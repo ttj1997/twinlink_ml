@@ -1,0 +1,560 @@
+{
+  "1000": {
+    "at_corner_gas_velocity": true,
+    "at_corner_inlet_temperature": true,
+    "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\f8de9a244899_step001000.zip",
+    "collapse_std_threshold": 0.05,
+    "collapsed_ignoring_context": true,
+    "corner_direction_gas_velocity": "hoch",
+    "corner_direction_inlet_temperature": "hoch",
+    "is_hot_corner": true,
+    "n_contexts": 25,
+    "normalised_action_max": [
+      0.9943194389343262,
+      0.9952960014343262
+    ],
+    "normalised_action_mean": [
+      0.9911557483673096,
+      0.9934227037429809
+    ],
+    "normalised_action_min": [
+      0.9837644100189209,
+      0.9885433912277222
+    ],
+    "normalised_action_std": [
+      0.0028108686189330756,
+      0.0019343998399699992
+    ],
+    "per_point": [
+      {
+        "action_normalised": [
+          0.9837644100189209,
+          0.9885433912277222
+        ],
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 5.0,
+        "gas_velocity_m_per_s": 2.490262031555176,
+        "inlet_temperature_celsius": 119.51293182373047
+      },
+      {
+        "action_normalised": [
+          0.9853825569152832,
+          0.9893780946731567
+        ],
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 5.0,
+        "gas_velocity_m_per_s": 2.490971326828003,
+        "inlet_temperature_celsius": 119.56147766113281
+      },
+      {
+        "action_normalised": [
+          0.9866162538528442,
+          0.9899933338165283
+        ],
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 5.0,
+        "gas_velocity_m_per_s": 2.4914944171905518,
+        "inlet_temperature_celsius": 119.5984878540039
+      },
+      {
+        "action_normalised": [
+          0.9877088069915771,
+          0.9905925989151001
+        ],
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 5.0,
+        "gas_velocity_m_per_s": 2.4920036792755127,
+        "inlet_temperature_celsius": 119.63126373291016
+      },
+      {
+        "action_normalised": [
+          0.9885435104370117,
+          0.9909632205963135
+        ],
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 5.0,
+        "gas_velocity_m_per_s": 2.492318868637085,
+        "inlet_temperature_celsius": 119.65630340576172
+      },
+      {
+        "action_normalised": [
+          0.9894028902053833,
+          0.9928176403045654
+        ],
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 12.5,
+        "gas_velocity_m_per_s": 2.4938950538635254,
+        "inlet_temperature_celsius": 119.68208312988281
+      },
+      {
+        "action_normalised": [
+          0.990626335144043,
+          0.9934139251708984
+        ],
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 12.5,
+        "gas_velocity_m_per_s": 2.4944019317626953,
+        "inlet_temperature_celsius": 119.71878814697266
+      },
+      {
+        "action_normalised": [
+          0.9917089939117432,
+          0.9939608573913574
+        ],
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 12.5,
+        "gas_velocity_m_per_s": 2.4948668479919434,
+        "inlet_temperature_celsius": 119.75126647949219
+      },
+      {
+        "action_normalised": [
+          0.9926671981811523,
+          0.9944624900817871
+        ],
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 12.5,
+        "gas_velocity_m_per_s": 2.495293140411377,
+        "inlet_temperature_celsius": 119.78001403808594
+      },
+      {
+        "action_normalised": [
+          0.9935179948806763,
+          0.9949303865432739
+        ],
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 12.5,
+        "gas_velocity_m_per_s": 2.4956908226013184,
+        "inlet_temperature_celsius": 119.8055419921875
+      },
+      {
+        "action_normalised": [
+          0.9897935390472412,
+          0.9929544925689697
+        ],
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 20.0,
+        "gas_velocity_m_per_s": 2.494011402130127,
+        "inlet_temperature_celsius": 119.69380187988281
+      },
+      {
+        "action_normalised": [
+          0.9909720420837402,
+          0.9935393333435059
+        ],
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 20.0,
+        "gas_velocity_m_per_s": 2.4945085048675537,
+        "inlet_temperature_celsius": 119.72915649414062
+      },
+      {
+        "action_normalised": [
+          0.9920148849487305,
+          0.9940758943557739
+        ],
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 20.0,
+        "gas_velocity_m_per_s": 2.494964599609375,
+        "inlet_temperature_celsius": 119.76044464111328
+      },
+      {
+        "action_normalised": [
+          0.9929378032684326,
+          0.99456787109375
+        ],
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 20.0,
+        "gas_velocity_m_per_s": 2.495382785797119,
+        "inlet_temperature_celsius": 119.78813171386719
+      },
+      {
+        "action_normalised": [
+          0.9937543869018555,
+          0.9950191974639893
+        ],
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 20.0,
+        "gas_velocity_m_per_s": 2.4957664012908936,
+        "inlet_temperature_celsius": 119.81262969970703
+      },
+      {
+        "action_normalised": [
+          0.9904643297195435,
+          0.9932868480682373
+        ],
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 27.5,
+        "gas_velocity_m_per_s": 2.4942939281463623,
+        "inlet_temperature_celsius": 119.71392822265625
+      },
+      {
+        "action_normalised": [
+          0.9913049936294556,
+          0.9936624765396118
+        ],
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 27.5,
+        "gas_velocity_m_per_s": 2.4946131706237793,
+        "inlet_temperature_celsius": 119.73915100097656
+      },
+      {
+        "action_normalised": [
+          0.9923095703125,
+          0.9941887855529785
+        ],
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 27.5,
+        "gas_velocity_m_per_s": 2.495060443878174,
+        "inlet_temperature_celsius": 119.769287109375
+      },
+      {
+        "action_normalised": [
+          0.9931986331939697,
+          0.9946715831756592
+        ],
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 27.5,
+        "gas_velocity_m_per_s": 2.4954710006713867,
+        "inlet_temperature_celsius": 119.79595947265625
+      },
+      {
+        "action_normalised": [
+          0.9939851760864258,
+          0.9951142072677612
+        ],
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 27.5,
+        "gas_velocity_m_per_s": 2.495847225189209,
+        "inlet_temperature_celsius": 119.8195571899414
+      },
+      {
+        "action_normalised": [
+          0.9929304122924805,
+          0.9948718547821045
+        ],
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 35.0,
+        "gas_velocity_m_per_s": 2.4956412315368652,
+        "inlet_temperature_celsius": 119.78791046142578
+      },
+      {
+        "action_normalised": [
+          0.9933066368103027,
+          0.9949812889099121
+        ],
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 35.0,
+        "gas_velocity_m_per_s": 2.495734214782715,
+        "inlet_temperature_celsius": 119.7991943359375
+      },
+      {
+        "action_normalised": [
+          0.9936628341674805,
+          0.9950884580612183
+        ],
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 35.0,
+        "gas_velocity_m_per_s": 2.4958252906799316,
+        "inlet_temperature_celsius": 119.80988311767578
+      },
+      {
+        "action_normalised": [
+          0.9940000772476196,
+          0.995193362236023
+        ],
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 35.0,
+        "gas_velocity_m_per_s": 2.4959144592285156,
+        "inlet_temperature_celsius": 119.82000732421875
+      },
+      {
+        "action_normalised": [
+          0.9943194389343262,
+          0.9952960014343262
+        ],
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 35.0,
+        "gas_velocity_m_per_s": 2.496001720428467,
+        "inlet_temperature_celsius": 119.82958221435547
+      }
+    ]
+  },
+  "10000": {
+    "at_corner_gas_velocity": false,
+    "at_corner_inlet_temperature": false,
+    "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\f8de9a244899_step010000.zip",
+    "collapse_std_threshold": 0.05,
+    "collapsed_ignoring_context": false,
+    "corner_direction_gas_velocity": "nicht gesaettigt",
+    "corner_direction_inlet_temperature": "nicht gesaettigt",
+    "is_hot_corner": false,
+    "n_contexts": 25,
+    "normalised_action_max": [
+      0.9952409267425537,
+      0.9912506341934204
+    ],
+    "normalised_action_mean": [
+      0.6988610887527466,
+      0.6099026155471802
+    ],
+    "normalised_action_min": [
+      0.2412252426147461,
+      -0.02992647886276245
+    ],
+    "normalised_action_std": [
+      0.2663619011490439,
+      0.3652355662253637
+    ],
+    "per_point": [
+      {
+        "action_normalised": [
+          0.38213253021240234,
+          0.00708770751953125
+        ],
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 5.0,
+        "gas_velocity_m_per_s": 1.6560245752334595,
+        "inlet_temperature_celsius": 101.46397399902344
+      },
+      {
+        "action_normalised": [
+          0.35384976863861084,
+          -0.009807884693145752
+        ],
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 5.0,
+        "gas_velocity_m_per_s": 1.6416633129119873,
+        "inlet_temperature_celsius": 100.61549377441406
+      },
+      {
+        "action_normalised": [
+          0.31992805004119873,
+          -0.023399174213409424
+        ],
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 5.0,
+        "gas_velocity_m_per_s": 1.630110740661621,
+        "inlet_temperature_celsius": 99.59783935546875
+      },
+      {
+        "action_normalised": [
+          0.28124356269836426,
+          -0.028103649616241455
+        ],
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 5.0,
+        "gas_velocity_m_per_s": 1.6261119842529297,
+        "inlet_temperature_celsius": 98.43730163574219
+      },
+      {
+        "action_normalised": [
+          0.2412252426147461,
+          -0.02992647886276245
+        ],
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 5.0,
+        "gas_velocity_m_per_s": 1.6245625019073486,
+        "inlet_temperature_celsius": 97.23675537109375
+      },
+      {
+        "action_normalised": [
+          0.5444004535675049,
+          0.48271405696868896
+        ],
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 12.5,
+        "gas_velocity_m_per_s": 2.060307025909424,
+        "inlet_temperature_celsius": 106.33201599121094
+      },
+      {
+        "action_normalised": [
+          0.5141466856002808,
+          0.4766082763671875
+        ],
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 12.5,
+        "gas_velocity_m_per_s": 2.055117130279541,
+        "inlet_temperature_celsius": 105.42440032958984
+      },
+      {
+        "action_normalised": [
+          0.484865665435791,
+          0.468019962310791
+        ],
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 12.5,
+        "gas_velocity_m_per_s": 2.0478169918060303,
+        "inlet_temperature_celsius": 104.54597473144531
+      },
+      {
+        "action_normalised": [
+          0.45628786087036133,
+          0.45745229721069336
+        ],
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 12.5,
+        "gas_velocity_m_per_s": 2.038834571838379,
+        "inlet_temperature_celsius": 103.68863677978516
+      },
+      {
+        "action_normalised": [
+          0.43029260635375977,
+          0.44330668449401855
+        ],
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 12.5,
+        "gas_velocity_m_per_s": 2.026810646057129,
+        "inlet_temperature_celsius": 102.90878295898438
+      },
+      {
+        "action_normalised": [
+          0.7759090662002563,
+          0.7108478546142578
+        ],
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 20.0,
+        "gas_velocity_m_per_s": 2.254220724105835,
+        "inlet_temperature_celsius": 113.27726745605469
+      },
+      {
+        "action_normalised": [
+          0.7488939762115479,
+          0.689345121383667
+        ],
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 20.0,
+        "gas_velocity_m_per_s": 2.23594331741333,
+        "inlet_temperature_celsius": 112.4668197631836
+      },
+      {
+        "action_normalised": [
+          0.7317888736724854,
+          0.6762467622756958
+        ],
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 20.0,
+        "gas_velocity_m_per_s": 2.2248098850250244,
+        "inlet_temperature_celsius": 111.95366668701172
+      },
+      {
+        "action_normalised": [
+          0.7199695110321045,
+          0.667121410369873
+        ],
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 20.0,
+        "gas_velocity_m_per_s": 2.217053174972534,
+        "inlet_temperature_celsius": 111.59909057617188
+      },
+      {
+        "action_normalised": [
+          0.7080075740814209,
+          0.6578431129455566
+        ],
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 20.0,
+        "gas_velocity_m_per_s": 2.2091667652130127,
+        "inlet_temperature_celsius": 111.24022674560547
+      },
+      {
+        "action_normalised": [
+          0.9779953956604004,
+          0.9572997093200684
+        ],
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 27.5,
+        "gas_velocity_m_per_s": 2.463704824447632,
+        "inlet_temperature_celsius": 119.33985900878906
+      },
+      {
+        "action_normalised": [
+          0.9715162515640259,
+          0.9463884830474854
+        ],
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 27.5,
+        "gas_velocity_m_per_s": 2.454430341720581,
+        "inlet_temperature_celsius": 119.14549255371094
+      },
+      {
+        "action_normalised": [
+          0.9631649255752563,
+          0.9327847957611084
+        ],
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 27.5,
+        "gas_velocity_m_per_s": 2.4428670406341553,
+        "inlet_temperature_celsius": 118.89494323730469
+      },
+      {
+        "action_normalised": [
+          0.9527661800384521,
+          0.9167979955673218
+        ],
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 27.5,
+        "gas_velocity_m_per_s": 2.4292783737182617,
+        "inlet_temperature_celsius": 118.5829849243164
+      },
+      {
+        "action_normalised": [
+          0.9397808313369751,
+          0.8979067802429199
+        ],
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 27.5,
+        "gas_velocity_m_per_s": 2.4132208824157715,
+        "inlet_temperature_celsius": 118.19342041015625
+      },
+      {
+        "action_normalised": [
+          0.9952409267425537,
+          0.9912506341934204
+        ],
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 35.0,
+        "gas_velocity_m_per_s": 2.492563009262085,
+        "inlet_temperature_celsius": 119.85722351074219
+      },
+      {
+        "action_normalised": [
+          0.9949722290039062,
+          0.9907569885253906
+        ],
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 35.0,
+        "gas_velocity_m_per_s": 2.492143392562866,
+        "inlet_temperature_celsius": 119.84916687011719
+      },
+      {
+        "action_normalised": [
+          0.9946885108947754,
+          0.9902355670928955
+        ],
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 35.0,
+        "gas_velocity_m_per_s": 2.4917001724243164,
+        "inlet_temperature_celsius": 119.84065246582031
+      },
+      {
+        "action_normalised": [
+          0.9943885803222656,
+          0.9896849393844604
+        ],
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 35.0,
+        "gas_velocity_m_per_s": 2.49123215675354,
+        "inlet_temperature_celsius": 119.83165740966797
+      },
+      {
+        "action_normalised": [
+          0.9940719604492188,
+          0.9891034364700317
+        ],
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 35.0,
+        "gas_velocity_m_per_s": 2.4907379150390625,
+        "inlet_temperature_celsius": 119.82215881347656
+      }
+    ]
+  }
+}

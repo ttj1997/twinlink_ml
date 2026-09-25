@@ -1,0 +1,62 @@
+{
+  "arguments": {
+    "algorithm": "SAC",
+    "disjointness_draws": 200,
+    "output": "\\\\nap.rz.tu-harburg.de\\ou-t2a-team$\\ResearchProjects\\BMWE TwinLink (ML)\\Code\\twinlink_ml (4)\\twinlink_rl\\artifacts\\runs\\probe_bandit_env_sac_smoke.json",
+    "seed": 0,
+    "timing_steps": 30,
+    "total_timesteps": 64
+  },
+  "env_step_timing": {
+    "max_s": 0.17706600000019534,
+    "mean_s": 0.1504986033334717,
+    "median_s": 0.16436529999919003,
+    "min_s": 0.01246299999911571,
+    "n_steps": 30,
+    "p95_s": 0.17469449500185874,
+    "total_s": 4.514958100004151
+  },
+  "environment": {
+    "env/mkl_num_threads": "1",
+    "env/omp_num_threads": "1",
+    "git/commit": "7e3fb1d8786b0552d1ab193b60093a5a8dd6651f",
+    "git/commit_available": true,
+    "git/diff_digest": "dcce0eab0c295960",
+    "git/diff_digest_available": true,
+    "git/dirty": true,
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.14.6",
+    "torch/num_threads": 1,
+    "version/numpy": "2.5.1",
+    "version/scipy": "1.18.1",
+    "version/torch": "2.13.0+cpu"
+  },
+  "extrapolation": {
+    "10000": {
+      "estimated_wall_hours_single_process": 0.45657027777552783
+    },
+    "100000": {
+      "estimated_wall_hours_single_process": 4.565702777755279
+    }
+  },
+  "sb3_smoke_training": {
+    "algorithm": "SAC",
+    "learning_starts": 16,
+    "total_timesteps": 64,
+    "wall_s": 10.769371099999262,
+    "wall_s_per_step": 0.16827142343748847
+  },
+  "smoke_policy_metric": {
+    "closed_fraction_median": -6.97031185684215,
+    "closed_fraction_min": -27177.9105919358,
+    "closed_fraction_p95": -5.345235548038477,
+    "feasibility_rate": 1.0,
+    "mean_moisture_violation_of_infeasible_kg_per_kg": null,
+    "n_points": 25,
+    "n_solve_failed": 0
+  },
+  "training_disjointness_check": {
+    "collision_found": false,
+    "n_draws_checked": 200
+  }
+}

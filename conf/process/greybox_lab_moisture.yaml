@@ -1,0 +1,145 @@
+# Variante: Feuchteniveau nach den Labormessungen des Vorprojekts (Status LAB)
+#
+# Zweck: pruefen, welche Aussagen aus Schritten 3-6 daran haengen, dass der
+# Feuchte-Platzhalter um Faktor 10 zu trocken war (siehe 02_prozess_setup.md).
+# Geaendert sind ausschliesslich die drei Feuchtewerte; alles andere ist byte-identisch
+# zu greybox_placeholder.yaml, damit der Vergleich genau einen Faktor variiert.
+#
+# Cellets(R) 200 sind stark sorptive MCC-Pellets. Ein Anwendungspartner-Granulat kann trockener
+# sein -- diese Datei ist die Obergrenze des plausiblen Bereichs, nicht die Wahrheit.
+# Umrechnung: Labor 3.2 ... 22.5 % feuchte Masse  ->  0.033 ... 0.29 kg/kg trocken.
+# Grey-Box-Prozessmodell: Wirbelschichtsprühgranulation
+#
+# STATUS: placeholder -- KEIN Wert in dieser Datei ist gemessen oder von TUHH-A bestätigt.
+#
+# Alle Werte sind so gewählt, dass sie für eine Laborwirbelschicht (~150 mm Durchmesser,
+# 2 kg Bettmasse) plausibel sind und die Zeitkonstanten in der richtigen Größenordnung
+# liegen. Sie sind für den ARCHITEKTURVERGLEICH in AP 1 ausreichend und für JEDE
+# Absolutaussage über Energieverbrauch unbrauchbar.
+#
+# Vorgehen beim Ersetzen:
+#   1. Wert eintragen
+#   2. Quelle in `provenance.description` ergänzen
+#   3. `provenance.status` erst auf `calibrated` setzen, wenn `open_todos` leer ist
+#   4. Zeitkonstanten mit `scripts/report_time_constants.py` neu bestimmen und
+#      Sequenzlängen im Datenmodul nachziehen
+
+provenance:
+  status: placeholder
+  description: >-
+    Plausibilitätswerte für eine Laborwirbelschicht, gesetzt am 12.08.2026 ohne
+    Rückmeldung von TUHH-A. Zeitkonstanten liegen bei tau_X ~ 15 s, tau_T ~ 80 s,
+    tau_d ~ 4 h. Absolutwerte der Leistung nicht belastbar.
+  open_todos:
+    - "TUHH-A: Zeitschrittweite und typischer Simulationshorizont in Dyssol"
+    - "TUHH-A: realistische Stellgrößenbereiche inkl. Fluidisierungsgrenzen"
+    - "TUHH-A: Rechenzeit pro Simulationslauf (begrenzt Datensatzgröße)"
+    - "SPE: Stoffsystem, Partikeldichte, Sorptionsisotherme, kritische Feuchte"
+    - "SPE: Geometrie und Bettmasse der Laboranlage, Duesentyp"
+    - "SPE/Anwendungspartner: Betriebsart kontinuierlich vs. Batch, Austragsintervalle"
+    - "Anwendungspartner: Abtastrate und Rauschniveau der Anlagensensoren"
+    - "Definition dE: Momentanleistung oder spezifischer Verbrauch, Referenzpunkt"
+
+geometry:
+  cross_section_area_m2: 0.0177        # TODO 150 mm Durchmesser angenommen
+  bed_mass_solid_setpoint_kg: 2.0      # TODO
+  heat_loss_ua_w_per_k: 2.0            # TODO isolierte Laboranlage angenommen
+
+gas:
+  pressure_pa: 101325.0
+  r_specific_dry_air_j_per_kg_k: 287.06
+  cp_dry_air_j_per_kg_k: 1006.0
+  cp_vapour_j_per_kg_k: 1860.0
+  viscosity_ref_pa_s: 1.716e-5
+  viscosity_ref_temperature_k: 273.15
+  sutherland_constant_k: 110.4
+
+material:
+  particle_density_kg_per_m3: 1500.0   # TODO Stoffsystem offen
+  sphericity: 0.9                      # TODO
+  cp_solid_j_per_kg_k: 1200.0          # TODO
+  cp_water_liquid_j_per_kg_k: 4180.0
+  cp_suspension_j_per_kg_k: 3500.0     # TODO haengt an w_solid
+  suspension_density_kg_per_m3: 1100.0 # TODO
+  critical_moisture_kg_per_kg: 0.200   # LAB-Niveau, war 0.020
+  equilibrium_moisture_kg_per_kg: 0.030 # LAB-Niveau, war 0.003
+  max_saturation_degree: 0.60          # TODO Saettigungsgrad der Abluft, Literatur 0.4-0.8
+  # Obergrenze der Treibkraft: markiert die Gueltigkeitsgrenze der normierten
+  # Trocknungskurve oberhalb ~80 C Betttemperatur (Y_sat divergiert gegen 100 C).
+  max_driving_humidity_kg_per_kg: 0.50 # TODO gegen Trocknungsversuche pruefen
+  nucleus_diameter_m: 150.0e-6         # TODO
+  # b_nuc = (d_nuc / d_50,soll)^3, hier fuer d_50,soll = 750 um
+  nucleation_solid_fraction: 0.008
+  initial_diameter_m: 400.0e-6         # TODO Startbett
+
+energy:
+  heater_efficiency: 0.98              # elektrisch; bei Anwendungspartner ggf. Gas -> anpassen
+  fan_efficiency: 0.55                 # TODO
+  distributor_loss_coefficient: 350.0  # TODO Anstroemboden + Filter, zeta
+  pump_pressure_rise_pa: 300000.0      # TODO
+  pump_efficiency: 0.40                # TODO
+  atomiser_air_kg_per_s_per_bar: 1.5e-4 # TODO Zweistoffduese, Kennlinie erfragen
+  compressor_efficiency: 0.50          # TODO
+  target: power_kw                     # OFFEN: power_kw | specific_kwh_per_kg
+  reference_value: null                # gesetzt -> dE als Differenz zum Referenzpunkt
+
+operation:
+  mode: continuous                     # TODO kontinuierlich | batch
+  mass_control_time_constant_s: 600.0  # TODO Fuellstandsregelung / Austragsintervall
+  seed_mass_flow_kg_per_h: 0.0
+  suspension_temperature_celsius: 20.0 # TODO
+  initial_moisture_kg_per_kg: 0.050    # LAB-Niveau, war 0.005
+  initial_bed_temperature_celsius: 55.0
+
+actions:
+  # Alle Grenzen TODO -- in 02_prozess_setup.md komplett offen.
+  inlet_temperature_celsius:
+    minimum: 60.0
+    maximum: 120.0
+    nominal: 90.0
+    max_rate_per_s: 0.5
+  gas_velocity_m_per_s:
+    # untere Grenze muss ueber u_mf(d_50,max) liegen: u_mf(750 um) ~ 0.24 m/s
+    minimum: 0.8
+    maximum: 2.5
+    nominal: 1.6
+    max_rate_per_s: 0.05
+  spray_rate_kg_per_h:
+    minimum: 0.4
+    maximum: 3.0
+    nominal: 1.5
+    max_rate_per_s: 0.02
+  nozzle_pressure_bar:
+    minimum: 1.0
+    maximum: 4.0
+    nominal: 2.5
+    max_rate_per_s: 0.05
+
+disturbances:
+  ambient_temperature_celsius:
+    minimum: 5.0
+    maximum: 35.0
+    nominal: 20.0
+  ambient_relative_humidity:
+    minimum: 0.25
+    maximum: 0.85
+    nominal: 0.50
+  suspension_solid_fraction:
+    minimum: 0.20
+    maximum: 0.40
+    nominal: 0.30
+
+numerics:
+  sample_time_s: 5.0                   # TODO an Dyssol / Anwendungspartner angleichen
+  substeps: 5
+  integrator: rk4
+  state_floor: 1.0e-9
+  enforce_action_bounds: true
+
+measurement:
+  enabled: true
+  relative_noise_std: 0.005            # TODO aus Anlagenzeitreihen schaetzen
+  absolute_noise_std_temperature_k: 0.2 # TODO
+  sensor_time_constant_s: 10.0         # TODO Thermoelement + Messstellendynamik
+
+backend: numpy

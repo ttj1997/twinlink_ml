@@ -1,0 +1,568 @@
+{
+  "f1_whole_apparatus_balance": {
+    "ACE": {
+      "0.112": {
+        "evaporation_kg_per_h": 381.66143405098643,
+        "heat_from_air_kw": 286.9807816898436,
+        "heat_from_suspension_kw": -36.91215572877139,
+        "latent_heat_at_t_abluft_j_per_kg": 2357706.0053601535,
+        "point": "ACE",
+        "solid_fraction": 0.5911741778335547,
+        "t_abluft_measured_celsius": 60.6690386838999,
+        "t_in_celsius": 84.57169292096101,
+        "wall_loss_kw": 0.11155510652247276
+      },
+      "30.000": {
+        "evaporation_kg_per_h": 336.0245304795071,
+        "heat_from_air_kw": 286.9807816898436,
+        "heat_from_suspension_kw": -36.91215572877139,
+        "latent_heat_at_t_abluft_j_per_kg": 2357706.0053601535,
+        "point": "ACE",
+        "solid_fraction": 0.6400592444375028,
+        "t_abluft_measured_celsius": 60.6690386838999,
+        "t_in_celsius": 84.57169292096101,
+        "wall_loss_kw": 30.0
+      }
+    },
+    "RID": {
+      "0.046": {
+        "evaporation_kg_per_h": 763.050232090072,
+        "heat_from_air_kw": 542.5426167954124,
+        "heat_from_suspension_kw": -29.62246176079135,
+        "implied_solid_density_kg_per_m3": 1658.1251219453256,
+        "implied_solid_density_plausible": true,
+        "latent_heat_at_t_abluft_j_per_kg": 2419693.499053225,
+        "point": "RID",
+        "solid_fraction": 0.6396830461255552,
+        "t_abluft_measured_celsius": 34.38756081861063,
+        "t_in_celsius": 83.07543150605963,
+        "wall_loss_kw": 0.04579780145389681
+      },
+      "30.000": {
+        "evaporation_kg_per_h": 718.4846174959262,
+        "heat_from_air_kw": 542.5426167954124,
+        "heat_from_suspension_kw": -29.62246176079135,
+        "implied_solid_density_kg_per_m3": 1623.913945116542,
+        "implied_solid_density_plausible": true,
+        "latent_heat_at_t_abluft_j_per_kg": 2419693.499053225,
+        "point": "RID",
+        "solid_fraction": 0.6607272000000928,
+        "t_abluft_measured_celsius": 34.38756081861063,
+        "t_in_celsius": 83.07543150605963,
+        "wall_loss_kw": 30.0
+      }
+    }
+  },
+  "r2_corrected_at_30_percent": {
+    "ACE": {
+      "600.0": {
+        "bed_temperature_celsius": 48.551724744828,
+        "deviation_k": -18.705145585834295,
+        "fluidization_feasible": false,
+        "fluidization_margin_lower_m_per_s": 3.525497297770775,
+        "fluidization_margin_upper_m_per_s": -0.2241794069185068,
+        "gas_velocity_m_per_s": 3.750824068293141,
+        "particle_moisture_kg_per_kg": 0.008412475100269122
+      },
+      "800.0": {
+        "bed_temperature_celsius": 48.551724744828,
+        "deviation_k": -18.705145585834295,
+        "fluidization_feasible": true,
+        "fluidization_margin_lower_m_per_s": 2.587791280697489,
+        "fluidization_margin_upper_m_per_s": 0.7135266101547786,
+        "gas_velocity_m_per_s": 2.8131180512198553,
+        "particle_moisture_kg_per_kg": 0.008412475100269122
+      }
+    },
+    "RID": {
+      "600.0": {
+        "error": "Kein Beharrungszustand bis Bracket-Untergrenze 86.5 degC gefunden"
+      },
+      "800.0": {
+        "error": "Kein Beharrungszustand bis Bracket-Untergrenze 86.5 degC gefunden"
+      }
+    }
+  },
+  "r3_predicted_solid_fraction": {
+    "ACE": {
+      "bed_mass_kg": 800.0,
+      "bracket_bed_temperature_celsius": [
+        67.21850854833605,
+        68.35760155407412
+      ],
+      "bracket_solid_fraction": [
+        0.725,
+        0.75
+      ],
+      "note": "Lineare Interpolation zwischen den beiden einschliessenden Gitterpunkten.",
+      "point": "ACE",
+      "predicted_particle_moisture_kg_per_kg": 0.0037328894312213118,
+      "predicted_solid_fraction": 0.7258419370089405,
+      "scan": [
+        {
+          "bed_temperature_celsius": 38.118968445027406,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.01651131438890164,
+          "solid_fraction": 0.05
+        },
+        {
+          "bed_temperature_celsius": 39.14818763144103,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.015360752855442483,
+          "solid_fraction": 0.075
+        },
+        {
+          "bed_temperature_celsius": 40.180018137289224,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.014304984612052778,
+          "solid_fraction": 0.1
+        },
+        {
+          "bed_temperature_celsius": 41.214690728072334,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.013335456740931334,
+          "solid_fraction": 0.125
+        },
+        {
+          "bed_temperature_celsius": 42.25241063001867,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.012444544402051035,
+          "solid_fraction": 0.15
+        },
+        {
+          "bed_temperature_celsius": 43.29336079351607,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.011625426805448882,
+          "solid_fraction": 0.175
+        },
+        {
+          "bed_temperature_celsius": 44.337704650506865,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.010871983206500973,
+          "solid_fraction": 0.2
+        },
+        {
+          "bed_temperature_celsius": 45.38558845994272,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.01017870515373514,
+          "solid_fraction": 0.225
+        },
+        {
+          "bed_temperature_celsius": 46.43714331085934,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.00954062202609592,
+          "solid_fraction": 0.25
+        },
+        {
+          "bed_temperature_celsius": 47.49248684514211,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.008953237504619977,
+          "solid_fraction": 0.275
+        },
+        {
+          "bed_temperature_celsius": 48.551724744828,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.008412475100269122,
+          "solid_fraction": 0.3
+        },
+        {
+          "bed_temperature_celsius": 49.614952020501,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.007914631225718184,
+          "solid_fraction": 0.325
+        },
+        {
+          "bed_temperature_celsius": 50.68225413556534,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.007456334583506391,
+          "solid_fraction": 0.35
+        },
+        {
+          "bed_temperature_celsius": 51.753707986830975,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.007034510874242786,
+          "solid_fraction": 0.375
+        },
+        {
+          "bed_temperature_celsius": 52.8293827667569,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.006646352003732234,
+          "solid_fraction": 0.4
+        },
+        {
+          "bed_temperature_celsius": 53.90934072079795,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.006289289115634773,
+          "solid_fraction": 0.425
+        },
+        {
+          "bed_temperature_celsius": 54.99363781797698,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.005960968888766701,
+          "solid_fraction": 0.45
+        },
+        {
+          "bed_temperature_celsius": 56.08232434266877,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.005659232634609084,
+          "solid_fraction": 0.475
+        },
+        {
+          "bed_temperature_celsius": 57.17544542146939,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.00538209780398077,
+          "solid_fraction": 0.5
+        },
+        {
+          "bed_temperature_celsius": 58.273041491453924,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.005127741576043348,
+          "solid_fraction": 0.525
+        },
+        {
+          "bed_temperature_celsius": 59.37514871938639,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.004894486252620964,
+          "solid_fraction": 0.55
+        },
+        {
+          "bed_temperature_celsius": 60.481799371754725,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.004680786224909439,
+          "solid_fraction": 0.575
+        },
+        {
+          "bed_temperature_celsius": 61.59302215379544,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.004485216310535835,
+          "solid_fraction": 0.6
+        },
+        {
+          "bed_temperature_celsius": 62.70884250566437,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.004306461294236811,
+          "solid_fraction": 0.625
+        },
+        {
+          "bed_temperature_celsius": 63.829282873344695,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.004143306523502843,
+          "solid_fraction": 0.65
+        },
+        {
+          "bed_temperature_celsius": 64.9543629519919,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.003994629435074585,
+          "solid_fraction": 0.675
+        },
+        {
+          "bed_temperature_celsius": 66.08409990213968,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.003859391904329613,
+          "solid_fraction": 0.7
+        },
+        {
+          "bed_temperature_celsius": 67.21850854833605,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.0037366333229724383,
+          "solid_fraction": 0.725
+        },
+        {
+          "bed_temperature_celsius": 68.35760155407412,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.0036254643248356914,
+          "solid_fraction": 0.75
+        },
+        {
+          "bed_temperature_celsius": 69.50138958636961,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.0035250610877612023,
+          "solid_fraction": 0.775
+        },
+        {
+          "bed_temperature_celsius": 70.6498814554709,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.0034346601514310742,
+          "solid_fraction": 0.8
+        },
+        {
+          "bed_temperature_celsius": 71.8030842488757,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.0033535536952692554,
+          "solid_fraction": 0.825
+        },
+        {
+          "bed_temperature_celsius": 72.96100345105557,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.0032810852299985237,
+          "solid_fraction": 0.85
+        },
+        {
+          "bed_temperature_celsius": 74.12364304535414,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.003216645661141655,
+          "solid_fraction": 0.875
+        },
+        {
+          "bed_temperature_celsius": 75.29100561571246,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.003159669686495903,
+          "solid_fraction": 0.9
+        },
+        {
+          "bed_temperature_celsius": 76.4630924322706,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.003109632496070702,
+          "solid_fraction": 0.925
+        },
+        {
+          "bed_temperature_celsius": 77.6399035289426,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.0030660467449619942,
+          "solid_fraction": 0.95
+        }
+      ]
+    },
+    "RID": {
+      "bed_mass_kg": 800.0,
+      "bracket_bed_temperature_celsius": [
+        42.15545798347158,
+        44.53388197932114
+      ],
+      "bracket_solid_fraction": [
+        0.7,
+        0.725
+      ],
+      "implied_solid_density_kg_per_m3": 1554.2939574337292,
+      "implied_solid_density_plausible": true,
+      "note": "Lineare Interpolation zwischen den beiden einschliessenden Gitterpunkten.",
+      "point": "RID",
+      "predicted_particle_moisture_kg_per_kg": 0.011169739985707538,
+      "predicted_solid_fraction": 0.7115454043433648,
+      "scan": [
+        {
+          "bed_temperature_celsius": null,
+          "error": "Kein Beharrungszustand bis Bracket-Untergrenze 86.5 degC gefunden",
+          "particle_moisture_kg_per_kg": null,
+          "solid_fraction": 0.05
+        },
+        {
+          "bed_temperature_celsius": null,
+          "error": "Kein Beharrungszustand bis Bracket-Untergrenze 86.5 degC gefunden",
+          "particle_moisture_kg_per_kg": null,
+          "solid_fraction": 0.075
+        },
+        {
+          "bed_temperature_celsius": null,
+          "error": "Kein Beharrungszustand bis Bracket-Untergrenze 86.5 degC gefunden",
+          "particle_moisture_kg_per_kg": null,
+          "solid_fraction": 0.1
+        },
+        {
+          "bed_temperature_celsius": null,
+          "error": "Kein Beharrungszustand bis Bracket-Untergrenze 86.5 degC gefunden",
+          "particle_moisture_kg_per_kg": null,
+          "solid_fraction": 0.125
+        },
+        {
+          "bed_temperature_celsius": null,
+          "error": "Kein Beharrungszustand bis Bracket-Untergrenze 86.5 degC gefunden",
+          "particle_moisture_kg_per_kg": null,
+          "solid_fraction": 0.15
+        },
+        {
+          "bed_temperature_celsius": null,
+          "error": "Kein Beharrungszustand bis Bracket-Untergrenze 86.5 degC gefunden",
+          "particle_moisture_kg_per_kg": null,
+          "solid_fraction": 0.175
+        },
+        {
+          "bed_temperature_celsius": null,
+          "error": "Kein Beharrungszustand bis Bracket-Untergrenze 86.5 degC gefunden",
+          "particle_moisture_kg_per_kg": null,
+          "solid_fraction": 0.2
+        },
+        {
+          "bed_temperature_celsius": null,
+          "error": "Kein Beharrungszustand bis Bracket-Untergrenze 86.5 degC gefunden",
+          "particle_moisture_kg_per_kg": null,
+          "solid_fraction": 0.225
+        },
+        {
+          "bed_temperature_celsius": null,
+          "error": "Kein Beharrungszustand bis Bracket-Untergrenze 86.5 degC gefunden",
+          "particle_moisture_kg_per_kg": null,
+          "solid_fraction": 0.25
+        },
+        {
+          "bed_temperature_celsius": null,
+          "error": "Kein Beharrungszustand bis Bracket-Untergrenze 86.5 degC gefunden",
+          "particle_moisture_kg_per_kg": null,
+          "solid_fraction": 0.275
+        },
+        {
+          "bed_temperature_celsius": null,
+          "error": "Kein Beharrungszustand bis Bracket-Untergrenze 86.5 degC gefunden",
+          "particle_moisture_kg_per_kg": null,
+          "solid_fraction": 0.3
+        },
+        {
+          "bed_temperature_celsius": null,
+          "error": "Kein Beharrungszustand bis Bracket-Untergrenze 86.5 degC gefunden",
+          "particle_moisture_kg_per_kg": null,
+          "solid_fraction": 0.325
+        },
+        {
+          "bed_temperature_celsius": null,
+          "error": "Kein Beharrungszustand bis Bracket-Untergrenze 86.5 degC gefunden",
+          "particle_moisture_kg_per_kg": null,
+          "solid_fraction": 0.35
+        },
+        {
+          "bed_temperature_celsius": 35.523779643015686,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.708006566870086,
+          "solid_fraction": 0.375
+        },
+        {
+          "bed_temperature_celsius": 35.523779643015686,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.601256156440693,
+          "solid_fraction": 0.4
+        },
+        {
+          "bed_temperature_celsius": 35.523779643013796,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.5070646178266821,
+          "solid_fraction": 0.425
+        },
+        {
+          "bed_temperature_celsius": 35.52377964301482,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.4233388057251316,
+          "solid_fraction": 0.45
+        },
+        {
+          "bed_temperature_celsius": 35.52377964301482,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.34842623700273057,
+          "solid_fraction": 0.475
+        },
+        {
+          "bed_temperature_celsius": 35.52377964301482,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.2810049251526262,
+          "solid_fraction": 0.5
+        },
+        {
+          "bed_temperature_celsius": 35.52377964301482,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.22000469062151995,
+          "solid_fraction": 0.525
+        },
+        {
+          "bed_temperature_celsius": 35.52377964301482,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.16454993195690895,
+          "solid_fraction": 0.55
+        },
+        {
+          "bed_temperature_celsius": 35.52377964301482,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.11391732621964054,
+          "solid_fraction": 0.575
+        },
+        {
+          "bed_temperature_celsius": 35.52377964301482,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.06750410429383955,
+          "solid_fraction": 0.6
+        },
+        {
+          "bed_temperature_celsius": 35.52377964301482,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.02480394012211625,
+          "solid_fraction": 0.625
+        },
+        {
+          "bed_temperature_celsius": 37.51623126894452,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.017054515540258157,
+          "solid_fraction": 0.65
+        },
+        {
+          "bed_temperature_celsius": 39.81545547301313,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.014289994357246687,
+          "solid_fraction": 0.675
+        },
+        {
+          "bed_temperature_celsius": 42.15545798347158,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.01202618717570832,
+          "solid_fraction": 0.7
+        },
+        {
+          "bed_temperature_celsius": 44.53388197932114,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.010171667479971143,
+          "solid_fraction": 0.725
+        },
+        {
+          "bed_temperature_celsius": 46.94870254817779,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.008652998866907608,
+          "solid_fraction": 0.75
+        },
+        {
+          "bed_temperature_celsius": 49.3981658718763,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.00741085020783035,
+          "solid_fraction": 0.775
+        },
+        {
+          "bed_temperature_celsius": 51.88074087049648,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.006397032268258756,
+          "solid_fraction": 0.8
+        },
+        {
+          "bed_temperature_celsius": 54.39508059681967,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.005572219546773482,
+          "solid_fraction": 0.825
+        },
+        {
+          "bed_temperature_celsius": 56.93999121756593,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.004904184911759474,
+          "solid_fraction": 0.85
+        },
+        {
+          "bed_temperature_celsius": 59.51440689260396,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.004366420790320635,
+          "solid_fraction": 0.875
+        },
+        {
+          "bed_temperature_celsius": 62.11736924961437,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.00393705401660779,
+          "solid_fraction": 0.9
+        },
+        {
+          "bed_temperature_celsius": 64.74801045801114,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.0035979855661595096,
+          "solid_fraction": 0.925
+        },
+        {
+          "bed_temperature_celsius": 67.40553913283948,
+          "error": null,
+          "particle_moisture_kg_per_kg": 0.0033342039040100816,
+          "solid_fraction": 0.95
+        }
+      ]
+    }
+  }
+}

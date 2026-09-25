@@ -1,0 +1,219 @@
+{
+  "reference": {
+    "bed_temperature_celsius": 62.55016802480853,
+    "particle_moisture_kg_per_kg": 0.03335841968791471,
+    "dry_air_mass_flow_kg_per_s_lab": 0.02943372610677841,
+    "inlet_absolute_humidity_kg_per_kg": 0.00726092263645281,
+    "outlet_temperature_celsius": 62.55016802480853,
+    "outlet_humidity_kg_per_kg": 0.017026523394953724
+  },
+  "errors": {
+    "bed_temperature_rmse_k": 0.5393090806307859,
+    "product_moisture_rmse_kg_per_kg": 0.0014883589441298012,
+    "source": "artifacts/runs/arch_learning_curve_constant_trained.jsonl, LSTM, n_train=64, test_set=constant_holdout, h=36, Median 5 Seeds"
+  },
+  "baseline_kw": {
+    "lab_simulator": {
+      "sensible": 1.1364509800513865,
+      "condensing": 1.915265015487103
+    },
+    "district_partner_model": {
+      "sensible": 308.8840266919977,
+      "condensing": 520.5633859713139
+    }
+  },
+  "scenarios": {
+    "temperature_plus": {
+      "delta_bed_temperature_k": 0.5393090806307859,
+      "delta_particle_moisture_kg_per_kg": 0.0,
+      "outlet_temperature_celsius": 63.089477105439315,
+      "outlet_humidity_kg_per_kg": 0.017377585507875038,
+      "by_scale": {
+        "lab_simulator": {
+          "q_sensible_kw": 1.1436587813730033,
+          "q_condensing_kw": 1.9581364635222076,
+          "delta_sensible_kw": 0.007207801321616802,
+          "delta_sensible_pct": 0.6342377672366379,
+          "delta_condensing_kw": 0.042871448035104676,
+          "delta_condensing_pct": 2.2384081413506802
+        },
+        "district_partner_model": {
+          "q_sensible_kw": 310.84308584623966,
+          "q_condensing_kw": 532.2157191837864,
+          "delta_sensible_kw": 1.9590591542419702,
+          "delta_sensible_pct": 0.6342377672366455,
+          "delta_condensing_kw": 11.652333212472513,
+          "delta_condensing_pct": 2.238408141350653
+        }
+      }
+    },
+    "temperature_minus": {
+      "delta_bed_temperature_k": -0.5393090806307859,
+      "delta_particle_moisture_kg_per_kg": 0.0,
+      "outlet_temperature_celsius": 62.01085894417774,
+      "outlet_humidity_kg_per_kg": 0.016687088604378276,
+      "by_scale": {
+        "lab_simulator": {
+          "q_sensible_kw": 1.1291228989165147,
+          "q_condensing_kw": 1.8732879774843343,
+          "delta_sensible_kw": -0.007328081134871711,
+          "delta_sensible_pct": -0.6448215773055482,
+          "delta_condensing_kw": -0.04197703800276864,
+          "delta_condensing_pct": -2.1917091192778226
+        },
+        "district_partner_model": {
+          "q_sensible_kw": 306.89227583903744,
+          "q_condensing_kw": 509.15415076935903,
+          "delta_sensible_kw": -1.9917508529602514,
+          "delta_sensible_pct": -0.6448215773055551,
+          "delta_condensing_kw": -11.409235201954857,
+          "delta_condensing_pct": -2.1917091192778537
+        }
+      }
+    },
+    "moisture_plus": {
+      "delta_bed_temperature_k": 0.0,
+      "delta_particle_moisture_kg_per_kg": 0.0014883589441298012,
+      "outlet_temperature_celsius": 62.55016802480853,
+      "outlet_humidity_kg_per_kg": 0.01772150455707097,
+      "by_scale": {
+        "lab_simulator": {
+          "q_sensible_kw": 1.118254278749554,
+          "q_condensing_kw": 1.9675065706169994,
+          "delta_sensible_kw": -0.018196701301832485,
+          "delta_sensible_pct": -1.6011866434405901,
+          "delta_condensing_kw": 0.05224155512989648,
+          "delta_condensing_pct": 2.7276410683359167
+        },
+        "district_partner_model": {
+          "q_sensible_kw": 303.938216912884,
+          "q_condensing_kw": 534.7624866737872,
+          "delta_sensible_kw": -4.945809779113688,
+          "delta_sensible_pct": -1.601186643440575,
+          "delta_condensing_kw": 14.199100702473288,
+          "delta_condensing_pct": 2.727641068335863
+        }
+      }
+    },
+    "moisture_minus": {
+      "delta_bed_temperature_k": 0.0,
+      "delta_particle_moisture_kg_per_kg": -0.0014883589441298012,
+      "outlet_temperature_celsius": 62.55016802480853,
+      "outlet_humidity_kg_per_kg": 0.016336990642634077,
+      "by_scale": {
+        "lab_simulator": {
+          "q_sensible_kw": 1.1551837802431058,
+          "q_condensing_kw": 1.8634330159197552,
+          "delta_sensible_kw": 0.0187328001917193,
+          "delta_sensible_pct": 1.6483597199126236,
+          "delta_condensing_kw": -0.05183199956734774,
+          "delta_condensing_pct": -2.706257314169417
+        },
+        "district_partner_model": {
+          "q_sensible_kw": 313.97554656923273,
+          "q_condensing_kw": 506.4756012635772,
+          "delta_sensible_kw": 5.091519877235044,
+          "delta_sensible_pct": 1.6483597199126225,
+          "delta_condensing_kw": -14.087784707736716,
+          "delta_condensing_pct": -2.7062573141694286
+        }
+      }
+    },
+    "both_pp": {
+      "delta_bed_temperature_k": 0.5393090806307859,
+      "delta_particle_moisture_kg_per_kg": 0.0014883589441298012,
+      "outlet_temperature_celsius": 63.089477105439315,
+      "outlet_humidity_kg_per_kg": 0.01809437531297374,
+      "by_scale": {
+        "lab_simulator": {
+          "q_sensible_kw": 1.1252599663072695,
+          "q_condensing_kw": 2.01203853224552,
+          "delta_sensible_kw": -0.011191013744116907,
+          "delta_sensible_pct": -0.9847335204560154,
+          "delta_condensing_kw": 0.09677351675841717,
+          "delta_condensing_pct": 5.052748104094883
+        },
+        "district_partner_model": {
+          "q_sensible_kw": 305.8423421418272,
+          "q_condensing_kw": 546.8661425865914,
+          "delta_sensible_kw": -3.041684550170487,
+          "delta_sensible_pct": -0.9847335204560412,
+          "delta_condensing_kw": 26.30275661527753,
+          "delta_condensing_pct": 5.052748104094852
+        }
+      }
+    },
+    "both_pm": {
+      "delta_bed_temperature_k": 0.5393090806307859,
+      "delta_particle_moisture_kg_per_kg": -0.0014883589441298012,
+      "outlet_temperature_celsius": 63.089477105439315,
+      "outlet_humidity_kg_per_kg": 0.016666516344320488,
+      "by_scale": {
+        "lab_simulator": {
+          "q_sensible_kw": 1.1626048916830163,
+          "q_condensing_kw": 1.9046645828560649,
+          "delta_sensible_kw": 0.026153911631629834,
+          "delta_sensible_pct": 2.3013673348627184,
+          "delta_condensing_kw": -0.010600432631038048,
+          "delta_condensing_pct": -0.5534708014463511
+        },
+        "district_partner_model": {
+          "q_sensible_kw": 315.99258278489594,
+          "q_condensing_kw": 517.682219626942,
+          "delta_sensible_kw": 7.1085560928982545,
+          "delta_sensible_pct": 2.3013673348627117,
+          "delta_condensing_kw": -2.881166344371877,
+          "delta_condensing_pct": -0.5534708014463865
+        }
+      }
+    },
+    "both_mp": {
+      "delta_bed_temperature_k": -0.5393090806307859,
+      "delta_particle_moisture_kg_per_kg": 0.0014883589441298012,
+      "outlet_temperature_celsius": 62.01085894417774,
+      "outlet_humidity_kg_per_kg": 0.017360979493678905,
+      "by_scale": {
+        "lab_simulator": {
+          "q_sensible_kw": 1.1111297254524486,
+          "q_condensing_kw": 1.9239242853292917,
+          "delta_sensible_kw": -0.02532125459893786,
+          "delta_sensible_pct": -2.2280991475578573,
+          "delta_condensing_kw": 0.008659269842188788,
+          "delta_condensing_pct": 0.4521186244289282
+        },
+        "district_partner_model": {
+          "q_sensible_kw": 302.00178432633095,
+          "q_condensing_kw": 522.9169499912479,
+          "delta_sensible_kw": -6.882242365666741,
+          "delta_sensible_pct": -2.228099147557843,
+          "delta_condensing_kw": 2.3535640199339696,
+          "delta_condensing_pct": 0.4521186244288923
+        }
+      }
+    },
+    "both_mm": {
+      "delta_bed_temperature_k": -0.5393090806307859,
+      "delta_particle_moisture_kg_per_kg": -0.0014883589441298012,
+      "outlet_temperature_celsius": 62.01085894417774,
+      "outlet_humidity_kg_per_kg": 0.01601838544228485,
+      "by_scale": {
+        "lab_simulator": {
+          "q_sensible_kw": 1.1476410278916245,
+          "q_condensing_kw": 1.8230414765889145,
+          "delta_sensible_kw": 0.011190047840238027,
+          "delta_sensible_pct": 0.9846485274474444,
+          "delta_condensing_kw": -0.09222353889818846,
+          "delta_condensing_pct": -4.8151842252876715
+        },
+        "district_partner_model": {
+          "q_sensible_kw": 311.92544871234077,
+          "q_condensing_kw": 495.49729992739975,
+          "delta_sensible_kw": 3.0414220203430773,
+          "delta_sensible_pct": 0.9846485274474285,
+          "delta_condensing_kw": -25.06608604391414,
+          "delta_condensing_pct": -4.815184225287682
+        }
+      }
+    }
+  }
+}

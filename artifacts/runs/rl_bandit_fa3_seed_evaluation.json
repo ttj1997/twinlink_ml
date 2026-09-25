@@ -1,0 +1,396 @@
+{
+  "per_checkpoint": {
+    "1000": {
+      "median": {
+        "feasibility_rate": 1.0,
+        "feasibility_rate_boundary": 1.0,
+        "feasibility_rate_interior": 1.0,
+        "median_mean_normalised_distance_to_oracle": 1.9053955512741418,
+        "n_violations_bed_temperature": 0.0,
+        "n_violations_gas_velocity_window": 0.0,
+        "n_violations_moisture": 0.0,
+        "n_violations_solve_failed": 0.0,
+        "pooled_closed_regret_fraction": -8.037972562908507,
+        "pooled_closed_regret_fraction_boundary": -8.412475065862616,
+        "pooled_closed_regret_fraction_interior": -5.313587556518651
+      },
+      "per_seed": {
+        "0": {
+          "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\7ab31069ac73_step001000.zip",
+          "feasibility_rate": 1.0,
+          "feasibility_rate_boundary": 1.0,
+          "feasibility_rate_interior": 1.0,
+          "mean_absolute_distance_to_oracle_gas_velocity_m_per_s": 1.5562905347043272,
+          "mean_absolute_distance_to_oracle_inlet_temperature_celsius": 12.773969471106591,
+          "mean_normalised_distance_to_oracle": 1.8875271009988304,
+          "median_normalised_distance_to_oracle": 1.8945627822827662,
+          "n_violations_bed_temperature": 0.0,
+          "n_violations_gas_velocity_window": 0.0,
+          "n_violations_moisture": 0.0,
+          "n_violations_solve_failed": 0.0,
+          "normalised_action_mean": [
+            -0.7770028686523438,
+            0.847328610420227
+          ],
+          "normalised_action_std": [
+            0.03699060831832669,
+            0.026519357459125398
+          ],
+          "pooled_closed_regret_fraction": -8.037972562908507,
+          "pooled_closed_regret_fraction_boundary": -8.412475065862616,
+          "pooled_closed_regret_fraction_interior": -5.374132995279118
+        },
+        "1": {
+          "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\1a0521c47870_step001000.zip",
+          "feasibility_rate": 1.0,
+          "feasibility_rate_boundary": 1.0,
+          "feasibility_rate_interior": 1.0,
+          "mean_absolute_distance_to_oracle_gas_velocity_m_per_s": 1.5763694071465728,
+          "mean_absolute_distance_to_oracle_inlet_temperature_celsius": 12.334232103476586,
+          "mean_normalised_distance_to_oracle": 1.9053955512741418,
+          "median_normalised_distance_to_oracle": 1.9186272156488304,
+          "n_violations_bed_temperature": 0.0,
+          "n_violations_gas_velocity_window": 0.0,
+          "n_violations_moisture": 0.0,
+          "n_violations_solve_failed": 0.0,
+          "normalised_action_mean": [
+            -0.7676914930343628,
+            0.870950813293457
+          ],
+          "normalised_action_std": [
+            0.05267073898146579,
+            0.034836368030910086
+          ],
+          "pooled_closed_regret_fraction": -8.25412105093242,
+          "pooled_closed_regret_fraction_boundary": -8.667523256928769,
+          "pooled_closed_regret_fraction_interior": -5.313587556518651
+        },
+        "2": {
+          "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\a5f35282f131_step001000.zip",
+          "feasibility_rate": 1.0,
+          "feasibility_rate_boundary": 1.0,
+          "feasibility_rate_interior": 1.0,
+          "mean_absolute_distance_to_oracle_gas_velocity_m_per_s": 1.5874381909066435,
+          "mean_absolute_distance_to_oracle_inlet_temperature_celsius": 13.951829945693078,
+          "mean_normalised_distance_to_oracle": 1.9340988217514026,
+          "median_normalised_distance_to_oracle": 1.9357160591394131,
+          "n_violations_bed_temperature": 0.0,
+          "n_violations_gas_velocity_window": 0.0,
+          "n_violations_moisture": 0.0,
+          "n_violations_solve_failed": 0.0,
+          "normalised_action_mean": [
+            -0.8256594443321228,
+            0.8839729118347168
+          ],
+          "normalised_action_std": [
+            0.02035995723679354,
+            0.03707746962527144
+          ],
+          "pooled_closed_regret_fraction": -7.829448593703208,
+          "pooled_closed_regret_fraction_boundary": -8.194582801483596,
+          "pooled_closed_regret_fraction_interior": -5.232245791297373
+        }
+      }
+    },
+    "10000": {
+      "median": {
+        "feasibility_rate": 1.0,
+        "feasibility_rate_boundary": 1.0,
+        "feasibility_rate_interior": 1.0,
+        "median_mean_normalised_distance_to_oracle": 0.7369174065555718,
+        "n_violations_bed_temperature": 0.0,
+        "n_violations_gas_velocity_window": 0.0,
+        "n_violations_moisture": 0.0,
+        "n_violations_solve_failed": 0.0,
+        "pooled_closed_regret_fraction": -2.7973488622832794,
+        "pooled_closed_regret_fraction_boundary": -2.9198847886872588,
+        "pooled_closed_regret_fraction_interior": -1.711589903351129
+      },
+      "per_seed": {
+        "0": {
+          "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\7ab31069ac73_step010000.zip",
+          "feasibility_rate": 1.0,
+          "feasibility_rate_boundary": 1.0,
+          "feasibility_rate_interior": 1.0,
+          "mean_absolute_distance_to_oracle_gas_velocity_m_per_s": 0.09805059046781657,
+          "mean_absolute_distance_to_oracle_inlet_temperature_celsius": 21.791876014772036,
+          "mean_normalised_distance_to_oracle": 0.7369174065555718,
+          "median_normalised_distance_to_oracle": 0.6930001455872823,
+          "n_violations_bed_temperature": 0.0,
+          "n_violations_gas_velocity_window": 0.0,
+          "n_violations_moisture": 0.0,
+          "n_violations_solve_failed": 0.0,
+          "normalised_action_mean": [
+            0.3556900215148926,
+            -0.8731302714347839
+          ],
+          "normalised_action_std": [
+            0.1807475857804104,
+            0.04513651228781658
+          ],
+          "pooled_closed_regret_fraction": -1.9984602459667704,
+          "pooled_closed_regret_fraction_boundary": -2.0387906257082458,
+          "pooled_closed_regret_fraction_interior": -1.711589903351129
+        },
+        "1": {
+          "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\1a0521c47870_step010000.zip",
+          "feasibility_rate": 1.0,
+          "feasibility_rate_boundary": 1.0,
+          "feasibility_rate_interior": 1.0,
+          "mean_absolute_distance_to_oracle_gas_velocity_m_per_s": 0.08843482599727925,
+          "mean_absolute_distance_to_oracle_inlet_temperature_celsius": 32.529281839433295,
+          "mean_normalised_distance_to_oracle": 1.0925124972271925,
+          "median_normalised_distance_to_oracle": 1.115568238209671,
+          "n_violations_bed_temperature": 0.0,
+          "n_violations_gas_velocity_window": 0.0,
+          "n_violations_moisture": 0.0,
+          "n_violations_solve_failed": 0.0,
+          "normalised_action_mean": [
+            0.7136035490036011,
+            -0.890358350276947
+          ],
+          "normalised_action_std": [
+            0.04063900883229588,
+            0.062315186218848205
+          ],
+          "pooled_closed_regret_fraction": -2.7973488622832794,
+          "pooled_closed_regret_fraction_boundary": -2.9198847886872588,
+          "pooled_closed_regret_fraction_interior": -1.9257497497640172
+        },
+        "2": {
+          "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\a5f35282f131_step010000.zip",
+          "feasibility_rate": 1.0,
+          "feasibility_rate_boundary": 1.0,
+          "feasibility_rate_interior": 1.0,
+          "mean_absolute_distance_to_oracle_gas_velocity_m_per_s": 0.28229665429628487,
+          "mean_absolute_distance_to_oracle_inlet_temperature_celsius": 14.624106940332034,
+          "mean_normalised_distance_to_oracle": 0.7249008017035482,
+          "median_normalised_distance_to_oracle": 0.6812312206522414,
+          "n_violations_bed_temperature": 0.0,
+          "n_violations_gas_velocity_window": 0.0,
+          "n_violations_moisture": 0.0,
+          "n_violations_solve_failed": 0.0,
+          "normalised_action_mean": [
+            0.11676438570022583,
+            -0.6524745559692383
+          ],
+          "normalised_action_std": [
+            0.41437409305090694,
+            0.28507525454821653
+          ],
+          "pooled_closed_regret_fraction": -3.012366063063362,
+          "pooled_closed_regret_fraction_boundary": -3.203683611431625,
+          "pooled_closed_regret_fraction_interior": -1.6515226740201665
+        }
+      }
+    },
+    "2500": {
+      "median": {
+        "feasibility_rate": 1.0,
+        "feasibility_rate_boundary": 1.0,
+        "feasibility_rate_interior": 1.0,
+        "median_mean_normalised_distance_to_oracle": 0.9613519846678947,
+        "n_violations_bed_temperature": 0.0,
+        "n_violations_gas_velocity_window": 0.0,
+        "n_violations_moisture": 0.0,
+        "n_violations_solve_failed": 0.0,
+        "pooled_closed_regret_fraction": -3.1842740783671295,
+        "pooled_closed_regret_fraction_boundary": -3.311350379446026,
+        "pooled_closed_regret_fraction_interior": -2.280379241211855
+      },
+      "per_seed": {
+        "0": {
+          "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\7ab31069ac73_step002500.zip",
+          "feasibility_rate": 1.0,
+          "feasibility_rate_boundary": 1.0,
+          "feasibility_rate_interior": 1.0,
+          "mean_absolute_distance_to_oracle_gas_velocity_m_per_s": 1.347399558752179,
+          "mean_absolute_distance_to_oracle_inlet_temperature_celsius": 5.826125950961457,
+          "mean_normalised_distance_to_oracle": 1.6048036243055102,
+          "median_normalised_distance_to_oracle": 1.5713400813991474,
+          "n_violations_bed_temperature": 0.0,
+          "n_violations_gas_velocity_window": 0.0,
+          "n_violations_moisture": 0.0,
+          "n_violations_solve_failed": 0.0,
+          "normalised_action_mean": [
+            -0.4878246855735779,
+            0.6015745210647583
+          ],
+          "normalised_action_std": [
+            0.01905364607598753,
+            0.16288931759073197
+          ],
+          "pooled_closed_regret_fraction": -8.601838330891919,
+          "pooled_closed_regret_fraction_boundary": -8.961045093074217,
+          "pooled_closed_regret_fraction_interior": -6.046797500688179
+        },
+        "1": {
+          "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\1a0521c47870_step002500.zip",
+          "feasibility_rate": 1.0,
+          "feasibility_rate_boundary": 1.0,
+          "feasibility_rate_interior": 1.0,
+          "mean_absolute_distance_to_oracle_gas_velocity_m_per_s": 0.1686245662692845,
+          "mean_absolute_distance_to_oracle_inlet_temperature_celsius": 25.536394151750187,
+          "mean_normalised_distance_to_oracle": 0.8781123382844548,
+          "median_normalised_distance_to_oracle": 0.8654789583449188,
+          "n_violations_bed_temperature": 0.0,
+          "n_violations_gas_velocity_window": 0.0,
+          "n_violations_moisture": 0.0,
+          "n_violations_solve_failed": 0.0,
+          "normalised_action_mean": [
+            0.48050729274749754,
+            -0.7873833918571472
+          ],
+          "normalised_action_std": [
+            0.14354317665088537,
+            0.04876508482948062
+          ],
+          "pooled_closed_regret_fraction": -3.071604197800108,
+          "pooled_closed_regret_fraction_boundary": -3.2021969217591164,
+          "pooled_closed_regret_fraction_interior": -2.1426970140498907
+        },
+        "2": {
+          "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\a5f35282f131_step002500.zip",
+          "feasibility_rate": 1.0,
+          "feasibility_rate_boundary": 1.0,
+          "feasibility_rate_interior": 1.0,
+          "mean_absolute_distance_to_oracle_gas_velocity_m_per_s": 0.1487522264245808,
+          "mean_absolute_distance_to_oracle_inlet_temperature_celsius": 28.313370546403508,
+          "mean_normalised_distance_to_oracle": 0.9613519846678947,
+          "median_normalised_distance_to_oracle": 0.9622280122909529,
+          "n_violations_bed_temperature": 0.0,
+          "n_violations_gas_velocity_window": 0.0,
+          "n_violations_moisture": 0.0,
+          "n_violations_solve_failed": 0.0,
+          "normalised_action_mean": [
+            0.5730731725692749,
+            -0.8107903051376343
+          ],
+          "normalised_action_std": [
+            0.1081152398329695,
+            0.027712189532665233
+          ],
+          "pooled_closed_regret_fraction": -3.1842740783671295,
+          "pooled_closed_regret_fraction_boundary": -3.311350379446026,
+          "pooled_closed_regret_fraction_interior": -2.280379241211855
+        }
+      }
+    },
+    "5000": {
+      "median": {
+        "feasibility_rate": 1.0,
+        "feasibility_rate_boundary": 1.0,
+        "feasibility_rate_interior": 1.0,
+        "median_mean_normalised_distance_to_oracle": 0.9274801976338494,
+        "n_violations_bed_temperature": 0.0,
+        "n_violations_gas_velocity_window": 0.0,
+        "n_violations_moisture": 0.0,
+        "n_violations_solve_failed": 0.0,
+        "pooled_closed_regret_fraction": -5.186831483163018,
+        "pooled_closed_regret_fraction_boundary": -5.525833061744576,
+        "pooled_closed_regret_fraction_interior": -3.1178826160208937
+      },
+      "per_seed": {
+        "0": {
+          "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\7ab31069ac73_step005000.zip",
+          "feasibility_rate": 1.0,
+          "feasibility_rate_boundary": 1.0,
+          "feasibility_rate_interior": 1.0,
+          "mean_absolute_distance_to_oracle_gas_velocity_m_per_s": 0.8168090797358749,
+          "mean_absolute_distance_to_oracle_inlet_temperature_celsius": 9.175088819566348,
+          "mean_normalised_distance_to_oracle": 1.0276769667050807,
+          "median_normalised_distance_to_oracle": 1.0382538630175475,
+          "n_violations_bed_temperature": 0.0,
+          "n_violations_gas_velocity_window": 0.0,
+          "n_violations_moisture": 0.0,
+          "n_violations_solve_failed": 0.0,
+          "normalised_action_mean": [
+            -0.06486955165863037,
+            -0.022649571895599366
+          ],
+          "normalised_action_std": [
+            0.12942317770229297,
+            0.1370065318511238
+          ],
+          "pooled_closed_regret_fraction": -6.926633093415544,
+          "pooled_closed_regret_fraction_boundary": -7.227676043067595,
+          "pooled_closed_regret_fraction_interior": -4.785311968687937
+        },
+        "1": {
+          "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\1a0521c47870_step005000.zip",
+          "feasibility_rate": 1.0,
+          "feasibility_rate_boundary": 1.0,
+          "feasibility_rate_interior": 1.0,
+          "mean_absolute_distance_to_oracle_gas_velocity_m_per_s": 0.5077848757201431,
+          "mean_absolute_distance_to_oracle_inlet_temperature_celsius": 15.203479982213052,
+          "mean_normalised_distance_to_oracle": 0.8983909575897144,
+          "median_normalised_distance_to_oracle": 0.8675102978494582,
+          "n_violations_bed_temperature": 0.0,
+          "n_violations_gas_velocity_window": 0.0,
+          "n_violations_moisture": 0.0,
+          "n_violations_solve_failed": 0.0,
+          "normalised_action_mean": [
+            0.13539196252822877,
+            -0.3862074589729309
+          ],
+          "normalised_action_std": [
+            0.41776570813148467,
+            0.3228392433763878
+          ],
+          "pooled_closed_regret_fraction": -5.186831483163018,
+          "pooled_closed_regret_fraction_boundary": -5.525833061744576,
+          "pooled_closed_regret_fraction_interior": -2.77551030001718
+        },
+        "2": {
+          "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\a5f35282f131_step005000.zip",
+          "feasibility_rate": 1.0,
+          "feasibility_rate_boundary": 1.0,
+          "feasibility_rate_interior": 1.0,
+          "mean_absolute_distance_to_oracle_gas_velocity_m_per_s": 0.4390435608321426,
+          "mean_absolute_distance_to_oracle_inlet_temperature_celsius": 18.554966506066897,
+          "mean_normalised_distance_to_oracle": 0.9274801976338494,
+          "median_normalised_distance_to_oracle": 0.9261220252301443,
+          "n_violations_bed_temperature": 0.0,
+          "n_violations_gas_velocity_window": 0.0,
+          "n_violations_moisture": 0.0,
+          "n_violations_solve_failed": 0.0,
+          "normalised_action_mean": [
+            0.24779303789138793,
+            -0.46707959413528444
+          ],
+          "normalised_action_std": [
+            0.4171636627129304,
+            0.3392022878434199
+          ],
+          "pooled_closed_regret_fraction": -4.99686625430275,
+          "pooled_closed_regret_fraction_boundary": -5.261027836740914,
+          "pooled_closed_regret_fraction_interior": -3.1178826160208937
+        }
+      }
+    }
+  },
+  "reference": {
+    "fixed_operating_point": {
+      "feasibility_rate": 1.0,
+      "pooled_closed_regret_fraction": 0.0
+    },
+    "oracle": {
+      "feasibility_rate": 1.0,
+      "pooled_closed_regret_fraction": 1.0000000000000004
+    },
+    "random_baseline_ya1": {
+      "feasibility_rate_max": 0.96,
+      "feasibility_rate_median": 0.8,
+      "feasibility_rate_min": 0.68,
+      "n_repetitions": 20,
+      "pooled_closed_regret_fraction_max": -5.080289046152214,
+      "pooled_closed_regret_fraction_median": -6.545563171596223,
+      "pooled_closed_regret_fraction_min": -8.95549444322424
+    }
+  },
+  "seeds": [
+    0,
+    1,
+    2
+  ]
+}

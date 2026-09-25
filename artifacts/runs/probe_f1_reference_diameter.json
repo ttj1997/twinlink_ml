@@ -1,0 +1,25 @@
+{
+  "nucleus_diameter_m": 0.00015,
+  "d50_mean_m": 0.0005809241796004016,
+  "d50_min_m": 0.00025100511373149655,
+  "d50_max_m": 0.0008956099107537371,
+  "u_terminal_d50_mean_m_per_s": 2.8729141272049015,
+  "u_terminal_nucleus_mean_m_per_s": 0.618372471837654,
+  "a_against_d50": {
+    "runs_affected": 34,
+    "n_runs": 128,
+    "run_fraction": 0.265625,
+    "points_affected": 8843,
+    "n_points": 147456,
+    "point_fraction": 0.05997043185763889
+  },
+  "b_against_nucleus": {
+    "runs_affected": 128,
+    "n_runs": 128,
+    "run_fraction": 1.0,
+    "points_affected": 147456,
+    "n_points": 147456,
+    "point_fraction": 1.0
+  },
+  "_elapsed_s": 6.222019199999977
+}

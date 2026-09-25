@@ -1,0 +1,704 @@
+{
+  "no_pinch": {
+    "Fall1": {
+      "fuel_kg_per_h_by_sink": {
+        "S1": 354.88187020000004,
+        "S2": 31.339468160000003
+      },
+      "max_feasibility_violation_k": 0.0,
+      "sink_outlet_after_recovery_c": {
+        "S1": 125.233,
+        "S2": 81.416
+      },
+      "sink_recovered_kw": {
+        "S1": 2238.391298,
+        "S2": 539.4573184
+      },
+      "stages": [
+        {
+          "feasibility_violation_k": 0.0,
+          "power_kw": 2238.391298,
+          "sink": "S1",
+          "sink_temperature_after_c": 125.233,
+          "sink_temperature_before_c": 15.0,
+          "source": "Q1",
+          "source_temperature_after_c": 25.887161072967643,
+          "source_temperature_before_c": 125.233
+        },
+        {
+          "feasibility_violation_k": 0.0,
+          "power_kw": 539.4573184,
+          "sink": "S2",
+          "sink_temperature_after_c": 81.416,
+          "sink_temperature_before_c": 15.0,
+          "source": "Q2",
+          "source_temperature_after_c": 16.773966369199513,
+          "source_temperature_before_c": 81.416
+        }
+      ],
+      "total_fuel_kg_per_h": 386.22133836000006
+    },
+    "Fall2": {
+      "fuel_kg_per_h_by_sink": {
+        "S1": 504.88633131720553,
+        "S2": 0.0
+      },
+      "max_feasibility_violation_k": 0.0,
+      "sink_outlet_after_recovery_c": {
+        "S1": 51.361010875009576,
+        "S2": 120.0
+      },
+      "sink_recovered_kw": {
+        "S1": 738.3466868279445,
+        "S2": 852.852
+      },
+      "stages": [
+        {
+          "feasibility_violation_k": 0.0,
+          "power_kw": 738.3466868279445,
+          "sink": "S1",
+          "sink_temperature_after_c": 51.361010875009576,
+          "sink_temperature_before_c": 15.0,
+          "source": "Q2",
+          "source_temperature_after_c": 15.0,
+          "source_temperature_before_c": 81.416
+        },
+        {
+          "feasibility_violation_k": 0.0,
+          "power_kw": 852.852,
+          "sink": "S2",
+          "sink_temperature_after_c": 120.0,
+          "sink_temperature_before_c": 15.0,
+          "source": "Q1",
+          "source_temperature_after_c": 87.38112955344263,
+          "source_temperature_before_c": 125.233
+        }
+      ],
+      "total_fuel_kg_per_h": 504.88633131720553
+    },
+    "Fall3": {
+      "fuel_kg_per_h_by_sink": {
+        "S1": 354.88187020000004,
+        "S2": 85.2852
+      },
+      "max_feasibility_violation_k": 0.0,
+      "sink_outlet_after_recovery_c": {
+        "S1": 125.233,
+        "S2": 15.0
+      },
+      "sink_recovered_kw": {
+        "S1": 2238.391298,
+        "S2": 0.0
+      },
+      "stages": [
+        {
+          "feasibility_violation_k": 0.0,
+          "power_kw": 738.3466868279445,
+          "sink": "S1",
+          "sink_temperature_after_c": 51.361010875009576,
+          "sink_temperature_before_c": 15.0,
+          "source": "Q2",
+          "source_temperature_after_c": 15.0,
+          "source_temperature_before_c": 81.416
+        },
+        {
+          "feasibility_violation_k": 0.0,
+          "power_kw": 1500.0446111720555,
+          "sink": "S1",
+          "sink_temperature_after_c": 125.233,
+          "sink_temperature_before_c": 51.361010875009576,
+          "source": "Q1",
+          "source_temperature_after_c": 58.656977095508736,
+          "source_temperature_before_c": 125.233
+        }
+      ],
+      "total_fuel_kg_per_h": 440.1670702
+    },
+    "Fall4": {
+      "fuel_kg_per_h_by_sink": {
+        "S1": 578.721,
+        "S2": 0.0
+      },
+      "max_feasibility_violation_k": 0.0,
+      "sink_outlet_after_recovery_c": {
+        "S1": 15.0,
+        "S2": 120.0
+      },
+      "sink_recovered_kw": {
+        "S1": 0.0,
+        "S2": 852.852
+      },
+      "stages": [
+        {
+          "feasibility_violation_k": 0.0,
+          "power_kw": 539.4573184,
+          "sink": "S2",
+          "sink_temperature_after_c": 81.416,
+          "sink_temperature_before_c": 15.0,
+          "source": "Q2",
+          "source_temperature_after_c": 16.773966369199513,
+          "source_temperature_before_c": 81.416
+        },
+        {
+          "feasibility_violation_k": 0.0,
+          "power_kw": 313.3946816,
+          "sink": "S2",
+          "sink_temperature_after_c": 120.0,
+          "sink_temperature_before_c": 81.416,
+          "source": "Q1",
+          "source_temperature_after_c": 111.32369933990505,
+          "source_temperature_before_c": 125.233
+        }
+      ],
+      "total_fuel_kg_per_h": 578.721
+    },
+    "Fall5": {
+      "fuel_kg_per_h_by_sink": {
+        "S1": 354.88187020000004,
+        "S2": 85.2852
+      },
+      "max_feasibility_violation_k": 43.81700000000001,
+      "sink_outlet_after_recovery_c": {
+        "S1": 125.233,
+        "S2": 15.0
+      },
+      "sink_recovered_kw": {
+        "S1": 2238.391298,
+        "S2": 0.0
+      },
+      "stages": [
+        {
+          "feasibility_violation_k": 0.0,
+          "power_kw": 2238.391298,
+          "sink": "S1",
+          "sink_temperature_after_c": 125.233,
+          "sink_temperature_before_c": 15.0,
+          "source": "Q1",
+          "source_temperature_after_c": 25.887161072967643,
+          "source_temperature_before_c": 125.233
+        },
+        {
+          "feasibility_violation_k": 43.81700000000001,
+          "power_kw": 0.0,
+          "sink": "S1",
+          "sink_temperature_after_c": 125.233,
+          "sink_temperature_before_c": 125.233,
+          "source": "Q2",
+          "source_temperature_after_c": 81.416,
+          "source_temperature_before_c": 81.416
+        }
+      ],
+      "total_fuel_kg_per_h": 440.1670702
+    },
+    "Fall6": {
+      "fuel_kg_per_h_by_sink": {
+        "S1": 578.721,
+        "S2": 0.0
+      },
+      "max_feasibility_violation_k": 0.0,
+      "sink_outlet_after_recovery_c": {
+        "S1": 15.0,
+        "S2": 120.0
+      },
+      "sink_recovered_kw": {
+        "S1": 0.0,
+        "S2": 852.852
+      },
+      "stages": [
+        {
+          "feasibility_violation_k": 0.0,
+          "power_kw": 852.852,
+          "sink": "S2",
+          "sink_temperature_after_c": 120.0,
+          "sink_temperature_before_c": 15.0,
+          "source": "Q1",
+          "source_temperature_after_c": 87.38112955344263,
+          "source_temperature_before_c": 125.233
+        }
+      ],
+      "total_fuel_kg_per_h": 578.721
+    }
+  },
+  "pinch_sensitivity": {
+    "10K": {
+      "best_case": "Fall1",
+      "best_fuel_kg_per_h": 414.64973836,
+      "results": {
+        "Fall1": {
+          "fuel_kg_per_h_by_sink": {
+            "S1": 375.1878702,
+            "S2": 39.46186816
+          },
+          "max_feasibility_violation_k": 0.0,
+          "sink_outlet_after_recovery_c": {
+            "S1": 115.233,
+            "S2": 71.416
+          },
+          "sink_recovered_kw": {
+            "S1": 2035.3312980000003,
+            "S2": 458.2333183999999
+          },
+          "stages": [
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 2035.3312980000003,
+              "sink": "S1",
+              "sink_temperature_after_c": 115.233,
+              "sink_temperature_before_c": 15.0,
+              "source": "Q1",
+              "source_temperature_after_c": 34.89951117929081,
+              "source_temperature_before_c": 125.233
+            },
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 458.2333183999999,
+              "sink": "S2",
+              "sink_temperature_after_c": 71.416,
+              "sink_temperature_before_c": 15.0,
+              "source": "Q2",
+              "source_temperature_after_c": 26.506867120645033,
+              "source_temperature_before_c": 81.416
+            }
+          ],
+          "total_fuel_kg_per_h": 414.64973836
+        },
+        "Fall2": {
+          "fuel_kg_per_h_by_sink": {
+            "S1": 504.88633131720553,
+            "S2": 3.8719480799999966
+          },
+          "max_feasibility_violation_k": 0.0,
+          "sink_outlet_after_recovery_c": {
+            "S1": 51.361010875009576,
+            "S2": 115.233
+          },
+          "sink_recovered_kw": {
+            "S1": 738.3466868279445,
+            "S2": 814.1325191999999
+          },
+          "stages": [
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 738.3466868279445,
+              "sink": "S1",
+              "sink_temperature_after_c": 51.361010875009576,
+              "sink_temperature_before_c": 15.0,
+              "source": "Q2",
+              "source_temperature_after_c": 15.0,
+              "source_temperature_before_c": 81.416
+            },
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 814.1325191999999,
+              "sink": "S2",
+              "sink_temperature_after_c": 115.233,
+              "sink_temperature_before_c": 15.0,
+              "source": "Q1",
+              "source_temperature_after_c": 89.09960447171633,
+              "source_temperature_before_c": 125.233
+            }
+          ],
+          "total_fuel_kg_per_h": 508.7582793972055
+        },
+        "Fall3": {
+          "fuel_kg_per_h_by_sink": {
+            "S1": 375.1878702,
+            "S2": 85.2852
+          },
+          "max_feasibility_violation_k": 0.0,
+          "sink_outlet_after_recovery_c": {
+            "S1": 115.233,
+            "S2": 15.0
+          },
+          "sink_recovered_kw": {
+            "S1": 2035.331298,
+            "S2": 0.0
+          },
+          "stages": [
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 738.3466868279445,
+              "sink": "S1",
+              "sink_temperature_after_c": 51.361010875009576,
+              "sink_temperature_before_c": 15.0,
+              "source": "Q2",
+              "source_temperature_after_c": 15.0,
+              "source_temperature_before_c": 81.416
+            },
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 1296.9846111720556,
+              "sink": "S1",
+              "sink_temperature_after_c": 115.233,
+              "sink_temperature_before_c": 51.361010875009576,
+              "source": "Q1",
+              "source_temperature_after_c": 67.66932720183192,
+              "source_temperature_before_c": 125.233
+            }
+          ],
+          "total_fuel_kg_per_h": 460.47307020000005
+        },
+        "Fall4": {
+          "fuel_kg_per_h_by_sink": {
+            "S1": 578.721,
+            "S2": 3.8719480799999966
+          },
+          "max_feasibility_violation_k": 0.0,
+          "sink_outlet_after_recovery_c": {
+            "S1": 15.0,
+            "S2": 115.233
+          },
+          "sink_recovered_kw": {
+            "S1": 0.0,
+            "S2": 814.1325191999999
+          },
+          "stages": [
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 458.2333183999999,
+              "sink": "S2",
+              "sink_temperature_after_c": 71.416,
+              "sink_temperature_before_c": 15.0,
+              "source": "Q2",
+              "source_temperature_after_c": 26.506867120645033,
+              "source_temperature_before_c": 81.416
+            },
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 355.8992008000001,
+              "sink": "S2",
+              "sink_temperature_after_c": 115.233,
+              "sink_temperature_before_c": 71.416,
+              "source": "Q1",
+              "source_temperature_after_c": 109.43723421564948,
+              "source_temperature_before_c": 125.233
+            }
+          ],
+          "total_fuel_kg_per_h": 582.59294808
+        },
+        "Fall5": {
+          "fuel_kg_per_h_by_sink": {
+            "S1": 375.1878702,
+            "S2": 85.2852
+          },
+          "max_feasibility_violation_k": 33.81700000000001,
+          "sink_outlet_after_recovery_c": {
+            "S1": 115.233,
+            "S2": 15.0
+          },
+          "sink_recovered_kw": {
+            "S1": 2035.3312980000003,
+            "S2": 0.0
+          },
+          "stages": [
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 2035.3312980000003,
+              "sink": "S1",
+              "sink_temperature_after_c": 115.233,
+              "sink_temperature_before_c": 15.0,
+              "source": "Q1",
+              "source_temperature_after_c": 34.89951117929081,
+              "source_temperature_before_c": 125.233
+            },
+            {
+              "feasibility_violation_k": 33.81700000000001,
+              "power_kw": 0.0,
+              "sink": "S1",
+              "sink_temperature_after_c": 115.233,
+              "sink_temperature_before_c": 115.233,
+              "source": "Q2",
+              "source_temperature_after_c": 81.416,
+              "source_temperature_before_c": 81.416
+            }
+          ],
+          "total_fuel_kg_per_h": 460.47307020000005
+        },
+        "Fall6": {
+          "fuel_kg_per_h_by_sink": {
+            "S1": 578.721,
+            "S2": 3.8719480799999966
+          },
+          "max_feasibility_violation_k": 0.0,
+          "sink_outlet_after_recovery_c": {
+            "S1": 15.0,
+            "S2": 115.233
+          },
+          "sink_recovered_kw": {
+            "S1": 0.0,
+            "S2": 814.1325191999999
+          },
+          "stages": [
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 814.1325191999999,
+              "sink": "S2",
+              "sink_temperature_after_c": 115.233,
+              "sink_temperature_before_c": 15.0,
+              "source": "Q1",
+              "source_temperature_after_c": 89.09960447171633,
+              "source_temperature_before_c": 125.233
+            }
+          ],
+          "total_fuel_kg_per_h": 582.59294808
+        }
+      }
+    },
+    "20K": {
+      "best_case": "Fall1",
+      "best_fuel_kg_per_h": 443.07813836,
+      "results": {
+        "Fall1": {
+          "fuel_kg_per_h_by_sink": {
+            "S1": 395.4938702,
+            "S2": 47.58426816
+          },
+          "max_feasibility_violation_k": 0.0,
+          "sink_outlet_after_recovery_c": {
+            "S1": 105.233,
+            "S2": 61.416
+          },
+          "sink_recovered_kw": {
+            "S1": 1832.2712980000001,
+            "S2": 377.0093183999999
+          },
+          "stages": [
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 1832.2712980000001,
+              "sink": "S1",
+              "sink_temperature_after_c": 105.233,
+              "sink_temperature_before_c": 15.0,
+              "source": "Q1",
+              "source_temperature_after_c": 43.91186128561401,
+              "source_temperature_before_c": 125.233
+            },
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 377.0093183999999,
+              "sink": "S2",
+              "sink_temperature_after_c": 61.416,
+              "sink_temperature_before_c": 15.0,
+              "source": "Q2",
+              "source_temperature_after_c": 36.23976787209054,
+              "source_temperature_before_c": 81.416
+            }
+          ],
+          "total_fuel_kg_per_h": 443.07813836
+        },
+        "Fall2": {
+          "fuel_kg_per_h_by_sink": {
+            "S1": 504.88633131720553,
+            "S2": 11.994348079999996
+          },
+          "max_feasibility_violation_k": 0.0,
+          "sink_outlet_after_recovery_c": {
+            "S1": 51.361010875009576,
+            "S2": 105.233
+          },
+          "sink_recovered_kw": {
+            "S1": 738.3466868279445,
+            "S2": 732.9085192
+          },
+          "stages": [
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 738.3466868279445,
+              "sink": "S1",
+              "sink_temperature_after_c": 51.361010875009576,
+              "sink_temperature_before_c": 15.0,
+              "source": "Q2",
+              "source_temperature_after_c": 15.0,
+              "source_temperature_before_c": 81.416
+            },
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 732.9085192,
+              "sink": "S2",
+              "sink_temperature_after_c": 105.233,
+              "sink_temperature_before_c": 15.0,
+              "source": "Q1",
+              "source_temperature_after_c": 92.70454451424561,
+              "source_temperature_before_c": 125.233
+            }
+          ],
+          "total_fuel_kg_per_h": 516.8806793972055
+        },
+        "Fall3": {
+          "fuel_kg_per_h_by_sink": {
+            "S1": 395.4938702,
+            "S2": 85.2852
+          },
+          "max_feasibility_violation_k": 0.0,
+          "sink_outlet_after_recovery_c": {
+            "S1": 105.233,
+            "S2": 15.0
+          },
+          "sink_recovered_kw": {
+            "S1": 1832.2712980000001,
+            "S2": 0.0
+          },
+          "stages": [
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 738.3466868279445,
+              "sink": "S1",
+              "sink_temperature_after_c": 51.361010875009576,
+              "sink_temperature_before_c": 15.0,
+              "source": "Q2",
+              "source_temperature_after_c": 15.0,
+              "source_temperature_before_c": 81.416
+            },
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 1093.9246111720556,
+              "sink": "S1",
+              "sink_temperature_after_c": 105.233,
+              "sink_temperature_before_c": 51.361010875009576,
+              "source": "Q1",
+              "source_temperature_after_c": 76.68167730815512,
+              "source_temperature_before_c": 125.233
+            }
+          ],
+          "total_fuel_kg_per_h": 480.7790702
+        },
+        "Fall4": {
+          "fuel_kg_per_h_by_sink": {
+            "S1": 578.721,
+            "S2": 11.994348079999996
+          },
+          "max_feasibility_violation_k": 0.0,
+          "sink_outlet_after_recovery_c": {
+            "S1": 15.0,
+            "S2": 105.233
+          },
+          "sink_recovered_kw": {
+            "S1": 0.0,
+            "S2": 732.9085192
+          },
+          "stages": [
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 377.0093183999999,
+              "sink": "S2",
+              "sink_temperature_after_c": 61.416,
+              "sink_temperature_before_c": 15.0,
+              "source": "Q2",
+              "source_temperature_after_c": 36.23976787209054,
+              "source_temperature_before_c": 81.416
+            },
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 355.8992008000001,
+              "sink": "S2",
+              "sink_temperature_after_c": 105.233,
+              "sink_temperature_before_c": 61.416,
+              "source": "Q1",
+              "source_temperature_after_c": 109.43723421564948,
+              "source_temperature_before_c": 125.233
+            }
+          ],
+          "total_fuel_kg_per_h": 590.71534808
+        },
+        "Fall5": {
+          "fuel_kg_per_h_by_sink": {
+            "S1": 395.4938702,
+            "S2": 85.2852
+          },
+          "max_feasibility_violation_k": 23.817000000000007,
+          "sink_outlet_after_recovery_c": {
+            "S1": 105.233,
+            "S2": 15.0
+          },
+          "sink_recovered_kw": {
+            "S1": 1832.2712980000001,
+            "S2": 0.0
+          },
+          "stages": [
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 1832.2712980000001,
+              "sink": "S1",
+              "sink_temperature_after_c": 105.233,
+              "sink_temperature_before_c": 15.0,
+              "source": "Q1",
+              "source_temperature_after_c": 43.91186128561401,
+              "source_temperature_before_c": 125.233
+            },
+            {
+              "feasibility_violation_k": 23.817000000000007,
+              "power_kw": 0.0,
+              "sink": "S1",
+              "sink_temperature_after_c": 105.233,
+              "sink_temperature_before_c": 105.233,
+              "source": "Q2",
+              "source_temperature_after_c": 81.416,
+              "source_temperature_before_c": 81.416
+            }
+          ],
+          "total_fuel_kg_per_h": 480.7790702
+        },
+        "Fall6": {
+          "fuel_kg_per_h_by_sink": {
+            "S1": 578.721,
+            "S2": 11.994348079999996
+          },
+          "max_feasibility_violation_k": 0.0,
+          "sink_outlet_after_recovery_c": {
+            "S1": 15.0,
+            "S2": 105.233
+          },
+          "sink_recovered_kw": {
+            "S1": 0.0,
+            "S2": 732.9085192
+          },
+          "stages": [
+            {
+              "feasibility_violation_k": 0.0,
+              "power_kw": 732.9085192,
+              "sink": "S2",
+              "sink_temperature_after_c": 105.233,
+              "sink_temperature_before_c": 15.0,
+              "source": "Q1",
+              "source_temperature_after_c": 92.70454451424561,
+              "source_temperature_before_c": 125.233
+            }
+          ],
+          "total_fuel_kg_per_h": 590.71534808
+        }
+      }
+    }
+  },
+  "sources": {
+    "Q1": {
+      "capacity_w_per_k": 22531.304,
+      "cold_temperature_celsius": 10.0,
+      "condensate_kg_per_s": 1.1438024279272523,
+      "dew_point_celsius": 44.940025552320876,
+      "mass_flow_kg_per_s": 20.0,
+      "outlet_humidity_kg_per_kg": 0.06482,
+      "outlet_temperature_celsius": 125.233,
+      "q_above_dew_point_kw": 1809.1054163448905,
+      "q_below_dew_point_kw": 3620.68772518249,
+      "q_latent_kw": 2833.4433876953804,
+      "q_rec_kw": 5429.793141527381,
+      "q_sensible_kw": 2596.3497538320003
+    },
+    "Q2": {
+      "capacity_w_per_k": 8345.3024,
+      "cold_temperature_celsius": 15.0,
+      "condensate_kg_per_s": 0.07466679428363124,
+      "dew_point_celsius": 24.920168935334665,
+      "mass_flow_kg_per_s": 8.0,
+      "outlet_humidity_kg_per_kg": 0.01998,
+      "outlet_temperature_celsius": 81.416,
+      "q_above_dew_point_kw": 471.47479457394616,
+      "q_below_dew_point_kw": 266.87189225399834,
+      "q_latent_kw": 184.0850826295444,
+      "q_rec_kw": 738.3466868279445,
+      "q_sensible_kw": 554.2616041984
+    }
+  },
+  "total_offer_corrected_kw": 6168.139828355325,
+  "total_offer_sheet_uncorrected_kw": 3233.4
+}

@@ -1,0 +1,42 @@
+# Anregungsdesign, abgeleitet aus den Zeitkonstanten des Grey-Box-Modells
+# (tau_fast 9.5 s, tau_slow 16000 s, dt 5 s) ueber
+# ExcitationConfig.from_time_constants.
+#
+# STATUS: abgeleitet aus PLATZHALTER-Zeitkonstanten. Nach jeder Aenderung an
+# conf/process/*.yaml neu erzeugen:
+#
+#   python scripts/report_excitation.py conf/process/<datei>.yaml --runs 16
+#
+# Diese Datei ist die versionierte Fassung des aufgeloesten Stands. Sie gehoert zu jedem
+# erzeugten Datensatz -- eine Lernkurve ohne den zugehoerigen Anregungsstand ist nicht
+# reproduzierbar.
+
+run_duration_s: 28800.0        # 8 h; deckt ~2 tau der Massenregelung, nicht das Kornwachstum
+
+hold_time:
+  minimum_s: 20.0              # 2 * tau_fast, gleichzeitig 4 Abtastschritte
+  maximum_s: 1169.6            # 3 * geometrisches Mittel der Zeitkonstanten
+
+prbs_register_length: 11       # Periode 2047 * 19 s = 10.8 h > Laufdauer
+prbs_clock_s: 19.0             # 2 * tau_fast
+
+ramp_segment_time:
+  minimum_s: 100.0
+  maximum_s: 4678.5
+
+# Amplitudenstufen als Anteil der Stellgroessenspanne. Mehrere Stufen sind hier keine
+# Feinheit: die Ratenbegrenzung koppelt Amplitude und erreichbare Umschaltfrequenz ueber
+# t_switch = Amplitude / max. Aenderungsrate. Nur die kleine Stufe kommt in die Naehe der
+# schnellen Prozessmode.
+amplitude_levels: [0.15, 0.35, 0.7, 1.0]
+
+signal_weights:
+  step: 0.4
+  prbs: 0.3
+  ramp: 0.3
+
+constant_run_fraction: 0.1     # Referenzlaeufe fuer Beharrungszustaende
+
+apply_rate_limits: true        # aus, nur um den Effekt der Aktordynamik zu isolieren
+sampler: sobol                 # verschachtelt -> Lernkurven-Teilmengen bleiben gueltig
+randomise_initial_conditions: true

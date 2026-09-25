@@ -1,0 +1,45 @@
+{
+  "results": {
+    "heiss": [
+      {
+        "run_index": 37,
+        "peak_bed_temperature_celsius": 105.86532829731128,
+        "max_deviation_5_to_10_substeps_k": 0.0010878065132402526,
+        "max_deviation_10_to_20_substeps_k": 0.00039647835647826923
+      },
+      {
+        "run_index": 29,
+        "peak_bed_temperature_celsius": 103.93178606258998,
+        "max_deviation_5_to_10_substeps_k": 0.001147709678434694,
+        "max_deviation_10_to_20_substeps_k": 0.0003127670126303883
+      },
+      {
+        "run_index": 27,
+        "peak_bed_temperature_celsius": 102.50819132394686,
+        "max_deviation_5_to_10_substeps_k": 0.0002939689367877918,
+        "max_deviation_10_to_20_substeps_k": 7.071909486455752e-05
+      }
+    ],
+    "kontrolle": [
+      {
+        "run_index": 70,
+        "peak_bed_temperature_celsius": 38.65145633197051,
+        "max_deviation_5_to_10_substeps_k": 1.6224172725287644e-06,
+        "max_deviation_10_to_20_substeps_k": 9.359019514931788e-08
+      },
+      {
+        "run_index": 110,
+        "peak_bed_temperature_celsius": 49.257129082538576,
+        "max_deviation_5_to_10_substeps_k": 0.00013861568089623688,
+        "max_deviation_10_to_20_substeps_k": 1.125961709647072e-06
+      },
+      {
+        "run_index": 86,
+        "peak_bed_temperature_celsius": 49.506344838164345,
+        "max_deviation_5_to_10_substeps_k": 0.00024358191244289173,
+        "max_deviation_10_to_20_substeps_k": 8.838072652395113e-06
+      }
+    ]
+  },
+  "_elapsed_s": 295.14921849999996
+}

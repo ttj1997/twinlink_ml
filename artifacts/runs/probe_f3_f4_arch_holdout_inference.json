@@ -1,0 +1,1271 @@
+{
+  "holdout_n_runs": 36,
+  "holdout_violating_any": 18,
+  "holdout_surviving": 16,
+  "per_criterion_affected": {
+    "u_above_u_terminal": 10,
+    "u_below_u_mf": 0,
+    "T_bed_above_80C": 8,
+    "moisture_above_critical": 4
+  },
+  "f3": {
+    "gru": {
+      "1": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.22730079786709523,
+          "nrmse/energy_target/h1": 0.015920946294807687,
+          "nrmse_run_median/energy_target/h36": 0.23473200489644452,
+          "nrmse/energy_target/h36": 0.01612952926419892,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.1556907320497413,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.008385661202917102,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.42274411879381435,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.0150377534432139,
+          "nrmse_run_median/d50_um/h1": 0.08971523469161191,
+          "nrmse/d50_um/h1": 0.023636126051871712,
+          "nrmse_run_median/d50_um/h36": 0.07584750767835896,
+          "nrmse/d50_um/h36": 0.020824328415338267,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.17717199056582608,
+          "nrmse/energy_target/h1": 0.01610881747643294,
+          "nrmse_run_median/energy_target/h36": 0.1794562058614234,
+          "nrmse/energy_target/h36": 0.016130942242845746,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.14629764616583668,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.011222316922531221,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.3102518348055642,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.022439778180892187,
+          "nrmse_run_median/d50_um/h1": 0.13455196332419542,
+          "nrmse/d50_um/h1": 0.028422694093613046,
+          "nrmse_run_median/d50_um/h36": 0.1273214763242672,
+          "nrmse/d50_um/h36": 0.02484826021865642,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.22730079786709523,
+            "recomputed_unmasked": 0.22730079786709523
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.23473200489644452,
+            "recomputed_unmasked": 0.23473200489644452
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.1556907320497413,
+            "recomputed_unmasked": 0.1556907320497413
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.42274411879381435,
+            "recomputed_unmasked": 0.42274411879381435
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.08971523469161191,
+            "recomputed_unmasked": 0.08971523469161191
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.07584750767835896,
+            "recomputed_unmasked": 0.07584750767835896
+          }
+        }
+      },
+      "2": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.22518566914320354,
+          "nrmse/energy_target/h1": 0.0157321710128049,
+          "nrmse_run_median/energy_target/h36": 0.23386959869530927,
+          "nrmse/energy_target/h36": 0.01578123938143282,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.15532417485321248,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.00860845658454883,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.2982339487220532,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.07091725701604708,
+          "nrmse_run_median/d50_um/h1": 0.1045214833452732,
+          "nrmse/d50_um/h1": 0.02778237498226386,
+          "nrmse_run_median/d50_um/h36": 0.10450040298386173,
+          "nrmse/d50_um/h36": 0.028740231668795718,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.19650512519842198,
+          "nrmse/energy_target/h1": 0.016033947135922762,
+          "nrmse_run_median/energy_target/h36": 0.2081207238222234,
+          "nrmse/energy_target/h36": 0.016158809715965932,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.14466387558942878,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.011152050993922327,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.23673100812200257,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.015706020103143457,
+          "nrmse_run_median/d50_um/h1": 0.16051166707652056,
+          "nrmse/d50_um/h1": 0.03358434903629518,
+          "nrmse_run_median/d50_um/h36": 0.17897144735881834,
+          "nrmse/d50_um/h36": 0.03435011476599496,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.22518566914320354,
+            "recomputed_unmasked": 0.22518566914320354
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.23386959869530927,
+            "recomputed_unmasked": 0.23386959869530927
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.15532417485321248,
+            "recomputed_unmasked": 0.15532417485321248
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.2982339487220532,
+            "recomputed_unmasked": 0.2982339487220532
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.1045214833452732,
+            "recomputed_unmasked": 0.1045214833452732
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.10450040298386173,
+            "recomputed_unmasked": 0.10450040298386173
+          }
+        }
+      },
+      "3": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.22132697166878204,
+          "nrmse/energy_target/h1": 0.015443431952279076,
+          "nrmse_run_median/energy_target/h36": 0.22523282542316653,
+          "nrmse/energy_target/h36": 0.015171233607381086,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.16418490841772104,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.008320034295447448,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.309491783590102,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.044952475667497174,
+          "nrmse_run_median/d50_um/h1": 0.10447963097818325,
+          "nrmse/d50_um/h1": 0.02777282513968628,
+          "nrmse_run_median/d50_um/h36": 0.10411377508049016,
+          "nrmse/d50_um/h36": 0.028524934441201102,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.18954174649661626,
+          "nrmse/energy_target/h1": 0.015876430112380994,
+          "nrmse_run_median/energy_target/h36": 0.20373069700482416,
+          "nrmse/energy_target/h36": 0.01587257783323856,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.15098169676576287,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.011234552279069297,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.32013856585348743,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.021965564309460325,
+          "nrmse_run_median/d50_um/h1": 0.1604444307830665,
+          "nrmse/d50_um/h1": 0.033579009037194914,
+          "nrmse_run_median/d50_um/h36": 0.1753165470700496,
+          "nrmse/d50_um/h36": 0.03419787949543328,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.22132697166878204,
+            "recomputed_unmasked": 0.22132697166878204
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.22523282542316653,
+            "recomputed_unmasked": 0.22523282542316653
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.16418490841772104,
+            "recomputed_unmasked": 0.16418490841772104
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.309491783590102,
+            "recomputed_unmasked": 0.309491783590102
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.10447963097818325,
+            "recomputed_unmasked": 0.10447963097818325
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.10411377508049016,
+            "recomputed_unmasked": 0.10411377508049016
+          }
+        }
+      },
+      "4": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.22756634744261947,
+          "nrmse/energy_target/h1": 0.015835133480155812,
+          "nrmse_run_median/energy_target/h36": 0.22865774105701264,
+          "nrmse/energy_target/h36": 0.015689100500817742,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.15747827314796384,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.008385625637127478,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.3503416435067316,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.021783672325313728,
+          "nrmse_run_median/d50_um/h1": 0.09007680632144865,
+          "nrmse/d50_um/h1": 0.023683965769693272,
+          "nrmse_run_median/d50_um/h36": 0.07687015652004589,
+          "nrmse/d50_um/h36": 0.020819511947860178,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.19942674344878059,
+          "nrmse/energy_target/h1": 0.015706286626141312,
+          "nrmse_run_median/energy_target/h36": 0.2080026294769737,
+          "nrmse/energy_target/h36": 0.01579434246915682,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.15066612374490113,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.01123084252098704,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.3503416435067316,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.02164526666191556,
+          "nrmse_run_median/d50_um/h1": 0.13530299101794213,
+          "nrmse/d50_um/h1": 0.028519357764384717,
+          "nrmse_run_median/d50_um/h36": 0.12699633935935542,
+          "nrmse/d50_um/h36": 0.024860479828020313,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.22756634744261947,
+            "recomputed_unmasked": 0.22756634744261947
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.22865774105701264,
+            "recomputed_unmasked": 0.22865774105701264
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.15747827314796384,
+            "recomputed_unmasked": 0.15747827314796384
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.3503416435067316,
+            "recomputed_unmasked": 0.3503416435067316
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.09007680632144865,
+            "recomputed_unmasked": 0.09007680632144865
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.07687015652004589,
+            "recomputed_unmasked": 0.07687015652004589
+          }
+        }
+      },
+      "5": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.22829142144807804,
+          "nrmse/energy_target/h1": 0.01561442907983551,
+          "nrmse_run_median/energy_target/h36": 0.2443195128315006,
+          "nrmse/energy_target/h36": 0.015231523151001746,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.16747514365766553,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.00837021430623857,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.3700407304270734,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.017648260241574867,
+          "nrmse_run_median/d50_um/h1": 0.0873472662232816,
+          "nrmse/d50_um/h1": 0.023011919805979046,
+          "nrmse_run_median/d50_um/h36": 0.07548864541154321,
+          "nrmse/d50_um/h36": 0.02086302820174393,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.21242509171287433,
+          "nrmse/energy_target/h1": 0.015994181869416334,
+          "nrmse_run_median/energy_target/h36": 0.2141517016202123,
+          "nrmse/energy_target/h36": 0.015714493315262895,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.1517978660476503,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.011188044040843479,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.3700407304270734,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.020060877265280636,
+          "nrmse_run_median/d50_um/h1": 0.1307480161161053,
+          "nrmse/d50_um/h1": 0.02764362867035725,
+          "nrmse_run_median/d50_um/h36": 0.12696820792647512,
+          "nrmse/d50_um/h36": 0.02501169983040773,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.22829142144807804,
+            "recomputed_unmasked": 0.22829142144807804
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.2443195128315006,
+            "recomputed_unmasked": 0.2443195128315006
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.16747514365766553,
+            "recomputed_unmasked": 0.16747514365766553
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.3700407304270734,
+            "recomputed_unmasked": 0.3700407304270734
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.0873472662232816,
+            "recomputed_unmasked": 0.0873472662232816
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.07548864541154321,
+            "recomputed_unmasked": 0.07548864541154321
+          }
+        }
+      },
+      "6": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.22979942637176173,
+          "nrmse/energy_target/h1": 0.016025003203242613,
+          "nrmse_run_median/energy_target/h36": 0.23678190207349606,
+          "nrmse/energy_target/h36": 0.01614192836691031,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.1669063003943294,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.008387289414189475,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.48086174346592914,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.020003260228008465,
+          "nrmse_run_median/d50_um/h1": 0.09096810977313435,
+          "nrmse/d50_um/h1": 0.02382167614788314,
+          "nrmse_run_median/d50_um/h36": 0.07630486805361492,
+          "nrmse/d50_um/h36": 0.020833840884595018,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.18932773869656122,
+          "nrmse/energy_target/h1": 0.015889218199367304,
+          "nrmse_run_median/energy_target/h36": 0.18565453934187642,
+          "nrmse/energy_target/h36": 0.015895490828269056,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.15302357278863826,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.011472516622339403,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.32212980643776323,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.03907416082351591,
+          "nrmse_run_median/d50_um/h1": 0.136135390252006,
+          "nrmse/d50_um/h1": 0.028633050274648852,
+          "nrmse_run_median/d50_um/h36": 0.12724392916877283,
+          "nrmse/d50_um/h36": 0.024823835809803536,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.22979942637176173,
+            "recomputed_unmasked": 0.22979942637176173
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.23678190207349606,
+            "recomputed_unmasked": 0.23678190207349606
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.1669063003943294,
+            "recomputed_unmasked": 0.1669063003943294
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.48086174346592914,
+            "recomputed_unmasked": 0.48086174346592914
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.09096810977313435,
+            "recomputed_unmasked": 0.09096810977313435
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.07630486805361492,
+            "recomputed_unmasked": 0.07630486805361492
+          }
+        }
+      },
+      "7": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.21652377754815982,
+          "nrmse/energy_target/h1": 0.015671640898944236,
+          "nrmse_run_median/energy_target/h36": 0.21508604458757008,
+          "nrmse/energy_target/h36": 0.015596050556968359,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.15799772921603236,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.00835638781954352,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.25101617297750567,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.05333402993406297,
+          "nrmse_run_median/d50_um/h1": 0.10446336800425231,
+          "nrmse/d50_um/h1": 0.027767666096767403,
+          "nrmse_run_median/d50_um/h36": 0.10354453585343285,
+          "nrmse/d50_um/h36": 0.028693345210242395,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.18654592736569894,
+          "nrmse/energy_target/h1": 0.015479306995949032,
+          "nrmse_run_median/energy_target/h36": 0.19361534318728255,
+          "nrmse/energy_target/h36": 0.015131332636359138,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.14947837513181006,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.01114619585878422,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.24884415526068,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.015032708394298324,
+          "nrmse_run_median/d50_um/h1": 0.1603646506096158,
+          "nrmse/d50_um/h1": 0.03356790701736283,
+          "nrmse_run_median/d50_um/h36": 0.1742195475377198,
+          "nrmse/d50_um/h36": 0.03430892037003564,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.21652377754815982,
+            "recomputed_unmasked": 0.21652377754815982
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.21508604458757008,
+            "recomputed_unmasked": 0.21508604458757008
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.15799772921603236,
+            "recomputed_unmasked": 0.15799772921603236
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.25101617297750567,
+            "recomputed_unmasked": 0.25101617297750567
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.10446336800425231,
+            "recomputed_unmasked": 0.10446336800425231
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.10354453585343285,
+            "recomputed_unmasked": 0.10354453585343285
+          }
+        }
+      },
+      "8": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.23331789740981126,
+          "nrmse/energy_target/h1": 0.01587400902833512,
+          "nrmse_run_median/energy_target/h36": 0.25674372260127587,
+          "nrmse/energy_target/h36": 0.016594689089911283,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.16257096248820746,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.008352993456788365,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.38818724263798676,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.02718471400411037,
+          "nrmse_run_median/d50_um/h1": 0.08848531620430242,
+          "nrmse/d50_um/h1": 0.02335016046675329,
+          "nrmse_run_median/d50_um/h36": 0.07573277257345973,
+          "nrmse/d50_um/h36": 0.02082586095677658,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.22039496322851396,
+          "nrmse/energy_target/h1": 0.015860687808011854,
+          "nrmse_run_median/energy_target/h36": 0.22005924058805737,
+          "nrmse/energy_target/h36": 0.01576708036754057,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.14556653996264035,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.011270180694213533,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.33618497493442434,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.028095657774917203,
+          "nrmse_run_median/d50_um/h1": 0.13259943183387135,
+          "nrmse/d50_um/h1": 0.028082961212073702,
+          "nrmse_run_median/d50_um/h36": 0.12698284130640192,
+          "nrmse/d50_um/h36": 0.024901706906642587,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.23331789740981126,
+            "recomputed_unmasked": 0.23331789740981126
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.25674372260127587,
+            "recomputed_unmasked": 0.25674372260127587
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.16257096248820746,
+            "recomputed_unmasked": 0.16257096248820746
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.38818724263798676,
+            "recomputed_unmasked": 0.38818724263798676
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.08848531620430242,
+            "recomputed_unmasked": 0.08848531620430242
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.07573277257345973,
+            "recomputed_unmasked": 0.07573277257345973
+          }
+        }
+      },
+      "9": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.21799473320448032,
+          "nrmse/energy_target/h1": 0.015853807609426257,
+          "nrmse_run_median/energy_target/h36": 0.22828635995866733,
+          "nrmse/energy_target/h36": 0.015436273452328784,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.15627159948284502,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.009295496259153792,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.2993508670563501,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.1107049845868526,
+          "nrmse_run_median/d50_um/h1": 0.10447080340449494,
+          "nrmse/d50_um/h1": 0.02776220418838883,
+          "nrmse_run_median/d50_um/h36": 0.102909170331493,
+          "nrmse/d50_um/h36": 0.028684114056933607,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.20933108523304217,
+          "nrmse/energy_target/h1": 0.01620190540839678,
+          "nrmse_run_median/energy_target/h36": 0.20429904912089192,
+          "nrmse/energy_target/h36": 0.01570956931452564,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.14429820751862593,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.011064305978842559,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.23570013700657283,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.014934219246900691,
+          "nrmse_run_median/d50_um/h1": 0.1603120308134779,
+          "nrmse/d50_um/h1": 0.03356223377713507,
+          "nrmse_run_median/d50_um/h36": 0.17446123869975874,
+          "nrmse/d50_um/h36": 0.03451878454545434,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.21799473320448032,
+            "recomputed_unmasked": 0.21799473320448032
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.22828635995866733,
+            "recomputed_unmasked": 0.22828635995866733
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.15627159948284502,
+            "recomputed_unmasked": 0.15627159948284502
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.2993508670563501,
+            "recomputed_unmasked": 0.2993508670563501
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.10447080340449494,
+            "recomputed_unmasked": 0.10447080340449494
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.102909170331493,
+            "recomputed_unmasked": 0.102909170331493
+          }
+        }
+      },
+      "10": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.2185981351477712,
+          "nrmse/energy_target/h1": 0.01601024858669588,
+          "nrmse_run_median/energy_target/h36": 0.23728886003592642,
+          "nrmse/energy_target/h36": 0.016569493193527476,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.15502453751956075,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.010799774554789636,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.3584847742863111,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.16231797531120112,
+          "nrmse_run_median/d50_um/h1": 0.09029418129774153,
+          "nrmse/d50_um/h1": 0.023700471071846044,
+          "nrmse_run_median/d50_um/h36": 0.07562935904328712,
+          "nrmse/d50_um/h36": 0.020789730027268714,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.20287745630226883,
+          "nrmse/energy_target/h1": 0.016483600027950462,
+          "nrmse_run_median/energy_target/h36": 0.19032738149752204,
+          "nrmse/energy_target/h36": 0.016925808371124323,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.14301984328134051,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.011062776995149985,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.2805657010316961,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.016549031935847534,
+          "nrmse_run_median/d50_um/h1": 0.13559053829189152,
+          "nrmse/d50_um/h1": 0.028539068378367345,
+          "nrmse_run_median/d50_um/h36": 0.12767038397103705,
+          "nrmse/d50_um/h36": 0.02486296241253063,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.2185981351477712,
+            "recomputed_unmasked": 0.2185981351477712
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.23728886003592642,
+            "recomputed_unmasked": 0.23728886003592642
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.15502453751956075,
+            "recomputed_unmasked": 0.15502453751956075
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.3584847742863111,
+            "recomputed_unmasked": 0.3584847742863111
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.09029418129774153,
+            "recomputed_unmasked": 0.09029418129774153
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.07562935904328712,
+            "recomputed_unmasked": 0.07562935904328712
+          }
+        }
+      }
+    },
+    "lstm": {
+      "1": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.24089193345550067,
+          "nrmse/energy_target/h1": 0.016280520455082197,
+          "nrmse_run_median/energy_target/h36": 0.2335347579423605,
+          "nrmse/energy_target/h36": 0.01678483892591007,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.16295886742599391,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.008421344092574177,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.39993645107153336,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.012289637067827182,
+          "nrmse_run_median/d50_um/h1": 0.10453541354854604,
+          "nrmse/d50_um/h1": 0.027781712836052287,
+          "nrmse_run_median/d50_um/h36": 0.10417870548734898,
+          "nrmse/d50_um/h36": 0.028658759084430985,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.17889368318996257,
+          "nrmse/energy_target/h1": 0.015971932465146513,
+          "nrmse_run_median/energy_target/h36": 0.19433681447871415,
+          "nrmse/energy_target/h36": 0.015944815343377286,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.1476937017380721,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.01121494407732409,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.39842546130803586,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.0214255787126025,
+          "nrmse_run_median/d50_um/h1": 0.16049822764780836,
+          "nrmse/d50_um/h1": 0.0335880619582657,
+          "nrmse_run_median/d50_um/h36": 0.1765015811870574,
+          "nrmse/d50_um/h36": 0.0342749459852057,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.24089193345550067,
+            "recomputed_unmasked": 0.24089193345550067
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.2335347579423605,
+            "recomputed_unmasked": 0.2335347579423605
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.16295886742599391,
+            "recomputed_unmasked": 0.16295886742599391
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.39993645107153336,
+            "recomputed_unmasked": 0.39993645107153336
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.10453541354854604,
+            "recomputed_unmasked": 0.10453541354854604
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.10417870548734898,
+            "recomputed_unmasked": 0.10417870548734898
+          }
+        }
+      },
+      "2": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.22158217083808995,
+          "nrmse/energy_target/h1": 0.01548076674561212,
+          "nrmse_run_median/energy_target/h36": 0.23804116239366738,
+          "nrmse/energy_target/h36": 0.01580588811689575,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.16093016989762937,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.00856255010447232,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.22825662233436367,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.030018991981942435,
+          "nrmse_run_median/d50_um/h1": 0.1045357845818268,
+          "nrmse/d50_um/h1": 0.02778305470385177,
+          "nrmse_run_median/d50_um/h36": 0.10457264580886666,
+          "nrmse/d50_um/h36": 0.028498345735703284,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.17953633502545285,
+          "nrmse/energy_target/h1": 0.016031720354411073,
+          "nrmse_run_median/energy_target/h36": 0.18007438218753852,
+          "nrmse/energy_target/h36": 0.016006345258703585,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.14464452851236687,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.011165468002728583,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.19826810189892166,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.01564708349996355,
+          "nrmse_run_median/d50_um/h1": 0.16050607898008795,
+          "nrmse/d50_um/h1": 0.033587770329023624,
+          "nrmse_run_median/d50_um/h36": 0.17630508206430523,
+          "nrmse/d50_um/h36": 0.03419466053022665,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.22158217083808995,
+            "recomputed_unmasked": 0.22158217083808995
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.23804116239366738,
+            "recomputed_unmasked": 0.23804116239366738
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.16093016989762937,
+            "recomputed_unmasked": 0.16093016989762937
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.22825662233436367,
+            "recomputed_unmasked": 0.22825662233436367
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.1045357845818268,
+            "recomputed_unmasked": 0.1045357845818268
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.10457264580886666,
+            "recomputed_unmasked": 0.10457264580886666
+          }
+        }
+      },
+      "3": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.22100666677981295,
+          "nrmse/energy_target/h1": 0.015574838304588341,
+          "nrmse_run_median/energy_target/h36": 0.2124264334046585,
+          "nrmse/energy_target/h36": 0.01543651544240199,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.16001834270955245,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.008956786890742056,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.2739390649831347,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.08752499602455072,
+          "nrmse_run_median/d50_um/h1": 0.104529722122705,
+          "nrmse/d50_um/h1": 0.02778529382110559,
+          "nrmse_run_median/d50_um/h36": 0.10510278015443814,
+          "nrmse/d50_um/h36": 0.028874065657238563,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.1750686209095736,
+          "nrmse/energy_target/h1": 0.015488972643725533,
+          "nrmse_run_median/energy_target/h36": 0.17038124213052663,
+          "nrmse/energy_target/h36": 0.015199360112383334,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.14523019403814708,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.011149088529289638,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.25430999018636863,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.01424647583540181,
+          "nrmse_run_median/d50_um/h1": 0.16057022184173278,
+          "nrmse/d50_um/h1": 0.03359321407108043,
+          "nrmse_run_median/d50_um/h36": 0.18098317835255825,
+          "nrmse/d50_um/h36": 0.03457989907967196,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.22100666677981295,
+            "recomputed_unmasked": 0.22100666677981295
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.2124264334046585,
+            "recomputed_unmasked": 0.2124264334046585
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.16001834270955245,
+            "recomputed_unmasked": 0.16001834270955245
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.2739390649831347,
+            "recomputed_unmasked": 0.2739390649831347
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.104529722122705,
+            "recomputed_unmasked": 0.104529722122705
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.10510278015443814,
+            "recomputed_unmasked": 0.10510278015443814
+          }
+        }
+      },
+      "4": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.22256604382448897,
+          "nrmse/energy_target/h1": 0.015315975224946399,
+          "nrmse_run_median/energy_target/h36": 0.23166985611881946,
+          "nrmse/energy_target/h36": 0.015635116867274677,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.16056493211549272,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.008476946698333586,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.2811004731291052,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.012543834344296187,
+          "nrmse_run_median/d50_um/h1": 0.10451196223205467,
+          "nrmse/d50_um/h1": 0.02777827614873299,
+          "nrmse_run_median/d50_um/h36": 0.10543453339047287,
+          "nrmse/d50_um/h36": 0.028494923331241664,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.1805582285982565,
+          "nrmse/energy_target/h1": 0.015534112464698508,
+          "nrmse_run_median/energy_target/h36": 0.19173395861225373,
+          "nrmse/energy_target/h36": 0.015558955419459812,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.1442716762948872,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.011203565803168747,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.24584087847608743,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.02039518990430933,
+          "nrmse_run_median/d50_um/h1": 0.16044745972532332,
+          "nrmse/d50_um/h1": 0.03358711011518524,
+          "nrmse_run_median/d50_um/h36": 0.17380500305855112,
+          "nrmse/d50_um/h36": 0.034069283721526615,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.22256604382448897,
+            "recomputed_unmasked": 0.22256604382448897
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.23166985611881946,
+            "recomputed_unmasked": 0.23166985611881946
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.16056493211549272,
+            "recomputed_unmasked": 0.16056493211549272
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.2811004731291052,
+            "recomputed_unmasked": 0.2811004731291052
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.10451196223205467,
+            "recomputed_unmasked": 0.10451196223205467
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.10543453339047287,
+            "recomputed_unmasked": 0.10543453339047287
+          }
+        }
+      },
+      "5": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.25029646194203703,
+          "nrmse/energy_target/h1": 0.016114340656778064,
+          "nrmse_run_median/energy_target/h36": 0.2908400392628476,
+          "nrmse/energy_target/h36": 0.016873247684289865,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.16324390789689838,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.008357768013435888,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.39136718046491725,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.023888888651208025,
+          "nrmse_run_median/d50_um/h1": 0.10451846323596356,
+          "nrmse/d50_um/h1": 0.027783512060226834,
+          "nrmse_run_median/d50_um/h36": 0.10335369650491313,
+          "nrmse/d50_um/h36": 0.028583791988234266,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.22812809730910888,
+          "nrmse/energy_target/h1": 0.01641895115199131,
+          "nrmse_run_median/energy_target/h36": 0.25668606870208505,
+          "nrmse/energy_target/h36": 0.017180857761588876,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.15473972914350784,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.011185498605431669,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.2932236640274937,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.01786055843529203,
+          "nrmse_run_median/d50_um/h1": 0.16049645747883534,
+          "nrmse/d50_um/h1": 0.033591342168699016,
+          "nrmse_run_median/d50_um/h36": 0.17543647617792574,
+          "nrmse/d50_um/h36": 0.034262643975038705,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.25029646194203703,
+            "recomputed_unmasked": 0.25029646194203703
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.2908400392628476,
+            "recomputed_unmasked": 0.2908400392628476
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.16324390789689838,
+            "recomputed_unmasked": 0.16324390789689838
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.39136718046491725,
+            "recomputed_unmasked": 0.39136718046491725
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.10451846323596356,
+            "recomputed_unmasked": 0.10451846323596356
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.10335369650491313,
+            "recomputed_unmasked": 0.10335369650491313
+          }
+        }
+      },
+      "6": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.24526599609975358,
+          "nrmse/energy_target/h1": 0.01656323673386365,
+          "nrmse_run_median/energy_target/h36": 0.231732592669868,
+          "nrmse/energy_target/h36": 0.017439037430951453,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.15506657982299146,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.008360404623996063,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.2550261272004903,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.020292036809678178,
+          "nrmse_run_median/d50_um/h1": 0.10452522526070908,
+          "nrmse/d50_um/h1": 0.027784486700574852,
+          "nrmse_run_median/d50_um/h36": 0.10328161923616379,
+          "nrmse/d50_um/h36": 0.028470039902550766,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.20853680939644792,
+          "nrmse/energy_target/h1": 0.015523204657653968,
+          "nrmse_run_median/energy_target/h36": 0.19480140209525593,
+          "nrmse/energy_target/h36": 0.015057235085458266,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.1462235765554366,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.011240932604977315,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.31461971787655973,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.024122758698505234,
+          "nrmse_run_median/d50_um/h1": 0.1604698843872321,
+          "nrmse/d50_um/h1": 0.03358848947231751,
+          "nrmse_run_median/d50_um/h36": 0.17483380961164874,
+          "nrmse/d50_um/h36": 0.03410842009534081,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.24526599609975358,
+            "recomputed_unmasked": 0.24526599609975358
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.231732592669868,
+            "recomputed_unmasked": 0.231732592669868
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.15506657982299146,
+            "recomputed_unmasked": 0.15506657982299146
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.2550261272004903,
+            "recomputed_unmasked": 0.2550261272004903
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.10452522526070908,
+            "recomputed_unmasked": 0.10452522526070908
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.10328161923616379,
+            "recomputed_unmasked": 0.10328161923616379
+          }
+        }
+      },
+      "7": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.23980595394836415,
+          "nrmse/energy_target/h1": 0.0159603214850524,
+          "nrmse_run_median/energy_target/h36": 0.26179149371178634,
+          "nrmse/energy_target/h36": 0.01693306045247056,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.16221974687979107,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.008517910777838292,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.27062265551560893,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.024705989365484404,
+          "nrmse_run_median/d50_um/h1": 0.10452027285614846,
+          "nrmse/d50_um/h1": 0.02778486824824748,
+          "nrmse_run_median/d50_um/h36": 0.10348210788265079,
+          "nrmse/d50_um/h36": 0.028467365117064176,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.20266778147671435,
+          "nrmse/energy_target/h1": 0.015460700723357187,
+          "nrmse_run_median/energy_target/h36": 0.1973208848686246,
+          "nrmse/energy_target/h36": 0.015441081786159553,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.15264614694068881,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.01116146491689172,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.2804187216820557,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.015171467695922699,
+          "nrmse_run_median/d50_um/h1": 0.16045093242476766,
+          "nrmse/d50_um/h1": 0.03359167566517591,
+          "nrmse_run_median/d50_um/h36": 0.1742428878745697,
+          "nrmse/d50_um/h36": 0.03409597409241792,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.23980595394836415,
+            "recomputed_unmasked": 0.23980595394836415
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.26179149371178634,
+            "recomputed_unmasked": 0.26179149371178634
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.16221974687979107,
+            "recomputed_unmasked": 0.16221974687979107
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.27062265551560893,
+            "recomputed_unmasked": 0.27062265551560893
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.10452027285614846,
+            "recomputed_unmasked": 0.10452027285614846
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.10348210788265079,
+            "recomputed_unmasked": 0.10348210788265079
+          }
+        }
+      },
+      "8": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.23535239449255058,
+          "nrmse/energy_target/h1": 0.015914610052870273,
+          "nrmse_run_median/energy_target/h36": 0.24824394848589965,
+          "nrmse/energy_target/h36": 0.016102178368413128,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.16224501015930387,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.008363613303175468,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.32973051274264387,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.01818664061506087,
+          "nrmse_run_median/d50_um/h1": 0.10449640830203995,
+          "nrmse/d50_um/h1": 0.02778305522470683,
+          "nrmse_run_median/d50_um/h36": 0.10332626975438428,
+          "nrmse/d50_um/h36": 0.028559134011105117,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.1916781526326587,
+          "nrmse/energy_target/h1": 0.01555482749507388,
+          "nrmse_run_median/energy_target/h36": 0.22439291776078818,
+          "nrmse/energy_target/h36": 0.015599831527279175,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.1501668531259286,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.011223749796658062,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.32264171047760876,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.021517418621595678,
+          "nrmse_run_median/d50_um/h1": 0.16050173744295515,
+          "nrmse/d50_um/h1": 0.03358888316139445,
+          "nrmse_run_median/d50_um/h36": 0.17758263013582853,
+          "nrmse/d50_um/h36": 0.034200148525378914,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.23535239449255058,
+            "recomputed_unmasked": 0.23535239449255058
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.24824394848589965,
+            "recomputed_unmasked": 0.24824394848589965
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.16224501015930387,
+            "recomputed_unmasked": 0.16224501015930387
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.32973051274264387,
+            "recomputed_unmasked": 0.32973051274264387
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.10449640830203995,
+            "recomputed_unmasked": 0.10449640830203995
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.10332626975438428,
+            "recomputed_unmasked": 0.10332626975438428
+          }
+        }
+      },
+      "9": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.2439647393802812,
+          "nrmse/energy_target/h1": 0.016478406078092415,
+          "nrmse_run_median/energy_target/h36": 0.2550928777656395,
+          "nrmse/energy_target/h36": 0.01857154311956824,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.15530763023893968,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.008340475536793077,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.2704552211561383,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.04964969190043805,
+          "nrmse_run_median/d50_um/h1": 0.10453851141188406,
+          "nrmse/d50_um/h1": 0.02777913724781469,
+          "nrmse_run_median/d50_um/h36": 0.10367428595716197,
+          "nrmse/d50_um/h36": 0.02852644674723645,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.21073544650662307,
+          "nrmse/energy_target/h1": 0.01640940404510585,
+          "nrmse_run_median/energy_target/h36": 0.2463397194688232,
+          "nrmse/energy_target/h36": 0.016875645320918214,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.14531159419127443,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.011173358418973127,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.30839365502961513,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.021673947867796674,
+          "nrmse_run_median/d50_um/h1": 0.16046263549961737,
+          "nrmse/d50_um/h1": 0.033585085263674465,
+          "nrmse_run_median/d50_um/h36": 0.1740496344571616,
+          "nrmse/d50_um/h36": 0.03428589733092057,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.2439647393802812,
+            "recomputed_unmasked": 0.2439647393802812
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.2550928777656395,
+            "recomputed_unmasked": 0.2550928777656395
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.15530763023893968,
+            "recomputed_unmasked": 0.15530763023893968
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.2704552211561383,
+            "recomputed_unmasked": 0.2704552211561383
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.10453851141188406,
+            "recomputed_unmasked": 0.10453851141188406
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.10367428595716197,
+            "recomputed_unmasked": 0.10367428595716197
+          }
+        }
+      },
+      "10": {
+        "unmasked": {
+          "nrmse_run_median/energy_target/h1": 0.2653260392003241,
+          "nrmse/energy_target/h1": 0.017262144362434853,
+          "nrmse_run_median/energy_target/h36": 0.267240272818588,
+          "nrmse/energy_target/h36": 0.018623320817680124,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.153437689757516,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.008691284017850891,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.23931049981409902,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.07986785718921328,
+          "nrmse_run_median/d50_um/h1": 0.10451422872104016,
+          "nrmse/d50_um/h1": 0.027776378608097802,
+          "nrmse_run_median/d50_um/h36": 0.10355524676709876,
+          "nrmse/d50_um/h36": 0.02865788708313807,
+          "n_test_runs": 32.0
+        },
+        "masked": {
+          "nrmse_run_median/energy_target/h1": 0.19913545961589774,
+          "nrmse/energy_target/h1": 0.016108890265765872,
+          "nrmse_run_median/energy_target/h36": 0.2152423297042105,
+          "nrmse/energy_target/h36": 0.016327157918779343,
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.14411299366926833,
+          "nrmse/product_moisture_kg_per_kg/h1": 0.011137548576830449,
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.23264195721931813,
+          "nrmse/product_moisture_kg_per_kg/h36": 0.014978351561560226,
+          "nrmse_run_median/d50_um/h1": 0.16047770493846997,
+          "nrmse/d50_um/h1": 0.0335820955001451,
+          "nrmse_run_median/d50_um/h36": 0.17453810983183993,
+          "nrmse/d50_um/h36": 0.034530711099829824,
+          "n_test_runs": 16.0
+        },
+        "reproduction_check": {
+          "nrmse_run_median/energy_target/h1": {
+            "logged": 0.2653260392003241,
+            "recomputed_unmasked": 0.2653260392003241
+          },
+          "nrmse_run_median/energy_target/h36": {
+            "logged": 0.267240272818588,
+            "recomputed_unmasked": 0.267240272818588
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+            "logged": 0.153437689757516,
+            "recomputed_unmasked": 0.153437689757516
+          },
+          "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+            "logged": 0.23931049981409902,
+            "recomputed_unmasked": 0.23931049981409902
+          },
+          "nrmse_run_median/d50_um/h1": {
+            "logged": 0.10451422872104016,
+            "recomputed_unmasked": 0.10451422872104016
+          },
+          "nrmse_run_median/d50_um/h36": {
+            "logged": 0.10355524676709876,
+            "recomputed_unmasked": 0.10355524676709876
+          }
+        }
+      }
+    }
+  },
+  "f4": {
+    "persistence": {
+      "unmasked": {
+        "nrmse_run_median/energy_target/h1": 0.28020599356148906,
+        "nrmse/energy_target/h1": 0.01963169564877031,
+        "nrmse_run_median/energy_target/h36": 0.46675284776626375,
+        "nrmse/energy_target/h36": 0.030645780510226827,
+        "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.17587263505054385,
+        "nrmse/product_moisture_kg_per_kg/h1": 0.008507962943500175,
+        "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.5437200228969948,
+        "nrmse/product_moisture_kg_per_kg/h36": 0.028690809658426367,
+        "nrmse_run_median/d50_um/h1": 0.10457270608845352,
+        "nrmse/d50_um/h1": 0.02781213283777013,
+        "nrmse_run_median/d50_um/h36": 0.13169565211388534,
+        "nrmse/d50_um/h36": 0.0361102173505056,
+        "n_test_runs": 32.0
+      },
+      "masked": {
+        "nrmse_run_median/energy_target/h1": 0.25362577952867704,
+        "nrmse/energy_target/h1": 0.02101880159807613,
+        "nrmse_run_median/energy_target/h36": 0.4088630072137409,
+        "nrmse/energy_target/h36": 0.03339870351610498,
+        "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.1587422478086895,
+        "nrmse/product_moisture_kg_per_kg/h1": 0.011470023606883395,
+        "nrmse_run_median/product_moisture_kg_per_kg/h36": 0.6404906333154969,
+        "nrmse/product_moisture_kg_per_kg/h36": 0.040090258673535224,
+        "nrmse_run_median/d50_um/h1": 0.16050113387686896,
+        "nrmse/d50_um/h1": 0.033621871404992905,
+        "nrmse_run_median/d50_um/h36": 0.18924356520446164,
+        "nrmse/d50_um/h36": 0.04065015933978611,
+        "n_test_runs": 16.0
+      },
+      "reproduction_check": {
+        "nrmse_run_median/energy_target/h1": {
+          "logged": 0.28020599356148906,
+          "recomputed_unmasked": 0.28020599356148906
+        },
+        "nrmse_run_median/energy_target/h36": {
+          "logged": 0.46675284776626375,
+          "recomputed_unmasked": 0.46675284776626375
+        },
+        "nrmse_run_median/product_moisture_kg_per_kg/h1": {
+          "logged": 0.17587263505054385,
+          "recomputed_unmasked": 0.17587263505054385
+        },
+        "nrmse_run_median/product_moisture_kg_per_kg/h36": {
+          "logged": 0.5437200228969948,
+          "recomputed_unmasked": 0.5437200228969948
+        },
+        "nrmse_run_median/d50_um/h1": {
+          "logged": 0.10457270608845352,
+          "recomputed_unmasked": 0.10457270608845352
+        },
+        "nrmse_run_median/d50_um/h36": {
+          "logged": 0.13169565211388534,
+          "recomputed_unmasked": 0.13169565211388534
+        }
+      }
+    },
+    "arx_p4_q2": {
+      "unmasked": {
+        "nrmse_run_median/energy_target/h1": 0.4203057265994543,
+        "nrmse/energy_target/h1": 0.02750827308797767,
+        "nrmse_run_median/energy_target/h36": 1.449122268123995,
+        "nrmse/energy_target/h36": 0.14455707696328704,
+        "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.20273403781964622,
+        "nrmse/product_moisture_kg_per_kg/h1": 0.00894136652995775,
+        "nrmse_run_median/product_moisture_kg_per_kg/h36": 4.544647849796746,
+        "nrmse/product_moisture_kg_per_kg/h36": 0.08931722084039978,
+        "nrmse_run_median/d50_um/h1": 0.08215897861412849,
+        "nrmse/d50_um/h1": 0.021844696692574495,
+        "nrmse_run_median/d50_um/h36": 0.1003797959625688,
+        "nrmse/d50_um/h36": 0.025193914176376814,
+        "n_test_runs": 32.0
+      },
+      "masked": {
+        "nrmse_run_median/energy_target/h1": 0.34728304326781223,
+        "nrmse/energy_target/h1": 0.028575799773082562,
+        "nrmse_run_median/energy_target/h36": 1.2920971723428254,
+        "nrmse/energy_target/h36": 0.1492817557619527,
+        "nrmse_run_median/product_moisture_kg_per_kg/h1": 0.18500433661779692,
+        "nrmse/product_moisture_kg_per_kg/h1": 0.012884008294352713,
+        "nrmse_run_median/product_moisture_kg_per_kg/h36": 3.0870354027793248,
+        "nrmse/product_moisture_kg_per_kg/h36": 0.21698808279548779,
+        "nrmse_run_median/d50_um/h1": 0.12659889716315947,
+        "nrmse/d50_um/h1": 0.026169042071598758,
+        "nrmse_run_median/d50_um/h36": 0.14208539740235543,
+        "nrmse/d50_um/h36": 0.02895575656494751,
+        "n_test_runs": 16.0
+      },
+      "reproduction_check": {}
+    }
+  },
+  "_elapsed_s": 19.520900699999856
+}

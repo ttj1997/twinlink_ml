@@ -1,0 +1,161 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "twinlink-ml"
+version = "0.1.0"
+description = "ML fuer die Wirbelschichtsprühgranulation -- TwinLink, Teilvorhaben TUHH-B"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.0",
+    "scipy>=1.13",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+# Das Grey-Box-Modell laeuft ohne PyTorch. Torch wird erst fuer die Sequenzmodelle
+# (Schritt 4-6) und fuer differenzierbare Rollouts gebraucht.
+torch = ["torch>=2.4"]
+# Nur fuer ExtraTreesModel (Kraeuter-Reproduktion, siehe models/extra_trees.py) --
+# keine der Kernpipeline- oder Architektur-Modelle braucht sklearn.
+sklearn = ["scikit-learn>=1.4"]
+# Nur fuer twinlink_ml.plant_data (Einlesen der .xlsx-Anlagenexporte des
+# Anwendungspartners) -- kein anderes Modul im Paket liest Excel-Dateien.
+plant-data = ["openpyxl>=3.1"]
+train = [
+    "torch>=2.4",
+    "lightning>=2.4",
+    "hydra-core>=1.3",
+    "mlflow>=2.16",
+]
+# Nur fuer twinlink_ml.rl (Bandit-/RL-Umgebungen) -- kein anderes Modul im Paket
+# importiert gymnasium oder stable-baselines3.
+rl = [
+    "gymnasium>=0.29",
+    "stable-baselines3>=2.3",
+    "torch>=2.4",
+]
+dev = [
+    "pytest>=8.0,<9",
+    "pytest-cov>=5.0",
+    "hypothesis>=6.100",
+    # Ruff und mypy sind **nach oben begrenzt**. Ein offenes `>=0.6` holt bei jedem
+    # Neuaufsetzen eine Version mit neuen Standardregeln; im Projekt sind so schon
+    # einmal über 200 Meldungen aufgelaufen, die niemand verursacht hat. Anheben ist
+    # eine bewusste Handlung mit einem Lauf dahinter, kein Nebeneffekt von `pip install`.
+    "ruff>=0.6,<0.13",
+    "mypy>=1.11,<1.19",
+    "nbstripout>=0.7",
+    "matplotlib>=3.9",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/twinlink_ml"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "W",      # pycodestyle, pyflakes
+    "I",                 # isort
+    "N",                 # pep8-naming
+    "UP",                # pyupgrade
+    "B",                 # bugbear
+    "A",                 # builtins shadowing
+    "C4",                # comprehensions
+    "SIM",               # simplify
+    "ARG",               # unused arguments
+    "PTH",               # pathlib
+    "RUF",
+    "D",                 # pydocstyle
+    "ANN",               # fehlende Annotationen
+    "NPY",
+]
+ignore = [
+    "D203", "D213",      # Konflikt mit D211/D212
+    "ANN401",            # Any im Backend-Protokoll ist beabsichtigt
+    # --- Bewusst abgeschaltet, mit Begründung. -------------------------------
+    # Die Regelauswahl oben war in Schritt 1 als Anspruch formuliert und nie
+    # durchgesetzt; beim ersten echten Lauf standen 223 Meldungen an, die
+    # überwiegend aus drei Regelgruppen kamen. Zwei davon sind für dieses
+    # Projekt falsch, eine ist Rauschen. Sie hier zu ignorieren ist eine
+    # Entscheidung und keine Bequemlichkeit -- ohne sie werden die verbleibenden
+    # echten Treffer nicht mehr gelesen.
+    "RUF001", "RUF002", "RUF003",
+    #   "ambiguous unicode character": schlägt bei σ, Δ, ×, ϱ, τ an. In einem
+    #   deutschsprachigen verfahrenstechnischen Projekt sind griechische
+    #   Formelzeichen in Tabellenköpfen und Docstrings die *richtige*
+    #   Schreibweise. Die Regel ist gegen homoglyphen-Schmuggel in Bezeichnern
+    #   gedacht, nicht gegen Fachnotation in Strings.
+    "D105",
+    #   "missing docstring in magic method": trifft ausschließlich
+    #   `__post_init__` von Konfigurations-Dataclasses. Deren Inhalt ist
+    #   Validierung; ein Docstring "Validiert die Felder." ist reine Zeile.
+    "D102",
+    #   "missing docstring in public method": trifft die `...`-Rümpfe der
+    #   Protokolle und ABCs (backend.py, base.py, windows.py). Die Bedeutung
+    #   steht im Klassen-Docstring; eine Wiederholung je Stub ist Ballast.
+    #   Konkrete Implementierungen behalten D101/D103 und werden weiter geprüft.
+    "D401",
+    #   "first line should be in imperative mood": pydocstyle prüft das über eine
+    #   englische Stemming-Heuristik (Endung "-s" u.ä.), die auf deutschen
+    #   Docstrings unzuverlässig ist -- sie feuert auf manche schon-imperativen
+    #   Formen ("Filtere ...") ebenso wie auf beschreibende. Ohne verlässliches
+    #   Signal ist die Regel für dieses Projekt Rauschen, nicht Qualitätssicherung.
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D103", "ANN001", "ANN201", "ANN202", "SLF001", "ARG001"]
+#   Tests: Fixtures haben keine sinnvolle Rückgabeannotation, und der Zugriff auf
+#   ein privates Feld ist in einem Test, der genau dessen Invariante prüft,
+#   zulässig. ARG001, weil pytest-Fixtures oft nur als Reihenfolge-Zwang
+#   angefordert werden.
+"scripts/*" = ["D103", "T201", "D205", "D209", "E501"]
+#   Treiberskripte drucken absichtlich und brauchen keine Docstrings auf
+#   `parse_args`/`main` -- der Modul-Docstring trägt die Begründung.
+#   Treiberskripte: ausführliche Moduldocstrings mit Formeln und Tabellen sind hier die
+#   eigentliche Textform, nicht Code-Dokumentation -- D205/D209/E501 werden daher nicht
+#   erzwungen. src/ und tests/ bleiben streng, damit neu eingeführte Meldungen dort
+#   sichtbar bleiben.
+"notebooks/*" = ["B905", "D100", "E402", "F401"]
+#   Notebook-Zellen sind kein Modul; `zip(axes, TARGETS)` über zwei Listen
+#   gleicher Länge braucht kein `strict=`.
+"src/twinlink_ml/simulation/energy.py" = ["PLR0913"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unreachable = true
+disallow_any_explicit = false          # `Array = Any` ist bewusst gesetzt, s. backend.py
+plugins = []
+files = ["src", "tests"]
+
+[[tool.mypy.overrides]]
+module = ["yaml.*", "torch.*", "mlflow.*", "matplotlib.*", "scipy.*", "sklearn.*", "openpyxl.*"]
+ignore_missing_imports = true
+#   Alle sind optionale Abhängigkeiten und werden erst im Funktionsaufruf
+#   importiert. Ohne diesen Eintrag scheitert `mypy src` auf einer Maschine, auf
+#   der MLflow nicht installiert ist -- also auf jeder, die nur das
+#   Kern-Extra installiert hat.
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+filterwarnings = [
+    "error",
+    # In den Tests wird bewusst gegen die Platzhalter-Config gefahren. Im
+    # Produktivlauf bleibt die Warnung sichtbar und landet im Experiment-Tracking.
+    "ignore::twinlink_ml.simulation.config.PlaceholderConfigWarning",
+    # Ein dirty Arbeitsbaum ist waehrend normaler Entwicklung/Iteration die Regel, kein
+    # Testfehler (G4a, docs/04_stand_ap1.md Befund 33). Im Produktivlauf bleibt die
+    # Warnung sichtbar; Tests, die sie gezielt pruefen wollen, fangen sie mit
+    # pytest.warns(DirtyWorkingTreeWarning) selbst ab (siehe tests/test_tracking.py).
+    "ignore::twinlink_ml.utils.tracking.DirtyWorkingTreeWarning",
+]

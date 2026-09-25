@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+
+# Virtuelle Umgebungen
+.venv/
+venv/
+.venv_audit/
+
+# Tool-Caches
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# Claude Code: sitzungs-/maschinenspezifischer Zustand
+.claude/
+
+# Vertrauliche Namenszuordnung (echte Partnernamen -> Pseudonyme) und Sperrliste --
+# siehe local.example/README.md. Nie committen, in Cloud-Sitzungen normalerweise
+# nicht vorhanden.
+local/
+
+# Lose Konsolenmitschnitte im Root (kein Projektinhalt, in Befunde 30-34 destilliert)
+final_run.txt
+final_run2.txt
+full_run.txt
+pytest_out.txt
+
+# Bundle-Exportdateien (Uebertragungsartefakte, kein Repo-Inhalt)
+*.bundle
+
+# Modellgewichte (Checkpoints) -- gross, nicht deterministisch reproduzierbar aus dem
+# Diff, gehoeren nicht ins Repo. Provenienz steht stattdessen im JSONL-Log
+# (checkpoint/path) und im Checkpoint selbst (siehe utils/checkpoints.py).
+artifacts/checkpoints/
+*.pt
+
+# Sweep-Scratch-Dateien/-Verzeichnisse (Einzel-Job-Logs/-JSONLs je Worker-Prozess, Praefix
+# "_" per Konvention seit Befund 36) -- redundant zur jeweils finalen zusammengefuehrten
+# JSONL (ohne Praefix im selben Verzeichnis), gehoeren nicht ins Repo (analog
+# .venv_audit/). Dauerhaftes Muster statt Einzelfall-Eintrag je Sweep (Befund 40) --
+# deckt u. a. _arch_constant_holdout_work/, _mamba_constant_holdout_work/,
+# _mamba_worker_1.jsonl, _mamba_gab_constant_holdout_seeds2-10.jsonl ab.
+artifacts/runs/_*
+
+# Konsolenlogs von Vergleichs-/Diagnoseskripten (Epochen-Stdout, redundant zum JSONL-
+# Ergebnis) -- dauerhaftes Muster statt Einzelfall-Entscheidung je Datei. Beruehrt nicht
+# die committeten *.jsonl-Ergebnisse im selben Verzeichnis (Endungen eindeutig getrennt).
+artifacts/runs/*.log

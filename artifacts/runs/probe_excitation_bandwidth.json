@@ -1,0 +1,1236 @@
+{
+  "config_fingerprint": "82f65f576a2e5253",
+  "c0": {
+    "r2_stat_full_sample_reference": {
+      "energy_target": {
+        "median": 0.9721960728934929,
+        "min": 0.9614328538633753,
+        "max": 0.9799876853364508
+      },
+      "bed_temperature_celsius": {
+        "median": 0.7682189609217713,
+        "min": 0.7601402851060857,
+        "max": 0.7914636508734656
+      },
+      "product_moisture_kg_per_kg": {
+        "median": 0.5080415782875666,
+        "min": 0.49736285695238225,
+        "max": 0.5630489631987028
+      },
+      "d50_um": {
+        "median": 0.14425293344338408,
+        "min": 0.12453726424452816,
+        "max": 0.16133484304902113
+      }
+    },
+    "trimmed": {
+      "energy_target": {
+        "r2_stat_trimmed": {
+          "median": 0.9721997849745008,
+          "min": 0.9614787004018839,
+          "max": 0.9800290735181718
+        },
+        "r2_lag1": {
+          "median": 0.9727254447815219,
+          "min": 0.9619723264980397,
+          "max": 0.9805002435073472
+        },
+        "diff": {
+          "median": 0.0004936260961557748,
+          "min": 0.00047116998917540176,
+          "max": 0.0005256598070211282
+        },
+        "one_minus_r2_lag1": {
+          "median": 0.027274555218478103,
+          "min": 0.019499756492652787,
+          "max": 0.038027673501960346
+        }
+      },
+      "bed_temperature_celsius": {
+        "r2_stat_trimmed": {
+          "median": 0.7692790651688584,
+          "min": 0.7613695855185433,
+          "max": 0.7925098265222775
+        },
+        "r2_lag1": {
+          "median": 0.7953672505789675,
+          "min": 0.7903098425856401,
+          "max": 0.8189523851017679
+        },
+        "diff": {
+          "median": 0.026442558579490405,
+          "min": 0.026088185410109155,
+          "max": 0.028940257067096797
+        },
+        "one_minus_r2_lag1": {
+          "median": 0.2046327494210325,
+          "min": 0.18104761489823207,
+          "max": 0.20969015741435992
+        }
+      },
+      "product_moisture_kg_per_kg": {
+        "r2_stat_trimmed": {
+          "median": 0.5096135206519286,
+          "min": 0.49933945206672525,
+          "max": 0.5642331687676079
+        },
+        "r2_lag1": {
+          "median": 0.5270148850184855,
+          "min": 0.5220042689876665,
+          "max": 0.5770098182387208
+        },
+        "diff": {
+          "median": 0.017401364366556926,
+          "min": 0.0127766494711129,
+          "max": 0.022664816920941244
+        },
+        "one_minus_r2_lag1": {
+          "median": 0.4729851149815145,
+          "min": 0.4229901817612792,
+          "max": 0.4779957310123335
+        }
+      },
+      "d50_um": {
+        "r2_stat_trimmed": {
+          "median": 0.14431665684319483,
+          "min": 0.12462633870277007,
+          "max": 0.16150977028913138
+        },
+        "r2_lag1": {
+          "median": 0.14549624219798407,
+          "min": 0.1249072658956335,
+          "max": 0.16211197688050805
+        },
+        "diff": {
+          "median": 0.0006022065913766639,
+          "min": 0.0002809271928634338,
+          "max": 0.0011795853547892365
+        },
+        "one_minus_r2_lag1": {
+          "median": 0.8545037578020159,
+          "min": 0.837888023119492,
+          "max": 0.8750927341043665
+        }
+      }
+    }
+  },
+  "c1_base": {
+    "tau_1": {
+      "new_criterion": {
+        "inlet_temperature_celsius": {
+          "median": 0.8067018728222997,
+          "min": 0.789198606271777,
+          "max": 0.8147049216027874
+        },
+        "gas_velocity_m_per_s": {
+          "median": 0.8098595383275261,
+          "min": 0.8087979094076655,
+          "max": 0.8661258710801394
+        },
+        "spray_rate_kg_per_h": {
+          "median": 0.804959712543554,
+          "min": 0.7769218205574913,
+          "max": 0.8143782665505227
+        },
+        "nozzle_pressure_bar": {
+          "median": 0.8483503919860628,
+          "min": 0.84375,
+          "max": 0.867323606271777
+        }
+      }
+    },
+    "tau_2": {
+      "new_criterion": {
+        "inlet_temperature_celsius": {
+          "median": 0.3925552299368801,
+          "min": 0.35936091073038773,
+          "max": 0.4128155996393147
+        },
+        "gas_velocity_m_per_s": {
+          "median": 0.4451927412082958,
+          "min": 0.42797565374211,
+          "max": 0.4529418394950406
+        },
+        "spray_rate_kg_per_h": {
+          "median": 0.4145908476104599,
+          "min": 0.38542605951307485,
+          "max": 0.4351611812443643
+        },
+        "nozzle_pressure_bar": {
+          "median": 0.4206210550045086,
+          "min": 0.40430568079350765,
+          "max": 0.47663999098286747
+        }
+      }
+    },
+    "old_criterion": {
+      "inlet_temperature_celsius": {
+        "median": 0.6698251520417029,
+        "min": 0.6566301042571677,
+        "max": 0.7499456993918332
+      },
+      "gas_velocity_m_per_s": {
+        "median": 0.7229311468288445,
+        "min": 0.5336392267593397,
+        "max": 0.8115225890529973
+      },
+      "spray_rate_kg_per_h": {
+        "median": 0.5911164205039097,
+        "min": 0.5228605560382277,
+        "max": 0.6058047350130321
+      },
+      "nozzle_pressure_bar": {
+        "median": 0.6079224587315378,
+        "min": 0.5793060382276282,
+        "max": 0.6450912250217202
+      }
+    }
+  },
+  "c2": {
+    "V0": {
+      "lag1": {
+        "energy_target": {
+          "r2_stat_trimmed": {
+            "median": 0.9721997849745008,
+            "min": 0.9614787004018839,
+            "max": 0.9800290735181718
+          },
+          "r2_lag1": {
+            "median": 0.9727254447815219,
+            "min": 0.9619723264980397,
+            "max": 0.9805002435073472
+          },
+          "diff": {
+            "median": 0.0004936260961557748,
+            "min": 0.00047116998917540176,
+            "max": 0.0005256598070211282
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.027274555218478103,
+            "min": 0.019499756492652787,
+            "max": 0.038027673501960346
+          }
+        },
+        "bed_temperature_celsius": {
+          "r2_stat_trimmed": {
+            "median": 0.7692790651688584,
+            "min": 0.7613695855185433,
+            "max": 0.7925098265222775
+          },
+          "r2_lag1": {
+            "median": 0.7953672505789675,
+            "min": 0.7903098425856401,
+            "max": 0.8189523851017679
+          },
+          "diff": {
+            "median": 0.026442558579490405,
+            "min": 0.026088185410109155,
+            "max": 0.028940257067096797
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.2046327494210325,
+            "min": 0.18104761489823207,
+            "max": 0.20969015741435992
+          }
+        },
+        "product_moisture_kg_per_kg": {
+          "r2_stat_trimmed": {
+            "median": 0.5096135206519286,
+            "min": 0.49933945206672525,
+            "max": 0.5642331687676079
+          },
+          "r2_lag1": {
+            "median": 0.5270148850184855,
+            "min": 0.5220042689876665,
+            "max": 0.5770098182387208
+          },
+          "diff": {
+            "median": 0.017401364366556926,
+            "min": 0.0127766494711129,
+            "max": 0.022664816920941244
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.4729851149815145,
+            "min": 0.4229901817612792,
+            "max": 0.4779957310123335
+          }
+        },
+        "d50_um": {
+          "r2_stat_trimmed": {
+            "median": 0.14431665684319483,
+            "min": 0.12462633870277007,
+            "max": 0.16150977028913138
+          },
+          "r2_lag1": {
+            "median": 0.14549624219798407,
+            "min": 0.1249072658956335,
+            "max": 0.16211197688050805
+          },
+          "diff": {
+            "median": 0.0006022065913766639,
+            "min": 0.0002809271928634338,
+            "max": 0.0011795853547892365
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.8545037578020159,
+            "min": 0.837888023119492,
+            "max": 0.8750927341043665
+          }
+        }
+      },
+      "quasistationary_tau_1": {
+        "inlet_temperature_celsius": {
+          "median": 0.8067018728222997,
+          "min": 0.789198606271777,
+          "max": 0.8147049216027874
+        },
+        "gas_velocity_m_per_s": {
+          "median": 0.8098595383275261,
+          "min": 0.8087979094076655,
+          "max": 0.8661258710801394
+        },
+        "spray_rate_kg_per_h": {
+          "median": 0.804959712543554,
+          "min": 0.7769218205574913,
+          "max": 0.8143782665505227
+        },
+        "nozzle_pressure_bar": {
+          "median": 0.8483503919860628,
+          "min": 0.84375,
+          "max": 0.867323606271777
+        }
+      },
+      "quasistationary_tau_2": {
+        "inlet_temperature_celsius": {
+          "median": 0.3925552299368801,
+          "min": 0.35936091073038773,
+          "max": 0.4128155996393147
+        },
+        "gas_velocity_m_per_s": {
+          "median": 0.4451927412082958,
+          "min": 0.42797565374211,
+          "max": 0.4529418394950406
+        },
+        "spray_rate_kg_per_h": {
+          "median": 0.4145908476104599,
+          "min": 0.38542605951307485,
+          "max": 0.4351611812443643
+        },
+        "nozzle_pressure_bar": {
+          "median": 0.4206210550045086,
+          "min": 0.40430568079350765,
+          "max": 0.47663999098286747
+        }
+      },
+      "quasistationary_old": {
+        "inlet_temperature_celsius": {
+          "median": 0.6698251520417029,
+          "min": 0.6566301042571677,
+          "max": 0.7499456993918332
+        },
+        "gas_velocity_m_per_s": {
+          "median": 0.7229311468288445,
+          "min": 0.5336392267593397,
+          "max": 0.8115225890529973
+        },
+        "spray_rate_kg_per_h": {
+          "median": 0.5911164205039097,
+          "min": 0.5228605560382277,
+          "max": 0.6058047350130321
+        },
+        "nozzle_pressure_bar": {
+          "median": 0.6079224587315378,
+          "min": 0.5793060382276282,
+          "max": 0.6450912250217202
+        }
+      }
+    },
+    "V1": {
+      "lag1": {
+        "energy_target": {
+          "r2_stat_trimmed": {
+            "median": 0.972767568341527,
+            "min": 0.961828947912087,
+            "max": 0.9797249044554636
+          },
+          "r2_lag1": {
+            "median": 0.9735535027446822,
+            "min": 0.9624942166335198,
+            "max": 0.9803236998023088
+          },
+          "diff": {
+            "median": 0.000665268721432799,
+            "min": 0.00059879534684526,
+            "max": 0.0007859344031552196
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.02644649725531778,
+            "min": 0.019676300197691177,
+            "max": 0.03750578336648025
+          }
+        },
+        "bed_temperature_celsius": {
+          "r2_stat_trimmed": {
+            "median": 0.7792234469585941,
+            "min": 0.7689635920794347,
+            "max": 0.8014755630475593
+          },
+          "r2_lag1": {
+            "median": 0.8073786317913212,
+            "min": 0.796515910629809,
+            "max": 0.8292732908363064
+          },
+          "diff": {
+            "median": 0.027797727788747117,
+            "min": 0.027552318550374322,
+            "max": 0.028155184832727054
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.1926213682086788,
+            "min": 0.1707267091636936,
+            "max": 0.20348408937019102
+          }
+        },
+        "product_moisture_kg_per_kg": {
+          "r2_stat_trimmed": {
+            "median": 0.537681692596095,
+            "min": 0.5280372414731405,
+            "max": 0.570727052510412
+          },
+          "r2_lag1": {
+            "median": 0.5553443531884863,
+            "min": 0.5522600584586786,
+            "max": 0.5856870354625955
+          },
+          "diff": {
+            "median": 0.0176626605923913,
+            "min": 0.014959982952183482,
+            "max": 0.024222816985538187
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.4446556468115137,
+            "min": 0.4143129645374045,
+            "max": 0.44773994154132135
+          }
+        },
+        "d50_um": {
+          "r2_stat_trimmed": {
+            "median": 0.1442083744172732,
+            "min": 0.12120448090879077,
+            "max": 0.1517404045516586
+          },
+          "r2_lag1": {
+            "median": 0.14731261854042055,
+            "min": 0.12178459490068871,
+            "max": 0.1532623349455814
+          },
+          "diff": {
+            "median": 0.001521930393922788,
+            "min": 0.0005801139918979459,
+            "max": 0.0031042441231473594
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.8526873814595795,
+            "min": 0.8467376650544186,
+            "max": 0.8782154050993113
+          }
+        }
+      },
+      "quasistationary_tau_1": {
+        "inlet_temperature_celsius": {
+          "median": 0.788926393728223,
+          "min": 0.7614601480836237,
+          "max": 0.7905868902439024
+        },
+        "gas_velocity_m_per_s": {
+          "median": 0.776976263066202,
+          "min": 0.7768673780487805,
+          "max": 0.8473432055749129
+        },
+        "spray_rate_kg_per_h": {
+          "median": 0.7873203397212544,
+          "min": 0.7600990853658537,
+          "max": 0.7907502177700348
+        },
+        "nozzle_pressure_bar": {
+          "median": 0.8275533536585366,
+          "min": 0.8181075783972126,
+          "max": 0.8498475609756098
+        }
+      },
+      "quasistationary_tau_2": {
+        "inlet_temperature_celsius": {
+          "median": 0.3744082506762849,
+          "min": 0.34220018034265104,
+          "max": 0.38703223624887284
+        },
+        "gas_velocity_m_per_s": {
+          "median": 0.43104711451758343,
+          "min": 0.42696122633002703,
+          "max": 0.4351048241659152
+        },
+        "spray_rate_kg_per_h": {
+          "median": 0.4053201082055906,
+          "min": 0.3577829125338142,
+          "max": 0.42515779981965734
+        },
+        "nozzle_pressure_bar": {
+          "median": 0.4153798467087466,
+          "min": 0.3908081605049594,
+          "max": 0.45852119026149685
+        }
+      },
+      "quasistationary_old": {
+        "inlet_temperature_celsius": {
+          "median": 0.6130267158992181,
+          "min": 0.5837586880973067,
+          "max": 0.7003692441355344
+        },
+        "gas_velocity_m_per_s": {
+          "median": 0.6575803649000869,
+          "min": 0.5055386620330148,
+          "max": 0.7446242397914856
+        },
+        "spray_rate_kg_per_h": {
+          "median": 0.5125977410947002,
+          "min": 0.46798979148566466,
+          "max": 0.5539476542137272
+        },
+        "nozzle_pressure_bar": {
+          "median": 0.5660838401390096,
+          "min": 0.5371687662901824,
+          "max": 0.6030082536924414
+        }
+      }
+    },
+    "V2": {
+      "lag1": {
+        "energy_target": {
+          "r2_stat_trimmed": {
+            "median": 0.9712156238668957,
+            "min": 0.960075528366853,
+            "max": 0.9792003701102611
+          },
+          "r2_lag1": {
+            "median": 0.971772292039911,
+            "min": 0.9607928678596623,
+            "max": 0.9796130512103303
+          },
+          "diff": {
+            "median": 0.0005566681730152512,
+            "min": 0.000412681100069201,
+            "max": 0.0007173394928093879
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.028227707960089,
+            "min": 0.020386948789669734,
+            "max": 0.039207132140337664
+          }
+        },
+        "bed_temperature_celsius": {
+          "r2_stat_trimmed": {
+            "median": 0.7611622134005154,
+            "min": 0.7474281744017022,
+            "max": 0.7733218937572639
+          },
+          "r2_lag1": {
+            "median": 0.790750670970622,
+            "min": 0.7807905328782092,
+            "max": 0.8061080507149851
+          },
+          "diff": {
+            "median": 0.032786156957721246,
+            "min": 0.02958845757010664,
+            "max": 0.03336235847650704
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.20924932902937798,
+            "min": 0.19389194928501485,
+            "max": 0.2192094671217908
+          }
+        },
+        "product_moisture_kg_per_kg": {
+          "r2_stat_trimmed": {
+            "median": 0.49211996243679323,
+            "min": 0.48521578439994717,
+            "max": 0.5635520518986025
+          },
+          "r2_lag1": {
+            "median": 0.5114810112654495,
+            "min": 0.5095316645092915,
+            "max": 0.5765331907730065
+          },
+          "diff": {
+            "median": 0.019361048828656302,
+            "min": 0.012981138874403997,
+            "max": 0.02431588010934438
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.48851898873455046,
+            "min": 0.42346680922699353,
+            "max": 0.49046833549070845
+          }
+        },
+        "d50_um": {
+          "r2_stat_trimmed": {
+            "median": 0.14486526002761657,
+            "min": 0.1237776709314099,
+            "max": 0.16332934370917618
+          },
+          "r2_lag1": {
+            "median": 0.14605399146414544,
+            "min": 0.12404867381191687,
+            "max": 0.16394878852209094
+          },
+          "diff": {
+            "median": 0.0006194448129147601,
+            "min": 0.0002710028805069653,
+            "max": 0.001188731436528867
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.8539460085358546,
+            "min": 0.8360512114779091,
+            "max": 0.8759513261880831
+          }
+        }
+      },
+      "quasistationary_tau_1": {
+        "inlet_temperature_celsius": {
+          "median": 0.833487587108014,
+          "min": 0.8167465156794426,
+          "max": 0.8391768292682927
+        },
+        "gas_velocity_m_per_s": {
+          "median": 0.8098595383275261,
+          "min": 0.8087979094076655,
+          "max": 0.8661258710801394
+        },
+        "spray_rate_kg_per_h": {
+          "median": 0.804959712543554,
+          "min": 0.7769218205574913,
+          "max": 0.8143782665505227
+        },
+        "nozzle_pressure_bar": {
+          "median": 0.8483503919860628,
+          "min": 0.84375,
+          "max": 0.867323606271777
+        }
+      },
+      "quasistationary_tau_2": {
+        "inlet_temperature_celsius": {
+          "median": 0.4177186654643823,
+          "min": 0.38689134355275023,
+          "max": 0.44155770964833185
+        },
+        "gas_velocity_m_per_s": {
+          "median": 0.4451927412082958,
+          "min": 0.42797565374211,
+          "max": 0.4529418394950406
+        },
+        "spray_rate_kg_per_h": {
+          "median": 0.4145908476104599,
+          "min": 0.38542605951307485,
+          "max": 0.4351611812443643
+        },
+        "nozzle_pressure_bar": {
+          "median": 0.4206210550045086,
+          "min": 0.40430568079350765,
+          "max": 0.47663999098286747
+        }
+      },
+      "quasistationary_old": {
+        "inlet_temperature_celsius": {
+          "median": 0.7066138140747177,
+          "min": 0.6992289313640313,
+          "max": 0.7947165508253693
+        },
+        "gas_velocity_m_per_s": {
+          "median": 0.7229311468288445,
+          "min": 0.5336392267593397,
+          "max": 0.8115225890529973
+        },
+        "spray_rate_kg_per_h": {
+          "median": 0.5911164205039097,
+          "min": 0.5228605560382277,
+          "max": 0.6058047350130321
+        },
+        "nozzle_pressure_bar": {
+          "median": 0.6079224587315378,
+          "min": 0.5793060382276282,
+          "max": 0.6450912250217202
+        }
+      }
+    },
+    "V3": {
+      "lag1": {
+        "energy_target": {
+          "r2_stat_trimmed": {
+            "median": 0.9712460488516723,
+            "min": 0.9596568461145359,
+            "max": 0.9788043733168992
+          },
+          "r2_lag1": {
+            "median": 0.9721250707762913,
+            "min": 0.9608314289775811,
+            "max": 0.9792878711972086
+          },
+          "diff": {
+            "median": 0.0008790219246189723,
+            "min": 0.00048349788030943586,
+            "max": 0.0011745828630451705
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.02787492922370871,
+            "min": 0.020712128802791385,
+            "max": 0.039168571022418885
+          }
+        },
+        "bed_temperature_celsius": {
+          "r2_stat_trimmed": {
+            "median": 0.7508395604825236,
+            "min": 0.7469223073691338,
+            "max": 0.7647667771196316
+          },
+          "r2_lag1": {
+            "median": 0.7899987190435173,
+            "min": 0.7882485157631599,
+            "max": 0.8104685878644614
+          },
+          "diff": {
+            "median": 0.043076411674383475,
+            "min": 0.03740895528063626,
+            "max": 0.04570181074482982
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.21000128095648274,
+            "min": 0.1895314121355386,
+            "max": 0.2117514842368401
+          }
+        },
+        "product_moisture_kg_per_kg": {
+          "r2_stat_trimmed": {
+            "median": 0.5077635309411366,
+            "min": 0.5014283205971638,
+            "max": 0.5687914784303969
+          },
+          "r2_lag1": {
+            "median": 0.532656670483596,
+            "min": 0.5325201050004372,
+            "max": 0.585043745386822
+          },
+          "diff": {
+            "median": 0.02489313954245942,
+            "min": 0.01625226695642512,
+            "max": 0.031091784403273426
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.467343329516404,
+            "min": 0.414956254613178,
+            "max": 0.4674798949995628
+          }
+        },
+        "d50_um": {
+          "r2_stat_trimmed": {
+            "median": 0.1448024092418092,
+            "min": 0.12012845961780305,
+            "max": 0.15082549495674724
+          },
+          "r2_lag1": {
+            "median": 0.14794854637275168,
+            "min": 0.12071520450301887,
+            "max": 0.15237211180441734
+          },
+          "diff": {
+            "median": 0.0015466168476701014,
+            "min": 0.0005867448852158175,
+            "max": 0.0031461371309424724
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.8520514536272483,
+            "min": 0.8476278881955827,
+            "max": 0.8792847954969811
+          }
+        }
+      },
+      "quasistationary_tau_1": {
+        "inlet_temperature_celsius": {
+          "median": 0.8092606707317073,
+          "min": 0.7864220383275261,
+          "max": 0.813180531358885
+        },
+        "gas_velocity_m_per_s": {
+          "median": 0.776976263066202,
+          "min": 0.7768673780487805,
+          "max": 0.8473432055749129
+        },
+        "spray_rate_kg_per_h": {
+          "median": 0.7873203397212544,
+          "min": 0.7600990853658537,
+          "max": 0.7907502177700348
+        },
+        "nozzle_pressure_bar": {
+          "median": 0.8275533536585366,
+          "min": 0.8181075783972126,
+          "max": 0.8498475609756098
+        }
+      },
+      "quasistationary_tau_2": {
+        "inlet_temperature_celsius": {
+          "median": 0.41352006311992784,
+          "min": 0.3760426059513075,
+          "max": 0.4331323264201984
+        },
+        "gas_velocity_m_per_s": {
+          "median": 0.43104711451758343,
+          "min": 0.42696122633002703,
+          "max": 0.4351048241659152
+        },
+        "spray_rate_kg_per_h": {
+          "median": 0.4053201082055906,
+          "min": 0.3577829125338142,
+          "max": 0.42515779981965734
+        },
+        "nozzle_pressure_bar": {
+          "median": 0.4153798467087466,
+          "min": 0.3908081605049594,
+          "max": 0.45852119026149685
+        }
+      },
+      "quasistationary_old": {
+        "inlet_temperature_celsius": {
+          "median": 0.6641235881841877,
+          "min": 0.643462206776716,
+          "max": 0.7526878801042571
+        },
+        "gas_velocity_m_per_s": {
+          "median": 0.6575803649000869,
+          "min": 0.5055386620330148,
+          "max": 0.7446242397914856
+        },
+        "spray_rate_kg_per_h": {
+          "median": 0.5125977410947002,
+          "min": 0.46798979148566466,
+          "max": 0.5539476542137272
+        },
+        "nozzle_pressure_bar": {
+          "median": 0.5660838401390096,
+          "min": 0.5371687662901824,
+          "max": 0.6030082536924414
+        }
+      }
+    },
+    "V4": {
+      "lag1": {
+        "energy_target": {
+          "r2_stat_trimmed": {
+            "median": 0.9529659991831446,
+            "min": 0.9526750270850716,
+            "max": 0.9600249035731931
+          },
+          "r2_lag1": {
+            "median": 0.9536161462980952,
+            "min": 0.9532414956505769,
+            "max": 0.9605979209133015
+          },
+          "diff": {
+            "median": 0.0005730173401083949,
+            "min": 0.0005664685655053514,
+            "max": 0.0006501471149505944
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.04638385370190479,
+            "min": 0.03940207908669846,
+            "max": 0.04675850434942308
+          }
+        },
+        "bed_temperature_celsius": {
+          "r2_stat_trimmed": {
+            "median": 0.5560981232279918,
+            "min": 0.5232988521151252,
+            "max": 0.6606177735074579
+          },
+          "r2_lag1": {
+            "median": 0.644411176254311,
+            "min": 0.6182730452801141,
+            "max": 0.7277015914941615
+          },
+          "diff": {
+            "median": 0.0883130530263192,
+            "min": 0.0670838179867036,
+            "max": 0.0949741931649889
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.355588823745689,
+            "min": 0.27229840850583853,
+            "max": 0.38172695471988594
+          }
+        },
+        "product_moisture_kg_per_kg": {
+          "r2_stat_trimmed": {
+            "median": 0.3776262404100492,
+            "min": 0.2747334101179758,
+            "max": 0.46732771058177547
+          },
+          "r2_lag1": {
+            "median": 0.4211366057511885,
+            "min": 0.33346149022537863,
+            "max": 0.5039889815814829
+          },
+          "diff": {
+            "median": 0.04351036534113928,
+            "min": 0.036661270999707396,
+            "max": 0.058728080107402825
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.5788633942488115,
+            "min": 0.49601101841851714,
+            "max": 0.6665385097746214
+          }
+        },
+        "d50_um": {
+          "r2_stat_trimmed": {
+            "median": 0.12663285327129437,
+            "min": 0.11399970570370455,
+            "max": 0.161886314151778
+          },
+          "r2_lag1": {
+            "median": 0.1340935530007591,
+            "min": 0.11430298439236852,
+            "max": 0.1652073976439219
+          },
+          "diff": {
+            "median": 0.0033210834921438837,
+            "min": 0.0003032786886639771,
+            "max": 0.007460699729464726
+          },
+          "one_minus_r2_lag1": {
+            "median": 0.8659064469992409,
+            "min": 0.8347926023560781,
+            "max": 0.8856970156076315
+          }
+        }
+      },
+      "quasistationary_tau_1": {
+        "inlet_temperature_celsius": {
+          "median": 0.46651785714285715,
+          "min": 0.4552482578397213,
+          "max": 0.48666158536585363
+        },
+        "gas_velocity_m_per_s": {
+          "median": 0.4566909843205575,
+          "min": 0.4501306620209059,
+          "max": 0.4580520470383275
+        },
+        "spray_rate_kg_per_h": {
+          "median": 0.4090810104529617,
+          "min": 0.4049978222996516,
+          "max": 0.41983340592334495
+        },
+        "nozzle_pressure_bar": {
+          "median": 0.43652003484320556,
+          "min": 0.4270198170731707,
+          "max": 0.44114764808362367
+        }
+      },
+      "quasistationary_tau_2": {
+        "inlet_temperature_celsius": {
+          "median": 0.43487939585211904,
+          "min": 0.41295649233543735,
+          "max": 0.4731176735798016
+        },
+        "gas_velocity_m_per_s": {
+          "median": 0.4119420649233544,
+          "min": 0.4041366095581605,
+          "max": 0.4198038773669973
+        },
+        "spray_rate_kg_per_h": {
+          "median": 0.2456605049594229,
+          "min": 0.23543169522091975,
+          "max": 0.2727682596934175
+        },
+        "nozzle_pressure_bar": {
+          "median": 0.3655883678990081,
+          "min": 0.3487939585211903,
+          "max": 0.3759862488728584
+        }
+      },
+      "quasistationary_old": {
+        "inlet_temperature_celsius": {
+          "median": 0.6858166811468288,
+          "min": 0.6643136403127715,
+          "max": 0.7262163336229366
+        },
+        "gas_velocity_m_per_s": {
+          "median": 0.6555983927019983,
+          "min": 0.6515801476976543,
+          "max": 0.666892919200695
+        },
+        "spray_rate_kg_per_h": {
+          "median": 0.4483329713292789,
+          "min": 0.4442061251086012,
+          "max": 0.4749945699391833
+        },
+        "nozzle_pressure_bar": {
+          "median": 0.6109632927888793,
+          "min": 0.5991800608166812,
+          "max": 0.6255158557775847
+        }
+      }
+    }
+  },
+  "c3": {
+    "a_prbs_period": {
+      "V0": {
+        "prbs_clock_s": 120.0,
+        "prbs_register_length": 8,
+        "period_s": 30600.0,
+        "complete_periods_per_run": 0.9411764705882353
+      },
+      "V1": {
+        "prbs_clock_s": 50.0,
+        "prbs_register_length": 8,
+        "period_s": 12750.0,
+        "complete_periods_per_run": 2.2588235294117647
+      },
+      "V2": {
+        "prbs_clock_s": 120.0,
+        "prbs_register_length": 8,
+        "period_s": 30600.0,
+        "complete_periods_per_run": 0.9411764705882353
+      },
+      "V3": {
+        "prbs_clock_s": 50.0,
+        "prbs_register_length": 8,
+        "period_s": 12750.0,
+        "complete_periods_per_run": 2.2588235294117647
+      },
+      "V4": {
+        "prbs_clock_s": 50.0,
+        "prbs_register_length": 8,
+        "period_s": 12750.0,
+        "complete_periods_per_run": 2.2588235294117647
+      }
+    },
+    "b_prbs_channel_run_combinations": {
+      "V0": {
+        "per_seed": [
+          31,
+          32,
+          35
+        ],
+        "total_combinations": 128
+      },
+      "V1": {
+        "per_seed": [
+          31,
+          32,
+          35
+        ],
+        "total_combinations": 128
+      },
+      "V4": {
+        "per_seed": [
+          128,
+          128,
+          128
+        ],
+        "total_combinations": 128
+      }
+    },
+    "c_constraints": {
+      "V0": {
+        "below_minimum_fluidization": {
+          "runs_affected": 0,
+          "n_runs": 96,
+          "points_affected": 0,
+          "n_points": 110592
+        },
+        "gas_velocity_above_terminal": {
+          "runs_affected": 28,
+          "n_runs": 96,
+          "points_affected": 9743,
+          "n_points": 110592
+        },
+        "above_critical_moisture": {
+          "runs_affected": 11,
+          "n_runs": 96,
+          "points_affected": 1670,
+          "n_points": 110592
+        },
+        "bed_temperature_above_validity_limit": {
+          "runs_affected": 52,
+          "n_runs": 96,
+          "points_affected": 9525,
+          "n_points": 110592
+        }
+      },
+      "V1": {
+        "below_minimum_fluidization": {
+          "runs_affected": 0,
+          "n_runs": 96,
+          "points_affected": 0,
+          "n_points": 110592
+        },
+        "gas_velocity_above_terminal": {
+          "runs_affected": 28,
+          "n_runs": 96,
+          "points_affected": 9689,
+          "n_points": 110592
+        },
+        "above_critical_moisture": {
+          "runs_affected": 10,
+          "n_runs": 96,
+          "points_affected": 1582,
+          "n_points": 110592
+        },
+        "bed_temperature_above_validity_limit": {
+          "runs_affected": 50,
+          "n_runs": 96,
+          "points_affected": 9187,
+          "n_points": 110592
+        }
+      },
+      "V2": {
+        "below_minimum_fluidization": {
+          "runs_affected": 0,
+          "n_runs": 96,
+          "points_affected": 0,
+          "n_points": 110592
+        },
+        "gas_velocity_above_terminal": {
+          "runs_affected": 28,
+          "n_runs": 96,
+          "points_affected": 9742,
+          "n_points": 110592
+        },
+        "above_critical_moisture": {
+          "runs_affected": 11,
+          "n_runs": 96,
+          "points_affected": 1663,
+          "n_points": 110592
+        },
+        "bed_temperature_above_validity_limit": {
+          "runs_affected": 52,
+          "n_runs": 96,
+          "points_affected": 9596,
+          "n_points": 110592
+        }
+      },
+      "V3": {
+        "below_minimum_fluidization": {
+          "runs_affected": 0,
+          "n_runs": 96,
+          "points_affected": 0,
+          "n_points": 110592
+        },
+        "gas_velocity_above_terminal": {
+          "runs_affected": 28,
+          "n_runs": 96,
+          "points_affected": 9688,
+          "n_points": 110592
+        },
+        "above_critical_moisture": {
+          "runs_affected": 10,
+          "n_runs": 96,
+          "points_affected": 1571,
+          "n_points": 110592
+        },
+        "bed_temperature_above_validity_limit": {
+          "runs_affected": 50,
+          "n_runs": 96,
+          "points_affected": 9038,
+          "n_points": 110592
+        }
+      },
+      "V4": {
+        "below_minimum_fluidization": {
+          "runs_affected": 0,
+          "n_runs": 96,
+          "points_affected": 0,
+          "n_points": 110592
+        },
+        "gas_velocity_above_terminal": {
+          "runs_affected": 39,
+          "n_runs": 96,
+          "points_affected": 11239,
+          "n_points": 110592
+        },
+        "above_critical_moisture": {
+          "runs_affected": 1,
+          "n_runs": 96,
+          "points_affected": 97,
+          "n_points": 110592
+        },
+        "bed_temperature_above_validity_limit": {
+          "runs_affected": 45,
+          "n_runs": 96,
+          "points_affected": 7646,
+          "n_points": 110592
+        }
+      }
+    },
+    "d_time_constants": {
+      "V0": {
+        "tau_1_s": 30.22626192813928,
+        "tau_2_s": 359.9276103387108,
+        "tau_3_s": 600.0000000157605,
+        "tau_4_s": 16000.000001938306,
+        "n_unstable_modes": 0.0,
+        "stiffness_ratio": 529.341009482983,
+        "sample_time_s": 25.0,
+        "fastest_mode_samples": 1.2090504771255712,
+        "recommended_sequence_length_fast": 7.0,
+        "steps_for_slowest_mode": 1921.0
+      },
+      "V1": {
+        "tau_1_s": 30.22626192813928,
+        "tau_2_s": 359.9276103387108,
+        "tau_3_s": 600.0000000157605,
+        "tau_4_s": 16000.000001938306,
+        "n_unstable_modes": 0.0,
+        "stiffness_ratio": 529.341009482983,
+        "sample_time_s": 25.0,
+        "fastest_mode_samples": 1.2090504771255712,
+        "recommended_sequence_length_fast": 7.0,
+        "steps_for_slowest_mode": 1921.0
+      },
+      "V2": {
+        "tau_1_s": 30.22626192813928,
+        "tau_2_s": 359.9276103387108,
+        "tau_3_s": 600.0000000157605,
+        "tau_4_s": 16000.000001938306,
+        "n_unstable_modes": 0.0,
+        "stiffness_ratio": 529.341009482983,
+        "sample_time_s": 25.0,
+        "fastest_mode_samples": 1.2090504771255712,
+        "recommended_sequence_length_fast": 7.0,
+        "steps_for_slowest_mode": 1921.0
+      },
+      "V3": {
+        "tau_1_s": 30.22626192813928,
+        "tau_2_s": 359.9276103387108,
+        "tau_3_s": 600.0000000157605,
+        "tau_4_s": 16000.000001938306,
+        "n_unstable_modes": 0.0,
+        "stiffness_ratio": 529.341009482983,
+        "sample_time_s": 25.0,
+        "fastest_mode_samples": 1.2090504771255712,
+        "recommended_sequence_length_fast": 7.0,
+        "steps_for_slowest_mode": 1921.0
+      },
+      "V4": {
+        "tau_1_s": 30.22626192813928,
+        "tau_2_s": 359.9276103387108,
+        "tau_3_s": 600.0000000157605,
+        "tau_4_s": 16000.000001938306,
+        "n_unstable_modes": 0.0,
+        "stiffness_ratio": 529.341009482983,
+        "sample_time_s": 25.0,
+        "fastest_mode_samples": 1.2090504771255712,
+        "recommended_sequence_length_fast": 7.0,
+        "steps_for_slowest_mode": 1921.0
+      }
+    }
+  },
+  "_elapsed_s_c0_c3": 84.4315254999999
+}

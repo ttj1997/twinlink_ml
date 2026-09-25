@@ -1,0 +1,3 @@
+# One real name per line -- copy this file to local/denylist.txt and fill in.
+# tests/test_denylist.py checks every entry against all git-tracked files and
+# fails the build if any is found. The file itself is never committed.

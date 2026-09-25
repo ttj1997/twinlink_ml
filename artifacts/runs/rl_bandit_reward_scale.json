@@ -1,0 +1,53 @@
+{
+  "feasible_random_energy_spread_kw": {
+    "max_kw": 4.144789441218607,
+    "median_kw": 2.1453259909584297,
+    "min_kw": 0.9460160671198707,
+    "n_feasible_samples": 409.0,
+    "n_total_samples": 500.0,
+    "span_kw": 3.198773374098736
+  },
+  "normalized_violation_formula": "normalized_violation = (\n    moisture_violation / max(critical_moisture_kg_per_kg, 1e-6)\n    + gas_lower_violation / window\n    + gas_upper_violation / window\n    + bed_temperature_violation / 10.0\n    + (0.0 if solution.feasible else 1.0)\n)",
+  "observed_bed_temperature_penalty_kw": {
+    "available": true,
+    "overall_max_penalty_kw": 94.10258924169739,
+    "overall_median_penalty_kw": 89.8062243934744,
+    "overall_min_penalty_kw": 4.816374435631019,
+    "overall_n_violations": 76.0,
+    "penalty_weight_kw": 50.0,
+    "per_checkpoint": {
+      "1000": {
+        "max_penalty_kw": 93.28369630899651,
+        "median_penalty_kw": 89.14577049900707,
+        "min_penalty_kw": 84.45302376189154,
+        "n_violations": 25.0
+      },
+      "10000": {
+        "max_penalty_kw": 91.26978411082547,
+        "median_penalty_kw": 75.52753244228079,
+        "min_penalty_kw": 4.816374435631019,
+        "n_violations": 11.0
+      },
+      "2500": {
+        "max_penalty_kw": 93.85799823953853,
+        "median_penalty_kw": 89.84567675376951,
+        "min_penalty_kw": 72.23549624425814,
+        "n_violations": 25.0
+      },
+      "5000": {
+        "max_penalty_kw": 94.10258924169739,
+        "median_penalty_kw": 91.553654964628,
+        "min_penalty_kw": 61.243527383647134,
+        "n_violations": 15.0
+      }
+    }
+  },
+  "oracle_fixed_gap_kw": {
+    "max_kw": 0.24148936563149515,
+    "median_kw": 0.1740034074360406,
+    "min_kw": 3.682693551887439e-05,
+    "n_points": 25.0,
+    "p95_kw": 0.2296627007886406
+  },
+  "ratio_penalty_to_signal_median": 516.1176192856165
+}

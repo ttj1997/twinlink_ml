@@ -1,0 +1,924 @@
+{
+  "forbidden_phrase_checks": [
+    {
+      "forbidden_pattern": "D1: 98,7% darf ueberhaupt nicht mehr vorkommen (nur 0,972 gueltig)",
+      "found_uncontextualized": false,
+      "status": "sauber"
+    },
+    {
+      "forbidden_pattern": "K1: externe Institutsarbeit (Kraeuter et al.) darf nicht genannt werden",
+      "found_uncontextualized": false,
+      "status": "sauber"
+    },
+    {
+      "forbidden_pattern": "D1: Laborbuch-Korrekturgeschichte ('dort korrigiert'/'zunaechst unerklaert') muss raus",
+      "found_uncontextualized": false,
+      "status": "sauber"
+    },
+    {
+      "forbidden_pattern": "K4a/D3: Faktor 4,4-23 (ueberholte Zahl) darf nicht mehr vorkommen, nur 4,4-24",
+      "found_uncontextualized": false,
+      "status": "sauber"
+    },
+    {
+      "forbidden_pattern": "K5: Taupunkt 47,9\u00b0C ohne Korrekturkontext",
+      "found_uncontextualized": false,
+      "status": "sauber"
+    },
+    {
+      "forbidden_pattern": "K2: Pinch-Hebel 'ueber die einzelne Anlage hinausreicht' ohne Vorbehalt",
+      "found_uncontextualized": false,
+      "status": "sauber"
+    },
+    {
+      "forbidden_pattern": "I1: 'Charge folgt auf Charge' darf nicht mehr als Tatsachenbehauptung stehen",
+      "found_uncontextualized": false,
+      "status": "sauber"
+    },
+    {
+      "forbidden_pattern": "I2: 'einzig verf\u00fcgbare' (Datengetriebene Modelle) darf nicht mehr stehen",
+      "found_uncontextualized": false,
+      "status": "sauber"
+    },
+    {
+      "forbidden_pattern": "R6: zurueckgezogener Betttemperatur-Treffer (0,4 bis 2,1 K) darf nicht mehr stehen",
+      "found_uncontextualized": false,
+      "status": "sauber"
+    },
+    {
+      "forbidden_pattern": "R6: 'validiert die Enthalpiebilanz' (zurueckgezogen) darf nicht mehr stehen",
+      "found_uncontextualized": false,
+      "status": "sauber"
+    },
+    {
+      "forbidden_pattern": "R5/R6: Befund 61 (ausgesetzt) darf in der Synthese nicht mehr zitiert werden",
+      "found_uncontextualized": false,
+      "status": "sauber"
+    },
+    {
+      "forbidden_pattern": "F1: alter Einzelwert '71 bis 73 %' (durch Spanne 59-73% ersetzt) darf nicht mehr stehen",
+      "found_uncontextualized": false,
+      "status": "sauber"
+    }
+  ],
+  "n_checks": 100,
+  "n_confirmed": 100,
+  "n_deviating": 0,
+  "numeric_checks": [
+    {
+      "absolute_error": 0.0026539520150837548,
+      "check": "Tabelle 2: Inferenzzeit persistence",
+      "claimed_in_synthesis": 0.15,
+      "recomputed_from_source": 0.15265395201508375,
+      "relative_error": 0.017385413086596784,
+      "status": "bestaetigt",
+      "unit": "us/window"
+    },
+    {
+      "absolute_error": 0.001999310559268608,
+      "check": "Tabelle 2: Inferenzzeit static",
+      "claimed_in_synthesis": 1.76,
+      "recomputed_from_source": 1.7580006894407314,
+      "relative_error": 0.0011372638084144572,
+      "status": "bestaetigt",
+      "unit": "us/window"
+    },
+    {
+      "absolute_error": 0.0033394991501953797,
+      "check": "Tabelle 2: Inferenzzeit arx",
+      "claimed_in_synthesis": 5.25,
+      "recomputed_from_source": 5.253339499150195,
+      "relative_error": 0.0006356907164929266,
+      "status": "bestaetigt",
+      "unit": "us/window"
+    },
+    {
+      "absolute_error": 0.029663487763457397,
+      "check": "Tabelle 2: Inferenzzeit lstm",
+      "claimed_in_synthesis": 182.8,
+      "recomputed_from_source": 182.82966348776347,
+      "relative_error": 0.0001622465807658325,
+      "status": "bestaetigt",
+      "unit": "us/window"
+    },
+    {
+      "absolute_error": 0.05219439218024036,
+      "check": "Tabelle 2: Inferenzzeit mamba",
+      "claimed_in_synthesis": 494.1,
+      "recomputed_from_source": 494.0478056078198,
+      "relative_error": 0.00010564644066382677,
+      "status": "bestaetigt",
+      "unit": "us/window"
+    },
+    {
+      "absolute_error": 0.01248437497076793,
+      "check": "Tabelle 2: Inferenzzeit gru",
+      "claimed_in_synthesis": 323.1,
+      "recomputed_from_source": 323.08751562502925,
+      "relative_error": 3.8640846108263486e-05,
+      "status": "bestaetigt",
+      "unit": "us/window"
+    },
+    {
+      "absolute_error": 0.015912223665054626,
+      "check": "Tabelle 2: Inferenzzeit xlstm",
+      "claimed_in_synthesis": 1121.9,
+      "recomputed_from_source": 1121.9159122236651,
+      "relative_error": 1.4183080471259388e-05,
+      "status": "bestaetigt",
+      "unit": "us/window"
+    },
+    {
+      "absolute_error": 0.04281939351631081,
+      "check": "Tabelle 2: Inferenzzeit transformer",
+      "claimed_in_synthesis": 3081.6,
+      "recomputed_from_source": 3081.5571806064836,
+      "relative_error": 1.3895375294604624e-05,
+      "status": "bestaetigt",
+      "unit": "us/window"
+    },
+    {
+      "absolute_error": 0,
+      "check": "Tabelle 2: Parameterzahl persistence",
+      "claimed_in_synthesis": 0,
+      "recomputed_from_source": 0,
+      "relative_error": 0.0,
+      "status": "bestaetigt",
+      "unit": "Parameter"
+    },
+    {
+      "absolute_error": 0,
+      "check": "Tabelle 2: Parameterzahl static",
+      "claimed_in_synthesis": 45,
+      "recomputed_from_source": 45,
+      "relative_error": 0.0,
+      "status": "bestaetigt",
+      "unit": "Parameter"
+    },
+    {
+      "absolute_error": 0,
+      "check": "Tabelle 2: Parameterzahl arx",
+      "claimed_in_synthesis": 102,
+      "recomputed_from_source": 102,
+      "relative_error": 0.0,
+      "status": "bestaetigt",
+      "unit": "Parameter"
+    },
+    {
+      "absolute_error": 0,
+      "check": "Tabelle 2: Parameterzahl lstm",
+      "claimed_in_synthesis": 57027,
+      "recomputed_from_source": 57027,
+      "relative_error": 0.0,
+      "status": "bestaetigt",
+      "unit": "Parameter"
+    },
+    {
+      "absolute_error": 0,
+      "check": "Tabelle 2: Parameterzahl mamba",
+      "claimed_in_synthesis": 8139,
+      "recomputed_from_source": 8139,
+      "relative_error": 0.0,
+      "status": "bestaetigt",
+      "unit": "Parameter"
+    },
+    {
+      "absolute_error": 0,
+      "check": "Tabelle 2: Parameterzahl gru",
+      "claimed_in_synthesis": 42819,
+      "recomputed_from_source": 42819,
+      "relative_error": 0.0,
+      "status": "bestaetigt",
+      "unit": "Parameter"
+    },
+    {
+      "absolute_error": 0,
+      "check": "Tabelle 2: Parameterzahl xlstm",
+      "claimed_in_synthesis": 8649,
+      "recomputed_from_source": 8649,
+      "relative_error": 0.0,
+      "status": "bestaetigt",
+      "unit": "Parameter"
+    },
+    {
+      "absolute_error": 0,
+      "check": "Tabelle 2: Parameterzahl transformer",
+      "claimed_in_synthesis": 23523,
+      "recomputed_from_source": 23523,
+      "relative_error": 0.0,
+      "status": "bestaetigt",
+      "unit": "Parameter"
+    },
+    {
+      "absolute_error": 0.00021788836932785244,
+      "check": "3: GRU vs LSTM improvement energy_target/excited",
+      "claimed_in_synthesis": -0.018,
+      "recomputed_from_source": -0.01821788836932785,
+      "relative_error": 0.011960133079676536,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.000487746685721005,
+      "check": "3: GRU vs LSTM Schwelle energy_target/excited",
+      "claimed_in_synthesis": 0.087,
+      "recomputed_from_source": 0.087487746685721,
+      "relative_error": 0.005575028551976763,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 3.2247621572837476e-05,
+      "check": "3: GRU vs LSTM improvement energy_target/constant_holdout",
+      "claimed_in_synthesis": 0.02,
+      "recomputed_from_source": 0.020032247621572838,
+      "relative_error": 0.0016097854909755526,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 2.469497893851924e-05,
+      "check": "3: GRU vs LSTM Schwelle energy_target/constant_holdout",
+      "claimed_in_synthesis": 0.039,
+      "recomputed_from_source": 0.03897530502106148,
+      "relative_error": 0.0006336057902606424,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00046096345631732594,
+      "check": "3: GRU vs LSTM improvement product_moisture_kg_per_kg/excited",
+      "claimed_in_synthesis": -0.192,
+      "recomputed_from_source": -0.19246096345631733,
+      "relative_error": 0.002395101053424532,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00019401169624944092,
+      "check": "3: GRU vs LSTM Schwelle product_moisture_kg_per_kg/excited",
+      "claimed_in_synthesis": 0.5,
+      "recomputed_from_source": 0.5001940116962494,
+      "relative_error": 0.0003878728887447328,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00040479541215429626,
+      "check": "3: GRU vs LSTM improvement product_moisture_kg_per_kg/constant_holdout",
+      "claimed_in_synthesis": -0.199,
+      "recomputed_from_source": -0.19859520458784571,
+      "relative_error": 0.002038293991007426,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.0004984195359873378,
+      "check": "3: GRU vs LSTM Schwelle product_moisture_kg_per_kg/constant_holdout",
+      "claimed_in_synthesis": 0.348,
+      "recomputed_from_source": 0.34750158046401264,
+      "relative_error": 0.0014342942996742839,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.0003971817786881616,
+      "check": "3: GRU vs LSTM improvement bed_temperature_celsius/excited",
+      "claimed_in_synthesis": 0.003,
+      "recomputed_from_source": 0.0026028182213118384,
+      "relative_error": 0.15259681810894163,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.0002930517722107423,
+      "check": "3: GRU vs LSTM Schwelle bed_temperature_celsius/excited",
+      "claimed_in_synthesis": 0.055,
+      "recomputed_from_source": 0.05470694822778926,
+      "relative_error": 0.005356755982631874,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00039854167612230623,
+      "check": "3: GRU vs LSTM improvement bed_temperature_celsius/constant_holdout",
+      "claimed_in_synthesis": 0.035,
+      "recomputed_from_source": 0.03539854167612231,
+      "relative_error": 0.011258703247403495,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00024208874687074028,
+      "check": "3: GRU vs LSTM Schwelle bed_temperature_celsius/constant_holdout",
+      "claimed_in_synthesis": 0.062,
+      "recomputed_from_source": 0.06175791125312926,
+      "relative_error": 0.003919963320625966,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 6.336070849510822e-05,
+      "check": "3: Transformer vs LSTM improvement product_moisture_kg_per_kg/excited",
+      "claimed_in_synthesis": -0.986,
+      "recomputed_from_source": -0.9859366392915049,
+      "relative_error": 6.42644831017126e-05,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00028557646753624155,
+      "check": "3: Transformer vs LSTM Schwelle product_moisture_kg_per_kg/excited",
+      "claimed_in_synthesis": 0.91,
+      "recomputed_from_source": 0.9102855764675363,
+      "relative_error": 0.0003137218417152698,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00011722966805177704,
+      "check": "3: Transformer vs LSTM improvement product_moisture_kg_per_kg/constant_holdout",
+      "claimed_in_synthesis": -0.459,
+      "recomputed_from_source": -0.4591172296680518,
+      "relative_error": 0.0002553371132173274,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.0004909461675912108,
+      "check": "3: Transformer vs LSTM Schwelle product_moisture_kg_per_kg/constant_holdout",
+      "claimed_in_synthesis": 0.455,
+      "recomputed_from_source": 0.4554909461675912,
+      "relative_error": 0.001077839574467797,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.0002291764293003637,
+      "check": "3: Transformer vs LSTM improvement bed_temperature_celsius/epochs_200",
+      "claimed_in_synthesis": -0.026,
+      "recomputed_from_source": -0.025770823570699635,
+      "relative_error": 0.008892864004584155,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00031948890602427615,
+      "check": "3: Transformer vs LSTM Schwelle bed_temperature_celsius/epochs_200",
+      "claimed_in_synthesis": 0.083,
+      "recomputed_from_source": 0.08331948890602428,
+      "relative_error": 0.0038345039104191628,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00044322287969230875,
+      "check": "3: Transformer vs LSTM improvement bed_temperature_celsius/epochs_600",
+      "claimed_in_synthesis": 0.0,
+      "recomputed_from_source": 0.00044322287969230875,
+      "relative_error": 1.0,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00032075350933728763,
+      "check": "3: Transformer vs LSTM Schwelle bed_temperature_celsius/epochs_600",
+      "claimed_in_synthesis": 0.075,
+      "recomputed_from_source": 0.07532075350933728,
+      "relative_error": 0.0042585010689985305,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00035186667999703714,
+      "check": "3: Transformer vs LSTM improvement energy_target/epochs_200",
+      "claimed_in_synthesis": -0.082,
+      "recomputed_from_source": -0.08164813332000297,
+      "relative_error": 0.004309549596412309,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00024022987967688841,
+      "check": "3: Transformer vs LSTM Schwelle energy_target/epochs_200",
+      "claimed_in_synthesis": 0.047,
+      "recomputed_from_source": 0.04724022987967689,
+      "relative_error": 0.005085281767018605,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.0004889477176812373,
+      "check": "3: Transformer vs LSTM improvement energy_target/epochs_600",
+      "claimed_in_synthesis": -0.158,
+      "recomputed_from_source": -0.15848894771768124,
+      "relative_error": 0.003085058767329362,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 9.80764587375782e-06,
+      "check": "3: Transformer vs LSTM Schwelle energy_target/epochs_600",
+      "claimed_in_synthesis": 0.098,
+      "recomputed_from_source": 0.09800980764587376,
+      "relative_error": 0.00010006800451230887,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.0,
+      "check": "3: xLSTM/Mamba 10/12 Zellen aufloesbar (zwei Ausnahmen: xLSTM/Feuchte)",
+      "claimed_in_synthesis": 10.0,
+      "recomputed_from_source": 10.0,
+      "relative_error": 0.0,
+      "status": "bestaetigt",
+      "unit": "von 12"
+    },
+    {
+      "absolute_error": 0.000487746685721005,
+      "check": "Tabelle 1: energy_target/excited/narrow unterer Rand",
+      "claimed_in_synthesis": 0.087,
+      "recomputed_from_source": 0.087487746685721,
+      "relative_error": 0.005575028551976763,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00042678787075439706,
+      "check": "Tabelle 1: energy_target/excited/narrow oberer Rand",
+      "claimed_in_synthesis": 0.105,
+      "recomputed_from_source": 0.1045732121292456,
+      "relative_error": 0.004081235165913383,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.0004266353050215721,
+      "check": "Tabelle 1: energy_target/excited/wide unterer Rand",
+      "claimed_in_synthesis": 0.233,
+      "recomputed_from_source": 0.23257336469497844,
+      "relative_error": 0.0018344117159809217,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00025066400105089315,
+      "check": "Tabelle 1: energy_target/excited/wide oberer Rand",
+      "claimed_in_synthesis": 11.897,
+      "recomputed_from_source": 11.897250664001051,
+      "relative_error": 2.1069069495976706e-05,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 2.469497893851924e-05,
+      "check": "Tabelle 1: energy_target/constant_holdout/narrow unterer Rand",
+      "claimed_in_synthesis": 0.039,
+      "recomputed_from_source": 0.03897530502106148,
+      "relative_error": 0.0006336057902606424,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00024022987967688841,
+      "check": "Tabelle 1: energy_target/constant_holdout/narrow oberer Rand",
+      "claimed_in_synthesis": 0.047,
+      "recomputed_from_source": 0.04724022987967689,
+      "relative_error": 0.005085281767018605,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 4.1862115425894686e-05,
+      "check": "Tabelle 1: energy_target/constant_holdout/wide unterer Rand",
+      "claimed_in_synthesis": 0.172,
+      "recomputed_from_source": 0.1719581378845741,
+      "relative_error": 0.00024344364239390864,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.000231783284121434,
+      "check": "Tabelle 1: energy_target/constant_holdout/wide oberer Rand",
+      "claimed_in_synthesis": 10.349,
+      "recomputed_from_source": 10.349231783284122,
+      "relative_error": 2.2396182535577748e-05,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00019401169624944092,
+      "check": "Tabelle 1: product_moisture_kg_per_kg/excited/narrow unterer Rand",
+      "claimed_in_synthesis": 0.5,
+      "recomputed_from_source": 0.5001940116962494,
+      "relative_error": 0.0003878728887447328,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00028557646753624155,
+      "check": "Tabelle 1: product_moisture_kg_per_kg/excited/narrow oberer Rand",
+      "claimed_in_synthesis": 0.91,
+      "recomputed_from_source": 0.9102855764675363,
+      "relative_error": 0.0003137218417152698,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00021597569120546112,
+      "check": "Tabelle 1: product_moisture_kg_per_kg/excited/wide unterer Rand",
+      "claimed_in_synthesis": 2.986,
+      "recomputed_from_source": 2.9857840243087947,
+      "relative_error": 7.233466635466348e-05,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.000258501784785814,
+      "check": "Tabelle 1: product_moisture_kg_per_kg/excited/wide oberer Rand",
+      "claimed_in_synthesis": 3.573,
+      "recomputed_from_source": 3.572741498215214,
+      "relative_error": 7.235390103508754e-05,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.0004984195359873378,
+      "check": "Tabelle 1: product_moisture_kg_per_kg/constant_holdout/narrow unterer Rand",
+      "claimed_in_synthesis": 0.348,
+      "recomputed_from_source": 0.34750158046401264,
+      "relative_error": 0.0014342942996742839,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.0004909461675912108,
+      "check": "Tabelle 1: product_moisture_kg_per_kg/constant_holdout/narrow oberer Rand",
+      "claimed_in_synthesis": 0.455,
+      "recomputed_from_source": 0.4554909461675912,
+      "relative_error": 0.001077839574467797,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00045045441771796035,
+      "check": "Tabelle 1: product_moisture_kg_per_kg/constant_holdout/wide unterer Rand",
+      "claimed_in_synthesis": 1.42,
+      "recomputed_from_source": 1.419549545582282,
+      "relative_error": 0.000317322082289977,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.0004984191091301771,
+      "check": "Tabelle 1: product_moisture_kg_per_kg/constant_holdout/wide oberer Rand",
+      "claimed_in_synthesis": 1.478,
+      "recomputed_from_source": 1.4784984191091302,
+      "relative_error": 0.0003371116956827723,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.0002930517722107423,
+      "check": "Tabelle 1: bed_temperature_celsius/excited/narrow unterer Rand",
+      "claimed_in_synthesis": 0.055,
+      "recomputed_from_source": 0.05470694822778926,
+      "relative_error": 0.005356755982631874,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00046395302145160744,
+      "check": "Tabelle 1: bed_temperature_celsius/excited/narrow oberer Rand",
+      "claimed_in_synthesis": 0.111,
+      "recomputed_from_source": 0.1105360469785484,
+      "relative_error": 0.0041973006465632545,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.0002770051451581601,
+      "check": "Tabelle 1: bed_temperature_celsius/excited/wide unterer Rand",
+      "claimed_in_synthesis": 0.494,
+      "recomputed_from_source": 0.49427700514515815,
+      "relative_error": 0.0005604249080468751,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.0002199250717687118,
+      "check": "Tabelle 1: bed_temperature_celsius/excited/wide oberer Rand",
+      "claimed_in_synthesis": 0.82,
+      "recomputed_from_source": 0.8202199250717687,
+      "relative_error": 0.0002681293943809869,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00024208874687074028,
+      "check": "Tabelle 1: bed_temperature_celsius/constant_holdout/narrow unterer Rand",
+      "claimed_in_synthesis": 0.062,
+      "recomputed_from_source": 0.06175791125312926,
+      "relative_error": 0.003919963320625966,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00031948890602427615,
+      "check": "Tabelle 1: bed_temperature_celsius/constant_holdout/narrow oberer Rand",
+      "claimed_in_synthesis": 0.083,
+      "recomputed_from_source": 0.08331948890602428,
+      "relative_error": 0.0038345039104191628,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00026394203413079853,
+      "check": "Tabelle 1: bed_temperature_celsius/constant_holdout/wide unterer Rand",
+      "claimed_in_synthesis": 0.237,
+      "recomputed_from_source": 0.2367360579658692,
+      "relative_error": 0.0011149211336823547,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.00046623060079048484,
+      "check": "Tabelle 1: bed_temperature_celsius/constant_holdout/wide oberer Rand",
+      "claimed_in_synthesis": 0.343,
+      "recomputed_from_source": 0.3434662306007905,
+      "relative_error": 0.0013574277738307929,
+      "status": "bestaetigt",
+      "unit": "relativ"
+    },
+    {
+      "absolute_error": 0.0013304451090956348,
+      "check": "3.1: energy_target Faktor Statisch/gru (excited)",
+      "claimed_in_synthesis": 7.68,
+      "recomputed_from_source": 7.681330445109095,
+      "relative_error": 0.00017320503506560692,
+      "status": "bestaetigt",
+      "unit": ""
+    },
+    {
+      "absolute_error": 0.0012680656860117878,
+      "check": "3.1: energy_target Faktor Statisch/lstm (excited)",
+      "claimed_in_synthesis": 7.82,
+      "recomputed_from_source": 7.821268065686012,
+      "relative_error": 0.00016213044679738443,
+      "status": "bestaetigt",
+      "unit": ""
+    },
+    {
+      "absolute_error": 0.002432966452976082,
+      "check": "3.1: energy_target Faktor Statisch/transformer (excited)",
+      "claimed_in_synthesis": 6.43,
+      "recomputed_from_source": 6.432432966452976,
+      "relative_error": 0.0003782342491036775,
+      "status": "bestaetigt",
+      "unit": ""
+    },
+    {
+      "absolute_error": 0.0036026899220500397,
+      "check": "3.1: energy_target Faktor Statisch/gru (constant_holdout)",
+      "claimed_in_synthesis": 5.74,
+      "recomputed_from_source": 5.73639731007795,
+      "relative_error": 0.0006280405152064134,
+      "status": "bestaetigt",
+      "unit": ""
+    },
+    {
+      "absolute_error": 0.0014843787067446712,
+      "check": "3.1: energy_target Faktor Statisch/lstm (constant_holdout)",
+      "claimed_in_synthesis": 5.62,
+      "recomputed_from_source": 5.621484378706745,
+      "relative_error": 0.0002640545818053418,
+      "status": "bestaetigt",
+      "unit": ""
+    },
+    {
+      "absolute_error": 0.002852974513809059,
+      "check": "3.1: energy_target Faktor Statisch/transformer (constant_holdout)",
+      "claimed_in_synthesis": 5.2,
+      "recomputed_from_source": 5.197147025486191,
+      "relative_error": 0.0005489501258706769,
+      "status": "bestaetigt",
+      "unit": ""
+    },
+    {
+      "actual_factor": 11.44875811835872,
+      "check": "3: Transformer/lstm Trainingszeitfaktor in [9.6; 11.4] (\u00b10,05 Rundung)",
+      "status": "bestaetigt"
+    },
+    {
+      "actual_factor": 9.58386995186422,
+      "check": "3: Transformer/gru Trainingszeitfaktor in [9.6; 11.4] (\u00b10,05 Rundung)",
+      "status": "bestaetigt"
+    },
+    {
+      "absolute_error": 0.0,
+      "check": "2: Seedbedarf 12,5% Feuchte (excited)",
+      "claimed_in_synthesis": 41.0,
+      "recomputed_from_source": 41.0,
+      "relative_error": 0.0,
+      "status": "bestaetigt",
+      "unit": ""
+    },
+    {
+      "absolute_error": 0.0,
+      "check": "2: Seedbedarf 12,5% Feuchte (constant_holdout)",
+      "claimed_in_synthesis": 40.0,
+      "recomputed_from_source": 40.0,
+      "relative_error": 0.0,
+      "status": "bestaetigt",
+      "unit": ""
+    },
+    {
+      "absolute_error": 0.0498280167455496,
+      "check": "7: Pinch-Verschaltungsl\u00fccke unterer Rand",
+      "claimed_in_synthesis": 2.3,
+      "recomputed_from_source": 2.2501719832544502,
+      "relative_error": 0.022144092592195,
+      "status": "bestaetigt",
+      "unit": "%"
+    },
+    {
+      "absolute_error": 0.041336825339130634,
+      "check": "7: Pinch-Verschaltungsl\u00fccke oberer Rand",
+      "claimed_in_synthesis": 4.2,
+      "recomputed_from_source": 4.1586631746608695,
+      "relative_error": 0.009939931079535329,
+      "status": "bestaetigt",
+      "unit": "%"
+    },
+    {
+      "absolute_error": 0.00015806299105947108,
+      "check": "5: Feststoffanteil-Vorhersage (Bett-Bilanz) ACE",
+      "claimed_in_synthesis": 0.726,
+      "recomputed_from_source": 0.7258419370089405,
+      "relative_error": 0.00021776502982291053,
+      "status": "bestaetigt",
+      "unit": ""
+    },
+    {
+      "absolute_error": 0.00045459565663519275,
+      "check": "5: Feststoffanteil-Vorhersage (Bett-Bilanz) RID",
+      "claimed_in_synthesis": 0.712,
+      "recomputed_from_source": 0.7115454043433648,
+      "relative_error": 0.0006388849592173351,
+      "status": "bestaetigt",
+      "unit": ""
+    },
+    {
+      "absolute_error": 0.00017417783355477834,
+      "check": "5/F1: Feststoffanteil Ganz-Apparat-Bilanz ACE (Modell-Wandverlust)",
+      "claimed_in_synthesis": 0.591,
+      "recomputed_from_source": 0.5911741778335547,
+      "relative_error": 0.0002946303138494289,
+      "status": "bestaetigt",
+      "unit": ""
+    },
+    {
+      "absolute_error": 5.92444375028256e-05,
+      "check": "5/F1: Feststoffanteil Ganz-Apparat-Bilanz ACE (30-kW-Sensitivitaet)",
+      "claimed_in_synthesis": 0.64,
+      "recomputed_from_source": 0.6400592444375028,
+      "relative_error": 9.256086529129163e-05,
+      "status": "bestaetigt",
+      "unit": ""
+    },
+    {
+      "absolute_error": 0.00031695387444485856,
+      "check": "5/F1: Feststoffanteil Ganz-Apparat-Bilanz RID (Modell-Wandverlust)",
+      "claimed_in_synthesis": 0.64,
+      "recomputed_from_source": 0.6396830461255552,
+      "relative_error": 0.0004954858134268073,
+      "status": "bestaetigt",
+      "unit": ""
+    },
+    {
+      "absolute_error": 0.00027279999990725834,
+      "check": "5/F1: Feststoffanteil Ganz-Apparat-Bilanz RID (30-kW-Sensitivitaet)",
+      "claimed_in_synthesis": 0.661,
+      "recomputed_from_source": 0.6607272000000928,
+      "relative_error": 0.0004128784162468565,
+      "status": "bestaetigt",
+      "unit": ""
+    },
+    {
+      "absolute_error": 0.12512194532564536,
+      "check": "5/F1: implizierte RID-Feststoffdichte, Ganz-Apparat-Bilanz (Modell-Wandverlust)",
+      "claimed_in_synthesis": 1658.0,
+      "recomputed_from_source": 1658.1251219453256,
+      "relative_error": 7.54598936290473e-05,
+      "status": "bestaetigt",
+      "unit": "kg/m3"
+    },
+    {
+      "absolute_error": 0.0860548834580186,
+      "check": "5/F1: implizierte RID-Feststoffdichte, Ganz-Apparat-Bilanz (30-kW-Sensitivitaet)",
+      "claimed_in_synthesis": 1624.0,
+      "recomputed_from_source": 1623.913945116542,
+      "relative_error": 5.2992268289095066e-05,
+      "status": "bestaetigt",
+      "unit": "kg/m3"
+    },
+    {
+      "absolute_error": 0.00017417783355477834,
+      "check": "5: Gesamtspanne Feststoffanteil, Minimum (~59 %)",
+      "claimed_in_synthesis": 0.591,
+      "recomputed_from_source": 0.5911741778335547,
+      "relative_error": 0.0002946303138494289,
+      "status": "bestaetigt",
+      "unit": ""
+    },
+    {
+      "absolute_error": 0.00015806299105947108,
+      "check": "5: Gesamtspanne Feststoffanteil, Maximum (~73 %)",
+      "claimed_in_synthesis": 0.726,
+      "recomputed_from_source": 0.7258419370089405,
+      "relative_error": 0.00021776502982291053,
+      "status": "bestaetigt",
+      "unit": ""
+    },
+    {
+      "check": "3.1: R2_stat=0,972 (reproduziert) steht in 02_prozess_setup.md",
+      "status": "bestaetigt"
+    },
+    {
+      "actual_ratio": 2.2213479443175834,
+      "check": "4: Befund-55-Faktor gru n_train=8 in [2,2; 3,1]",
+      "status": "bestaetigt"
+    },
+    {
+      "actual_ratio": 2.703875795299433,
+      "check": "4: Befund-55-Faktor lstm n_train=8 in [2,2; 3,1]",
+      "status": "bestaetigt"
+    },
+    {
+      "actual_ratio": 2.451096359083127,
+      "check": "4: Befund-55-Faktor gru n_train=16 in [2,2; 3,1]",
+      "status": "bestaetigt"
+    },
+    {
+      "actual_ratio": 2.685484551832109,
+      "check": "4: Befund-55-Faktor lstm n_train=16 in [2,2; 3,1]",
+      "status": "bestaetigt"
+    },
+    {
+      "actual_ratio": 2.2838340706275098,
+      "check": "4: Befund-55-Faktor gru n_train=32 in [2,2; 3,1]",
+      "status": "bestaetigt"
+    },
+    {
+      "actual_ratio": 3.058466372712824,
+      "check": "4: Befund-55-Faktor lstm n_train=32 in [2,2; 3,1]",
+      "status": "bestaetigt"
+    },
+    {
+      "actual_ratio": 2.5243562623547726,
+      "check": "4: Befund-55-Faktor gru n_train=64 in [2,2; 3,1]",
+      "status": "bestaetigt"
+    },
+    {
+      "actual_ratio": 2.399081028523533,
+      "check": "4: Befund-55-Faktor lstm n_train=64 in [2,2; 3,1]",
+      "status": "bestaetigt"
+    },
+    {
+      "absolute_error": 0.03046317836972179,
+      "check": "7: Regret Median (~16 %)",
+      "claimed_in_synthesis": 16.0,
+      "recomputed_from_source": 16.030463178369722,
+      "relative_error": 0.0019003305163899735,
+      "status": "bestaetigt",
+      "unit": "%"
+    },
+    {
+      "absolute_error": 0.19852874959935107,
+      "check": "7: Regret Maximum (~26 %)",
+      "claimed_in_synthesis": 26.0,
+      "recomputed_from_source": 25.80147125040065,
+      "relative_error": 0.007694473996178349,
+      "status": "bestaetigt",
+      "unit": "%"
+    },
+    {
+      "absolute_error": 0.004323549026750584,
+      "check": "7: Marge/(3xRMSE) angeregt",
+      "claimed_in_synthesis": 85.7,
+      "recomputed_from_source": 85.70432354902675,
+      "relative_error": 5.044726855906304e-05,
+      "status": "bestaetigt",
+      "unit": ""
+    },
+    {
+      "absolute_error": 0.04743202320748452,
+      "check": "7: Marge/(3xRMSE) konstant",
+      "claimed_in_synthesis": 31.3,
+      "recomputed_from_source": 31.252567976792516,
+      "relative_error": 0.0015177000252493337,
+      "status": "bestaetigt",
+      "unit": ""
+    }
+  ]
+}

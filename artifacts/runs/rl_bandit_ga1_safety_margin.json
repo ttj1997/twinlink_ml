@@ -1,0 +1,725 @@
+{
+  "bed_temperature_limit_c": 80.0,
+  "critical_moisture_kg_per_kg": 0.2,
+  "median_across_seeds": {
+    "gas_velocity_delta_agent_minus_oracle_binding_subset_m_per_s": 0.1029825632787087,
+    "moisture_margin_agent_binding_subset_kg_per_kg": 0.13954511722585233
+  },
+  "n_oracle_binding_moisture": 17,
+  "n_points": 25,
+  "oracle_per_point": [
+    {
+      "bed_temperature_margin_k": 49.26716587021669,
+      "binding_moisture": true,
+      "gas_velocity_m_per_s": 0.800131237008538,
+      "moisture_margin_kg_per_kg": 5.1978773063510175e-08
+    },
+    {
+      "bed_temperature_margin_k": 48.75090390162886,
+      "binding_moisture": true,
+      "gas_velocity_m_per_s": 0.800148958034117,
+      "moisture_margin_kg_per_kg": 5.1978773063510175e-08
+    },
+    {
+      "bed_temperature_margin_k": 48.24731150107059,
+      "binding_moisture": true,
+      "gas_velocity_m_per_s": 0.8001204792509937,
+      "moisture_margin_kg_per_kg": 5.1978773063510175e-08
+    },
+    {
+      "bed_temperature_margin_k": 47.75857061400849,
+      "binding_moisture": true,
+      "gas_velocity_m_per_s": 0.8001937530466643,
+      "moisture_margin_kg_per_kg": 5.1978773063510175e-08
+    },
+    {
+      "bed_temperature_margin_k": 47.28074876798213,
+      "binding_moisture": true,
+      "gas_velocity_m_per_s": 0.8002061385118446,
+      "moisture_margin_kg_per_kg": 5.1978773063510175e-08
+    },
+    {
+      "bed_temperature_margin_k": 48.71344941765772,
+      "binding_moisture": true,
+      "gas_velocity_m_per_s": 0.8008578302358627,
+      "moisture_margin_kg_per_kg": 5.1978773063510175e-08
+    },
+    {
+      "bed_temperature_margin_k": 47.87107306821981,
+      "binding_moisture": true,
+      "gas_velocity_m_per_s": 0.800069633064936,
+      "moisture_margin_kg_per_kg": 5.1978773063510175e-08
+    },
+    {
+      "bed_temperature_margin_k": 47.0777536152403,
+      "binding_moisture": true,
+      "gas_velocity_m_per_s": 0.8000160763536313,
+      "moisture_margin_kg_per_kg": 1.115773515247831e-07
+    },
+    {
+      "bed_temperature_margin_k": 46.31769409956456,
+      "binding_moisture": true,
+      "gas_velocity_m_per_s": 0.8000806682824244,
+      "moisture_margin_kg_per_kg": 5.1978773063510175e-08
+    },
+    {
+      "bed_temperature_margin_k": 45.5840101411733,
+      "binding_moisture": true,
+      "gas_velocity_m_per_s": 0.8000305747585623,
+      "moisture_margin_kg_per_kg": 5.1978773063510175e-08
+    },
+    {
+      "bed_temperature_margin_k": 49.99782075122617,
+      "binding_moisture": true,
+      "gas_velocity_m_per_s": 0.9193677771632893,
+      "moisture_margin_kg_per_kg": 5.1978773063510175e-08
+    },
+    {
+      "bed_temperature_margin_k": 49.993118923480324,
+      "binding_moisture": true,
+      "gas_velocity_m_per_s": 1.0164329720408487,
+      "moisture_margin_kg_per_kg": 5.1978773063510175e-08
+    },
+    {
+      "bed_temperature_margin_k": 45.40577900407911,
+      "binding_moisture": true,
+      "gas_velocity_m_per_s": 0.8000417498147472,
+      "moisture_margin_kg_per_kg": 5.1978773063510175e-08
+    },
+    {
+      "bed_temperature_margin_k": 44.357936500962026,
+      "binding_moisture": true,
+      "gas_velocity_m_per_s": 0.8043563811708438,
+      "moisture_margin_kg_per_kg": 5.1978773063510175e-08
+    },
+    {
+      "bed_temperature_margin_k": 43.228713263718305,
+      "binding_moisture": true,
+      "gas_velocity_m_per_s": 0.800033561871794,
+      "moisture_margin_kg_per_kg": 5.1978773063510175e-08
+    },
+    {
+      "bed_temperature_margin_k": 42.49999856358983,
+      "binding_moisture": false,
+      "gas_velocity_m_per_s": 0.8000333019348238,
+      "moisture_margin_kg_per_kg": 0.0376640292380937
+    },
+    {
+      "bed_temperature_margin_k": 42.49999571755335,
+      "binding_moisture": false,
+      "gas_velocity_m_per_s": 0.8001170780280211,
+      "moisture_margin_kg_per_kg": 0.02368089155628056
+    },
+    {
+      "bed_temperature_margin_k": 42.49999858249209,
+      "binding_moisture": false,
+      "gas_velocity_m_per_s": 0.8000373060423543,
+      "moisture_margin_kg_per_kg": 0.007310175221693471
+    },
+    {
+      "bed_temperature_margin_k": 41.65646321618239,
+      "binding_moisture": true,
+      "gas_velocity_m_per_s": 0.8052745561785708,
+      "moisture_margin_kg_per_kg": 5.1978773063510175e-08
+    },
+    {
+      "bed_temperature_margin_k": 40.13913397287989,
+      "binding_moisture": true,
+      "gas_velocity_m_per_s": 0.8000357490582031,
+      "moisture_margin_kg_per_kg": 5.1978773063510175e-08
+    },
+    {
+      "bed_temperature_margin_k": 34.99999248684277,
+      "binding_moisture": false,
+      "gas_velocity_m_per_s": 0.8000000000000003,
+      "moisture_margin_kg_per_kg": 0.08113696074540026
+    },
+    {
+      "bed_temperature_margin_k": 34.99999850648422,
+      "binding_moisture": false,
+      "gas_velocity_m_per_s": 0.8006421282979224,
+      "moisture_margin_kg_per_kg": 0.06984928797282569
+    },
+    {
+      "bed_temperature_margin_k": 34.99999851479305,
+      "binding_moisture": false,
+      "gas_velocity_m_per_s": 0.8000298702346711,
+      "moisture_margin_kg_per_kg": 0.05620884211731364
+    },
+    {
+      "bed_temperature_margin_k": 34.99999852567205,
+      "binding_moisture": false,
+      "gas_velocity_m_per_s": 0.8000000058843479,
+      "moisture_margin_kg_per_kg": 0.03969240725832551
+    },
+    {
+      "bed_temperature_margin_k": 34.99999853915995,
+      "binding_moisture": false,
+      "gas_velocity_m_per_s": 0.8002118175536281,
+      "moisture_margin_kg_per_kg": 0.01918155647197134
+    }
+  ],
+  "per_seed": {
+    "0": {
+      "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\7ab31069ac73_step010000.zip",
+      "median_bed_temperature_margin_agent_all_k": 23.319272179517192,
+      "median_gas_velocity_delta_agent_minus_oracle_all_m_per_s": 0.10152788351106545,
+      "median_gas_velocity_delta_agent_minus_oracle_binding_subset_m_per_s": 0.1029825632787087,
+      "median_moisture_margin_agent_all_kg_per_kg": 0.134758397796078,
+      "median_moisture_margin_agent_binding_subset_kg_per_kg": 0.1298720295430732,
+      "n_agent_binding_moisture": 0,
+      "n_binding_subset": 17,
+      "per_point": [
+        {
+          "bed_temperature_margin_k": 31.090835602809328,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9031138002872467,
+          "moisture_margin_kg_per_kg": 0.11893700155940708,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 31.845112247235754,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8827112764120102,
+          "moisture_margin_kg_per_kg": 0.11379590898194815,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 32.50508770529882,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8674973994493484,
+          "moisture_margin_kg_per_kg": 0.10902694992856303,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 33.106770085297995,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8566902726888657,
+          "moisture_margin_kg_per_kg": 0.1045331575120531,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 33.63843045926535,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8480464458465576,
+          "moisture_margin_kg_per_kg": 0.10024444380411746,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 26.2364389790147,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.987511020898819,
+          "moisture_margin_kg_per_kg": 0.13759350217471195,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 27.31442023206295,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9614559203386307,
+          "moisture_margin_kg_per_kg": 0.13223654354597253,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 28.298501769983524,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9387712389230729,
+          "moisture_margin_kg_per_kg": 0.1268038947225545,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 29.29764385446905,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9195011556148529,
+          "moisture_margin_kg_per_kg": 0.1209653199810604,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 30.230698244972274,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9032745569944383,
+          "moisture_margin_kg_per_kg": 0.11495516093210183,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 22.230153234876084,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9752962470054627,
+          "moisture_margin_kg_per_kg": 0.1457953393489572,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 22.722222581069573,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9645566552877427,
+          "moisture_margin_kg_per_kg": 0.14285486468355796,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 23.319272179517192,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9507067531347275,
+          "moisture_margin_kg_per_kg": 0.13935630892920503,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 24.123497342229108,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9303412646055222,
+          "moisture_margin_kg_per_kg": 0.1346990376119048,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 24.87118834447287,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9122619360685349,
+          "moisture_margin_kg_per_kg": 0.1298720295430732,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 20.544204291374797,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9172136276960373,
+          "moisture_margin_kg_per_kg": 0.14596150018577936,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 20.72656885011927,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9143974721431732,
+          "moisture_margin_kg_per_kg": 0.14350860149098355,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 20.929332910983476,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9111538141965867,
+          "moisture_margin_kg_per_kg": 0.14092065241733584,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 21.17801824431062,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9068024396896363,
+          "moisture_margin_kg_per_kg": 0.13804382903376092,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 21.481826728723092,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.900982216000557,
+          "moisture_margin_kg_per_kg": 0.134758397796078,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 19.088239967593665,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.871581369638443,
+          "moisture_margin_kg_per_kg": 0.14568335361997983,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 19.138886527804857,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8706555366516113,
+          "moisture_margin_kg_per_kg": 0.14282476740142191,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 19.237199064420594,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8689058065414429,
+          "moisture_margin_kg_per_kg": 0.13971205284419486,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 19.333436650592475,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8671385973691941,
+          "moisture_margin_kg_per_kg": 0.13642554883209923,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 19.42598391453636,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.865414908528328,
+          "moisture_margin_kg_per_kg": 0.13291257022175235,
+          "solve_failed": false
+        }
+      ]
+    },
+    "1": {
+      "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\1a0521c47870_step010000.zip",
+      "median_bed_temperature_margin_agent_all_k": 17.793516551101263,
+      "median_gas_velocity_delta_agent_minus_oracle_all_m_per_s": 0.06781250686809714,
+      "median_gas_velocity_delta_agent_minus_oracle_binding_subset_m_per_s": 0.044893819737518825,
+      "median_moisture_margin_agent_all_kg_per_kg": 0.14967985549759294,
+      "median_moisture_margin_agent_binding_subset_kg_per_kg": 0.14541402764379638,
+      "n_agent_binding_moisture": 0,
+      "n_binding_subset": 17,
+      "per_point": [
+        {
+          "bed_temperature_margin_k": 22.96857388936452,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8344598442316056,
+          "moisture_margin_kg_per_kg": 0.1387385100646072,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 22.950719697500652,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8299034833908081,
+          "moisture_margin_kg_per_kg": 0.13798798516571845,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 22.935750051116308,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8263208329677583,
+          "moisture_margin_kg_per_kg": 0.13728418555236363,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 22.958069650148616,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8239828944206238,
+          "moisture_margin_kg_per_kg": 0.1365511826355501,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 22.99004347995602,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.82210853099823,
+          "moisture_margin_kg_per_kg": 0.1358149613954983,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 20.005045413028384,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8656115859746933,
+          "moisture_margin_kg_per_kg": 0.14680780000029697,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 20.129109027603604,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8577790915966035,
+          "moisture_margin_kg_per_kg": 0.14541402764379638,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 20.217418806006933,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8509252727031709,
+          "moisture_margin_kg_per_kg": 0.14413396937504927,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 20.27011156371003,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8449744880199432,
+          "moisture_margin_kg_per_kg": 0.14296923435567482,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 20.29635769581624,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8386675357818604,
+          "moisture_margin_kg_per_kg": 0.14184019888481414,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 17.23735212765053,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9172178834676743,
+          "moisture_margin_kg_per_kg": 0.15388233006245766,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 17.52328003882834,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9038552671670914,
+          "moisture_margin_kg_per_kg": 0.1517900623660876,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 17.793516551101263,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8903020024299622,
+          "moisture_margin_kg_per_kg": 0.14967985549759294,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 18.014170273802144,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8781169176101685,
+          "moisture_margin_kg_per_kg": 0.14767537650733448,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 18.170493035421096,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8678460687398911,
+          "moisture_margin_kg_per_kg": 0.1458415878458632,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 14.074652408069568,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9651542365550996,
+          "moisture_margin_kg_per_kg": 0.1601071035925485,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 14.514943190902656,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9477652549743653,
+          "moisture_margin_kg_per_kg": 0.15747904467557894,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 14.912510284173237,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9320497035980225,
+          "moisture_margin_kg_per_kg": 0.1549284639106427,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 15.269196955098067,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9173341572284699,
+          "moisture_margin_kg_per_kg": 0.15240625206906633,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 15.594136312812992,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9023128539323807,
+          "moisture_margin_kg_per_kg": 0.14983010351395906,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 11.063212864231033,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9992167234420777,
+          "moisture_margin_kg_per_kg": 0.16448861228718864,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 11.538487617581694,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9804903149604798,
+          "moisture_margin_kg_per_kg": 0.16156416963940246,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 12.010021087737854,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9622694820165635,
+          "moisture_margin_kg_per_kg": 0.15863013162047984,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 12.488768832692301,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9438927054405213,
+          "moisture_margin_kg_per_kg": 0.15555865927956586,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 12.917536927421338,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9273279249668122,
+          "moisture_margin_kg_per_kg": 0.1524453487365539,
+          "solve_failed": false
+        }
+      ]
+    },
+    "2": {
+      "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\a5f35282f131_step010000.zip",
+      "median_bed_temperature_margin_agent_all_k": 24.611201822279583,
+      "median_gas_velocity_delta_agent_minus_oracle_all_m_per_s": 0.23116206254601646,
+      "median_gas_velocity_delta_agent_minus_oracle_binding_subset_m_per_s": 0.5322315520525822,
+      "median_moisture_margin_agent_all_kg_per_kg": 0.13777039075566183,
+      "median_moisture_margin_agent_binding_subset_kg_per_kg": 0.13954511722585233,
+      "n_agent_binding_moisture": 0,
+      "n_binding_subset": 17,
+      "per_point": [
+        {
+          "bed_temperature_margin_k": 31.63441107380539,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 1.444073849916458,
+          "moisture_margin_kg_per_kg": 0.14214474762088353,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 31.961310647580206,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 1.4200274735689162,
+          "moisture_margin_kg_per_kg": 0.13977332018287963,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 32.18008192108762,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 1.3953440994024278,
+          "moisture_margin_kg_per_kg": 0.13757031832768046,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 32.29308897274109,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 1.3714386701583863,
+          "moisture_margin_kg_per_kg": 0.13560195607598524,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 32.3611722889534,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 1.3506725311279297,
+          "moisture_margin_kg_per_kg": 0.1338102440109259,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 28.67439273112023,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 1.405258071422577,
+          "moisture_margin_kg_per_kg": 0.14695673684793636,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 28.912446702670778,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 1.3845343887805939,
+          "moisture_margin_kg_per_kg": 0.14469222925973846,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 29.043494731983728,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 1.358269488811493,
+          "moisture_margin_kg_per_kg": 0.1424556138062725,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 29.178150566583305,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 1.3323122203350066,
+          "moisture_margin_kg_per_kg": 0.1401484336358778,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 29.314460480450926,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 1.3070206254720689,
+          "moisture_margin_kg_per_kg": 0.13777039075566183,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 23.937688571873537,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.9840244293212891,
+          "moisture_margin_kg_per_kg": 0.142191174913525,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 24.264525367678615,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 1.0059478342533112,
+          "moisture_margin_kg_per_kg": 0.1408572395298255,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 24.611201822279583,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 1.0312038123607636,
+          "moisture_margin_kg_per_kg": 0.13954511722585233,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 24.961115824277655,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 1.0593417078256606,
+          "moisture_margin_kg_per_kg": 0.1382541524172421,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 25.320017255611553,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 1.089714390039444,
+          "moisture_margin_kg_per_kg": 0.1369211706107984,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 22.709085891198484,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8576596260070801,
+          "moisture_margin_kg_per_kg": 0.1378328500659164,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 22.77483920632683,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8617446601390839,
+          "moisture_margin_kg_per_kg": 0.13564039715910942,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 22.83631187604584,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8661074340343475,
+          "moisture_margin_kg_per_kg": 0.13341152952084684,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 22.892810309867677,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8707651227712632,
+          "moisture_margin_kg_per_kg": 0.13112419567708833,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 22.943700544479988,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8757357120513917,
+          "moisture_margin_kg_per_kg": 0.1287603372585523,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 20.690239628330005,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8196933805942536,
+          "moisture_margin_kg_per_kg": 0.13924134327130328,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 20.767363515585586,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.821099153161049,
+          "moisture_margin_kg_per_kg": 0.1360220068571627,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 20.843718117054486,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8226296603679657,
+          "moisture_margin_kg_per_kg": 0.1326437210341968,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 20.918248754368065,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8242695510387421,
+          "moisture_margin_kg_per_kg": 0.12903854342293036,
+          "solve_failed": false
+        },
+        {
+          "bed_temperature_margin_k": 20.989920595640967,
+          "binding_moisture": false,
+          "gas_velocity_m_per_s": 0.8260277926921845,
+          "moisture_margin_kg_per_kg": 0.12514449150173662,
+          "solve_failed": false
+        }
+      ]
+    }
+  }
+}

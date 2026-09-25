@@ -1,0 +1,1160 @@
+{
+  "1000": {
+    "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\0e3ce674ba22_step001000.zip",
+    "mu_abs_max": [
+      1.8146841526031494,
+      2.280487060546875
+    ],
+    "mu_mean": [
+      1.0365592980384826,
+      -1.327381865978241
+    ],
+    "mu_std": [
+      0.5169091889757362,
+      0.6617187569510873
+    ],
+    "n_contexts": 25,
+    "n_contexts_corner_ranked_above_oracle": 22,
+    "n_contexts_saturated": [
+      0,
+      0
+    ],
+    "per_point": [
+      {
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 5.0,
+        "deterministic_action_normalised": [
+          0.2645221948623657,
+          -0.35965240001678467
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.2709646224975586,
+          -0.376486599445343
+        ],
+        "q_at_corner": [
+          -0.13408149778842926,
+          -0.13728123903274536
+        ],
+        "q_at_oracle": [
+          -0.14339220523834229,
+          -0.15825247764587402
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 5.0,
+        "deterministic_action_normalised": [
+          0.2832832336425781,
+          -0.367811918258667
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.2912481427192688,
+          -0.38589030504226685
+        ],
+        "q_at_corner": [
+          -0.1434372365474701,
+          -0.1435564160346985
+        ],
+        "q_at_oracle": [
+          -0.1556277871131897,
+          -0.16428449749946594
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 5.0,
+        "deterministic_action_normalised": [
+          0.3010232448577881,
+          -0.37676578760147095
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.3106445074081421,
+          -0.3962849974632263
+        ],
+        "q_at_corner": [
+          -0.1528151035308838,
+          -0.15335148572921753
+        ],
+        "q_at_oracle": [
+          -0.16717785596847534,
+          -0.16989374160766602
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 5.0,
+        "deterministic_action_normalised": [
+          0.317130446434021,
+          -0.38247376680374146
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.3284534811973572,
+          -0.4029541015625
+        ],
+        "q_at_corner": [
+          -0.16253536939620972,
+          -0.16351577639579773
+        ],
+        "q_at_oracle": [
+          -0.17850282788276672,
+          -0.17440316081047058
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 5.0,
+        "deterministic_action_normalised": [
+          0.3326507806777954,
+          -0.3864894509315491
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.34580594301223755,
+          -0.4076663851737976
+        ],
+        "q_at_corner": [
+          -0.17532497644424438,
+          -0.17288845777511597
+        ],
+        "q_at_oracle": [
+          -0.18977570533752441,
+          -0.18021619319915771
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 12.5,
+        "deterministic_action_normalised": [
+          0.5547665357589722,
+          -0.6844396591186523
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.6252409219741821,
+          -0.8374191522598267
+        ],
+        "q_at_corner": [
+          -0.2005164921283722,
+          -0.3190893232822418
+        ],
+        "q_at_oracle": [
+          -0.18706783652305603,
+          -0.34159180521965027
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 12.5,
+        "deterministic_action_normalised": [
+          0.5702290534973145,
+          -0.6899852752685547
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.6478621959686279,
+          -0.8479276299476624
+        ],
+        "q_at_corner": [
+          -0.21210357546806335,
+          -0.3266982138156891
+        ],
+        "q_at_oracle": [
+          -0.19571921229362488,
+          -0.3447045087814331
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 12.5,
+        "deterministic_action_normalised": [
+          0.5848287343978882,
+          -0.6959241032600403
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.6697702407836914,
+          -0.8593528270721436
+        ],
+        "q_at_corner": [
+          -0.22317257523536682,
+          -0.33392271399497986
+        ],
+        "q_at_oracle": [
+          -0.20449507236480713,
+          -0.34931161999702454
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 12.5,
+        "deterministic_action_normalised": [
+          0.5984773635864258,
+          -0.7018118500709534
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.6907715797424316,
+          -0.8708620071411133
+        ],
+        "q_at_corner": [
+          -0.232528954744339,
+          -0.3409267067909241
+        ],
+        "q_at_oracle": [
+          -0.2128719985485077,
+          -0.3564084768295288
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 12.5,
+        "deterministic_action_normalised": [
+          0.6105905771255493,
+          -0.707850992679596
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.709862470626831,
+          -0.8828635215759277
+        ],
+        "q_at_corner": [
+          -0.242446631193161,
+          -0.34825313091278076
+        ],
+        "q_at_oracle": [
+          -0.22173792123794556,
+          -0.3637513816356659
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 20.0,
+        "deterministic_action_normalised": [
+          0.7567362785339355,
+          -0.8638749718666077
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.9885332584381104,
+          -1.3084194660186768
+        ],
+        "q_at_corner": [
+          -0.2630138695240021,
+          -0.49541714787483215
+        ],
+        "q_at_oracle": [
+          -0.22833546996116638,
+          -0.5040785074234009
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 20.0,
+        "deterministic_action_normalised": [
+          0.7667936086654663,
+          -0.8656717538833618
+        ],
+        "min_q_corner_gt_min_q_oracle": false,
+        "mu": [
+          1.0124988555908203,
+          -1.3155450820922852
+        ],
+        "q_at_corner": [
+          -0.2727656960487366,
+          -0.5019920468330383
+        ],
+        "q_at_oracle": [
+          -0.2330303192138672,
+          -0.4996383488178253
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 20.0,
+        "deterministic_action_normalised": [
+          0.7764017581939697,
+          -0.8674639463424683
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          1.0362471342086792,
+          -1.3227410316467285
+        ],
+        "q_at_corner": [
+          -0.28306451439857483,
+          -0.5085600018501282
+        ],
+        "q_at_oracle": [
+          -0.2557762861251831,
+          -0.5175714492797852
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 20.0,
+        "deterministic_action_normalised": [
+          0.7854554653167725,
+          -0.8694502711296082
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          1.0594558715820312,
+          -1.3308227062225342
+        ],
+        "q_at_corner": [
+          -0.293884813785553,
+          -0.5146939754486084
+        ],
+        "q_at_oracle": [
+          -0.2656187415122986,
+          -0.5223569273948669
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 20.0,
+        "deterministic_action_normalised": [
+          0.7942489385604858,
+          -0.8716801404953003
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          1.082837462425232,
+          -1.3400328159332275
+        ],
+        "q_at_corner": [
+          -0.3046388626098633,
+          -0.5207465291023254
+        ],
+        "q_at_oracle": [
+          -0.27638521790504456,
+          -0.5282447338104248
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 27.5,
+        "deterministic_action_normalised": [
+          0.8750629425048828,
+          -0.9446505904197693
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          1.3542934656143188,
+          -1.7795859575271606
+        ],
+        "q_at_corner": [
+          -0.3208014965057373,
+          -0.6680433750152588
+        ],
+        "q_at_oracle": [
+          -0.29660564661026,
+          -0.6746336817741394
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 27.5,
+        "deterministic_action_normalised": [
+          0.8804948329925537,
+          -0.9454284310340881
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          1.3779654502868652,
+          -1.7868623733520508
+        ],
+        "q_at_corner": [
+          -0.3297908306121826,
+          -0.6744911074638367
+        ],
+        "q_at_oracle": [
+          -0.30483296513557434,
+          -0.6803622841835022
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 27.5,
+        "deterministic_action_normalised": [
+          0.8857148885726929,
+          -0.9461906552314758
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          1.4016830921173096,
+          -1.7940912246704102
+        ],
+        "q_at_corner": [
+          -0.33939459919929504,
+          -0.6802659034729004
+        ],
+        "q_at_oracle": [
+          -0.31343141198158264,
+          -0.6861160397529602
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 27.5,
+        "deterministic_action_normalised": [
+          0.8907265663146973,
+          -0.9469391107559204
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          1.425431728363037,
+          -1.801287055015564
+        ],
+        "q_at_corner": [
+          -0.35001516342163086,
+          -0.6860982179641724
+        ],
+        "q_at_oracle": [
+          -0.32303866744041443,
+          -0.6910942196846008
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 27.5,
+        "deterministic_action_normalised": [
+          0.8955304622650146,
+          -0.9476774334907532
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          1.4491792917251587,
+          -1.8084826469421387
+        ],
+        "q_at_corner": [
+          -0.36063626408576965,
+          -0.6923535466194153
+        ],
+        "q_at_oracle": [
+          -0.33419108390808105,
+          -0.6966027617454529
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 35.0,
+        "deterministic_action_normalised": [
+          0.9377212524414062,
+          -0.9780551791191101
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          1.7188243865966797,
+          -2.250669479370117
+        ],
+        "q_at_corner": [
+          -0.37837883830070496,
+          -0.8406543135643005
+        ],
+        "q_at_oracle": [
+          -0.3556396961212158,
+          -0.8464726805686951
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 35.0,
+        "deterministic_action_normalised": [
+          0.9406158924102783,
+          -0.9783961772918701
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          1.7433667182922363,
+          -2.2585861682891846
+        ],
+        "q_at_corner": [
+          -0.38729918003082275,
+          -0.847076952457428
+        ],
+        "q_at_oracle": [
+          -0.365467369556427,
+          -0.850648820400238
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 35.0,
+        "deterministic_action_normalised": [
+          0.9433176517486572,
+          -0.9787102937698364
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          1.7673437595367432,
+          -2.2659881114959717
+        ],
+        "q_at_corner": [
+          -0.396218478679657,
+          -0.8534982204437256
+        ],
+        "q_at_oracle": [
+          -0.37533414363861084,
+          -0.8549217581748962
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 35.0,
+        "deterministic_action_normalised": [
+          0.9458674192428589,
+          -0.9790135025978088
+        ],
+        "min_q_corner_gt_min_q_oracle": false,
+        "mu": [
+          1.7910137176513672,
+          -2.273237943649292
+        ],
+        "q_at_corner": [
+          -0.4052339792251587,
+          -0.8599190711975098
+        ],
+        "q_at_oracle": [
+          -0.38513439893722534,
+          -0.859602153301239
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 35.0,
+        "deterministic_action_normalised": [
+          0.9483057260513306,
+          -0.9793124794960022
+        ],
+        "min_q_corner_gt_min_q_oracle": false,
+        "mu": [
+          1.8146841526031494,
+          -2.280487060546875
+        ],
+        "q_at_corner": [
+          -0.41459107398986816,
+          -0.865954577922821
+        ],
+        "q_at_oracle": [
+          -0.39511990547180176,
+          -0.8647477030754089
+        ]
+      }
+    ],
+    "proxy_unvisited_action_q_at_context_0": {
+      "gegenecke_kalt": [
+        -0.13731466233730316,
+        -0.1285906434059143
+      ],
+      "gemischt_heiss_gas_niedrig": [
+        -0.1619432270526886,
+        -0.23853108286857605
+      ],
+      "gemischt_kalt_gas_hoch": [
+        -0.10414887219667435,
+        -0.01974179595708847
+      ],
+      "mitte": [
+        -0.12462686002254486,
+        -0.09421329200267792
+      ]
+    },
+    "q_corner_at_context_0": [
+      -0.13408149778842926,
+      -0.13728123903274536
+    ],
+    "q_corner_mean": [
+      -0.27914760291576385,
+      -0.5059699380397796
+    ],
+    "q_oracle_mean": [
+      -0.2625723898410797,
+      -0.5151963973045349
+    ],
+    "saturation_mu_threshold": 3.0
+  },
+  "10000": {
+    "checkpoint_path": "artifacts\\checkpoints\\rl_bandit_sac_learning_curve\\0e3ce674ba22_step010000.zip",
+    "mu_abs_max": [
+      3.7643580436706543,
+      3.6477363109588623
+    ],
+    "mu_mean": [
+      1.2753526186943054,
+      1.1638401743024587
+    ],
+    "mu_std": [
+      1.3495949463943218,
+      1.3081245578853171
+    ],
+    "n_contexts": 25,
+    "n_contexts_corner_ranked_above_oracle": 25,
+    "n_contexts_saturated": [
+      5,
+      5
+    ],
+    "per_point": [
+      {
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 5.0,
+        "deterministic_action_normalised": [
+          -0.01111525297164917,
+          0.0070343017578125
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          -0.011115692555904388,
+          0.007034425623714924
+        ],
+        "q_at_corner": [
+          107.96771240234375,
+          104.46206665039062
+        ],
+        "q_at_oracle": [
+          -2478.328857421875,
+          -2438.806396484375
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 5.0,
+        "deterministic_action_normalised": [
+          -0.04739028215408325,
+          0.012711167335510254
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          -0.04742579907178879,
+          0.012711797840893269
+        ],
+        "q_at_corner": [
+          119.73037719726562,
+          115.15132141113281
+        ],
+        "q_at_oracle": [
+          -2422.39794921875,
+          -2378.235595703125
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 5.0,
+        "deterministic_action_normalised": [
+          -0.08293461799621582,
+          0.01696157455444336
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          -0.08312558382749557,
+          0.01696324720978737
+        ],
+        "q_at_corner": [
+          131.24041748046875,
+          125.94781494140625
+        ],
+        "q_at_oracle": [
+          -2367.056396484375,
+          -2318.322021484375
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 5.0,
+        "deterministic_action_normalised": [
+          -0.1167898178100586,
+          0.02103722095489502
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          -0.11732520908117294,
+          0.02104029431939125
+        ],
+        "q_at_corner": [
+          143.31478881835938,
+          136.22274780273438
+        ],
+        "q_at_oracle": [
+          -2312.619873046875,
+          -2259.425537109375
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 5.0,
+        "deterministic_action_normalised": [
+          -0.14871907234191895,
+          0.02569127082824707
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          -0.14983028173446655,
+          0.02569696679711342
+        ],
+        "q_at_corner": [
+          156.04879760742188,
+          146.30906677246094
+        ],
+        "q_at_oracle": [
+          -2258.663330078125,
+          -2193.663818359375
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 12.5,
+        "deterministic_action_normalised": [
+          0.3991161584854126,
+          0.20502102375030518
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.42259714007377625,
+          0.2079683244228363
+        ],
+        "q_at_corner": [
+          106.77787780761719,
+          103.3146743774414
+        ],
+        "q_at_oracle": [
+          -4980.6689453125,
+          -4847.31494140625
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 12.5,
+        "deterministic_action_normalised": [
+          0.3662431240081787,
+          0.20770180225372314
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.384077250957489,
+          0.21076828241348267
+        ],
+        "q_at_corner": [
+          117.80758666992188,
+          112.12979125976562
+        ],
+        "q_at_oracle": [
+          -4907.10107421875,
+          -4766.89892578125
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 12.5,
+        "deterministic_action_normalised": [
+          0.33356618881225586,
+          0.2117462158203125
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.34683552384376526,
+          0.2149987816810608
+        ],
+        "q_at_corner": [
+          128.97503662109375,
+          122.75749969482422
+        ],
+        "q_at_oracle": [
+          -4836.029296875,
+          -4676.89501953125
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 12.5,
+        "deterministic_action_normalised": [
+          0.30006730556488037,
+          0.21578335762023926
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.3095935881137848,
+          0.21922922134399414
+        ],
+        "q_at_corner": [
+          140.12026977539062,
+          134.3772430419922
+        ],
+        "q_at_oracle": [
+          -4755.7978515625,
+          -4578.46728515625
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 12.5,
+        "deterministic_action_normalised": [
+          0.26421892642974854,
+          0.22212612628936768
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.2706385850906372,
+          0.22589144110679626
+        ],
+        "q_at_corner": [
+          151.42820739746094,
+          145.63818359375
+        ],
+        "q_at_oracle": [
+          -4666.7734375,
+          -4452.02099609375
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 20.0,
+        "deterministic_action_normalised": [
+          0.6956324577331543,
+          0.5398708581924438
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.858787477016449,
+          0.6039733290672302
+        ],
+        "q_at_corner": [
+          154.53378295898438,
+          148.51510620117188
+        ],
+        "q_at_oracle": [
+          -7669.5634765625,
+          -7478.04248046875
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 20.0,
+        "deterministic_action_normalised": [
+          0.6622967720031738,
+          0.5282528400421143
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.7968940138816833,
+          0.5877185463905334
+        ],
+        "q_at_corner": [
+          162.185791015625,
+          157.8819122314453
+        ],
+        "q_at_oracle": [
+          -7699.14599609375,
+          -7498.52099609375
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 20.0,
+        "deterministic_action_normalised": [
+          0.634608268737793,
+          0.5248923301696777
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.7490941882133484,
+          0.5830689072608948
+        ],
+        "q_at_corner": [
+          169.0246124267578,
+          166.5921630859375
+        ],
+        "q_at_oracle": [
+          -7124.662109375,
+          -6856.14306640625
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 20.0,
+        "deterministic_action_normalised": [
+          0.6063201427459717,
+          0.5227634906768799
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.703081488609314,
+          0.5801348090171814
+        ],
+        "q_at_corner": [
+          175.90411376953125,
+          175.22024536132812
+        ],
+        "q_at_oracle": [
+          -6932.5263671875,
+          -6640.189453125
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 20.0,
+        "deterministic_action_normalised": [
+          0.5769798755645752,
+          0.5212254524230957
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          0.6579236388206482,
+          0.5780208706855774
+        ],
+        "q_at_corner": [
+          182.62020874023438,
+          183.81143188476562
+        ],
+        "q_at_oracle": [
+          -6652.95703125,
+          -6332.3017578125
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 27.5,
+        "deterministic_action_normalised": [
+          0.9640505313873291,
+          0.9355592727661133
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          2.000324249267578,
+          1.7012027502059937
+        ],
+        "q_at_corner": [
+          200.4403839111328,
+          185.3463897705078
+        ],
+        "q_at_oracle": [
+          -8802.8310546875,
+          -8518.546875
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 27.5,
+        "deterministic_action_normalised": [
+          0.9470369815826416,
+          0.9091229438781738
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          1.8022356033325195,
+          1.522445559501648
+        ],
+        "q_at_corner": [
+          209.30987548828125,
+          196.21315002441406
+        ],
+        "q_at_oracle": [
+          -8755.232421875,
+          -8440.3603515625
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 27.5,
+        "deterministic_action_normalised": [
+          0.9229526519775391,
+          0.8753085136413574
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          1.6085987091064453,
+          1.3553428649902344
+        ],
+        "q_at_corner": [
+          219.45606994628906,
+          209.75416564941406
+        ],
+        "q_at_oracle": [
+          -8695.904296875,
+          -8365.568359375
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 27.5,
+        "deterministic_action_normalised": [
+          0.9012279510498047,
+          0.8519539833068848
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          1.4787206649780273,
+          1.2632367610931396
+        ],
+        "q_at_corner": [
+          226.26747131347656,
+          220.2230682373047
+        ],
+        "q_at_oracle": [
+          -8483.3984375,
+          -8149.11181640625
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 27.5,
+        "deterministic_action_normalised": [
+          0.8757344484329224,
+          0.8279399871826172
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          1.3571674823760986,
+          1.1815507411956787
+        ],
+        "q_at_corner": [
+          233.2236328125,
+          230.71827697753906
+        ],
+        "q_at_oracle": [
+          -8095.763671875,
+          -7755.26123046875
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.25,
+        "ambient_temperature_celsius": 35.0,
+        "deterministic_action_normalised": [
+          0.9988434314727783,
+          0.998286247253418
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          3.7274110317230225,
+          3.530665874481201
+        ],
+        "q_at_corner": [
+          -193.47698974609375,
+          -355.6131286621094
+        ],
+        "q_at_oracle": [
+          -9191.3857421875,
+          -8932.7978515625
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.4,
+        "ambient_temperature_celsius": 35.0,
+        "deterministic_action_normalised": [
+          0.9989256858825684,
+          0.9985535144805908
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          3.7643580436706543,
+          3.6155450344085693
+        ],
+        "q_at_corner": [
+          -118.33003234863281,
+          -263.3415222167969
+        ],
+        "q_at_oracle": [
+          -9117.1318359375,
+          -8843.439453125
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.55,
+        "ambient_temperature_celsius": 35.0,
+        "deterministic_action_normalised": [
+          0.9989023208618164,
+          0.9986436367034912
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          3.7536113262176514,
+          3.6477363109588623
+        ],
+        "q_at_corner": [
+          -47.610595703125,
+          -171.66502380371094
+        ],
+        "q_at_oracle": [
+          -9043.7216796875,
+          -8754.556640625
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.7,
+        "ambient_temperature_celsius": 35.0,
+        "deterministic_action_normalised": [
+          0.9988045692443848,
+          0.9986238479614258
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          3.7108941078186035,
+          3.6404857635498047
+        ],
+        "q_at_corner": [
+          16.905668258666992,
+          -81.03346252441406
+        ],
+        "q_at_oracle": [
+          -8979.7705078125,
+          -8675.103515625
+        ]
+      },
+      {
+        "ambient_relative_humidity": 0.85,
+        "ambient_temperature_celsius": 35.0,
+        "deterministic_action_normalised": [
+          0.9984772205352783,
+          0.9983265399932861
+        ],
+        "min_q_corner_gt_min_q_oracle": true,
+        "mu": [
+          3.5897939205169678,
+          3.5425734519958496
+        ],
+        "q_at_corner": [
+          72.94406127929688,
+          7.61790657043457
+        ],
+        "q_at_oracle": [
+          -8926.6630859375,
+          -8606.34375
+        ]
+      }
+    ],
+    "proxy_unvisited_action_q_at_context_0": {
+      "gegenecke_kalt": [
+        -3031.057373046875,
+        -3000.13818359375
+      ],
+      "gemischt_heiss_gas_niedrig": [
+        4.853521823883057,
+        3.0994741916656494
+      ],
+      "gemischt_kalt_gas_hoch": [
+        -422.6780090332031,
+        -693.7337036132812
+      ],
+      "mitte": [
+        108.5653076171875,
+        102.90478515625
+      ]
+    },
+    "q_corner_at_context_0": [
+      107.96771240234375,
+      104.46206665039062
+    ],
+    "q_corner_mean": [
+      118.67236503601075,
+      90.2620435333252
+    ],
+    "q_oracle_mean": [
+      -6406.2437890625,
+      -6190.253525390625
+    ],
+    "saturation_mu_threshold": 3.0
+  }
+}

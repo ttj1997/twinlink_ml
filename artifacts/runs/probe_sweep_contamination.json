@@ -1,0 +1,214 @@
+{
+  "d2a": {
+    "u_above_u_terminal": {
+      "train_pool_runs_affected": 18,
+      "train_pool_n": 64,
+      "train_pool_fraction": 0.28125,
+      "holdout_runs_affected": 10,
+      "holdout_n": 32,
+      "holdout_fraction": 0.3125
+    },
+    "u_below_u_mf": {
+      "train_pool_runs_affected": 0,
+      "train_pool_n": 64,
+      "train_pool_fraction": 0.0,
+      "holdout_runs_affected": 0,
+      "holdout_n": 32,
+      "holdout_fraction": 0.0
+    },
+    "T_bed_above_80C": {
+      "train_pool_runs_affected": 46,
+      "train_pool_n": 64,
+      "train_pool_fraction": 0.71875,
+      "holdout_runs_affected": 19,
+      "holdout_n": 32,
+      "holdout_fraction": 0.59375
+    },
+    "moisture_above_critical": {
+      "train_pool_runs_affected": 3,
+      "train_pool_n": 64,
+      "train_pool_fraction": 0.046875,
+      "holdout_runs_affected": 3,
+      "holdout_n": 32,
+      "holdout_fraction": 0.09375
+    }
+  },
+  "d2b": {
+    "u_above_u_terminal": {
+      "points_q1_q2_q3_q4": [
+        5257,
+        2690,
+        683,
+        213
+      ],
+      "fraction_q1_q2_q3_q4": [
+        0.5944815107995024,
+        0.30419540879791923,
+        0.07723623204794752,
+        0.02408684835463078
+      ],
+      "total_points": 8843
+    },
+    "u_below_u_mf": {
+      "points_q1_q2_q3_q4": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fraction_q1_q2_q3_q4": [
+        NaN,
+        NaN,
+        NaN,
+        NaN
+      ],
+      "total_points": 0
+    },
+    "T_bed_above_80C": {
+      "points_q1_q2_q3_q4": [
+        3912,
+        4633,
+        4152,
+        3981
+      ],
+      "fraction_q1_q2_q3_q4": [
+        0.23456049886077468,
+        0.2777911020506056,
+        0.24895071351480993,
+        0.2386976855738098
+      ],
+      "total_points": 16678
+    },
+    "moisture_above_critical": {
+      "points_q1_q2_q3_q4": [
+        686,
+        828,
+        600,
+        864
+      ],
+      "fraction_q1_q2_q3_q4": [
+        0.23035594358629952,
+        0.2780389523169913,
+        0.20147750167897918,
+        0.29012760241773
+      ],
+      "total_points": 2978
+    }
+  },
+  "d2c": {
+    "u_above_u_terminal": {
+      "n_affected_runs": 34,
+      "median_s": 25.0,
+      "min_s": 25.0,
+      "max_s": 11375.0
+    },
+    "u_below_u_mf": {
+      "n_affected_runs": 0
+    },
+    "T_bed_above_80C": {
+      "n_affected_runs": 82,
+      "median_s": 2925.0,
+      "min_s": 200.0,
+      "max_s": 27075.0
+    },
+    "moisture_above_critical": {
+      "n_affected_runs": 7,
+      "median_s": 12725.0,
+      "min_s": 675.0,
+      "max_s": 28800.0
+    }
+  },
+  "d2d": {
+    "8": {
+      "n_budget": 8,
+      "violating": 5,
+      "surviving": 3
+    },
+    "16": {
+      "n_budget": 16,
+      "violating": 13,
+      "surviving": 3
+    },
+    "32": {
+      "n_budget": 32,
+      "violating": 28,
+      "surviving": 4
+    },
+    "64": {
+      "n_budget": 64,
+      "violating": 52,
+      "surviving": 12
+    }
+  },
+  "d4": {
+    "persistence": {
+      "nrmse/energy_target/h1": {
+        "unmasked": 0.2949879442042128,
+        "masked": 0.2434530664251607,
+        "diff": -0.05153487777905211
+      },
+      "nrmse/energy_target/h36": {
+        "unmasked": 0.9650507390684954,
+        "masked": 0.8635705385170811,
+        "diff": -0.10148020055141427
+      },
+      "nrmse/product_moisture_kg_per_kg/h1": {
+        "unmasked": 0.012314087126945438,
+        "masked": 0.057457845200395964,
+        "diff": 0.04514375807345053
+      },
+      "nrmse/product_moisture_kg_per_kg/h36": {
+        "unmasked": 0.1037276780316943,
+        "masked": 0.5773526605990812,
+        "diff": 0.4736249825673869
+      },
+      "nrmse/d50_um/h1": {
+        "unmasked": 0.02890269459534156,
+        "masked": 0.03259664814380951,
+        "diff": 0.0036939535484679514
+      },
+      "nrmse/d50_um/h36": {
+        "unmasked": 0.03789080391287625,
+        "masked": 0.03853558922920153,
+        "diff": 0.0006447853163252804
+      },
+      "n_test_runs_unmasked": 32.0,
+      "n_test_runs_masked": 8.0
+    },
+    "arx_p4_q2": {
+      "nrmse/energy_target/h1": {
+        "unmasked": 0.06303187015036925,
+        "masked": 0.0839919534345963,
+        "diff": 0.02096008328422705
+      },
+      "nrmse/energy_target/h36": {
+        "unmasked": 0.187804761923793,
+        "masked": 0.28808732901697925,
+        "diff": 0.10028256709318625
+      },
+      "nrmse/product_moisture_kg_per_kg/h1": {
+        "unmasked": 0.011849380548282515,
+        "masked": 0.05878174082960876,
+        "diff": 0.046932360281326246
+      },
+      "nrmse/product_moisture_kg_per_kg/h36": {
+        "unmasked": 0.12288372456302402,
+        "masked": 0.7376445804480307,
+        "diff": 0.6147608558850067
+      },
+      "nrmse/d50_um/h1": {
+        "unmasked": 0.02286513354770903,
+        "masked": 0.02618607440343314,
+        "diff": 0.003320940855724111
+      },
+      "nrmse/d50_um/h36": {
+        "unmasked": 0.030983670966138847,
+        "masked": 0.03744564894540141,
+        "diff": 0.006461977979262561
+      },
+      "n_test_runs_unmasked": 32.0,
+      "n_test_runs_masked": 8.0
+    }
+  },
+  "_elapsed_s": 6.480404500000077
+}

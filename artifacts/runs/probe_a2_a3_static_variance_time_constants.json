@@ -1,0 +1,183 @@
+{
+  "a2": {
+    "placeholder": {
+      "fingerprint": "6c9074a249bd60d3",
+      "scatter": {
+        "False": [
+          {
+            "master_seed": 20260812,
+            "r2": {
+              "energy_target": 0.9802737160386878,
+              "bed_temperature_celsius": 0.8644204277621135,
+              "product_moisture_kg_per_kg": 0.21963918712802133,
+              "d50_um": 0.15465263706831245
+            }
+          },
+          {
+            "master_seed": 20260813,
+            "r2": {
+              "energy_target": 0.9659576785122732,
+              "bed_temperature_celsius": 0.8421811188619737,
+              "product_moisture_kg_per_kg": 0.2735875828459676,
+              "d50_um": 0.15262740781421757
+            }
+          },
+          {
+            "master_seed": 20260814,
+            "r2": {
+              "energy_target": 0.9735757729679745,
+              "bed_temperature_celsius": 0.8340527908110105,
+              "product_moisture_kg_per_kg": 0.270267789844871,
+              "d50_um": 0.2180665051755425
+            }
+          }
+        ],
+        "True": [
+          {
+            "master_seed": 20260812,
+            "r2": {
+              "energy_target": 0.9817413740531804,
+              "bed_temperature_celsius": 0.8631391297781741,
+              "product_moisture_kg_per_kg": 0.24478748699386288,
+              "d50_um": 0.12453726424452816
+            }
+          },
+          {
+            "master_seed": 20260813,
+            "r2": {
+              "energy_target": 0.9643085797564807,
+              "bed_temperature_celsius": 0.8388304612079811,
+              "product_moisture_kg_per_kg": 0.23783792516921376,
+              "d50_um": 0.14425293344338408
+            }
+          },
+          {
+            "master_seed": 20260814,
+            "r2": {
+              "energy_target": 0.9740636573593293,
+              "bed_temperature_celsius": 0.839922934242232,
+              "product_moisture_kg_per_kg": 0.2705459530351071,
+              "d50_um": 0.16133484304902113
+            }
+          }
+        ]
+      }
+    },
+    "gab": {
+      "fingerprint": "82f65f576a2e5253",
+      "scatter": {
+        "False": [
+          {
+            "master_seed": 20260812,
+            "r2": {
+              "energy_target": 0.9789797565976507,
+              "bed_temperature_celsius": 0.8036061142401374,
+              "product_moisture_kg_per_kg": 0.5044167296111319,
+              "d50_um": 0.15465263706831245
+            }
+          },
+          {
+            "master_seed": 20260813,
+            "r2": {
+              "energy_target": 0.963400323381473,
+              "bed_temperature_celsius": 0.7735429617848558,
+              "product_moisture_kg_per_kg": 0.5351503355048514,
+              "d50_um": 0.15262740781421757
+            }
+          },
+          {
+            "master_seed": 20260814,
+            "r2": {
+              "energy_target": 0.9720470145511905,
+              "bed_temperature_celsius": 0.7650034709365845,
+              "product_moisture_kg_per_kg": 0.5498966564704296,
+              "d50_um": 0.2180665051755425
+            }
+          }
+        ],
+        "True": [
+          {
+            "master_seed": 20260812,
+            "r2": {
+              "energy_target": 0.9799876853364508,
+              "bed_temperature_celsius": 0.7914636508734656,
+              "product_moisture_kg_per_kg": 0.5080415782875666,
+              "d50_um": 0.12453726424452816
+            }
+          },
+          {
+            "master_seed": 20260813,
+            "r2": {
+              "energy_target": 0.9614328538633753,
+              "bed_temperature_celsius": 0.7601402851060857,
+              "product_moisture_kg_per_kg": 0.49736285695238225,
+              "d50_um": 0.14425293344338408
+            }
+          },
+          {
+            "master_seed": 20260814,
+            "r2": {
+              "energy_target": 0.9721960728934929,
+              "bed_temperature_celsius": 0.7682189609217713,
+              "product_moisture_kg_per_kg": 0.5630489631987028,
+              "d50_um": 0.16133484304902113
+            }
+          }
+        ]
+      }
+    }
+  },
+  "a3": {
+    "placeholder": {
+      "fingerprint": "6c9074a249bd60d3",
+      "eigenvalue_report": {
+        "tau_1_s": 9.459665805546171,
+        "tau_2_s": 84.04875093579656,
+        "tau_3_s": 600.0000000157605,
+        "tau_4_s": 16000.000001938306,
+        "n_unstable_modes": 0.0,
+        "stiffness_ratio": 1691.3916760735415,
+        "sample_time_s": 25.0,
+        "fastest_mode_samples": 0.3783866322218469,
+        "recommended_sequence_length_fast": 2.0,
+        "steps_for_slowest_mode": 1921.0
+      },
+      "closed_form": {
+        "tau_T_s": 77.10976794222559,
+        "solid_mass_kg": 2.0,
+        "water_mass_kg": 0.009352602912441683,
+        "dry_air_mass_flow_kg_per_s": 0.029454723100873794,
+        "cp_solid_j_per_kg_k": 1200.0,
+        "cp_water_liquid_j_per_kg_k": 4180.0,
+        "cp_dry_air_j_per_kg_k": 1006.0,
+        "heat_loss_ua_w_per_k": 2.0
+      }
+    },
+    "gab": {
+      "fingerprint": "82f65f576a2e5253",
+      "eigenvalue_report": {
+        "tau_1_s": 30.22626192813928,
+        "tau_2_s": 359.9276103387108,
+        "tau_3_s": 600.0000000157605,
+        "tau_4_s": 16000.000001938306,
+        "n_unstable_modes": 0.0,
+        "stiffness_ratio": 529.341009482983,
+        "sample_time_s": 25.0,
+        "fastest_mode_samples": 1.2090504771255712,
+        "recommended_sequence_length_fast": 7.0,
+        "steps_for_slowest_mode": 1921.0
+      },
+      "closed_form": {
+        "tau_T_s": 84.74686973566521,
+        "solid_mass_kg": 2.0,
+        "water_mass_kg": 0.06671683937582942,
+        "dry_air_mass_flow_kg_per_s": 0.02943372610677841,
+        "cp_solid_j_per_kg_k": 1200.0,
+        "cp_water_liquid_j_per_kg_k": 4180.0,
+        "cp_dry_air_j_per_kg_k": 1006.0,
+        "heat_loss_ua_w_per_k": 2.0
+      }
+    }
+  },
+  "_elapsed_s": 85.46107910000137
+}

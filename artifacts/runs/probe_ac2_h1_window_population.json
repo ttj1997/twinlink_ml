@@ -1,0 +1,200 @@
+[
+  {
+    "seed": 1,
+    "test_set": "excited",
+    "model": "persistence",
+    "n_windows_h36_native": 4352,
+    "n_windows_h1_all": 4480,
+    "n_windows_h1_h36_subset": 4352,
+    "rmse_k_h36_dataset_at_h1": 0.7884711926320114,
+    "rmse_k_h1_dataset_all_windows": 0.7885431672913309,
+    "rmse_k_h1_dataset_h36_subset": 0.7884711926320114
+  },
+  {
+    "seed": 1,
+    "test_set": "excited",
+    "model": "static",
+    "n_windows_h36_native": 4352,
+    "n_windows_h1_all": 4480,
+    "n_windows_h1_h36_subset": 4352,
+    "rmse_k_h36_dataset_at_h1": 6.9308577493950505,
+    "rmse_k_h1_dataset_all_windows": 6.850587525820702,
+    "rmse_k_h1_dataset_h36_subset": 6.9308577493950505
+  },
+  {
+    "seed": 1,
+    "test_set": "excited",
+    "model": "gru",
+    "n_windows_h36_native": 4352,
+    "n_windows_h1_all": 4480,
+    "n_windows_h1_h36_subset": 4352,
+    "rmse_k_h36_dataset_at_h1": 0.29769611201129853,
+    "rmse_k_h1_dataset_all_windows": 0.29880098876038247,
+    "rmse_k_h1_dataset_h36_subset": 0.29769611201129853
+  },
+  {
+    "seed": 1,
+    "test_set": "constant_holdout",
+    "model": "persistence",
+    "n_windows_h36_native": 4352,
+    "n_windows_h1_all": 4480,
+    "n_windows_h1_h36_subset": 4352,
+    "rmse_k_h36_dataset_at_h1": 0.35112894979911446,
+    "rmse_k_h1_dataset_all_windows": 0.3485342202376317,
+    "rmse_k_h1_dataset_h36_subset": 0.35112894979911446
+  },
+  {
+    "seed": 1,
+    "test_set": "constant_holdout",
+    "model": "static",
+    "n_windows_h36_native": 4352,
+    "n_windows_h1_all": 4480,
+    "n_windows_h1_h36_subset": 4352,
+    "rmse_k_h36_dataset_at_h1": 5.939817838704828,
+    "rmse_k_h1_dataset_all_windows": 5.950017934868033,
+    "rmse_k_h1_dataset_h36_subset": 5.939817838704828
+  },
+  {
+    "seed": 1,
+    "test_set": "constant_holdout",
+    "model": "gru",
+    "n_windows_h36_native": 4352,
+    "n_windows_h1_all": 4480,
+    "n_windows_h1_h36_subset": 4352,
+    "rmse_k_h36_dataset_at_h1": 0.27987181316404264,
+    "rmse_k_h1_dataset_all_windows": 0.28022115003676307,
+    "rmse_k_h1_dataset_h36_subset": 0.27987181316404264
+  },
+  {
+    "seed": 2,
+    "test_set": "excited",
+    "model": "persistence",
+    "n_windows_h36_native": 4352,
+    "n_windows_h1_all": 4480,
+    "n_windows_h1_h36_subset": 4352,
+    "rmse_k_h36_dataset_at_h1": 0.7258773174754265,
+    "rmse_k_h1_dataset_all_windows": 0.7270275461786079,
+    "rmse_k_h1_dataset_h36_subset": 0.7258773174754265
+  },
+  {
+    "seed": 2,
+    "test_set": "excited",
+    "model": "static",
+    "n_windows_h36_native": 4352,
+    "n_windows_h1_all": 4480,
+    "n_windows_h1_h36_subset": 4352,
+    "rmse_k_h36_dataset_at_h1": 6.327200887306422,
+    "rmse_k_h1_dataset_all_windows": 6.363799068710868,
+    "rmse_k_h1_dataset_h36_subset": 6.327200887306422
+  },
+  {
+    "seed": 2,
+    "test_set": "excited",
+    "model": "gru",
+    "n_windows_h36_native": 4352,
+    "n_windows_h1_all": 4480,
+    "n_windows_h1_h36_subset": 4352,
+    "rmse_k_h36_dataset_at_h1": 0.3024679745559733,
+    "rmse_k_h1_dataset_all_windows": 0.3043147482722944,
+    "rmse_k_h1_dataset_h36_subset": 0.3024679745559733
+  },
+  {
+    "seed": 2,
+    "test_set": "constant_holdout",
+    "model": "persistence",
+    "n_windows_h36_native": 4352,
+    "n_windows_h1_all": 4480,
+    "n_windows_h1_h36_subset": 4352,
+    "rmse_k_h36_dataset_at_h1": 0.3511289497991411,
+    "rmse_k_h1_dataset_all_windows": 0.34853422023762437,
+    "rmse_k_h1_dataset_h36_subset": 0.3511289497991411
+  },
+  {
+    "seed": 2,
+    "test_set": "constant_holdout",
+    "model": "static",
+    "n_windows_h36_native": 4352,
+    "n_windows_h1_all": 4480,
+    "n_windows_h1_h36_subset": 4352,
+    "rmse_k_h36_dataset_at_h1": 5.867699699307343,
+    "rmse_k_h1_dataset_all_windows": 5.875049054415485,
+    "rmse_k_h1_dataset_h36_subset": 5.867699699307343
+  },
+  {
+    "seed": 2,
+    "test_set": "constant_holdout",
+    "model": "gru",
+    "n_windows_h36_native": 4352,
+    "n_windows_h1_all": 4480,
+    "n_windows_h1_h36_subset": 4352,
+    "rmse_k_h36_dataset_at_h1": 0.2780707148344069,
+    "rmse_k_h1_dataset_all_windows": 0.2768196645360912,
+    "rmse_k_h1_dataset_h36_subset": 0.2780707148344069
+  },
+  {
+    "seed": 3,
+    "test_set": "excited",
+    "model": "persistence",
+    "n_windows_h36_native": 4352,
+    "n_windows_h1_all": 4480,
+    "n_windows_h1_h36_subset": 4352,
+    "rmse_k_h36_dataset_at_h1": 0.8210099070814598,
+    "rmse_k_h1_dataset_all_windows": 0.8248319925083203,
+    "rmse_k_h1_dataset_h36_subset": 0.8210099070814598
+  },
+  {
+    "seed": 3,
+    "test_set": "excited",
+    "model": "static",
+    "n_windows_h36_native": 4352,
+    "n_windows_h1_all": 4480,
+    "n_windows_h1_h36_subset": 4352,
+    "rmse_k_h36_dataset_at_h1": 6.848072808551831,
+    "rmse_k_h1_dataset_all_windows": 6.811935294670782,
+    "rmse_k_h1_dataset_h36_subset": 6.848072808551831
+  },
+  {
+    "seed": 3,
+    "test_set": "excited",
+    "model": "gru",
+    "n_windows_h36_native": 4352,
+    "n_windows_h1_all": 4480,
+    "n_windows_h1_h36_subset": 4352,
+    "rmse_k_h36_dataset_at_h1": 0.30393096000671377,
+    "rmse_k_h1_dataset_all_windows": 0.3014862692865852,
+    "rmse_k_h1_dataset_h36_subset": 0.30393096000671377
+  },
+  {
+    "seed": 3,
+    "test_set": "constant_holdout",
+    "model": "persistence",
+    "n_windows_h36_native": 4352,
+    "n_windows_h1_all": 4480,
+    "n_windows_h1_h36_subset": 4352,
+    "rmse_k_h36_dataset_at_h1": 0.3511289497991493,
+    "rmse_k_h1_dataset_all_windows": 0.34853422023761804,
+    "rmse_k_h1_dataset_h36_subset": 0.3511289497991493
+  },
+  {
+    "seed": 3,
+    "test_set": "constant_holdout",
+    "model": "static",
+    "n_windows_h36_native": 4352,
+    "n_windows_h1_all": 4480,
+    "n_windows_h1_h36_subset": 4352,
+    "rmse_k_h36_dataset_at_h1": 6.261775732135915,
+    "rmse_k_h1_dataset_all_windows": 6.234699698993978,
+    "rmse_k_h1_dataset_h36_subset": 6.261775732135915
+  },
+  {
+    "seed": 3,
+    "test_set": "constant_holdout",
+    "model": "gru",
+    "n_windows_h36_native": 4352,
+    "n_windows_h1_all": 4480,
+    "n_windows_h1_h36_subset": 4352,
+    "rmse_k_h36_dataset_at_h1": 0.27098512955084286,
+    "rmse_k_h1_dataset_all_windows": 0.2687671610014969,
+    "rmse_k_h1_dataset_h36_subset": 0.27098512955084286
+  }
+]

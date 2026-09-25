@@ -1,0 +1,22 @@
+{
+  "projected": {
+    "T_bed_above_80C_fraction": 0.09728551793981481,
+    "moisture_above_critical_fraction": 0.012161820023148149,
+    "multiple_criteria_fraction": 0.0001537181712962963,
+    "n_points": 221184,
+    "only_T_bed_above_80C_fraction": 0.09713179976851852,
+    "u_above_u_terminal_fraction": 0.0020887586805555555,
+    "u_below_u_mf_fraction": 0.0,
+    "union_fraction": 0.11138237847222222
+  },
+  "unprojected": {
+    "T_bed_above_80C_fraction": 0.10153989438657407,
+    "moisture_above_critical_fraction": 0.010516131365740741,
+    "multiple_criteria_fraction": 0.011036060474537037,
+    "n_points": 221184,
+    "only_T_bed_above_80C_fraction": 0.09064850983796297,
+    "u_above_u_terminal_fraction": 0.0650363498263889,
+    "u_below_u_mf_fraction": 0.0,
+    "union_fraction": 0.16605631510416666
+  }
+}

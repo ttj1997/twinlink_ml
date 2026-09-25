@@ -1,0 +1,38 @@
+{
+  "cases": {
+    "constant_trained": {
+      "3x_rmse_kg_per_kg": 0.004465076832389439,
+      "margin_over_threshold_ratio": 31.252567976792516,
+      "n_seeds": 5,
+      "rmse_run_median_physical_kg_per_kg": 0.001488358944129813,
+      "source_jsonl": "artifacts\\runs\\arch_learning_curve_constant_trained.jsonl",
+      "values_over_seeds_kg_per_kg": [
+        0.0006949073991073874,
+        0.0013098209477262984,
+        0.001488358944129813,
+        0.0016806785637006171,
+        0.0023191883713281195
+      ]
+    },
+    "excited_trained": {
+      "3x_rmse_kg_per_kg": 0.0016282156074194577,
+      "margin_over_threshold_ratio": 85.70432354902675,
+      "n_seeds": 5,
+      "rmse_run_median_physical_kg_per_kg": 0.000542738535806486,
+      "source_jsonl": "artifacts\\runs\\arch_learning_curve_projected.jsonl",
+      "values_over_seeds_kg_per_kg": [
+        0.0004255827644118671,
+        0.00048556030889744203,
+        0.000542738535806486,
+        0.0006643328329214776,
+        0.0007824310482943155
+      ]
+    }
+  },
+  "ga1_margin_kg_per_kg": 0.13954511722585233,
+  "ga1_n_oracle_binding_moisture": 17,
+  "ga1_n_points": 25,
+  "ga1_source_json": "artifacts\\runs\\rl_bandit_ga1_safety_margin.json",
+  "safety_factor_multiple": 3.0,
+  "target_metric": "rmse_run_median_physical/product_moisture_kg_per_kg/h36"
+}

@@ -1,0 +1,4341 @@
+{
+  "anchor_comparison": {
+    "anchor_5x5": {
+      "config_fingerprint": "abbe8325f1326d80",
+      "grid_size": 5,
+      "regret": {
+        "absolute_kw": {
+          "max": 0.24148936563149515,
+          "median": 0.1740034074360406,
+          "p95": 0.2296627007886406
+        },
+        "n_points": 25,
+        "relative_pct": {
+          "max": 25.80147125040065,
+          "median": 16.030463178369722,
+          "p95": 22.199283255358587
+        }
+      },
+      "source": "/home/johncox/PhD/Code/twinlink_ml/artifacts/runs/bb1_bb3_operating_point_regret.json"
+    },
+    "median_relative_pct_diff": -0.8079923444573982,
+    "new_3x3_at_current_value": {
+      "grid_size": 3,
+      "regret": {
+        "absolute_kw": {
+          "max": 0.24148952635630905,
+          "median": 0.1869028916796801,
+          "p95": 0.2346629748765299
+        },
+        "n_points": 9,
+        "relative_pct": {
+          "max": 25.80148842273722,
+          "median": 15.222470833912324,
+          "p95": 23.0219172728508
+        }
+      }
+    }
+  },
+  "base_config_fingerprint": "abbe8325f1326d80",
+  "config_path": "/home/johncox/PhD/Code/twinlink_ml/conf/process/greybox_gab_placeholder.yaml",
+  "environment": {
+    "env/mkl_num_threads": null,
+    "env/omp_num_threads": null,
+    "git/commit": "d76853b4b09db353b215e4bc3110c98dcd05959c",
+    "git/commit_available": true,
+    "git/diff_digest": "e3b0c44298fc1c14",
+    "git/diff_digest_available": true,
+    "git/dirty": true,
+    "platform": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "torch/num_threads": null,
+    "version/numpy": "2.5.3",
+    "version/scipy": "1.18.1"
+  },
+  "grid_size": 3,
+  "results_by_value": {
+    "16000": {
+      "stationary": {
+        "bed_mass_solid_setpoint_kg": 2.0,
+        "budget": {
+          "de_tol": 0.0001,
+          "maxiter": 50,
+          "popsize": 10,
+          "search_max_iterations": 30,
+          "search_tolerance": 1e-07,
+          "seed": 0,
+          "workers": 16
+        },
+        "config_fingerprint": "abbe8325f1326d80",
+        "elapsed_s": 1497.061326119001,
+        "fixed_point": {
+          "de_converged": false,
+          "de_elapsed_s": 686.8502972940041,
+          "de_message": "Maximum number of iterations has been exceeded.",
+          "feasible_everywhere": true,
+          "gas_velocity_m_per_s": 0.8001297976998168,
+          "inlet_temperature_celsius": 90.4128496084104,
+          "nozzle_pressure_bar": 1.003884991243238,
+          "per_grid_point": [
+            {
+              "ambient_relative_humidity": 0.25,
+              "ambient_temperature_celsius": 5.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 42.102808728369766,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.2274639690829822,
+                "moisture_kg_per_kg": 0.11986530854901821,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.501843829444804
+              },
+              "energy_target": 1.4262305950354581,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 3.169401322301018
+            },
+            {
+              "ambient_relative_humidity": 0.55,
+              "ambient_temperature_celsius": 5.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 42.16175518473709,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.2274694014183715,
+                "moisture_kg_per_kg": 0.1230360721216918,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.503514346172492
+              },
+              "energy_target": 1.426595979618993,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 3.170213288042207
+            },
+            {
+              "ambient_relative_humidity": 0.85,
+              "ambient_temperature_celsius": 5.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 42.22253255921086,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.2274742029768045,
+                "moisture_kg_per_kg": 0.12633777377130173,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5051932594242716
+              },
+              "energy_target": 1.4269569013775876,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 3.171015336394639
+            },
+            {
+              "ambient_relative_humidity": 0.25,
+              "ambient_temperature_celsius": 20.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 43.5021483560072,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.22702402424289306,
+                "moisture_kg_per_kg": 0.11706179141698249,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5087986981040924
+              },
+              "energy_target": 1.177441446647464,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.6165365481054756
+            },
+            {
+              "ambient_relative_humidity": 0.55,
+              "ambient_temperature_celsius": 20.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 43.65649059399225,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.22703932402269406,
+                "moisture_kg_per_kg": 0.12532710107731654,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5132744357466303
+              },
+              "energy_target": 1.1782954996153594,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.6184344435896874
+            },
+            {
+              "ambient_relative_humidity": 0.85,
+              "ambient_temperature_celsius": 20.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 43.82447121798426,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.22704993623587477,
+                "moisture_kg_per_kg": 0.13456446355277601,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5178120371098998
+              },
+              "energy_target": 1.1791273551077024,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.6202830113504496
+            },
+            {
+              "ambient_relative_humidity": 0.25,
+              "ambient_temperature_celsius": 35.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 45.00000150242,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.22659520139696457,
+                "moisture_kg_per_kg": 0.11884813960997798,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.518636997503321
+              },
+              "energy_target": 0.9310284112340046,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.0689520249644544
+            },
+            {
+              "ambient_relative_humidity": 0.55,
+              "ambient_temperature_celsius": 35.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 45.39441980474439,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.226622890902584,
+                "moisture_kg_per_kg": 0.14044034700440308,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5295497362318664
+              },
+              "energy_target": 0.9327424716195536,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.072761048043452
+            },
+            {
+              "ambient_relative_humidity": 0.85,
+              "ambient_temperature_celsius": 35.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 45.89090350711183,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.22661552978215865,
+                "moisture_kg_per_kg": 0.16924630674033486,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5409004429934074
+              },
+              "energy_target": 0.9343714007639036,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.0763808905864525
+            }
+          ],
+          "refine_converged": true,
+          "refine_elapsed_s": 77.70264818899159
+        },
+        "grid_results": [
+          {
+            "_grid_index": 0,
+            "_wall_elapsed_s": 619.922323863997,
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 5.0,
+            "bed_temperature_celsius": 30.732834129783313,
+            "constraint_check": {
+              "bed_temperature_celsius": 30.732834129783313,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.800131237008538,
+              "minimum_fluidization_velocity_m_per_s": 0.23138267006522154,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.4609910035352
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 568.9702745219984,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 1.201807447378597,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.800131237008538,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 73.90400797962472,
+            "nozzle_pressure_bar": 1.0083997756408234,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 50.68463154799247,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 80,
+            "residual_inf_norm": 3.4516927927656464e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.670683216396882
+          },
+          {
+            "_grid_index": 1,
+            "_wall_elapsed_s": 634.8414084399992,
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 5.0,
+            "bed_temperature_celsius": 31.75268849892941,
+            "constraint_check": {
+              "bed_temperature_celsius": 31.75268849892941,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8001204792509937,
+              "minimum_fluidization_velocity_m_per_s": 0.23105454016866062,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.4661866255580116
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 568.3173278160102,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 1.2206211707965329,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8001204792509937,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 75.22738324014043,
+            "nozzle_pressure_bar": 1.0014599409560598,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 66.28847756198957,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 113,
+            "residual_inf_norm": 2.1031734122696974e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.712491490658962
+          },
+          {
+            "_grid_index": 2,
+            "_wall_elapsed_s": 730.915165806,
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 5.0,
+            "bed_temperature_celsius": 32.71925123201787,
+            "constraint_check": {
+              "bed_temperature_celsius": 32.71925123201787,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8002061385118446,
+              "minimum_fluidization_velocity_m_per_s": 0.23074535121675432,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.4711763394166573
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 699.6307696659933,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 1.2384362972344845,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8002061385118446,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 76.47635241464891,
+            "nozzle_pressure_bar": 1.0110954793893936,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 31.10708148899721,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 91,
+            "residual_inf_norm": 4.190009683614135e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.7520806605210764
+          },
+          {
+            "_grid_index": 3,
+            "_wall_elapsed_s": 499.54446278800606,
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 20.0,
+            "bed_temperature_celsius": 30.002179248773828,
+            "constraint_check": {
+              "bed_temperature_celsius": 30.002179248773828,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.9193677771632893,
+              "minimum_fluidization_velocity_m_per_s": 0.23167672123681318,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.4603415553400785
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 445.97020892999717,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.935951920291155,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.9193677771632893,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 65.78274110006765,
+            "nozzle_pressure_bar": 1.0094658165236405,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 53.19105259299977,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 84,
+            "residual_inf_norm": 6.155336561627151e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.0798931562025667
+          },
+          {
+            "_grid_index": 4,
+            "_wall_elapsed_s": 611.8060693180014,
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 20.0,
+            "bed_temperature_celsius": 34.59422099592089,
+            "constraint_check": {
+              "bed_temperature_celsius": 34.59422099592089,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8000417498147472,
+              "minimum_fluidization_velocity_m_per_s": 0.23015036956102772,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.481032787255731
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 556.1822098230041,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.9913926079356793,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8000417498147472,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 77.08465910243822,
+            "nozzle_pressure_bar": 1.0020978982712805,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 55.32902074699814,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 88,
+            "residual_inf_norm": 7.366254981785889e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.2030946843015093
+          },
+          {
+            "_grid_index": 5,
+            "_wall_elapsed_s": 611.2111541029881,
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 20.0,
+            "bed_temperature_celsius": 36.771286736281695,
+            "constraint_check": {
+              "bed_temperature_celsius": 36.771286736281695,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.800033561871794,
+              "minimum_fluidization_velocity_m_per_s": 0.2294681671242332,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.4928213873622256
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 555.0273677290097,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 1.0323305790736996,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.800033561871794,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 79.8969782530435,
+            "nozzle_pressure_bar": 1.0048299735940778,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 55.85351459599042,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 87,
+            "residual_inf_norm": 7.507115834308824e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.2940679534971102
+          },
+          {
+            "_grid_index": 6,
+            "_wall_elapsed_s": 498.00362536999455,
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 35.0,
+            "bed_temperature_celsius": 45.00000751315723,
+            "constraint_check": {
+              "bed_temperature_celsius": 45.00000751315723,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": false,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8000000000000003,
+              "minimum_fluidization_velocity_m_per_s": 0.22659519936118885,
+              "moisture_kg_per_kg": 0.11886303925459975,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.518637018406557
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 466.1566160229995,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.9309914599546953,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8000000000000003,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 90.41994471902834,
+            "nozzle_pressure_bar": 1.005782730560979,
+            "particle_moisture_kg_per_kg": 0.11886303925459975,
+            "refine_converged": true,
+            "refine_elapsed_s": 31.494290267000906,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 77,
+            "residual_inf_norm": 3.709938690459673e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.068869911010434
+          },
+          {
+            "_grid_index": 7,
+            "_wall_elapsed_s": 497.00785505599924,
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 35.0,
+            "bed_temperature_celsius": 45.00000148520695,
+            "constraint_check": {
+              "bed_temperature_celsius": 45.00000148520695,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": false,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8000298702346711,
+              "minimum_fluidization_velocity_m_per_s": 0.22675685466880938,
+              "moisture_kg_per_kg": 0.14379115788268637,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.528177630045091
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 462.8750174769957,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.9244789097207522,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8000298702346711,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 89.83527559339001,
+            "nozzle_pressure_bar": 1.0070123163217741,
+            "particle_moisture_kg_per_kg": 0.14379115788268637,
+            "refine_converged": true,
+            "refine_elapsed_s": 33.77006309499848,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 82,
+            "residual_inf_norm": 6.615126787211472e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.054397577157227
+          },
+          {
+            "_grid_index": 8,
+            "_wall_elapsed_s": 662.6512646519986,
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 35.0,
+            "bed_temperature_celsius": 45.00000146084005,
+            "constraint_check": {
+              "bed_temperature_celsius": 45.00000146084005,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": false,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8002118175536281,
+              "minimum_fluidization_velocity_m_per_s": 0.22691894171963117,
+              "moisture_kg_per_kg": 0.18081844352802867,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.5378007546395622
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 645.4337771400023,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.9146552956797194,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8002118175536281,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 89.01765825206859,
+            "nozzle_pressure_bar": 1.002370221488685,
+            "particle_moisture_kg_per_kg": 0.18081844352802867,
+            "refine_converged": true,
+            "refine_elapsed_s": 17.017834286991274,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 77,
+            "residual_inf_norm": 5.455416550742718e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.0325673237327098
+          }
+        ],
+        "grid_size": 3,
+        "label": "tau4=16000s",
+        "regret": {
+          "absolute_kw": {
+            "max": 0.24148952635630905,
+            "median": 0.1869028916796801,
+            "p95": 0.2346629748765299
+          },
+          "n_points": 9,
+          "relative_pct": {
+            "max": 25.80148842273722,
+            "median": 15.222470833912324,
+            "p95": 23.0219172728508
+          }
+        },
+        "setpoint_spread": {
+          "gas_velocity_m_per_s": {
+            "maximum": 0.9193677771632893,
+            "minimum": 0.8000000000000003,
+            "span_absolute": 0.11936777716328906,
+            "span_fraction_of_bound": 0.0702163395078171
+          },
+          "inlet_temperature_celsius": {
+            "maximum": 90.41994471902834,
+            "minimum": 65.78274110006765,
+            "span_absolute": 24.637203618960683,
+            "span_fraction_of_bound": 0.4106200603160114
+          },
+          "n_feasible_points": 9,
+          "nozzle_pressure_bar": {
+            "maximum": 1.0110954793893936,
+            "minimum": 1.0014599409560598,
+            "span_absolute": 0.009635538433333757,
+            "span_fraction_of_bound": 0.0032118461444445856
+          }
+        },
+        "solid_inflow_kg_per_s": 0.000125
+      },
+      "transient": {
+        "batch_duration_s": 28800.0,
+        "elapsed_s": 51.82332240199321,
+        "label": "tau4=16000s",
+        "n_steps": 1152,
+        "per_grid_point": [
+          {
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 5.0,
+            "batch_mean": {
+              "energy_target_kw": 1.1972713568193578,
+              "q_rec_kw": 53.907859027547936
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 0.0012324457337396424,
+              "d50_um": -19.60277346642026,
+              "particle_moisture_kg_per_kg": -0.0027966881360820847,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 30.733212895286403,
+              "d50_um": 602.979199001848,
+              "energy_target_kw": 1.201805832858882,
+              "particle_moisture_kg_per_kg": 0.19999435464640847,
+              "q_rec_kw": 40.788421146688556,
+              "solid_mass_kg": 2.0
+            },
+            "grid_index": 0,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 13.123860481933875,
+              "batch_mean_vs_steady_state_relative_pct": 32.17894505183387,
+              "end_vs_steady_state_relative_pct": 0.010843961436367306
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 30.732834129783313,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 1.201807447378597,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 40.78399854561406,
+              "solid_mass_kg": 2.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 5.0,
+            "batch_mean": {
+              "energy_target_kw": 1.216048689162665,
+              "q_rec_kw": 49.65172591330811
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 0.0014298872017609588,
+              "d50_um": -19.60277346642026,
+              "particle_moisture_kg_per_kg": -0.0034488564589743786,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 31.75314252655847,
+              "d50_um": 602.979199001848,
+              "energy_target_kw": 1.2206192077819098,
+              "particle_moisture_kg_per_kg": 0.19999305031010167,
+              "q_rec_kw": 36.891112706716775,
+              "solid_mass_kg": 2.0
+            },
+            "grid_index": 1,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 12.765820133576824,
+              "batch_mean_vs_steady_state_relative_pct": 34.608937651713056,
+              "end_vs_steady_state_relative_pct": 0.014116305064001038
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 31.75268849892941,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 1.2206211707965329,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 36.88590577973129,
+              "solid_mass_kg": 2.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 5.0,
+            "batch_mean": {
+              "energy_target_kw": 1.233830951795513,
+              "q_rec_kw": 45.931179133330616
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 0.0016489703376926232,
+              "d50_um": -19.60277346642026,
+              "particle_moisture_kg_per_kg": -0.004205512480481925,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 32.7197907627654,
+              "d50_um": 602.979199001848,
+              "energy_target_kw": 1.2384339336161332,
+              "particle_moisture_kg_per_kg": 0.19999153699845196,
+              "q_rec_kw": 33.473279084388274,
+              "solid_mass_kg": 2.0
+            },
+            "grid_index": 2,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 12.463986277967635,
+              "batch_mean_vs_steady_state_relative_pct": 37.24240133265415,
+              "end_vs_steady_state_relative_pct": 0.018185657373762893
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 32.71925123201787,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 1.2384362972344845,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 33.46719285536298,
+              "solid_mass_kg": 2.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 20.0,
+            "batch_mean": {
+              "energy_target_kw": 0.9326322429451639,
+              "q_rec_kw": 45.067696515018305
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 0.0009684634874466528,
+              "d50_um": -19.60277346642026,
+              "particle_moisture_kg_per_kg": -0.002367000211078525,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 30.00246980892529,
+              "d50_um": 602.979199001848,
+              "energy_target_kw": 0.9359509059920964,
+              "particle_moisture_kg_per_kg": 0.19999521402203513,
+              "q_rec_kw": 33.34286606624272,
+              "solid_mass_kg": 2.0
+            },
+            "grid_index": 3,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 11.728220314539392,
+              "batch_mean_vs_steady_state_relative_pct": 35.178178097383906,
+              "end_vs_steady_state_relative_pct": 0.010167723522179768
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 30.002179248773828,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.935951920291155,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 33.33947620047891,
+              "solid_mass_kg": 2.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 20.0,
+            "batch_mean": {
+              "energy_target_kw": 0.9876820761890335,
+              "q_rec_kw": 39.542689346126025
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 0.0021893401230865268,
+              "d50_um": -19.60277346642026,
+              "particle_moisture_kg_per_kg": -0.006230687355420168,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 34.594978381081425,
+              "d50_um": 602.979199001848,
+              "energy_target_kw": 0.9913898974731806,
+              "particle_moisture_kg_per_kg": 0.19998748664975474,
+              "q_rec_kw": 27.548195920104952,
+              "solid_mass_kg": 2.0
+            },
+            "grid_index": 4,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 12.002831881164848,
+              "batch_mean_vs_steady_state_relative_pct": 43.58349311152387,
+              "end_vs_steady_state_relative_pct": 0.03027777160569646
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 34.59422099592089,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.9913926079356793,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 27.539857464961177,
+              "solid_mass_kg": 2.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 20.0,
+            "batch_mean": {
+              "energy_target_kw": 1.0285327233085786,
+              "q_rec_kw": 33.10552909734221
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 0.002940556384643932,
+              "d50_um": -19.60277346642026,
+              "particle_moisture_kg_per_kg": -0.009456861086855707,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 36.772368016701535,
+              "d50_um": 602.979199001848,
+              "energy_target_kw": 1.0323265582346177,
+              "particle_moisture_kg_per_kg": 0.1999810343039688,
+              "q_rec_kw": 21.58494621286926,
+              "solid_mass_kg": 2.0
+            },
+            "grid_index": 5,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 11.532200780620517,
+              "batch_mean_vs_steady_state_relative_pct": 53.455825690474455,
+              "end_vs_steady_state_relative_pct": 0.05385305399796584
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 36.771286736281695,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 1.0323305790736996,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 21.573328316721696,
+              "solid_mass_kg": 2.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 35.0,
+            "batch_mean": {
+              "energy_target_kw": 0.92936883189169,
+              "q_rec_kw": 110.34372574091499
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": -8.195258126950064e-06,
+              "d50_um": -19.60277346642026,
+              "particle_moisture_kg_per_kg": 2.1856422961021383e-05,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 45.000003825290456,
+              "d50_um": 602.979199001848,
+              "energy_target_kw": 0.9309914711142294,
+              "particle_moisture_kg_per_kg": 0.11886306523380835,
+              "q_rec_kw": 104.4730747810619,
+              "solid_mass_kg": 2.0
+            },
+            "grid_index": 6,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 5.870617549865344,
+              "batch_mean_vs_steady_state_relative_pct": 5.619261886159034,
+              "end_vs_steady_state_relative_pct": -3.1979509683478595e-05
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 45.00000751315723,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.9309914599546953,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.11886303925459975,
+              "q_rec_kw": 104.47310819104965,
+              "solid_mass_kg": 2.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 35.0,
+            "batch_mean": {
+              "energy_target_kw": 0.9223473004858563,
+              "q_rec_kw": 63.74366440893036
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 0.00014304680872905375,
+              "d50_um": -19.60277346642026,
+              "particle_moisture_kg_per_kg": -0.0005679933576531791,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 45.000065856273004,
+              "d50_um": 602.979199001848,
+              "energy_target_kw": 0.9244787060307335,
+              "particle_moisture_kg_per_kg": 0.1437903411584607,
+              "q_rec_kw": 56.421255726478236,
+              "solid_mass_kg": 2.0
+            },
+            "grid_index": 7,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 7.32309007706472,
+              "batch_mean_vs_steady_state_relative_pct": 12.979467443897907,
+              "end_vs_steady_state_relative_pct": 0.001207705913432909
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 45.00000148520695,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.9244789097207522,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.14379115788268637,
+              "q_rec_kw": 56.42057433186564,
+              "solid_mass_kg": 2.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 35.0,
+            "batch_mean": {
+              "energy_target_kw": 0.9117996000445111,
+              "q_rec_kw": 27.36060270751711
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 0.0030600543693942535,
+              "d50_um": -19.60277346642026,
+              "particle_moisture_kg_per_kg": -0.014275463521326493,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 45.00137848535098,
+              "d50_um": 602.979199001848,
+              "energy_target_kw": 0.9146507473456694,
+              "particle_moisture_kg_per_kg": 0.180792630857083,
+              "q_rec_kw": 17.972232576900492,
+              "solid_mass_kg": 2.0
+            },
+            "grid_index": 8,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 9.402552589592965,
+              "batch_mean_vs_steady_state_relative_pct": 52.35842715578661,
+              "end_vs_steady_state_relative_pct": 0.07897549501875452
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 45.00000146084005,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.9146552956797194,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.18081844352802867,
+              "q_rec_kw": 17.958050117924145,
+              "solid_mass_kg": 2.0
+            }
+          }
+        ],
+        "q_rec_deviation_summary": {
+          "batch_mean_vs_steady_state_abs_kw": {
+            "max": 13.123860481933875,
+            "median": 11.728220314539392
+          },
+          "batch_mean_vs_steady_state_relative_pct": {
+            "max": 53.455825690474455,
+            "median": 35.178178097383906
+          }
+        },
+        "sample_time_s": 25.0,
+        "state_channel_deviation_relative_pct": {
+          "bed_temperature_celsius": {
+            "max": 0.0030600543693942535,
+            "median": 0.0014298872017609588
+          },
+          "d50_um": {
+            "max": 19.60277346642026,
+            "median": -19.60277346642026
+          },
+          "particle_moisture_kg_per_kg": {
+            "max": 0.014275463521326493,
+            "median": -0.0034488564589743786
+          },
+          "solid_mass_kg": {
+            "max": 0.0,
+            "median": 0.0
+          }
+        },
+        "transient_config_fingerprint": "2d2679eeed716577"
+      }
+    },
+    "32000": {
+      "stationary": {
+        "bed_mass_solid_setpoint_kg": 4.0,
+        "budget": {
+          "de_tol": 0.0001,
+          "maxiter": 50,
+          "popsize": 10,
+          "search_max_iterations": 30,
+          "search_tolerance": 1e-07,
+          "seed": 0,
+          "workers": 16
+        },
+        "config_fingerprint": "1a726466c0a8d456",
+        "elapsed_s": 1507.077345658996,
+        "fixed_point": {
+          "de_converged": false,
+          "de_elapsed_s": 680.2511314899893,
+          "de_message": "Maximum number of iterations has been exceeded.",
+          "feasible_everywhere": true,
+          "gas_velocity_m_per_s": 0.8000457892776146,
+          "inlet_temperature_celsius": 90.41743097686674,
+          "nozzle_pressure_bar": 1.0062207676719843,
+          "per_grid_point": [
+            {
+              "ambient_relative_humidity": 0.25,
+              "ambient_temperature_celsius": 5.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 42.10259852872895,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8000457892776146,
+                "minimum_fluidization_velocity_m_per_s": 0.22746404059685865,
+                "moisture_kg_per_kg": 0.1198764534831953,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5018430907766085
+              },
+              "energy_target": 1.4581061924179748,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 3.240235983151055
+            },
+            {
+              "ambient_relative_humidity": 0.55,
+              "ambient_temperature_celsius": 5.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 42.1615579299628,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8000457892776146,
+                "minimum_fluidization_velocity_m_per_s": 0.22746946855382003,
+                "moisture_kg_per_kg": 0.12304739585160436,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.503513653032111
+              },
+              "energy_target": 1.4585619694511547,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 3.241248821002566
+            },
+            {
+              "ambient_relative_humidity": 0.85,
+              "ambient_temperature_celsius": 5.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 42.22234116373755,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8000457892776146,
+                "minimum_fluidization_velocity_m_per_s": 0.2274742681426546,
+                "moisture_kg_per_kg": 0.12634933589552821,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5051925869147245
+              },
+              "energy_target": 1.4590170540850338,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 3.242260120188964
+            },
+            {
+              "ambient_relative_humidity": 0.25,
+              "ambient_temperature_celsius": 20.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 43.50203343832165,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8000457892776146,
+                "minimum_fluidization_velocity_m_per_s": 0.22702406324010427,
+                "moisture_kg_per_kg": 0.11707210197106076,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.508798296353986
+              },
+              "energy_target": 1.2092623339009774,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.6872496308910607
+            },
+            {
+              "ambient_relative_humidity": 0.55,
+              "ambient_temperature_celsius": 20.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 43.65639818363714,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8000457892776146,
+                "minimum_fluidization_velocity_m_per_s": 0.22703935541399295,
+                "moisture_kg_per_kg": 0.1253378884200227,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5132741127258775
+              },
+              "energy_target": 1.210352095839409,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.6896713240875756
+            },
+            {
+              "ambient_relative_humidity": 0.85,
+              "ambient_temperature_celsius": 20.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 43.824402270161414,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8000457892776146,
+                "minimum_fluidization_velocity_m_per_s": 0.22704995968011538,
+                "moisture_kg_per_kg": 0.1345757872826886,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5178117961484188
+              },
+              "energy_target": 1.2114473920690692,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.6921053157090427
+            },
+            {
+              "ambient_relative_humidity": 0.25,
+              "ambient_temperature_celsius": 35.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 45.00000150255653,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8000457892776146,
+                "minimum_fluidization_velocity_m_per_s": 0.22659520139691852,
+                "moisture_kg_per_kg": 0.11885779457969288,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.518636997503796
+              },
+              "energy_target": 0.9629254272178142,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.1398342827062535
+            },
+            {
+              "ambient_relative_humidity": 0.55,
+              "ambient_temperature_celsius": 35.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 45.3944616586585,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8000457892776146,
+                "minimum_fluidization_velocity_m_per_s": 0.22662287669371387,
+                "moisture_kg_per_kg": 0.14045107474853075,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5295498817224313
+              },
+              "energy_target": 0.9652553755961002,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.1450119457691117
+            },
+            {
+              "ambient_relative_humidity": 0.85,
+              "ambient_temperature_celsius": 35.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 45.89099949531379,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8000457892776146,
+                "minimum_fluidization_velocity_m_per_s": 0.22661549712722664,
+                "moisture_kg_per_kg": 0.16925792846313992,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5409007763851563
+              },
+              "energy_target": 0.9677059420323075,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.1504576489606833
+            }
+          ],
+          "refine_converged": true,
+          "refine_elapsed_s": 88.90367476300162
+        },
+        "grid_results": [
+          {
+            "_grid_index": 0,
+            "_wall_elapsed_s": 619.3164258739998,
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 5.0,
+            "bed_temperature_celsius": 30.733193375268634,
+            "constraint_check": {
+              "bed_temperature_celsius": 30.733193375268634,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.800114254817026,
+              "minimum_fluidization_velocity_m_per_s": 0.23138254468939284,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.460992323224994
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 572.2530913510127,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 1.2360429075782937,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.800114254817026,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 73.90539754889771,
+            "nozzle_pressure_bar": 1.0073813043658184,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 46.787746337999124,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 78,
+            "residual_inf_norm": 8.816151307021684e-12,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.746762016840653
+          },
+          {
+            "_grid_index": 1,
+            "_wall_elapsed_s": 736.361516599005,
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 5.0,
+            "bed_temperature_celsius": 31.75495630806166,
+            "constraint_check": {
+              "bed_temperature_celsius": 31.75495630806166,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8000070181161231,
+              "minimum_fluidization_velocity_m_per_s": 0.2310537500060367,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.466194924592593
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 704.1090115770057,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 1.254826820181514,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8000070181161231,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 75.23653099508391,
+            "nozzle_pressure_bar": 1.0088569329644357,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 32.08327575000294,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 94,
+            "residual_inf_norm": 7.671940347857484e-11,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.788504044847809
+          },
+          {
+            "_grid_index": 2,
+            "_wall_elapsed_s": 659.9662477890088,
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 5.0,
+            "bed_temperature_celsius": 32.722421682269236,
+            "constraint_check": {
+              "bed_temperature_celsius": 32.722421682269236,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8000393764943445,
+              "minimum_fluidization_velocity_m_per_s": 0.23074424826118964,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.4711878998812806
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 571.8876129989949,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 1.2726234320380614,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8000393764943445,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 76.48964442352178,
+            "nozzle_pressure_bar": 1.013244129985278,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 87.84213109899429,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 166,
+            "residual_inf_norm": 1.7643352713664348e-11,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.828052071195692
+          },
+          {
+            "_grid_index": 3,
+            "_wall_elapsed_s": 500.7284322560008,
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 20.0,
+            "bed_temperature_celsius": 30.00247101373556,
+            "constraint_check": {
+              "bed_temperature_celsius": 30.00247101373556,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.9193501347045043,
+              "minimum_fluidization_velocity_m_per_s": 0.2316766191729271,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.4603426305060387
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 435.1310309180117,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.9752949221007238,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.9193501347045043,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 65.7837985050674,
+            "nozzle_pressure_bar": 1.0087581184967618,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 65.0251688050048,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 94,
+            "residual_inf_norm": 2.1668858937252188e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.1673220491127196
+          },
+          {
+            "_grid_index": 4,
+            "_wall_elapsed_s": 683.4999041800038,
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 20.0,
+            "bed_temperature_celsius": 34.59228344652398,
+            "constraint_check": {
+              "bed_temperature_celsius": 34.59228344652398,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8001538759845903,
+              "minimum_fluidization_velocity_m_per_s": 0.23015104159638158,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.4810257712873223
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 651.8201229309925,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 1.0256373525613787,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8001538759845903,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 77.07617081765287,
+            "nozzle_pressure_bar": 1.0012723127888645,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 31.480063109003822,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 79,
+            "residual_inf_norm": 3.5589274131548443e-11,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.2791941168030636
+          },
+          {
+            "_grid_index": 5,
+            "_wall_elapsed_s": 612.3014566490019,
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 20.0,
+            "bed_temperature_celsius": 36.771614682788794,
+            "constraint_check": {
+              "bed_temperature_celsius": 36.771614682788794,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8000124942589469,
+              "minimum_fluidization_velocity_m_per_s": 0.22946805376784196,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.492822565373746
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 563.9830535649962,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 1.0665629172094742,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8000124942589469,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 79.89854933752083,
+            "nozzle_pressure_bar": 1.0029508697690774,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 48.01348380900163,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 80,
+            "residual_inf_norm": 3.838895245540155e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.370139816021054
+          },
+          {
+            "_grid_index": 6,
+            "_wall_elapsed_s": 508.5130713910039,
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 35.0,
+            "bed_temperature_celsius": 45.00000150258009,
+            "constraint_check": {
+              "bed_temperature_celsius": 45.00000150258009,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": false,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8000312964217127,
+              "minimum_fluidization_velocity_m_per_s": 0.2265952013969105,
+              "moisture_kg_per_kg": 0.11885946333989054,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.518636997503877
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 464.4612724309991,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.9629207440137167,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8000312964217127,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 90.41822147159809,
+            "nozzle_pressure_bar": 1.005282925144152,
+            "particle_moisture_kg_per_kg": 0.11885946333989054,
+            "refine_converged": true,
+            "refine_elapsed_s": 43.69307318999199,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 103,
+            "residual_inf_norm": 2.9837614715749797e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.1398238755860373
+          },
+          {
+            "_grid_index": 7,
+            "_wall_elapsed_s": 480.15894328200375,
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 35.0,
+            "bed_temperature_celsius": 45.000001485194275,
+            "constraint_check": {
+              "bed_temperature_celsius": 45.000001485194275,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": false,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.800037897790727,
+              "minimum_fluidization_velocity_m_per_s": 0.2267568546688137,
+              "moisture_kg_per_kg": 0.14379008510827362,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.528177630045048
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 447.2247946740099,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.9571134148574795,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.800037897790727,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 89.8348503468305,
+            "nozzle_pressure_bar": 1.0053483839140371,
+            "particle_moisture_kg_per_kg": 0.14379008510827362,
+            "refine_converged": true,
+            "refine_elapsed_s": 32.574276008992456,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 79,
+            "residual_inf_norm": 3.050383333934518e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.1269186996832876
+          },
+          {
+            "_grid_index": 8,
+            "_wall_elapsed_s": 590.462901758001,
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 35.0,
+            "bed_temperature_celsius": 45.000001461012424,
+            "constraint_check": {
+              "bed_temperature_celsius": 45.000001461012424,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": false,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8001005193703681,
+              "minimum_fluidization_velocity_m_per_s": 0.22691894171957244,
+              "moisture_kg_per_kg": 0.18083638270015334,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.5378007546401635
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 555.3375713470014,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.9483133521519529,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8001005193703681,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 89.02344209261268,
+            "nozzle_pressure_bar": 1.0066043176356807,
+            "particle_moisture_kg_per_kg": 0.18083638270015334,
+            "refine_converged": true,
+            "refine_elapsed_s": 34.806784856002196,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 96,
+            "residual_inf_norm": 3.5429512811061094e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.1073630047821177
+          }
+        ],
+        "grid_size": 3,
+        "label": "tau4=32000s",
+        "regret": {
+          "absolute_kw": {
+            "max": 0.2339674118002536,
+            "median": 0.18471474327803028,
+            "p95": 0.22920576101602458
+          },
+          "n_points": 9,
+          "relative_pct": {
+            "max": 23.989401205565855,
+            "median": 14.646408148282296,
+            "p95": 21.597541510171517
+          }
+        },
+        "setpoint_spread": {
+          "gas_velocity_m_per_s": {
+            "maximum": 0.9193501347045043,
+            "minimum": 0.8000070181161231,
+            "span_absolute": 0.11934311658838126,
+            "span_fraction_of_bound": 0.07020183328728309
+          },
+          "inlet_temperature_celsius": {
+            "maximum": 90.41822147159809,
+            "minimum": 65.7837985050674,
+            "span_absolute": 24.634422966530693,
+            "span_fraction_of_bound": 0.41057371610884486
+          },
+          "n_feasible_points": 9,
+          "nozzle_pressure_bar": {
+            "maximum": 1.013244129985278,
+            "minimum": 1.0012723127888645,
+            "span_absolute": 0.011971817196413381,
+            "span_fraction_of_bound": 0.0039906057321377935
+          }
+        },
+        "solid_inflow_kg_per_s": 0.000125
+      },
+      "transient": {
+        "batch_duration_s": 28800.0,
+        "elapsed_s": 52.07001790200593,
+        "label": "tau4=32000s",
+        "n_steps": 1152,
+        "per_grid_point": [
+          {
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 5.0,
+            "batch_mean": {
+              "energy_target_kw": 1.2262359398746332,
+              "q_rec_kw": 67.00411688113144
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 0.17921810186156825,
+              "d50_um": -32.65099089616143,
+              "particle_moisture_kg_per_kg": -0.4069465595070313,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 30.788272821077236,
+              "d50_um": 505.1175682787892,
+              "energy_target_kw": 1.2357849290889857,
+              "particle_moisture_kg_per_kg": 0.1991860551137387,
+              "q_rec_kw": 41.428715221771775,
+              "solid_mass_kg": 4.0
+            },
+            "grid_index": 0,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 26.219878563818504,
+              "batch_mean_vs_steady_state_relative_pct": 64.28924419237751,
+              "end_vs_steady_state_relative_pct": 1.5802107163179762
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 30.733193375268634,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 1.2360429075782937,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 40.78423831731293,
+              "solid_mass_kg": 4.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 5.0,
+            "batch_mean": {
+              "energy_target_kw": 1.2449414213616663,
+              "q_rec_kw": 62.38014029127529
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 0.18667029978833413,
+              "d50_um": -32.65099089616143,
+              "particle_moisture_kg_per_kg": -0.4500270637366718,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 31.814233380199575,
+              "d50_um": 505.1175682787892,
+              "energy_target_kw": 1.2545449237233335,
+              "particle_moisture_kg_per_kg": 0.19909989412767215,
+              "q_rec_kw": 37.56851028748993,
+              "solid_mass_kg": 4.0
+            },
+            "grid_index": 1,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 25.492230231436437,
+              "batch_mean_vs_steady_state_relative_pct": 69.10727712706802,
+              "end_vs_steady_state_relative_pct": 1.8450495746357554
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 31.75495630806166,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 1.254826820181514,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 36.88791005983885,
+              "solid_mass_kg": 4.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 5.0,
+            "batch_mean": {
+              "energy_target_kw": 1.262667247214974,
+              "q_rec_kw": 58.346796934817206
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 0.19384456949535894,
+              "d50_um": -32.65099089616143,
+              "particle_moisture_kg_per_kg": -0.4943162791368669,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 32.785852319707686,
+              "d50_um": 505.1175682787892,
+              "energy_target_kw": 1.2723174193319047,
+              "particle_moisture_kg_per_kg": 0.19901131571989275,
+              "q_rec_kw": 34.18729975974855,
+              "solid_mass_kg": 4.0
+            },
+            "grid_index": 2,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 24.876219748882576,
+              "batch_mean_vs_steady_state_relative_pct": 74.32264944428964,
+              "end_vs_steady_state_relative_pct": 2.1413511031865533
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 32.722421682269236,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 1.2726234320380614,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 33.47057718593463,
+              "solid_mass_kg": 4.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 20.0,
+            "batch_mean": {
+              "energy_target_kw": 0.9678183240041212,
+              "q_rec_kw": 56.78760954538909
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 0.1538391530661617,
+              "d50_um": -32.65099089616143,
+              "particle_moisture_kg_per_kg": -0.37416281670194346,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 30.04862656104201,
+              "d50_um": 505.1175682787892,
+              "energy_target_kw": 0.9751094082246975,
+              "particle_moisture_kg_per_kg": 0.1992516225823083,
+              "q_rec_kw": 33.87658948357772,
+              "solid_mass_kg": 4.0
+            },
+            "grid_index": 3,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 23.447834451095275,
+              "batch_mean_vs_steady_state_relative_pct": 70.32991189886111,
+              "end_vs_steady_state_relative_pct": 1.6101320052869268
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 30.00247101373556,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.9752949221007238,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 33.33977509429381,
+              "solid_mass_kg": 4.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 20.0,
+            "batch_mean": {
+              "energy_target_kw": 1.0174555077486391,
+              "q_rec_kw": 51.45566344386953
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 0.21073958545786128,
+              "d50_um": -32.65099089616143,
+              "particle_moisture_kg_per_kg": -0.5971903541788757,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 34.66518308125959,
+              "d50_um": 505.1175682787892,
+              "energy_target_kw": 1.0253425766142021,
+              "particle_moisture_kg_per_kg": 0.19880556762328142,
+              "q_rec_kw": 28.338567014584427,
+              "solid_mass_kg": 4.0
+            },
+            "grid_index": 4,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 23.918467504907667,
+              "batch_mean_vs_steady_state_relative_pct": 86.85876208283746,
+              "end_vs_steady_state_relative_pct": 2.9101404420365005
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 34.59228344652398,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 1.0256373525613787,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 27.537195938961865,
+              "solid_mass_kg": 4.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 20.0,
+            "batch_mean": {
+              "energy_target_kw": 1.0581939931675919,
+              "q_rec_kw": 44.51642645661349
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 0.22769337069531348,
+              "d50_um": -32.65099089616143,
+              "particle_moisture_kg_per_kg": -0.7290070886538362,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 36.85534121171913,
+              "d50_um": 505.1175682787892,
+              "energy_target_kw": 1.0662102368875686,
+              "particle_moisture_kg_per_kg": 0.19854193422284822,
+              "q_rec_kw": 22.47257247653302,
+              "solid_mass_kg": 4.0
+            },
+            "grid_index": 5,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 22.942551425660415,
+              "batch_mean_vs_steady_state_relative_pct": 106.34413795733794,
+              "end_vs_steady_state_relative_pct": 4.165674661091455
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 36.771614682788794,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 1.0665629172094742,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 21.573875030953072,
+              "solid_mass_kg": 4.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 35.0,
+            "batch_mean": {
+              "energy_target_kw": 0.9594362979659476,
+              "q_rec_kw": 116.26539632918882
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 0.008109109767984669,
+              "d50_um": -32.65099089616143,
+              "particle_moisture_kg_per_kg": -0.02722081604752792,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 45.00365060209753,
+              "d50_um": 505.1175682787892,
+              "energy_target_kw": 0.9629085890563024,
+              "particle_moisture_kg_per_kg": 0.11882710882401971,
+              "q_rec_kw": 104.5158423988955,
+              "solid_mass_kg": 4.0
+            },
+            "grid_index": 6,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 11.788915426097404,
+              "batch_mean_vs_steady_state_relative_pct": 11.283798347909874,
+              "end_vs_steady_state_relative_pct": 0.0376749824112064
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 45.00000150258009,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.9629207440137167,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.11885946333989054,
+              "q_rec_kw": 104.47648090309141,
+              "solid_mass_kg": 4.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 35.0,
+            "batch_mean": {
+              "energy_target_kw": 0.9524547313134492,
+              "q_rec_kw": 71.08461515712186
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 0.04412015949832668,
+              "d50_um": -32.65099089616143,
+              "particle_moisture_kg_per_kg": -0.17142180513356317,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 45.01985555762379,
+              "d50_um": 505.1175682787892,
+              "energy_target_kw": 0.957043715950525,
+              "particle_moisture_kg_per_kg": 0.14354359754877793,
+              "q_rec_kw": 56.62826489771743,
+              "solid_mass_kg": 4.0
+            },
+            "grid_index": 7,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 14.663393032047026,
+              "batch_mean_vs_steady_state_relative_pct": 25.989144651176016,
+              "end_vs_steady_state_relative_pct": 0.3669590357040146
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 45.000001485194275,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.9571134148574795,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.14379008510827362,
+              "q_rec_kw": 56.421222125074834,
+              "solid_mass_kg": 4.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 35.0,
+            "batch_mean": {
+              "energy_target_kw": 0.9419262907744128,
+              "q_rec_kw": 36.61013840566721
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 0.18409639848978737,
+              "d50_um": -32.65099089616143,
+              "particle_moisture_kg_per_kg": -0.8538988319939307,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 45.0828448430225,
+              "d50_um": 505.1175682787892,
+              "energy_target_kw": 0.9479959836082954,
+              "particle_moisture_kg_per_kg": 0.17929222294045666,
+              "q_rec_kw": 18.80356923306667,
+              "solid_mass_kg": 4.0
+            },
+            "grid_index": 8,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 18.659338625528143,
+              "batch_mean_vs_steady_state_relative_pct": 103.9471157500905,
+              "end_vs_steady_state_relative_pct": 4.750593084276496
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 45.000001461012424,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.9483133521519529,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.18083638270015334,
+              "q_rec_kw": 17.950799780139064,
+              "solid_mass_kg": 4.0
+            }
+          }
+        ],
+        "q_rec_deviation_summary": {
+          "batch_mean_vs_steady_state_abs_kw": {
+            "max": 26.219878563818504,
+            "median": 23.447834451095275
+          },
+          "batch_mean_vs_steady_state_relative_pct": {
+            "max": 106.34413795733794,
+            "median": 70.32991189886111
+          }
+        },
+        "sample_time_s": 25.0,
+        "state_channel_deviation_relative_pct": {
+          "bed_temperature_celsius": {
+            "max": 0.22769337069531348,
+            "median": 0.18409639848978737
+          },
+          "d50_um": {
+            "max": 32.65099089616143,
+            "median": -32.65099089616143
+          },
+          "particle_moisture_kg_per_kg": {
+            "max": 0.8538988319939307,
+            "median": -0.4500270637366718
+          },
+          "solid_mass_kg": {
+            "max": 0.0,
+            "median": 0.0
+          }
+        },
+        "transient_config_fingerprint": "871a2148cc84d99a"
+      }
+    },
+    "4000": {
+      "stationary": {
+        "bed_mass_solid_setpoint_kg": 0.5,
+        "budget": {
+          "de_tol": 0.0001,
+          "maxiter": 50,
+          "popsize": 10,
+          "search_max_iterations": 30,
+          "search_tolerance": 1e-07,
+          "seed": 0,
+          "workers": 16
+        },
+        "config_fingerprint": "6efbbd09057100c7",
+        "elapsed_s": 1463.5534433870052,
+        "fixed_point": {
+          "de_converged": false,
+          "de_elapsed_s": 684.5866376249905,
+          "de_message": "Maximum number of iterations has been exceeded.",
+          "feasible_everywhere": true,
+          "gas_velocity_m_per_s": 0.8001297976998168,
+          "inlet_temperature_celsius": 90.4128496084104,
+          "nozzle_pressure_bar": 1.003884991243238,
+          "per_grid_point": [
+            {
+              "ambient_relative_humidity": 0.25,
+              "ambient_temperature_celsius": 5.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 42.102808728369766,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.2274639690829822,
+                "moisture_kg_per_kg": 0.11986530854901821,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.501843829444804
+              },
+              "energy_target": 1.4022657027882597,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 3.1161460061961326
+            },
+            {
+              "ambient_relative_humidity": 0.55,
+              "ambient_temperature_celsius": 5.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 42.16175518473709,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.2274694014183715,
+                "moisture_kg_per_kg": 0.1230360721216918,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.503514346172492
+              },
+              "energy_target": 1.4025632336694072,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 3.1168071859320157
+            },
+            {
+              "ambient_relative_humidity": 0.85,
+              "ambient_temperature_celsius": 5.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 42.22253255921086,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.2274742029768045,
+                "moisture_kg_per_kg": 0.12633777377130173,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5051932594242716
+              },
+              "energy_target": 1.4028534996771171,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 3.1174522215047045
+            },
+            {
+              "ambient_relative_humidity": 0.25,
+              "ambient_temperature_celsius": 20.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 43.5021483560072,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.22702402424289306,
+                "moisture_kg_per_kg": 0.11706179141698249,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5087986981040924
+              },
+              "energy_target": 1.1535365491027263,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.5634145535616137
+            },
+            {
+              "ambient_relative_humidity": 0.55,
+              "ambient_temperature_celsius": 20.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 43.65649059399225,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.22703932402269406,
+                "moisture_kg_per_kg": 0.12532710107731654,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5132744357466303
+              },
+              "energy_target": 1.1542137261071574,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.5649193913492385
+            },
+            {
+              "ambient_relative_humidity": 0.85,
+              "ambient_temperature_celsius": 20.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 43.82447121798426,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.22704993623587477,
+                "moisture_kg_per_kg": 0.13456446355277601,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5178120371098998
+              },
+              "energy_target": 1.1548479039014035,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.566328675336452
+            },
+            {
+              "ambient_relative_humidity": 0.25,
+              "ambient_temperature_celsius": 35.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 45.00000150242,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.22659520139696457,
+                "moisture_kg_per_kg": 0.11884813960997798,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.518636997503321
+              },
+              "energy_target": 0.9070852861974118,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.015745080438693
+            },
+            {
+              "ambient_relative_humidity": 0.55,
+              "ambient_temperature_celsius": 35.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 45.39441980474439,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.226622890902584,
+                "moisture_kg_per_kg": 0.14044034700440308,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5295497362318664
+              },
+              "energy_target": 0.9083372776898214,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.0185272837551587
+            },
+            {
+              "ambient_relative_humidity": 0.85,
+              "ambient_temperature_celsius": 35.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 45.89090350711183,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.22661552978215865,
+                "moisture_kg_per_kg": 0.16924630674033486,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5409004429934074
+              },
+              "energy_target": 0.9093497650925808,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.0207772557612906
+            }
+          ],
+          "refine_converged": true,
+          "refine_elapsed_s": 77.21106347299065
+        },
+        "grid_results": [
+          {
+            "_grid_index": 0,
+            "_wall_elapsed_s": 594.6817037549918,
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 5.0,
+            "bed_temperature_celsius": 30.725431690925088,
+            "constraint_check": {
+              "bed_temperature_celsius": 30.725431690925088,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8004829689174172,
+              "minimum_fluidization_velocity_m_per_s": 0.2313852535204044,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.460963810230513
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 542.6177520519996,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 1.176191051379425,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8004829689174172,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 73.87531690909012,
+            "nozzle_pressure_bar": 1.0078870719963093,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 51.72295467200456,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 79,
+            "residual_inf_norm": 3.788557763500813e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.6137578919542777
+          },
+          {
+            "_grid_index": 1,
+            "_wall_elapsed_s": 700.1897138300119,
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 5.0,
+            "bed_temperature_celsius": 31.751716667962178,
+            "constraint_check": {
+              "bed_temperature_celsius": 31.751716667962178,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8001691491672387,
+              "minimum_fluidization_velocity_m_per_s": 0.23105487878057723,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.466183069125523
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 672.8538846979936,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 1.1949525414831834,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8001691491672387,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 75.22346314067349,
+            "nozzle_pressure_bar": 1.0021665156980024,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 27.16108618299768,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 79,
+            "residual_inf_norm": 1.4439846175173941e-09,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.655450092184852
+          },
+          {
+            "_grid_index": 2,
+            "_wall_elapsed_s": 613.1999895990011,
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 5.0,
+            "bed_temperature_celsius": 32.71434835393856,
+            "constraint_check": {
+              "bed_temperature_celsius": 32.71434835393856,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.80046437389547,
+              "minimum_fluidization_velocity_m_per_s": 0.23074705687490715,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.4711584616891358
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 547.3228143839951,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 1.2128212939263565,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.80046437389547,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 76.45578891368874,
+            "nozzle_pressure_bar": 1.0072019367152831,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 65.6383141339902,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 108,
+            "residual_inf_norm": 1.1844529765627203e-09,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.6951584309474588
+          },
+          {
+            "_grid_index": 3,
+            "_wall_elapsed_s": 445.2324526329903,
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 20.0,
+            "bed_temperature_celsius": 30.001843737843657,
+            "constraint_check": {
+              "bed_temperature_celsius": 30.001843737843657,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.9193881149751291,
+              "minimum_fluidization_velocity_m_per_s": 0.23167683860379282,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.4603403189668893
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 394.5630841799866,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.9064429037250451,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.9193881149751291,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 65.78152676386642,
+            "nozzle_pressure_bar": 1.0048608744154017,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 50.31037212899537,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 80,
+            "residual_inf_norm": 2.242608935123615e-09,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.0143175638334334
+          },
+          {
+            "_grid_index": 4,
+            "_wall_elapsed_s": 595.4731161609961,
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 20.0,
+            "bed_temperature_celsius": 30.31908094840469,
+            "constraint_check": {
+              "bed_temperature_celsius": 30.31908094840469,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 1.1084031522583047,
+              "minimum_fluidization_velocity_m_per_s": 0.2316401797592569,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.4654218469883133
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 531.0116796289949,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.9606462048934087,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 1.1084031522583047,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 60.03656939600857,
+            "nozzle_pressure_bar": 1.0086126203596912,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 64.16925619798712,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 101,
+            "residual_inf_norm": 1.1357863289155073e-09,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.134769344207575
+          },
+          {
+            "_grid_index": 5,
+            "_wall_elapsed_s": 603.4821604430035,
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 20.0,
+            "bed_temperature_celsius": 36.771086576340025,
+            "constraint_check": {
+              "bed_temperature_celsius": 36.771086576340025,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8000464801905944,
+              "minimum_fluidization_velocity_m_per_s": 0.22946823631058455,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.492820668370088
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 530.1582188619941,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 1.0066549767967505,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8000464801905944,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 79.89601868299161,
+            "nozzle_pressure_bar": 1.0017576238804027,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 73.06551340999431,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 119,
+            "residual_inf_norm": 3.1421107750996673e-09,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.2370110595483346
+          },
+          {
+            "_grid_index": 6,
+            "_wall_elapsed_s": 449.5052417679981,
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 35.0,
+            "bed_temperature_celsius": 45.00000150238128,
+            "constraint_check": {
+              "bed_temperature_celsius": 45.00000150238128,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": false,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8001535574925847,
+              "minimum_fluidization_velocity_m_per_s": 0.22659520139697784,
+              "moisture_kg_per_kg": 0.11884539807536755,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.5186369975031857
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 418.1700783330016,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.9070913837696143,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8001535574925847,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 90.41155042039284,
+            "nozzle_pressure_bar": 1.0046569874633229,
+            "particle_moisture_kg_per_kg": 0.11884539807536755,
+            "refine_converged": true,
+            "refine_elapsed_s": 30.93979651700647,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 75,
+            "residual_inf_norm": 2.0976258232412013e-09,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.0157586305991426
+          },
+          {
+            "_grid_index": 7,
+            "_wall_elapsed_s": 477.72710034599004,
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 35.0,
+            "bed_temperature_celsius": 45.000001485195696,
+            "constraint_check": {
+              "bed_temperature_celsius": 45.000001485195696,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": false,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.800036915721205,
+              "minimum_fluidization_velocity_m_per_s": 0.226756854668813,
+              "moisture_kg_per_kg": 0.1437902043054306,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.528177630045052
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 442.6785510269983,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.9000069184510835,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.800036915721205,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 89.83489785573407,
+            "nozzle_pressure_bar": 1.0100412412206352,
+            "particle_moisture_kg_per_kg": 0.1437902043054306,
+            "refine_converged": true,
+            "refine_elapsed_s": 34.676264788009576,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 84,
+            "residual_inf_norm": 2.518490926217835e-09,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.000015374335741
+          },
+          {
+            "_grid_index": 8,
+            "_wall_elapsed_s": 647.8567220279947,
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 35.0,
+            "bed_temperature_celsius": 45.000319999150456,
+            "constraint_check": {
+              "bed_temperature_celsius": 45.000319999150456,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": false,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8000001075108634,
+              "minimum_fluidization_velocity_m_per_s": 0.22691883311834435,
+              "moisture_kg_per_kg": 0.1808482428172723,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.5378018648372085
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 616.7225931889989,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.8893329425031062,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8000001075108634,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 89.02917686773571,
+            "nozzle_pressure_bar": 1.0,
+            "particle_moisture_kg_per_kg": 0.1808482428172723,
+            "refine_converged": true,
+            "refine_elapsed_s": 30.924729552003555,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 112,
+            "residual_inf_norm": 1.8195351411481166e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 1.9762954277846805
+          }
+        ],
+        "grid_size": 3,
+        "label": "tau4=4000s",
+        "regret": {
+          "absolute_kw": {
+            "max": 0.2470936453776812,
+            "median": 0.19003220575076063,
+            "p95": 0.2386860477901426
+          },
+          "n_points": 9,
+          "relative_pct": {
+            "max": 27.25970321597146,
+            "median": 15.6686072962617,
+            "p95": 24.41570996027474
+          }
+        },
+        "setpoint_spread": {
+          "gas_velocity_m_per_s": {
+            "maximum": 1.1084031522583047,
+            "minimum": 0.8000001075108634,
+            "span_absolute": 0.3084030447474413,
+            "span_fraction_of_bound": 0.181413555733789
+          },
+          "inlet_temperature_celsius": {
+            "maximum": 90.41155042039284,
+            "minimum": 60.03656939600857,
+            "span_absolute": 30.374981024384276,
+            "span_fraction_of_bound": 0.5062496837397379
+          },
+          "n_feasible_points": 9,
+          "nozzle_pressure_bar": {
+            "maximum": 1.0100412412206352,
+            "minimum": 1.0,
+            "span_absolute": 0.01004124122063521,
+            "span_fraction_of_bound": 0.0033470804068784035
+          }
+        },
+        "solid_inflow_kg_per_s": 0.000125
+      },
+      "transient": {
+        "batch_duration_s": 28800.0,
+        "elapsed_s": 52.18242140200164,
+        "label": "tau4=4000s",
+        "n_steps": 1152,
+        "per_grid_point": [
+          {
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 5.0,
+            "batch_mean": {
+              "energy_target_kw": 1.175153268969261,
+              "q_rec_kw": 43.98595628910805
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": -1.1804193183704625e-05,
+              "d50_um": -0.13877249091298535,
+              "particle_moisture_kg_per_kg": 3.2655664693921606e-05,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 30.725428064035775,
+              "d50_um": 748.9592063181525,
+              "energy_target_kw": 1.1761910657782777,
+              "particle_moisture_kg_per_kg": 0.20000001333253936,
+              "q_rec_kw": 40.77901638625712,
+              "solid_mass_kg": 0.5
+            },
+            "grid_index": 0,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 3.2068987357948657,
+              "batch_mean_vs_steady_state_relative_pct": 7.864082517361449,
+              "end_vs_steady_state_relative_pct": -0.00010095146513434566
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 30.725431690925088,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 1.176191051379425,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 40.77905755331319,
+              "solid_mass_kg": 0.5
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 5.0,
+            "batch_mean": {
+              "energy_target_kw": 1.1939060559289922,
+              "q_rec_kw": 40.00552100897697
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": -4.5545259148846335e-06,
+              "d50_um": -0.13877249091298535,
+              "particle_moisture_kg_per_kg": 1.7083957470032826e-05,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 31.751715221822014,
+              "d50_um": 748.9592063181525,
+              "energy_target_kw": 1.1949525473526017,
+              "particle_moisture_kg_per_kg": 0.199999982189133,
+              "q_rec_kw": 36.88502175900222,
+              "solid_mass_kg": 0.5
+            },
+            "grid_index": 1,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 3.120474167662998,
+              "batch_mean_vs_steady_state_relative_pct": 8.459997844350942,
+              "end_vs_steady_state_relative_pct": -6.800130106664383e-05
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 31.751716667962178,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 1.1949525414831834,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 36.88504684131397,
+              "solid_mass_kg": 0.5
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 5.0,
+            "batch_mean": {
+              "energy_target_kw": 1.2117673066443124,
+              "q_rec_kw": 36.50881884150171
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": -5.187076455441479e-06,
+              "d50_um": -0.13877249091298535,
+              "particle_moisture_kg_per_kg": 8.632053581027019e-06,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 32.7143466570203,
+              "d50_um": 748.9592063181525,
+              "energy_target_kw": 1.212821300729137,
+              "particle_moisture_kg_per_kg": 0.19999996528532962,
+              "q_rec_kw": 33.461945446922435,
+              "solid_mass_kg": 0.5
+            },
+            "grid_index": 2,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 3.046860273972925,
+              "batch_mean_vs_steady_state_relative_pct": 9.105445121582255,
+              "end_vs_steady_state_relative_pct": -3.9210515190537596e-05
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 32.71434835393856,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 1.2128212939263565,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 33.46195856752878,
+              "solid_mass_kg": 0.5
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 20.0,
+            "batch_mean": {
+              "energy_target_kw": 0.9057119911478146,
+              "q_rec_kw": 36.201225965048565
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": -1.2319217082815101e-05,
+              "d50_um": -0.13877249091298535,
+              "particle_moisture_kg_per_kg": 2.2150750245480063e-05,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 30.0018400418514,
+              "d50_um": 748.9592063181525,
+              "energy_target_kw": 0.9064429150160285,
+              "particle_moisture_kg_per_kg": 0.19999999232271592,
+              "q_rec_kw": 33.33909976531592,
+              "solid_mass_kg": 0.5
+            },
+            "grid_index": 3,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 2.8620934765141754,
+              "batch_mean_vs_steady_state_relative_pct": 8.584786894195503,
+              "end_vs_steady_state_relative_pct": -9.815257934087331e-05
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 30.001843737843657,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.9064429037250451,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 33.33913248853439,
+              "solid_mass_kg": 0.5
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 20.0,
+            "batch_mean": {
+              "energy_target_kw": 0.9599769695437842,
+              "q_rec_kw": 23.585098253760094
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": -1.0257280226724002e-05,
+              "d50_um": -0.13877249091298535,
+              "particle_moisture_kg_per_kg": 4.123877136014061e-05,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 30.319077838491594,
+              "d50_um": 748.9592063181525,
+              "energy_target_kw": 0.960646215428568,
+              "particle_moisture_kg_per_kg": 0.20000003049874823,
+              "q_rec_kw": 21.212600716252755,
+              "solid_mass_kg": 0.5
+            },
+            "grid_index": 4,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 2.3724660264991755,
+              "batch_mean_vs_steady_state_relative_pct": 11.184213260673308,
+              "end_vs_steady_state_relative_pct": -0.00014854831699377878
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 30.31908094840469,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.9606462048934087,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 21.21263222726092,
+              "solid_mass_kg": 0.5
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 20.0,
+            "batch_mean": {
+              "energy_target_kw": 1.005800549984082,
+              "q_rec_kw": 24.396693134720717
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": -1.2319831877795844e-05,
+              "d50_um": -0.13877249091298535,
+              "particle_moisture_kg_per_kg": 0.00010915869426767647,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 36.77108204620398,
+              "d50_um": 748.9592063181525,
+              "energy_target_kw": 1.0066549929389832,
+              "particle_moisture_kg_per_kg": 0.20000016633855874,
+              "q_rec_kw": 21.572960104993978,
+              "solid_mass_kg": 0.5
+            },
+            "grid_index": 5,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 2.8236985044102454,
+              "batch_mean_vs_steady_state_relative_pct": 13.089042818575104,
+              "end_vs_steady_state_relative_pct": -0.00016003951739374585
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 36.771086576340025,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 1.0066549767967505,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 21.572994630310472,
+              "solid_mass_kg": 0.5
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 35.0,
+            "batch_mean": {
+              "energy_target_kw": 0.9067166499135195,
+              "q_rec_kw": 105.91673049626125
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": -1.801989676327423e-05,
+              "d50_um": -0.13877249091298535,
+              "particle_moisture_kg_per_kg": 5.243914535882208e-05,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 44.99999339342747,
+              "d50_um": 748.9592063181525,
+              "energy_target_kw": 0.9070914071233113,
+              "particle_moisture_kg_per_kg": 0.1188454603968786,
+              "q_rec_kw": 104.48972552499262,
+              "solid_mass_kg": 0.5
+            },
+            "grid_index": 6,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 1.4269265770262507,
+              "batch_mean_vs_steady_state_relative_pct": 1.365613221103552,
+              "end_vs_steady_state_relative_pct": -7.502573403240954e-05
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 45.00000150238128,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.9070913837696143,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.11884539807536755,
+              "q_rec_kw": 104.489803919235,
+              "solid_mass_kg": 0.5
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 35.0,
+            "batch_mean": {
+              "energy_target_kw": 0.8995207688172285,
+              "q_rec_kw": 58.21082471322831
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": -1.7366062234868778e-05,
+              "d50_um": -0.13877249091298535,
+              "particle_moisture_kg_per_kg": 5.656724123497522e-05,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 44.99999367046743,
+              "d50_um": 748.9592063181525,
+              "energy_target_kw": 0.9000069409307571,
+              "particle_moisture_kg_per_kg": 0.14379028564358234,
+              "q_rec_kw": 56.42107818219035,
+              "solid_mass_kg": 0.5
+            },
+            "grid_index": 7,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 1.7896745652538613,
+              "batch_mean_vs_steady_state_relative_pct": 3.171992347834319,
+              "end_vs_steady_state_relative_pct": -0.00012755107599365158
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 45.000001485195696,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.9000069184510835,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.1437902043054306,
+              "q_rec_kw": 56.42115014797445,
+              "solid_mass_kg": 0.5
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 35.0,
+            "batch_mean": {
+              "energy_target_kw": 0.8886977752129395,
+              "q_rec_kw": 20.25674224036832
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 3.092003666265317e-06,
+              "d50_um": -0.13877249091298535,
+              "particle_moisture_kg_per_kg": -1.4856889929209224e-05,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 45.000321390562,
+              "d50_um": 748.9592063181525,
+              "energy_target_kw": 0.8893329384601083,
+              "particle_moisture_kg_per_kg": 0.18084821594884792,
+              "q_rec_kw": 17.946888017344516,
+              "solid_mass_kg": 0.5
+            },
+            "grid_index": 8,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 2.309868869506044,
+              "batch_mean_vs_steady_state_relative_pct": 12.87059211804682,
+              "end_vs_steady_state_relative_pct": 8.161021664291007e-05
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 45.000319999150456,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.8893329425031062,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.1808482428172723,
+              "q_rec_kw": 17.946873370862278,
+              "solid_mass_kg": 0.5
+            }
+          }
+        ],
+        "q_rec_deviation_summary": {
+          "batch_mean_vs_steady_state_abs_kw": {
+            "max": 3.2068987357948657,
+            "median": 2.8236985044102454
+          },
+          "batch_mean_vs_steady_state_relative_pct": {
+            "max": 13.089042818575104,
+            "median": 8.584786894195503
+          }
+        },
+        "sample_time_s": 25.0,
+        "state_channel_deviation_relative_pct": {
+          "bed_temperature_celsius": {
+            "max": 1.801989676327423e-05,
+            "median": -1.1804193183704625e-05
+          },
+          "d50_um": {
+            "max": 0.13877249091298535,
+            "median": -0.13877249091298535
+          },
+          "particle_moisture_kg_per_kg": {
+            "max": 0.00010915869426767647,
+            "median": 3.2655664693921606e-05
+          },
+          "solid_mass_kg": {
+            "max": 0.0,
+            "median": 0.0
+          }
+        },
+        "transient_config_fingerprint": "e572e072260d7104"
+      }
+    },
+    "8000": {
+      "stationary": {
+        "bed_mass_solid_setpoint_kg": 1.0,
+        "budget": {
+          "de_tol": 0.0001,
+          "maxiter": 50,
+          "popsize": 10,
+          "search_max_iterations": 30,
+          "search_tolerance": 1e-07,
+          "seed": 0,
+          "workers": 16
+        },
+        "config_fingerprint": "17ee9d37ff3f258f",
+        "elapsed_s": 1530.5008240189927,
+        "fixed_point": {
+          "de_converged": false,
+          "de_elapsed_s": 702.853868812992,
+          "de_message": "Maximum number of iterations has been exceeded.",
+          "feasible_everywhere": true,
+          "gas_velocity_m_per_s": 0.8001297976998168,
+          "inlet_temperature_celsius": 90.4128496084104,
+          "nozzle_pressure_bar": 1.003884991243238,
+          "per_grid_point": [
+            {
+              "ambient_relative_humidity": 0.25,
+              "ambient_temperature_celsius": 5.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 42.102808728369766,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.2274639690829822,
+                "moisture_kg_per_kg": 0.11986530854901821,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.501843829444804
+              },
+              "energy_target": 1.4102540002039925,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 3.1338977782310944
+            },
+            {
+              "ambient_relative_humidity": 0.55,
+              "ambient_temperature_celsius": 5.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 42.16175518473709,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.2274694014183715,
+                "moisture_kg_per_kg": 0.1230360721216918,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.503514346172492
+              },
+              "energy_target": 1.4105741489859356,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 3.1346092199687456
+            },
+            {
+              "ambient_relative_humidity": 0.85,
+              "ambient_temperature_celsius": 5.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 42.22253255921086,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.2274742029768045,
+                "moisture_kg_per_kg": 0.12633777377130173,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5051932594242716
+              },
+              "energy_target": 1.4108879669106071,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 3.1353065931346826
+            },
+            {
+              "ambient_relative_humidity": 0.25,
+              "ambient_temperature_celsius": 20.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 43.5021483560072,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.22702402424289306,
+                "moisture_kg_per_kg": 0.11706179141698249,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5087986981040924
+              },
+              "energy_target": 1.1615048482843056,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.5811218850762345
+            },
+            {
+              "ambient_relative_humidity": 0.55,
+              "ambient_temperature_celsius": 20.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 43.65649059399225,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.22703932402269406,
+                "moisture_kg_per_kg": 0.12532710107731654,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5132744357466303
+              },
+              "energy_target": 1.1622409839432248,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.5827577420960552
+            },
+            {
+              "ambient_relative_humidity": 0.85,
+              "ambient_temperature_celsius": 20.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 43.82447121798426,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.22704993623587477,
+                "moisture_kg_per_kg": 0.13456446355277601,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5178120371098998
+              },
+              "energy_target": 1.162941054303503,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.5843134540077846
+            },
+            {
+              "ambient_relative_humidity": 0.25,
+              "ambient_temperature_celsius": 35.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 45.00000150242,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.22659520139696457,
+                "moisture_kg_per_kg": 0.11884813960997798,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.518636997503321
+              },
+              "energy_target": 0.9150663278762761,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.033480728613947
+            },
+            {
+              "ambient_relative_humidity": 0.55,
+              "ambient_temperature_celsius": 35.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 45.39441980474439,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.226622890902584,
+                "moisture_kg_per_kg": 0.14044034700440308,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5295497362318664
+              },
+              "energy_target": 0.9164723423330655,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.03660520518459
+            },
+            {
+              "ambient_relative_humidity": 0.85,
+              "ambient_temperature_celsius": 35.0,
+              "constraint_check": {
+                "bed_temperature_celsius": 45.89090350711183,
+                "bed_temperature_violation_k": 0.0,
+                "binding_bed_temperature": false,
+                "binding_gas_lower": false,
+                "binding_gas_upper": false,
+                "binding_moisture": false,
+                "feasible": true,
+                "gas_velocity_m_per_s": 0.8001297976998168,
+                "minimum_fluidization_velocity_m_per_s": 0.22661552978215865,
+                "moisture_kg_per_kg": 0.16924630674033486,
+                "moisture_violation_kg_per_kg": 0.0,
+                "normalized_violation": 0.0,
+                "solver_feasible": true,
+                "terminal_velocity_m_per_s": 3.5409004429934074
+              },
+              "energy_target": 0.9176903103163551,
+              "feasible": true,
+              "infeasibility_reasons": [],
+              "solve_failed": false,
+              "specific_energy_kwh_per_kg": 2.039311800703011
+            }
+          ],
+          "refine_converged": true,
+          "refine_elapsed_s": 76.99716724800237
+        },
+        "grid_results": [
+          {
+            "_grid_index": 0,
+            "_wall_elapsed_s": 651.9071087220073,
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 5.0,
+            "bed_temperature_celsius": 30.73034994467948,
+            "constraint_check": {
+              "bed_temperature_celsius": 30.73034994467948,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8002493388845422,
+              "minimum_fluidization_velocity_m_per_s": 0.23138353704261172,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.4609818778198593
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 575.2283173129981,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 1.184710168547035,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8002493388845422,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 73.89437399340339,
+            "nozzle_pressure_bar": 1.0065869448062883,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 76.40036017799866,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 122,
+            "residual_inf_norm": 6.861240306313828e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.632689263437855
+          },
+          {
+            "_grid_index": 1,
+            "_wall_elapsed_s": 749.0959541300108,
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 5.0,
+            "bed_temperature_celsius": 31.75346409960793,
+            "constraint_check": {
+              "bed_temperature_celsius": 31.75346409960793,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.800081736967714,
+              "minimum_fluidization_velocity_m_per_s": 0.2310542699291389,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.4661894638725803
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 710.0567734359938,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 1.2034925735278585,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.800081736967714,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 75.23050904588983,
+            "nozzle_pressure_bar": 1.0042753324121154,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 38.86310193598911,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 110,
+            "residual_inf_norm": 4.2050339451648824e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.6744279411730187
+          },
+          {
+            "_grid_index": 2,
+            "_wall_elapsed_s": 652.1840172049997,
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 5.0,
+            "bed_temperature_celsius": 32.72270821831512,
+            "constraint_check": {
+              "bed_temperature_celsius": 32.72270821831512,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8000241934306953,
+              "minimum_fluidization_velocity_m_per_s": 0.230744148579659,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.4711889446752715
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 577.3651718019973,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 1.2212654707310908,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8000241934306953,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 76.4908458117612,
+            "nozzle_pressure_bar": 1.0102280122753493,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 74.5757520920015,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 120,
+            "residual_inf_norm": 1.789927039899326e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.713923268291313
+          },
+          {
+            "_grid_index": 3,
+            "_wall_elapsed_s": 652.4337081210106,
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 20.0,
+            "bed_temperature_celsius": 30.004221920523733,
+            "constraint_check": {
+              "bed_temperature_celsius": 30.004221920523733,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.91924424859845,
+              "minimum_fluidization_velocity_m_per_s": 0.2316760066800439,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.460349082644099
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 610.6796970889991,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.9162942969420932,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.91924424859845,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 65.79013680483565,
+            "nozzle_pressure_bar": 1.0041212897366292,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 41.54938195599243,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 85,
+            "residual_inf_norm": 1.0539773881136517e-09,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.036209548760207
+          },
+          {
+            "_grid_index": 4,
+            "_wall_elapsed_s": 615.1712516660045,
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 20.0,
+            "bed_temperature_celsius": 30.451011301312022,
+            "constraint_check": {
+              "bed_temperature_celsius": 30.451011301312022,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 1.096676800362905,
+              "minimum_fluidization_velocity_m_per_s": 0.2315939971522593,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.465907529483657
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 562.1155114629946,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.9727474849001503,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 1.096676800362905,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 60.51572509382821,
+            "nozzle_pressure_bar": 1.0004295830361332,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 52.708506711991504,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 78,
+            "residual_inf_norm": 8.021177246572004e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.1616610775558893
+          },
+          {
+            "_grid_index": 5,
+            "_wall_elapsed_s": 619.2642722559976,
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 20.0,
+            "bed_temperature_celsius": 36.770264949038555,
+            "constraint_check": {
+              "bed_temperature_celsius": 36.770264949038555,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": true,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8000995191726128,
+              "minimum_fluidization_velocity_m_per_s": 0.22946852031077308,
+              "moisture_kg_per_kg": 0.19999994802122695,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.4928177170065706
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 566.1464171510015,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 1.0152191213741197,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8000995191726128,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 79.89208958996716,
+            "nozzle_pressure_bar": 1.0080700787493413,
+            "particle_moisture_kg_per_kg": 0.19999994802122695,
+            "refine_converged": true,
+            "refine_elapsed_s": 52.81732294600806,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 79,
+            "residual_inf_norm": 2.610295333094781e-10,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.2560424919424884
+          },
+          {
+            "_grid_index": 6,
+            "_wall_elapsed_s": 487.53022549800517,
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 35.0,
+            "bed_temperature_celsius": 45.00000150234672,
+            "constraint_check": {
+              "bed_temperature_celsius": 45.00000150234672,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": false,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8001747826112388,
+              "minimum_fluidization_velocity_m_per_s": 0.22659520139698952,
+              "moisture_kg_per_kg": 0.11884295453364958,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.518636997503066
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 450.8015167679987,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.9150782987018352,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8001747826112388,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 90.41039078416365,
+            "nozzle_pressure_bar": 1.0044573937859964,
+            "particle_moisture_kg_per_kg": 0.11884295453364958,
+            "refine_converged": true,
+            "refine_elapsed_s": 36.36159490799764,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 87,
+            "residual_inf_norm": 1.184595563016232e-09,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.0335073304485225
+          },
+          {
+            "_grid_index": 7,
+            "_wall_elapsed_s": 489.80289033599547,
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 35.0,
+            "bed_temperature_celsius": 45.00000148497454,
+            "constraint_check": {
+              "bed_temperature_celsius": 45.00000148497454,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": false,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8001756827022792,
+              "minimum_fluidization_velocity_m_per_s": 0.2267568546688883,
+              "moisture_kg_per_kg": 0.1437714903517856,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.5281776300442815
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 457.41287758399267,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.9082029875607242,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8001756827022792,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 89.82747714107586,
+            "nozzle_pressure_bar": 1.0084507390500952,
+            "particle_moisture_kg_per_kg": 0.1437714903517856,
+            "refine_converged": true,
+            "refine_elapsed_s": 32.037131138000404,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 78,
+            "residual_inf_norm": 1.1023618299670865e-09,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 2.0182288612460537
+          },
+          {
+            "_grid_index": 8,
+            "_wall_elapsed_s": 542.8259694120061,
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 35.0,
+            "bed_temperature_celsius": 45.000319999150456,
+            "constraint_check": {
+              "bed_temperature_celsius": 45.000319999150456,
+              "bed_temperature_violation_k": 0.0,
+              "binding_bed_temperature": false,
+              "binding_gas_lower": false,
+              "binding_gas_upper": false,
+              "binding_moisture": false,
+              "feasible": true,
+              "gas_velocity_m_per_s": 0.8000001075108634,
+              "minimum_fluidization_velocity_m_per_s": 0.22691883311834435,
+              "moisture_kg_per_kg": 0.1808482428172723,
+              "moisture_violation_kg_per_kg": 0.0,
+              "normalized_violation": 0.0,
+              "solver_feasible": true,
+              "terminal_velocity_m_per_s": 3.5378018648372085
+            },
+            "converged": true,
+            "de_converged": false,
+            "de_elapsed_s": 484.42214904900175,
+            "de_message": "Maximum number of iterations has been exceeded.",
+            "de_nfev": 1530,
+            "de_nit": 50,
+            "diameter_um": 749.9999999999999,
+            "energy_target": 0.8977548821224997,
+            "energy_target_unit": "power_kw",
+            "feasible": true,
+            "gas_velocity_m_per_s": 0.8000001075108634,
+            "infeasibility_reasons": [],
+            "inlet_temperature_celsius": 89.02917686773571,
+            "nozzle_pressure_bar": 1.0,
+            "particle_moisture_kg_per_kg": 0.1808482428172723,
+            "refine_converged": true,
+            "refine_elapsed_s": 58.026005806998,
+            "refine_message": "Optimization terminated successfully.",
+            "refine_nit": 112,
+            "residual_inf_norm": 9.097675705740583e-11,
+            "solve_failed": false,
+            "specific_energy_kwh_per_kg": 1.9950108491611103
+          }
+        ],
+        "grid_size": 3,
+        "label": "tau4=8000s",
+        "regret": {
+          "absolute_kw": {
+            "max": 0.24521055134221237,
+            "median": 0.18949349904307455,
+            "p95": 0.23734386346811046
+          },
+          "n_points": 9,
+          "relative_pct": {
+            "max": 26.761112904504834,
+            "median": 15.526722135687818,
+            "p95": 23.848761867213558
+          }
+        },
+        "setpoint_spread": {
+          "gas_velocity_m_per_s": {
+            "maximum": 1.096676800362905,
+            "minimum": 0.8000001075108634,
+            "span_absolute": 0.2966766928520417,
+            "span_fraction_of_bound": 0.17451570167767158
+          },
+          "inlet_temperature_celsius": {
+            "maximum": 90.41039078416365,
+            "minimum": 60.51572509382821,
+            "span_absolute": 29.894665690335444,
+            "span_fraction_of_bound": 0.4982444281722574
+          },
+          "n_feasible_points": 9,
+          "nozzle_pressure_bar": {
+            "maximum": 1.0102280122753493,
+            "minimum": 1.0,
+            "span_absolute": 0.010228012275349307,
+            "span_fraction_of_bound": 0.0034093374251164357
+          }
+        },
+        "solid_inflow_kg_per_s": 0.000125
+      },
+      "transient": {
+        "batch_duration_s": 28800.0,
+        "elapsed_s": 51.97159527700569,
+        "label": "tau4=8000s",
+        "n_steps": 1152,
+        "per_grid_point": [
+          {
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 5.0,
+            "batch_mean": {
+              "energy_target_kw": 1.1825536703552488,
+              "q_rec_kw": 47.29442891593097
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": -7.823426836725576e-06,
+              "d50_um": -4.628906458066908,
+              "particle_moisture_kg_per_kg": 1.2813725482991069e-05,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 30.730347540513037,
+              "d50_um": 715.2832015644981,
+              "energy_target_kw": 1.1847101781478933,
+              "particle_moisture_kg_per_kg": 0.19999997364867125,
+              "q_rec_kw": 40.78231976785747,
+              "solid_mass_kg": 1.0
+            },
+            "grid_index": 0,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 6.5120884391298475,
+              "batch_mean_vs_steady_state_relative_pct": 15.967912491030827,
+              "end_vs_steady_state_relative_pct": -5.077919366410786e-05
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 30.73034994467948,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 1.184710168547035,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 40.782340476801124,
+              "solid_mass_kg": 1.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 5.0,
+            "batch_mean": {
+              "energy_target_kw": 1.2013187758950192,
+              "q_rec_kw": 43.221946314418574
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": -4.604661646223151e-06,
+              "d50_um": -4.628906458066908,
+              "particle_moisture_kg_per_kg": 7.974781423369056e-06,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 31.753462637468346,
+              "d50_um": 715.2832015644981,
+              "energy_target_kw": 1.203492579443185,
+              "particle_moisture_kg_per_kg": 0.19999996397078565,
+              "q_rec_kw": 36.88657886210246,
+              "solid_mass_kg": 1.0
+            },
+            "grid_index": 1,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 6.335355048004423,
+              "batch_mean_vs_steady_state_relative_pct": 17.175225008586978,
+              "end_vs_steady_state_relative_pct": -3.362824068024096e-05
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 31.75346409960793,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 1.2034925735278585,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 36.88659126641415,
+              "solid_mass_kg": 1.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 5.0,
+            "batch_mean": {
+              "energy_target_kw": 1.2190761599155955,
+              "q_rec_kw": 39.65747846271311
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": -1.0455030156002508e-05,
+              "d50_um": -4.628906458066908,
+              "particle_moisture_kg_per_kg": 2.9780815726175073e-05,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 32.72270479714611,
+              "d50_um": 715.2832015644981,
+              "energy_target_kw": 1.2212654850458653,
+              "particle_moisture_kg_per_kg": 0.20000000758284292,
+              "q_rec_kw": 33.470845329254466,
+              "solid_mass_kg": 1.0
+            },
+            "grid_index": 2,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 6.186595427339832,
+              "batch_mean_vs_steady_state_relative_pct": 18.48351422578725,
+              "end_vs_steady_state_relative_pct": -0.0001126534928000777
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 32.72270821831512,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 1.2212654707310908,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 33.47088303537328,
+              "solid_mass_kg": 1.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 20.0,
+            "batch_mean": {
+              "energy_target_kw": 0.9147537024600388,
+              "q_rec_kw": 39.15874687614335
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": -1.3656567812964364e-05,
+              "d50_um": -4.628906458066908,
+              "particle_moisture_kg_per_kg": 3.652432124805058e-05,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 30.00421782297682,
+              "d50_um": 715.2832015644981,
+              "energy_target_kw": 0.9162943102546811,
+              "particle_moisture_kg_per_kg": 0.20000002106985046,
+              "q_rec_kw": 33.34153057552197,
+              "solid_mass_kg": 1.0
+            },
+            "grid_index": 3,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 5.817178150137565,
+              "batch_mean_vs_steady_state_relative_pct": 17.44722390821485,
+              "end_vs_steady_state_relative_pct": -0.00011442318183585507
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 30.004221920523733,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.9162942969420932,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 33.34156872600578,
+              "solid_mass_kg": 1.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 20.0,
+            "batch_mean": {
+              "energy_target_kw": 0.9713104670426428,
+              "q_rec_kw": 26.285751951773946
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": -1.0870186594133918e-05,
+              "d50_um": -4.628906458066908,
+              "particle_moisture_kg_per_kg": 3.82322462992269e-05,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 30.451007991230274,
+              "d50_um": 715.2832015644981,
+              "energy_target_kw": 0.9727474967420211,
+              "particle_moisture_kg_per_kg": 0.20000002448569967,
+              "q_rec_kw": 21.422303991932477,
+              "solid_mass_kg": 1.0
+            },
+            "grid_index": 4,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 4.863416027506609,
+              "batch_mean_vs_steady_state_relative_pct": 22.702547680607072,
+              "end_vs_steady_state_relative_pct": -0.0001490609379516882
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 30.451011301312022,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.9727474849001503,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 21.422335924267337,
+              "solid_mass_kg": 1.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 20.0,
+            "batch_mean": {
+              "energy_target_kw": 1.0134354594564856,
+              "q_rec_kw": 27.297870332586356
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": -1.9530253146897985e-06,
+              "d50_um": -4.628906458066908,
+              "particle_moisture_kg_per_kg": 8.775254180763017e-06,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 36.77026423090597,
+              "d50_um": 715.2832015644981,
+              "energy_target_kw": 1.015219123936587,
+              "particle_moisture_kg_per_kg": 0.19999996557173075,
+              "q_rec_kw": 21.57161456768814,
+              "solid_mass_kg": 1.0
+            },
+            "grid_index": 5,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 5.726245460540088,
+              "batch_mean_vs_steady_state_relative_pct": 26.545267194779015,
+              "end_vs_steady_state_relative_pct": -4.776811292045111e-05
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 36.770264949038555,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 1.0152191213741197,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.19999994802122695,
+              "q_rec_kw": 21.571624872046268,
+              "solid_mass_kg": 1.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.25,
+            "ambient_temperature_celsius": 35.0,
+            "batch_mean": {
+              "energy_target_kw": 0.9143020191176426,
+              "q_rec_kw": 107.39933370507322
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": -1.991160228934386e-05,
+              "d50_um": -4.628906458066908,
+              "particle_moisture_kg_per_kg": 5.770544993622107e-05,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 44.99999254212539,
+              "d50_um": 715.2832015644981,
+              "energy_target_kw": 0.9150783249945196,
+              "particle_moisture_kg_per_kg": 0.11884302311251121,
+              "q_rec_kw": 104.49203225057565,
+              "solid_mass_kg": 1.0
+            },
+            "grid_index": 6,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 2.9072150992994636,
+              "batch_mean_vs_steady_state_relative_pct": 2.7822338546582253,
+              "end_vs_steady_state_relative_pct": -8.264278613467226e-05
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 45.00000150234672,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.9150782987018352,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.11884295453364958,
+              "q_rec_kw": 104.49211860577375,
+              "solid_mass_kg": 1.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.55,
+            "ambient_temperature_celsius": 35.0,
+            "batch_mean": {
+              "energy_target_kw": 0.9071931391758379,
+              "q_rec_kw": 60.06571293575093
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": -1.468654018636494e-05,
+              "d50_um": -4.628906458066908,
+              "particle_moisture_kg_per_kg": 4.7476448422479105e-05,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 44.99999487603124,
+              "d50_um": 715.2832015644981,
+              "energy_target_kw": 0.9082030070558302,
+              "particle_moisture_kg_per_kg": 0.14377155860938307,
+              "q_rec_kw": 56.43239024296939,
+              "solid_mass_kg": 1.0
+            },
+            "grid_index": 7,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 3.6332621464400674,
+              "batch_mean_vs_steady_state_relative_pct": 6.438249793553643,
+              "end_vs_steady_state_relative_pct": -0.00010728993801624603
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 45.00000148497454,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.9082029875607242,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.1437714903517856,
+              "q_rec_kw": 56.43245078931086,
+              "solid_mass_kg": 1.0
+            }
+          },
+          {
+            "ambient_relative_humidity": 0.85,
+            "ambient_temperature_celsius": 35.0,
+            "batch_mean": {
+              "energy_target_kw": 0.8964249541610122,
+              "q_rec_kw": 22.623243442233793
+            },
+            "deviation_end_vs_steady_state_relative_pct": {
+              "bed_temperature_celsius": 3.9666417325198195e-06,
+              "d50_um": -4.628906458066908,
+              "particle_moisture_kg_per_kg": -1.8934215607497712e-05,
+              "solid_mass_kg": 0.0
+            },
+            "end_of_batch": {
+              "bed_temperature_celsius": 45.00032178415193,
+              "d50_um": 715.2832015644981,
+              "energy_target_kw": 0.8977548766932516,
+              "particle_moisture_kg_per_kg": 0.18084820857507608,
+              "q_rec_kw": 17.946892068854705,
+              "solid_mass_kg": 1.0
+            },
+            "grid_index": 8,
+            "q_rec_deviation": {
+              "batch_mean_vs_steady_state_abs_kw": 4.676370071371515,
+              "batch_mean_vs_steady_state_relative_pct": 26.056739660089512,
+              "end_vs_steady_state_relative_pct": 0.00010418523628533897
+            },
+            "steady_state_reference": {
+              "bed_temperature_celsius": 45.000319999150456,
+              "d50_um": 749.9999999999999,
+              "energy_target_kw": 0.8977548821224997,
+              "feasible": true,
+              "particle_moisture_kg_per_kg": 0.1808482428172723,
+              "q_rec_kw": 17.946873370862278,
+              "solid_mass_kg": 1.0
+            }
+          }
+        ],
+        "q_rec_deviation_summary": {
+          "batch_mean_vs_steady_state_abs_kw": {
+            "max": 6.5120884391298475,
+            "median": 5.726245460540088
+          },
+          "batch_mean_vs_steady_state_relative_pct": {
+            "max": 26.545267194779015,
+            "median": 17.44722390821485
+          }
+        },
+        "sample_time_s": 25.0,
+        "state_channel_deviation_relative_pct": {
+          "bed_temperature_celsius": {
+            "max": 1.991160228934386e-05,
+            "median": -1.0455030156002508e-05
+          },
+          "d50_um": {
+            "max": 4.628906458066908,
+            "median": -4.628906458066908
+          },
+          "particle_moisture_kg_per_kg": {
+            "max": 5.770544993622107e-05,
+            "median": 2.9780815726175073e-05
+          },
+          "solid_mass_kg": {
+            "max": 0.0,
+            "median": 0.0
+          }
+        },
+        "transient_config_fingerprint": "ac942f740298da74"
+      }
+    }
+  },
+  "tau4_values_s": [
+    4000.0,
+    8000.0,
+    16000.0,
+    32000.0
+  ],
+  "total_elapsed_s": 6206.243122774002
+}

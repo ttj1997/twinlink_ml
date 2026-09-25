@@ -1,0 +1,188 @@
+{
+  "config_fingerprint": "abbe8325f1326d80",
+  "convergence_band": 0.05,
+  "environment": {
+    "env/mkl_num_threads": null,
+    "env/omp_num_threads": null,
+    "git/commit": "fad62084c860b449c9ffc93ccc43cf863e37463d",
+    "git/commit_available": true,
+    "git/diff_digest": "e3b0c44298fc1c14",
+    "git/diff_digest_available": true,
+    "git/dirty": true,
+    "platform": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "torch/num_threads": null,
+    "version/numpy": "2.5.3",
+    "version/scipy": "1.18.1"
+  },
+  "per_grid_point": [
+    {
+      "ambient_relative_humidity": 0.25,
+      "ambient_temperature_celsius": 5.0,
+      "grid_index": 0,
+      "nominal": {
+        "batch_mean_deviation_pct": 32.17894505183387,
+        "batch_mean_q_rec_kw": 53.907859027547936,
+        "convergence_time_s": 28800.0
+      },
+      "q_rec_steady_kw": 40.78399854561406,
+      "warmstart": {
+        "batch_mean_deviation_pct": -5.595934967820832e-05,
+        "batch_mean_q_rec_kw": 40.7839757231537,
+        "convergence_time_s": 0.0
+      }
+    },
+    {
+      "ambient_relative_humidity": 0.55,
+      "ambient_temperature_celsius": 5.0,
+      "grid_index": 1,
+      "nominal": {
+        "batch_mean_deviation_pct": 34.608937651713056,
+        "batch_mean_q_rec_kw": 49.65172591330811,
+        "convergence_time_s": 28800.0
+      },
+      "q_rec_steady_kw": 36.88590577973129,
+      "warmstart": {
+        "batch_mean_deviation_pct": -7.57937473342395e-05,
+        "batch_mean_q_rec_kw": 36.88587782252106,
+        "convergence_time_s": 0.0
+      }
+    },
+    {
+      "ambient_relative_humidity": 0.85,
+      "ambient_temperature_celsius": 5.0,
+      "grid_index": 2,
+      "nominal": {
+        "batch_mean_deviation_pct": 37.24240133265415,
+        "batch_mean_q_rec_kw": 45.931179133330616,
+        "convergence_time_s": 28800.0
+      },
+      "q_rec_steady_kw": 33.46719285536298,
+      "warmstart": {
+        "batch_mean_deviation_pct": -5.522114304250735e-05,
+        "batch_mean_q_rec_kw": 33.46717437439654,
+        "convergence_time_s": 0.0
+      }
+    },
+    {
+      "ambient_relative_humidity": 0.25,
+      "ambient_temperature_celsius": 20.0,
+      "grid_index": 3,
+      "nominal": {
+        "batch_mean_deviation_pct": 35.178178097383906,
+        "batch_mean_q_rec_kw": 45.067696515018305,
+        "convergence_time_s": 28800.0
+      },
+      "q_rec_steady_kw": 33.33947620047891,
+      "warmstart": {
+        "batch_mean_deviation_pct": -0.00010825887846305023,
+        "batch_mean_q_rec_kw": 33.33944010753589,
+        "convergence_time_s": 0.0
+      }
+    },
+    {
+      "ambient_relative_humidity": 0.55,
+      "ambient_temperature_celsius": 20.0,
+      "grid_index": 4,
+      "nominal": {
+        "batch_mean_deviation_pct": 43.58349311152387,
+        "batch_mean_q_rec_kw": 39.542689346126025,
+        "convergence_time_s": 28800.0
+      },
+      "q_rec_steady_kw": 27.539857464961177,
+      "warmstart": {
+        "batch_mean_deviation_pct": -0.00012601772434560232,
+        "batch_mean_q_rec_kw": 27.53982275985951,
+        "convergence_time_s": 0.0
+      }
+    },
+    {
+      "ambient_relative_humidity": 0.85,
+      "ambient_temperature_celsius": 20.0,
+      "grid_index": 5,
+      "nominal": {
+        "batch_mean_deviation_pct": 53.455825690474455,
+        "batch_mean_q_rec_kw": 33.10552909734221,
+        "convergence_time_s": 28800.0
+      },
+      "q_rec_steady_kw": 21.573328316721696,
+      "warmstart": {
+        "batch_mean_deviation_pct": -0.00015224122586771037,
+        "batch_mean_q_rec_kw": 21.573295473222206,
+        "convergence_time_s": 0.0
+      }
+    },
+    {
+      "ambient_relative_humidity": 0.25,
+      "ambient_temperature_celsius": 35.0,
+      "grid_index": 6,
+      "nominal": {
+        "batch_mean_deviation_pct": 5.619261886159034,
+        "batch_mean_q_rec_kw": 110.34372574091499,
+        "convergence_time_s": 28800.0
+      },
+      "q_rec_steady_kw": 104.47310819104965,
+      "warmstart": {
+        "batch_mean_deviation_pct": -5.149487750823105e-05,
+        "batch_mean_q_rec_kw": 104.47305439275056,
+        "convergence_time_s": 0.0
+      }
+    },
+    {
+      "ambient_relative_humidity": 0.55,
+      "ambient_temperature_celsius": 35.0,
+      "grid_index": 7,
+      "nominal": {
+        "batch_mean_deviation_pct": 12.979467443897907,
+        "batch_mean_q_rec_kw": 63.74366440893036,
+        "convergence_time_s": 28800.0
+      },
+      "q_rec_steady_kw": 56.42057433186564,
+      "warmstart": {
+        "batch_mean_deviation_pct": -0.00010649008163178138,
+        "batch_mean_q_rec_kw": 56.420514249549974,
+        "convergence_time_s": 0.0
+      }
+    },
+    {
+      "ambient_relative_humidity": 0.85,
+      "ambient_temperature_celsius": 35.0,
+      "grid_index": 8,
+      "nominal": {
+        "batch_mean_deviation_pct": 52.35842715578661,
+        "batch_mean_q_rec_kw": 27.36060270751711,
+        "convergence_time_s": 28800.0
+      },
+      "q_rec_steady_kw": 17.958050117924145,
+      "warmstart": {
+        "batch_mean_deviation_pct": -0.00024177305539481954,
+        "batch_mean_q_rec_kw": 17.958006700197686,
+        "convergence_time_s": 0.0
+      }
+    }
+  ],
+  "source_tau4_sensitivity": "/home/johncox/PhD/Code/twinlink_ml/artifacts/runs/probe_tau4_sensitivity.json",
+  "summary": {
+    "nominal": {
+      "batch_mean_deviation_pct": {
+        "max": 53.455825690474455,
+        "median": 35.178178097383906
+      },
+      "convergence_time_s": {
+        "max": 28800.0,
+        "median": 28800.0
+      }
+    },
+    "warmstart": {
+      "batch_mean_deviation_pct": {
+        "max": 0.00024177305539481954,
+        "median": -0.00010649008163178138
+      },
+      "convergence_time_s": {
+        "max": 0.0,
+        "median": 0.0
+      }
+    }
+  },
+  "transient_config_fingerprint": "2d2679eeed716577"
+}
