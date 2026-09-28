@@ -4496,6 +4496,23 @@ nicht eine unentdeckte Codeänderung im Rest des Baums. Die Lücke ist mit `git/
 (s. o., erfasst jetzt auch ungetrackte Dateiinhalte) für künftige Läufe geschlossen, ändert
 aber nichts an den oben berichteten Zahlen für alle drei Skripte.
 
+**Addendum (2026-09-28, English -- see Befund 64 for the full analysis).**
+`probe_critical_moisture_sensitivity.py`'s `build_variant_config` replaces
+`material.critical_moisture_kg_per_kg` directly for DA1's five tested values (0.10-0.30
+kg/kg). That field has a double role in this model: it is not only the quality-constraint
+threshold checked in `study_operating_point_regret.py::check_constraints`, but also `X_cr`
+in `thermo.normalised_moisture` -- the drying-kinetics falling-rate-period parameter, used
+inside `solve_steady_state` itself (`config.py`'s own comment on the field: "Trocknungskinetik:
+normierte Trocknungskurve, linear fallende Rate"). DA1's sweep therefore moved the drying
+kinetics and the quality limit together at every tested value, not the quality limit alone.
+The reported regret-vs-`critical_moisture` curve (b) -- in particular the claim that the
+regret magnitude is not robust below 0.15 kg/kg, and the "b) kehrt sich das Bild um" binding-
+pattern reversal at 0.10 kg/kg -- mixes both effects and cannot be attributed to the quality
+constraint in isolation. Not recomputed here for DA1's full range; a decoupled repeat
+(kinetics fixed at 0.20 kg/kg, only the constraint threshold varied) exists for the narrower
+0.12-0.20 kg/kg range in Befund 64's addendum, using the same decoupling method
+(`scripts/probe_margin_energy_cost_decoupled.py`).
+
 ### 55. Braucht man das Anregungsexperiment? Konstant trainierter Zwilling zu Befund 51 auf demselben Konstantlauf-Holdout -- überwiegend nein: Betriebsdaten genügen im getesteten Budgetbereich nicht
 
 **Frage dahinter.** Alle bisherigen Trainingsläufe dieses Projekts (Befund 51 eingeschlossen)
@@ -7799,6 +7816,116 @@ kg/kg), so this was always an order-of-magnitude check, not an exact reconciliat
   floor (0.08891 kg/kg) that made the RL-agent-margin boundary infeasible.
 - Laboratory scale, gross energy consumption (no heat-network recovery credit, same scope
   limitation as Befund 52).
+
+**f) Addendum (2026-09-28): sections (b)-(d) above conflated the drying-kinetics parameter
+with the quality-constraint threshold -- corrected below.** Raised externally, before any
+of the numbers above were relied on elsewhere: Befund 62 GA1 measured the RL agent reaching
+product moisture 0.055-0.070 kg/kg in this same model, yet (b) reported the RL-agent-margin
+boundary (0.0605 kg/kg) as infeasible at all 9 grid points. Both cannot be true at once
+unless KA1 changed more than the boundary -- and it did.
+
+*What was wrong.* `material.critical_moisture_kg_per_kg` has a double role in this model,
+confirmed by reading every use of the field:
+
+- `thermo.normalised_moisture`: `span = X_cr - X_eq`, `η = clip((X_p - X_eq)/span, 0, 1)` --
+  the drying-kinetics falling-rate-period transition, used inside `solve_steady_state`
+  itself (`config.py`'s own comment on the field: "Trocknungskinetik: normierte
+  Trocknungskurve, linear fallende Rate").
+- `sorption.py::validate_isotherm_against_critical_moisture`: a config-construction guard
+  requiring `X_cr` to exceed the GAB isotherm's maximum equilibrium moisture over the whole
+  safety envelope, so that `span` in the point above cannot go non-positive.
+- `study_operating_point_regret.py::check_constraints`: the quality-constraint threshold --
+  here a plain, independent function argument, unrelated to the config.
+
+`probe_margin_energy_cost.py` (KA1, section (b) above) built each boundary by replacing
+`material.critical_moisture_kg_per_kg` in the config -- moving the kinetics parameter and
+the quality threshold together, exactly like Befund 54 DA1's `probe_critical_moisture_
+sensitivity.py` (same `build_variant_config` pattern; see the addendum there). At the
+RL-agent-margin boundary, this made `validate_isotherm_against_critical_moisture` reject
+the *config* before any point was solved -- a kinetics-validity failure, not a finding about
+what boundary is economically or physically reachable.
+
+*The fix.* `scripts/probe_margin_energy_cost_decoupled.py` (committed `dc5c1c4`) keeps
+`material.critical_moisture_kg_per_kg` fixed at 0.20 kg/kg (same fingerprint as Befund
+52/54) for every boundary, and instead composes `evaluate_point`/`check_constraints`/
+`_optimize` (unchanged, via `importlib`, same as KA1) into a new objective that takes the
+quality threshold as an explicit parameter -- `study_operating_point_regret.py` itself is
+untouched. Smoke-tested first: at the RL-agent-margin threshold, all 9 points now solve,
+moisture ≈0.0604 kg/kg at every point -- consistent with GA1's observed 0.055-0.070 kg/kg,
+which the contaminated version could not explain. Full run: 51.9 min,
+`artifacts/runs/probe_margin_energy_cost_decoupled.json`, `git/dirty=False`, six of the
+seven boundaries recomputed (the 0.20 kg/kg anchor is unaffected -- at margin 0, kinetics
+and threshold coincide, so it is unchanged from Befund 52/54 either way).
+
+*Corrected KA2 table (decoupled; KA1's contaminated numbers in parentheses for reference):*
+
+| Boundary | margin [kg/kg] | feasible | pooled cost [%] | pooled remaining, all 9 |
+|---|---|---|---|---|
+| oracle anchor | 0 | 9/9 | 0.000 (0.000) | 1.000 (1.000) |
+| excited-trained LSTM | 0.001628 | 9/9 | 0.263 (0.054) | 0.980 (0.996) |
+| constant-trained LSTM | 0.004465 | 9/9 | 0.605 (0.174) | 0.954 (0.987) |
+| boundary 0.18 kg/kg | 0.02 | 9/9 | 2.815 (0.824) | 0.784 (0.937) |
+| boundary 0.15 kg/kg | 0.05 | 9/9 | 8.362 (6.025) | 0.358 (0.537) |
+| boundary 0.12 kg/kg | 0.08 | 9/9 | 15.59 (18.83) | -0.198 (-0.447) |
+| RL-agent margin | 0.139545 | **9/9 (was 0/9)** | 42.13 (n/a) | **-2.237 (n/a)** |
+
+The correction does not point the same direction throughout: at the four smaller margins
+(up to and including the 0.05 kg/kg margin, boundary 0.15 kg/kg), the decoupled (correct)
+cost is *higher* than KA1 reported and the remaining benefit *lower* -- the entangled
+kinetics in KA1 had made drying artificially easier at a reduced `X_cr`, partly offsetting
+the true constraint cost. At the 0.08 kg/kg margin (boundary 0.12 kg/kg) this reverses: the
+corrected cost is *lower* (15.59% vs. 18.83%) and the remaining fraction *less negative*
+(-0.198 vs. -0.447) than KA1 reported -- the entangled kinetics there had made the tightened
+search harder, not easier, than the true constraint alone. At the RL agent's own margin, KA1
+could not report a number at all; the corrected boundary is not only computable but shows
+the *most* negative remaining fraction of any boundary tested, as expected. No simple rule
+("KA1 always over-/understated") holds across the whole range -- the sign and size of the
+contamination depend on where the entangled kinetics shift lands relative to the true
+constraint at each boundary. The one qualitative finding that survives unchanged: the
+remaining fraction turns negative between the 0.15 and 0.12 kg/kg boundaries in both the
+contaminated and the corrected version -- the location of that crossover was not an artifact
+of the bug, even though its exact value was.
+
+*Corrected core question.* At the excited-trained soft sensor's own margin, 98.0% of Befund
+52's control benefit survives (was 99.6%); at the constant-trained (operating-data-only)
+soft sensor, 95.4% survives (was 98.7%) -- both still close to fully preserved, but
+measurably less so than KA1 reported. The benefit degrades further at the 0.18 kg/kg
+boundary (78.4% remaining, was 93.7%) and turns negative between the 0.15 kg/kg (35.8%
+remaining, was 53.7%) and 0.12 kg/kg (-19.8%, was -44.7%) boundaries.
+
+*Corrected non-binding-point check.* Section (c)'s finding needs revision, not just
+rescaling: with kinetics fixed, a small margin costs **exactly** nothing at points where
+moisture does not bind at 0.20 kg/kg, at every margin up to and including the 0.18 kg/kg
+boundary (median AND pooled cost 0.0% at the excited- and constant-trained margins; pooled
+cost 0.049% -- floating-point-scale -- at 0.18 kg/kg). This is a cleaner result than KA1's
+smeared small-but-nonzero costs there, which were themselves a symptom of the entangled
+kinetics shifting the whole optimisation surface, not a real property of the true
+constraint. The 0.15 kg/kg boundary is where this genuinely starts to break down: 2 of the 3
+non-binding points still cost exactly 0%, but the third now binds (pooled cost 2.03%,
+pooled remaining fraction -1.009 -- the small-denominator sensitivity flagged as a caveat
+throughout this entry, not a new problem).
+
+*Corrected KA3.* The counter-check against the RL agent is now direct rather than
+extrapolated: at the agent's own margin, this study's pooled remaining fraction is **-2.237**
+against Befund 62 FA3's measured **-2.797** (10,000 steps, median over 3 seeds, 25-context
+5x5 grid) -- about four-fifths of FA3's magnitude (ratio 0.80), same sign, same order of
+magnitude, on a 9-context 3x3 grid. This is a substantially cleaner confirmation of the
+pre-registered KA3 reading than the contaminated run allowed: the margin mechanism alone,
+evaluated correctly, accounts for most of the RL agent's measured shortfall against the
+fixed operating point. The caveat noted in advance still applies in full -- the agent does
+not hold a uniform margin at every point (GA1: seed range 0.1299-0.1454 kg/kg), so a ~20%
+gap between -2.237 and -2.797 is well within what that alone could explain, without invoking
+any additional mechanism.
+
+*Open model question, recorded, not to be fixed here.* The model represents the drying
+kinetics' critical moisture and the product's quality limit as ONE parameter
+(`material.critical_moisture_kg_per_kg`). Physically these are two different quantities --
+a material/process property of the drying curve, and a specification choice about
+acceptable product quality -- that happen to be numerically equal in this placeholder
+configuration only by construction, not by necessity. Separating them would be a model
+change with fingerprint consequences for every prior finding that touched this field
+(Befund 52, 53, 54, 57, 62 among them); **not implemented**, recorded here as an open
+question for whoever next revisits the material model.
 
 ## Was Schritt 6, Teil 2 als Nächstes braucht
 
