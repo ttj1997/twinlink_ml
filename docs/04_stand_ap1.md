@@ -7977,6 +7977,62 @@ Read against their own GLOBAL RMSE, both soft sensors comfortably clear the 90
 95.4 % remaining at the two soft-sensor margins). The reserve factor is the number that
 changes once GA2 supplies a LOCAL rather than global error (see GA3).
 
+**GA2 -- is the soft sensor as good at the boundary as on average?** No checkpoint of
+Befund 51/58's excited-trained LSTM (`n_train=64`, `h=36`) is committed to this repository
+(`artifacts/checkpoints/` is gitignored; the paths logged in
+`arch_learning_curve_projected.jsonl` point at a different machine). `scripts/probe_soft_
+sensor_error_by_moisture_class.py` retrains it under the identical protocol (same
+`_excited_spec`/`_holdout_spec`/fingerprint `bddca37f716f5cfc` as `run_arch_learning_curve_
+worker.py`, unchanged import), for seeds 1-3 (Befund 51/58's own seed numbering), and
+additionally captures the per-window/per-step prediction-vs-truth arrays that
+`RolloutEvaluator.evaluate` computes internally but never persists. Runtime: seed 1 piloted
+first (11.5 min, after fixing an off-by-one in the class-binning code that only surfaced at
+the aggregation step -- data generation and training themselves ran cleanly; fix committed
+before the full run), all three seeds together 43.4 min, `git/dirty=False` throughout.
+
+Cross-check: this run's own per-run-median RMSE on the constant-run holdout at `h=36`
+(independent computation from `RolloutEvaluator`, same definition) reproduced Befund 62
+HA1's published per-seed values bit-for-bit -- seed 1 = 0.000664, seed 2 = 0.000426, seed 3
+= 0.000543 kg/kg, exactly the first three entries of that table.
+
+*a) Moisture distribution.* The [0.18,0.22) kg/kg band -- centred on the 0.20 kg/kg limit
+-- is a small, seed-dependent fraction of the excited training pool (`n_train=64`): 0.52 %
+(seed 1), 2.67 % (seed 2), 0.67 % (seed 3) of all training window-steps. The excited test
+split behaves similarly (0.86 %/0.68 %/0.92 %). The constant-run holdout -- fixed across
+all seeds (same `HOLDOUT_SEED=999` pool) -- puts 6.87 % of its window-steps in that band:
+2.6 to 13.2 times more often than the excited-trained arm ever saw during training.
+
+*b) Error by moisture class* (constant-run holdout, per-run-median RMSE,
+`product_moisture_kg_per_kg`, `h=36`, three seeds):
+
+| Class [kg/kg] | n (seed 1) | RMSE seed 1 | RMSE seed 2 | RMSE seed 3 | Median |
+|---|---|---|---|---|---|
+| [0.00,0.10) | 121633 | 0.000612 | 0.000342 | 0.000354 | 0.000354 |
+| [0.10,0.14) | 10626 | 0.000903 | 0.000765 | 0.000969 | 0.000903 |
+| [0.14,0.18) | 1473 | 0.001214 | 0.001216 | 0.001310 | 0.001216 |
+| **[0.18,0.22)** | **10757** | **0.001817** | **0.001545** | **0.002053** | **0.001817** |
+| [0.22,0.26) | 2626 | 0.001930 | 0.002571 | 0.005229 | 0.002571 |
+| [0.26,inf) | 9557 | 0.003942 | 0.011063 | 0.011373 | 0.011063 |
+
+Error rises roughly monotonically with true moisture across all three seeds -- the
+boundary class is not a special outlier, it sits on a broader trend of the soft sensor
+doing worse the further the true value is from the pool's mean (0.051-0.087 kg/kg, well
+below 0.20 across all three seeds and both training/holdout distributions).
+
+*c) Boundary vs. global.* Per seed, boundary-class RMSE against that seed's own global
+(all-classes, per-run-median) RMSE:
+
+| Seed | Global RMSE | Boundary-class RMSE | Ratio |
+|---|---|---|---|
+| 1 | 0.000664 | 0.001817 | 2.73x |
+| 2 | 0.000426 | 0.001545 | 3.63x |
+| 3 | 0.000543 | 0.002053 | 3.78x |
+| **Median** | **0.000543** | **0.001817** | **3.35x** |
+
+**Core question, one sentence:** the soft sensor is measurably less accurate right at the
+moisture limit than on average -- median 3.35x the global RMSE across three seeds,
+consistently in the same direction for every seed.
+
 ## Was Schritt 6, Teil 2 als Nächstes braucht
 
 Torch läuft jetzt (Befund 24); der Rahmen ist bereit, gebraucht wird die eigentliche
