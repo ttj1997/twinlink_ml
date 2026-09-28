@@ -143,17 +143,39 @@ def _collect_predictions(
     }
 
 
-def _moisture_channel(arrays: dict[str, Any]) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+def _moisture_channel(arrays: dict[str, Any]) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Extrahiert `product_moisture_kg_per_kg` (Kanal `MOISTURE_INDEX`) aus Vorhersage,
-    Referenz und Wahrheit, jeweils zu 1D ueber (Fenster x Schritte 1..36) geglaettet."""
+    Referenz und Wahrheit, jeweils zu 1D ueber (Fenster x Schritte 1..36) geglaettet, plus
+    `run_index` auf dieselbe Laenge expandiert (ein Laufindex war je FENSTER gespeichert,
+    hier auf jeden der `horizon` Schritte dieses Fensters wiederholt) -- noetig fuer die
+    laufweise Median-Aggregation (siehe `_rmse_per_run_median`)."""
     pred = arrays["prediction_physical"][..., MOISTURE_INDEX].reshape(-1)
     ref = arrays["reference_physical"][..., MOISTURE_INDEX].reshape(-1)
     truth = arrays["truth_physical"][..., MOISTURE_INDEX].reshape(-1)
-    return pred, ref, truth
+    horizon = arrays["prediction_physical"].shape[1]
+    run_index = np.repeat(arrays["run_index"], horizon)
+    return pred, ref, truth, run_index
 
 
 def _rmse(prediction: np.ndarray, reference: np.ndarray) -> float:
     return float(np.sqrt(np.mean((prediction - reference) ** 2)))
+
+
+def _rmse_per_run_median(prediction: np.ndarray, reference: np.ndarray, run_index: np.ndarray) -> float | None:
+    """Wie `twinlink_ml.evaluation.evaluator.per_run_rmse_median` (die Definition hinter
+    Befund 62 HA1s 0,000543-kg/kg-Zahl: RMSE je Lauf, dann Median ueber Laeufe) -- NICHT
+    der gepoolte/geglaettete RMSE ueber alle Fenster/Schritte (siehe Moduldocstring von
+    `evaluator.py`, Abschnitt "Laufweise Normierung ist die Primärzahl"). Diese Funktion
+    ist die primaere Kennzahl fuer GA2c, weil sie mit Befund 62 HA1s Definition
+    vergleichbar bleibt -- der gepoolte Wert (`_rmse`) ist hier nur Nebeninformation."""
+    if prediction.size == 0:
+        return None
+    per_run = [
+        _rmse(prediction[run_index == run], reference[run_index == run])
+        for run in np.unique(run_index)
+        if np.count_nonzero(run_index == run) > 0
+    ]
+    return float(np.median(per_run)) if per_run else None
 
 
 def _moisture_distribution(arrays: dict[str, Any]) -> dict[str, Any]:
@@ -174,11 +196,20 @@ def _moisture_distribution(arrays: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _error_by_class(prediction: np.ndarray, reference: np.ndarray, truth: np.ndarray) -> dict[str, Any]:
+def _error_by_class(
+    prediction: np.ndarray, reference: np.ndarray, truth: np.ndarray, run_index: np.ndarray
+) -> dict[str, Any]:
     global_rmse = _rmse(prediction, reference)
+    global_rmse_per_run_median = _rmse_per_run_median(prediction, reference, run_index)
     boundary_mask = (truth >= BOUNDARY_CLASS_LOW) & (truth < BOUNDARY_CLASS_HIGH)
     n_boundary = int(np.count_nonzero(boundary_mask))
     boundary_rmse = _rmse(prediction[boundary_mask], reference[boundary_mask]) if n_boundary > 0 else None
+    boundary_rmse_per_run_median = (
+        _rmse_per_run_median(prediction[boundary_mask], reference[boundary_mask], run_index[boundary_mask])
+        if n_boundary > 0
+        else None
+    )
+    boundary_n_runs = int(np.unique(run_index[boundary_mask]).size) if n_boundary > 0 else 0
 
     per_class: list[dict[str, Any]] = []
     for label, lo, hi in zip(CLASS_LABELS, CLASS_EDGES[:-1], CLASS_EDGES[1:], strict=True):
@@ -188,17 +219,35 @@ def _error_by_class(prediction: np.ndarray, reference: np.ndarray, truth: np.nda
             {
                 "class": label,
                 "n_points": n,
-                "rmse_kg_per_kg": _rmse(prediction[mask], reference[mask]) if n > 0 else None,
+                "rmse_pooled_kg_per_kg": _rmse(prediction[mask], reference[mask]) if n > 0 else None,
+                "rmse_per_run_median_kg_per_kg": (
+                    _rmse_per_run_median(prediction[mask], reference[mask], run_index[mask]) if n > 0 else None
+                ),
             }
         )
 
     return {
         "n_points_total": int(truth.size),
-        "global_rmse_kg_per_kg": global_rmse,
+        "global_rmse_pooled_kg_per_kg": global_rmse,
+        "global_rmse_per_run_median_kg_per_kg": global_rmse_per_run_median,
         "boundary_class_n_points": n_boundary,
-        "boundary_class_rmse_kg_per_kg": boundary_rmse,
-        "boundary_vs_global_ratio": (
+        "boundary_class_n_runs": boundary_n_runs,
+        "boundary_class_rmse_pooled_kg_per_kg": boundary_rmse,
+        "boundary_class_rmse_per_run_median_kg_per_kg": boundary_rmse_per_run_median,
+        "boundary_vs_global_ratio_pooled": (
             boundary_rmse / global_rmse if boundary_rmse is not None and global_rmse > 0 else None
+        ),
+        "boundary_vs_global_ratio_per_run_median": (
+            boundary_rmse_per_run_median / global_rmse_per_run_median
+            if boundary_rmse_per_run_median is not None
+            and global_rmse_per_run_median is not None
+            and global_rmse_per_run_median > 0
+            else None
+        ),
+        "note": (
+            "per_run_median ist die Primaerzahl (vergleichbar mit Befund 62 HA1s "
+            "0,000543 kg/kg), pooled ist Nebeninformation -- siehe evaluator.py-Moduldocstring "
+            "'Laufweise Normierung ist die Primärzahl'."
         ),
         "per_class": per_class,
     }
@@ -295,8 +344,8 @@ def main() -> int:
         test_excited_arrays = _collect_predictions(model, test_excited)
         test_constant_arrays = _collect_predictions(model, test_constant)
 
-        pred_c, ref_c, truth_c = _moisture_channel(test_constant_arrays)
-        error_by_class = _error_by_class(pred_c, ref_c, truth_c)
+        pred_c, ref_c, truth_c, run_index_c = _moisture_channel(test_constant_arrays)
+        error_by_class = _error_by_class(pred_c, ref_c, truth_c, run_index_c)
 
         # Cross-Check gegen Befund 62 HA1: rmse_run_median_physical, product_moisture, h=36,
         # test_set=constant_holdout -- dieselbe Definition (Median ueber Laeufe des
@@ -331,9 +380,10 @@ def main() -> int:
         seed_elapsed = time.perf_counter() - seed_start
         print(
             f"Seed {seed}: fertig ({seed_elapsed / 60.0:.1f} min) -- "
-            f"global RMSE={error_by_class['global_rmse_kg_per_kg']:.6f} kg/kg, "
-            f"Grenzklasse [{BOUNDARY_CLASS_LOW},{BOUNDARY_CLASS_HIGH}) RMSE="
-            f"{error_by_class['boundary_class_rmse_kg_per_kg']}, "
+            f"global RMSE (Median/Lauf)={error_by_class['global_rmse_per_run_median_kg_per_kg']:.6f} kg/kg, "
+            f"Grenzklasse [{BOUNDARY_CLASS_LOW},{BOUNDARY_CLASS_HIGH}) RMSE (Median/Lauf)="
+            f"{error_by_class['boundary_class_rmse_per_run_median_kg_per_kg']}, "
+            f"Verhaeltnis={error_by_class['boundary_vs_global_ratio_per_run_median']}, "
             f"Cross-Check (h=36, Median/Lauf)={cross_check_rmse:.6f} kg/kg "
             f"(Befund 62 HA1: 0.000543 kg/kg)",
             flush=True,
@@ -341,24 +391,33 @@ def main() -> int:
 
     total_elapsed = time.perf_counter() - total_start
 
-    # Aggregation ueber Seeds (Median), nur wenn mehr als ein Seed gerechnet wurde.
+    # Aggregation ueber Seeds (Median), nur wenn mehr als ein Seed gerechnet wurde. Primaerzahl
+    # ist per_run_median (vergleichbar mit Befund 62 HA1), pooled nur Nebeninformation.
     aggregate: dict[str, Any] | None = None
     if len(arguments.seeds) > 1:
-        global_rmses = [per_seed[str(s)]["error_by_class_test_constant_holdout"]["global_rmse_kg_per_kg"] for s in arguments.seeds]
+        global_rmses = [
+            per_seed[str(s)]["error_by_class_test_constant_holdout"]["global_rmse_per_run_median_kg_per_kg"]
+            for s in arguments.seeds
+        ]
         boundary_rmses = [
-            per_seed[str(s)]["error_by_class_test_constant_holdout"]["boundary_class_rmse_kg_per_kg"] for s in arguments.seeds
+            per_seed[str(s)]["error_by_class_test_constant_holdout"]["boundary_class_rmse_per_run_median_kg_per_kg"]
+            for s in arguments.seeds
         ]
         boundary_rmses_finite = [v for v in boundary_rmses if v is not None]
         aggregate = {
             "n_seeds": len(arguments.seeds),
-            "median_global_rmse_kg_per_kg": float(np.median(global_rmses)),
-            "median_boundary_class_rmse_kg_per_kg": (
+            "median_global_rmse_per_run_median_kg_per_kg": float(np.median(global_rmses)),
+            "median_boundary_class_rmse_per_run_median_kg_per_kg": (
                 float(np.median(boundary_rmses_finite)) if boundary_rmses_finite else None
             ),
         }
-        if aggregate["median_boundary_class_rmse_kg_per_kg"] is not None and aggregate["median_global_rmse_kg_per_kg"] > 0:
+        if (
+            aggregate["median_boundary_class_rmse_per_run_median_kg_per_kg"] is not None
+            and aggregate["median_global_rmse_per_run_median_kg_per_kg"] > 0
+        ):
             aggregate["median_boundary_vs_global_ratio"] = (
-                aggregate["median_boundary_class_rmse_kg_per_kg"] / aggregate["median_global_rmse_kg_per_kg"]
+                aggregate["median_boundary_class_rmse_per_run_median_kg_per_kg"]
+                / aggregate["median_global_rmse_per_run_median_kg_per_kg"]
             )
 
     output: dict[str, Any] = {
