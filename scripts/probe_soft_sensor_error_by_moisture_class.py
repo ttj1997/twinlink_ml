@@ -181,7 +181,7 @@ def _error_by_class(prediction: np.ndarray, reference: np.ndarray, truth: np.nda
     boundary_rmse = _rmse(prediction[boundary_mask], reference[boundary_mask]) if n_boundary > 0 else None
 
     per_class: list[dict[str, Any]] = []
-    for label, lo, hi in zip(CLASS_LABELS, CLASS_EDGES, CLASS_EDGES[1:], strict=True):
+    for label, lo, hi in zip(CLASS_LABELS, CLASS_EDGES[:-1], CLASS_EDGES[1:], strict=True):
         mask = (truth >= lo) & (truth < hi)
         n = int(np.count_nonzero(mask))
         per_class.append(
