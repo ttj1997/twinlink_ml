@@ -8033,6 +8033,50 @@ below 0.20 across all three seeds and both training/holdout distributions).
 moisture limit than on average -- median 3.35x the global RMSE across three seeds,
 consistently in the same direction for every seed.
 
+**GA3 -- verdict.** Plugging GA2c's LOCAL error (median boundary-class RMSE 0.0018166
+kg/kg) into GA1's curve in place of the global RMSE it was built against: reserve factor at
+the 90 %-preservation mark = 0.003181 / 0.0018166 = **1.75x** -- still above 1 (the
+requirement is still met), but a 3.35x smaller reserve than the naive global comparison
+suggested (5.86x). The shrinkage matches GA2c's boundary/global ratio exactly, because
+reserve factor and RMSE enter the ratio linearly with `sigma_max` held fixed. At the looser
+50 %/0 % marks the reserve stays comfortable even with the local error (7.33x / 12.72x).
+
+The training-data question the task flagged in advance applies here: the [0.18,0.22) kg/kg
+band is 0.52-2.67 % of the excited training pool (GA2a) but 6.87 % of the constant-run
+holdout -- the region where the optimum actually sits is under-represented in training
+relative to where the model is evaluated and would operate. This reads as a genuine,
+separate finding, not just an artefact of small-sample noise at the boundary: the same
+under-representation shows up in all three seeds' training pools (never above 2.67 %)
+against the same fixed holdout fraction (6.87 %), and the error trend across all six
+moisture classes (GA2b) is consistent with reduced local training density explaining at
+least part of the accuracy gradient, not only the boundary class in isolation.
+
+**Verdict, one sentence:** the excited-trained soft sensor still clears Befund 64's
+requirement for keeping most of Befund 52's control benefit even when judged by its LOCAL
+error at the moisture limit, but with roughly a third of the safety reserve the global
+figure implied -- and the excitation design should be extended to cover the [0.18,0.22)
+kg/kg band more deliberately, since that is where the optimum lives and where training
+data is currently thinnest.
+
+**Caveats.**
+- GA1's curve was built assuming ONE uniform margin/sigma across the whole disturbance
+  grid (Befund 64's own oracle-based method); using GA2c's local sigma as a stand-in for
+  "the sigma that applies at the boundary" is an approximation, not a rerun of Befund 64's
+  KA1/KA2 mechanics with a spatially varying margin -- a genuinely spatially-resolved
+  version of Befund 64 is future work, not done here.
+- Measured against the simulator (grey-box model), not the plant -- same scope limitation
+  as Befund 56/64.
+- `critical_moisture_kg_per_kg` (0.20 kg/kg) remains an unsourced placeholder and carries
+  the double role documented in Befund 64's addendum (drying-kinetics parameter and
+  quality threshold); GA1's decoupled boundaries keep the kinetics fixed throughout,
+  exactly as in Befund 64 MA2.
+- GA2 used 3 of Befund 51/58's 5 seeds (the task's own "1 to 3 seeds" allowance); all three
+  reproduced the published 5-seed table bit-for-bit at their respective positions, which is
+  good evidence the protocol is right, but the local-error median is a 3-seed, not 5-seed,
+  statistic.
+- The 3-sigma safety-margin convention is Befund 62 HA1's choice, not a plant or standard
+  requirement (carried over unchanged, as in Befund 64).
+
 ## Was Schritt 6, Teil 2 als Nächstes braucht
 
 Torch läuft jetzt (Befund 24); der Rahmen ist bereit, gebraucht wird die eigentliche
