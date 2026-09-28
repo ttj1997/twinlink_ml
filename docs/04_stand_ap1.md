@@ -7927,6 +7927,56 @@ change with fingerprint consequences for every prior finding that touched this f
 (Befund 52, 53, 54, 57, 62 among them); **not implemented**, recorded here as an open
 question for whoever next revisits the material model.
 
+### 65. Soft-sensor accuracy requirement at the moisture limit -- met, but with a 3.35x smaller safety reserve right at the optimum, because the boundary region is under-represented in training
+
+**a) Purpose and scope.** Befund 64 (KA2, decoupled) gives the fraction of Befund 52's
+control benefit that survives as a function of the safety margin held at the moisture
+limit -- measured against ONE global soft-sensor error (Befund 62 HA1's 5-seed median
+RMSE). Befund 62 itself shows the optimum sits exactly on `critical_moisture_kg_per_kg`
+(0.20 kg/kg) at 17 of 25 disturbance grid points. A single global error says nothing about
+whether the soft sensor is that accurate specifically where the optimum lives. This entry
+answers two questions: (GA1) how accurate would the soft sensor need to be, read off
+Befund 64's curve, to keep 90/50/0 % of the control benefit; and (GA2/GA3) is it that
+accurate right at the boundary, or only on average.
+
+**GA1 -- accuracy requirement, read from Befund 64.** Befund 64's decoupled KA2 result
+(`artifacts/runs/probe_margin_energy_cost_decoupled.json`) gives seven (margin, pooled
+remaining fraction) points. The 90 %-mark falls in the largest unsampled gap in that curve
+-- between the constant-trained soft sensor's margin (0.0044651 kg/kg, 95.35 % remaining)
+and the bare 0.18 kg/kg grid point (0.02 kg/kg margin, 78.37 % remaining) -- exactly the
+range the task anticipated. `scripts/probe_soft_sensor_margin_requirement.py` computes two
+more boundaries (`critical_moisture` 0.19/0.185 kg/kg, margins 0.01/0.015 kg/kg) with the
+same decoupled mechanism as Befund 64 MA2 (kinetics fixed at 0.20 kg/kg, only the
+quality-constraint threshold moved), then linearly interpolates for the 90/50/0 % marks
+over all nine points. Runtime: 17.0 min (estimated 15-20 min beforehand from MA2's
+per-boundary wall times), `git/dirty=False` throughout, script committed (`2616aa0`)
+before the run.
+
+| Margin [kg/kg] | Remaining fraction | Source |
+|---|---|---|
+| 0 | 1.0000 | oracle anchor (Befund 64) |
+| 0.0016282 | 0.9798 | excited-trained LSTM margin (Befund 64) |
+| 0.0044651 | 0.9535 | constant-trained LSTM margin (Befund 64) |
+| 0.01 | 0.8952 | grid 0.19 (new, this entry) |
+| 0.015 | 0.8407 | grid 0.185 (new, this entry) |
+| 0.02 | 0.7837 | grid 0.18 (Befund 64) |
+| 0.05 | 0.3575 | grid 0.15 (Befund 64) |
+| 0.08 | -0.1980 | grid 0.12 (Befund 64) |
+| 0.1395451 | -2.2371 | RL-agent margin (Befund 64) |
+
+Linear interpolation, `m = 3*sigma` (Befund 62 HA1's convention):
+
+| Remaining fraction | Margin [kg/kg] | `sigma_max` [kg/kg] | Reserve vs. excited-trained RMSE (0.000543) | Reserve vs. operating-data RMSE (0.001488) |
+|---|---|---|---|---|
+| 90 % | 0.009544 | 0.003181 | 5.86x | 2.14x |
+| 50 % | 0.039970 | 0.013323 | 24.5x | 8.95x |
+| 0 % | 0.069308 | 0.023103 | 42.6x | 15.5x |
+
+Read against their own GLOBAL RMSE, both soft sensors comfortably clear the 90
+%-preservation requirement -- consistent with Befund 64's own coarser reading (98.0 %/
+95.4 % remaining at the two soft-sensor margins). The reserve factor is the number that
+changes once GA2 supplies a LOCAL rather than global error (see GA3).
+
 ## Was Schritt 6, Teil 2 als Nächstes braucht
 
 Torch läuft jetzt (Befund 24); der Rahmen ist bereit, gebraucht wird die eigentliche
