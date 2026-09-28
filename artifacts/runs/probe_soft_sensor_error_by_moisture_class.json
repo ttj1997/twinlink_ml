@@ -1,0 +1,595 @@
+{
+  "aggregate_over_seeds": {
+    "median_boundary_class_rmse_per_run_median_kg_per_kg": 0.0018166196217554416,
+    "median_boundary_vs_global_ratio": 3.347136601339261,
+    "median_global_rmse_per_run_median_kg_per_kg": 0.0005427384173769822,
+    "n_seeds": 3
+  },
+  "boundary_class_kg_per_kg": [
+    0.18,
+    0.22
+  ],
+  "class_edges_kg_per_kg": [
+    0.0,
+    0.1,
+    0.14,
+    0.18,
+    0.22,
+    0.26,
+    null
+  ],
+  "config_path": "\\\\nap.rz.tu-harburg.de\\ou-t2a-team$\\ResearchProjects\\BMWE TwinLink (ML)\\Code\\twinlink_ml (4)\\twinlink_ml_neu\\conf\\process\\greybox_gab_placeholder.yaml",
+  "environment": {
+    "env/mkl_num_threads": null,
+    "env/omp_num_threads": null,
+    "git/commit": "d567f78fb4d30ee9dc498d2532a22163e9d15d8f",
+    "git/commit_available": true,
+    "git/diff_digest": null,
+    "git/diff_digest_available": true,
+    "git/dirty": false,
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.14.2",
+    "torch/num_threads": 1,
+    "version/numpy": "2.5.3",
+    "version/scipy": "1.18.1",
+    "version/torch": "2.14.0+cpu"
+  },
+  "holdout_seed": 999,
+  "horizon": 36,
+  "moisture_index": 1,
+  "n_train": 64,
+  "per_seed": {
+    "1": {
+      "checkpoint_path": "\\\\nap.rz.tu-harburg.de\\ou-t2a-team$\\ResearchProjects\\BMWE TwinLink (ML)\\Code\\twinlink_ml (4)\\twinlink_ml_neu\\artifacts\\checkpoints\\lstm_ga2_seed1_n64.pt",
+      "cross_check_reference_befund62_ha1_excited_median_5seeds_kg_per_kg": 0.000542738535806486,
+      "cross_check_rmse_run_median_physical_kg_per_kg_h36_constant_holdout": 0.0006643298242508039,
+      "data_generation_elapsed_s": 9.795009699999355,
+      "error_by_class_test_constant_holdout": {
+        "boundary_class_n_points": 10757,
+        "boundary_class_n_runs": 5,
+        "boundary_class_rmse_per_run_median_kg_per_kg": 0.0018166196217554416,
+        "boundary_class_rmse_pooled_kg_per_kg": 0.0024289160456937146,
+        "boundary_vs_global_ratio_per_run_median": 2.734514627284916,
+        "boundary_vs_global_ratio_pooled": 1.2466136721700145,
+        "global_rmse_per_run_median_kg_per_kg": 0.0006643298242508042,
+        "global_rmse_pooled_kg_per_kg": 0.0019484112038219781,
+        "n_points_total": 156672,
+        "note": "per_run_median ist die Primaerzahl (vergleichbar mit Befund 62 HA1s 0,000543 kg/kg), pooled ist Nebeninformation -- siehe evaluator.py-Moduldocstring 'Laufweise Normierung ist die Prim\u00e4rzahl'.",
+        "per_class": [
+          {
+            "class": "[0.00,0.10)",
+            "n_points": 121633,
+            "rmse_per_run_median_kg_per_kg": 0.0006119873700341793,
+            "rmse_pooled_kg_per_kg": 0.0006757939213528648
+          },
+          {
+            "class": "[0.10,0.14)",
+            "n_points": 10626,
+            "rmse_per_run_median_kg_per_kg": 0.000902735894248082,
+            "rmse_pooled_kg_per_kg": 0.0009571309265257267
+          },
+          {
+            "class": "[0.14,0.18)",
+            "n_points": 1473,
+            "rmse_per_run_median_kg_per_kg": 0.0012136031228415754,
+            "rmse_pooled_kg_per_kg": 0.0019021052890528297
+          },
+          {
+            "class": "[0.18,0.22)",
+            "n_points": 10757,
+            "rmse_per_run_median_kg_per_kg": 0.0018166196217554416,
+            "rmse_pooled_kg_per_kg": 0.0024289160456937146
+          },
+          {
+            "class": "[0.22,0.26)",
+            "n_points": 2626,
+            "rmse_per_run_median_kg_per_kg": 0.0019298649027951799,
+            "rmse_pooled_kg_per_kg": 0.0029066412801643736
+          },
+          {
+            "class": "[0.26,inf)",
+            "n_points": 9557,
+            "rmse_per_run_median_kg_per_kg": 0.0039416884444968495,
+            "rmse_pooled_kg_per_kg": 0.00677377252945921
+          }
+        ]
+      },
+      "moisture_distribution": {
+        "test_constant_holdout": {
+          "boundary_class_fraction": 0.0686593647875817,
+          "class_counts": [
+            121633,
+            10626,
+            1473,
+            10757,
+            2626,
+            9557
+          ],
+          "class_edges_kg_per_kg": [
+            0.0,
+            0.1,
+            0.14,
+            0.18,
+            0.22,
+            0.26,
+            null
+          ],
+          "class_fractions": [
+            0.7763544219771242,
+            0.06782322303921569,
+            0.009401807598039215,
+            0.0686593647875817,
+            0.016761131535947712,
+            0.061000051062091505
+          ],
+          "class_labels": [
+            "[0.00,0.10)",
+            "[0.10,0.14)",
+            "[0.14,0.18)",
+            "[0.18,0.22)",
+            "[0.22,0.26)",
+            "[0.26,inf)"
+          ],
+          "max_kg_per_kg": 0.961840643953128,
+          "mean_kg_per_kg": 0.08747718862004172,
+          "min_kg_per_kg": 0.006418708354308411,
+          "n_points": 156672
+        },
+        "test_excited": {
+          "boundary_class_fraction": 0.008559283088235295,
+          "class_counts": [
+            130676,
+            15138,
+            3005,
+            1341,
+            280,
+            6232
+          ],
+          "class_edges_kg_per_kg": [
+            0.0,
+            0.1,
+            0.14,
+            0.18,
+            0.22,
+            0.26,
+            null
+          ],
+          "class_fractions": [
+            0.8340737336601307,
+            0.09662224264705882,
+            0.019180198120915034,
+            0.008559283088235295,
+            0.001787173202614379,
+            0.03977736928104575
+          ],
+          "class_labels": [
+            "[0.00,0.10)",
+            "[0.10,0.14)",
+            "[0.14,0.18)",
+            "[0.18,0.22)",
+            "[0.22,0.26)",
+            "[0.26,inf)"
+          ],
+          "max_kg_per_kg": 1.3377997682735043,
+          "mean_kg_per_kg": 0.0871160035854035,
+          "min_kg_per_kg": 0.0037741921072696125,
+          "n_points": 156672
+        },
+        "train": {
+          "boundary_class_fraction": 0.005170036764705882,
+          "class_counts": [
+            281769,
+            17444,
+            7135,
+            1620,
+            452,
+            4924
+          ],
+          "class_edges_kg_per_kg": [
+            0.0,
+            0.1,
+            0.14,
+            0.18,
+            0.22,
+            0.26,
+            null
+          ],
+          "class_fractions": [
+            0.8992321537990197,
+            0.05567044526143791,
+            0.022770501429738563,
+            0.005170036764705882,
+            0.0014425040849673203,
+            0.01571435866013072
+          ],
+          "class_labels": [
+            "[0.00,0.10)",
+            "[0.10,0.14)",
+            "[0.14,0.18)",
+            "[0.18,0.22)",
+            "[0.22,0.26)",
+            "[0.26,inf)"
+          ],
+          "max_kg_per_kg": 1.7622744169079014,
+          "mean_kg_per_kg": 0.06453963660720194,
+          "min_kg_per_kg": 0.004529630936826193,
+          "n_points": 313344
+        }
+      },
+      "process_fingerprint": "bddca37f716f5cfc",
+      "seed": 1,
+      "split_digest": "5b9628a151344f37",
+      "training_elapsed_s": 789.456106499998
+    },
+    "2": {
+      "checkpoint_path": "\\\\nap.rz.tu-harburg.de\\ou-t2a-team$\\ResearchProjects\\BMWE TwinLink (ML)\\Code\\twinlink_ml (4)\\twinlink_ml_neu\\artifacts\\checkpoints\\lstm_ga2_seed2_n64.pt",
+      "cross_check_reference_befund62_ha1_excited_median_5seeds_kg_per_kg": 0.000542738535806486,
+      "cross_check_rmse_run_median_physical_kg_per_kg_h36_constant_holdout": 0.0004255827332035621,
+      "data_generation_elapsed_s": 7.039617700000235,
+      "error_by_class_test_constant_holdout": {
+        "boundary_class_n_points": 10757,
+        "boundary_class_n_runs": 5,
+        "boundary_class_rmse_per_run_median_kg_per_kg": 0.0015451744400146687,
+        "boundary_class_rmse_pooled_kg_per_kg": 0.003485666763662448,
+        "boundary_vs_global_ratio_per_run_median": 3.630726341699565,
+        "boundary_vs_global_ratio_pooled": 0.9021655656378739,
+        "global_rmse_per_run_median_kg_per_kg": 0.00042558273320356143,
+        "global_rmse_pooled_kg_per_kg": 0.0038636663783525324,
+        "n_points_total": 156672,
+        "note": "per_run_median ist die Primaerzahl (vergleichbar mit Befund 62 HA1s 0,000543 kg/kg), pooled ist Nebeninformation -- siehe evaluator.py-Moduldocstring 'Laufweise Normierung ist die Prim\u00e4rzahl'.",
+        "per_class": [
+          {
+            "class": "[0.00,0.10)",
+            "n_points": 121633,
+            "rmse_per_run_median_kg_per_kg": 0.00034163666809225045,
+            "rmse_pooled_kg_per_kg": 0.0004305364626872282
+          },
+          {
+            "class": "[0.10,0.14)",
+            "n_points": 10626,
+            "rmse_per_run_median_kg_per_kg": 0.0007654346935092955,
+            "rmse_pooled_kg_per_kg": 0.0015425531875102154
+          },
+          {
+            "class": "[0.14,0.18)",
+            "n_points": 1473,
+            "rmse_per_run_median_kg_per_kg": 0.0012155837315683646,
+            "rmse_pooled_kg_per_kg": 0.0016309800390156694
+          },
+          {
+            "class": "[0.18,0.22)",
+            "n_points": 10757,
+            "rmse_per_run_median_kg_per_kg": 0.0015451744400146687,
+            "rmse_pooled_kg_per_kg": 0.003485666763662448
+          },
+          {
+            "class": "[0.22,0.26)",
+            "n_points": 2626,
+            "rmse_per_run_median_kg_per_kg": 0.0025706002571599757,
+            "rmse_pooled_kg_per_kg": 0.004431955851115408
+          },
+          {
+            "class": "[0.26,inf)",
+            "n_points": 9557,
+            "rmse_per_run_median_kg_per_kg": 0.011062704488428866,
+            "rmse_pooled_kg_per_kg": 0.014840230353758574
+          }
+        ]
+      },
+      "moisture_distribution": {
+        "test_constant_holdout": {
+          "boundary_class_fraction": 0.0686593647875817,
+          "class_counts": [
+            121633,
+            10626,
+            1473,
+            10757,
+            2626,
+            9557
+          ],
+          "class_edges_kg_per_kg": [
+            0.0,
+            0.1,
+            0.14,
+            0.18,
+            0.22,
+            0.26,
+            null
+          ],
+          "class_fractions": [
+            0.7763544219771242,
+            0.06782322303921569,
+            0.009401807598039215,
+            0.0686593647875817,
+            0.016761131535947712,
+            0.061000051062091505
+          ],
+          "class_labels": [
+            "[0.00,0.10)",
+            "[0.10,0.14)",
+            "[0.14,0.18)",
+            "[0.18,0.22)",
+            "[0.22,0.26)",
+            "[0.26,inf)"
+          ],
+          "max_kg_per_kg": 0.961840643953128,
+          "mean_kg_per_kg": 0.08747718862004172,
+          "min_kg_per_kg": 0.006418708354308411,
+          "n_points": 156672
+        },
+        "test_excited": {
+          "boundary_class_fraction": 0.0068359375,
+          "class_counts": [
+            126811,
+            16450,
+            4690,
+            1071,
+            1014,
+            6636
+          ],
+          "class_edges_kg_per_kg": [
+            0.0,
+            0.1,
+            0.14,
+            0.18,
+            0.22,
+            0.26,
+            null
+          ],
+          "class_fractions": [
+            0.8094043607026143,
+            0.10499642565359477,
+            0.02993515114379085,
+            0.0068359375,
+            0.006472120098039216,
+            0.042356004901960786
+          ],
+          "class_labels": [
+            "[0.00,0.10)",
+            "[0.10,0.14)",
+            "[0.14,0.18)",
+            "[0.18,0.22)",
+            "[0.22,0.26)",
+            "[0.26,inf)"
+          ],
+          "max_kg_per_kg": 0.6435400494033419,
+          "mean_kg_per_kg": 0.06752495152128572,
+          "min_kg_per_kg": 0.004586942645842647,
+          "n_points": 156672
+        },
+        "train": {
+          "boundary_class_fraction": 0.026702282475490197,
+          "class_counts": [
+            264032,
+            26601,
+            11390,
+            8367,
+            2741,
+            213
+          ],
+          "class_edges_kg_per_kg": [
+            0.0,
+            0.1,
+            0.14,
+            0.18,
+            0.22,
+            0.26,
+            null
+          ],
+          "class_fractions": [
+            0.842626633986928,
+            0.08489391850490197,
+            0.03634982638888889,
+            0.026702282475490197,
+            0.008747574550653595,
+            0.0006797640931372549
+          ],
+          "class_labels": [
+            "[0.00,0.10)",
+            "[0.10,0.14)",
+            "[0.14,0.18)",
+            "[0.18,0.22)",
+            "[0.22,0.26)",
+            "[0.26,inf)"
+          ],
+          "max_kg_per_kg": 0.2748127669061708,
+          "mean_kg_per_kg": 0.060128475332771616,
+          "min_kg_per_kg": 0.004929462396375969,
+          "n_points": 313344
+        }
+      },
+      "process_fingerprint": "bddca37f716f5cfc",
+      "seed": 2,
+      "split_digest": "751a5bc08e4183d9",
+      "training_elapsed_s": 1025.8649485000024
+    },
+    "3": {
+      "checkpoint_path": "\\\\nap.rz.tu-harburg.de\\ou-t2a-team$\\ResearchProjects\\BMWE TwinLink (ML)\\Code\\twinlink_ml (4)\\twinlink_ml_neu\\artifacts\\checkpoints\\lstm_ga2_seed3_n64.pt",
+      "cross_check_reference_befund62_ha1_excited_median_5seeds_kg_per_kg": 0.000542738535806486,
+      "cross_check_rmse_run_median_physical_kg_per_kg_h36_constant_holdout": 0.0005427384173769827,
+      "data_generation_elapsed_s": 9.550689200001216,
+      "error_by_class_test_constant_holdout": {
+        "boundary_class_n_points": 10757,
+        "boundary_class_n_runs": 5,
+        "boundary_class_rmse_per_run_median_kg_per_kg": 0.0020531387296634255,
+        "boundary_class_rmse_pooled_kg_per_kg": 0.00199197686019255,
+        "boundary_vs_global_ratio_per_run_median": 3.7829250038832796,
+        "boundary_vs_global_ratio_pooled": 0.1518772937329676,
+        "global_rmse_per_run_median_kg_per_kg": 0.0005427384173769822,
+        "global_rmse_pooled_kg_per_kg": 0.013115698938479022,
+        "n_points_total": 156672,
+        "note": "per_run_median ist die Primaerzahl (vergleichbar mit Befund 62 HA1s 0,000543 kg/kg), pooled ist Nebeninformation -- siehe evaluator.py-Moduldocstring 'Laufweise Normierung ist die Prim\u00e4rzahl'.",
+        "per_class": [
+          {
+            "class": "[0.00,0.10)",
+            "n_points": 121633,
+            "rmse_per_run_median_kg_per_kg": 0.00035424787862647336,
+            "rmse_pooled_kg_per_kg": 0.0005362238634368735
+          },
+          {
+            "class": "[0.10,0.14)",
+            "n_points": 10626,
+            "rmse_per_run_median_kg_per_kg": 0.0009693579783206752,
+            "rmse_pooled_kg_per_kg": 0.0016161131693424636
+          },
+          {
+            "class": "[0.14,0.18)",
+            "n_points": 1473,
+            "rmse_per_run_median_kg_per_kg": 0.00130960345383878,
+            "rmse_pooled_kg_per_kg": 0.0014384456681944434
+          },
+          {
+            "class": "[0.18,0.22)",
+            "n_points": 10757,
+            "rmse_per_run_median_kg_per_kg": 0.0020531387296634255,
+            "rmse_pooled_kg_per_kg": 0.00199197686019255
+          },
+          {
+            "class": "[0.22,0.26)",
+            "n_points": 2626,
+            "rmse_per_run_median_kg_per_kg": 0.005229307855404673,
+            "rmse_pooled_kg_per_kg": 0.005110148006751394
+          },
+          {
+            "class": "[0.26,inf)",
+            "n_points": 9557,
+            "rmse_per_run_median_kg_per_kg": 0.011373224657706613,
+            "rmse_pooled_kg_per_kg": 0.05292919147302222
+          }
+        ]
+      },
+      "moisture_distribution": {
+        "test_constant_holdout": {
+          "boundary_class_fraction": 0.0686593647875817,
+          "class_counts": [
+            121633,
+            10626,
+            1473,
+            10757,
+            2626,
+            9557
+          ],
+          "class_edges_kg_per_kg": [
+            0.0,
+            0.1,
+            0.14,
+            0.18,
+            0.22,
+            0.26,
+            null
+          ],
+          "class_fractions": [
+            0.7763544219771242,
+            0.06782322303921569,
+            0.009401807598039215,
+            0.0686593647875817,
+            0.016761131535947712,
+            0.061000051062091505
+          ],
+          "class_labels": [
+            "[0.00,0.10)",
+            "[0.10,0.14)",
+            "[0.14,0.18)",
+            "[0.18,0.22)",
+            "[0.22,0.26)",
+            "[0.26,inf)"
+          ],
+          "max_kg_per_kg": 0.961840643953128,
+          "mean_kg_per_kg": 0.08747718862004172,
+          "min_kg_per_kg": 0.006418708354308404,
+          "n_points": 156672
+        },
+        "test_excited": {
+          "boundary_class_fraction": 0.009203941993464053,
+          "class_counts": [
+            131463,
+            9713,
+            2151,
+            1442,
+            1550,
+            10353
+          ],
+          "class_edges_kg_per_kg": [
+            0.0,
+            0.1,
+            0.14,
+            0.18,
+            0.22,
+            0.26,
+            null
+          ],
+          "class_fractions": [
+            0.8390969669117647,
+            0.06199576184640523,
+            0.013729319852941176,
+            0.009203941993464053,
+            0.00989328022875817,
+            0.06608072916666667
+          ],
+          "class_labels": [
+            "[0.00,0.10)",
+            "[0.10,0.14)",
+            "[0.14,0.18)",
+            "[0.18,0.22)",
+            "[0.22,0.26)",
+            "[0.26,inf)"
+          ],
+          "max_kg_per_kg": 0.5163171896991678,
+          "mean_kg_per_kg": 0.07178548303273713,
+          "min_kg_per_kg": 0.004152960128853661,
+          "n_points": 156672
+        },
+        "train": {
+          "boundary_class_fraction": 0.006714665032679739,
+          "class_counts": [
+            284368,
+            19997,
+            5881,
+            2104,
+            350,
+            644
+          ],
+          "class_edges_kg_per_kg": [
+            0.0,
+            0.1,
+            0.14,
+            0.18,
+            0.22,
+            0.26,
+            null
+          ],
+          "class_fractions": [
+            0.9075265522875817,
+            0.06381804023692811,
+            0.018768510008169936,
+            0.006714665032679739,
+            0.0011169832516339869,
+            0.002055249183006536
+          ],
+          "class_labels": [
+            "[0.00,0.10)",
+            "[0.10,0.14)",
+            "[0.14,0.18)",
+            "[0.18,0.22)",
+            "[0.22,0.26)",
+            "[0.26,inf)"
+          ],
+          "max_kg_per_kg": 0.2990933294548808,
+          "mean_kg_per_kg": 0.05127708120931607,
+          "min_kg_per_kg": 0.004177256900745961,
+          "n_points": 313344
+        }
+      },
+      "process_fingerprint": "bddca37f716f5cfc",
+      "seed": 3,
+      "split_digest": "b4d224dac74b40d0",
+      "training_elapsed_s": 759.9746707000013
+    }
+  },
+  "target_names": [
+    "energy_target",
+    "product_moisture_kg_per_kg",
+    "bed_temperature_celsius"
+  ],
+  "total_elapsed_s": 2605.8872919000023
+}
