@@ -7642,6 +7642,164 @@ Messstellenposition) nicht geprüft. Als mögliche künftige Grundlage festgehal
 Feuchte-Soft-Sensor (Abschnitt 3 der M2-Synthese) gegen eine reale In-situ-Messung zu
 prüfen -- an KR-1, nicht an F-5. Reine Notiz, kein Ergebnis, keine Berechnung.
 
+### 64. Cost of a safety margin at the moisture limit -- most of Befund 52's control benefit survives at a realistic soft-sensor margin, but the RL agent's own margin falls outside what the model can even represent
+
+**a) Purpose and scope.** Befund 62 (GA1/HA1) showed that a penalty-based RL agent holds a
+large, consistent safety margin to the moisture limit (median 0.139545 kg/kg, GA1) -- 31 to
+86 times larger than the 3x-RMSE margin that the moisture soft sensor's own prediction error
+would justify (HA1). Open question: what does a safety margin like that cost in energy, and
+how much of Befund 52's control benefit survives once a controller has to keep one at all?
+
+No reinforcement learning, no network training. A controller that estimates moisture with
+uncertainty sigma and keeps a margin `m = 3 sigma` operates the plant (under a perfect
+process model) exactly like an optimiser working against a tightened constraint
+`critical_moisture - m` -- so the energy at that tightened constraint is the per-instance
+oracle there. Implemented in `scripts/probe_margin_energy_cost.py`
+(`artifacts/runs/probe_margin_energy_cost.json`), reusing the unchanged optimiser mechanics
+of `study_operating_point_regret.py` (via `importlib`, same pattern as Befund 54 DA1's
+`probe_critical_moisture_sensitivity.py`) and the same 3x3 grid/budget/seed as DA1. Measured
+runtime: 33.3 min for the five newly computed boundaries (well under the 1-2 h estimate,
+because KA1, unlike DA1, only reruns the per-point oracle (BB2), not the fixed-point search
+(BB3(a)) -- the fixed operating point never sees a moisture measurement and therefore never
+adapts to a margin, so it is reused unchanged from Befund 52/54 at 0.20 kg/kg). `git/dirty`
+was `False` throughout; script committed (`e7d17c2`) before the run.
+
+**b) KA1 -- seven effective boundaries, two reused, five newly computed.** Seven values of
+`critical_moisture_kg_per_kg`, descending from the true limit (0.20 kg/kg) toward the RL
+agent's own margin:
+
+| Boundary | `critical_moisture` [kg/kg] | margin [kg/kg] | source of the margin | status |
+|---|---|---|---|---|
+| oracle anchor | 0.20000 | 0 | -- | reused from Befund 54 DA1 (bit-identical) |
+| excited-trained LSTM | 0.19837 | 0.001628 | 3x RMSE, Befund 62 HA1 (excited-trained soft sensor, Befund 51/58) | newly computed |
+| constant-trained LSTM | 0.19553 | 0.004465 | 3x RMSE, Befund 62 HA1 (constant-trained soft sensor, Befund 55) | newly computed |
+| grid point | 0.18000 | 0.02 | -- (interpolation point) | newly computed |
+| grid point | 0.15000 | 0.05 | -- (interpolation point) | reused from Befund 54 DA1 (bit-identical) |
+| grid point | 0.12000 | 0.08 | -- (interpolation point) | newly computed |
+| RL-agent margin | 0.06045 | 0.139545 | Befund 62 GA1 (median agent margin over 3 seeds) | newly computed -- **infeasible at all 9 grid points** |
+
+The two reused boundaries were checked, not assumed, reusable: the script asserts the base
+config fingerprint, the search budget (`popsize`, `maxiter`, `de_tol`,
+`search_max_iterations`, `search_tolerance`, `seed`), and the grid coordinates against the
+committed DA1 artifact before skipping the recomputation; all three assertions passed
+silently (no exception), and the run completed without error. The `oracle_anchor` row is
+therefore not an independent reproduction of DA1 -- it is the same data object -- but the
+assertions are the actual verification that reuse was valid.
+
+The margins for the two LSTM cases and the RL agent were read programmatically from the
+already-committed `rl_bandit_ha1_margin_vs_prediction_error.json` (which in turn cites
+`rl_bandit_ga1_safety_margin.json` for the agent's margin), at full floating-point precision
+-- not retyped from the rounded display values in the task (0.1984/0.1955/0.0605 kg/kg),
+which are simply this artifact's numbers rounded to four decimals.
+
+**RL-agent margin: infeasible everywhere, not a search failure.** All 9 grid points failed
+in 0.1 s each, with the identical reason regardless of ambient temperature/humidity:
+
+> `critical_moisture_kg_per_kg (0.06045...) liegt nicht über dem Maximum der GAB-Isotherme
+> im Sicherheitsraster (0.08891 kg/kg, phi in [0.0008, 0.99], T in [-5.0, 130.0] °C) --
+> normalised_moisture würde eine negative Spanne (X_cr - X_eq) sehen.`
+
+This is `sorption.py::validate_isotherm_against_critical_moisture`, a pre-existing,
+documented guard (unrelated to this study) that requires `critical_moisture_kg_per_kg` to
+exceed the GAB isotherm's maximum equilibrium moisture over the model's entire safety
+envelope (not just the current disturbance grid point) -- otherwise the normalised-moisture
+variable used throughout the drying physics would see a non-positive span. The bound
+(0.08891 kg/kg) is a property of the isotherm parameterisation and the action/disturbance
+envelope, identical at all 9 grid points -- not something the DE/refine search discovered
+per point. **The RL agent's own margin, taken literally as a tightened moisture ceiling, asks
+for a value (0.06045 kg/kg) that this grey-box model cannot represent at all, anywhere in its
+operating envelope** -- a stronger statement than "expensive," and the reason every one of
+the 45 objective evaluations per grid point returned the solve-failure sentinel immediately
+rather than after a real search.
+
+**c) KA2 -- cost of the margin and remaining control benefit.** Per boundary, over the 9
+grid points that are feasible at that boundary: cost = `E_oracle(boundary) -
+E_oracle(0.20)` (absolute and relative), and remaining fraction of Befund 52's control
+benefit = `(E_fixed - E_oracle(boundary)) / (E_fixed - E_oracle(0.20))`, with `E_fixed` the
+unchanged Befund 52/54 fixed operating point at 0.20 kg/kg. Aggregated two ways, as in
+Befund 62's `pooled_closed_regret_fraction`: the median of the per-point ratios, and pooled
+(sum of numerators over sum of denominators) -- pooling matters here for the same reason as
+in Befund 62: at points where the moisture limit does not bind at 0.20 kg/kg, `E_fixed -
+E_oracle(0.20)` is small, and a single such point can otherwise dominate a median or a mean
+of ratios.
+
+| Boundary | feasible | pooled cost [%] | pooled remaining, all 9 | pooled remaining, 6 binding points | pooled remaining, 3 non-binding points |
+|---|---|---|---|---|---|
+| oracle anchor | 9/9 | 0.000 | 1.000 | 1.000 | 1.000 |
+| excited-trained LSTM | 9/9 | 0.054 | 0.996 | 0.997 | 0.962 |
+| constant-trained LSTM | 9/9 | 0.174 | 0.987 | 0.988 | 0.912 |
+| grid 0.18 | 9/9 | 0.824 | 0.937 | 0.944 | 0.611 |
+| grid 0.15 | 9/9 | 6.025 | 0.537 | 0.549 | 0.015 |
+| grid 0.12 | 9/9 | 18.83 | -0.447 | -0.443 | -0.592 |
+| RL-agent margin | 0/9 | -- | -- | -- | -- |
+
+(Median-of-ratios values are in the artifact alongside the pooled ones; they agree with the
+pooled numbers in sign and order of magnitude at every boundary except grid 0.12, where the
+per-point ratios range from +0.87 to -3.87 within the 6 binding points and include one
+non-binding point at -308.7 (a near-zero `E_fixed - E_oracle(0.20)` denominator there) --
+median and pooled disagree in sign in both the "all 9" and the "binding" groups as a result.
+Exactly the small-denominator sensitivity the task anticipated, and the reason pooled values
+are reported as primary throughout.)
+
+**Core question, one sentence each:** at the excited-trained soft sensor's own margin,
+99.6% of Befund 52's control benefit survives (pooled, all 9 points); at the considerably
+weaker constant-trained (operating-data-only) soft sensor, 98.7% survives -- both realistic
+soft-sensor margins cost close to nothing. The benefit only degrades materially from the
+0.18 kg/kg grid point onward (93.7% remaining) and turns negative somewhere between the
+0.15 kg/kg (53.7% remaining) and 0.12 kg/kg (-44.7%, i.e. worse than the fixed point) grid
+points -- both margins far larger than either soft sensor's, but still smaller than the RL
+agent's own.
+
+**Does a small margin cost nothing where moisture doesn't bind at 0.20 kg/kg? Checked --
+mostly yes, but only while the margin stays small.** At the two smallest, soft-sensor-scale
+margins, the non-binding-point cost is indeed far smaller than the binding-point cost
+(excited: 0.038% vs. 0.060%; constant: 0.089% vs. 0.210%) -- consistent with the expectation.
+By the 0.15 kg/kg grid point (margin 0.05 kg/kg, roughly 11-31x larger than the soft-sensor
+margins), that stops holding: the non-binding pooled remaining fraction (0.015) has nearly
+collapsed even though the pooled cost there (1.00%) is still an order of magnitude below the
+binding group's (8.13%) -- the near-zero denominator at non-binding points (Befund 52c: the
+fixed point already sits close to the unconstrained optimum there) makes the *ratio*
+sensitive well before the *cost* becomes large. "Small margin, no cost" holds for margins at
+the soft-sensor scale; it is not a general property of non-binding points once the margin
+grows to grid-point scale.
+
+**d) KA3 -- counter-check against the RL agent, pre-registered.** Expected: a clearly
+negative pooled remaining fraction at the agent's own margin, matching the order of
+magnitude of the -2.80 pooled `closed_regret_fraction` that Befund 62 FA3 measured for the
+agent itself at 10,000 training steps (median over 3 seeds, 5x5 grid, 25 contexts). That
+comparison cannot be made directly: at the agent's literal margin (0.06045 kg/kg), every one
+of the 9 grid points is infeasible for the reason given in (b) -- the boundary lies below
+what this model's isotherm can represent at all, not merely below what is economically
+reachable. This is a stronger failure mode than a finite negative number, not a weaker one.
+
+The nearest computable point is the 0.12 kg/kg grid point (margin 0.08 kg/kg -- still 43%
+smaller than the agent's actual 0.139545 kg/kg): its pooled remaining fraction is already
+clearly negative (-0.447, all 9 points; -0.443 restricted to the 6 points where moisture
+binds at 0.20 kg/kg). That is the same sign and a comparable order of magnitude to FA3's
+-2.80, though about 6x smaller in magnitude -- and this is at a margin still smaller than
+the agent's own. **Reading (pre-registered in the task): the margin mechanism is directionally
+sufficient to explain FA3's negative finding -- a margin well short of the agent's own already
+produces a worse-than-fixed-point outcome -- but no precise magnitude match can be
+established, because the agent's actual margin sits beyond the range in which this
+oracle-based method can be evaluated at all.** The caveat noted in advance applies in full:
+the agent does not hold a uniform margin at every point (GA1: seed range 0.1299-0.1454
+kg/kg), so this was always an order-of-magnitude check, not an exact reconciliation.
+
+**e) Caveats (as specified in the task, none newly discovered).**
+- Perfect process-model knowledge assumed; only the moisture estimation error is
+  represented as a margin. A real soft sensor also has other error sources (Befund 56: no
+  plant moisture measurement exists to validate against).
+- The prediction error behind the 3x-RMSE margins is assumed unbiased and Gaussian; 3 sigma
+  is a convention introduced in Befund 62 HA1, not a plant or standard requirement.
+- The fixed operating point holds no margin at all -- fair, because it is determined offline
+  against the true model (Befund 52), but worth stating plainly: it is not a policy that
+  could exist without perfect foresight of the disturbance grid either.
+- `critical_moisture_kg_per_kg` (0.20 kg/kg) remains an unsourced placeholder (Befund 52a);
+  every number in this entry is relative to that placeholder, including the GAB-isotherm
+  floor (0.08891 kg/kg) that made the RL-agent-margin boundary infeasible.
+- Laboratory scale, gross energy consumption (no heat-network recovery credit, same scope
+  limitation as Befund 52).
+
 ## Was Schritt 6, Teil 2 als Nächstes braucht
 
 Torch läuft jetzt (Befund 24); der Rahmen ist bereit, gebraucht wird die eigentliche
