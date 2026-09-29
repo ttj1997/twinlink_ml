@@ -8077,6 +8077,187 @@ data is currently thinnest.
 - The 3-sigma safety-margin convention is Befund 62 HA1's choice, not a plant or standard
   requirement (carried over unchanged, as in Befund 64).
 
+**Addendum to Befund 65 (2026-09-29): audit of GA2 -- the 3.35x reproduces exactly, but it is an
+estimator and run-selection effect; the local error itself is real and the reserve is thinner than
+the global figure, thin for the excited-trained and about 1 for the constant-trained soft sensor.**
+
+*Scope.* Same procedure as the Befund 66 audit: new code under `scripts/verify/` (`zw1`-`zw6`, helper
+`_zw.py`), no import of the GA2 script or of the project's evaluation code, networks read from the
+archive checkpoints and not retrained, every script committed before it ran, artifacts
+`artifacts/runs/verify_zw*.json` with `git/dirty=False` (one exception below). Nothing in Befund 65
+was corrected; deviations are reported only. All errors in kg/kg, LSTM, `n_train=64`, constant-run
+holdout (32 runs, 4352 windows x 36 steps = 156672 window-steps per network), class
+[0.18, 0.22) kg/kg formed on the TRUE (noise-free) moisture, steps 1..36 pooled ("h=36") unless
+stated. "vs measured" is the reference of the project metric, "vs truth" the error of the network alone.
+
+**ZW1 -- raw predictions.** Two arms x five seeds = 10 networks. Constant-trained: archive checkpoints
+`constant_trained_lstm_seed{1..5}_n64` (record reproduced to 1e-15). Excited-trained: no 200-epoch
+checkpoint for seeds 4-5 exists (the archive `lstm_seed{1..5}_n64` files are the 600-epoch probe;
+the audit's seed 4-5 retrains of Befund 66 were not saved). Deviation and justification: the archive
+probe checkpoints are used for all five seeds because the moisture head early-stopped before epoch
+200 in every seed (80/182/53/99/65 epochs), so the network equals the 200-epoch one; check against the
+Befund 51 record (h=36, moisture, constant holdout): relative difference 7e-8 to 4.5e-6 for all five
+seeds; seeds 1-3 additionally scored from the local GA2 retrain, bit-identical scores. Per network
+one `.npz` (true moisture, measured moisture, prediction, run index, window start; step k = column
+k-1, so h=1 is column 0). Size, estimated from the window count before saving: 3 float64 arrays
+x 156672 = 3.8 MB per network (about 38 MB for 10); measured 16.7 MB compressed in total. The
+files are git-ignored (`artifacts/runs/raw_zw1/`); SHA-256 of each file is in
+`verify_zw1_raw_predictions.json`, and the script regenerates them. Provenance note: the first run
+(`verify_zw1_raw_predictions_run1_dirty.json`) logged `git/dirty=True` because later scripts were
+authored in the working tree while it ran; it was repeated on a clean tree, the `.npz` hashes of both
+runs are identical.
+
+**ZW2 -- independent recomputation.** Global and boundary value per seed with GA2's procedure as
+written in this entry reproduce the published values to 1e-15 (all six class counts equal): seeds
+1-3 boundary 0.001817 / 0.001545 / 0.002053, global 0.000664 / 0.000426 / 0.000543; **quotient 3.347**.
+Two findings on the number itself: (i) the 3.35 is the ratio of the cross-seed MEDIANS
+(0.001817 / 0.000543); the median of the three per-seed ratios (2.73, 3.63, 3.78) is 3.63, so the "Median"
+row of the GA2c table is not the median of the column above it. (ii) Seeds 4 and 5, not in GA2, give
+6.26 and 2.66; five seeds: per-seed range 2.66-6.26, median of ratios 3.63, ratio of medians 3.78.
+
+**ZW3 -- same scale.** The global 0.000543 is the median over all 32 runs of the per-run RMSE (all
+points of the run); the local 0.001817 is the median of the per-run RMSE over the class points of only
+the runs that reach the class (5 runs), i.e. run-median on both sides, but over different run sets.
+Quotients with the same estimator (5-seed median, min-max; vs measured):
+
+| Quotient | Excited-trained | Constant-trained |
+|---|---|---|
+| A: GA2 (run-median class runs / run-median all 32 runs) | 3.63 (2.66-6.26) | 1.52 (1.15-5.10) |
+| B: pooled / pooled (all class points / all points) | **0.90** (0.15-1.72) | **0.98** (0.88-1.60) |
+| C: run-median / run-median, same 5 runs both sides | **0.55** (0.29-1.01) | **0.56** (0.40-1.05) |
+| D: pooled / pooled, same 5 runs both sides | 0.36 (0.06-0.71) | 0.44 (0.37-0.72) |
+
+Absolute values behind them (excited / constant): global run-median 0.00054 / 0.00149; global pooled
+0.00386 / 0.00353; local run-median 0.00205 / 0.00320; local pooled 0.00281 / 0.00371; whole-run
+error of the 5 class runs (run-median) 0.00333 / 0.00529. The five runs that reach the class are the
+moisture-varying runs, whose ordinary error is 6.2x (excited) / 3.6x (constant) that of the median
+holdout run; the 27 other runs stay below 0.14 kg/kg. Against the truth instead of the measured
+reference the picture is the same (A 3.60 / 1.40, B 0.88 / 0.98, C 0.55 / 0.57). With the same
+estimator the soft sensor is **not** measurably worse near the limit than on average: pooled quotient
+about 1, and within the runs that reach the class the class is, if anything, better than the rest of
+those runs. The 3.35 measures "the runs that visit 0.20 are harder runs", not "0.20 is harder".
+
+**ZW4 -- how solid.** *Composition* (identical for every network, since it depends on the truth only):
+10757 window-steps from **5 of 32 runs**: 4280 / 3298 / 2821 / 296 / 62 (runs 15, 6, 23, 26, 17;
+123 / 96 / 83 / 11 / 4 windows); the largest run supplies 40 %, the effective number of runs
+(1 / sum of squared shares) is 3.1. Run 15 never reaches 0.20 (maximum 0.196), run 6 sits at 0.15-0.23
+(mean 0.203), run 23 passes through the class (0.11-0.32), run 17 (maximum 0.96) and run 26 only cross it.
+*Bootstrap over runs* (32 runs drawn with replacement, 10000 draws, same draw for all seeds, median
+over the five seeds inside each draw, percentile 95 % interval; 0.5 % of draws contain no class run and
+are dropped): A 3.63 [2.63, 5.91] (excited), 1.52 [1.21, 6.76] (constant); B 0.90 [0.34, 2.76] and
+0.98 [0.63, 2.26]; C 0.55 [0.08, 1.04] and 0.56 [0.31, 1.02]. B lies below 1 in 54 % (excited) / 41 %
+(constant) of the draws. *Per seed* A / B / C: excited 2.73 / 1.25 / 0.55, 3.63 / 0.90 / 0.29,
+3.78 / 0.15 / 0.39, 6.26 / 1.72 / 1.01, 2.66 / 0.72 / 0.77; constant 5.10 / 0.98 / 0.95, 1.38 / 1.43 / 0.56,
+1.15 / 0.88 / 0.40, 3.76 / 1.60 / 1.05, 1.52 / 0.92 / 0.48 (per-seed A intervals are wide, e.g. seed 2
+excited [2.40, 13.9]). *Reference noise* (measured minus truth, pooled): 0.00098 kg/kg in the class,
+0.00087 over all points. The pooled local error of the network vs the truth (excited 0.0018-0.0033,
+constant 0.0027-0.0058) is 2.0-3.6x (excited) and 2.9-6.1x (constant) the pooled class noise:
+clearly above the noise. (The pooled noise is larger than the global run-median error 0.00054, so the noise is not
+uniform over the runs; not analysed further.) *Runs
+(ZW4b):* within a class run, the error in the class is about the run's own whole-run error (excited run
+15: 0.0017-0.0032 in class vs 0.0016-0.0030 whole run over five seeds), and the signed offset of a
+run in the class changes with the seed (run 6, excited: -0.0015 to +0.0046 kg/kg over five seeds; constant
+-0.0030 to +0.0085). The local error is largely a steady-state offset of a few operating points that
+differs from network to network.
+
+**ZW5 -- shape.** (a, b) Error over the true moisture (excited-trained, 5-seed median, h=36; RMSE
+vs truth / bias `pred - truth` / spread; runs reaching the class in brackets): [0.10,0.12) 0.00098 /
+-0.00033 / 0.00093 (9); [0.14,0.16) 0.00076 / +0.00017 / 0.00068 (4); [0.16,0.18) 0.00145 / +0.00054 /
+0.00117 (5); [0.18,0.20) 0.00240 / +0.00179 / 0.00159 (5); [0.20,0.22) 0.00296 / +0.00195 / 0.00219 (4);
+[0.22,0.24) 0.00298 / +0.00084 / 0.00259 (4); [0.24,0.26) 0.00256 / -0.00101 / 0.00224 (3); [0.30,0.32)
+0.00377 / -0.00225 / 0.00331 (3). Constant-trained: 0.00288 (9 runs, [0.10,0.12)), 0.00282 ([0.16,0.18)),
+0.00277 ([0.18,0.20)), 0.00489 ([0.20,0.22)), 0.00487 ([0.22,0.24)), 0.00600 ([0.30,0.32)); bias at
+[0.20,0.22) +0.00297. Below 0.10 the excited error is 0.0004-0.0006 with 6-12 runs per class; above
+0.24 there are 3 or fewer runs per class. **Direction:** on average the sensor reports the moisture
+WETTER than true (positive bias) in the classes from 0.16 to 0.24 and drier above it (negative bias -0.001 to -0.0026); near
+the limit the mean is on the safe side. It is not so in every network: the class bias is negative in
+excited seed 3 (-0.00045) and constant seed 1 (-0.00038), and the per-run offsets change sign with the
+seed (ZW4b). (c) Classed by the PREDICTION (controller view), excited, [0.20,0.22): bias +0.00229,
+spread 0.00235; the signed error `truth - pred` for predictions in [0.19,0.21) has a 99 % quantile of
+0.0024 / 0.0021 / 0.0048 / 0.0008 / 0.0013 (excited seeds 1-5) and 0.0059 / 0.0020 / 0.0013 / 0.0010 /
+0.0017 (constant), i.e. the tail towards "truth drier than reported" exists but is below the 90 %-mark
+margin 0.00954 in every network. (d) Class bounds (RMSE vs truth; pooled/pooled quotient vs measured):
+excited 0.00293 (0.81) for [0.19,0.21), 0.00259 (0.73) for [0.18,0.22), 0.00248 (0.70) for [0.17,0.23),
+0.00249 (0.69) for [0.15,0.25); constant 0.00348 (1.02), 0.00357 (1.05), 0.00357 (1.05), 0.00390 (1.14);
+classing by the prediction gives the same within 10 %. (e) h=1: the error in [0.18,0.22) is 0.00099 (excited)
+and 0.00100 (constant), pooled quotient 1.15 for both, bias 0.0001: at h=1 the class is at the level of the
+rest, the local error of the excited network is 2.6x larger at h=36 (0.00259) and 3.6x for the constant-trained
+one (0.00357), so it is a multi-step forecast error. **Core question:** the error rises broadly with the true
+moisture (Spearman rank correlation of the class RMSE with moisture over 0.06-0.40, classes with >= 3 runs:
+0.96 excited, 0.63 constant; four and six decreases between neighbouring classes) and does **not** show a
+resolved spike at 0.20: peak statistic RMSE[0.19,0.21) - mean of the two neighbour classes
++0.00036 (excited; bootstrap over runs [-0.00009, +0.00099], per seed -0.0002 / +0.0004 / -0.0012 /
++0.0009 / +0.0008) and +0.00004 (constant, [-0.00078, +0.00069]); by the prediction +0.00038 and -0.00058.
+The step from 0.14 to 0.18 (excited 0.00076 to 0.0024) coincides with the drop from 9 to 4-5 runs per class.
+
+*ZW5b -- training density.* The share of training window-steps in [0.18,0.22) is 0.52 / 2.67 / 0.67 /
+1.35 / 0.65 % (excited, seeds 1-5; 6-9 training runs) and 2.99 / 1.88 / 4.14 / 4.66 / 0.04 % (constant;
+3-12 runs). Across 17 classes (0 to 0.34), the rank correlation between the log training share and the
+holdout error is -0.97 (excited) and -0.77 (constant). The slope of the prediction on the truth is 0.998
+(0.10-0.40) and 0.982 (0.15-0.25) for the excited-trained network, 1.000 and 1.017 for the constant-trained one.
+
+**ZW6 -- both arms, reserve factor at the 90 % mark with the local error.** From the Befund 65 GA1
+interpolation (read from `probe_soft_sensor_margin_requirement.json`): `sigma_max` = 0.003181 kg/kg,
+margin 0.009544 kg/kg. Reserve = `sigma_max` / local error (5-seed median, min-max):
+
+| Local error definition | Excited-trained | Constant-trained |
+|---|---|---|
+| E1 run-median vs measured (GA2's estimator) | **1.55** (1.05-2.06); seeds 1-3: 1.75 | **0.995** (0.57-2.11); 3 of 5 seeds < 1 |
+| E2 pooled vs measured | 1.13 (0.91-1.60) | 0.86 (0.54-1.13) |
+| E3 pooled vs truth | 1.23 (0.96-1.80) | 0.89 (0.55-1.19) |
+| E4 margin coverage `0.00954 / (max(0,-bias) + 3 spread)` | 1.71 (1.19-1.85) | 1.09 (0.71-1.49) |
+| E4' worst case, `|bias|` instead of `max(0,-bias)` | 1.31 (0.96-1.71) | 0.88 (0.56-1.14) |
+| For reference: global run-median (Befund 65 GA1) | 5.86 (4.07-7.47) | 2.14 (1.37-4.58) |
+
+Margin needed to cover offset plus spread (dangerous direction / worst case): 0.0056 (0.0052-0.0080) /
+0.0073 (0.0056-0.0099) excited; 0.0088 (0.0064-0.0134) / 0.0108 (0.0083-0.0171) constant. Violation rate
+(truth above 0.20 for predictions held at `0.20 - m`, 680-1300 points from 5 runs per network): at
+the 90 %-mark margin 0 in all excited networks and 0.27 % / 0.26 % in constant seeds 4 and 5, 0 in the
+others; at the margin of Befund 64 (3x global RMSE: 0.0016 excited, 0.0045 constant) 4.0 % in excited
+seed 3 (0 in the others) and 0.12-0.69 % in constant seeds 1, 2, 4, 5. **The constant-trained (operating
+data) sensor is at reserve 1 at the operating point (0.995 with GA2's estimator; below 1 in three of five
+seeds and, with the pooled estimators, at 0.86-0.89): the requirement for 90 % of the benefit is not
+reliably met; the excited-trained sensor keeps a reserve of 1.55 (1.05-2.06), thin but above 1 in every seed.**
+
+**ZW7 -- verdict.**
+1. *Quotient with the same estimator and interval.* The 3.35 reproduces exactly but does not describe the
+   boundary: with the same estimator on both sides the quotient is 0.90 (pooled, [0.34, 2.76]) excited and
+   0.98 ([0.63, 2.26]) constant, and 0.55 [0.08, 1.04] / 0.56 [0.31, 1.02] when both sides use the same five
+   runs. The claim in the GA2c text "measurably less accurate right at the moisture limit than on
+   average" does not hold at the same scale; what holds is that the runs which visit the limit are the
+   harder runs. The GA3 sentence "3.35x smaller reserve" mixes this with a legitimate effect and should
+   be read as: the reserve against the LOCAL error is 1.55 (5 seeds; 1.75 for the 3 seeds of GA2), which
+   is 3.8x (5.86/1.55) below the global figure because the local error is 3.8x the run-median global
+   error, not because the boundary is worse than comparable operation.
+2. *Margin: bias plus spread.* Yes. The local error is mostly a steady offset of the few operating
+   points that reach 0.20, whose sign changes with the network; an RMSE-based 3 sigma hides this. The
+   margin must cover the offset in the dangerous direction plus 3 x spread: 0.0056 kg/kg (excited,
+   58 % of the 90 %-mark margin) and 0.0088 kg/kg (constant, 92 %, up to 0.0134 in one seed, i.e. more
+   than the 0.0095 available).
+3. *Mechanism.* **Open.** Not supported: shrinkage towards the centre (slope 0.98-1.02, bias changes
+   sign) and a kinetics kink at 0.20 (no resolved local peak in either arm). Consistent: data scarcity
+   (rank correlation -0.97 / -0.77), but the training density falls monotonically with the distance from
+   the pool centre, so any monotone mechanism gives the same rank correlation; and the constant-trained
+   arm has the higher median training density in the class (2.99 % vs 0.67 %; range 0.04-4.66 % vs
+   0.52-2.67 %) with a larger local error. The class is 3.1 effective runs and moisture is confounded with the operating point (constant
+   runs), so the holdout cannot separate "moisture near 0.20" from "these operating points".
+4. *Reserve factors, both arms, new.* Excited-trained 1.55 (1.05-2.06); constant-trained 0.995
+   (0.57-2.11), against 5.86 and 2.14 with the global run-median. Stated with the estimator: E1 run-median vs
+   measured, 5 seeds, five holdout runs in the class.
+
+**Caveats.** Five class runs out of 32 (effective 3.1); bootstrap over so few runs is a wide,
+approximate interval; the class conclusions are conditional on this holdout (constant-action runs). The
+excited-trained networks for seeds 4-5 are the 600-epoch probe checkpoints (equivalent by early stopping,
+see ZW1). The margin/violation numbers use the Befund 64 convention (`m = 3 sigma`, uniform margin) and
+about 680-1300 points from 5 runs per network. Not done: no rerun of Befund 64 with a spatially varying
+margin; no new holdout runs designed to cross 0.20 at several operating points (that would be the test
+that separates operating point from moisture; needs a decision on new data); Befund 65 itself is
+unchanged.
+
+Artifacts (`artifacts/runs/`): `verify_zw1_raw_predictions` (+ `_run1_dirty`), `verify_zw2_reproduce_ratio`,
+`verify_zw3_same_estimator`, `verify_zw4_reliability`, `verify_zw4b_class_runs`, `verify_zw5_shape`,
+`verify_zw5b_train_density`, `verify_zw6_reserve`.
+
 ## Was Schritt 6, Teil 2 als Nächstes braucht
 
 Torch läuft jetzt (Befund 24); der Rahmen ist bereit, gebraucht wird die eigentliche
