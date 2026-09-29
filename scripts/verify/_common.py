@@ -28,7 +28,15 @@ TARGETS = ("energy_target", "product_moisture_kg_per_kg", "bed_temperature_celsi
 
 def git(*args: str, cwd: Path = REPO_ROOT) -> str:
     """Run a git command and return stripped stdout ('' on failure)."""
-    result = subprocess.run(["git", *args], cwd=cwd, capture_output=True, text=True, check=False)
+    result = subprocess.run(
+        ["git", *args],
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        check=False,
+    )
     return result.stdout.strip() if result.returncode == 0 else ""
 
 
