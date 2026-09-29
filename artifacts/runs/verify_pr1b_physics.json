@@ -1,0 +1,2179 @@
+{
+ "provenance": {
+  "git/commit": "9c72b66f31d6bc47dcb9fc7a185a190a6987d9ae",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "pools": [
+  {
+   "kind": "excited",
+   "seed": 1,
+   "n_runs": 128,
+   "n_steps": 1152,
+   "finite": {
+    "states": true,
+    "outputs": true,
+    "measurements": true,
+    "actions": true,
+    "disturbances": true,
+    "diag/energy_target": true,
+    "diag/d50_m": true,
+    "diag/particle_moisture_kg_per_kg": true,
+    "diag/evaporation_rate_kg_per_s": true,
+    "diag/outlet_humidity_kg_per_kg": true,
+    "diag/saturation_humidity_kg_per_kg": true,
+    "diag/inlet_humidity_kg_per_kg": true,
+    "diag/saturation_degree": true,
+    "diag/dry_air_mass_flow_kg_per_s": true,
+    "diag/product_mass_flow_kg_per_s": true,
+    "diag/bed_pressure_drop_pa": true,
+    "diag/minimum_fluidization_velocity_m_per_s": true,
+    "diag/terminal_velocity_m_per_s": true,
+    "diag/fluidization_margin_lower_m_per_s": true,
+    "diag/fluidization_margin_upper_m_per_s": true,
+    "diag/power_heater_kw": true,
+    "diag/power_fan_kw": true,
+    "diag/power_pump_kw": true,
+    "diag/power_atomiser_kw": true,
+    "diag/power_total_kw": true
+   },
+   "all_finite": true,
+   "bounds": {
+    "solid_mass_kg": {
+     "min": 1.6041896354239693,
+     "p01": 1.8502968143112914,
+     "median": 2.0000000000000067,
+     "p99": 2.065149021897404,
+     "max": 2.382696529737004
+    },
+    "water_mass_kg": {
+     "min": 0.007548384214539332,
+     "p01": 0.017250449723785963,
+     "median": 0.08462816598953907,
+     "p99": 1.9009753250058559,
+     "max": 3.526071730397409
+    },
+    "particle_count": {
+     "min": 2906932.090506392,
+     "p01": 4527391.219564478,
+     "median": 11781127.443176422,
+     "p99": 110285936.71705845,
+     "max": 174974671.0188077
+    },
+    "masses_and_count_all_positive": true,
+    "moisture_kg_per_kg": {
+     "min": 0.0037741921072696155,
+     "p01": 0.00863367183184663,
+     "median": 0.04235262997676841,
+     "p99": 0.9504876192186835,
+     "max": 1.763035865198681
+    },
+    "moisture_minus_equilibrium": {
+     "min": 0.00014696554739415668,
+     "p01": 0.002841299858383869,
+     "median": 0.02446976374905386,
+     "p99": 0.9074800345569821,
+     "max": 1.7164698615422218
+    },
+    "n_steps_moisture_below_equilibrium_by_more_than_1e-9": 0,
+    "n_steps_at_equilibrium_floor_(margin<1e-9)": 0,
+    "n_steps_moisture_above_critical": 2981,
+    "bed_temperature_celsius": {
+     "min": 29.64359319922811,
+     "p01": 32.67090873065954,
+     "median": 58.741247972129386,
+     "p99": 96.6262381228254,
+     "max": 105.86532829731128
+    },
+    "n_steps_bed_temperature_outside_0_100": 104,
+    "n_steps_bed_temperature_above_80": 15915,
+    "outlet_humidity_minus_saturation_max": -0.007166184207987727,
+    "d50_um": {
+     "min": 251.00511373149655,
+     "p01": 284.96285691555914,
+     "median": 600.0261695958693,
+     "p99": 823.7044551771285,
+     "max": 895.609910753737
+    },
+    "fluidisation_margin_lower_end_of_step_min": 0.5590154055270848,
+    "fluidisation_margin_upper_end_of_step_min": -0.03759980703719634,
+    "n_steps_u_below_u_mf_end_of_step": 0,
+    "n_steps_u_above_u_terminal_end_of_step": 157
+   },
+   "projection": {
+    "steps_projected_fraction": 0.06013319227430555,
+    "runs_with_any_projection": 34,
+    "runs_with_more_than_10pct_steps_projected": 24,
+    "runs_with_more_than_50pct_steps_projected": 3,
+    "per_run_fraction_projected": {
+     "min": 0.0,
+     "p01": 0.0,
+     "median": 0.0,
+     "p99": 0.5329687500000001,
+     "max": 0.6206597222222222
+    },
+    "only_gas_velocity_channel_modified": true,
+    "clipped_to_upper_(u_terminal)_fraction": 1.0,
+    "relative_change_of_gas_velocity_when_projected": {
+     "min": 8.392431085717492e-06,
+     "p01": 0.0016639090797124815,
+     "median": 0.1177450328954688,
+     "p99": 0.39136289596356094,
+     "max": 0.4429845828502148
+    },
+    "share_of_projected_steps_in_first_10pct_of_run": 0.2851020638321868,
+    "n_projected_steps_field_consistent": true
+   },
+   "replay": {
+    "formulas": "own RK4 (5 substeps) of own balance ODEs; simulator used only for evaporation",
+    "n_steps_total": 147456,
+    "steps_where_replay_differs_from_stored_(rel>1e-8)": 0,
+    "fraction_steps_differing": 0.0,
+    "runs_with_any_difference": 0,
+    "first_step_of_run_share_of_differences": 0.0,
+    "max_relative_deviation_on_non_flagged_steps": 2.2106079306137543e-16,
+    "max_relative_deviation_per_state_all_steps": {
+     "solid_mass": 0.0,
+     "water_mass": 0.0,
+     "particle_count": 2.2106079306137543e-16,
+     "bed_temperature": 0.0
+    },
+    "abs_water_mass_shortfall_kg_on_flagged_steps": null,
+    "moisture_shortfall_kg_per_kg_on_flagged_steps": null,
+    "run_level_cumulative_residual_relative_max_per_state": {
+     "solid_mass": 0.0,
+     "water_mass": 0.0,
+     "particle_count": 5.797259319829362e-16,
+     "bed_temperature": 0.0
+    }
+   },
+   "balance_trapezoid_25s": {
+    "note": "coarse second-order check independent of the integrator; the moisture mode has tau~15 s, so the water residual is dominated by trapezoid error, the solid one is tight",
+    "solid_closure_relative_to_total_solid_inflow_max": 2.960920831662709e-05,
+    "water_closure_relative_to_total_sprayed_water_max": 0.008345970848214417,
+    "solid_product_flow_model_check_max_abs_kg_per_s": 0.0
+   },
+   "targets": {
+    "units": {
+     "energy_target": "kW (electrical power, absolute)",
+     "product_moisture": "kg water / kg dry solid",
+     "bed_temperature": "degC",
+     "d50": "um"
+    },
+    "energy_target_vs_recomputed_kw": {
+     "max_abs_diff": 0.0,
+     "max_rel_diff": 0.0,
+     "stats_kw": {
+      "min": 0.4413934864393361,
+      "p01": 0.890285158610309,
+      "median": 2.2814726492745274,
+      "p99": 4.392574616060028,
+      "max": 5.535408593638762
+     }
+    },
+    "power_terms_vs_diagnostics_max_abs_kw": {
+     "heater": 0.0,
+     "fan": 0.0,
+     "pump": 0.0,
+     "atomiser": 0.0,
+     "total": 0.0
+    },
+    "energy_target_equals_power_total_diag_max_abs": 0.0,
+    "moisture_output_vs_mw_over_ms_max_abs": 0.0,
+    "bed_temperature_output_vs_state_max_abs": 0.0,
+    "d50_output_vs_recomputed_um_max_abs": 0.0,
+    "power_share_of_total_median": {
+     "heater": 0.9369149221132278,
+     "fan": 0.03646661652813972,
+     "pump": 0.00013917982930376196,
+     "atomiser": 0.022621851767663296
+    }
+   },
+   "measurement_model": {
+    "bit_exact_regeneration": true,
+    "max_abs_diff": 0.0,
+    "noise_floor_rmse_measurement_vs_truth": {
+     "energy_target": 0.023852763693537823,
+     "bed_temperature_celsius": 0.3851680279766033,
+     "product_moisture_kg_per_kg": 0.0007973128008383312,
+     "d50_um": 3.0188609996614377
+    }
+   }
+  },
+  {
+   "kind": "excited",
+   "seed": 2,
+   "n_runs": 128,
+   "n_steps": 1152,
+   "finite": {
+    "states": true,
+    "outputs": true,
+    "measurements": true,
+    "actions": true,
+    "disturbances": true,
+    "diag/energy_target": true,
+    "diag/d50_m": true,
+    "diag/particle_moisture_kg_per_kg": true,
+    "diag/evaporation_rate_kg_per_s": true,
+    "diag/outlet_humidity_kg_per_kg": true,
+    "diag/saturation_humidity_kg_per_kg": true,
+    "diag/inlet_humidity_kg_per_kg": true,
+    "diag/saturation_degree": true,
+    "diag/dry_air_mass_flow_kg_per_s": true,
+    "diag/product_mass_flow_kg_per_s": true,
+    "diag/bed_pressure_drop_pa": true,
+    "diag/minimum_fluidization_velocity_m_per_s": true,
+    "diag/terminal_velocity_m_per_s": true,
+    "diag/fluidization_margin_lower_m_per_s": true,
+    "diag/fluidization_margin_upper_m_per_s": true,
+    "diag/power_heater_kw": true,
+    "diag/power_fan_kw": true,
+    "diag/power_pump_kw": true,
+    "diag/power_atomiser_kw": true,
+    "diag/power_total_kw": true
+   },
+   "all_finite": true,
+   "bounds": {
+    "solid_mass_kg": {
+     "min": 1.6045662101493672,
+     "p01": 1.8451654484212552,
+     "median": 2.0000000000000067,
+     "p99": 2.065126172268249,
+     "max": 2.3825235303938546
+    },
+    "water_mass_kg": {
+     "min": 0.00502415056039441,
+     "p01": 0.018154754889493994,
+     "median": 0.08527555114305668,
+     "p99": 0.5365900130667576,
+     "max": 1.287080098806675
+    },
+    "particle_count": {
+     "min": 3369332.083003584,
+     "p01": 4564065.848988882,
+     "median": 12193194.218842966,
+     "p99": 115665435.79780735,
+     "max": 184600901.97592044
+    },
+    "masses_and_count_all_positive": true,
+    "moisture_kg_per_kg": {
+     "min": 0.002512075280197222,
+     "p01": 0.009079824650202333,
+     "median": 0.04267274690405829,
+     "p99": 0.2682952836571763,
+     "max": 0.6435400494033419
+    },
+    "moisture_minus_equilibrium": {
+     "min": 0.0004133231479928282,
+     "p01": 0.002613602760485205,
+     "median": 0.024923539576019692,
+     "p99": 0.22440983601020514,
+     "max": 0.6039357023844314
+    },
+    "n_steps_moisture_below_equilibrium_by_more_than_1e-9": 0,
+    "n_steps_at_equilibrium_floor_(margin<1e-9)": 0,
+    "n_steps_moisture_above_critical": 3294,
+    "bed_temperature_celsius": {
+     "min": 28.488912090798287,
+     "p01": 32.44917631548281,
+     "median": 57.647738251762206,
+     "p99": 93.61838647520177,
+     "max": 103.45470581337874
+    },
+    "n_steps_bed_temperature_outside_0_100": 146,
+    "n_steps_bed_temperature_above_80": 13137,
+    "outlet_humidity_minus_saturation_max": -0.006908281530345731,
+    "d50_um": {
+     "min": 250.58552609873038,
+     "p01": 279.94934239568283,
+     "median": 593.0685863106294,
+     "p99": 821.7441608220395,
+     "max": 892.3803876423221
+    },
+    "fluidisation_margin_lower_end_of_step_min": 0.5758812369191697,
+    "fluidisation_margin_upper_end_of_step_min": -0.011709997607108225,
+    "n_steps_u_below_u_mf_end_of_step": 0,
+    "n_steps_u_above_u_terminal_end_of_step": 338
+   },
+   "projection": {
+    "steps_projected_fraction": 0.0788913302951389,
+    "runs_with_any_projection": 38,
+    "runs_with_more_than_10pct_steps_projected": 28,
+    "runs_with_more_than_50pct_steps_projected": 6,
+    "per_run_fraction_projected": {
+     "min": 0.0,
+     "p01": 0.0,
+     "median": 0.0,
+     "p99": 0.664496527777778,
+     "max": 0.8142361111111112
+    },
+    "only_gas_velocity_channel_modified": true,
+    "clipped_to_upper_(u_terminal)_fraction": 1.0,
+    "relative_change_of_gas_velocity_when_projected": {
+     "min": 8.02685117520241e-06,
+     "p01": 0.0027161470123051924,
+     "median": 0.12871535411179774,
+     "p99": 0.41722212396012404,
+     "max": 0.46058716986926146
+    },
+    "share_of_projected_steps_in_first_10pct_of_run": 0.21800051577409094,
+    "n_projected_steps_field_consistent": true
+   },
+   "replay": {
+    "formulas": "own RK4 (5 substeps) of own balance ODEs; simulator used only for evaporation",
+    "n_steps_total": 147456,
+    "steps_where_replay_differs_from_stored_(rel>1e-8)": 0,
+    "fraction_steps_differing": 0.0,
+    "runs_with_any_difference": 0,
+    "first_step_of_run_share_of_differences": 0.0,
+    "max_relative_deviation_on_non_flagged_steps": 2.242908417254548e-16,
+    "max_relative_deviation_per_state_all_steps": {
+     "solid_mass": 0.0,
+     "water_mass": 0.0,
+     "particle_count": 2.242908417254548e-16,
+     "bed_temperature": 0.0
+    },
+    "abs_water_mass_shortfall_kg_on_flagged_steps": null,
+    "moisture_shortfall_kg_per_kg_on_flagged_steps": null,
+    "run_level_cumulative_residual_relative_max_per_state": {
+     "solid_mass": 0.0,
+     "water_mass": 0.0,
+     "particle_count": 4.739134905264383e-16,
+     "bed_temperature": 0.0
+    }
+   },
+   "balance_trapezoid_25s": {
+    "note": "coarse second-order check independent of the integrator; the moisture mode has tau~15 s, so the water residual is dominated by trapezoid error, the solid one is tight",
+    "solid_closure_relative_to_total_solid_inflow_max": 3.2439770115387814e-05,
+    "water_closure_relative_to_total_sprayed_water_max": 0.0065216793016166985,
+    "solid_product_flow_model_check_max_abs_kg_per_s": 0.0
+   },
+   "targets": {
+    "units": {
+     "energy_target": "kW (electrical power, absolute)",
+     "product_moisture": "kg water / kg dry solid",
+     "bed_temperature": "degC",
+     "d50": "um"
+    },
+    "energy_target_vs_recomputed_kw": {
+     "max_abs_diff": 0.0,
+     "max_rel_diff": 0.0,
+     "stats_kw": {
+      "min": 0.4792448043517242,
+      "p01": 0.8707895994624163,
+      "median": 2.2219326264969173,
+      "p99": 4.50755719164264,
+      "max": 5.526550245366262
+     }
+    },
+    "power_terms_vs_diagnostics_max_abs_kw": {
+     "heater": 0.0,
+     "fan": 0.0,
+     "pump": 0.0,
+     "atomiser": 0.0,
+     "total": 0.0
+    },
+    "energy_target_equals_power_total_diag_max_abs": 0.0,
+    "moisture_output_vs_mw_over_ms_max_abs": 0.0,
+    "bed_temperature_output_vs_state_max_abs": 0.0,
+    "d50_output_vs_recomputed_um_max_abs": 0.0,
+    "power_share_of_total_median": {
+     "heater": 0.9305541848566588,
+     "fan": 0.03830518125585963,
+     "pump": 0.00014065680538640502,
+     "atomiser": 0.028845126590360613
+    }
+   },
+   "measurement_model": {
+    "bit_exact_regeneration": true,
+    "max_abs_diff": 0.0,
+    "noise_floor_rmse_measurement_vs_truth": {
+     "energy_target": 0.025137869534931353,
+     "bed_temperature_celsius": 0.37908498237292304,
+     "product_moisture_kg_per_kg": 0.00042898582160056964,
+     "d50_um": 3.004446135257056
+    }
+   }
+  },
+  {
+   "kind": "excited",
+   "seed": 3,
+   "n_runs": 128,
+   "n_steps": 1152,
+   "finite": {
+    "states": true,
+    "outputs": true,
+    "measurements": true,
+    "actions": true,
+    "disturbances": true,
+    "diag/energy_target": true,
+    "diag/d50_m": true,
+    "diag/particle_moisture_kg_per_kg": true,
+    "diag/evaporation_rate_kg_per_s": true,
+    "diag/outlet_humidity_kg_per_kg": true,
+    "diag/saturation_humidity_kg_per_kg": true,
+    "diag/inlet_humidity_kg_per_kg": true,
+    "diag/saturation_degree": true,
+    "diag/dry_air_mass_flow_kg_per_s": true,
+    "diag/product_mass_flow_kg_per_s": true,
+    "diag/bed_pressure_drop_pa": true,
+    "diag/minimum_fluidization_velocity_m_per_s": true,
+    "diag/terminal_velocity_m_per_s": true,
+    "diag/fluidization_margin_lower_m_per_s": true,
+    "diag/fluidization_margin_upper_m_per_s": true,
+    "diag/power_heater_kw": true,
+    "diag/power_fan_kw": true,
+    "diag/power_pump_kw": true,
+    "diag/power_atomiser_kw": true,
+    "diag/power_total_kw": true
+   },
+   "all_finite": true,
+   "bounds": {
+    "solid_mass_kg": {
+     "min": 1.6070853649440864,
+     "p01": 1.8380941787978067,
+     "median": 2.0000000000000067,
+     "p99": 2.065167575043337,
+     "max": 2.382382418100967
+    },
+    "water_mass_kg": {
+     "min": 0.008316264670405653,
+     "p01": 0.01932346280055419,
+     "median": 0.08628330818593241,
+     "p99": 0.743462482843934,
+     "max": 1.0326343793983495
+    },
+    "particle_count": {
+     "min": 2984097.058421638,
+     "p01": 4535648.725791877,
+     "median": 11933758.843067817,
+     "p99": 111658627.44669859,
+     "max": 178990220.71901444
+    },
+    "masses_and_count_all_positive": true,
+    "moisture_kg_per_kg": {
+     "min": 0.004152960128853658,
+     "p01": 0.00966339432678299,
+     "median": 0.04319802002236267,
+     "p99": 0.37173124142196207,
+     "max": 0.5163171896991678
+    },
+    "moisture_minus_equilibrium": {
+     "min": 0.0005932471861448477,
+     "p01": 0.0028367745132748252,
+     "median": 0.02512083433707702,
+     "p99": 0.3249370794574494,
+     "max": 0.4702817005534844
+    },
+    "n_steps_moisture_below_equilibrium_by_more_than_1e-9": 0,
+    "n_steps_at_equilibrium_floor_(margin<1e-9)": 0,
+    "n_steps_moisture_above_critical": 4145,
+    "bed_temperature_celsius": {
+     "min": 28.62805810697226,
+     "p01": 31.497716986619178,
+     "median": 58.30889018647328,
+     "p99": 90.71480158317429,
+     "max": 105.26056266286679
+    },
+    "n_steps_bed_temperature_outside_0_100": 75,
+    "n_steps_bed_temperature_above_80": 9677,
+    "outlet_humidity_minus_saturation_max": -0.007779390828070835,
+    "d50_um": {
+     "min": 252.32925113022503,
+     "p01": 283.6253038792186,
+     "median": 597.461738567481,
+     "p99": 824.4172096771505,
+     "max": 891.9883821363691
+    },
+    "fluidisation_margin_lower_end_of_step_min": 0.5549182803940114,
+    "fluidisation_margin_upper_end_of_step_min": -0.02823628604390782,
+    "n_steps_u_below_u_mf_end_of_step": 0,
+    "n_steps_u_above_u_terminal_end_of_step": 267
+   },
+   "projection": {
+    "steps_projected_fraction": 0.06278483072916667,
+    "runs_with_any_projection": 35,
+    "runs_with_more_than_10pct_steps_projected": 19,
+    "runs_with_more_than_50pct_steps_projected": 7,
+    "per_run_fraction_projected": {
+     "min": 0.0,
+     "p01": 0.0,
+     "median": 0.0,
+     "p99": 0.6919618055555556,
+     "max": 1.0
+    },
+    "only_gas_velocity_channel_modified": true,
+    "clipped_to_upper_(u_terminal)_fraction": 1.0,
+    "relative_change_of_gas_velocity_when_projected": {
+     "min": 6.798575705039817e-07,
+     "p01": 0.0018452225717378538,
+     "median": 0.14836025495050936,
+     "p99": 0.43230645620721625,
+     "max": 0.4645606266410369
+    },
+    "share_of_projected_steps_in_first_10pct_of_run": 0.24497731691510044,
+    "n_projected_steps_field_consistent": true
+   },
+   "replay": {
+    "formulas": "own RK4 (5 substeps) of own balance ODEs; simulator used only for evaporation",
+    "n_steps_total": 147456,
+    "steps_where_replay_differs_from_stored_(rel>1e-8)": 0,
+    "fraction_steps_differing": 0.0,
+    "runs_with_any_difference": 0,
+    "first_step_of_run_share_of_differences": 0.0,
+    "max_relative_deviation_on_non_flagged_steps": 2.1756238769466476e-16,
+    "max_relative_deviation_per_state_all_steps": {
+     "solid_mass": 0.0,
+     "water_mass": 0.0,
+     "particle_count": 2.1756238769466476e-16,
+     "bed_temperature": 0.0
+    },
+    "abs_water_mass_shortfall_kg_on_flagged_steps": null,
+    "moisture_shortfall_kg_per_kg_on_flagged_steps": null,
+    "run_level_cumulative_residual_relative_max_per_state": {
+     "solid_mass": 0.0,
+     "water_mass": 0.0,
+     "particle_count": 3.350600231253639e-16,
+     "bed_temperature": 0.0
+    }
+   },
+   "balance_trapezoid_25s": {
+    "note": "coarse second-order check independent of the integrator; the moisture mode has tau~15 s, so the water residual is dominated by trapezoid error, the solid one is tight",
+    "solid_closure_relative_to_total_solid_inflow_max": 1.985597258144492e-05,
+    "water_closure_relative_to_total_sprayed_water_max": 0.006359352310364483,
+    "solid_product_flow_model_check_max_abs_kg_per_s": 0.0
+   },
+   "targets": {
+    "units": {
+     "energy_target": "kW (electrical power, absolute)",
+     "product_moisture": "kg water / kg dry solid",
+     "bed_temperature": "degC",
+     "d50": "um"
+    },
+    "energy_target_vs_recomputed_kw": {
+     "max_abs_diff": 0.0,
+     "max_rel_diff": 0.0,
+     "stats_kw": {
+      "min": 0.575946374266335,
+      "p01": 0.949364547731661,
+      "median": 2.2198051995035284,
+      "p99": 4.263062895408146,
+      "max": 5.39121072607233
+     }
+    },
+    "power_terms_vs_diagnostics_max_abs_kw": {
+     "heater": 0.0,
+     "fan": 0.0,
+     "pump": 0.0,
+     "atomiser": 0.0,
+     "total": 0.0
+    },
+    "energy_target_equals_power_total_diag_max_abs": 0.0,
+    "moisture_output_vs_mw_over_ms_max_abs": 0.0,
+    "bed_temperature_output_vs_state_max_abs": 0.0,
+    "d50_output_vs_recomputed_um_max_abs": 0.0,
+    "power_share_of_total_median": {
+     "heater": 0.9362402629964987,
+     "fan": 0.03726198304957417,
+     "pump": 0.0001421705500621235,
+     "atomiser": 0.025090712958765023
+    }
+   },
+   "measurement_model": {
+    "bit_exact_regeneration": true,
+    "max_abs_diff": 0.0,
+    "noise_floor_rmse_measurement_vs_truth": {
+     "energy_target": 0.021735256874205047,
+     "bed_temperature_celsius": 0.37326929853158386,
+     "product_moisture_kg_per_kg": 0.0004387314827455409,
+     "d50_um": 3.0050246927454376
+    }
+   }
+  },
+  {
+   "kind": "excited",
+   "seed": 4,
+   "n_runs": 128,
+   "n_steps": 1152,
+   "finite": {
+    "states": true,
+    "outputs": true,
+    "measurements": true,
+    "actions": true,
+    "disturbances": true,
+    "diag/energy_target": true,
+    "diag/d50_m": true,
+    "diag/particle_moisture_kg_per_kg": true,
+    "diag/evaporation_rate_kg_per_s": true,
+    "diag/outlet_humidity_kg_per_kg": true,
+    "diag/saturation_humidity_kg_per_kg": true,
+    "diag/inlet_humidity_kg_per_kg": true,
+    "diag/saturation_degree": true,
+    "diag/dry_air_mass_flow_kg_per_s": true,
+    "diag/product_mass_flow_kg_per_s": true,
+    "diag/bed_pressure_drop_pa": true,
+    "diag/minimum_fluidization_velocity_m_per_s": true,
+    "diag/terminal_velocity_m_per_s": true,
+    "diag/fluidization_margin_lower_m_per_s": true,
+    "diag/fluidization_margin_upper_m_per_s": true,
+    "diag/power_heater_kw": true,
+    "diag/power_fan_kw": true,
+    "diag/power_pump_kw": true,
+    "diag/power_atomiser_kw": true,
+    "diag/power_total_kw": true
+   },
+   "all_finite": true,
+   "bounds": {
+    "solid_mass_kg": {
+     "min": 1.6047805238363575,
+     "p01": 1.8390029827422258,
+     "median": 2.0000000000000067,
+     "p99": 2.0652820762614548,
+     "max": 2.3834717011488586
+    },
+    "water_mass_kg": {
+     "min": 0.006846685047166824,
+     "p01": 0.012301844497931716,
+     "median": 0.06701066157488449,
+     "p99": 0.8255830703503152,
+     "max": 1.92254894582598
+    },
+    "particle_count": {
+     "min": 2976612.5023308443,
+     "p01": 4441182.08897511,
+     "median": 12703553.579336524,
+     "p99": 119196740.47561035,
+     "max": 190698234.42770895
+    },
+    "masses_and_count_all_positive": true,
+    "moisture_kg_per_kg": {
+     "min": 0.0034233425235833666,
+     "p01": 0.0061546751054415375,
+     "median": 0.03354003039482967,
+     "p99": 0.4127939534462036,
+     "max": 0.9612744729129964
+    },
+    "moisture_minus_equilibrium": {
+     "min": -0.0003688184661584104,
+     "p01": 0.0020834017869656757,
+     "median": 0.017414830030958825,
+     "p99": 0.3697431490261712,
+     "max": 0.915722722185413
+    },
+    "n_steps_moisture_below_equilibrium_by_more_than_1e-9": 3,
+    "n_steps_at_equilibrium_floor_(margin<1e-9)": 3,
+    "n_steps_moisture_above_critical": 5469,
+    "bed_temperature_celsius": {
+     "min": 28.121641723614854,
+     "p01": 30.765155311768247,
+     "median": 61.94908132237911,
+     "p99": 99.36689488430602,
+     "max": 106.82830422945689
+    },
+    "n_steps_bed_temperature_outside_0_100": 1413,
+    "n_steps_bed_temperature_above_80": 21709,
+    "outlet_humidity_minus_saturation_max": -0.006552122775925033,
+    "d50_um": {
+     "min": 250.3300974111208,
+     "p01": 276.6614447125056,
+     "median": 585.2686140302378,
+     "p99": 830.4760427315233,
+     "max": 894.0981029388769
+    },
+    "fluidisation_margin_lower_end_of_step_min": 0.5202478054766235,
+    "fluidisation_margin_upper_end_of_step_min": -0.0136634865398646,
+    "n_steps_u_below_u_mf_end_of_step": 0,
+    "n_steps_u_above_u_terminal_end_of_step": 706
+   },
+   "projection": {
+    "steps_projected_fraction": 0.09877522786458333,
+    "runs_with_any_projection": 41,
+    "runs_with_more_than_10pct_steps_projected": 32,
+    "runs_with_more_than_50pct_steps_projected": 8,
+    "per_run_fraction_projected": {
+     "min": 0.0,
+     "p01": 0.0,
+     "median": 0.0,
+     "p99": 0.8198437500000003,
+     "max": 1.0
+    },
+    "only_gas_velocity_channel_modified": true,
+    "clipped_to_upper_(u_terminal)_fraction": 1.0,
+    "relative_change_of_gas_velocity_when_projected": {
+     "min": 1.4463083655509466e-06,
+     "p01": 0.0024650099952752635,
+     "median": 0.13976909801429105,
+     "p99": 0.44392561551587295,
+     "max": 0.4995401178142626
+    },
+    "share_of_projected_steps_in_first_10pct_of_run": 0.2243048403707518,
+    "n_projected_steps_field_consistent": true
+   },
+   "replay": {
+    "formulas": "own RK4 (5 substeps) of own balance ODEs; simulator used only for evaporation",
+    "n_steps_total": 147456,
+    "steps_where_replay_differs_from_stored_(rel>1e-8)": 4,
+    "fraction_steps_differing": 2.712673611111111e-05,
+    "runs_with_any_difference": 1,
+    "first_step_of_run_share_of_differences": 0.0,
+    "max_relative_deviation_on_non_flagged_steps": 2.2196130567499704e-16,
+    "max_relative_deviation_per_state_all_steps": {
+     "solid_mass": 0.0,
+     "water_mass": 0.04914421191453646,
+     "particle_count": 2.2196130567499704e-16,
+     "bed_temperature": 0.00010099107519521322
+    },
+    "abs_water_mass_shortfall_kg_on_flagged_steps": {
+     "min": 7.983416810920102e-05,
+     "p01": 8.036014398900736e-05,
+     "median": 0.00025960438419425115,
+     "p99": 0.0011146781471244322,
+     "max": 0.001136106067006041
+    },
+    "moisture_shortfall_kg_per_kg_on_flagged_steps": {
+     "min": 3.9917084054827806e-05,
+     "p01": 4.01800719947315e-05,
+     "median": 0.00012980219209780038,
+     "p99": 0.0005573390735652587,
+     "max": 0.000568053033506123
+    },
+    "run_level_cumulative_residual_relative_max_per_state": {
+     "solid_mass": 0.0,
+     "water_mass": 0.006394829498730683,
+     "particle_count": 2.988256784492516e-16,
+     "bed_temperature": 6.925596141665421e-05
+    }
+   },
+   "balance_trapezoid_25s": {
+    "note": "coarse second-order check independent of the integrator; the moisture mode has tau~15 s, so the water residual is dominated by trapezoid error, the solid one is tight",
+    "solid_closure_relative_to_total_solid_inflow_max": 3.196703963069598e-05,
+    "water_closure_relative_to_total_sprayed_water_max": 0.008271330001611373,
+    "solid_product_flow_model_check_max_abs_kg_per_s": 0.0
+   },
+   "targets": {
+    "units": {
+     "energy_target": "kW (electrical power, absolute)",
+     "product_moisture": "kg water / kg dry solid",
+     "bed_temperature": "degC",
+     "d50": "um"
+    },
+    "energy_target_vs_recomputed_kw": {
+     "max_abs_diff": 0.0,
+     "max_rel_diff": 0.0,
+     "stats_kw": {
+      "min": 0.5185451042075903,
+      "p01": 0.8560347044686492,
+      "median": 2.398454139255844,
+      "p99": 4.576606045419363,
+      "max": 5.434533317590166
+     }
+    },
+    "power_terms_vs_diagnostics_max_abs_kw": {
+     "heater": 0.0,
+     "fan": 0.0,
+     "pump": 0.0,
+     "atomiser": 0.0,
+     "total": 0.0
+    },
+    "energy_target_equals_power_total_diag_max_abs": 0.0,
+    "moisture_output_vs_mw_over_ms_max_abs": 0.0,
+    "bed_temperature_output_vs_state_max_abs": 0.0,
+    "d50_output_vs_recomputed_um_max_abs": 0.0,
+    "power_share_of_total_median": {
+     "heater": 0.9350654430815805,
+     "fan": 0.03779979050114715,
+     "pump": 0.00011774189426101909,
+     "atomiser": 0.024499271578187
+    }
+   },
+   "measurement_model": {
+    "bit_exact_regeneration": true,
+    "max_abs_diff": 0.0,
+    "noise_floor_rmse_measurement_vs_truth": {
+     "energy_target": 0.02342955774693459,
+     "bed_temperature_celsius": 0.39762620253269326,
+     "product_moisture_kg_per_kg": 0.000530784362027711,
+     "d50_um": 2.9803127679484698
+    }
+   }
+  },
+  {
+   "kind": "excited",
+   "seed": 5,
+   "n_runs": 128,
+   "n_steps": 1152,
+   "finite": {
+    "states": true,
+    "outputs": true,
+    "measurements": true,
+    "actions": true,
+    "disturbances": true,
+    "diag/energy_target": true,
+    "diag/d50_m": true,
+    "diag/particle_moisture_kg_per_kg": true,
+    "diag/evaporation_rate_kg_per_s": true,
+    "diag/outlet_humidity_kg_per_kg": true,
+    "diag/saturation_humidity_kg_per_kg": true,
+    "diag/inlet_humidity_kg_per_kg": true,
+    "diag/saturation_degree": true,
+    "diag/dry_air_mass_flow_kg_per_s": true,
+    "diag/product_mass_flow_kg_per_s": true,
+    "diag/bed_pressure_drop_pa": true,
+    "diag/minimum_fluidization_velocity_m_per_s": true,
+    "diag/terminal_velocity_m_per_s": true,
+    "diag/fluidization_margin_lower_m_per_s": true,
+    "diag/fluidization_margin_upper_m_per_s": true,
+    "diag/power_heater_kw": true,
+    "diag/power_fan_kw": true,
+    "diag/power_pump_kw": true,
+    "diag/power_atomiser_kw": true,
+    "diag/power_total_kw": true
+   },
+   "all_finite": true,
+   "bounds": {
+    "solid_mass_kg": {
+     "min": 1.609891608024757,
+     "p01": 1.8397703459569894,
+     "median": 2.0000000000000067,
+     "p99": 2.0650714993155797,
+     "max": 2.380740603415535
+    },
+    "water_mass_kg": {
+     "min": 0.0073616933933793125,
+     "p01": 0.016591764746048763,
+     "median": 0.08456278506237758,
+     "p99": 1.1915149957883873,
+     "max": 2.3224619061272174
+    },
+    "particle_count": {
+     "min": 3287419.3058398785,
+     "p01": 4448805.417714007,
+     "median": 11889747.746474404,
+     "p99": 111371916.42357898,
+     "max": 180483543.72601876
+    },
+    "masses_and_count_all_positive": true,
+    "moisture_kg_per_kg": {
+     "min": 0.003945179205968771,
+     "p01": 0.008305559881070379,
+     "median": 0.042307689376589394,
+     "p99": 0.5957574978941858,
+     "max": 1.1612309530635931
+    },
+    "moisture_minus_equilibrium": {
+     "min": -0.00038239738493629945,
+     "p01": 0.0025655900391879285,
+     "median": 0.02447487612504233,
+     "p99": 0.5524356001056143,
+     "max": 1.113770841369292
+    },
+    "n_steps_moisture_below_equilibrium_by_more_than_1e-9": 2,
+    "n_steps_at_equilibrium_floor_(margin<1e-9)": 2,
+    "n_steps_moisture_above_critical": 5324,
+    "bed_temperature_celsius": {
+     "min": 27.140186565581153,
+     "p01": 33.22503750972445,
+     "median": 58.358739601611,
+     "p99": 90.69459908686306,
+     "max": 103.86842717846167
+    },
+    "n_steps_bed_temperature_outside_0_100": 139,
+    "n_steps_bed_temperature_above_80": 11475,
+    "outlet_humidity_minus_saturation_max": -0.007738522680728971,
+    "d50_um": {
+     "min": 252.4450367536602,
+     "p01": 282.9700930453793,
+     "median": 597.9746876388773,
+     "p99": 828.7861931482171,
+     "max": 891.5883459282328
+    },
+    "fluidisation_margin_lower_end_of_step_min": 0.5296901023697249,
+    "fluidisation_margin_upper_end_of_step_min": -0.005648929985072826,
+    "n_steps_u_below_u_mf_end_of_step": 0,
+    "n_steps_u_above_u_terminal_end_of_step": 279
+   },
+   "projection": {
+    "steps_projected_fraction": 0.08165825737847222,
+    "runs_with_any_projection": 47,
+    "runs_with_more_than_10pct_steps_projected": 29,
+    "runs_with_more_than_50pct_steps_projected": 3,
+    "per_run_fraction_projected": {
+     "min": 0.0,
+     "p01": 0.0,
+     "median": 0.0,
+     "p99": 0.6023263888888893,
+     "max": 1.0
+    },
+    "only_gas_velocity_channel_modified": true,
+    "clipped_to_upper_(u_terminal)_fraction": 1.0,
+    "relative_change_of_gas_velocity_when_projected": {
+     "min": 1.0688727451334595e-05,
+     "p01": 0.0020600732128685977,
+     "median": 0.1289718240909646,
+     "p99": 0.42406379292164537,
+     "max": 0.47060991276913827
+    },
+    "share_of_projected_steps_in_first_10pct_of_run": 0.23004733826094179,
+    "n_projected_steps_field_consistent": true
+   },
+   "replay": {
+    "formulas": "own RK4 (5 substeps) of own balance ODEs; simulator used only for evaporation",
+    "n_steps_total": 147456,
+    "steps_where_replay_differs_from_stored_(rel>1e-8)": 3,
+    "fraction_steps_differing": 2.0345052083333332e-05,
+    "runs_with_any_difference": 1,
+    "first_step_of_run_share_of_differences": 0.0,
+    "max_relative_deviation_on_non_flagged_steps": 2.2011757169944037e-16,
+    "max_relative_deviation_per_state_all_steps": {
+     "solid_mass": 0.0,
+     "water_mass": 0.042796698467499034,
+     "particle_count": 2.2011757169944037e-16,
+     "bed_temperature": 7.304587303600668e-05
+    },
+    "abs_water_mass_shortfall_kg_on_flagged_steps": {
+     "min": -4.17446952595546e-08,
+     "p01": 1.5755835872520787e-05,
+     "median": 0.0007898372836937576,
+     "p99": 0.0009197990067942361,
+     "max": 0.0009224512868575112
+    },
+    "moisture_shortfall_kg_per_kg_on_flagged_steps": {
+     "min": -2.087234762977702e-08,
+     "p01": 7.877917936260288e-06,
+     "median": 0.0003949186418468735,
+     "p99": 0.00045989950339711197,
+     "max": 0.00046122564342874947
+    },
+    "run_level_cumulative_residual_relative_max_per_state": {
+     "solid_mass": 0.0,
+     "water_mass": 0.007160617764591264,
+     "particle_count": 6.321962581396202e-16,
+     "bed_temperature": 9.322087814717172e-05
+    }
+   },
+   "balance_trapezoid_25s": {
+    "note": "coarse second-order check independent of the integrator; the moisture mode has tau~15 s, so the water residual is dominated by trapezoid error, the solid one is tight",
+    "solid_closure_relative_to_total_solid_inflow_max": 2.9611424980236032e-05,
+    "water_closure_relative_to_total_sprayed_water_max": 0.010212767513218602,
+    "solid_product_flow_model_check_max_abs_kg_per_s": 0.0
+   },
+   "targets": {
+    "units": {
+     "energy_target": "kW (electrical power, absolute)",
+     "product_moisture": "kg water / kg dry solid",
+     "bed_temperature": "degC",
+     "d50": "um"
+    },
+    "energy_target_vs_recomputed_kw": {
+     "max_abs_diff": 0.0,
+     "max_rel_diff": 0.0,
+     "stats_kw": {
+      "min": 0.49664740661419066,
+      "p01": 0.8195176872701354,
+      "median": 2.276015094952827,
+      "p99": 4.362248536788947,
+      "max": 5.858721192005668
+     }
+    },
+    "power_terms_vs_diagnostics_max_abs_kw": {
+     "heater": 0.0,
+     "fan": 0.0,
+     "pump": 0.0,
+     "atomiser": 0.0,
+     "total": 0.0
+    },
+    "energy_target_equals_power_total_diag_max_abs": 0.0,
+    "moisture_output_vs_mw_over_ms_max_abs": 0.0,
+    "bed_temperature_output_vs_state_max_abs": 0.0,
+    "d50_output_vs_recomputed_um_max_abs": 0.0,
+    "power_share_of_total_median": {
+     "heater": 0.9348243082894347,
+     "fan": 0.037769352358314856,
+     "pump": 0.00014066233403870962,
+     "atomiser": 0.025173806207407064
+    }
+   },
+   "measurement_model": {
+    "bit_exact_regeneration": true,
+    "max_abs_diff": 0.0,
+    "noise_floor_rmse_measurement_vs_truth": {
+     "energy_target": 0.02557770158429222,
+     "bed_temperature_celsius": 0.37779740816329593,
+     "product_moisture_kg_per_kg": 0.0006492442774213179,
+     "d50_um": 2.998060439171498
+    }
+   }
+  },
+  {
+   "kind": "constant_train",
+   "seed": 1,
+   "n_runs": 128,
+   "n_steps": 1152,
+   "finite": {
+    "states": true,
+    "outputs": true,
+    "measurements": true,
+    "actions": true,
+    "disturbances": true,
+    "diag/energy_target": true,
+    "diag/d50_m": true,
+    "diag/particle_moisture_kg_per_kg": true,
+    "diag/evaporation_rate_kg_per_s": true,
+    "diag/outlet_humidity_kg_per_kg": true,
+    "diag/saturation_humidity_kg_per_kg": true,
+    "diag/inlet_humidity_kg_per_kg": true,
+    "diag/saturation_degree": true,
+    "diag/dry_air_mass_flow_kg_per_s": true,
+    "diag/product_mass_flow_kg_per_s": true,
+    "diag/bed_pressure_drop_pa": true,
+    "diag/minimum_fluidization_velocity_m_per_s": true,
+    "diag/terminal_velocity_m_per_s": true,
+    "diag/fluidization_margin_lower_m_per_s": true,
+    "diag/fluidization_margin_upper_m_per_s": true,
+    "diag/power_heater_kw": true,
+    "diag/power_fan_kw": true,
+    "diag/power_pump_kw": true,
+    "diag/power_atomiser_kw": true,
+    "diag/power_total_kw": true
+   },
+   "all_finite": true,
+   "bounds": {
+    "solid_mass_kg": {
+     "min": 1.6041393181677355,
+     "p01": 1.8192150955714557,
+     "median": 2.0000000000000067,
+     "p99": 2.065149021897404,
+     "max": 2.382696529737004
+    },
+    "water_mass_kg": {
+     "min": 0.011481301501429253,
+     "p01": 0.014051871484627568,
+     "median": 0.08091433016810534,
+     "p99": 2.3443341609435477,
+     "max": 3.526071730397409
+    },
+    "particle_count": {
+     "min": 2908545.632979748,
+     "p01": 4480412.537043918,
+     "median": 11933686.414946968,
+     "p99": 114381420.09752715,
+     "max": 174983482.4789445
+    },
+    "masses_and_count_all_positive": true,
+    "moisture_kg_per_kg": {
+     "min": 0.006103613387034985,
+     "p01": 0.007022881038905533,
+     "median": 0.04047791528157614,
+     "p99": 1.1721670801251978,
+     "max": 1.763035865198681
+    },
+    "moisture_minus_equilibrium": {
+     "min": 0.0014824268450817652,
+     "p01": 0.002375121957135648,
+     "median": 0.02205141473917662,
+     "p99": 1.129010353436606,
+     "max": 1.7164698615422218
+    },
+    "n_steps_moisture_below_equilibrium_by_more_than_1e-9": 0,
+    "n_steps_at_equilibrium_floor_(margin<1e-9)": 0,
+    "n_steps_moisture_above_critical": 15323,
+    "bed_temperature_celsius": {
+     "min": 27.518042124221473,
+     "p01": 29.543896841176803,
+     "median": 55.97498762213759,
+     "p99": 90.82984910627283,
+     "max": 95.31699295522165
+    },
+    "n_steps_bed_temperature_outside_0_100": 0,
+    "n_steps_bed_temperature_above_80": 11863,
+    "outlet_humidity_minus_saturation_max": -0.007390984085067463,
+    "d50_um": {
+     "min": 250.7968210383233,
+     "p01": 278.7612014401896,
+     "median": 597.4062493407569,
+     "p99": 825.671643753965,
+     "max": 895.5415484694946
+    },
+    "fluidisation_margin_lower_end_of_step_min": 0.5432532960761657,
+    "fluidisation_margin_upper_end_of_step_min": -0.013938790688138525,
+    "n_steps_u_below_u_mf_end_of_step": 0,
+    "n_steps_u_above_u_terminal_end_of_step": 15
+   },
+   "projection": {
+    "steps_projected_fraction": 0.09496392144097222,
+    "runs_with_any_projection": 23,
+    "runs_with_more_than_10pct_steps_projected": 19,
+    "runs_with_more_than_50pct_steps_projected": 11,
+    "per_run_fraction_projected": {
+     "min": 0.0,
+     "p01": 0.0,
+     "median": 0.0,
+     "p99": 1.0,
+     "max": 1.0
+    },
+    "only_gas_velocity_channel_modified": true,
+    "clipped_to_upper_(u_terminal)_fraction": 1.0,
+    "relative_change_of_gas_velocity_when_projected": {
+     "min": 2.5835761052350252e-05,
+     "p01": 0.0035839662818700157,
+     "median": 0.15480405169672323,
+     "p99": 0.4336995271001806,
+     "max": 0.4863231006226171
+    },
+    "share_of_projected_steps_in_first_10pct_of_run": 0.17574805398843105,
+    "n_projected_steps_field_consistent": true
+   },
+   "replay": {
+    "formulas": "own RK4 (5 substeps) of own balance ODEs; simulator used only for evaporation",
+    "n_steps_total": 147456,
+    "steps_where_replay_differs_from_stored_(rel>1e-8)": 0,
+    "fraction_steps_differing": 0.0,
+    "runs_with_any_difference": 0,
+    "first_step_of_run_share_of_differences": 0.0,
+    "max_relative_deviation_on_non_flagged_steps": 2.812101875511289e-16,
+    "max_relative_deviation_per_state_all_steps": {
+     "solid_mass": 0.0,
+     "water_mass": 0.0,
+     "particle_count": 2.812101875511289e-16,
+     "bed_temperature": 0.0
+    },
+    "abs_water_mass_shortfall_kg_on_flagged_steps": null,
+    "moisture_shortfall_kg_per_kg_on_flagged_steps": null,
+    "run_level_cumulative_residual_relative_max_per_state": {
+     "solid_mass": 0.0,
+     "water_mass": 0.0,
+     "particle_count": 4.603639931392701e-16,
+     "bed_temperature": 0.0
+    }
+   },
+   "balance_trapezoid_25s": {
+    "note": "coarse second-order check independent of the integrator; the moisture mode has tau~15 s, so the water residual is dominated by trapezoid error, the solid one is tight",
+    "solid_closure_relative_to_total_solid_inflow_max": 6.491119058445619e-05,
+    "water_closure_relative_to_total_sprayed_water_max": 0.017491507179081815,
+    "solid_product_flow_model_check_max_abs_kg_per_s": 0.0
+   },
+   "targets": {
+    "units": {
+     "energy_target": "kW (electrical power, absolute)",
+     "product_moisture": "kg water / kg dry solid",
+     "bed_temperature": "degC",
+     "d50": "um"
+    },
+    "energy_target_vs_recomputed_kw": {
+     "max_abs_diff": 0.0,
+     "max_rel_diff": 0.0,
+     "stats_kw": {
+      "min": 0.7485339192238878,
+      "p01": 0.8388933432722522,
+      "median": 2.1360063583579425,
+      "p99": 3.9505173349639944,
+      "max": 4.501922644022934
+     }
+    },
+    "power_terms_vs_diagnostics_max_abs_kw": {
+     "heater": 0.0,
+     "fan": 0.0,
+     "pump": 0.0,
+     "atomiser": 0.0,
+     "total": 0.0
+    },
+    "energy_target_equals_power_total_diag_max_abs": 0.0,
+    "moisture_output_vs_mw_over_ms_max_abs": 0.0,
+    "bed_temperature_output_vs_state_max_abs": 0.0,
+    "d50_output_vs_recomputed_um_max_abs": 0.0,
+    "power_share_of_total_median": {
+     "heater": 0.9316410858768278,
+     "fan": 0.040157028450701376,
+     "pump": 0.0001334653743846332,
+     "atomiser": 0.026324915077359005
+    }
+   },
+   "measurement_model": {
+    "bit_exact_regeneration": true,
+    "max_abs_diff": 0.0,
+    "noise_floor_rmse_measurement_vs_truth": {
+     "energy_target": 0.011442530088990486,
+     "bed_temperature_celsius": 0.3587881308888775,
+     "product_moisture_kg_per_kg": 0.0012423220477392883,
+     "d50_um": 2.9986160468510716
+    }
+   }
+  },
+  {
+   "kind": "constant_train",
+   "seed": 2,
+   "n_runs": 128,
+   "n_steps": 1152,
+   "finite": {
+    "states": true,
+    "outputs": true,
+    "measurements": true,
+    "actions": true,
+    "disturbances": true,
+    "diag/energy_target": true,
+    "diag/d50_m": true,
+    "diag/particle_moisture_kg_per_kg": true,
+    "diag/evaporation_rate_kg_per_s": true,
+    "diag/outlet_humidity_kg_per_kg": true,
+    "diag/saturation_humidity_kg_per_kg": true,
+    "diag/inlet_humidity_kg_per_kg": true,
+    "diag/saturation_degree": true,
+    "diag/dry_air_mass_flow_kg_per_s": true,
+    "diag/product_mass_flow_kg_per_s": true,
+    "diag/bed_pressure_drop_pa": true,
+    "diag/minimum_fluidization_velocity_m_per_s": true,
+    "diag/terminal_velocity_m_per_s": true,
+    "diag/fluidization_margin_lower_m_per_s": true,
+    "diag/fluidization_margin_upper_m_per_s": true,
+    "diag/power_heater_kw": true,
+    "diag/power_fan_kw": true,
+    "diag/power_pump_kw": true,
+    "diag/power_atomiser_kw": true,
+    "diag/power_total_kw": true
+   },
+   "all_finite": true,
+   "bounds": {
+    "solid_mass_kg": {
+     "min": 1.6030963487545467,
+     "p01": 1.8360895926528045,
+     "median": 2.0000000000000067,
+     "p99": 2.065126172268249,
+     "max": 2.3825235303938546
+    },
+    "water_mass_kg": {
+     "min": 0.009206524694214006,
+     "p01": 0.011045119663968223,
+     "median": 0.09302955248806757,
+     "p99": 2.456593780059659,
+     "max": 3.8743214863286592
+    },
+    "particle_count": {
+     "min": 3363792.4827890377,
+     "p01": 4321833.641991353,
+     "median": 11491081.413468778,
+     "p99": 113068553.46841437,
+     "max": 184346692.89307022
+    },
+    "masses_and_count_all_positive": true,
+    "moisture_kg_per_kg": {
+     "min": 0.004565247147481334,
+     "p01": 0.005527916193989876,
+     "median": 0.046535793207074336,
+     "p99": 1.2282968900298377,
+     "max": 1.9371607431643425
+    },
+    "moisture_minus_equilibrium": {
+     "min": 0.001481620246292119,
+     "p01": 0.0019529826814349408,
+     "median": 0.02818659539932781,
+     "p99": 1.1847372797898592,
+     "max": 1.8882986595999507
+    },
+    "n_steps_moisture_below_equilibrium_by_more_than_1e-9": 0,
+    "n_steps_at_equilibrium_floor_(margin<1e-9)": 0,
+    "n_steps_moisture_above_critical": 19818,
+    "bed_temperature_celsius": {
+     "min": 28.749876329150553,
+     "p01": 29.569386566716517,
+     "median": 58.11714793127284,
+     "p99": 101.22122945279092,
+     "max": 102.55501143920408
+    },
+    "n_steps_bed_temperature_outside_0_100": 3203,
+    "n_steps_bed_temperature_above_80": 19262,
+    "outlet_humidity_minus_saturation_max": -0.006798008532983152,
+    "d50_um": {
+     "min": 250.70065673921678,
+     "p01": 281.22605262317757,
+     "median": 605.0914037185958,
+     "p99": 837.592452342978,
+     "max": 892.7365859277285
+    },
+    "fluidisation_margin_lower_end_of_step_min": 0.6485645322468689,
+    "fluidisation_margin_upper_end_of_step_min": -0.00993075420075451,
+    "n_steps_u_below_u_mf_end_of_step": 0,
+    "n_steps_u_above_u_terminal_end_of_step": 17
+   },
+   "projection": {
+    "steps_projected_fraction": 0.09303792317708333,
+    "runs_with_any_projection": 23,
+    "runs_with_more_than_10pct_steps_projected": 21,
+    "runs_with_more_than_50pct_steps_projected": 10,
+    "per_run_fraction_projected": {
+     "min": 0.0,
+     "p01": 0.0,
+     "median": 0.0,
+     "p99": 1.0,
+     "max": 1.0
+    },
+    "only_gas_velocity_channel_modified": true,
+    "clipped_to_upper_(u_terminal)_fraction": 1.0,
+    "relative_change_of_gas_velocity_when_projected": {
+     "min": 8.496850797856488e-06,
+     "p01": 0.002821904663276835,
+     "median": 0.1490349718946994,
+     "p99": 0.3905425270832388,
+     "max": 0.4279794321816592
+    },
+    "share_of_projected_steps_in_first_10pct_of_run": 0.18878927035498214,
+    "n_projected_steps_field_consistent": true
+   },
+   "replay": {
+    "formulas": "own RK4 (5 substeps) of own balance ODEs; simulator used only for evaporation",
+    "n_steps_total": 147456,
+    "steps_where_replay_differs_from_stored_(rel>1e-8)": 0,
+    "fraction_steps_differing": 0.0,
+    "runs_with_any_difference": 0,
+    "first_step_of_run_share_of_differences": 0.0,
+    "max_relative_deviation_on_non_flagged_steps": 2.1922259103731316e-16,
+    "max_relative_deviation_per_state_all_steps": {
+     "solid_mass": 0.0,
+     "water_mass": 0.0,
+     "particle_count": 2.1922259103731316e-16,
+     "bed_temperature": 0.0
+    },
+    "abs_water_mass_shortfall_kg_on_flagged_steps": null,
+    "moisture_shortfall_kg_per_kg_on_flagged_steps": null,
+    "run_level_cumulative_residual_relative_max_per_state": {
+     "solid_mass": 0.0,
+     "water_mass": 0.0,
+     "particle_count": 6.314090866580473e-16,
+     "bed_temperature": 0.0
+    }
+   },
+   "balance_trapezoid_25s": {
+    "note": "coarse second-order check independent of the integrator; the moisture mode has tau~15 s, so the water residual is dominated by trapezoid error, the solid one is tight",
+    "solid_closure_relative_to_total_solid_inflow_max": 5.087432052875923e-05,
+    "water_closure_relative_to_total_sprayed_water_max": 0.014028524203832243,
+    "solid_product_flow_model_check_max_abs_kg_per_s": 0.0
+   },
+   "targets": {
+    "units": {
+     "energy_target": "kW (electrical power, absolute)",
+     "product_moisture": "kg water / kg dry solid",
+     "bed_temperature": "degC",
+     "d50": "um"
+    },
+    "energy_target_vs_recomputed_kw": {
+     "max_abs_diff": 0.0,
+     "max_rel_diff": 0.0,
+     "stats_kw": {
+      "min": 0.8489881021335939,
+      "p01": 0.9478958454156047,
+      "median": 2.1408789689343597,
+      "p99": 4.077871540282385,
+      "max": 4.783279790657714
+     }
+    },
+    "power_terms_vs_diagnostics_max_abs_kw": {
+     "heater": 0.0,
+     "fan": 0.0,
+     "pump": 0.0,
+     "atomiser": 0.0,
+     "total": 0.0
+    },
+    "energy_target_equals_power_total_diag_max_abs": 0.0,
+    "moisture_output_vs_mw_over_ms_max_abs": 0.0,
+    "bed_temperature_output_vs_state_max_abs": 0.0,
+    "d50_output_vs_recomputed_um_max_abs": 0.0,
+    "power_share_of_total_median": {
+     "heater": 0.9306050423280419,
+     "fan": 0.036909169493951746,
+     "pump": 0.00014525825914527354,
+     "atomiser": 0.021807495052563415
+    }
+   },
+   "measurement_model": {
+    "bit_exact_regeneration": true,
+    "max_abs_diff": 0.0,
+    "noise_floor_rmse_measurement_vs_truth": {
+     "energy_target": 0.011959512840123653,
+     "bed_temperature_celsius": 0.366461541384167,
+     "product_moisture_kg_per_kg": 0.0012761355365920547,
+     "d50_um": 3.016595292452778
+    }
+   }
+  },
+  {
+   "kind": "constant_train",
+   "seed": 3,
+   "n_runs": 128,
+   "n_steps": 1152,
+   "finite": {
+    "states": true,
+    "outputs": true,
+    "measurements": true,
+    "actions": true,
+    "disturbances": true,
+    "diag/energy_target": true,
+    "diag/d50_m": true,
+    "diag/particle_moisture_kg_per_kg": true,
+    "diag/evaporation_rate_kg_per_s": true,
+    "diag/outlet_humidity_kg_per_kg": true,
+    "diag/saturation_humidity_kg_per_kg": true,
+    "diag/inlet_humidity_kg_per_kg": true,
+    "diag/saturation_degree": true,
+    "diag/dry_air_mass_flow_kg_per_s": true,
+    "diag/product_mass_flow_kg_per_s": true,
+    "diag/bed_pressure_drop_pa": true,
+    "diag/minimum_fluidization_velocity_m_per_s": true,
+    "diag/terminal_velocity_m_per_s": true,
+    "diag/fluidization_margin_lower_m_per_s": true,
+    "diag/fluidization_margin_upper_m_per_s": true,
+    "diag/power_heater_kw": true,
+    "diag/power_fan_kw": true,
+    "diag/power_pump_kw": true,
+    "diag/power_atomiser_kw": true,
+    "diag/power_total_kw": true
+   },
+   "all_finite": true,
+   "bounds": {
+    "solid_mass_kg": {
+     "min": 1.6050326230223477,
+     "p01": 1.823849566429942,
+     "median": 2.0000000000000067,
+     "p99": 2.065167575043337,
+     "max": 2.382382418100967
+    },
+    "water_mass_kg": {
+     "min": 0.008504852343084181,
+     "p01": 0.010970522550301762,
+     "median": 0.08064755185655854,
+     "p99": 1.430693664680784,
+     "max": 1.9383650370743937
+    },
+    "particle_count": {
+     "min": 2984097.058421638,
+     "p01": 4360190.877981722,
+     "median": 12107048.821121939,
+     "p99": 121764245.15325136,
+     "max": 179359495.90050766
+    },
+    "masses_and_count_all_positive": true,
+    "moisture_kg_per_kg": {
+     "min": 0.004252426171542119,
+     "p01": 0.005486336267621874,
+     "median": 0.04032272429984325,
+     "p99": 0.715346832461946,
+     "max": 0.9691825185372033
+    },
+    "moisture_minus_equilibrium": {
+     "min": 0.0017603174942570632,
+     "p01": 0.0020609160975969465,
+     "median": 0.023858016656045263,
+     "p99": 0.670341051468288,
+     "max": 0.9256633305406281
+    },
+    "n_steps_moisture_below_equilibrium_by_more_than_1e-9": 0,
+    "n_steps_at_equilibrium_floor_(margin<1e-9)": 0,
+    "n_steps_moisture_above_critical": 14176,
+    "bed_temperature_celsius": {
+     "min": 28.60356026841023,
+     "p01": 29.82626563453248,
+     "median": 58.08683662434396,
+     "p99": 102.78037591926115,
+     "max": 104.63316829353705
+    },
+    "n_steps_bed_temperature_outside_0_100": 3389,
+    "n_steps_bed_temperature_above_80": 32486,
+    "outlet_humidity_minus_saturation_max": -0.007265908638391577,
+    "d50_um": {
+     "min": 252.15596237648,
+     "p01": 273.56272621362854,
+     "median": 594.6686555278782,
+     "p99": 835.3019893930951,
+     "max": 891.9883821363691
+    },
+    "fluidisation_margin_lower_end_of_step_min": 0.6072664503540699,
+    "fluidisation_margin_upper_end_of_step_min": -0.012053069293212815,
+    "n_steps_u_below_u_mf_end_of_step": 0,
+    "n_steps_u_above_u_terminal_end_of_step": 23
+   },
+   "projection": {
+    "steps_projected_fraction": 0.09319390190972222,
+    "runs_with_any_projection": 27,
+    "runs_with_more_than_10pct_steps_projected": 24,
+    "runs_with_more_than_50pct_steps_projected": 9,
+    "per_run_fraction_projected": {
+     "min": 0.0,
+     "p01": 0.0,
+     "median": 0.0,
+     "p99": 1.0,
+     "max": 1.0
+    },
+    "only_gas_velocity_channel_modified": true,
+    "clipped_to_upper_(u_terminal)_fraction": 1.0,
+    "relative_change_of_gas_velocity_when_projected": {
+     "min": 2.8804309834516852e-06,
+     "p01": 0.002598965671717068,
+     "median": 0.12235292975824034,
+     "p99": 0.3683533849327827,
+     "max": 0.41059344060973163
+    },
+    "share_of_projected_steps_in_first_10pct_of_run": 0.2166351331683889,
+    "n_projected_steps_field_consistent": true
+   },
+   "replay": {
+    "formulas": "own RK4 (5 substeps) of own balance ODEs; simulator used only for evaporation",
+    "n_steps_total": 147456,
+    "steps_where_replay_differs_from_stored_(rel>1e-8)": 0,
+    "fraction_steps_differing": 0.0,
+    "runs_with_any_difference": 0,
+    "first_step_of_run_share_of_differences": 0.0,
+    "max_relative_deviation_on_non_flagged_steps": 1.8085955298247872e-16,
+    "max_relative_deviation_per_state_all_steps": {
+     "solid_mass": 0.0,
+     "water_mass": 0.0,
+     "particle_count": 1.8085955298247872e-16,
+     "bed_temperature": 0.0
+    },
+    "abs_water_mass_shortfall_kg_on_flagged_steps": null,
+    "moisture_shortfall_kg_per_kg_on_flagged_steps": null,
+    "run_level_cumulative_residual_relative_max_per_state": {
+     "solid_mass": 0.0,
+     "water_mass": 0.0,
+     "particle_count": 3.095519456269632e-16,
+     "bed_temperature": 0.0
+    }
+   },
+   "balance_trapezoid_25s": {
+    "note": "coarse second-order check independent of the integrator; the moisture mode has tau~15 s, so the water residual is dominated by trapezoid error, the solid one is tight",
+    "solid_closure_relative_to_total_solid_inflow_max": 4.965215786445688e-05,
+    "water_closure_relative_to_total_sprayed_water_max": 0.014208973443745165,
+    "solid_product_flow_model_check_max_abs_kg_per_s": 0.0
+   },
+   "targets": {
+    "units": {
+     "energy_target": "kW (electrical power, absolute)",
+     "product_moisture": "kg water / kg dry solid",
+     "bed_temperature": "degC",
+     "d50": "um"
+    },
+    "energy_target_vs_recomputed_kw": {
+     "max_abs_diff": 0.0,
+     "max_rel_diff": 0.0,
+     "stats_kw": {
+      "min": 0.7863002639803498,
+      "p01": 1.0136581500673565,
+      "median": 2.180477913487776,
+      "p99": 4.549460407118864,
+      "max": 5.366181151493476
+     }
+    },
+    "power_terms_vs_diagnostics_max_abs_kw": {
+     "heater": 0.0,
+     "fan": 0.0,
+     "pump": 0.0,
+     "atomiser": 0.0,
+     "total": 0.0
+    },
+    "energy_target_equals_power_total_diag_max_abs": 0.0,
+    "moisture_output_vs_mw_over_ms_max_abs": 0.0,
+    "bed_temperature_output_vs_state_max_abs": 0.0,
+    "d50_output_vs_recomputed_um_max_abs": 0.0,
+    "power_share_of_total_median": {
+     "heater": 0.9365404205261967,
+     "fan": 0.0356370479150644,
+     "pump": 0.00012746623056594347,
+     "atomiser": 0.026533449444071225
+    }
+   },
+   "measurement_model": {
+    "bit_exact_regeneration": true,
+    "max_abs_diff": 0.0,
+    "noise_floor_rmse_measurement_vs_truth": {
+     "energy_target": 0.01261281752381323,
+     "bed_temperature_celsius": 0.37972434257844395,
+     "product_moisture_kg_per_kg": 0.0008176186768557918,
+     "d50_um": 3.002840641600389
+    }
+   }
+  },
+  {
+   "kind": "constant_train",
+   "seed": 4,
+   "n_runs": 128,
+   "n_steps": 1152,
+   "finite": {
+    "states": true,
+    "outputs": true,
+    "measurements": true,
+    "actions": true,
+    "disturbances": true,
+    "diag/energy_target": true,
+    "diag/d50_m": true,
+    "diag/particle_moisture_kg_per_kg": true,
+    "diag/evaporation_rate_kg_per_s": true,
+    "diag/outlet_humidity_kg_per_kg": true,
+    "diag/saturation_humidity_kg_per_kg": true,
+    "diag/inlet_humidity_kg_per_kg": true,
+    "diag/saturation_degree": true,
+    "diag/dry_air_mass_flow_kg_per_s": true,
+    "diag/product_mass_flow_kg_per_s": true,
+    "diag/bed_pressure_drop_pa": true,
+    "diag/minimum_fluidization_velocity_m_per_s": true,
+    "diag/terminal_velocity_m_per_s": true,
+    "diag/fluidization_margin_lower_m_per_s": true,
+    "diag/fluidization_margin_upper_m_per_s": true,
+    "diag/power_heater_kw": true,
+    "diag/power_fan_kw": true,
+    "diag/power_pump_kw": true,
+    "diag/power_atomiser_kw": true,
+    "diag/power_total_kw": true
+   },
+   "all_finite": true,
+   "bounds": {
+    "solid_mass_kg": {
+     "min": 1.6039529859629362,
+     "p01": 1.8289292258359524,
+     "median": 2.0000000000000067,
+     "p99": 2.0652820762614548,
+     "max": 2.3834717011488586
+    },
+    "water_mass_kg": {
+     "min": 0.011144420722703862,
+     "p01": 0.013112913495414541,
+     "median": 0.07584447404832549,
+     "p99": 1.901426794049476,
+     "max": 2.3292312034428204
+    },
+    "particle_count": {
+     "min": 2974114.952238505,
+     "p01": 4365432.705228545,
+     "median": 12734474.40487825,
+     "p99": 117879844.49118072,
+     "max": 190387883.35636705
+    },
+    "masses_and_count_all_positive": true,
+    "moisture_kg_per_kg": {
+     "min": 0.005572210361351857,
+     "p01": 0.006598542258521704,
+     "median": 0.03795661381212934,
+     "p99": 0.9507133970248142,
+     "max": 1.1646156017213947
+    },
+    "moisture_minus_equilibrium": {
+     "min": 0.0013451982623759566,
+     "p01": 0.0015278798985693736,
+     "median": 0.02078434677502889,
+     "p99": 0.906080145839369,
+     "max": 1.1258712910693676
+    },
+    "n_steps_moisture_below_equilibrium_by_more_than_1e-9": 0,
+    "n_steps_at_equilibrium_floor_(margin<1e-9)": 0,
+    "n_steps_moisture_above_critical": 15232,
+    "bed_temperature_celsius": {
+     "min": 28.610125051856425,
+     "p01": 29.133244609946594,
+     "median": 59.74447416200701,
+     "p99": 101.52876857534241,
+     "max": 102.58201062429667
+    },
+    "n_steps_bed_temperature_outside_0_100": 2267,
+    "n_steps_bed_temperature_above_80": 23782,
+    "outlet_humidity_minus_saturation_max": -0.007530884645862233,
+    "d50_um": {
+     "min": 250.46604450414117,
+     "p01": 278.0824286284165,
+     "median": 584.7718588973044,
+     "p99": 835.6408288629056,
+     "max": 893.7671100760557
+    },
+    "fluidisation_margin_lower_end_of_step_min": 0.6469948982544227,
+    "fluidisation_margin_upper_end_of_step_min": -0.0166186697326296,
+    "n_steps_u_below_u_mf_end_of_step": 0,
+    "n_steps_u_above_u_terminal_end_of_step": 14
+   },
+   "projection": {
+    "steps_projected_fraction": 0.1021457248263889,
+    "runs_with_any_projection": 25,
+    "runs_with_more_than_10pct_steps_projected": 23,
+    "runs_with_more_than_50pct_steps_projected": 12,
+    "per_run_fraction_projected": {
+     "min": 0.0,
+     "p01": 0.0,
+     "median": 0.0,
+     "p99": 1.0,
+     "max": 1.0
+    },
+    "only_gas_velocity_channel_modified": true,
+    "clipped_to_upper_(u_terminal)_fraction": 1.0,
+    "relative_change_of_gas_velocity_when_projected": {
+     "min": 1.90190497728535e-06,
+     "p01": 0.0028075551037732107,
+     "median": 0.13694734636253963,
+     "p99": 0.4177892987576215,
+     "max": 0.4688235264160852
+    },
+    "share_of_projected_steps_in_first_10pct_of_run": 0.18815562342318418,
+    "n_projected_steps_field_consistent": true
+   },
+   "replay": {
+    "formulas": "own RK4 (5 substeps) of own balance ODEs; simulator used only for evaporation",
+    "n_steps_total": 147456,
+    "steps_where_replay_differs_from_stored_(rel>1e-8)": 0,
+    "fraction_steps_differing": 0.0,
+    "runs_with_any_difference": 0,
+    "first_step_of_run_share_of_differences": 0.0,
+    "max_relative_deviation_on_non_flagged_steps": 2.091531714839436e-16,
+    "max_relative_deviation_per_state_all_steps": {
+     "solid_mass": 0.0,
+     "water_mass": 0.0,
+     "particle_count": 2.091531714839436e-16,
+     "bed_temperature": 0.0
+    },
+    "abs_water_mass_shortfall_kg_on_flagged_steps": null,
+    "moisture_shortfall_kg_per_kg_on_flagged_steps": null,
+    "run_level_cumulative_residual_relative_max_per_state": {
+     "solid_mass": 0.0,
+     "water_mass": 0.0,
+     "particle_count": 4.571362598649898e-16,
+     "bed_temperature": 0.0
+    }
+   },
+   "balance_trapezoid_25s": {
+    "note": "coarse second-order check independent of the integrator; the moisture mode has tau~15 s, so the water residual is dominated by trapezoid error, the solid one is tight",
+    "solid_closure_relative_to_total_solid_inflow_max": 4.696667428281182e-05,
+    "water_closure_relative_to_total_sprayed_water_max": 0.015119133979225353,
+    "solid_product_flow_model_check_max_abs_kg_per_s": 0.0
+   },
+   "targets": {
+    "units": {
+     "energy_target": "kW (electrical power, absolute)",
+     "product_moisture": "kg water / kg dry solid",
+     "bed_temperature": "degC",
+     "d50": "um"
+    },
+    "energy_target_vs_recomputed_kw": {
+     "max_abs_diff": 0.0,
+     "max_rel_diff": 0.0,
+     "stats_kw": {
+      "min": 0.7484854328087751,
+      "p01": 0.943224375878448,
+      "median": 2.072534002801594,
+      "p99": 4.296655926941285,
+      "max": 4.736739712628039
+     }
+    },
+    "power_terms_vs_diagnostics_max_abs_kw": {
+     "heater": 0.0,
+     "fan": 0.0,
+     "pump": 0.0,
+     "atomiser": 0.0,
+     "total": 0.0
+    },
+    "energy_target_equals_power_total_diag_max_abs": 0.0,
+    "moisture_output_vs_mw_over_ms_max_abs": 0.0,
+    "bed_temperature_output_vs_state_max_abs": 0.0,
+    "d50_output_vs_recomputed_um_max_abs": 0.0,
+    "power_share_of_total_median": {
+     "heater": 0.9341488528076647,
+     "fan": 0.03922447608267543,
+     "pump": 0.00012942548513968636,
+     "atomiser": 0.025718364118990637
+    }
+   },
+   "measurement_model": {
+    "bit_exact_regeneration": true,
+    "max_abs_diff": 0.0,
+    "noise_floor_rmse_measurement_vs_truth": {
+     "energy_target": 0.011974657436981045,
+     "bed_temperature_celsius": 0.37110413418648047,
+     "product_moisture_kg_per_kg": 0.000953210675615757,
+     "d50_um": 2.983503268764543
+    }
+   }
+  },
+  {
+   "kind": "constant_train",
+   "seed": 5,
+   "n_runs": 128,
+   "n_steps": 1152,
+   "finite": {
+    "states": true,
+    "outputs": true,
+    "measurements": true,
+    "actions": true,
+    "disturbances": true,
+    "diag/energy_target": true,
+    "diag/d50_m": true,
+    "diag/particle_moisture_kg_per_kg": true,
+    "diag/evaporation_rate_kg_per_s": true,
+    "diag/outlet_humidity_kg_per_kg": true,
+    "diag/saturation_humidity_kg_per_kg": true,
+    "diag/inlet_humidity_kg_per_kg": true,
+    "diag/saturation_degree": true,
+    "diag/dry_air_mass_flow_kg_per_s": true,
+    "diag/product_mass_flow_kg_per_s": true,
+    "diag/bed_pressure_drop_pa": true,
+    "diag/minimum_fluidization_velocity_m_per_s": true,
+    "diag/terminal_velocity_m_per_s": true,
+    "diag/fluidization_margin_lower_m_per_s": true,
+    "diag/fluidization_margin_upper_m_per_s": true,
+    "diag/power_heater_kw": true,
+    "diag/power_fan_kw": true,
+    "diag/power_pump_kw": true,
+    "diag/power_atomiser_kw": true,
+    "diag/power_total_kw": true
+   },
+   "all_finite": true,
+   "bounds": {
+    "solid_mass_kg": {
+     "min": 1.605992371676743,
+     "p01": 1.8078273075799243,
+     "median": 2.0000000000000067,
+     "p99": 2.0650714993155797,
+     "max": 2.380740603415535
+    },
+    "water_mass_kg": {
+     "min": 0.008700280303959232,
+     "p01": 0.010909907709406844,
+     "median": 0.07289202265988401,
+     "p99": 1.553858755295558,
+     "max": 1.982443817401963
+    },
+    "particle_count": {
+     "min": 3285153.3599850885,
+     "p01": 4435343.910352926,
+     "median": 12126992.301144805,
+     "p99": 118214528.9088144,
+     "max": 180883690.01564845
+    },
+    "masses_and_count_all_positive": true,
+    "moisture_kg_per_kg": {
+     "min": 0.004350140151979558,
+     "p01": 0.005454839452142316,
+     "median": 0.03648091556889737,
+     "p99": 0.776929377647722,
+     "max": 0.9912219087009683
+    },
+    "moisture_minus_equilibrium": {
+     "min": 0.0015662038480311839,
+     "p01": 0.0018857734029798956,
+     "median": 0.01931358205885122,
+     "p99": 0.7372415239373581,
+     "max": 0.9491888259721879
+    },
+    "n_steps_moisture_below_equilibrium_by_more_than_1e-9": 0,
+    "n_steps_at_equilibrium_floor_(margin<1e-9)": 0,
+    "n_steps_moisture_above_critical": 9901,
+    "bed_temperature_celsius": {
+     "min": 28.148171180436513,
+     "p01": 30.71650825881553,
+     "median": 59.99563947069959,
+     "p99": 96.59865633423283,
+     "max": 104.68206325056752
+    },
+    "n_steps_bed_temperature_outside_0_100": 986,
+    "n_steps_bed_temperature_above_80": 17690,
+    "outlet_humidity_minus_saturation_max": -0.006812979681209523,
+    "d50_um": {
+     "min": 252.2587484929086,
+     "p01": 277.5517247941405,
+     "median": 594.0028584189963,
+     "p99": 829.7792234226772,
+     "max": 891.7271695532806
+    },
+    "fluidisation_margin_lower_end_of_step_min": 0.5390967852451568,
+    "fluidisation_margin_upper_end_of_step_min": -0.005959333536019962,
+    "n_steps_u_below_u_mf_end_of_step": 0,
+    "n_steps_u_above_u_terminal_end_of_step": 58
+   },
+   "projection": {
+    "steps_projected_fraction": 0.0793796115451389,
+    "runs_with_any_projection": 22,
+    "runs_with_more_than_10pct_steps_projected": 18,
+    "runs_with_more_than_50pct_steps_projected": 9,
+    "per_run_fraction_projected": {
+     "min": 0.0,
+     "p01": 0.0,
+     "median": 0.0,
+     "p99": 1.0,
+     "max": 1.0
+    },
+    "only_gas_velocity_channel_modified": true,
+    "clipped_to_upper_(u_terminal)_fraction": 1.0,
+    "relative_change_of_gas_velocity_when_projected": {
+     "min": 1.966921489156829e-05,
+     "p01": 0.0021575555169828457,
+     "median": 0.1423798310351449,
+     "p99": 0.39402246873537655,
+     "max": 0.4028876461911121
+    },
+    "share_of_projected_steps_in_first_10pct_of_run": 0.20512601452370782,
+    "n_projected_steps_field_consistent": true
+   },
+   "replay": {
+    "formulas": "own RK4 (5 substeps) of own balance ODEs; simulator used only for evaporation",
+    "n_steps_total": 147456,
+    "steps_where_replay_differs_from_stored_(rel>1e-8)": 0,
+    "fraction_steps_differing": 0.0,
+    "runs_with_any_difference": 0,
+    "first_step_of_run_share_of_differences": 0.0,
+    "max_relative_deviation_on_non_flagged_steps": 2.1971485329021783e-16,
+    "max_relative_deviation_per_state_all_steps": {
+     "solid_mass": 0.0,
+     "water_mass": 0.0,
+     "particle_count": 2.1971485329021783e-16,
+     "bed_temperature": 0.0
+    },
+    "abs_water_mass_shortfall_kg_on_flagged_steps": null,
+    "moisture_shortfall_kg_per_kg_on_flagged_steps": null,
+    "run_level_cumulative_residual_relative_max_per_state": {
+     "solid_mass": 0.0,
+     "water_mass": 0.0,
+     "particle_count": 5.127959438736378e-16,
+     "bed_temperature": 0.0
+    }
+   },
+   "balance_trapezoid_25s": {
+    "note": "coarse second-order check independent of the integrator; the moisture mode has tau~15 s, so the water residual is dominated by trapezoid error, the solid one is tight",
+    "solid_closure_relative_to_total_solid_inflow_max": 4.7261148281787145e-05,
+    "water_closure_relative_to_total_sprayed_water_max": 0.009838578334548919,
+    "solid_product_flow_model_check_max_abs_kg_per_s": 0.0
+   },
+   "targets": {
+    "units": {
+     "energy_target": "kW (electrical power, absolute)",
+     "product_moisture": "kg water / kg dry solid",
+     "bed_temperature": "degC",
+     "d50": "um"
+    },
+    "energy_target_vs_recomputed_kw": {
+     "max_abs_diff": 0.0,
+     "max_rel_diff": 0.0,
+     "stats_kw": {
+      "min": 0.6975241266996373,
+      "p01": 0.8087266132186061,
+      "median": 2.1718470967465215,
+      "p99": 4.255994188444025,
+      "max": 4.69920587491464
+     }
+    },
+    "power_terms_vs_diagnostics_max_abs_kw": {
+     "heater": 0.0,
+     "fan": 0.0,
+     "pump": 0.0,
+     "atomiser": 0.0,
+     "total": 0.0
+    },
+    "energy_target_equals_power_total_diag_max_abs": 0.0,
+    "moisture_output_vs_mw_over_ms_max_abs": 0.0,
+    "bed_temperature_output_vs_state_max_abs": 0.0,
+    "d50_output_vs_recomputed_um_max_abs": 0.0,
+    "power_share_of_total_median": {
+     "heater": 0.936224527373964,
+     "fan": 0.03940236699280589,
+     "pump": 0.0001315443972655149,
+     "atomiser": 0.021109084514143006
+    }
+   },
+   "measurement_model": {
+    "bit_exact_regeneration": true,
+    "max_abs_diff": 0.0,
+    "noise_floor_rmse_measurement_vs_truth": {
+     "energy_target": 0.012474890573904596,
+     "bed_temperature_celsius": 0.37237176242937686,
+     "product_moisture_kg_per_kg": 0.0007954679410962526,
+     "d50_um": 2.985704983089103
+    }
+   }
+  },
+  {
+   "kind": "holdout",
+   "seed": 999,
+   "n_runs": 36,
+   "n_steps": 1152,
+   "finite": {
+    "states": true,
+    "outputs": true,
+    "measurements": true,
+    "actions": true,
+    "disturbances": true,
+    "diag/energy_target": true,
+    "diag/d50_m": true,
+    "diag/particle_moisture_kg_per_kg": true,
+    "diag/evaporation_rate_kg_per_s": true,
+    "diag/outlet_humidity_kg_per_kg": true,
+    "diag/saturation_humidity_kg_per_kg": true,
+    "diag/inlet_humidity_kg_per_kg": true,
+    "diag/saturation_degree": true,
+    "diag/dry_air_mass_flow_kg_per_s": true,
+    "diag/product_mass_flow_kg_per_s": true,
+    "diag/bed_pressure_drop_pa": true,
+    "diag/minimum_fluidization_velocity_m_per_s": true,
+    "diag/terminal_velocity_m_per_s": true,
+    "diag/fluidization_margin_lower_m_per_s": true,
+    "diag/fluidization_margin_upper_m_per_s": true,
+    "diag/power_heater_kw": true,
+    "diag/power_fan_kw": true,
+    "diag/power_pump_kw": true,
+    "diag/power_atomiser_kw": true,
+    "diag/power_total_kw": true
+   },
+   "all_finite": true,
+   "bounds": {
+    "solid_mass_kg": {
+     "min": 1.6119663303983356,
+     "p01": 1.8280951987420668,
+     "median": 2.0000000000000067,
+     "p99": 2.0623444446912456,
+     "max": 2.364430684149885
+    },
+    "water_mass_kg": {
+     "min": 0.01283741670861673,
+     "p01": 0.013389952705530813,
+     "median": 0.06069339634754521,
+     "p99": 1.8381474273285536,
+     "max": 1.9236812879062815
+    },
+    "particle_count": {
+     "min": 3343547.2745360564,
+     "p01": 4347557.366160681,
+     "median": 12421853.039964974,
+     "p99": 113796996.0468365,
+     "max": 164841599.877703
+    },
+    "masses_and_count_all_positive": true,
+    "moisture_kg_per_kg": {
+     "min": 0.006418708354308408,
+     "p01": 0.006694976352765472,
+     "median": 0.030410319070763144,
+     "p99": 0.9190737136642646,
+     "max": 0.961840643953128
+    },
+    "moisture_minus_equilibrium": {
+     "min": 0.003090406249324957,
+     "p01": 0.0031945478591557438,
+     "median": 0.01558926497717835,
+     "p99": 0.8805379114174695,
+     "max": 0.9234270160867786
+    },
+    "n_steps_moisture_below_equilibrium_by_more_than_1e-9": 0,
+    "n_steps_at_equilibrium_floor_(margin<1e-9)": 0,
+    "n_steps_moisture_above_critical": 3524,
+    "bed_temperature_celsius": {
+     "min": 28.847756033340143,
+     "p01": 29.027715850610452,
+     "median": 58.12298420960299,
+     "p99": 99.1928337138129,
+     "max": 99.60795235668309
+    },
+    "n_steps_bed_temperature_outside_0_100": 0,
+    "n_steps_bed_temperature_above_80": 7924,
+    "outlet_humidity_minus_saturation_max": -0.008773142824275288,
+    "d50_um": {
+     "min": 257.72337783141614,
+     "p01": 281.9211371743038,
+     "median": 589.5896852102378,
+     "p99": 835.1480093439731,
+     "max": 870.569336633874
+    },
+    "fluidisation_margin_lower_end_of_step_min": 0.606726572555172,
+    "fluidisation_margin_upper_end_of_step_min": -0.008555398819471982,
+    "n_steps_u_below_u_mf_end_of_step": 0,
+    "n_steps_u_above_u_terminal_end_of_step": 4
+   },
+   "projection": {
+    "steps_projected_fraction": 0.10334683641975309,
+    "runs_with_any_projection": 10,
+    "runs_with_more_than_10pct_steps_projected": 8,
+    "runs_with_more_than_50pct_steps_projected": 3,
+    "per_run_fraction_projected": {
+     "min": 0.0,
+     "p01": 0.0,
+     "median": 0.0,
+     "p99": 0.8632812499999994,
+     "max": 1.0
+    },
+    "only_gas_velocity_channel_modified": true,
+    "clipped_to_upper_(u_terminal)_fraction": 1.0,
+    "relative_change_of_gas_velocity_when_projected": {
+     "min": 2.3410825675173718e-05,
+     "p01": 0.0020528370309544925,
+     "median": 0.0786225233078228,
+     "p99": 0.23187338282208475,
+     "max": 0.2453399456708541
+    },
+    "share_of_projected_steps_in_first_10pct_of_run": 0.23635090993933738,
+    "n_projected_steps_field_consistent": true
+   },
+   "replay": {
+    "formulas": "own RK4 (5 substeps) of own balance ODEs; simulator used only for evaporation",
+    "n_steps_total": 41472,
+    "steps_where_replay_differs_from_stored_(rel>1e-8)": 0,
+    "fraction_steps_differing": 0.0,
+    "runs_with_any_difference": 0,
+    "first_step_of_run_share_of_differences": 0.0,
+    "max_relative_deviation_on_non_flagged_steps": 9.856534473111527e-16,
+    "max_relative_deviation_per_state_all_steps": {
+     "solid_mass": 0.0,
+     "water_mass": 0.0,
+     "particle_count": 9.856534473111527e-16,
+     "bed_temperature": 0.0
+    },
+    "abs_water_mass_shortfall_kg_on_flagged_steps": null,
+    "moisture_shortfall_kg_per_kg_on_flagged_steps": null,
+    "run_level_cumulative_residual_relative_max_per_state": {
+     "solid_mass": 0.0,
+     "water_mass": 0.0,
+     "particle_count": 9.350414764718384e-16,
+     "bed_temperature": 0.0
+    }
+   },
+   "balance_trapezoid_25s": {
+    "note": "coarse second-order check independent of the integrator; the moisture mode has tau~15 s, so the water residual is dominated by trapezoid error, the solid one is tight",
+    "solid_closure_relative_to_total_solid_inflow_max": 2.6687394138635073e-05,
+    "water_closure_relative_to_total_sprayed_water_max": 0.01815157551609408,
+    "solid_product_flow_model_check_max_abs_kg_per_s": 0.0
+   },
+   "targets": {
+    "units": {
+     "energy_target": "kW (electrical power, absolute)",
+     "product_moisture": "kg water / kg dry solid",
+     "bed_temperature": "degC",
+     "d50": "um"
+    },
+    "energy_target_vs_recomputed_kw": {
+     "max_abs_diff": 0.0,
+     "max_rel_diff": 0.0,
+     "stats_kw": {
+      "min": 0.8028522256682368,
+      "p01": 0.8961971710858612,
+      "median": 2.2285105577632898,
+      "p99": 4.482248896650307,
+      "max": 4.641503914892233
+     }
+    },
+    "power_terms_vs_diagnostics_max_abs_kw": {
+     "heater": 0.0,
+     "fan": 0.0,
+     "pump": 0.0,
+     "atomiser": 0.0,
+     "total": 0.0
+    },
+    "energy_target_equals_power_total_diag_max_abs": 0.0,
+    "moisture_output_vs_mw_over_ms_max_abs": 0.0,
+    "bed_temperature_output_vs_state_max_abs": 0.0,
+    "d50_output_vs_recomputed_um_max_abs": 0.0,
+    "power_share_of_total_median": {
+     "heater": 0.9400319356785856,
+     "fan": 0.03722748222632,
+     "pump": 0.00012933184256521692,
+     "atomiser": 0.017325434055359513
+    }
+   },
+   "measurement_model": {
+    "bit_exact_regeneration": true,
+    "max_abs_diff": 0.0,
+    "noise_floor_rmse_measurement_vs_truth": {
+     "energy_target": 0.01286674188351158,
+     "bed_temperature_celsius": 0.37888209135356704,
+     "product_moisture_kg_per_kg": 0.0008146831799974808,
+     "d50_um": 2.9910802640471164
+    }
+   }
+  }
+ ]
+}
