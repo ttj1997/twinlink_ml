@@ -1,0 +1,559 @@
+{
+ "provenance": {
+  "git/commit": "97f27dd72cc983f54d5c5b22cbfd52bda6bfea59",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "archive_root": "\\\\nap.rz.tu-harburg.de\\ou-t2a-team$\\ResearchProjects\\BMWE TwinLink (ML)\\Code\\twinlink_ml (4)\\twinlink_ml",
+ "claims": {
+  "C1_split_29_68": {
+   "claim": "window-wise vs run-wise split: 29 to 68 % lower error",
+   "befund": "39",
+   "note": null,
+   "generators": [
+    "run_extra_trees_split_comparison.py"
+   ],
+   "analysis_scripts": {},
+   "artifacts": [
+    {
+     "artifact": "extra_trees_split_comparison.jsonl",
+     "kind": "records",
+     "n_records": 10,
+     "groups": [
+      {
+       "n_records": 10,
+       "git/commit_raw": "e54cf29fedd3887903c8169e6e5b118476509ff3-dirty",
+       "git/dirty_field": null,
+       "dirty_suffix_in_commit": true,
+       "platform": "Windows-11-10.0.26200-SP0",
+       "python": "3.14.2",
+       "torch": "2.13.0+cpu",
+       "process/fingerprint": "82f65f576a2e5253",
+       "projection": null,
+       "commit_resolvable": {
+        "this_repo": false,
+        "archive": true
+       },
+       "generators_at_commit": {
+        "run_extra_trees_split_comparison.py": {
+         "this_repo": false,
+         "archive": false
+        }
+       },
+       "traceable_to_clean_commit": false
+      }
+     ]
+    }
+   ],
+   "artifacts_not_traceable_to_clean_commit": [
+    "extra_trees_split_comparison.jsonl"
+   ]
+  },
+  "C2_k5_factors": {
+   "claim": "factor vs persistence on moisture: 1.31/1.70 constant, 4.4-24 excited",
+   "befund": "51 (K5)",
+   "note": null,
+   "generators": [
+    "run_arch_learning_curve_worker.py"
+   ],
+   "analysis_scripts": {},
+   "artifacts": [
+    {
+     "artifact": "arch_learning_curve_projected.jsonl",
+     "kind": "records",
+     "n_records": 200,
+     "groups": [
+      {
+       "n_records": 200,
+       "git/commit_raw": "0b3eaafc4f94efce9e8ec2550c6ca4ec5b37bf15",
+       "git/dirty_field": false,
+       "dirty_suffix_in_commit": false,
+       "platform": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+       "python": "3.11.15",
+       "torch": "2.13.0+cu130",
+       "process/fingerprint": "2d2679eeed716577",
+       "projection": true,
+       "commit_resolvable": {
+        "this_repo": false,
+        "archive": true
+       },
+       "generators_at_commit": {
+        "run_arch_learning_curve_worker.py": {
+         "this_repo": false,
+         "archive": true
+        }
+       },
+       "traceable_to_clean_commit": true
+      }
+     ]
+    }
+   ],
+   "artifacts_not_traceable_to_clean_commit": []
+  },
+  "C3_shift_63_14": {
+   "claim": "persistence shifts 6.3x, static regression 1.4x between test sets",
+   "befund": "58 OA5a / 59a",
+   "note": null,
+   "generators": [
+    "run_arch_learning_curve_worker.py"
+   ],
+   "analysis_scripts": {
+    "analyze_energy_target_static_factor.py": {
+     "exists_in_worktree": true,
+     "last_commit_archive": "f1a6152"
+    }
+   },
+   "artifacts": [
+    {
+     "artifact": "arch_learning_curve_projected.jsonl",
+     "kind": "records",
+     "n_records": 200,
+     "groups": [
+      {
+       "n_records": 200,
+       "git/commit_raw": "0b3eaafc4f94efce9e8ec2550c6ca4ec5b37bf15",
+       "git/dirty_field": false,
+       "dirty_suffix_in_commit": false,
+       "platform": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+       "python": "3.11.15",
+       "torch": "2.13.0+cu130",
+       "process/fingerprint": "2d2679eeed716577",
+       "projection": true,
+       "commit_resolvable": {
+        "this_repo": false,
+        "archive": true
+       },
+       "generators_at_commit": {
+        "run_arch_learning_curve_worker.py": {
+         "this_repo": false,
+         "archive": true
+        }
+       },
+       "traceable_to_clean_commit": true
+      }
+     ]
+    }
+   ],
+   "artifacts_not_traceable_to_clean_commit": []
+  },
+  "C4_energy_r2": {
+   "claim": "energy R2 0.972 static vs >=0.999 / >=0.9989, factor 5.2-7.8 in RMSE",
+   "befund": "59",
+   "note": "R2_static=0.972 is quoted from docs/02_prozess_setup.md (fp 82f65f576a2e5253, report_baselines.py, seeds 20260812-14, 32 runs), NOT from the Befund 51/58 data; the >=0.999 values are derived as 1-(1-0.972)/factor^2 (Befund 59b), not measured.",
+   "generators": [
+    "run_arch_learning_curve_worker.py"
+   ],
+   "analysis_scripts": {
+    "analyze_energy_target_static_factor.py": {
+     "exists_in_worktree": true,
+     "last_commit_archive": "f1a6152"
+    },
+    "report_baselines.py": {
+     "exists_in_worktree": true,
+     "last_commit_archive": "c62c5ae"
+    }
+   },
+   "artifacts": [
+    {
+     "artifact": "arch_learning_curve_projected.jsonl",
+     "kind": "records",
+     "n_records": 200,
+     "groups": [
+      {
+       "n_records": 200,
+       "git/commit_raw": "0b3eaafc4f94efce9e8ec2550c6ca4ec5b37bf15",
+       "git/dirty_field": false,
+       "dirty_suffix_in_commit": false,
+       "platform": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+       "python": "3.11.15",
+       "torch": "2.13.0+cu130",
+       "process/fingerprint": "2d2679eeed716577",
+       "projection": true,
+       "commit_resolvable": {
+        "this_repo": false,
+        "archive": true
+       },
+       "generators_at_commit": {
+        "run_arch_learning_curve_worker.py": {
+         "this_repo": false,
+         "archive": true
+        }
+       },
+       "traceable_to_clean_commit": true
+      }
+     ]
+    },
+    {
+     "artifact": "arch_learning_curve_projected_extended.jsonl",
+     "kind": "records",
+     "n_records": 120,
+     "groups": [
+      {
+       "n_records": 120,
+       "git/commit_raw": "256d64414e7e71c97ebadc7a81723c3a8b4f5026",
+       "git/dirty_field": false,
+       "dirty_suffix_in_commit": false,
+       "platform": "Windows-11-10.0.26200-SP0",
+       "python": "3.14.6",
+       "torch": "2.13.0+cpu",
+       "process/fingerprint": "2d2679eeed716577",
+       "projection": true,
+       "commit_resolvable": {
+        "this_repo": false,
+        "archive": true
+       },
+       "generators_at_commit": {
+        "run_arch_learning_curve_worker.py": {
+         "this_repo": false,
+         "archive": true
+        }
+       },
+       "traceable_to_clean_commit": true
+      }
+     ]
+    }
+   ],
+   "artifacts_not_traceable_to_clean_commit": []
+  },
+  "C5_resolution": {
+   "claim": "resolution with 5 seeds: 3.9-11 % / 35-91 %, ~40 seeds for 12.5 %",
+   "befund": "63",
+   "note": null,
+   "generators": [
+    "run_arch_learning_curve_worker.py"
+   ],
+   "analysis_scripts": {
+    "analyze_m2_resolution_verdicts.py": {
+     "exists_in_worktree": true,
+     "last_commit_archive": "47c5292"
+    }
+   },
+   "artifacts": [
+    {
+     "artifact": "analyze_m2_resolution_verdicts.json",
+     "kind": "analysis_json",
+     "has_git_fields": false,
+     "git/commit": null,
+     "git/dirty": null,
+     "last_archive_commit_touching_file": "45f2985",
+     "content_equals_archived_version": true,
+     "added_in_this_repo": "7384455",
+     "traceable_to_clean_commit": false
+    },
+    {
+     "artifact": "arch_learning_curve_projected.jsonl",
+     "kind": "records",
+     "n_records": 200,
+     "groups": [
+      {
+       "n_records": 200,
+       "git/commit_raw": "0b3eaafc4f94efce9e8ec2550c6ca4ec5b37bf15",
+       "git/dirty_field": false,
+       "dirty_suffix_in_commit": false,
+       "platform": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+       "python": "3.11.15",
+       "torch": "2.13.0+cu130",
+       "process/fingerprint": "2d2679eeed716577",
+       "projection": true,
+       "commit_resolvable": {
+        "this_repo": false,
+        "archive": true
+       },
+       "generators_at_commit": {
+        "run_arch_learning_curve_worker.py": {
+         "this_repo": false,
+         "archive": true
+        }
+       },
+       "traceable_to_clean_commit": true
+      }
+     ]
+    },
+    {
+     "artifact": "arch_learning_curve_projected_extended.jsonl",
+     "kind": "records",
+     "n_records": 120,
+     "groups": [
+      {
+       "n_records": 120,
+       "git/commit_raw": "256d64414e7e71c97ebadc7a81723c3a8b4f5026",
+       "git/dirty_field": false,
+       "dirty_suffix_in_commit": false,
+       "platform": "Windows-11-10.0.26200-SP0",
+       "python": "3.14.6",
+       "torch": "2.13.0+cpu",
+       "process/fingerprint": "2d2679eeed716577",
+       "projection": true,
+       "commit_resolvable": {
+        "this_repo": false,
+        "archive": true
+       },
+       "generators_at_commit": {
+        "run_arch_learning_curve_worker.py": {
+         "this_repo": false,
+         "archive": true
+        }
+       },
+       "traceable_to_clean_commit": true
+      }
+     ]
+    }
+   ],
+   "artifacts_not_traceable_to_clean_commit": [
+    "analyze_m2_resolution_verdicts.json"
+   ]
+  },
+  "C6_architectures": {
+   "claim": "GRU/LSTM 6/6 indistinguishable; Transformer 15.8 %, parity 1.000, 2.6 %; xLSTM/Mamba behind in 10/12",
+   "befund": "58, 63",
+   "note": null,
+   "generators": [
+    "run_arch_learning_curve_worker.py"
+   ],
+   "analysis_scripts": {
+    "analyze_m2_resolution_verdicts.py": {
+     "exists_in_worktree": true,
+     "last_commit_archive": "47c5292"
+    },
+    "analyze_epoch_budget_probe600.py": {
+     "exists_in_worktree": true,
+     "last_commit_archive": "d9dc8a7"
+    }
+   },
+   "artifacts": [
+    {
+     "artifact": "analyze_m2_resolution_verdicts.json",
+     "kind": "analysis_json",
+     "has_git_fields": false,
+     "git/commit": null,
+     "git/dirty": null,
+     "last_archive_commit_touching_file": "45f2985",
+     "content_equals_archived_version": true,
+     "added_in_this_repo": "7384455",
+     "traceable_to_clean_commit": false
+    },
+    {
+     "artifact": "arch_epoch_budget_probe600.jsonl",
+     "kind": "records",
+     "n_records": 20,
+     "groups": [
+      {
+       "n_records": 20,
+       "git/commit_raw": "7e3fb1d8786b0552d1ab193b60093a5a8dd6651f",
+       "git/dirty_field": false,
+       "dirty_suffix_in_commit": false,
+       "platform": "Windows-11-10.0.26200-SP0",
+       "python": "3.14.6",
+       "torch": "2.13.0+cpu",
+       "process/fingerprint": "2d2679eeed716577",
+       "projection": true,
+       "commit_resolvable": {
+        "this_repo": false,
+        "archive": true
+       },
+       "generators_at_commit": {
+        "run_arch_learning_curve_worker.py": {
+         "this_repo": false,
+         "archive": true
+        }
+       },
+       "traceable_to_clean_commit": true
+      }
+     ]
+    },
+    {
+     "artifact": "arch_learning_curve_projected_extended.jsonl",
+     "kind": "records",
+     "n_records": 120,
+     "groups": [
+      {
+       "n_records": 120,
+       "git/commit_raw": "256d64414e7e71c97ebadc7a81723c3a8b4f5026",
+       "git/dirty_field": false,
+       "dirty_suffix_in_commit": false,
+       "platform": "Windows-11-10.0.26200-SP0",
+       "python": "3.14.6",
+       "torch": "2.13.0+cpu",
+       "process/fingerprint": "2d2679eeed716577",
+       "projection": true,
+       "commit_resolvable": {
+        "this_repo": false,
+        "archive": true
+       },
+       "generators_at_commit": {
+        "run_arch_learning_curve_worker.py": {
+         "this_repo": false,
+         "archive": true
+        }
+       },
+       "traceable_to_clean_commit": true
+      }
+     ]
+    }
+   ],
+   "artifacts_not_traceable_to_clean_commit": [
+    "analyze_m2_resolution_verdicts.json"
+   ]
+  },
+  "C7_inference": {
+   "claim": "inference 183 us LSTM, 323 us GRU, ~3.1 ms Transformer; training ~10x",
+   "befund": "63a",
+   "note": null,
+   "generators": [
+    "run_arch_learning_curve_worker.py"
+   ],
+   "analysis_scripts": {
+    "analyze_m2_resolution_verdicts.py": {
+     "exists_in_worktree": true,
+     "last_commit_archive": "47c5292"
+    }
+   },
+   "artifacts": [
+    {
+     "artifact": "arch_learning_curve_projected.jsonl",
+     "kind": "records",
+     "n_records": 200,
+     "groups": [
+      {
+       "n_records": 200,
+       "git/commit_raw": "0b3eaafc4f94efce9e8ec2550c6ca4ec5b37bf15",
+       "git/dirty_field": false,
+       "dirty_suffix_in_commit": false,
+       "platform": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+       "python": "3.11.15",
+       "torch": "2.13.0+cu130",
+       "process/fingerprint": "2d2679eeed716577",
+       "projection": true,
+       "commit_resolvable": {
+        "this_repo": false,
+        "archive": true
+       },
+       "generators_at_commit": {
+        "run_arch_learning_curve_worker.py": {
+         "this_repo": false,
+         "archive": true
+        }
+       },
+       "traceable_to_clean_commit": true
+      }
+     ]
+    },
+    {
+     "artifact": "arch_learning_curve_projected_extended.jsonl",
+     "kind": "records",
+     "n_records": 120,
+     "groups": [
+      {
+       "n_records": 120,
+       "git/commit_raw": "256d64414e7e71c97ebadc7a81723c3a8b4f5026",
+       "git/dirty_field": false,
+       "dirty_suffix_in_commit": false,
+       "platform": "Windows-11-10.0.26200-SP0",
+       "python": "3.14.6",
+       "torch": "2.13.0+cpu",
+       "process/fingerprint": "2d2679eeed716577",
+       "projection": true,
+       "commit_resolvable": {
+        "this_repo": false,
+        "archive": true
+       },
+       "generators_at_commit": {
+        "run_arch_learning_curve_worker.py": {
+         "this_repo": false,
+         "archive": true
+        }
+       },
+       "traceable_to_clean_commit": true
+      }
+     ]
+    }
+   ],
+   "artifacts_not_traceable_to_clean_commit": []
+  },
+  "C8_moisture_abs": {
+   "claim": "moisture 0.00149 vs 0.00054 kg/kg (factor 2.7); persistence never beaten; early stopping ~24 vs ~170 epochs",
+   "befund": "55, 62 HA1",
+   "note": null,
+   "generators": [
+    "run_arch_constant_trained_learning_curve_worker.py",
+    "run_arch_learning_curve_worker.py"
+   ],
+   "analysis_scripts": {
+    "probe_bandit_env_ha1_margin_vs_prediction_error.py": {
+     "exists_in_worktree": true,
+     "last_commit_archive": "7e9ff67"
+    }
+   },
+   "artifacts": [
+    {
+     "artifact": "arch_learning_curve_constant_trained.jsonl",
+     "kind": "records",
+     "n_records": 200,
+     "groups": [
+      {
+       "n_records": 200,
+       "git/commit_raw": "1b85ce4cda1b9716ec37567b4f096602eabeb0f5",
+       "git/dirty_field": false,
+       "dirty_suffix_in_commit": false,
+       "platform": "Windows-11-10.0.26200-SP0",
+       "python": "3.14.6",
+       "torch": "2.13.0+cpu",
+       "process/fingerprint": "2d2679eeed716577",
+       "projection": true,
+       "commit_resolvable": {
+        "this_repo": false,
+        "archive": true
+       },
+       "generators_at_commit": {
+        "run_arch_constant_trained_learning_curve_worker.py": {
+         "this_repo": false,
+         "archive": true
+        },
+        "run_arch_learning_curve_worker.py": {
+         "this_repo": false,
+         "archive": true
+        }
+       },
+       "traceable_to_clean_commit": true
+      }
+     ]
+    },
+    {
+     "artifact": "arch_learning_curve_projected.jsonl",
+     "kind": "records",
+     "n_records": 200,
+     "groups": [
+      {
+       "n_records": 200,
+       "git/commit_raw": "0b3eaafc4f94efce9e8ec2550c6ca4ec5b37bf15",
+       "git/dirty_field": false,
+       "dirty_suffix_in_commit": false,
+       "platform": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+       "python": "3.11.15",
+       "torch": "2.13.0+cu130",
+       "process/fingerprint": "2d2679eeed716577",
+       "projection": true,
+       "commit_resolvable": {
+        "this_repo": false,
+        "archive": true
+       },
+       "generators_at_commit": {
+        "run_arch_constant_trained_learning_curve_worker.py": {
+         "this_repo": false,
+         "archive": false
+        },
+        "run_arch_learning_curve_worker.py": {
+         "this_repo": false,
+         "archive": true
+        }
+       },
+       "traceable_to_clean_commit": true
+      }
+     ]
+    }
+   ],
+   "artifacts_not_traceable_to_clean_commit": []
+  }
+ }
+}
