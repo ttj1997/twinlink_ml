@@ -50,3 +50,4 @@ artifacts/runs/_*
 # Ergebnis) -- dauerhaftes Muster statt Einzelfall-Entscheidung je Datei. Beruehrt nicht
 # die committeten *.jsonl-Ergebnisse im selben Verzeichnis (Endungen eindeutig getrennt).
 artifacts/runs/*.log
+artifacts/runs/raw_zw1/
