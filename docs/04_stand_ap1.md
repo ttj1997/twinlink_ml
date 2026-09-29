@@ -8244,3 +8244,77 @@ epochs": only for n <= 16, best epoch about 3-5. All other numbers are unchanged
 `verify_pr2_separation`, `verify_pr3_metrics`, `verify_pr4_records`, `verify_pr4_befund39`,
 `verify_pr4_timing`, `verify_pr4_retrain_lstm_seed4`, `verify_pr4_retrain_lstm_seed5` (all under
 `artifacts/runs/`).
+
+
+**Addendum to Befund 66 (2026-09-29): full test environment and two re-measurements.**
+
+**TE1 -- environment and dependencies.** Installed `pip install -e ".[torch,sklearn,plant-data,train,rl,dev]"`
+(torch 2.14.0+cpu, gymnasium 1.3.0, stable-baselines3 2.9.0, scikit-learn 1.9.1, openpyxl 3.1.5,
+lightning 2.6.6, mlflow 3.16.1, ruff 0.12.12, mypy 1.18.2). Correction to the premise: torch was
+already installed during Befund 66 (2.14.0+cpu); what was missing were the `sklearn`,
+`plant-data` and `rl` extras. `scripts/verify/te1_declared_dependencies.py` parses all 208+
+tracked `.py` files: every third-party import is already declared -- torch (extras `torch`,
+`train`, `rl`), scikit-learn (`sklearn`), openpyxl (`plant-data`), gymnasium and stable-baselines3
+(`rl`), mlflow (`train`), matplotlib and pytest (`dev`), numpy, scipy, pyyaml (base).
+**No declaration was missing; `pyproject.toml` is unchanged.** Declared but never imported
+statically: hydra-core, lightning (extra `train`), hypothesis, pytest-cov, nbstripout, mypy, ruff
+(dev tools or reserved). The scikit-learn side directory of Befund 66 (`%TEMP%\sk`) is now
+redundant. Artifact `verify_te1_declared_dependencies.json`.
+
+**TE2 -- full suite.** 512 tests collected, 511 passed, 1 skipped, 0 failed, 0 collection errors
+(before this installation: 472 collected, 464 passed, 8 skipped, `tests/test_plant_data.py` not
+collectable). 47 additional tests now run and pass: the 6 tests of `test_plant_data.py` (openpyxl)
+and the tests that the modules using `importorskip` for gymnasium, stable-baselines3 and
+scikit-learn had hidden behind a single skip each. The one remaining skip is
+`tests/test_experiments.py:317` ("checks only the error path without torch"): it is skipped
+because torch IS installed, not because `local/` is absent; it is intended, but it means the
+no-torch error path is untested in this environment. No torch-dependent test failed; because
+torch was present throughout, there was no set of torch tests that newly started to run.
+No skip is due to a missing `local/`; the denylist test ran and passed.
+
+**TE3a -- inference and training time, one machine, one thread, no parallel load.** AMD64
+(16 logical CPUs), Windows 11, torch 2.14.0+cpu, `torch.set_num_threads(1)` and
+`OMP/MKL_NUM_THREADS=1`; 4352 excited test windows (seed 1), batch 4096; 3 warm-up passes for
+EVERY model before timing; 15 timed passes in forward model order and 15 in reversed order;
+networks from the archive checkpoints. Nothing else ran during the measurement.
+
+| Architecture | Inference, median us/window (both rounds) | Range (min-max) | Forward / reversed round | Ratio to LSTM | Training, s per epoch (3 heads, n=64) | Ratio to LSTM |
+|---|---|---|---|---|---|---|
+| LSTM | 51.5 | 50.2-59.4 | 50.8 / 52.9 | 1.0 | 4.17 | 1.0 |
+| GRU | 107.0 | 104.0-114.4 | 104.2 / 110.8 | 2.08 | 3.86 | 0.93 |
+| Transformer | 2394 | 2365-2502 | 2376 / 2401 | 46.4 | 59.5 | 14.3 |
+| xLSTM | 901 | 885-932 | 892 / 909 | 17.5 | 23.0 | 5.5 |
+| Mamba | 322 | 318-338 | 323 / 322 | 6.25 | 11.6 | 2.8 |
+
+Training: one discarded warm-up epoch, then 3 timed epochs per architecture, patience raised so
+that no early stop occurs. The relative range of the inference times is 5-18 % (LSTM widest,
+Transformer 6 %); the order-reversed round differs from the forward round by at most 4 %, i.e.
+no residual warm-up effect. **Correction to Befund 66:** the earlier same-machine LSTM epoch cost
+(12.9 s) contained the warm-up; without it LSTM and GRU cost the same per epoch (4.2 vs 3.9 s),
+and the per-epoch Transformer/LSTM ratio is 14.3, not 4.6. The inference values of Befund 66
+(LSTM 52, GRU 108, Transformer 2394 us) are confirmed; they are unchanged by warm-up. Total
+training time additionally depends on the epochs run (records: 144 per head for LSTM at 200
+epochs, up to 439 per head for the Transformer at 600), so the "about tenfold" of the abstract is of the
+right size per epoch but depends on the epoch counts; the quoted 183 / 323 us remain a Linux
+measurement under four parallel jobs and are not comparable with the Transformer figure.
+Artifact `verify_te3a_timing_all.json`.
+
+**TE3b -- static regression at h=36.** Excited test set over constant-run holdout, absolute
+error (`rmse_run_median_physical`, `energy_target`, median over 5 seeds), same horizon for both
+baselines (`verify_te3b_static_shift.json`, from the committed records):
+
+| Horizon | Persistence (n=64) | Static regression (n=64) | Static, n=8 / 16 / 32 | GRU (n=64) | LSTM (n=64) |
+|---|---|---|---|---|---|
+| h=1 | 6.26 (per seed 5.8-6.7) | 1.40 (1.12-1.80) | 1.03 / 1.25 / 1.35 | 1.11 | 1.06 |
+| h=36 | 18.32 (per seed 18.2-20.4) | 1.39 (1.11-1.78) | 1.04 / 1.24 / 1.37 | 1.04 | 1.00 |
+
+The static regression shifts by the same factor at h=36 as at h=1 (1.39 vs 1.40; the values
+0.1115 / 0.0802 kW at h=36 and 0.1113 / 0.0794 kW at h=1). This is expected, as the static
+prediction does not depend on the history or the horizon; the seed-to-seed spread of the
+ratio (1.1-1.8) is wider than the difference between horizons. Persistence shifts 6.3-fold at h=1
+and 18-fold at h=36, so "persistence 6.3-fold, static 1.4-fold" is a consistent pair at h=1 and
+the contrast is stronger, not weaker, at h=36. The shift of the static regression depends on the
+budget (1.03 at n=8 to 1.40 at n=64). Abstract wording: state the horizon (h=1) next to the pair,
+or quote both horizons.
+
+Artifacts: `verify_te1_declared_dependencies`, `verify_te3a_timing_all`, `verify_te3b_static_shift`.
