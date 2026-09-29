@@ -1,0 +1,175 @@
+{
+ "provenance": {
+  "git/commit": "c096833b865b3c20b0b831e1c49f91e701360cee",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "pools": [
+  {
+   "kind": "excited",
+   "seed": 1,
+   "lstm_reference_test_set": "excited",
+   "all_runs": {
+    "n_runs": 128,
+    "energy_target": {
+     "median_of_per_run_rmse": 1.102681827137987e-07,
+     "p90_of_per_run_rmse": 7.069761849826721e-07,
+     "max_of_per_run_rmse": 3.4457485111962544e-06,
+     "lstm_error_n64_h36_median": 0.014258659251519177,
+     "median_over_lstm_error": 7.733418743564566e-06,
+     "max_over_lstm_error": 0.0002416600642749163,
+     "n_runs_above_one_tenth_of_lstm_error": 0
+    },
+    "bed_temperature_celsius": {
+     "median_of_per_run_rmse": 1.4475461738481125e-05,
+     "p90_of_per_run_rmse": 8.53327314550619e-05,
+     "max_of_per_run_rmse": 0.0003806096114429144,
+     "lstm_error_n64_h36_median": 0.42863742567368873,
+     "median_over_lstm_error": 3.377087690308439e-05,
+     "max_over_lstm_error": 0.00088795235470797,
+     "n_runs_above_one_tenth_of_lstm_error": 0
+    },
+    "product_moisture_kg_per_kg": {
+     "median_of_per_run_rmse": 1.838146134614965e-08,
+     "p90_of_per_run_rmse": 1.0110357728010872e-07,
+     "max_of_per_run_rmse": 1.3699996557817188e-06,
+     "lstm_error_n64_h36_median": 0.0005107313408606714,
+     "median_over_lstm_error": 3.599047067519624e-05,
+     "max_over_lstm_error": 0.002682427229691897,
+     "n_runs_above_one_tenth_of_lstm_error": 0
+    }
+   },
+   "test_block": {
+    "n_runs": 32,
+    "energy_target": {
+     "median_of_per_run_rmse": 8.049188585992017e-08,
+     "p90_of_per_run_rmse": 4.7412766845571334e-07,
+     "max_of_per_run_rmse": 3.4457485111962544e-06,
+     "lstm_error_n64_h36_median": 0.014258659251519177,
+     "median_over_lstm_error": 5.645123039976162e-06,
+     "max_over_lstm_error": 0.0002416600642749163,
+     "n_runs_above_one_tenth_of_lstm_error": 0
+    },
+    "bed_temperature_celsius": {
+     "median_of_per_run_rmse": 1.1381789105545052e-05,
+     "p90_of_per_run_rmse": 5.571402680472482e-05,
+     "max_of_per_run_rmse": 0.0003806096114429144,
+     "lstm_error_n64_h36_median": 0.42863742567368873,
+     "median_over_lstm_error": 2.6553418865971193e-05,
+     "max_over_lstm_error": 0.00088795235470797,
+     "n_runs_above_one_tenth_of_lstm_error": 0
+    },
+    "product_moisture_kg_per_kg": {
+     "median_of_per_run_rmse": 2.0222276427733972e-08,
+     "p90_of_per_run_rmse": 1.0085412904152369e-07,
+     "max_of_per_run_rmse": 1.3699996557817188e-06,
+     "lstm_error_n64_h36_median": 0.0005107313408606714,
+     "median_over_lstm_error": 3.959474347835382e-05,
+     "max_over_lstm_error": 0.002682427229691897,
+     "n_runs_above_one_tenth_of_lstm_error": 0
+    }
+   }
+  },
+  {
+   "kind": "holdout",
+   "seed": 999,
+   "lstm_reference_test_set": "constant_holdout",
+   "all_runs": {
+    "n_runs": 36,
+    "energy_target": {
+     "median_of_per_run_rmse": 2.0524112191048946e-09,
+     "p90_of_per_run_rmse": 3.22286758540179e-08,
+     "max_of_per_run_rmse": 2.0041250775076504e-06,
+     "lstm_error_n64_h36_median": 0.014272586911465834,
+     "median_over_lstm_error": 1.438009263377543e-07,
+     "max_over_lstm_error": 0.00014041778760496762,
+     "n_runs_above_one_tenth_of_lstm_error": 0
+    },
+    "bed_temperature_celsius": {
+     "median_of_per_run_rmse": 2.916734207760917e-07,
+     "p90_of_per_run_rmse": 5.139560675846364e-06,
+     "max_of_per_run_rmse": 0.0002720542314071691,
+     "lstm_error_n64_h36_median": 0.4490138678065214,
+     "median_over_lstm_error": 6.495866646634905e-07,
+     "max_over_lstm_error": 0.0006058927149314604,
+     "n_runs_above_one_tenth_of_lstm_error": 0
+    },
+    "product_moisture_kg_per_kg": {
+     "median_of_per_run_rmse": 4.167723499582198e-10,
+     "p90_of_per_run_rmse": 2.3282700036279683e-08,
+     "max_of_per_run_rmse": 6.03483355184914e-07,
+     "lstm_error_n64_h36_median": 0.000542738535806486,
+     "median_over_lstm_error": 7.679063166924644e-07,
+     "max_over_lstm_error": 0.0011119228051278205,
+     "n_runs_above_one_tenth_of_lstm_error": 0
+    }
+   },
+   "test_block": {
+    "n_runs": 32,
+    "energy_target": {
+     "median_of_per_run_rmse": 2.1361851049866984e-09,
+     "p90_of_per_run_rmse": 3.2472570965662715e-08,
+     "max_of_per_run_rmse": 2.0041250775076504e-06,
+     "lstm_error_n64_h36_median": 0.014272586911465834,
+     "median_over_lstm_error": 1.4967049198842863e-07,
+     "max_over_lstm_error": 0.00014041778760496762,
+     "n_runs_above_one_tenth_of_lstm_error": 0
+    },
+    "bed_temperature_celsius": {
+     "median_of_per_run_rmse": 2.493736095420412e-07,
+     "p90_of_per_run_rmse": 5.399525915301503e-06,
+     "max_of_per_run_rmse": 0.0002720542314071691,
+     "lstm_error_n64_h36_median": 0.4490138678065214,
+     "median_over_lstm_error": 5.553806406030547e-07,
+     "max_over_lstm_error": 0.0006058927149314604,
+     "n_runs_above_one_tenth_of_lstm_error": 0
+    },
+    "product_moisture_kg_per_kg": {
+     "median_of_per_run_rmse": 4.0215034219976386e-10,
+     "p90_of_per_run_rmse": 3.0465188694293804e-08,
+     "max_of_per_run_rmse": 6.03483355184914e-07,
+     "lstm_error_n64_h36_median": 0.000542738535806486,
+     "median_over_lstm_error": 7.409651529574657e-07,
+     "max_over_lstm_error": 0.0011119228051278205,
+     "n_runs_above_one_tenth_of_lstm_error": 0
+    }
+   }
+  },
+  {
+   "kind": "constant_train",
+   "seed": 1,
+   "lstm_reference_test_set": "constant_holdout",
+   "all_runs": {
+    "n_runs": 128,
+    "energy_target": {
+     "median_of_per_run_rmse": 1.9834764741554175e-09,
+     "p90_of_per_run_rmse": 6.25791429815576e-08,
+     "max_of_per_run_rmse": 2.0245405575642e-06,
+     "lstm_error_n64_h36_median": 0.014272586911465834,
+     "median_over_lstm_error": 1.3897105594515586e-07,
+     "max_over_lstm_error": 0.00014184818562483527,
+     "n_runs_above_one_tenth_of_lstm_error": 0
+    },
+    "bed_temperature_celsius": {
+     "median_of_per_run_rmse": 3.0467016794466086e-07,
+     "p90_of_per_run_rmse": 9.04268265980422e-06,
+     "max_of_per_run_rmse": 0.0003279637044662681,
+     "lstm_error_n64_h36_median": 0.4490138678065214,
+     "median_over_lstm_error": 6.785317554511305e-07,
+     "max_over_lstm_error": 0.0007304088536694964,
+     "n_runs_above_one_tenth_of_lstm_error": 0
+    },
+    "product_moisture_kg_per_kg": {
+     "median_of_per_run_rmse": 6.804067965797328e-10,
+     "p90_of_per_run_rmse": 5.21092717413232e-08,
+     "max_of_per_run_rmse": 2.539060367881553e-06,
+     "lstm_error_n64_h36_median": 0.000542738535806486,
+     "median_over_lstm_error": 1.253654847943822e-06,
+     "max_over_lstm_error": 0.00467823859993398,
+     "n_runs_above_one_tenth_of_lstm_error": 0
+    }
+   }
+  }
+ ]
+}
