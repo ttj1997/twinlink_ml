@@ -7929,6 +7929,8 @@ question for whoever next revisits the material model.
 
 ### 65. Soft-sensor accuracy requirement at the moisture limit -- met, but with a 3.35x smaller safety reserve right at the optimum, because the boundary region is under-represented in training
 
+**Note (2026-09-30): GA2c and GA3 below are superseded by the addendum at the end of this entry.** GA2c ("measurably less accurate right at the moisture limit than on average") and GA3 ("3.35x smaller safety reserve") rest on a quotient formed from unequal estimators (run-median over the 5 of 32 runs that reach the class, divided by run-median over all 32 runs) and on the selection of harder runs; with the same estimator on both sides the quotient is 0.90 (excited-trained) and 0.98 (constant-trained). The 3.35 itself reproduces exactly; the reserve against the local error is 1.55 (excited) and 0.995 (constant). Nothing below was deleted or changed.
+
 **a) Purpose and scope.** Befund 64 (KA2, decoupled) gives the fraction of Befund 52's
 control benefit that survives as a function of the safety margin held at the moisture
 limit -- measured against ONE global soft-sensor error (Befund 62 HA1's 5-seed median
