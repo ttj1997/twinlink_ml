@@ -1,0 +1,281 @@
+{
+ "provenance": {
+  "git/commit": "3546d548f1a7390696eb80e243ef9b11e0372828",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "sklearn_version_(installed_isolated_via_PYTHONPATH,_absent_from_the_environment)": "1.9.1",
+ "records": {
+  "params_that_differ_between_arms": [
+   "fit_seconds",
+   "model/n_parameters",
+   "n_test_windows",
+   "n_train_windows",
+   "split/kind"
+  ],
+  "from_records": {
+   "energy_target": {
+    "run_level_median": 0.3663275564127111,
+    "point_level_median": 0.26106715169761496,
+    "ratio_point_over_run": 0.7126604240590957,
+    "reduction_percent": 28.73395759409043,
+    "run_level_range": [
+     0.2956382745840107,
+     0.4463836876100752
+    ],
+    "point_level_range": [
+     0.24223711004286425,
+     0.2635277421686274
+    ],
+    "ranges_disjoint": true
+   },
+   "product_moisture_kg_per_kg": {
+    "run_level_median": 0.26158628546558893,
+    "point_level_median": 0.08346147099400746,
+    "ratio_point_over_run": 0.31905904717235883,
+    "reduction_percent": 68.09409528276412,
+    "run_level_range": [
+     0.15045341283265445,
+     0.39460912909415
+    ],
+    "point_level_range": [
+     0.06326644808896376,
+     0.12851337254176146
+    ],
+    "ranges_disjoint": true
+   },
+   "d50_um": {
+    "run_level_median": 0.16481080314744811,
+    "point_level_median": 0.07964955186061085,
+    "ratio_point_over_run": 0.4832787070963565,
+    "reduction_percent": 51.67212929036435,
+    "run_level_range": [
+     0.11578637800008577,
+     0.1760795083720012
+    ],
+    "point_level_range": [
+     0.07410334212798729,
+     0.08653388550375268
+    ],
+    "ranges_disjoint": true
+   }
+  },
+  "n_train_windows": {
+   "run_level": [
+    73536,
+    73536,
+    73536,
+    73536,
+    73536
+   ],
+   "point_level": [
+    73479,
+    73706,
+    73698,
+    73598,
+    73414
+   ]
+  },
+  "model": {
+   "run_level": [
+    "extra_trees100"
+   ],
+   "point_level": [
+    "extra_trees100"
+   ]
+  },
+  "data_fingerprints_equal_between_arms": true,
+  "record_target_names": [
+   "energy_target",
+   "product_moisture_kg_per_kg",
+   "d50_um"
+  ],
+  "record_git_commit": [
+   "e54cf29fedd3887903c8169e6e5b118476509ff3-dirty"
+  ],
+  "record_process_fingerprint": [
+   "82f65f576a2e5253"
+  ]
+ },
+ "rerun_per_seed": [
+  {
+   "seed": 1,
+   "n_train_windows": {
+    "run_level": 73536,
+    "point_level": 73500
+   },
+   "nrmse_run_median_h1": {
+    "energy_target": {
+     "run_level": 0.29739380432500895,
+     "point_level": 0.24403245123315412
+    },
+    "product_moisture_kg_per_kg": {
+     "run_level": 0.3797681201927888,
+     "point_level": 0.12644247360246405
+    },
+    "d50_um": {
+     "run_level": 0.11528447267654283,
+     "point_level": 0.07294675379478555
+    }
+   }
+  },
+  {
+   "seed": 2,
+   "n_train_windows": {
+    "run_level": 73536,
+    "point_level": 73450
+   },
+   "nrmse_run_median_h1": {
+    "energy_target": {
+     "run_level": 0.44511978031999505,
+     "point_level": 0.25375697953451914
+    },
+    "product_moisture_kg_per_kg": {
+     "run_level": 0.15769814334730575,
+     "point_level": 0.0636919005799799
+    },
+    "d50_um": {
+     "run_level": 0.17498196271318786,
+     "point_level": 0.08330472574889866
+    }
+   }
+  },
+  {
+   "seed": 3,
+   "n_train_windows": {
+    "run_level": 73536,
+    "point_level": 73652
+   },
+   "nrmse_run_median_h1": {
+    "energy_target": {
+     "run_level": 0.456297639119293,
+     "point_level": 0.25315421614258143
+    },
+    "product_moisture_kg_per_kg": {
+     "run_level": 0.1555734493674166,
+     "point_level": 0.06609436599555397
+    },
+    "d50_um": {
+     "run_level": 0.16448575632628373,
+     "point_level": 0.0783128517982756
+    }
+   }
+  },
+  {
+   "seed": 4,
+   "n_train_windows": {
+    "run_level": 73536,
+    "point_level": 73730
+   },
+   "nrmse_run_median_h1": {
+    "energy_target": {
+     "run_level": 0.31150407361560983,
+     "point_level": 0.24275700526014984
+    },
+    "product_moisture_kg_per_kg": {
+     "run_level": 0.28538567871741505,
+     "point_level": 0.08287090903469752
+    },
+    "d50_um": {
+     "run_level": 0.16715211789553358,
+     "point_level": 0.08932764703054229
+    }
+   }
+  },
+  {
+   "seed": 5,
+   "n_train_windows": {
+    "run_level": 73536,
+    "point_level": 73471
+   },
+   "nrmse_run_median_h1": {
+    "energy_target": {
+     "run_level": 0.3613260227908334,
+     "point_level": 0.2736465634242975
+    },
+    "product_moisture_kg_per_kg": {
+     "run_level": 0.37715605908307526,
+     "point_level": 0.08485157808320504
+    },
+    "d50_um": {
+     "run_level": 0.1312274413181851,
+     "point_level": 0.07899230567862074
+    }
+   }
+  }
+ ],
+ "rerun_summary": {
+  "energy_target": {
+   "run_level_median": 0.3613260227908334,
+   "point_level_median": 0.25315421614258143,
+   "ratio": 0.700625474432349,
+   "reduction_percent": 29.9374525567651,
+   "run_level_range": [
+    0.29739380432500895,
+    0.456297639119293
+   ],
+   "point_level_range": [
+    0.24275700526014984,
+    0.2736465634242975
+   ],
+   "ranges_disjoint": true
+  },
+  "product_moisture_kg_per_kg": {
+   "run_level_median": 0.28538567871741505,
+   "point_level_median": 0.08287090903469752,
+   "ratio": 0.2903821572516789,
+   "reduction_percent": 70.96178427483211,
+   "run_level_range": [
+    0.1555734493674166,
+    0.3797681201927888
+   ],
+   "point_level_range": [
+    0.0636919005799799,
+    0.12644247360246405
+   ],
+   "ranges_disjoint": true
+  },
+  "d50_um": {
+   "run_level_median": 0.16448575632628373,
+   "point_level_median": 0.07899230567862074,
+   "ratio": 0.48023796979677014,
+   "reduction_percent": 51.976203020322984,
+   "run_level_range": [
+    0.11528447267654283,
+    0.17498196271318786
+   ],
+   "point_level_range": [
+    0.07294675379478555,
+    0.08932764703054229
+   ],
+   "ranges_disjoint": true
+  }
+ },
+ "lstm_repetition_runtime_estimate": {
+  "basis_records": "arch_learning_curve_projected, lstm, n_train=64 (Linux, 4 jobs in parallel), median over 5 seeds",
+  "reference_fit_elapsed_s": 1283.8340863740013,
+  "reference_mean_epochs_per_head": 144.33333333333334,
+  "reference_gradient_steps_per_head": 4907.333333333333,
+  "reference_seconds_per_gradient_step_per_head": 0.0872051410388535,
+  "new_geometry": {
+   "history": 3,
+   "horizon": 1,
+   "train_windows_per_fit": 73536,
+   "sequence_steps": 4,
+   "gradient_steps_per_epoch": 288.0
+  },
+  "one_fit_lower_bound_s_(cost_scales_with_sequence_length)": 638.0300022680483,
+  "one_fit_upper_bound_s_(cost_scales_with_gradient_steps_only)": 10874.829908109186,
+  "assumption": "same epochs as the n_train=64 excited fits (early stopping needs a validation block, which the ExtraTrees comparison does not have); 3 heads",
+  "full_repetition_5_seeds_x_2_arms_sequential_h": [
+   1.7723055618556898,
+   30.20786085585885
+  ],
+  "full_repetition_with_4_parallel_jobs_h": [
+   0.5316916685567069,
+   9.062358256757655
+  ],
+  "not_executed": true
+ }
+}
