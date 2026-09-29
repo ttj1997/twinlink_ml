@@ -1,0 +1,759 @@
+{
+ "provenance": {
+  "git/commit": "891b511d8dbba930a475175fdd5edc98fff67f03",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "process_fingerprint": "bddca37f716f5cfc",
+ "n_runs": 50,
+ "n_steps": 1152,
+ "sample_time_s": 25.0,
+ "seeds": {
+  "initial_states": 20260931,
+  "sensor_noise": 20260932
+ },
+ "dataset_file": "artifacts/runs/raw_ev3/dataset.npz (git-ignored)",
+ "dataset_sha256": "8f63b2318d3a5122c839d2c429fd571592a707b607a24d55377e04adbe100925",
+ "dataset_bytes": 3364950,
+ "run_ids": [
+  "ev3opt-fdf18c8f-00-r0",
+  "ev3opt-fdf18c8f-00-r1",
+  "ev3opt-fdf18c8f-01-r0",
+  "ev3opt-fdf18c8f-01-r1",
+  "ev3opt-fdf18c8f-02-r0",
+  "ev3opt-fdf18c8f-02-r1",
+  "ev3opt-fdf18c8f-03-r0",
+  "ev3opt-fdf18c8f-03-r1",
+  "ev3opt-fdf18c8f-04-r0",
+  "ev3opt-fdf18c8f-04-r1",
+  "ev3opt-fdf18c8f-05-r0",
+  "ev3opt-fdf18c8f-05-r1",
+  "ev3opt-fdf18c8f-06-r0",
+  "ev3opt-fdf18c8f-06-r1",
+  "ev3opt-fdf18c8f-07-r0",
+  "ev3opt-fdf18c8f-07-r1",
+  "ev3opt-fdf18c8f-08-r0",
+  "ev3opt-fdf18c8f-08-r1",
+  "ev3opt-fdf18c8f-09-r0",
+  "ev3opt-fdf18c8f-09-r1",
+  "ev3opt-fdf18c8f-10-r0",
+  "ev3opt-fdf18c8f-10-r1",
+  "ev3opt-fdf18c8f-11-r0",
+  "ev3opt-fdf18c8f-11-r1",
+  "ev3opt-fdf18c8f-12-r0",
+  "ev3opt-fdf18c8f-12-r1",
+  "ev3opt-fdf18c8f-13-r0",
+  "ev3opt-fdf18c8f-13-r1",
+  "ev3opt-fdf18c8f-14-r0",
+  "ev3opt-fdf18c8f-14-r1",
+  "ev3opt-fdf18c8f-15-r0",
+  "ev3opt-fdf18c8f-15-r1",
+  "ev3opt-fdf18c8f-16-r0",
+  "ev3opt-fdf18c8f-16-r1",
+  "ev3opt-fdf18c8f-17-r0",
+  "ev3opt-fdf18c8f-17-r1",
+  "ev3opt-fdf18c8f-18-r0",
+  "ev3opt-fdf18c8f-18-r1",
+  "ev3opt-fdf18c8f-19-r0",
+  "ev3opt-fdf18c8f-19-r1",
+  "ev3opt-fdf18c8f-20-r0",
+  "ev3opt-fdf18c8f-20-r1",
+  "ev3opt-fdf18c8f-21-r0",
+  "ev3opt-fdf18c8f-21-r1",
+  "ev3opt-fdf18c8f-22-r0",
+  "ev3opt-fdf18c8f-22-r1",
+  "ev3opt-fdf18c8f-23-r0",
+  "ev3opt-fdf18c8f-23-r1",
+  "ev3opt-fdf18c8f-24-r0",
+  "ev3opt-fdf18c8f-24-r1"
+ ],
+ "scenarios": [
+  {
+   "scenario": 0,
+   "ambient_temperature_celsius": 5.0,
+   "ambient_relative_humidity": 0.25,
+   "inlet_temperature_celsius": 73.90400797962472,
+   "gas_velocity_m_per_s": 0.800131237008538,
+   "nozzle_pressure_bar": 1.0083997756408234,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": true,
+   "moisture_last_step_r0_r1": [
+    0.19999435464640847,
+    0.19999527787711852
+   ],
+   "moisture_max_r0_r1": [
+    0.19999435464640847,
+    0.19999527787711852
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.8194444444444444,
+    0.8376736111111112
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 1,
+   "ambient_temperature_celsius": 5.0,
+   "ambient_relative_humidity": 0.4,
+   "inlet_temperature_celsius": 74.57264748594491,
+   "gas_velocity_m_per_s": 0.800148958034117,
+   "nozzle_pressure_bar": 1.0073686135937039,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": true,
+   "moisture_last_step_r0_r1": [
+    0.19999372796000844,
+    0.1999944920838865
+   ],
+   "moisture_max_r0_r1": [
+    0.19999372796000844,
+    0.1999944920838865
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.8185763888888888,
+    0.8315972222222222
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 2,
+   "ambient_temperature_celsius": 5.0,
+   "ambient_relative_humidity": 0.55,
+   "inlet_temperature_celsius": 75.22738324014043,
+   "gas_velocity_m_per_s": 0.8001204792509937,
+   "nozzle_pressure_bar": 1.0014599409560598,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": true,
+   "moisture_last_step_r0_r1": [
+    0.19999305031010167,
+    0.19999532447936083
+   ],
+   "moisture_max_r0_r1": [
+    0.19999305031010167,
+    0.19999532447936083
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.8168402777777778,
+    0.8576388888888888
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 3,
+   "ambient_temperature_celsius": 5.0,
+   "ambient_relative_humidity": 0.7,
+   "inlet_temperature_celsius": 75.85729107044338,
+   "gas_velocity_m_per_s": 0.8001937530466643,
+   "nozzle_pressure_bar": 1.0001695311898398,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": true,
+   "moisture_last_step_r0_r1": [
+    0.1999922880093106,
+    0.19999741675229654
+   ],
+   "moisture_max_r0_r1": [
+    0.1999922880093106,
+    0.19999741675229654
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.8151041666666666,
+    0.9296875
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 4,
+   "ambient_temperature_celsius": 5.0,
+   "ambient_relative_humidity": 0.85,
+   "inlet_temperature_celsius": 76.47635241464891,
+   "gas_velocity_m_per_s": 0.8002061385118446,
+   "nozzle_pressure_bar": 1.0110954793893936,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": true,
+   "moisture_last_step_r0_r1": [
+    0.19999153699845196,
+    0.19999275709888878
+   ],
+   "moisture_max_r0_r1": [
+    0.19999153699845196,
+    0.19999275709888878
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.8133680555555556,
+    0.8298611111111112
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 5,
+   "ambient_temperature_celsius": 12.5,
+   "ambient_relative_humidity": 0.25,
+   "inlet_temperature_celsius": 73.6758875531831,
+   "gas_velocity_m_per_s": 0.8008578302358627,
+   "nozzle_pressure_bar": 1.006229766685535,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": true,
+   "moisture_last_step_r0_r1": [
+    0.19999360127832208,
+    0.19999380953714224
+   ],
+   "moisture_max_r0_r1": [
+    0.19999360127832208,
+    0.19999380953714224
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.8177083333333334,
+    0.8211805555555556
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 6,
+   "ambient_temperature_celsius": 12.5,
+   "ambient_relative_humidity": 0.4,
+   "inlet_temperature_celsius": 74.80831201201877,
+   "gas_velocity_m_per_s": 0.800069633064936,
+   "nozzle_pressure_bar": 1.0075321808129944,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": true,
+   "moisture_last_step_r0_r1": [
+    0.19999243856310545,
+    0.1999918637522616
+   ],
+   "moisture_max_r0_r1": [
+    0.19999243856310545,
+    0.1999918637522616
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.8151041666666666,
+    0.8072916666666666
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 7,
+   "ambient_temperature_celsius": 12.5,
+   "ambient_relative_humidity": 0.55,
+   "inlet_temperature_celsius": 75.83812017449179,
+   "gas_velocity_m_per_s": 0.8000160763536313,
+   "nozzle_pressure_bar": 1.001991766091708,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": true,
+   "moisture_last_step_r0_r1": [
+    0.19999105000051784,
+    0.199994074853138
+   ],
+   "moisture_max_r0_r1": [
+    0.19999105000051784,
+    0.199994074853138
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.8125,
+    0.8567708333333334
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 8,
+   "ambient_temperature_celsius": 12.5,
+   "ambient_relative_humidity": 0.7,
+   "inlet_temperature_celsius": 76.81846934479981,
+   "gas_velocity_m_per_s": 0.8000806682824244,
+   "nozzle_pressure_bar": 1.0095718981686634,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": true,
+   "moisture_last_step_r0_r1": [
+    0.1999896746513176,
+    0.19999042366669842
+   ],
+   "moisture_max_r0_r1": [
+    0.1999896746513176,
+    0.19999042366669842
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.8098958333333334,
+    0.8177083333333334
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 9,
+   "ambient_temperature_celsius": 12.5,
+   "ambient_relative_humidity": 0.85,
+   "inlet_temperature_celsius": 77.77086120186199,
+   "gas_velocity_m_per_s": 0.8000305747585623,
+   "nozzle_pressure_bar": 1.004270882839853,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": true,
+   "moisture_last_step_r0_r1": [
+    0.19998801554909018,
+    0.1999904171480208
+   ],
+   "moisture_max_r0_r1": [
+    0.19998801554909018,
+    0.1999904171480208
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.8072916666666666,
+    0.8315972222222222
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 10,
+   "ambient_temperature_celsius": 20.0,
+   "ambient_relative_humidity": 0.25,
+   "inlet_temperature_celsius": 65.78274110006765,
+   "gas_velocity_m_per_s": 0.9193677771632893,
+   "nozzle_pressure_bar": 1.0094658165236405,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": true,
+   "moisture_last_step_r0_r1": [
+    0.19999521402203513,
+    0.19999880480301394
+   ],
+   "moisture_max_r0_r1": [
+    0.19999521402203513,
+    0.19999880480301394
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.8229166666666666,
+    0.9600694444444444
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 11,
+   "ambient_temperature_celsius": 20.0,
+   "ambient_relative_humidity": 0.4,
+   "inlet_temperature_celsius": 62.35489632200921,
+   "gas_velocity_m_per_s": 1.0164329720408487,
+   "nozzle_pressure_bar": 1.007676158105848,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": true,
+   "moisture_last_step_r0_r1": [
+    0.19999533690088814,
+    0.1999960411300332
+   ],
+   "moisture_max_r0_r1": [
+    0.19999533690088814,
+    0.1999960411300332
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.8246527777777778,
+    0.8411458333333334
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 12,
+   "ambient_temperature_celsius": 20.0,
+   "ambient_relative_humidity": 0.55,
+   "inlet_temperature_celsius": 77.08465910243822,
+   "gas_velocity_m_per_s": 0.8000417498147472,
+   "nozzle_pressure_bar": 1.0020978982712805,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": true,
+   "moisture_last_step_r0_r1": [
+    0.19998748664975474,
+    0.19998692784496402
+   ],
+   "moisture_max_r0_r1": [
+    0.19998748664975474,
+    0.19998692784496402
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.8064236111111112,
+    0.8020833333333334
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 13,
+   "ambient_temperature_celsius": 20.0,
+   "ambient_relative_humidity": 0.7,
+   "inlet_temperature_celsius": 78.20715989984302,
+   "gas_velocity_m_per_s": 0.8043563811708438,
+   "nozzle_pressure_bar": 1.0076052944519738,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": true,
+   "moisture_last_step_r0_r1": [
+    0.19998469796167445,
+    0.19998633082143102
+   ],
+   "moisture_max_r0_r1": [
+    0.19998469796167445,
+    0.19998633082143102
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.8029513888888888,
+    0.8159722222222222
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 14,
+   "ambient_temperature_celsius": 20.0,
+   "ambient_relative_humidity": 0.85,
+   "inlet_temperature_celsius": 79.8969782530435,
+   "gas_velocity_m_per_s": 0.800033561871794,
+   "nozzle_pressure_bar": 1.0048299735940778,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": true,
+   "moisture_last_step_r0_r1": [
+    0.1999810343039688,
+    0.1999848294809081
+   ],
+   "moisture_max_r0_r1": [
+    0.1999810343039688,
+    0.1999848294809081
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.7986111111111112,
+    0.8246527777777778
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 15,
+   "ambient_temperature_celsius": 27.5,
+   "ambient_relative_humidity": 0.25,
+   "inlet_temperature_celsius": 80.69792740464143,
+   "gas_velocity_m_per_s": 0.8000333019348238,
+   "nozzle_pressure_bar": 1.0034793825309927,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": false,
+   "moisture_last_step_r0_r1": [
+    0.16233485776345266,
+    0.1623360296627112
+   ],
+   "moisture_max_r0_r1": [
+    0.16233485776345266,
+    0.1700110778779324
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.0,
+    0.0
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 16,
+   "ambient_temperature_celsius": 27.5,
+   "ambient_relative_humidity": 0.4,
+   "inlet_temperature_celsius": 80.39835496079802,
+   "gas_velocity_m_per_s": 0.8001170780280211,
+   "nozzle_pressure_bar": 1.003443635029174,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": false,
+   "moisture_last_step_r0_r1": [
+    0.1763149070660214,
+    0.1763187731008528
+   ],
+   "moisture_max_r0_r1": [
+    0.1763149070660214,
+    0.17736219060288966
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.0,
+    0.0
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 17,
+   "ambient_temperature_celsius": 27.5,
+   "ambient_relative_humidity": 0.55,
+   "inlet_temperature_celsius": 80.06367285444946,
+   "gas_velocity_m_per_s": 0.8000373060423543,
+   "nozzle_pressure_bar": 1.00887361988682,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": false,
+   "moisture_last_step_r0_r1": [
+    0.19267584110365493,
+    0.1926757111235141
+   ],
+   "moisture_max_r0_r1": [
+    0.19267584110365493,
+    0.1926757111235141
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.7604166666666666,
+    0.7595486111111112
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 18,
+   "ambient_temperature_celsius": 27.5,
+   "ambient_relative_humidity": 0.7,
+   "inlet_temperature_celsius": 80.72193919546123,
+   "gas_velocity_m_per_s": 0.8052745561785708,
+   "nozzle_pressure_bar": 1.0083330731154194,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": true,
+   "moisture_last_step_r0_r1": [
+    0.19997434256424151,
+    0.19997644483649835
+   ],
+   "moisture_max_r0_r1": [
+    0.19997434256424151,
+    0.19997644483649835
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.7925347222222222,
+    0.8029513888888888
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 19,
+   "ambient_temperature_celsius": 27.5,
+   "ambient_relative_humidity": 0.85,
+   "inlet_temperature_celsius": 82.95576483648605,
+   "gas_velocity_m_per_s": 0.8000357490582031,
+   "nozzle_pressure_bar": 1.0048782741689128,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": true,
+   "moisture_last_step_r0_r1": [
+    0.19996630521890857,
+    0.19998041419824727
+   ],
+   "moisture_max_r0_r1": [
+    0.19996630521890857,
+    0.19998041419824727
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.7864583333333334,
+    0.8541666666666666
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 20,
+   "ambient_temperature_celsius": 35.0,
+   "ambient_relative_humidity": 0.25,
+   "inlet_temperature_celsius": 90.41994471902834,
+   "gas_velocity_m_per_s": 0.8000000000000003,
+   "nozzle_pressure_bar": 1.005782730560979,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": false,
+   "moisture_last_step_r0_r1": [
+    0.11886306523380835,
+    0.11886307152289347
+   ],
+   "moisture_max_r0_r1": [
+    0.11886306523380835,
+    0.11886307152289347
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.0,
+    0.0
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 21,
+   "ambient_temperature_celsius": 35.0,
+   "ambient_relative_humidity": 0.4,
+   "inlet_temperature_celsius": 90.11407375865916,
+   "gas_velocity_m_per_s": 0.8006421282979224,
+   "nozzle_pressure_bar": 1.0082186346282271,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": false,
+   "moisture_last_step_r0_r1": [
+    0.13015064391985282,
+    0.13015075910896187
+   ],
+   "moisture_max_r0_r1": [
+    0.13015064391985282,
+    0.13015075910896187
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.0,
+    0.0
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 22,
+   "ambient_temperature_celsius": 35.0,
+   "ambient_relative_humidity": 0.55,
+   "inlet_temperature_celsius": 89.83527559339001,
+   "gas_velocity_m_per_s": 0.8000298702346711,
+   "nozzle_pressure_bar": 1.0070123163217741,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": false,
+   "moisture_last_step_r0_r1": [
+    0.1437903411584607,
+    0.1437905451560354
+   ],
+   "moisture_max_r0_r1": [
+    0.1437903411584607,
+    0.1437905451560354
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.0,
+    0.0
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 23,
+   "ambient_temperature_celsius": 35.0,
+   "ambient_relative_humidity": 0.7,
+   "inlet_temperature_celsius": 89.47023703732678,
+   "gas_velocity_m_per_s": 0.8000000058843479,
+   "nozzle_pressure_bar": 1.0002018106797292,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": false,
+   "moisture_last_step_r0_r1": [
+    0.16030255654993023,
+    0.16030634032622146
+   ],
+   "moisture_max_r0_r1": [
+    0.16030255654993023,
+    0.16030634032622146
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.0,
+    0.0
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  },
+  {
+   "scenario": 24,
+   "ambient_temperature_celsius": 35.0,
+   "ambient_relative_humidity": 0.85,
+   "inlet_temperature_celsius": 89.01765825206859,
+   "gas_velocity_m_per_s": 0.8002118175536281,
+   "nozzle_pressure_bar": 1.002370221488685,
+   "spray_rate_kg_per_h": 1.5,
+   "suspension_solid_fraction": 0.3,
+   "moisture_binds_at_oracle": false,
+   "moisture_last_step_r0_r1": [
+    0.18079263085708294,
+    0.18080826233218028
+   ],
+   "moisture_max_r0_r1": [
+    0.18079263085708294,
+    0.18080826233218028
+   ],
+   "share_steps_in_0.18_0.22_r0_r1": [
+    0.4227430555555556,
+    0.5364583333333334
+   ],
+   "n_projected_steps_r0_r1": [
+    0,
+    0
+   ]
+  }
+ ],
+ "disjointness": {
+  "n_pool_runs_compared": 1316,
+  "n_pool_sources": 11,
+  "id_overlap": 0,
+  "content_overlap_actions_disturbances_initial": 0,
+  "content_overlap_actions_disturbances": 0,
+  "smallest_normalised_distance_to_any_pool_run": 0.27076674135263973,
+  "median_normalised_distance_to_pool": 0.38571482355851805,
+  "distance_note": "Euclidean, mean actions and mean disturbances scaled by bound span, 7 dims"
+ },
+ "share_runs_with_projection_active": 0.0
+}
