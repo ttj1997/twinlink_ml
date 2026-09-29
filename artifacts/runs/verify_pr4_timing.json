@@ -1,0 +1,70 @@
+{
+ "provenance": {
+  "git/commit": "478c332fe44d2066612f79efeeaff9861065f015",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "machine": {
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "cpu_count": 16,
+  "torch": "2.14.0+cpu",
+  "torch_threads": 1
+ },
+ "protocol": {
+  "repeats": 10,
+  "warmup": 2,
+  "batch": 4096,
+  "windows": 4352,
+  "test_set": "excited, seed 1"
+ },
+ "inference": {
+  "gru": {
+   "mean_us": 107.94648667275824,
+   "sd_us": 2.3930813396290986,
+   "min_us": 104.87107077202208,
+   "median_us": 107.72264476093383,
+   "max_us": 112.89379595571263,
+   "relative_sd": 0.02216914522548352
+  },
+  "lstm": {
+   "mean_us": 51.661031709550244,
+   "sd_us": 1.046372225857812,
+   "min_us": 50.41415441177284,
+   "median_us": 51.59407169126198,
+   "max_us": 54.31243106603661,
+   "relative_sd": 0.020254574700341803
+  },
+  "transformer": {
+   "mean_us": 2404.4205882352585,
+   "sd_us": 23.451300432038828,
+   "min_us": 2385.8920955883973,
+   "median_us": 2393.892589613788,
+   "max_us": 2452.226401654447,
+   "relative_sd": 0.009753410258914425
+  }
+ },
+ "inference_ratios_median": {
+  "gru_over_lstm": 2.087888031120014,
+  "transformer_over_lstm": 46.398597961773575
+ },
+ "training_2_epochs_n64": {
+  "lstm": {
+   "elapsed_s": 25.862937600000805,
+   "epochs_per_head": 2.0,
+   "seconds_per_epoch_all_three_heads": 12.931468800000403
+  },
+  "gru": {
+   "elapsed_s": 7.141632700000628,
+   "epochs_per_head": 2.0,
+   "seconds_per_epoch_all_three_heads": 3.570816350000314
+  },
+  "transformer": {
+   "elapsed_s": 119.18659549999938,
+   "epochs_per_head": 2.0,
+   "seconds_per_epoch_all_three_heads": 59.59329774999969
+  }
+ },
+ "training_epoch_cost_ratio_transformer_over_lstm": 4.60839357629644
+}
