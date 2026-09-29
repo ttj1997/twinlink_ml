@@ -1,0 +1,337 @@
+{
+ "provenance": {
+  "git/commit": "f0aa4014448bb6794b0a33a03d754926a14139b2",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "determinism": {
+  "excited_seed1": {
+   "n_arrays_hashed": 29,
+   "in_process_identical": true,
+   "fresh_process_identical": true,
+   "split_hashes": {
+    "train": "6da7de501d80e83a",
+    "val": "e7d6f2b90fbaf548",
+    "test": "a2fbdafe739106d2"
+   },
+   "array_hashes_actions_states": {
+    "actions_realised": "ca1ecaf6273458a4",
+    "states": "2bdaa151d3c20cf8",
+    "measurements": "b3b666ecd784cdca"
+   }
+  },
+  "constant_train_seed1": {
+   "n_arrays_hashed": 29,
+   "in_process_identical": true,
+   "fresh_process_identical": true,
+   "split_hashes": {
+    "train": "4d6888d649ec37e7",
+    "val": "d2b9af5da8a7eaf4",
+    "test": "8ae1cfb4a02507b9"
+   },
+   "array_hashes_actions_states": {
+    "actions_realised": "a9326768d2400802",
+    "states": "d708e395cff3f214",
+    "measurements": "cf1fd2104da53222"
+   }
+  },
+  "excited_seed2": {
+   "n_arrays_hashed": 29,
+   "in_process_identical": true,
+   "fresh_process_identical": true,
+   "split_hashes": {
+    "train": "d4de054a56fb5a1b",
+    "val": "53dea9d2237c8b9a",
+    "test": "24b5d4a8dae3c03e"
+   },
+   "array_hashes_actions_states": {
+    "actions_realised": "ef54f61e82bd7d9a",
+    "states": "378870ccadd7cc8f",
+    "measurements": "2d589f9ca6e078ce"
+   }
+  },
+  "constant_train_seed2": {
+   "n_arrays_hashed": 29,
+   "in_process_identical": true,
+   "fresh_process_identical": true,
+   "split_hashes": {
+    "train": "f1a1f1175744cc6d",
+    "val": "9eb055f2b560dda2",
+    "test": "523205fb69f3b4e3"
+   },
+   "array_hashes_actions_states": {
+    "actions_realised": "769ff6d1ad491345",
+    "states": "7a82262ff2cfd88f",
+    "measurements": "080cf8e47ee9df85"
+   }
+  },
+  "holdout_seed999": {
+   "n_arrays_hashed": 29,
+   "in_process_identical": true,
+   "fresh_process_identical": true,
+   "split_hashes": {
+    "train": "ac554948c8f3d72b",
+    "val": "ccb60668b5819eb3",
+    "test": "f8f0e7733ebd8916"
+   },
+   "array_hashes_actions_states": {
+    "actions_realised": "0ef1ae4dabd556d6",
+    "states": "cf54715b8e2fad6f",
+    "measurements": "5917ef48cf43c433"
+   }
+  }
+ },
+ "ids_vs_records": {
+  "excited_seed1": {
+   "n_records": 40,
+   "each_field_single_valued_in_records": true,
+   "regenerated_equals_record": {
+    "split/digest": true,
+    "excitation/fingerprint": true,
+    "seed/data": true,
+    "seed/noise": true,
+    "seed/model": true
+   },
+   "run_id_pattern_mixed_<fingerprint>_<index>": true,
+   "run_ids_unique": true,
+   "n_runs": 128,
+   "record_process_fingerprint": [
+    "2d2679eeed716577"
+   ],
+   "regenerated_process_fingerprint": "bddca37f716f5cfc"
+  },
+  "constant_train_seed1": {
+   "n_records": 40,
+   "each_field_single_valued_in_records": true,
+   "regenerated_equals_record": {
+    "split/digest": true,
+    "excitation/fingerprint": true,
+    "seed/data": true,
+    "seed/noise": true,
+    "seed/model": true
+   },
+   "run_id_pattern_mixed_<fingerprint>_<index>": true,
+   "run_ids_unique": true,
+   "n_runs": 128,
+   "record_process_fingerprint": [
+    "2d2679eeed716577"
+   ],
+   "regenerated_process_fingerprint": "bddca37f716f5cfc"
+  },
+  "excited_seed2": {
+   "n_records": 40,
+   "each_field_single_valued_in_records": true,
+   "regenerated_equals_record": {
+    "split/digest": true,
+    "excitation/fingerprint": true,
+    "seed/data": true,
+    "seed/noise": true,
+    "seed/model": true
+   },
+   "run_id_pattern_mixed_<fingerprint>_<index>": true,
+   "run_ids_unique": true,
+   "n_runs": 128,
+   "record_process_fingerprint": [
+    "2d2679eeed716577"
+   ],
+   "regenerated_process_fingerprint": "bddca37f716f5cfc"
+  },
+  "constant_train_seed2": {
+   "n_records": 40,
+   "each_field_single_valued_in_records": true,
+   "regenerated_equals_record": {
+    "split/digest": true,
+    "excitation/fingerprint": true,
+    "seed/data": true,
+    "seed/noise": true,
+    "seed/model": true
+   },
+   "run_id_pattern_mixed_<fingerprint>_<index>": true,
+   "run_ids_unique": true,
+   "n_runs": 128,
+   "record_process_fingerprint": [
+    "2d2679eeed716577"
+   ],
+   "regenerated_process_fingerprint": "bddca37f716f5cfc"
+  }
+ },
+ "note_ids": "Run IDs are not stored in the records; the split digest (a hash over the ordered ID tuples) and the excitation fingerprint (embedded in every ID) are. Equality of these two is equality of all IDs.",
+ "config_equivalence": [
+  {
+   "commit": "0b3eaafc4f94efce9e8ec2550c6ca4ec5b37bf15",
+   "numerically_identical_except_provenance": true,
+   "differing_sections": [],
+   "provenance_keys_old": [
+    "description",
+    "open_todos",
+    "status"
+   ],
+   "provenance_keys_new": [
+    "description",
+    "open_todos",
+    "status"
+   ]
+  },
+  {
+   "commit": "256d64414e",
+   "numerically_identical_except_provenance": true,
+   "differing_sections": [],
+   "provenance_keys_old": [
+    "description",
+    "open_todos",
+    "status"
+   ],
+   "provenance_keys_new": [
+    "description",
+    "open_todos",
+    "status"
+   ]
+  },
+  {
+   "commit": "1b85ce4cda",
+   "numerically_identical_except_provenance": true,
+   "differing_sections": [],
+   "provenance_keys_old": [
+    "description",
+    "open_todos",
+    "status"
+   ],
+   "provenance_keys_new": [
+    "description",
+    "open_todos",
+    "status"
+   ]
+  },
+  {
+   "commit": "7e3fb1d878",
+   "numerically_identical_except_provenance": true,
+   "differing_sections": [],
+   "provenance_keys_old": [
+    "description",
+    "open_todos",
+    "status"
+   ],
+   "provenance_keys_new": [
+    "description",
+    "open_todos",
+    "status"
+   ]
+  }
+ ],
+ "code_identity_across_cut": [
+  {
+   "commit": "0b3eaafc4f94efce9e8ec2550c6ca4ec5b37bf15",
+   "produced": "arch_learning_curve_projected (GRU/LSTM/baselines)",
+   "n_files_compared": 41,
+   "files_with_semantic_difference": [
+    "src/twinlink_ml/data/point_split.py",
+    "src/twinlink_ml/evaluation/exhaust_reconstruction.py",
+    "src/twinlink_ml/evaluation/protocol.py",
+    "src/twinlink_ml/evaluation/recoverable_power.py",
+    "src/twinlink_ml/simulation/config.py",
+    "src/twinlink_ml/simulation/diagnostics.py",
+    "src/twinlink_ml/utils/tracking.py"
+   ],
+   "differences_on_data_generation_path": [
+    "src/twinlink_ml/data/point_split.py",
+    "src/twinlink_ml/simulation/config.py",
+    "src/twinlink_ml/simulation/diagnostics.py"
+   ],
+   "only_in_archive_commit": [],
+   "only_in_current_tree": [
+    "src/twinlink_ml/evaluation/net_energy.py",
+    "src/twinlink_ml/heatnetwork/__init__.py",
+    "src/twinlink_ml/heatnetwork/balance.py",
+    "src/twinlink_ml/heatnetwork/config.py",
+    "src/twinlink_ml/heatnetwork/pinch.py",
+    "src/twinlink_ml/heatnetwork/routing.py",
+    "src/twinlink_ml/plant_data/__init__.py",
+    "src/twinlink_ml/plant_data/channels.py",
+    "src/twinlink_ml/plant_data/loader.py",
+    "src/twinlink_ml/rl/__init__.py",
+    "src/twinlink_ml/rl/env.py",
+    "src/twinlink_ml/rl/evaluation.py",
+    "src/twinlink_ml/utils/fingerprint_history.py"
+   ]
+  },
+  {
+   "commit": "256d64414e",
+   "produced": "arch_learning_curve_projected_extended (Transformer/xLSTM/Mamba)",
+   "n_files_compared": 49,
+   "files_with_semantic_difference": [
+    "src/twinlink_ml/evaluation/protocol.py",
+    "src/twinlink_ml/heatnetwork/__init__.py",
+    "src/twinlink_ml/heatnetwork/config.py",
+    "src/twinlink_ml/plant_data/channels.py",
+    "src/twinlink_ml/simulation/config.py",
+    "src/twinlink_ml/utils/tracking.py"
+   ],
+   "differences_on_data_generation_path": [
+    "src/twinlink_ml/plant_data/channels.py",
+    "src/twinlink_ml/simulation/config.py"
+   ],
+   "only_in_archive_commit": [],
+   "only_in_current_tree": [
+    "src/twinlink_ml/heatnetwork/pinch.py",
+    "src/twinlink_ml/rl/__init__.py",
+    "src/twinlink_ml/rl/env.py",
+    "src/twinlink_ml/rl/evaluation.py",
+    "src/twinlink_ml/utils/fingerprint_history.py"
+   ]
+  },
+  {
+   "commit": "1b85ce4cda",
+   "produced": "arch_learning_curve_constant_trained",
+   "n_files_compared": 45,
+   "files_with_semantic_difference": [
+    "src/twinlink_ml/evaluation/protocol.py",
+    "src/twinlink_ml/heatnetwork/__init__.py",
+    "src/twinlink_ml/heatnetwork/balance.py",
+    "src/twinlink_ml/heatnetwork/config.py",
+    "src/twinlink_ml/simulation/config.py",
+    "src/twinlink_ml/utils/tracking.py"
+   ],
+   "differences_on_data_generation_path": [
+    "src/twinlink_ml/simulation/config.py"
+   ],
+   "only_in_archive_commit": [],
+   "only_in_current_tree": [
+    "src/twinlink_ml/evaluation/net_energy.py",
+    "src/twinlink_ml/heatnetwork/pinch.py",
+    "src/twinlink_ml/plant_data/__init__.py",
+    "src/twinlink_ml/plant_data/channels.py",
+    "src/twinlink_ml/plant_data/loader.py",
+    "src/twinlink_ml/rl/__init__.py",
+    "src/twinlink_ml/rl/env.py",
+    "src/twinlink_ml/rl/evaluation.py",
+    "src/twinlink_ml/utils/fingerprint_history.py"
+   ]
+  },
+  {
+   "commit": "7e3fb1d878",
+   "produced": "arch_epoch_budget_probe600",
+   "n_files_compared": 49,
+   "files_with_semantic_difference": [
+    "src/twinlink_ml/evaluation/protocol.py",
+    "src/twinlink_ml/heatnetwork/__init__.py",
+    "src/twinlink_ml/heatnetwork/config.py",
+    "src/twinlink_ml/plant_data/channels.py",
+    "src/twinlink_ml/simulation/config.py",
+    "src/twinlink_ml/utils/tracking.py"
+   ],
+   "differences_on_data_generation_path": [
+    "src/twinlink_ml/plant_data/channels.py",
+    "src/twinlink_ml/simulation/config.py"
+   ],
+   "only_in_archive_commit": [],
+   "only_in_current_tree": [
+    "src/twinlink_ml/heatnetwork/pinch.py",
+    "src/twinlink_ml/rl/__init__.py",
+    "src/twinlink_ml/rl/env.py",
+    "src/twinlink_ml/rl/evaluation.py",
+    "src/twinlink_ml/utils/fingerprint_history.py"
+   ]
+  }
+ ]
+}
