@@ -1,0 +1,21 @@
+{
+ "provenance": {
+  "git/commit": "d76b8d968a07a88292ada1d865744f803078a024",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "binding": {
+  "n_runs": 34,
+  "noise_rmse_pooled": 0.0010026281297308313,
+  "noise_rmse_run_median": 0.0009925059245161011,
+  "noise_mean": 6.710941438341477e-06
+ },
+ "nonbinding": {
+  "n_runs": 16,
+  "noise_rmse_pooled": 0.0007928895312779877,
+  "noise_rmse_run_median": 0.0008014576899147933,
+  "noise_mean": 2.332476279381874e-07
+ },
+ "holdout_class_0.18_0.22_noise_pooled_zw4": 0.0009798656869870767
+}
