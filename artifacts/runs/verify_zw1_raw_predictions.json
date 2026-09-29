@@ -1,0 +1,226 @@
+{
+ "provenance": {
+  "git/commit": "dca1355b15df7da14fecf165a628513b238bc4f8",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "columns": "run, start, truth, measured, pred (float64, W x 36; step k = column k-1)",
+ "holdout_test_run_ids": [
+  "mixed-80468413-00004",
+  "mixed-80468413-00005",
+  "mixed-80468413-00006",
+  "mixed-80468413-00007",
+  "mixed-80468413-00008",
+  "mixed-80468413-00009",
+  "mixed-80468413-00010",
+  "mixed-80468413-00011",
+  "mixed-80468413-00012",
+  "mixed-80468413-00013",
+  "mixed-80468413-00014",
+  "mixed-80468413-00015",
+  "mixed-80468413-00016",
+  "mixed-80468413-00017",
+  "mixed-80468413-00018",
+  "mixed-80468413-00019",
+  "mixed-80468413-00020",
+  "mixed-80468413-00021",
+  "mixed-80468413-00022",
+  "mixed-80468413-00023",
+  "mixed-80468413-00024",
+  "mixed-80468413-00025",
+  "mixed-80468413-00026",
+  "mixed-80468413-00027",
+  "mixed-80468413-00028",
+  "mixed-80468413-00029",
+  "mixed-80468413-00030",
+  "mixed-80468413-00031",
+  "mixed-80468413-00032",
+  "mixed-80468413-00033",
+  "mixed-80468413-00034",
+  "mixed-80468413-00035"
+ ],
+ "n_windows": 4352,
+ "window_steps_per_set": 156672,
+ "total_bytes_npz": 16721262,
+ "sets": [
+  {
+   "arm": "excited",
+   "seed": 1,
+   "checks": {
+    "archive": {
+     "checkpoint": "lstm_seed1_n64.pt",
+     "rmse_run_median_h36": 0.0006643298242508041,
+     "record": 0.0006643328329214776,
+     "rel_diff": 4.5288604211566616e-06
+    },
+    "ga2_local": {
+     "checkpoint": "lstm_ga2_seed1_n64.pt",
+     "rmse_run_median_h36": 0.0006643298242508041,
+     "record": 0.0006643328329214776,
+     "rel_diff": 4.5288604211566616e-06
+    }
+   },
+   "file": "excited_seed1.npz",
+   "bytes": 1672246,
+   "sha256": "8d483fc252deb774a1c2908b4afaa7bd0cda23d70a79017431993fd50a3ccc58",
+   "n_windows": 4352
+  },
+  {
+   "arm": "excited",
+   "seed": 2,
+   "checks": {
+    "archive": {
+     "checkpoint": "lstm_seed2_n64.pt",
+     "rmse_run_median_h36": 0.0004255827332035621,
+     "record": 0.0004255827644118671,
+     "rel_diff": 7.333075407922773e-08
+    },
+    "ga2_local": {
+     "checkpoint": "lstm_ga2_seed2_n64.pt",
+     "rmse_run_median_h36": 0.0004255827332035621,
+     "record": 0.0004255827644118671,
+     "rel_diff": 7.333075407922773e-08
+    }
+   },
+   "file": "excited_seed2.npz",
+   "bytes": 1669703,
+   "sha256": "5f5a45af3fe48f30f2d2ffdb2275b485aaaa5b07a69b3ef1049c3604d5f14223",
+   "n_windows": 4352
+  },
+  {
+   "arm": "excited",
+   "seed": 3,
+   "checks": {
+    "archive": {
+     "checkpoint": "lstm_seed3_n64.pt",
+     "rmse_run_median_h36": 0.0005427384173769827,
+     "record": 0.000542738535806486,
+     "rel_diff": 2.1820728671089924e-07
+    },
+    "ga2_local": {
+     "checkpoint": "lstm_ga2_seed3_n64.pt",
+     "rmse_run_median_h36": 0.0005427384173769827,
+     "record": 0.000542738535806486,
+     "rel_diff": 2.1820728671089924e-07
+    }
+   },
+   "file": "excited_seed3.npz",
+   "bytes": 1672086,
+   "sha256": "a0130444fbeb2efff66abb518a872469b6b7aec6c0b95d94809d4e11c50b1de2",
+   "n_windows": 4352
+  },
+  {
+   "arm": "excited",
+   "seed": 4,
+   "checks": {
+    "archive": {
+     "checkpoint": "lstm_seed4_n64.pt",
+     "rmse_run_median_h36": 0.00048555961988418065,
+     "record": 0.00048556030889744203,
+     "rel_diff": 1.4190065554180222e-06
+    }
+   },
+   "file": "excited_seed4.npz",
+   "bytes": 1669517,
+   "sha256": "24ff72da2605ee473a49c6cec27b7af11a6711fd2287e464ae647334ee58041d",
+   "n_windows": 4352
+  },
+  {
+   "arm": "excited",
+   "seed": 5,
+   "checks": {
+    "archive": {
+     "checkpoint": "lstm_seed5_n64.pt",
+     "rmse_run_median_h36": 0.0007824320264535637,
+     "record": 0.0007824310482943155,
+     "rel_diff": 1.2501539278038836e-06
+    }
+   },
+   "file": "excited_seed5.npz",
+   "bytes": 1672423,
+   "sha256": "a7ae999485c426b5cb9b6a4f1d0fea7c358eeca5b56dfca4ba84f78af3581f25",
+   "n_windows": 4352
+  },
+  {
+   "arm": "constant",
+   "seed": 1,
+   "checks": {
+    "archive": {
+     "checkpoint": "constant_trained_lstm_seed1_n64.pt",
+     "rmse_run_median_h36": 0.0006949073991073878,
+     "record": 0.0006949073991073874,
+     "rel_diff": 6.240844025423638e-16
+    }
+   },
+   "file": "constant_seed1.npz",
+   "bytes": 1670380,
+   "sha256": "9eb295f44f528d65910e46fed745fceb4bc2eb5a073248649b22fed3aa56343a",
+   "n_windows": 4352
+  },
+  {
+   "arm": "constant",
+   "seed": 2,
+   "checks": {
+    "archive": {
+     "checkpoint": "constant_trained_lstm_seed2_n64.pt",
+     "rmse_run_median_h36": 0.00231918837132812,
+     "record": 0.0023191883713281195,
+     "rel_diff": 1.8699682800920894e-16
+    }
+   },
+   "file": "constant_seed2.npz",
+   "bytes": 1678500,
+   "sha256": "212b50252a7348873df6967ab81c4643b24484643cff3bb6318f0d426cb8c437",
+   "n_windows": 4352
+  },
+  {
+   "arm": "constant",
+   "seed": 3,
+   "checks": {
+    "archive": {
+     "checkpoint": "constant_trained_lstm_seed3_n64.pt",
+     "rmse_run_median_h36": 0.0013098209477262976,
+     "record": 0.0013098209477262984,
+     "rel_diff": 6.621987070019347e-16
+    }
+   },
+   "file": "constant_seed3.npz",
+   "bytes": 1671149,
+   "sha256": "912304e8ce423ce2b6b61c7a29afc5da8335413203159894f0565ae4fa3a264d",
+   "n_windows": 4352
+  },
+  {
+   "arm": "constant",
+   "seed": 4,
+   "checks": {
+    "archive": {
+     "checkpoint": "constant_trained_lstm_seed4_n64.pt",
+     "rmse_run_median_h36": 0.0014883589441298127,
+     "record": 0.001488358944129813,
+     "rel_diff": 1.456909540217661e-16
+    }
+   },
+   "file": "constant_seed4.npz",
+   "bytes": 1672787,
+   "sha256": "be0345a88334c8f35259c73e3cc92d3f1199fcf44c9a323a184a3dcd3e7ffc25",
+   "n_windows": 4352
+  },
+  {
+   "arm": "constant",
+   "seed": 5,
+   "checks": {
+    "archive": {
+     "checkpoint": "constant_trained_lstm_seed5_n64.pt",
+     "rmse_run_median_h36": 0.0016806785637006173,
+     "record": 0.0016806785637006171,
+     "rel_diff": 1.290195752956168e-16
+    }
+   },
+   "file": "constant_seed5.npz",
+   "bytes": 1672471,
+   "sha256": "5e544764dccb33490a3f26e3238c982f8dcf2e23f067999898c98aa1d9be7a54",
+   "n_windows": 4352
+  }
+ ]
+}
