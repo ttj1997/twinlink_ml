@@ -1,0 +1,57 @@
+{
+ "provenance": {
+  "git/commit": "d9db59b702560de2f4b51a8e01a999b09be59716",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "seed": 5,
+ "elapsed_s": 448.10551809999924,
+ "record_elapsed_s_linux": 614.9730997769984,
+ "epochs_run_retrained": {
+  "epochs_run/energy_target": 162,
+  "epochs_run/product_moisture_kg_per_kg": 65,
+  "epochs_run/bed_temperature_celsius": 102
+ },
+ "epochs_run_record": {
+  "energy_target": 162,
+  "product_moisture_kg_per_kg": 65,
+  "bed_temperature_celsius": 102
+ },
+ "rmse_run_median_physical_h36_n64": {
+  "excited": {
+   "energy_target": {
+    "retrained": 0.01546694504495405,
+    "record_linux": 0.015466936247677237,
+    "rel_diff": 5.687795354165711e-07
+   },
+   "product_moisture_kg_per_kg": {
+    "retrained": 0.0008060614709674017,
+    "record_linux": 0.0008060637174136735,
+    "rel_diff": 2.7869338654034065e-06
+   },
+   "bed_temperature_celsius": {
+    "retrained": 0.45559839052247103,
+    "record_linux": 0.45559834236375263,
+    "rel_diff": 1.0570433191693809e-07
+   }
+  },
+  "constant_holdout": {
+   "energy_target": {
+    "retrained": 0.014746317513797137,
+    "record_linux": 0.014746372506933843,
+    "rel_diff": 3.7292653959492588e-06
+   },
+   "product_moisture_kg_per_kg": {
+    "retrained": 0.0007824320264535637,
+    "record_linux": 0.0007824310482943155,
+    "rel_diff": 1.2501539278038836e-06
+   },
+   "bed_temperature_celsius": {
+    "retrained": 0.47909232757467124,
+    "record_linux": 0.4790930362419302,
+    "rel_diff": 1.4791850546296773e-06
+   }
+  }
+ }
+}
