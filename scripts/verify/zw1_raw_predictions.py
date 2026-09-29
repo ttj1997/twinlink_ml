@@ -21,7 +21,6 @@ from __future__ import annotations
 
 import hashlib
 import os
-from pathlib import Path
 
 for _name in ("OMP_NUM_THREADS", "MKL_NUM_THREADS"):
     os.environ[_name] = "1"
@@ -107,7 +106,7 @@ def main() -> None:
             entry["file"] = path_npz.name
             entry["bytes"] = path_npz.stat().st_size
             entry["sha256"] = hashlib.sha256(path_npz.read_bytes()).hexdigest()
-            entry["n_windows"] = int(len(w["run"]))
+            entry["n_windows"] = len(w["run"])
             sets.append(entry)
             print(name, entry["checks"], flush=True)
     n_win = sets[0]["n_windows"]
