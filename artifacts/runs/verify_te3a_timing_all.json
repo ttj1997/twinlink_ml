@@ -1,0 +1,182 @@
+{
+ "provenance": {
+  "git/commit": "2c21b7d4559d9557d487f9ec10481c3f8c7756ba",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "machine": {
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "cpu_count": 16,
+  "torch": "2.14.0+cpu",
+  "torch_threads": 1
+ },
+ "protocol": {
+  "repeats_per_round": 15,
+  "warmup_passes_all_models": 3,
+  "batch": 4096,
+  "windows": 4352,
+  "test_set": "excited, seed 1",
+  "training_timed_epochs": 3,
+  "training_warmup_epoch_discarded": true
+ },
+ "inference": {
+  "lstm": {
+   "forward_round": {
+    "median_us": 50.82490808828264,
+    "min_us": 50.218910845621714,
+    "max_us": 52.84696691255837,
+    "relative_range": 0.05170803383198915,
+    "n": 15
+   },
+   "reversed_round": {
+    "median_us": 52.850114889391826,
+    "min_us": 51.22513786743104,
+    "max_us": 59.43821231656945,
+    "relative_range": 0.1554031522226067,
+    "n": 15
+   },
+   "both_rounds": {
+    "median_us": 51.541406250103535,
+    "min_us": 50.218910845621714,
+    "max_us": 59.43821231656945,
+    "relative_range": 0.17887174878797985,
+    "n": 30
+   }
+  },
+  "gru": {
+   "forward_round": {
+    "median_us": 104.19014246314659,
+    "min_us": 103.97063419150875,
+    "max_us": 106.17293198536385,
+    "relative_range": 0.021137295158551842,
+    "n": 15
+   },
+   "reversed_round": {
+    "median_us": 110.82180606582797,
+    "min_us": 107.89496783094337,
+    "max_us": 114.4339384194716,
+    "relative_range": 0.05900436764804295,
+    "n": 15
+   },
+   "both_rounds": {
+    "median_us": 107.0339499081536,
+    "min_us": 103.97063419150875,
+    "max_us": 114.4339384194716,
+    "relative_range": 0.09775687281410682,
+    "n": 30
+   }
+  },
+  "transformer": {
+   "forward_round": {
+    "median_us": 2376.139499080456,
+    "min_us": 2364.712063419294,
+    "max_us": 2427.9858685661916,
+    "relative_range": 0.02662882594703894,
+    "n": 15
+   },
+   "reversed_round": {
+    "median_us": 2400.85519301491,
+    "min_us": 2371.9903722427953,
+    "max_us": 2501.8730698529707,
+    "relative_range": 0.054098513724633805,
+    "n": 15
+   },
+   "both_rounds": {
+    "median_us": 2393.876137408229,
+    "min_us": 2364.712063419294,
+    "max_us": 2501.8730698529707,
+    "relative_range": 0.05729661793704022,
+    "n": 30
+   }
+  },
+  "xlstm": {
+   "forward_round": {
+    "median_us": 891.7010569851581,
+    "min_us": 885.0579044121787,
+    "max_us": 907.2882352933889,
+    "relative_range": 0.02493025067882162,
+    "n": 15
+   },
+   "reversed_round": {
+    "median_us": 909.3787454048652,
+    "min_us": 894.5911534932052,
+    "max_us": 931.6682674626891,
+    "relative_range": 0.04077191616456437,
+    "n": 15
+   },
+   "both_rounds": {
+    "median_us": 900.6951631433553,
+    "min_us": 885.0579044121787,
+    "max_us": 931.6682674626891,
+    "relative_range": 0.051749320922124066,
+    "n": 30
+   }
+  },
+  "mamba": {
+   "forward_round": {
+    "median_us": 322.83347886080344,
+    "min_us": 319.0387867654047,
+    "max_us": 338.0391314343168,
+    "relative_range": 0.05885493888663413,
+    "n": 15
+   },
+   "reversed_round": {
+    "median_us": 321.61767003662374,
+    "min_us": 317.9774126844931,
+    "max_us": 326.43230698551287,
+    "relative_range": 0.026288649812235006,
+    "n": 15
+   },
+   "both_rounds": {
+    "median_us": 322.1293198528904,
+    "min_us": 317.9774126844931,
+    "max_us": 338.0391314343168,
+    "relative_range": 0.06227846244789342,
+    "n": 30
+   }
+  }
+ },
+ "inference_ratio_to_lstm_median_both_rounds": {
+  "lstm": 1.0,
+  "gru": 2.076659480123102,
+  "transformer": 46.44568923463202,
+  "xlstm": 17.475176342157837,
+  "mamba": 6.249913288934434
+ },
+ "training_seconds_per_epoch_ratio_to_lstm": {
+  "lstm": 1.0,
+  "gru": 0.9257780582239125,
+  "transformer": 14.26699659858732,
+  "xlstm": 5.51874575111339,
+  "mamba": 2.7806966145204033
+ },
+ "training_timed_epochs_n64": {
+  "lstm": {
+   "elapsed_s": 12.503569399999833,
+   "epochs": 3,
+   "seconds_per_epoch_three_heads": 4.167856466666611
+  },
+  "gru": {
+   "elapsed_s": 11.575530199999776,
+   "epochs": 3,
+   "seconds_per_epoch_three_heads": 3.8585100666665917
+  },
+  "transformer": {
+   "elapsed_s": 178.38838209999813,
+   "epochs": 3,
+   "seconds_per_epoch_three_heads": 59.462794033332706
+  },
+  "xlstm": {
+   "elapsed_s": 69.00402050000048,
+   "epochs": 3,
+   "seconds_per_epoch_three_heads": 23.001340166666825
+  },
+  "mamba": {
+   "elapsed_s": 34.76863310000044,
+   "epochs": 3,
+   "seconds_per_epoch_three_heads": 11.589544366666814
+  }
+ }
+}
