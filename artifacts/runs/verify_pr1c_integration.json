@@ -1,0 +1,256 @@
+{
+ "provenance": {
+  "git/commit": "9439c4741c7b4b924178ccfd8c2ba5e3c5394733",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "lstm_reference_errors_n64_h36": {
+  "excited": {
+   "energy_target": 0.014258659251519177,
+   "bed_temperature_celsius": 0.42863742567368873,
+   "product_moisture_kg_per_kg": 0.0005107313408606714
+  },
+  "constant_holdout": {
+   "energy_target": 0.014272586911465834,
+   "bed_temperature_celsius": 0.4490138678065214,
+   "product_moisture_kg_per_kg": 0.000542738535806486
+  }
+ },
+ "pools": [
+  {
+   "kind": "excited",
+   "seed": 1,
+   "n_runs": 128,
+   "substeps_5_reproduces_stored_outputs_bitwise": true,
+   "delta_5_vs_10": {
+    "energy_target": {
+     "unit": "kW",
+     "max_abs": 0.0004250074297758033,
+     "rms": 2.995787032994506e-06,
+     "median_of_per_run_max": 2.3552613768185182e-06,
+     "worst_run_index": 113
+    },
+    "bed_temperature_celsius": {
+     "unit": "K",
+     "max_abs": 0.03830984728781317,
+     "rms": 0.0002941947760380817,
+     "median_of_per_run_max": 0.0003374167708471987,
+     "worst_run_index": 113
+    },
+    "product_moisture_kg_per_kg": {
+     "unit": "kg/kg",
+     "max_abs": 0.00011695272246659005,
+     "rms": 1.4941297598088871e-06,
+     "median_of_per_run_max": 2.768959256813086e-07,
+     "worst_run_index": 108
+    }
+   },
+   "delta_10_vs_20": {
+    "energy_target": {
+     "unit": "kW",
+     "max_abs": 3.8808817134583506e-05,
+     "rms": 1.980273228478573e-07,
+     "median_of_per_run_max": 3.2334994060079225e-07,
+     "worst_run_index": 113
+    },
+    "bed_temperature_celsius": {
+     "unit": "K",
+     "max_abs": 0.0034356740930547858,
+     "rms": 2.1422438159133968e-05,
+     "median_of_per_run_max": 4.8186117929560623e-05,
+     "worst_run_index": 113
+    },
+    "product_moisture_kg_per_kg": {
+     "unit": "kg/kg",
+     "max_abs": 7.106257338213018e-06,
+     "rms": 8.316864502447957e-08,
+     "median_of_per_run_max": 5.312677916688435e-08,
+     "worst_run_index": 108
+    }
+   },
+   "convergence_ratio_max_abs_(RK4 smooth: ~16)": {
+    "energy_target": 10.951311097731669,
+    "bed_temperature_celsius": 11.150605747284503,
+    "product_moisture_kg_per_kg": 16.457710001253584
+   },
+   "limit_one_tenth_of_lstm_error": {
+    "energy_target": 0.0014258659251519176,
+    "bed_temperature_celsius": 0.04286374256736887,
+    "product_moisture_kg_per_kg": 5.1073134086067143e-05
+   },
+   "lstm_error_reference_test_set": "excited",
+   "max_abs_delta_5_vs_10_over_limit": {
+    "energy_target": 0.2980697008595119,
+    "bed_temperature_celsius": 0.8937588039028941,
+    "product_moisture_kg_per_kg": 2.2899069062318422
+   },
+   "rms_delta_5_vs_10_over_limit": {
+    "energy_target": 0.002101029963722096,
+    "bed_temperature_celsius": 0.0068634878435007455,
+    "product_moisture_kg_per_kg": 0.0292547106525912
+   },
+   "within_limit_max_abs": {
+    "energy_target": true,
+    "bed_temperature_celsius": true,
+    "product_moisture_kg_per_kg": false
+   }
+  },
+  {
+   "kind": "holdout",
+   "seed": 999,
+   "n_runs": 36,
+   "substeps_5_reproduces_stored_outputs_bitwise": true,
+   "delta_5_vs_10": {
+    "energy_target": {
+     "unit": "kW",
+     "max_abs": 0.00041828132956700514,
+     "rms": 3.1813978599707393e-06,
+     "median_of_per_run_max": 4.401396944686553e-07,
+     "worst_run_index": 13
+    },
+    "bed_temperature_celsius": {
+     "unit": "K",
+     "max_abs": 0.057359684600264416,
+     "rms": 0.00041526719988862847,
+     "median_of_per_run_max": 6.792107914677104e-05,
+     "worst_run_index": 13
+    },
+    "product_moisture_kg_per_kg": {
+     "unit": "kg/kg",
+     "max_abs": 0.00014401697706670213,
+     "rms": 1.9127059172235977e-06,
+     "median_of_per_run_max": 4.611777225556335e-08,
+     "worst_run_index": 13
+    }
+   },
+   "delta_10_vs_20": {
+    "energy_target": {
+     "unit": "kW",
+     "max_abs": 6.931529530795899e-06,
+     "rms": 1.240773259121423e-07,
+     "median_of_per_run_max": 2.9569837245446706e-08,
+     "worst_run_index": 13
+    },
+    "bed_temperature_celsius": {
+     "unit": "K",
+     "max_abs": 0.000989131533373211,
+     "rms": 1.569059956733422e-05,
+     "median_of_per_run_max": 4.785908235049874e-06,
+     "worst_run_index": 13
+    },
+    "product_moisture_kg_per_kg": {
+     "unit": "kg/kg",
+     "max_abs": 6.140551681008133e-06,
+     "rms": 9.125290090342209e-08,
+     "median_of_per_run_max": 3.3113716369631563e-09,
+     "worst_run_index": 13
+    }
+   },
+   "convergence_ratio_max_abs_(RK4 smooth: ~16)": {
+    "energy_target": 60.344737436179805,
+    "bed_temperature_celsius": 57.98994639737356,
+    "product_moisture_kg_per_kg": 23.45342642618358
+   },
+   "limit_one_tenth_of_lstm_error": {
+    "energy_target": 0.0014272586911465834,
+    "bed_temperature_celsius": 0.04490138678065214,
+    "product_moisture_kg_per_kg": 5.4273853580648594e-05
+   },
+   "lstm_error_reference_test_set": "constant_holdout",
+   "max_abs_delta_5_vs_10_over_limit": {
+    "energy_target": 0.2930662340062405,
+    "bed_temperature_celsius": 1.2774590878556231,
+    "product_moisture_kg_per_kg": 2.6535240740313224
+   },
+   "rms_delta_5_vs_10_over_limit": {
+    "energy_target": 0.0022290267908020053,
+    "bed_temperature_celsius": 0.009248427045633383,
+    "product_moisture_kg_per_kg": 0.03524175622395045
+   },
+   "within_limit_max_abs": {
+    "energy_target": true,
+    "bed_temperature_celsius": false,
+    "product_moisture_kg_per_kg": false
+   }
+  },
+  {
+   "kind": "constant_train",
+   "seed": 1,
+   "n_runs": 128,
+   "substeps_5_reproduces_stored_outputs_bitwise": true,
+   "delta_5_vs_10": {
+    "energy_target": {
+     "unit": "kW",
+     "max_abs": 0.0004226301390448661,
+     "rms": 2.3034587639910447e-06,
+     "median_of_per_run_max": 3.266066783691457e-07,
+     "worst_run_index": 4
+    },
+    "bed_temperature_celsius": {
+     "unit": "K",
+     "max_abs": 0.06479440505557221,
+     "rms": 0.0003249125836172627,
+     "median_of_per_run_max": 4.684706755853085e-05,
+     "worst_run_index": 4
+    },
+    "product_moisture_kg_per_kg": {
+     "unit": "kg/kg",
+     "max_abs": 0.00022328087280495956,
+     "rms": 1.75045128742461e-06,
+     "median_of_per_run_max": 3.474560268668103e-08,
+     "worst_run_index": 4
+    }
+   },
+   "delta_10_vs_20": {
+    "energy_target": {
+     "unit": "kW",
+     "max_abs": 4.4097938674880766e-05,
+     "rms": 1.972380369551917e-07,
+     "median_of_per_run_max": 2.2122142895319996e-08,
+     "worst_run_index": 113
+    },
+    "bed_temperature_celsius": {
+     "unit": "K",
+     "max_abs": 0.005993330873444336,
+     "rms": 2.8276611569644795e-05,
+     "median_of_per_run_max": 4.118923129681207e-06,
+     "worst_run_index": 113
+    },
+    "product_moisture_kg_per_kg": {
+     "unit": "kg/kg",
+     "max_abs": 1.4605868143835465e-05,
+     "rms": 1.2464027116018453e-07,
+     "median_of_per_run_max": 2.536902563021748e-09,
+     "worst_run_index": 4
+    }
+   },
+   "convergence_ratio_max_abs_(RK4 smooth: ~16)": {
+    "energy_target": 9.583897836150022,
+    "bed_temperature_celsius": 10.811084257448181,
+    "product_moisture_kg_per_kg": 15.287066171359161
+   },
+   "limit_one_tenth_of_lstm_error": {
+    "energy_target": 0.0014272586911465834,
+    "bed_temperature_celsius": 0.04490138678065214,
+    "product_moisture_kg_per_kg": 5.4273853580648594e-05
+   },
+   "lstm_error_reference_test_set": "constant_holdout",
+   "max_abs_delta_5_vs_10_over_limit": {
+    "energy_target": 0.296113200547651,
+    "bed_temperature_celsius": 1.443037948295439,
+    "product_moisture_kg_per_kg": 4.113967556646293
+   },
+   "rms_delta_5_vs_10_over_limit": {
+    "energy_target": 0.001613904177483459,
+    "bed_temperature_celsius": 0.007236136941705027,
+    "product_moisture_kg_per_kg": 0.032252201970945645
+   },
+   "within_limit_max_abs": {
+    "energy_target": true,
+    "bed_temperature_celsius": false,
+    "product_moisture_kg_per_kg": false
+   }
+  }
+ ]
+}
