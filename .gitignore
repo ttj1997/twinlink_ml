@@ -51,3 +51,4 @@ artifacts/runs/_*
 # die committeten *.jsonl-Ergebnisse im selben Verzeichnis (Endungen eindeutig getrennt).
 artifacts/runs/*.log
 artifacts/runs/raw_zw1/
+artifacts/runs/raw_ev3/
