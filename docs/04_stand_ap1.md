@@ -8260,6 +8260,122 @@ Artifacts (`artifacts/runs/`): `verify_zw1_raw_predictions` (+ `_run1_dirty`), `
 `verify_zw3_same_estimator`, `verify_zw4_reliability`, `verify_zw4b_class_runs`, `verify_zw5_shape`,
 `verify_zw5b_train_density`, `verify_zw6_reserve`.
 
+**Second addendum to Befund 65 (2026-09-30): five-seed ensemble (EV2) and error at the instance-optimal
+operating points (EV3).** Placed here and not as a new Befund because it answers the reserve question of
+this entry with the same estimators and the same 90 %-mark figures (`sigma_max` 0.003181 kg/kg, margin
+0.009544 kg/kg); EV1 is the dated note at the top of this entry. Same rules as the first addendum: new code
+under `scripts/verify/`, no training, archive checkpoints read-only, scripts committed before they ran,
+`git/dirty=False`.
+
+**EV2 -- ensemble** (mean of the five networks per window-step, from the ZW1 raw data; members differ in
+initialisation and in training data; holdout class [0.18, 0.22), 5 runs, steps 1..36; 5-seed median of the
+single networks in brackets):
+
+| | Excited-trained | Constant-trained |
+|---|---|---|
+| a) global run-median vs measured | 0.00048 (0.00054) | 0.00130 (0.00149) |
+| a) class run-median vs measured | 0.00214 (0.00205) | 0.00302 (0.00320) |
+| a) class pooled vs measured | 0.00216 (0.00281) | 0.00313 (0.00371) |
+| a) quotients A / B / C / D (ZW3 definitions) | 4.44 / 0.50 / 0.85 / 0.20 (3.63 / 0.90 / 0.55 / 0.36) | 2.31 / 1.29 / 1.02 / 0.59 (1.52 / 0.98 / 0.56 / 0.44) |
+| b) class runs: ensemble offset / RMS of the single offsets | 0.66 (runs 0.44-0.94) | 0.70 (0.59-0.90) |
+| b) median absolute offset in the class runs, single -> ensemble | 0.00147 -> 0.00155 | 0.00295 -> 0.00232 |
+| c) median spread between networks, class / rest | 0.00109 / 0.00038 | 0.00187 / 0.00106 |
+| c) rank correlation of \|error\| with spread, all / class | 0.47 / 0.40 | 0.68 / 0.69 |
+| c) share with \|ensemble - truth\| <= 2 spread, all / class | 85 % / 68 % | 95 % / 81 % |
+| d) reserve E1 (run-median vs measured), 95 % over runs | **1.49** [1.33, 2.43] (single 1.55) | **1.06** [0.45, 1.19] (single 0.995) |
+| d) reserve E2 (pooled) / E3 (vs truth) | 1.47 [1.34, 1.72] / 1.68 (single 1.13 / 1.23) | 1.02 [0.81, 1.18] / 1.08 (single 0.86 / 0.89) |
+| d) reserve E4, dangerous direction / worst case | 2.56 / 1.85 (single 1.71 / 1.31) | 1.71 / 1.22 (single 1.09 / 0.88) |
+
+(a) The ensemble is 11-12 % better than the median single network on the global run-median and does not
+improve the class run-median (excited +4 %, constant -6 %); on the pooled class error it is 23 % (excited) and
+16 % (constant) better. The quotient conclusions of ZW3 stay: with the same estimator the class is not worse
+than the runs that reach it (C 0.85 and 1.02); pooled/pooled is 0.50 for the excited ensemble and 1.29 for the
+constant one (no interval computed for the ensemble quotients; the single-network interval of ZW4 for the
+latter is [0.63, 2.26]). (b) Averaging cancels the stationary offset only in part: the ensemble offset is 0.66 /
+0.70 of the RMS of the members' offsets, where fully independent offsets would give 0.447 and a fully common one
+1; run 15 (never reaches 0.20) has 0.94 / 0.90, i.e. all members share the same offset there. (c) The spread is
+informative, not calibrated: it is 2.9x (excited) / 1.8x (constant) larger in the class than outside, but only 68 % /
+81 % of the class window-steps lie within twice the spread, and at run level the rank correlation of the absolute
+run offset with the mean spread is 0.39 (excited) and 0.75 (constant). With five members the spread itself is
+uncertain. (d) The ensemble lifts the pooled and the bias-plus-spread reserves clearly (constant-trained: E4 in
+the dangerous direction 1.09 -> 1.71), the GA2 estimator E1 hardly (excited 1.55 -> 1.49, constant 0.995 -> 1.06)
+because E1 is a median over five runs; the intervals over runs are wide and those of the constant arm contain 1.
+
+**EV3 -- error at the optimal operating points.** *Data* (`ev3_build_dataset.py`, artifact
+`verify_ev3_dataset`): 25 scenarios of the Befund 52 grid (ambient temperature x relative humidity), oracle
+setpoints of the committed Windows reproduction (`study_operating_point_regret_win_repro.json`; inlet
+temperature, gas velocity, nozzle pressure, spray rate nominal), held constant for 28800 s with the disturbances
+held constant at the grid point; same simulator configuration (gas-velocity projection on, 25 s steps, 1152
+steps) and same measurement model as the constant-run holdout. **50 runs = 25 scenarios x 2 replicates.**
+Reasoning: the local error found in ZW4b is a steady offset of an operating point, so the operating point is
+the unit of information and all 25 oracle points are covered (17 bind the 0.20 kg/kg limit, giving 34 runs at the
+limit instead of the 5 of the holdout class); the two replicates add transient diversity (replicate 0 starts
+from the nominal state as in Befund 53, replicate 1 from an initial state drawn from the holdout's design) and
+independent sensor noise, more replicates of a settled operating point add little. Runtime estimated before
+the run at under 3 min (the 36-run holdout takes 20 s); measured 93 s for the data. Simulator check: in all 17
+binding scenarios the product moisture ends at 0.2000 kg/kg, in the 8 non-binding ones at 0.119-0.193 kg/kg (as in
+Befund 52), the projection is never active. New run IDs `ev3opt-<fingerprint>-<scenario>-r<replicate>`;
+disjointness from all 1316 runs of the 11 pools (5 excited, 5 constant-trained, holdout): 0 shared IDs, 0
+identical runs by content hash (with and without the initial state); the smallest normalised distance of a run's
+mean setpoint/disturbance vector to any pool run is 0.27 (median 0.39, 7 dimensions scaled by their span). The
+data file is git-ignored (3.4 MB, SHA-256 in the artifact). *Evaluation* (`ev3_evaluate.py`): the ten archive
+networks and the two ensembles, moisture, h=36, windows as in Befund 51. Definitions and reading thresholds were
+fixed in the script before the first evaluation: main population = "settled" windows (forecast starting in the
+second half of the run) of the 34 binding runs; estimator E1 = run-median of the per-run RMSE against the measured
+reference, the estimator of the global figure; pre-registered reading on E1 / global holdout run-median
+(0.000543 excited, 0.001488 constant): <= 1.5 "about like the global median run", >= 2.0 "clearly higher",
+in between intermediate.
+
+| Settled, 34 binding runs | Excited-trained | Constant-trained |
+|---|---|---|
+| single networks, E1 (median, min-max) | 0.00189 (0.00155-0.00274) | 0.00351 (0.00172-0.00457) |
+| ratio to the global holdout run-median | **3.5** (2.9-5.0) -> clearly higher | **2.4** (1.2-3.1) -> clearly higher |
+| ensemble, E1 / ratio | 0.00169 / **3.1** -> clearly higher | 0.00192 / **1.29** -> about like the global |
+| single networks: bias `pred - truth` / spread (median) | +0.00096 / 0.00133 | +0.00104 / 0.00257 |
+| ensemble bias / spread | +0.00083 / 0.00109 | +0.00134 / 0.00146 |
+| reserve E1, single networks (median, min-max; 95 % over scenarios for the median) | **1.68** (1.16-2.05) [1.38, 1.78] | **0.905** (0.70-1.84) [0.77, 1.57]; 3 of 5 < 1 |
+| reserve E1, ensemble [95 % over scenarios] | **1.88** [1.74, 2.03] | **1.66** [1.49, 1.82] |
+| reserve E2 (pooled), single / ensemble | 1.46 / 1.87 | 0.90 / 1.44 [1.22, 1.71] |
+| reserve E4 dangerous direction / worst case, single | 2.39 / 1.77 | 1.04 / 0.96 |
+| reserve E4 dangerous direction / worst case, ensemble | 2.91 / 2.32 | 2.18 / 1.67 |
+| the same E1 reserve on the holdout class (5 runs, ZW6) | 1.55 | 0.995 |
+
+Further: (i) direction: the ensemble mean offset of a scenario is negative (sensor drier than true) in 0 of the 17
+binding scenarios; single-network offsets are negative in 20 % (excited) and 31 % (constant) of the
+scenario x network cases; the mean bias is on the safe (wetter) side. (ii) The 8 non-binding scenarios are
+easier: E1 0.00139 (excited) / 0.00184 (constant), reserve E1 2.28 / 1.73 (single networks). (iii) Including the
+initial transient (all windows, binding) changes E1 by less than 12 % (0.00174 / 0.00366). (iv) Step 1 alone:
+0.00145 for both arms, i.e. the one-step error sits at the reference noise. (v) Reference noise (measured minus
+truth) on these runs: 0.00100 kg/kg pooled at the binding points (0.00099 run-median), 0.00079 at the non-binding
+ones, against 0.00098 in the holdout class; the global holdout run-median (0.00054) is below it, so the
+ratios above compare a settled operating point that carries the full noise of a 0.2 kg/kg reading with a
+median holdout run at low moisture. Against the truth (E3) the ensembles are 0.00138 (excited) and 0.00198
+(constant). (vi) Spread as uncertainty at the optimal points: rank correlation with the ensemble error 0.21 /
+0.38, 82 % / 93 % of the window-steps within twice the spread.
+
+**Reading.** Single networks: pre-registered reading 2 applies to both arms -- the error at the optimal
+operating points is clearly higher (2.4-3.5x) than the global holdout run-median, and the reserve is thin:
+1.68 for the excited-trained sensor, 0.905 for the constant-trained one (below 1 in 3 of 5 networks), practically
+the same as the reserves from the 5-run holdout class (1.55, 0.995). That is, the ZW6 conclusion carries over
+to 34 runs at all 17 limit-binding oracle points, with the direction of the mean bias on the safe side. Part of
+the gap to the global figure is reference noise (v), not forecast error; the pre-registered comparison does not
+separate the two. Ensemble: the reserve rises to 1.88 (excited) and 1.66 (constant) with intervals above 1 in
+both arms (constant: from 0.905 for a single network), and the constant-trained ensemble falls into reading 1
+(1.29x the global figure) while the excited-trained one stays in reading 2 (3.1x). So the ensemble is the
+cheaper lever and works at the optimal points more clearly than in the 5-run holdout class of EV2; targeted
+excitation is untested here (no training was done) and remains the second lever for the excited arm, whose
+reserve is limited by a common offset of its members (EV2b).
+
+**Caveats.** As in Befund 64: the optima depend on the unsourced placeholder limit 0.20 kg/kg, which is also the
+drying-kinetics parameter (double role, Befund 64 addendum); the oracle assumes perfect knowledge of the
+disturbances; disturbances are constant at the grid point here (the oracle's assumption), and the disturbance
+design of the holdout runs was not compared; a controller with margin operates at `0.20 - m`, not on the limit,
+which was not evaluated. The EV3 set was designed after the ZW findings (that is its purpose), the reading
+thresholds were fixed before the evaluation but are conventions. The 25 scenarios use one setpoint each, two
+runs per point; bootstrap intervals are over scenarios (17 for the binding population). The 3 sigma margin
+convention is Befund 62 HA1's. Artifacts: `verify_ev2_ensemble`, `verify_ev3_dataset`, `verify_ev3_evaluate`,
+`verify_ev3_noise_floor`.
+
 ## Was Schritt 6, Teil 2 als Nächstes braucht
 
 Torch läuft jetzt (Befund 24); der Rahmen ist bereit, gebraucht wird die eigentliche
