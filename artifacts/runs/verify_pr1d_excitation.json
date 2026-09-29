@@ -1,0 +1,1242 @@
+{
+ "provenance": {
+  "git/commit": "1b1c63cc1c351d02b3d8263c7f4fff90dce236c0",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "pools": [
+  {
+   "kind": "excited",
+   "seed": 1,
+   "n_runs": 128,
+   "n_steps": 1152,
+   "action_bounds_ok": {
+    "inlet_temperature_celsius/requested": true,
+    "inlet_temperature_celsius/realised": true,
+    "gas_velocity_m_per_s/requested": true,
+    "gas_velocity_m_per_s/realised": true,
+    "spray_rate_kg_per_h/requested": true,
+    "spray_rate_kg_per_h/realised": true,
+    "nozzle_pressure_bar/requested": true,
+    "nozzle_pressure_bar/realised": true
+   },
+   "rate_limit_ok_(requested)": {
+    "inlet_temperature_celsius": true,
+    "gas_velocity_m_per_s": true,
+    "spray_rate_kg_per_h": true,
+    "nozzle_pressure_bar": true
+   },
+   "max_rate_over_limit": {
+    "inlet_temperature_celsius": 1.0000000000000007,
+    "gas_velocity_m_per_s": 1.0,
+    "spray_rate_kg_per_h": 1.0000000000000004,
+    "nozzle_pressure_bar": 1.0000000000000002
+   },
+   "label_vs_own_classification": {
+    "constant->constant": 52,
+    "prbs->prbs": 117,
+    "prbs->ramp": 15,
+    "ramp->ramp": 127,
+    "step->step": 201
+   },
+   "disagreement_by_channel_and_label": {
+    "spray_rate_kg_per_h:prbs->ramp": 7,
+    "inlet_temperature_celsius:prbs->ramp": 8
+   },
+   "disagreement_mean_band_width": 1.0,
+   "label_counts": {
+    "constant": 52,
+    "ramp": 127,
+    "step": 201,
+    "prbs": 132
+   },
+   "agreement_fraction": 0.970703125,
+   "prbs": {
+    "n_series": 132,
+    "clock_steps_assumed": 5,
+    "fraction_high_mean": 0.5034327651515151,
+    "fraction_high_min_max": [
+     0.4730902777777778,
+     0.5225694444444444
+    ],
+    "mean_run_length_bits_(m-sequence ~2)": 1.9807717292451605,
+    "share_run_length_1_(m-sequence 0.5)": 0.5020137715993244,
+    "share_run_length_2_(m-sequence 0.25)": 0.25191633103806677,
+    "modal_edge_phase_mod_clock_share": 0.6453408421190492
+   },
+   "n_step_series": 201,
+   "n_ramp_series": 127,
+   "constant_runs": {
+    "n_flagged": 13,
+    "fraction_flagged": 0.1015625,
+    "flagged_indices_first": [
+     0,
+     10,
+     20,
+     30,
+     40,
+     50,
+     60,
+     70,
+     80,
+     90,
+     100,
+     110,
+     120
+    ],
+    "label_equals_data_constant_for_all_runs": true,
+    "requested_actions_exactly_constant": true,
+    "realised_gas_velocity_varies_in_n_runs_(projection)": 4,
+    "realised_other_channels_constant": true,
+    "disturbance_ptp_median_in_constant_runs": {
+     "ambient_temperature_celsius": 8.935400452027961,
+     "ambient_relative_humidity": 0.1655190760036459,
+     "suspension_solid_fraction": 0.05649461642136566
+    },
+    "disturbance_ptp_as_share_of_range": {
+     "ambient_temperature_celsius": 0.2978466817342654,
+     "ambient_relative_humidity": 0.2758651266727432,
+     "suspension_solid_fraction": 0.2824730821068283
+    }
+   },
+   "disturbances": {
+    "ambient_temperature_celsius": {
+     "configured": [
+      5.0,
+      35.0
+     ],
+     "observed": [
+      5.0,
+      35.0
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.13922119140625
+    },
+    "ambient_relative_humidity": {
+     "configured": [
+      0.25,
+      0.85
+     ],
+     "observed": [
+      0.25,
+      0.85
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.1263766818576389
+    },
+    "suspension_solid_fraction": {
+     "configured": [
+      0.2,
+      0.4
+     ],
+     "observed": [
+      0.2,
+      0.4
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.10725233289930555
+    }
+   },
+   "initial_conditions": {
+    "solid_mass_kg": {
+     "documented_range": [
+      1.6,
+      2.4
+     ],
+     "observed": [
+      1.6025710791349412,
+      2.3989790827035904
+     ],
+     "within_range": true
+    },
+    "moisture_kg_per_kg": {
+     "documented_range": [
+      0.03,
+      0.2
+     ],
+     "observed": [
+      0.030822450509294868,
+      0.19923049616627397
+     ],
+     "within_range": true
+    },
+    "diameter_m": {
+     "documented_range": [
+      0.00025,
+      0.0009
+     ],
+     "observed": [
+      0.0002506396812733725,
+      0.0008961686775934004
+     ],
+     "within_range": true
+    },
+    "bed_temperature_celsius": {
+     "documented_range": [
+      35.0,
+      80.0
+     ],
+     "observed": [
+      35.032842392101884,
+      79.89394369535148
+     ],
+     "within_range": true
+    }
+   }
+  },
+  {
+   "kind": "excited",
+   "seed": 2,
+   "n_runs": 128,
+   "n_steps": 1152,
+   "action_bounds_ok": {
+    "inlet_temperature_celsius/requested": true,
+    "inlet_temperature_celsius/realised": true,
+    "gas_velocity_m_per_s/requested": true,
+    "gas_velocity_m_per_s/realised": true,
+    "spray_rate_kg_per_h/requested": true,
+    "spray_rate_kg_per_h/realised": true,
+    "nozzle_pressure_bar/requested": true,
+    "nozzle_pressure_bar/realised": true
+   },
+   "rate_limit_ok_(requested)": {
+    "inlet_temperature_celsius": true,
+    "gas_velocity_m_per_s": true,
+    "spray_rate_kg_per_h": true,
+    "nozzle_pressure_bar": true
+   },
+   "max_rate_over_limit": {
+    "inlet_temperature_celsius": 1.0000000000000007,
+    "gas_velocity_m_per_s": 1.0000000000000002,
+    "spray_rate_kg_per_h": 1.0000000000000004,
+    "nozzle_pressure_bar": 1.0000000000000002
+   },
+   "label_vs_own_classification": {
+    "constant->constant": 52,
+    "prbs->prbs": 121,
+    "prbs->ramp": 15,
+    "ramp->ramp": 133,
+    "step->step": 191
+   },
+   "disagreement_by_channel_and_label": {
+    "spray_rate_kg_per_h:prbs->ramp": 8,
+    "inlet_temperature_celsius:prbs->ramp": 7
+   },
+   "disagreement_mean_band_width": 1.0,
+   "label_counts": {
+    "constant": 52,
+    "ramp": 133,
+    "prbs": 136,
+    "step": 191
+   },
+   "agreement_fraction": 0.970703125,
+   "prbs": {
+    "n_series": 136,
+    "clock_steps_assumed": 5,
+    "fraction_high_mean": 0.5020041870915032,
+    "fraction_high_min_max": [
+     0.4748263888888889,
+     0.5225694444444444
+    ],
+    "mean_run_length_bits_(m-sequence ~2)": 1.9832081307998233,
+    "share_run_length_1_(m-sequence 0.5)": 0.49984218168044947,
+    "share_run_length_2_(m-sequence 0.25)": 0.252951202575595,
+    "modal_edge_phase_mod_clock_share": 0.6926698905573937
+   },
+   "n_step_series": 191,
+   "n_ramp_series": 133,
+   "constant_runs": {
+    "n_flagged": 13,
+    "fraction_flagged": 0.1015625,
+    "flagged_indices_first": [
+     0,
+     10,
+     20,
+     30,
+     40,
+     50,
+     60,
+     70,
+     80,
+     90,
+     100,
+     110,
+     120
+    ],
+    "label_equals_data_constant_for_all_runs": true,
+    "requested_actions_exactly_constant": true,
+    "realised_gas_velocity_varies_in_n_runs_(projection)": 0,
+    "realised_other_channels_constant": true,
+    "disturbance_ptp_median_in_constant_runs": {
+     "ambient_temperature_celsius": 9.25535548226969,
+     "ambient_relative_humidity": 0.17358745208294624,
+     "suspension_solid_fraction": 0.05169769692688622
+    },
+    "disturbance_ptp_as_share_of_range": {
+     "ambient_temperature_celsius": 0.3085118494089897,
+     "ambient_relative_humidity": 0.28931242013824376,
+     "suspension_solid_fraction": 0.2584884846344311
+    }
+   },
+   "disturbances": {
+    "ambient_temperature_celsius": {
+     "configured": [
+      5.0,
+      35.0
+     ],
+     "observed": [
+      5.0,
+      35.0
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.08936903211805555
+    },
+    "ambient_relative_humidity": {
+     "configured": [
+      0.25,
+      0.85
+     ],
+     "observed": [
+      0.25,
+      0.85
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.11319986979166667
+    },
+    "suspension_solid_fraction": {
+     "configured": [
+      0.2,
+      0.4
+     ],
+     "observed": [
+      0.2,
+      0.4
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.1303439670138889
+    }
+   },
+   "initial_conditions": {
+    "solid_mass_kg": {
+     "documented_range": [
+      1.6,
+      2.4
+     ],
+     "observed": [
+      1.6009709969162942,
+      2.3987987227737904
+     ],
+     "within_range": true
+    },
+    "moisture_kg_per_kg": {
+     "documented_range": [
+      0.03,
+      0.2
+     ],
+     "observed": [
+      0.030910538332536815,
+      0.1994003237783909
+     ],
+     "within_range": true
+    },
+    "diameter_m": {
+     "documented_range": [
+      0.00025,
+      0.0009
+     ],
+     "observed": [
+      0.00025054833522882274,
+      0.0008928987357879027
+     ],
+     "within_range": true
+    },
+    "bed_temperature_celsius": {
+     "documented_range": [
+      35.0,
+      80.0
+     ],
+     "observed": [
+      35.036953003145754,
+      79.80706334114075
+     ],
+     "within_range": true
+    }
+   }
+  },
+  {
+   "kind": "excited",
+   "seed": 3,
+   "n_runs": 128,
+   "n_steps": 1152,
+   "action_bounds_ok": {
+    "inlet_temperature_celsius/requested": true,
+    "inlet_temperature_celsius/realised": true,
+    "gas_velocity_m_per_s/requested": true,
+    "gas_velocity_m_per_s/realised": true,
+    "spray_rate_kg_per_h/requested": true,
+    "spray_rate_kg_per_h/realised": true,
+    "nozzle_pressure_bar/requested": true,
+    "nozzle_pressure_bar/realised": true
+   },
+   "rate_limit_ok_(requested)": {
+    "inlet_temperature_celsius": true,
+    "gas_velocity_m_per_s": true,
+    "spray_rate_kg_per_h": true,
+    "nozzle_pressure_bar": true
+   },
+   "max_rate_over_limit": {
+    "inlet_temperature_celsius": 1.0000000000000007,
+    "gas_velocity_m_per_s": 1.0000000000000002,
+    "spray_rate_kg_per_h": 1.0000000000000004,
+    "nozzle_pressure_bar": 1.0000000000000002
+   },
+   "label_vs_own_classification": {
+    "constant->constant": 52,
+    "prbs->prbs": 114,
+    "prbs->ramp": 12,
+    "ramp->ramp": 137,
+    "step->step": 197
+   },
+   "disagreement_by_channel_and_label": {
+    "spray_rate_kg_per_h:prbs->ramp": 10,
+    "inlet_temperature_celsius:prbs->ramp": 2
+   },
+   "disagreement_mean_band_width": 1.0,
+   "label_counts": {
+    "constant": 52,
+    "step": 197,
+    "ramp": 137,
+    "prbs": 126
+   },
+   "agreement_fraction": 0.9765625,
+   "prbs": {
+    "n_series": 126,
+    "clock_steps_assumed": 5,
+    "fraction_high_mean": 0.5031897597001764,
+    "fraction_high_min_max": [
+     0.4739583333333333,
+     0.5225694444444444
+    ],
+    "mean_run_length_bits_(m-sequence ~2)": 1.9906983106490663,
+    "share_run_length_1_(m-sequence 0.5)": 0.499213460091649,
+    "share_run_length_2_(m-sequence 0.25)": 0.2512824020244853,
+    "modal_edge_phase_mod_clock_share": 0.6282307533255221
+   },
+   "n_step_series": 197,
+   "n_ramp_series": 137,
+   "constant_runs": {
+    "n_flagged": 13,
+    "fraction_flagged": 0.1015625,
+    "flagged_indices_first": [
+     0,
+     10,
+     20,
+     30,
+     40,
+     50,
+     60,
+     70,
+     80,
+     90,
+     100,
+     110,
+     120
+    ],
+    "label_equals_data_constant_for_all_runs": true,
+    "requested_actions_exactly_constant": true,
+    "realised_gas_velocity_varies_in_n_runs_(projection)": 3,
+    "realised_other_channels_constant": true,
+    "disturbance_ptp_median_in_constant_runs": {
+     "ambient_temperature_celsius": 9.523141746461672,
+     "ambient_relative_humidity": 0.1612902443243842,
+     "suspension_solid_fraction": 0.05796068497910378
+    },
+    "disturbance_ptp_as_share_of_range": {
+     "ambient_temperature_celsius": 0.31743805821538906,
+     "ambient_relative_humidity": 0.2688170738739737,
+     "suspension_solid_fraction": 0.2898034248955189
+    }
+   },
+   "disturbances": {
+    "ambient_temperature_celsius": {
+     "configured": [
+      5.0,
+      35.0
+     ],
+     "observed": [
+      5.0,
+      35.0
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.09735785590277778
+    },
+    "ambient_relative_humidity": {
+     "configured": [
+      0.25,
+      0.85
+     ],
+     "observed": [
+      0.25,
+      0.85
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.1274346245659722
+    },
+    "suspension_solid_fraction": {
+     "configured": [
+      0.2,
+      0.4
+     ],
+     "observed": [
+      0.2,
+      0.4
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.13536241319444445
+    }
+   },
+   "initial_conditions": {
+    "solid_mass_kg": {
+     "documented_range": [
+      1.6,
+      2.4
+     ],
+     "observed": [
+      1.603723644465208,
+      2.3986516065895556
+     ],
+     "within_range": true
+    },
+    "moisture_kg_per_kg": {
+     "documented_range": [
+      0.03,
+      0.2
+     ],
+     "observed": [
+      0.031001240257173775,
+      0.198806095039472
+     ],
+     "within_range": true
+    },
+    "diameter_m": {
+     "documented_range": [
+      0.00025,
+      0.0009
+     ],
+     "observed": [
+      0.0002521247821462961,
+      0.0008924018254523356
+     ],
+     "within_range": true
+    },
+    "bed_temperature_celsius": {
+     "documented_range": [
+      35.0,
+      80.0
+     ],
+     "observed": [
+      35.122609892860055,
+      79.95928813237697
+     ],
+     "within_range": true
+    }
+   }
+  },
+  {
+   "kind": "excited",
+   "seed": 4,
+   "n_runs": 128,
+   "n_steps": 1152,
+   "action_bounds_ok": {
+    "inlet_temperature_celsius/requested": true,
+    "inlet_temperature_celsius/realised": true,
+    "gas_velocity_m_per_s/requested": true,
+    "gas_velocity_m_per_s/realised": true,
+    "spray_rate_kg_per_h/requested": true,
+    "spray_rate_kg_per_h/realised": true,
+    "nozzle_pressure_bar/requested": true,
+    "nozzle_pressure_bar/realised": true
+   },
+   "rate_limit_ok_(requested)": {
+    "inlet_temperature_celsius": true,
+    "gas_velocity_m_per_s": true,
+    "spray_rate_kg_per_h": true,
+    "nozzle_pressure_bar": true
+   },
+   "max_rate_over_limit": {
+    "inlet_temperature_celsius": 1.0000000000000007,
+    "gas_velocity_m_per_s": 1.0000000000000002,
+    "spray_rate_kg_per_h": 1.0000000000000004,
+    "nozzle_pressure_bar": 1.0000000000000002
+   },
+   "label_vs_own_classification": {
+    "constant->constant": 52,
+    "prbs->prbs": 117,
+    "prbs->ramp": 10,
+    "ramp->ramp": 137,
+    "step->step": 196
+   },
+   "disagreement_by_channel_and_label": {
+    "spray_rate_kg_per_h:prbs->ramp": 5,
+    "inlet_temperature_celsius:prbs->ramp": 5
+   },
+   "disagreement_mean_band_width": 1.0,
+   "label_counts": {
+    "constant": 52,
+    "step": 196,
+    "prbs": 127,
+    "ramp": 137
+   },
+   "agreement_fraction": 0.98046875,
+   "prbs": {
+    "n_series": 127,
+    "clock_steps_assumed": 5,
+    "fraction_high_mean": 0.501947998687664,
+    "fraction_high_min_max": [
+     0.4774305555555556,
+     0.5182291666666666
+    ],
+    "mean_run_length_bits_(m-sequence ~2)": 1.986390412350193,
+    "share_run_length_1_(m-sequence 0.5)": 0.5015911706953754,
+    "share_run_length_2_(m-sequence 0.25)": 0.25038932899993227,
+    "modal_edge_phase_mod_clock_share": 0.6142145829070322
+   },
+   "n_step_series": 196,
+   "n_ramp_series": 137,
+   "constant_runs": {
+    "n_flagged": 13,
+    "fraction_flagged": 0.1015625,
+    "flagged_indices_first": [
+     0,
+     10,
+     20,
+     30,
+     40,
+     50,
+     60,
+     70,
+     80,
+     90,
+     100,
+     110,
+     120
+    ],
+    "label_equals_data_constant_for_all_runs": true,
+    "requested_actions_exactly_constant": true,
+    "realised_gas_velocity_varies_in_n_runs_(projection)": 3,
+    "realised_other_channels_constant": true,
+    "disturbance_ptp_median_in_constant_runs": {
+     "ambient_temperature_celsius": 10.14065590497676,
+     "ambient_relative_humidity": 0.2321902476302939,
+     "suspension_solid_fraction": 0.07887852343803042
+    },
+    "disturbance_ptp_as_share_of_range": {
+     "ambient_temperature_celsius": 0.33802186349922536,
+     "ambient_relative_humidity": 0.38698374605048985,
+     "suspension_solid_fraction": 0.3943926171901521
+    }
+   },
+   "disturbances": {
+    "ambient_temperature_celsius": {
+     "configured": [
+      5.0,
+      35.0
+     ],
+     "observed": [
+      5.0,
+      35.0
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.13029649522569445
+    },
+    "ambient_relative_humidity": {
+     "configured": [
+      0.25,
+      0.85
+     ],
+     "observed": [
+      0.25,
+      0.85
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.1128268771701389
+    },
+    "suspension_solid_fraction": {
+     "configured": [
+      0.2,
+      0.4
+     ],
+     "observed": [
+      0.2,
+      0.4
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.09240044487847222
+    }
+   },
+   "initial_conditions": {
+    "solid_mass_kg": {
+     "documented_range": [
+      1.6,
+      2.4
+     ],
+     "observed": [
+      1.601451412588358,
+      2.3997872352600096
+     ],
+     "within_range": true
+    },
+    "moisture_kg_per_kg": {
+     "documented_range": [
+      0.03,
+      0.2
+     ],
+     "observed": [
+      0.030740029765293,
+      0.19872281965799632
+     ],
+     "within_range": true
+    },
+    "diameter_m": {
+     "documented_range": [
+      0.00025,
+      0.0009
+     ],
+     "observed": [
+      0.0002502726170161445,
+      0.0008944872170355968
+     ],
+     "within_range": true
+    },
+    "bed_temperature_celsius": {
+     "documented_range": [
+      35.0,
+      80.0
+     ],
+     "observed": [
+      35.01314064487815,
+      79.67349406797439
+     ],
+     "within_range": true
+    }
+   }
+  },
+  {
+   "kind": "excited",
+   "seed": 5,
+   "n_runs": 128,
+   "n_steps": 1152,
+   "action_bounds_ok": {
+    "inlet_temperature_celsius/requested": true,
+    "inlet_temperature_celsius/realised": true,
+    "gas_velocity_m_per_s/requested": true,
+    "gas_velocity_m_per_s/realised": true,
+    "spray_rate_kg_per_h/requested": true,
+    "spray_rate_kg_per_h/realised": true,
+    "nozzle_pressure_bar/requested": true,
+    "nozzle_pressure_bar/realised": true
+   },
+   "rate_limit_ok_(requested)": {
+    "inlet_temperature_celsius": true,
+    "gas_velocity_m_per_s": true,
+    "spray_rate_kg_per_h": true,
+    "nozzle_pressure_bar": true
+   },
+   "max_rate_over_limit": {
+    "inlet_temperature_celsius": 1.0000000000000007,
+    "gas_velocity_m_per_s": 1.0000000000000002,
+    "spray_rate_kg_per_h": 1.0000000000000004,
+    "nozzle_pressure_bar": 1.0000000000000002
+   },
+   "label_vs_own_classification": {
+    "constant->constant": 52,
+    "prbs->prbs": 122,
+    "prbs->ramp": 12,
+    "ramp->ramp": 141,
+    "step->step": 185
+   },
+   "disagreement_by_channel_and_label": {
+    "inlet_temperature_celsius:prbs->ramp": 4,
+    "spray_rate_kg_per_h:prbs->ramp": 8
+   },
+   "disagreement_mean_band_width": 1.0,
+   "label_counts": {
+    "constant": 52,
+    "step": 185,
+    "prbs": 134,
+    "ramp": 141
+   },
+   "agreement_fraction": 0.9765625,
+   "prbs": {
+    "n_series": 134,
+    "clock_steps_assumed": 5,
+    "fraction_high_mean": 0.5025393864013268,
+    "fraction_high_min_max": [
+     0.4774305555555556,
+     0.5225694444444444
+    ],
+    "mean_run_length_bits_(m-sequence ~2)": 1.9869054496437513,
+    "share_run_length_1_(m-sequence 0.5)": 0.498491559150138,
+    "share_run_length_2_(m-sequence 0.25)": 0.25284036202580396,
+    "modal_edge_phase_mod_clock_share": 0.6936161955889011
+   },
+   "n_step_series": 185,
+   "n_ramp_series": 141,
+   "constant_runs": {
+    "n_flagged": 13,
+    "fraction_flagged": 0.1015625,
+    "flagged_indices_first": [
+     0,
+     10,
+     20,
+     30,
+     40,
+     50,
+     60,
+     70,
+     80,
+     90,
+     100,
+     110,
+     120
+    ],
+    "label_equals_data_constant_for_all_runs": true,
+    "requested_actions_exactly_constant": true,
+    "realised_gas_velocity_varies_in_n_runs_(projection)": 5,
+    "realised_other_channels_constant": true,
+    "disturbance_ptp_median_in_constant_runs": {
+     "ambient_temperature_celsius": 8.570222144184534,
+     "ambient_relative_humidity": 0.206527964624579,
+     "suspension_solid_fraction": 0.059383725872444726
+    },
+    "disturbance_ptp_as_share_of_range": {
+     "ambient_temperature_celsius": 0.2856740714728178,
+     "ambient_relative_humidity": 0.3442132743742984,
+     "suspension_solid_fraction": 0.29691862936222363
+    }
+   },
+   "disturbances": {
+    "ambient_temperature_celsius": {
+     "configured": [
+      5.0,
+      35.0
+     ],
+     "observed": [
+      5.0,
+      35.0
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.1645779079861111
+    },
+    "ambient_relative_humidity": {
+     "configured": [
+      0.25,
+      0.85
+     ],
+     "observed": [
+      0.25,
+      0.85
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.1081814236111111
+    },
+    "suspension_solid_fraction": {
+     "configured": [
+      0.2,
+      0.4
+     ],
+     "observed": [
+      0.2,
+      0.4
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.1056179470486111
+    }
+   },
+   "initial_conditions": {
+    "solid_mass_kg": {
+     "documented_range": [
+      1.6,
+      2.4
+     ],
+     "observed": [
+      1.6030925787985326,
+      2.396939937770367
+     ],
+     "within_range": true
+    },
+    "moisture_kg_per_kg": {
+     "documented_range": [
+      0.03,
+      0.2
+     ],
+     "observed": [
+      0.03079009207896888,
+      0.19941843534819784
+     ],
+     "within_range": true
+    },
+    "diameter_m": {
+     "documented_range": [
+      0.00025,
+      0.0009
+     ],
+     "observed": [
+      0.000252219399485629,
+      0.0008922418663046957
+     ],
+     "within_range": true
+    },
+    "bed_temperature_celsius": {
+     "documented_range": [
+      35.0,
+      80.0
+     ],
+     "observed": [
+      35.01636801287532,
+      79.79090923443437
+     ],
+     "within_range": true
+    }
+   }
+  },
+  {
+   "kind": "constant_train",
+   "seed": 1,
+   "n_runs": 128,
+   "n_steps": 1152,
+   "action_bounds_ok": {
+    "inlet_temperature_celsius/requested": true,
+    "inlet_temperature_celsius/realised": true,
+    "gas_velocity_m_per_s/requested": true,
+    "gas_velocity_m_per_s/realised": true,
+    "spray_rate_kg_per_h/requested": true,
+    "spray_rate_kg_per_h/realised": true,
+    "nozzle_pressure_bar/requested": true,
+    "nozzle_pressure_bar/realised": true
+   },
+   "rate_limit_ok_(requested)": {
+    "inlet_temperature_celsius": true,
+    "gas_velocity_m_per_s": true,
+    "spray_rate_kg_per_h": true,
+    "nozzle_pressure_bar": true
+   },
+   "max_rate_over_limit": {
+    "inlet_temperature_celsius": 0.0,
+    "gas_velocity_m_per_s": 0.0,
+    "spray_rate_kg_per_h": 0.0,
+    "nozzle_pressure_bar": 0.0
+   },
+   "label_vs_own_classification": {
+    "constant->constant": 512
+   },
+   "disagreement_by_channel_and_label": {},
+   "disagreement_mean_band_width": null,
+   "label_counts": {
+    "constant": 512
+   },
+   "agreement_fraction": 1.0,
+   "n_step_series": 0,
+   "n_ramp_series": 0,
+   "constant_runs": {
+    "n_flagged": 128,
+    "fraction_flagged": 1.0,
+    "flagged_indices_first": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14
+    ],
+    "label_equals_data_constant_for_all_runs": true,
+    "requested_actions_exactly_constant": true,
+    "realised_gas_velocity_varies_in_n_runs_(projection)": 23,
+    "realised_other_channels_constant": true,
+    "disturbance_ptp_median_in_constant_runs": {
+     "ambient_temperature_celsius": 8.035068522605838,
+     "ambient_relative_humidity": 0.174362151873028,
+     "suspension_solid_fraction": 0.05846460016133892
+    },
+    "disturbance_ptp_as_share_of_range": {
+     "ambient_temperature_celsius": 0.2678356174201946,
+     "ambient_relative_humidity": 0.2906035864550467,
+     "suspension_solid_fraction": 0.2923230008066946
+    }
+   },
+   "disturbances": {
+    "ambient_temperature_celsius": {
+     "configured": [
+      5.0,
+      35.0
+     ],
+     "observed": [
+      5.0,
+      35.0
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.13922119140625
+    },
+    "ambient_relative_humidity": {
+     "configured": [
+      0.25,
+      0.85
+     ],
+     "observed": [
+      0.25,
+      0.85
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.1263766818576389
+    },
+    "suspension_solid_fraction": {
+     "configured": [
+      0.2,
+      0.4
+     ],
+     "observed": [
+      0.2,
+      0.4
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.10725233289930555
+    }
+   },
+   "initial_conditions": {
+    "solid_mass_kg": {
+     "documented_range": [
+      1.6,
+      2.4
+     ],
+     "observed": [
+      1.6025710791349412,
+      2.3989790827035904
+     ],
+     "within_range": true
+    },
+    "moisture_kg_per_kg": {
+     "documented_range": [
+      0.03,
+      0.2
+     ],
+     "observed": [
+      0.030822450509294868,
+      0.19923049616627397
+     ],
+     "within_range": true
+    },
+    "diameter_m": {
+     "documented_range": [
+      0.00025,
+      0.0009
+     ],
+     "observed": [
+      0.0002506396812733725,
+      0.0008961686775934004
+     ],
+     "within_range": true
+    },
+    "bed_temperature_celsius": {
+     "documented_range": [
+      35.0,
+      80.0
+     ],
+     "observed": [
+      35.032842392101884,
+      79.89394369535148
+     ],
+     "within_range": true
+    }
+   }
+  },
+  {
+   "kind": "holdout",
+   "seed": 999,
+   "n_runs": 36,
+   "n_steps": 1152,
+   "action_bounds_ok": {
+    "inlet_temperature_celsius/requested": true,
+    "inlet_temperature_celsius/realised": true,
+    "gas_velocity_m_per_s/requested": true,
+    "gas_velocity_m_per_s/realised": true,
+    "spray_rate_kg_per_h/requested": true,
+    "spray_rate_kg_per_h/realised": true,
+    "nozzle_pressure_bar/requested": true,
+    "nozzle_pressure_bar/realised": true
+   },
+   "rate_limit_ok_(requested)": {
+    "inlet_temperature_celsius": true,
+    "gas_velocity_m_per_s": true,
+    "spray_rate_kg_per_h": true,
+    "nozzle_pressure_bar": true
+   },
+   "max_rate_over_limit": {
+    "inlet_temperature_celsius": 0.0,
+    "gas_velocity_m_per_s": 0.0,
+    "spray_rate_kg_per_h": 0.0,
+    "nozzle_pressure_bar": 0.0
+   },
+   "label_vs_own_classification": {
+    "constant->constant": 144
+   },
+   "disagreement_by_channel_and_label": {},
+   "disagreement_mean_band_width": null,
+   "label_counts": {
+    "constant": 144
+   },
+   "agreement_fraction": 1.0,
+   "n_step_series": 0,
+   "n_ramp_series": 0,
+   "constant_runs": {
+    "n_flagged": 36,
+    "fraction_flagged": 1.0,
+    "flagged_indices_first": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14
+    ],
+    "label_equals_data_constant_for_all_runs": true,
+    "requested_actions_exactly_constant": true,
+    "realised_gas_velocity_varies_in_n_runs_(projection)": 10,
+    "realised_other_channels_constant": true,
+    "disturbance_ptp_median_in_constant_runs": {
+     "ambient_temperature_celsius": 7.439999841891035,
+     "ambient_relative_humidity": 0.16008445919678238,
+     "suspension_solid_fraction": 0.053247082006648974
+    },
+    "disturbance_ptp_as_share_of_range": {
+     "ambient_temperature_celsius": 0.2479999947297012,
+     "ambient_relative_humidity": 0.2668074319946373,
+     "suspension_solid_fraction": 0.26623541003324486
+    }
+   },
+   "disturbances": {
+    "ambient_temperature_celsius": {
+     "configured": [
+      5.0,
+      35.0
+     ],
+     "observed": [
+      5.0,
+      35.0
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.0843701774691358
+    },
+    "ambient_relative_humidity": {
+     "configured": [
+      0.25,
+      0.85
+     ],
+     "observed": [
+      0.25,
+      0.85
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.18296682098765432
+    },
+    "suspension_solid_fraction": {
+     "configured": [
+      0.2,
+      0.4
+     ],
+     "observed": [
+      0.2,
+      0.4
+     ],
+     "within_range": true,
+     "coverage_of_range": 1.0,
+     "fraction_of_samples_exactly_at_a_bound": 0.10402199074074074
+    }
+   },
+   "initial_conditions": {
+    "solid_mass_kg": {
+     "documented_range": [
+      1.6,
+      2.4
+     ],
+     "observed": [
+      1.6101192705333234,
+      2.3799360819160937
+     ],
+     "within_range": true
+    },
+    "moisture_kg_per_kg": {
+     "documented_range": [
+      0.03,
+      0.2
+     ],
+     "observed": [
+      0.03001024409197271,
+      0.19905265478417278
+     ],
+     "within_range": true
+    },
+    "diameter_m": {
+     "documented_range": [
+      0.00025,
+      0.0009
+     ],
+     "observed": [
+      0.00025758468548236417,
+      0.0008706955644406772
+     ],
+     "within_range": true
+    },
+    "bed_temperature_celsius": {
+     "documented_range": [
+      35.0,
+      80.0
+     ],
+     "observed": [
+      36.40365282539278,
+      79.22744660638273
+     ],
+     "within_range": true
+    }
+   }
+  }
+ ]
+}
