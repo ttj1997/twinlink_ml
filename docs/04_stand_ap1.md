@@ -8135,3 +8135,112 @@ Studie statt eines einzelnen Trainingslaufs.
    Fensterzahl bei kleinem n): Befund 24 lief mit effektiv 40 Gradientenschritten insgesamt
    bei n = 8 — bevor die Lernkurve entsteht, ist zu prüfen, ob das für die kleinen
    Stützstellen ausreicht oder das Bild systematisch zu ihren Ungunsten verzerrt.
+
+
+### 66. Pre-publication audit of the abstract numbers -- the data are generated correctly and every number is reproduced; several numbers need a qualifier or a changed wording, one provenance gap remains
+
+**a) Purpose and scope.** Independent recomputation of every number the methods-paper abstract
+rests on (Befund 39, 51 K5, 55, 58 OA5a, 59, 62 HA1, 63, 63a), with emphasis on whether the
+underlying data were generated correctly. All code is new (`scripts/verify/`), imports none of
+the existing evaluation code (`evaluation.evaluator/protocol/resolution`, `scripts/analyze_*`)
+and uses the simulator and `generate_data` only as the objects under test. Windows, Python
+3.14.2, one thread where timing matters. Every script was committed before it ran, on a clean
+tree; artifacts `artifacts/runs/verify_*.json` carry `git/commit` and `git/dirty=False`. Nothing
+was corrected: deviations are reported only.
+
+Two runs were discarded before commit and repeated after fixing the audit script itself (a
+Windows code-page decoding error in the git helper produced spurious AST differences; an exact
+float comparison of Linux vs Windows checkpoint scalers failed at 1e-16). Neither artifact was
+committed. scikit-learn is absent from this environment; it was installed into an isolated
+target directory (`PYTHONPATH`) for the Befund 39 re-run only.
+
+**b) Table 1 -- numbers of the abstract.**
+
+| Number (abstract) | Recomputed value | Status |
+|---|---|---|
+| Window-wise vs run-wise split: 29 to 68 % lower error (Befund 39) | records: 28.7 / 68.1 / 51.7 % (energy / moisture / d50); independent re-run (own windowing, own random window assignment, ExtraTrees 100 trees, 5 seeds): 29.9 / 71.0 / 52.0 %, ranges of the two arms disjoint on all three targets | **confirmed**, but provenance **not traceable to a clean commit** (see d) |
+| Factor vs persistence, moisture, constant holdout 1.31 / 1.70 (K5) | 1.310 / 1.703 (`nrmse_run_median`, h36, n=64); in physical units (`rmse_run_median_physical`) 1.89 / 2.27 | **confirmed for `nrmse_run_median`**; metric must be named, physical-unit factors are larger |
+| Excited 4.4 to 24 (K5) | `nrmse_run_median`: 4.51 to 24.27; physical: 4.44 to 22.96 | **deviating in wording**: lower bound belongs to the physical metric, upper bound to the NRMSE |
+| Persistence shifts 6.3x, static 1.4x (OA5a) | h=1: persistence 0.1014 vs 0.0162 kW = 6.26, static 1.40; h=36: persistence 18.3, static 1.39 | **confirmed at h=1**; the horizon is not stated in the abstract |
+| Energy R2 0.972 static vs >= 0.999 / >= 0.9989 | 0.972 is the in-sample R2 of a different data set (fp 82f65..., 32 runs); same estimator on the Befund 51 excited pools: 0.967-0.971 (constant holdout 0.984). The >= 0.999 figures were derived (1-(1-0.972)/k^2: 0.99896-0.99954), not measured. Measured pooled R2 (h<=36, physical units, same windows): static 0.958 excited / 0.971 constant; GRU 0.99956 / 0.99976, Transformer 0.99942 / 0.99968; LSTM (600 ep) 0.99957 / 0.99973 | **confirmed** by direct measurement; "R2 0.972 static" refers to another data set |
+| RMSE factor 5.2 to 7.8 (Befund 59) | 5.20 to 7.82 | **confirmed** |
+| Resolution with 5 seeds 3.9 to 11 % (energy, bed temperature) | 3.90 to 11.05 % (GRU, Transformer 200 epochs vs LSTM; 12.8 % if the 600-epoch cells are included) | **confirmed** for the 200-epoch comparisons |
+| 35 to 91 % (moisture); ~40 seeds for 12.5 % | 34.8 to 91.0 % (96.8 % with 600 epochs); 41 (excited) / 40 (constant) seeds; d2(5) = 2.3259 derived by integration | **confirmed** |
+| GRU/LSTM indistinguishable in 6 of 6 cells | 0 of 6 resolvable | **confirmed** |
+| Transformer 15.8 % behind LSTM (energy, 600 ep); parity 1.000 (bed temperature, 600 ep); 2.6 % (200 ep) | -15.85 % (threshold 9.8 %); ratio 0.9996; -2.58 % (threshold 8.3 %, not resolvable) | **confirmed** |
+| xLSTM/Mamba behind in 10 of 12 cells | 10 of 12; the two exceptions are xLSTM moisture, both test sets | **confirmed** |
+| Transformer at 600 epochs: no head at the epoch limit | 0 of 15 heads at 600 (maximum 439 epochs) | **confirmed** |
+| Inference 183 us LSTM, 323 us GRU, ~3.1 ms Transformer | as recorded (180.6 / 331.5 us Linux under 4 parallel jobs; 3062 us Windows), but three different conditions. Same machine, one thread, warm-up, batch 4096, 10 repeats: LSTM 51.6 us (sd 2.0 %), GRU 107.7 us (2.2 %), Transformer 2394 us (1.0 %) | **deviating**: reproducible as records, not comparable; same-machine ratios GRU/LSTM 2.09, Transformer/LSTM 46 (quoted mix: 1.77 and ~17) |
+| Training about tenfold | records: 14698 s Transformer (Windows) / 1284 s LSTM (Linux) = 11.4; same machine, per epoch (all three heads): Transformer 59.6 s, LSTM 12.9 s, GRU 3.6 s, i.e. 4.6x per epoch. LSTM was timed first, warm-up not excluded | **not verifiable as stated** (mixed machines) |
+| Moisture 0.00149 vs 0.00054 kg/kg (factor 2.7) | 0.001488 vs 0.000543 (2.74). Constant-trained: all 5 seeds re-evaluated from the archive checkpoints. Excited-trained: seeds 1-3 from the local GA2 checkpoints, seeds 4-5 retrained here (identical epoch counts to the Linux records, values within 6e-5). Same test set (constant holdout), estimator (`rmse_run_median_physical`), horizon (h36), channel, n=64 | **confirmed** |
+| Persistence not beaten at any budget (constant-trained) | 16 of 16 cells (GRU, LSTM x 4 budgets x 2 metrics): model worse than persistence (factor 0.15 to 0.83) | **confirmed** |
+| Early stopping at ~24 instead of ~170 epochs | constant-trained n=8: 24.3 (GRU) / 23.0 (LSTM) epochs run vs 166 / 171 excited; n=64: 79 / 100 vs 150 / 144. `epochs_run` includes the 20 patience epochs, so the best epoch is about 3-5 | **confirmed for n <= 16 only** |
+
+**c) Table 2 -- data checks.**
+
+| Check | Result | Verdict |
+|---|---|---|
+| PR1a determinism (excited, constant-train, holdout; seeds 1, 2, 999) | 29 array hashes per set identical in-process and in a fresh process; split-block hashes identical | passed |
+| PR1a run IDs vs records | split digest, excitation fingerprint and seed bundle equal the record values for seeds 1, 2 (IDs embed the fingerprint) | passed |
+| PR1a config / code across the repository cut | YAML numerically identical except `provenance`; `src/` AST-identical (docstrings stripped) except fingerprint refactor, `np.asarray` wrappers, tracking additions, pseudonyms | passed |
+| PR1b finiteness, positivity | no NaN/Inf in 11 pools; masses and particle count positive; outlet humidity below saturation everywhere | passed |
+| PR1b balances | own RK4 of own balance ODEs reproduces every stored step to 1e-15 except 7 steps (seeds 4, 5 excited pools, validation block only, moisture shortfall <= 5 %); solid closure 2-7e-5 (trapezoid) | passed (7 clamped steps outside train and test) |
+| PR1b projection | acts in 6.0-9.9 % of steps in excited pools (34-47 of 128 runs), 7.9-10.2 % in constant-train pools, 10.3 % in the holdout (10 of 36 runs, 3 above 50 % of steps); only the gas velocity changes, always clipped to u_terminal, by up to 44 % | passed, **but the data contain corrections in a substantial share of steps** |
+| PR1b validity regime | bed temperature > 80 degC in 6.6-14.7 % (excited), 8-22 % (constant-train), 19.1 % (holdout) of steps; > 100 degC up to 2.3 %; moisture above the critical 0.20 kg/kg in 2.0-3.7 % / 6.7-13.4 % / 8.5 %, maximum 1.94 kg/kg | information: outside the model's stated validity range |
+| PR1c integration (5 vs 10 vs 20 sub-steps) | RK4 convergence ratios 9.6-60; worst single step up to 2.3-4.1x the 1/10-of-LSTM-error guide for moisture (0.9-1.4x bed temperature); aggregated like the metric (per-run RMSE over forecast windows) the deviation is <= 0.47 % of the LSTM error in every run | passed for the metric; the guide is exceeded at single extreme steps |
+| PR1d excitation | steps, ramps and PRBS present; PRBS statistics of m-sequences (high fraction 0.503, run-length shares 0.50 / 0.25); actions within bounds, rate limits respected; constant runs exactly constant in the requested actions (13 of 128 = 10.2 %); disturbances and initial conditions within ranges | passed. Notes: realised gas velocity varies in 3-5 of 13 constant runs (projection); 7-12 % of PRBS series on the slow channels (inlet temperature, spray rate, full amplitude) become slew-limited triangles; 9-18 % of disturbance samples sit exactly on a range bound |
+| PR1e targets | `energy_target` (kW), moisture, bed temperature, d50 recomputed from actions, disturbances and states: max difference 0; measurement model regenerated bit-exactly | passed |
+| PR2 IDs | 33 ID sets pairwise disjoint; holdout test vs constant training pool: no shared ID and no identical run content | passed |
+| PR2 content | 1316 runs hashed; the only duplicates: run 0 of every excited pool equals run 0 of the constant-train pool of the same seed (both constant, same data seed) | passed with note; the excited test block contains about 3 constant runs |
+| PR2 windows | 136 windows per run, 4352 per test set = record; project windows equal the audit's slices (max diff 0), all inside one run | passed |
+| PR2 normalisation | training-only statistics recomputed: exact match; val/test carry the training scaler; 148 archive checkpoints match to 1e-15 and are identical across architectures (40 seed/budget/arm combinations) | passed |
+| PR2 nesting | 8 in 16 in 32 in 64 by prefix, val and test identical for all budgets; constant runs per budget 1 / 2 / 4 / 7 (12.5 % at n=8) | passed |
+| PR2 records | all fields single-valued per seed across models, budgets and test sets in four record files; excited-arm digest identical across files; constant arm differs | passed |
+| PR3 metrics | 1900+ cells recomputed with own windowing, scaler, persistence, static regression and RMSE aggregate: persistence and static within 3e-5 of the records; 396 GRU/LSTM cells from the original Linux checkpoints within 4e-7; Transformer/xLSTM/Mamba within 5e-8; 600-epoch probe within 2e-15; GA2 Windows retrain vs Linux record within 7e-6. Requested sample (GRU seed 1, n=64, both test sets) within 2e-7 | passed |
+
+**d) Deviations and gaps, listed separately.**
+
+1. *Provenance, Befund 39.* `extra_trees_split_comparison.jsonl` logs `git/commit =
+   e54cf29...-dirty`: the run started on a dirty tree, before the script was committed (`a0bbc19`
+   in the archive; both hashes resolve there). No `git/dirty` field. The numbers are reproduced
+   (b), the run is not traceable to a clean commit. The record also predates
+   `enforce_gas_velocity_projection` (fingerprint 82f65..., behaviourally equivalent, Befund 46)
+   and includes `d50_um` as a target (later removed). Model is ExtraTrees, not a network; only the
+   split differs between the arms (same fingerprints, same 100 trees; training window counts differ
+   by 0.3 %).
+2. *Provenance, analysis artifacts.* `analyze_m2_resolution_verdicts.json` has no git fields; it
+   is identical to the archived version and every record it reads is clean (`0b3eaaf`,
+   `256d644`, `7e3fb1d`). Records come from two platforms (Linux: baselines, GRU, LSTM; Windows:
+   Transformer, xLSTM, Mamba, constant arm, probe).
+3. *Numbers whose wording should change:* the K5 range (mixed metrics), inference and training
+   times (mixed machines, parallel load), the 0.972 (other data set), 24 vs 170 epochs (n <= 16,
+   patience included).
+4. *Context, not deviations.* The reference is the noisy measurement (PT1 sensor, 0.5 % relative
+   noise, 0.2 K). Its RMSE against the noise-free output (run median over the test windows,
+   including sensor lag) is 0.016 kW (energy), 0.37-0.40 K (bed temperature), 0.00021-0.00036
+   kg/kg (moisture); the LSTM errors are 0.0143 kW, 0.43-0.45 K, 0.00051-0.00054 kg/kg. Energy and
+   bed temperature errors are of the size of the reference noise, which bounds all factors on those
+   channels. Persistence has R2 0.99898 on the constant holdout, above static: R2 does not
+   separate the baselines there.
+5. *Runtime estimate for repeating Befund 39 with the LSTM (not run).* 0.6 to 10.9 ks per fit
+   (lower bound: cost scales with sequence length 4 instead of 68; upper bound: cost scales with
+   288 gradient steps per epoch at the recorded 87 ms per step), i.e. 0.5 to 9 h for 5 seeds x 2
+   arms with 4 parallel jobs. Assumes ~144 epochs per head; needs a validation block the ExtraTrees
+   comparison does not have. A one-epoch calibration run would narrow this.
+6. *Environment.* `tests/test_plant_data.py` cannot be collected here (`openpyxl` missing); the
+   rest of the suite passed at the start of the audit.
+
+**e) Abstract numbers that change or need a qualifier (separate list).** (i) "4.4 to 24": name
+the metric (NRMSE: 4.5-24.3). (ii) "1.31 / 1.70": name the metric; physical-unit factors are
+1.89 / 2.27. (iii) "6.3-fold vs 1.4-fold": add h=1 (persistence is 18-fold at h=36). (iv) "R2
+0.972 static": state that it comes from another data set; on the reported windows static is
+0.958 / 0.971. (v) Inference 183 us / 323 us / 3.1 ms and "training about tenfold": not
+comparable as they stand; same-machine values are LSTM 52 us, GRU 108 us, Transformer 2.4 ms,
+per-epoch training cost Transformer/LSTM 4.6. (vi) "Early stopping at ~24 instead of ~170
+epochs": only for n <= 16, best epoch about 3-5. All other numbers are unchanged.
+
+**f) Artifacts.** `verify_pr0_provenance`, `verify_pr1a_determinism`, `verify_pr1b_physics`,
+`verify_pr1c_integration`, `verify_pr1c2_integration_per_run`, `verify_pr1d_excitation`,
+`verify_pr2_separation`, `verify_pr3_metrics`, `verify_pr4_records`, `verify_pr4_befund39`,
+`verify_pr4_timing`, `verify_pr4_retrain_lstm_seed4`, `verify_pr4_retrain_lstm_seed5` (all under
+`artifacts/runs/`).
