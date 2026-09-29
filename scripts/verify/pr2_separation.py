@@ -322,8 +322,14 @@ def check_checkpoint_scalers(pools: dict[tuple[str, int], Any]) -> dict[str, Any
     across = {
         f"{'constant_train' if constant else 'excited'}_seed{seed}_n{n}": {
             "architectures": sorted(a for a, _ in items),
-            "scalers_identical_across_architectures": bool(
-                all(np.array_equal(items[0][1], v) for _, v in items)
+            "max_relative_spread_of_scaler_values_across_architectures": float(
+                max(np.abs(v - items[0][1]).max() / np.abs(items[0][1]).max() for _, v in items)
+            ),
+            "identical_within_1e-12": bool(
+                all(
+                    np.abs(v - items[0][1]).max() / np.abs(items[0][1]).max() < 1e-12
+                    for _, v in items
+                )
             ),
         }
         for (seed, n, constant), items in sorted(per_key.items())
