@@ -8971,3 +8971,19 @@ cores and 17 GB free memory. Planned as two concurrent sweeps of five processes 
 sLSTM + small LSTM; Mamba + mixed + 2-layer sLSTM), one thread per process: **wall time about 5-7 h.**
 The Befund 58 experience (real costs above the small-budget probe) applies: the probe is a lower
 bound in spirit, not a promise.
+
+**SX3 -- launch (2026-09-30, about 13:10).** Pilot first (1 seed, `n_train = 8`, small LSTM, 2-layer
+sLSTM, mixed; plumbing only, metrics not used; it ran at about half the calibrated per-epoch cost, 0.2 /
+1.3 / 2.1 s per epoch and head, because it was a single process on an idle machine). The pilot also
+repeated the Befund 58 lesson: commits to the working tree while a run is active change `git/commit`
+between the fits of one job (here: three different hashes in three records). The real run therefore
+runs from a **separate git worktree** (`C:\tw_sx3`, detached at commit `d3ef3a0`, with
+`PYTHONPATH` pointing at its `src`), so that commits in the main working tree cannot touch the run's
+provenance; the first launch attempt aborted at once by the provenance guard (dirty worktree: my own
+console output file lay in the worktree root; nothing had been trained). Two sweeps of five seed jobs
+(one thread per process, ten processes): A = `mlstm_cm slstm_l1_cm lstm_small`, B = `mamba_cm
+mixed_cm slstm_cm`, `--sizes 64 --skip-baselines`, logs `artifacts/runs/_sx3_a.jsonl` and
+`_sx3_b.jsonl` in the worktree (underscore names are git-ignored, so that a finished merge of the
+first sweep cannot make the tree dirty for the second). Evaluation only after both are complete:
+`scripts/analyze_sx3_capacity_matched.py`, committed before the run, with the readings of the
+pre-registration above.
