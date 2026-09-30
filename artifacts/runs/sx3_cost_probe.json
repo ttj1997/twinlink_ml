@@ -1,0 +1,146 @@
+{
+ "provenance": {
+  "git/commit": "0dd033bc76ddc7387e6d04f9a7d747e637480afc",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "shapes": {
+  "batch": 256,
+  "history": 32,
+  "horizon": 36,
+  "train_batches_per_epoch": 34,
+  "validation_batches_per_epoch": 17
+ },
+ "probes": {
+  "lstm": {
+   "parameters_per_head": 19009,
+   "train_step_s_median": 0.03332419999969716,
+   "forward_s_median": 0.005960399999821675,
+   "probe_epoch_s": 1.2343495999866718
+  },
+  "gru": {
+   "parameters_per_head": 14273,
+   "train_step_s_median": 0.029271500001414097,
+   "forward_s_median": 0.009072099999684724,
+   "probe_epoch_s": 1.1494567000427196
+  },
+  "xlstm": {
+   "parameters_per_head": 2883,
+   "train_step_s_median": 0.27062870000008843,
+   "forward_s_median": 0.038950099999055965,
+   "probe_epoch_s": 9.863527499986958
+  },
+  "mamba": {
+   "parameters_per_head": 2713,
+   "train_step_s_median": 0.09802529999979015,
+   "forward_s_median": 0.0288064000014856,
+   "probe_epoch_s": 3.8225690000181203
+  },
+  "mlstm_cm": {
+   "parameters_per_head": 16767,
+   "train_step_s_median": 0.515735400000267,
+   "forward_s_median": 0.08461370000077295,
+   "probe_epoch_s": 18.973436500022217
+  },
+  "slstm_cm": {
+   "parameters_per_head": 15985,
+   "train_step_s_median": 0.12031719999868074,
+   "forward_s_median": 0.03909229999953823,
+   "probe_epoch_s": 4.755353899947295
+  },
+  "slstm_l1_cm": {
+   "parameters_per_head": 16913,
+   "train_step_s_median": 0.09543010000015784,
+   "forward_s_median": 0.031008500000098138,
+   "probe_epoch_s": 3.7717679000070348
+  },
+  "mixed_cm": {
+   "parameters_per_head": 16175,
+   "train_step_s_median": 0.2528948999988643,
+   "forward_s_median": 0.05498830000033195,
+   "probe_epoch_s": 9.533227699967028
+  },
+  "mamba_cm": {
+   "parameters_per_head": 17737,
+   "train_step_s_median": 0.34228620000067167,
+   "forward_s_median": 0.09873189999962051,
+   "probe_epoch_s": 13.316173100016385
+  },
+  "lstm_small": {
+   "parameters_per_head": 2839,
+   "train_step_s_median": 0.018519699999160366,
+   "forward_s_median": 0.003871300001264899,
+   "probe_epoch_s": 0.6954818999929557
+  }
+ },
+ "recorded_reference_epoch_cost": {
+  "lstm": {
+   "seconds_per_epoch_and_head_median": 2.906271661907619,
+   "epochs_per_head_median": 144.33333333333334,
+   "epochs_per_head_min": 109.66666666666667,
+   "epochs_per_head_max": 194.0
+  },
+  "gru": {
+   "seconds_per_epoch_and_head_median": 3.1818472885684645,
+   "epochs_per_head_median": 150.0,
+   "epochs_per_head_min": 128.66666666666666,
+   "epochs_per_head_max": 168.66666666666666
+  },
+  "xlstm": {
+   "seconds_per_epoch_and_head_median": 14.186728011294104,
+   "epochs_per_head_median": 115.0,
+   "epochs_per_head_min": 66.66666666666667,
+   "epochs_per_head_max": 141.66666666666666
+  },
+  "mamba": {
+   "seconds_per_epoch_and_head_median": 5.254704260158312,
+   "epochs_per_head_median": 133.33333333333334,
+   "epochs_per_head_min": 126.33333333333333,
+   "epochs_per_head_max": 150.66666666666666
+  }
+ },
+ "calibration_factor_recorded_over_probe": {
+  "lstm": 2.35449637763807,
+  "gru": 2.7681314906861747,
+  "xlstm": 1.4383016635086041,
+  "mamba": 1.374652559609363
+ },
+ "calibration_scale_used_median": 1.896399020573337,
+ "assumed_epochs_per_head_range": [
+  115.0,
+  150.0
+ ],
+ "estimates_one_seed_job_n_train_64_three_heads": {
+  "mlstm_cm": {
+   "seconds_per_epoch_and_head": 35.98120639555253,
+   "seed_job_hours_low": 3.4481989462404514,
+   "seed_job_hours_high": 4.497650799444067
+  },
+  "slstm_cm": {
+   "seconds_per_epoch_and_head": 9.018048478339649,
+   "seed_job_hours_low": 0.864229645840883,
+   "seed_job_hours_high": 1.1272560597924561
+  },
+  "slstm_l1_cm": {
+   "seconds_per_epoch_and_head": 7.152776951403292,
+   "seed_job_hours_low": 0.6854744578428156,
+   "seed_job_hours_high": 0.8940971189254115
+  },
+  "mixed_cm": {
+   "seconds_per_epoch_and_head": 18.078803673120078,
+   "seed_job_hours_low": 1.7325520186740073,
+   "seed_job_hours_high": 2.2598504591400093
+  },
+  "mamba_cm": {
+   "seconds_per_epoch_and_head": 25.25277762465609,
+   "seed_job_hours_low": 2.4200578556962085,
+   "seed_job_hours_high": 3.1565972030820113
+  },
+  "lstm_small": {
+   "seconds_per_epoch_and_head": 1.3189111939731248,
+   "seed_job_hours_low": 0.12639565608909115,
+   "seed_job_hours_high": 0.1648638992466406
+  }
+ }
+}
