@@ -8987,3 +8987,10 @@ mixed_cm slstm_cm`, `--sizes 64 --skip-baselines`, logs `artifacts/runs/_sx3_a.j
 first sweep cannot make the tree dirty for the second). Evaluation only after both are complete:
 `scripts/analyze_sx3_capacity_matched.py`, committed before the run, with the readings of the
 pre-registration above.
+
+**Addendum to the SX0 entry of Befund 67 (2026-09-30): status of two statements.** (1) The growth of
+the mLSTM matrix state with the square of the head dimension (`C_t` has `d x d` entries per sample and
+step) follows from the construction and stands. (2) The statement that the earlier capacity-matched
+attempt (hidden size about 317, Befund 29) "cost more than 12 h per training point" **because of** this
+growth is **not measured**: the only trace is a sentence in the `composite.py` docstring; neither the
+duration nor its cause is documented by a run in the repository.
