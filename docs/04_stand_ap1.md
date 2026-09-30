@@ -8747,3 +8747,97 @@ budget (1.03 at n=8 to 1.40 at n=64). Abstract wording: state the horizon (h=1) 
 or quote both horizons.
 
 Artifacts: `verify_te1_declared_dependencies`, `verify_te3a_timing_all`, `verify_te3b_static_shift`.
+
+
+### 67. Are xLSTM and Mamba behind because of the architecture, or because of small models and an incomplete xLSTM variant?
+
+**Question.** Befund 58/63 report that xLSTM (8 649 parameters) and Mamba (8 139) stay clearly
+behind LSTM (57 027) and GRU (42 819). The parameter counts differ by a factor of about six, and the
+xLSTM tested contains only mLSTM cells. Is "xLSTM and Mamba are worse" a statement about the
+architecture, or about capacity and an incomplete variant? Sections: SX0 inventory (read-only),
+SX1 resolution threshold with t instead of z (addendum to Befund 63), SX2 sLSTM implementation,
+SX3 capacity-matched comparison at `n_train=64`, SX4 (full learning curves) only after
+confirmation. Each section is committed on its own.
+
+**SX0 -- inventory (read only; artifact `sx0_parameter_breakdown.json`, script
+`scripts/verify/sx0_parameter_breakdown.py`).**
+
+*(a) Configuration and where the parameter counts come from.* The composite model has three
+independent heads (one per target); every head sees 8 input channels (7 exogenous + the target).
+Per head:
+
+| Core | Configuration | Parameters per head | x 3 heads | of which recurrent (hidden-to-hidden) |
+|---|---|---|---|---|
+| LSTM | `hidden_size=64`, 1 layer | 19 009 | 57 027 | 16 384 (86 %) |
+| GRU | `hidden_size=64`, 1 layer | 14 273 | 42 819 | 12 288 (86 %) |
+| xLSTM (mLSTM only) | `hidden_size=64`, 1 layer, 1 head | 2 883 | 8 649 | 0 |
+| Mamba | `hidden_size=16`, `state_size=16`, `expand=2`, 1 layer | 2 713 | 8 139 | -- (SSM) |
+
+The counts reproduce the totals of Befund 63 exactly. xLSTM: four input projections `q, k, v, o`
+(8x64 + 64 each = 576, together 2 304), two scalar gate projections from `[q;k;v]` (193 each),
+LayerNorm 128, output head 65. **The mLSTM cell has no hidden-to-hidden weight matrix at all**: `q, k,
+v, o` and both gates are computed from the current input `x_t` only (`src/twinlink_ml/models/xlstm.py`,
+`_XLSTMLayer.step`). The 64x64 matrix state `C_t` carries memory but has no learned parameters; in
+LSTM/GRU the recurrent matrices are 86 % of all parameters.
+
+*(b) Deliberate or side effect?* xLSTM: `hidden_size=64` is the dataclass default and was kept "like
+GRU/LSTM" (Befund 58, "Konfiguration"): a nominal width match. The six-fold smaller parameter count is
+a **side effect of the cell structure** (no recurrent matrix, one head, no up/down projection, no
+causal convolution -- all listed as simplifications in the module docstring), not a chosen budget.
+Mamba: **deliberately small** (`hidden_size=16`, `state_size=16`; comment in
+`composite.py`, `CompositeMambaSequenceModel`: comparability with the Transformer default, "capacity
+at small learning-curve points is not a head start"). Neither was ever tuned to the parameter count of
+GRU/LSTM. A capacity-matched xLSTM was tried once before (`scripts/study_xlstm_wide.py`,
+`hidden_size` about 317, Befund 29); the only trace of the outcome is the sentence in
+`composite.py` (`CompositeTransformerSequenceModel`) that it cost more than 12 h per training point
+-- an oral figure, not a documented measurement. Reason: the matrix state grows with `hidden_size`
+squared (`diag_xlstm_memory.py`). This matters for SX3: matching capacity by widening the
+single-head mLSTM is not feasible; multi-head cells (state per head `(H/NH)^2`) are.
+
+*(c) Is the exponential input gate stabilised?* Yes -- so a missing stabilisation does **not** explain
+the diverging optimisation on moisture/energy described in Befund 58. Verbatim,
+`src/twinlink_ml/models/xlstm.py:171-187`:
+
+```python
+gate_input = torch_module.cat([query, key, value], dim=-1)
+i_preact = self.w_i(gate_input)
+f_preact = self.w_f(gate_input)
+log_f = -functional.softplus(-f_preact)
+
+m_new = torch_module.maximum(log_f + stabilizer, i_preact)
+i_act = torch_module.exp(i_preact - m_new)
+f_act = torch_module.exp(log_f + stabilizer - m_new)
+
+outer = torch_module.einsum("bi,bj->bij", key, value)
+cell_new = f_act.unsqueeze(-1) * cell + i_act.unsqueeze(-1) * outer
+normalizer_new = f_act * normalizer + i_act * key
+
+h_num = torch_module.einsum("bi,bij->bj", query, cell_new)
+qn_dot = torch_module.einsum("bi,bi->b", query, normalizer_new).unsqueeze(-1)
+denom = torch_module.maximum(qn_dot.abs(), torch_module.exp(-m_new)) + 1e-6
+h_tilde = self.norm(h_num / denom)
+```
+
+The stabiliser state `m_t` (`m_new`) and the normaliser `n_t` (`normalizer_new`) are present, with the
+denominator `max(|q^T n_t|, exp(-m_t))`, as in the reference implementation the module docstring
+cites. Deviations from the original that are listed in the module docstring and could matter for
+optimisation, but were **not** tested here: a single head (the gates are scalars per time step and
+layer), forget-gate bias initialised to +3 (not from the paper), no block structure
+(no pre-LayerNorm residual block, no up-projection). The cause of the divergence is therefore still
+open; the hypothesis "no stabilisation" is excluded.
+
+*(d) Official package with sLSTM on CPU?* Yes. `xlstm` 2.0.6 (PyPI, pure-Python wheel, NX-AI) contains
+`sLSTMCell` with `backend="vanilla"` (`xlstm/blocks/slstm/src/vanilla/`), a PyTorch implementation
+without CUDA kernels; the default backend is `"cuda"`, so the vanilla backend must be selected
+explicitly, and the default dtype is `bfloat16` (must be set to `float32`). Checked in a scratch
+directory against the installed torch 2.14.0+cpu: the cell instantiates (576 parameters for
+`hidden_size=16, num_heads=2`: 4 gates x 2 heads x 8x8 recurrent + 64 bias) and its forward pass
+runs on the CPU; it was not installed into the project environment. The cell expects the gate
+pre-activations as input (width 4 x `hidden_size`); the input projections, the causal convolution and
+the feed-forward part live in the layer/block classes. It is a Python time loop like our own cores,
+so it is not faster. Per the instruction, the official implementation is preferred: SX2 wraps the
+official vanilla cell (input projection, state pass-through for the autoregressive rollout) and writes
+the tests against a small independent reference recurrence, including the unstabilised variant, which
+the official code does not offer. This adds an optional dependency (`xlstm==2.0.6`, installed with
+`--no-deps`, since the CUDA/kernel dependencies are not needed); the `pyproject.toml` change is
+listed in SX2.

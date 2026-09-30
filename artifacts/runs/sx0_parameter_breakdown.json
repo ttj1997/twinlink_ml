@@ -1,0 +1,84 @@
+{
+ "provenance": {
+  "git/commit": "552808a255666808322c905f0f10305ffe79d3f4",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "cores": {
+  "lstm": {
+   "hidden_size": 64,
+   "state_size": null,
+   "input_size": 8,
+   "parameters_per_head": 19009,
+   "parameters_composite_three_heads": 57027,
+   "tensors": {
+    "core.weight_ih_l0": 2048,
+    "core.weight_hh_l0": 16384,
+    "core.bias_ih_l0": 256,
+    "core.bias_hh_l0": 256,
+    "head.weight": 64,
+    "head.bias": 1
+   }
+  },
+  "gru": {
+   "hidden_size": 64,
+   "state_size": null,
+   "input_size": 8,
+   "parameters_per_head": 14273,
+   "parameters_composite_three_heads": 42819,
+   "tensors": {
+    "core.weight_ih_l0": 1536,
+    "core.weight_hh_l0": 12288,
+    "core.bias_ih_l0": 192,
+    "core.bias_hh_l0": 192,
+    "head.weight": 64,
+    "head.bias": 1
+   }
+  },
+  "xlstm": {
+   "hidden_size": 64,
+   "state_size": null,
+   "input_size": 8,
+   "parameters_per_head": 2883,
+   "parameters_composite_three_heads": 8649,
+   "tensors": {
+    "core.layers.0.w_q.weight": 512,
+    "core.layers.0.w_q.bias": 64,
+    "core.layers.0.w_k.weight": 512,
+    "core.layers.0.w_k.bias": 64,
+    "core.layers.0.w_v.weight": 512,
+    "core.layers.0.w_v.bias": 64,
+    "core.layers.0.w_o.weight": 512,
+    "core.layers.0.w_o.bias": 64,
+    "core.layers.0.w_i.weight": 192,
+    "core.layers.0.w_i.bias": 1,
+    "core.layers.0.w_f.weight": 192,
+    "core.layers.0.w_f.bias": 1,
+    "core.layers.0.norm.weight": 64,
+    "core.layers.0.norm.bias": 64,
+    "head.weight": 64,
+    "head.bias": 1
+   }
+  },
+  "mamba": {
+   "hidden_size": 16,
+   "state_size": 16,
+   "input_size": 8,
+   "parameters_per_head": 2713,
+   "parameters_composite_three_heads": 8139,
+   "tensors": {
+    "core.layers.0.A_log": 512,
+    "core.layers.0.D": 32,
+    "core.layers.0.norm.weight": 8,
+    "core.layers.0.in_proj.weight": 512,
+    "core.layers.0.x_proj.weight": 1056,
+    "core.layers.0.dt_proj.weight": 32,
+    "core.layers.0.dt_proj.bias": 32,
+    "core.layers.0.out_proj.weight": 512,
+    "head.weight": 16,
+    "head.bias": 1
+   }
+  }
+ }
+}
