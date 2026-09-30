@@ -36,8 +36,8 @@ from scipy import stats
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "verify"))
 
-from _common import provenance, require_clean_tree, write_artifact  # noqa: E402
-from analyze_m2_resolution_verdicts import (  # noqa: E402
+from _common import provenance, require_clean_tree, write_artifact
+from analyze_m2_resolution_verdicts import (
     CHANNELS,
     EPOCH600_JSONL,
     EXTENDED_JSONL,
@@ -49,8 +49,8 @@ from analyze_m2_resolution_verdicts import (  # noqa: E402
     _values,
 )
 
-from twinlink_ml.evaluation.resolution import _HARTLEY_D2  # noqa: E402
-from twinlink_ml.utils.tracking import read_jsonl  # noqa: E402
+from twinlink_ml.evaluation.resolution import _HARTLEY_D2
+from twinlink_ml.utils.tracking import read_jsonl
 
 Z_95 = 1.960
 ALPHA_TWO_SIDED = 0.05

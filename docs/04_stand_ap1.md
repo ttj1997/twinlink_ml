@@ -8841,3 +8841,44 @@ the tests against a small independent reference recurrence, including the unstab
 the official code does not offer. This adds an optional dependency (`xlstm==2.0.6`, installed with
 `--no-deps`, since the CUDA/kernel dependencies are not needed); the `pyproject.toml` change is
 listed in SX2.
+
+
+**Addendum to Befund 63 (2026-09-30, part of Befund 67 / SX1): critical value t instead of z -- two
+verdicts change, both the Transformer on moisture.** Pure evaluation of committed records, no
+training. Script `scripts/analyze_sx1_resolution_t.py` (committed as `a316559`, run on a clean
+tree; a later commit only removes unused `noqa` comments), artifact `sx1_resolution_t.json`.
+
+*Method.* Same medians, same range-based sigma (`R / d2`, Hartley), same two-sample form as Befund 63
+part g; only the critical value changes: `Delta_min = t(nu, 0.975) * sqrt((s_c^2 + s_r^2) / n)`, with
+the Welch-Satterthwaite `nu = (a+b)^2 / (a^2/nu_c + b^2/nu_r)`, `a = s_c^2/n`, `b = s_r^2/n`. The
+effective degrees of freedom of a range estimator are **fewer than `n - 1`**: matching the variance of
+`(R/d2)^2` to a scaled chi-square (`nu = 2 E[s^2]^2 / Var[s^2]`, Monte Carlo over 4 000 000 normal
+samples of size 5, seed 20260930) gives **`nu_eff = 3.76`** instead of 4 for the sample standard
+deviation. With `nu_c = nu_r = 3.76`, the Welch degrees of freedom per cell lie between 3.76 (very
+different spreads: the larger sigma dominates) and 7.52 (equal spreads), and the critical values between
+2.33 and 2.85 instead of 1.96. The regression check passed: the z reproduction equals the thresholds
+stored in Befund 63 part g (maximum deviation 4e-16). "Table 1" of Befund 63 is not uniquely named;
+all 28 verdicts of part g and the epoch-budget rows are recomputed (24 cells of GRU / Transformer /
+xLSTM / Mamba against LSTM at `n_train=64`, 4 cells Transformer against LSTM at 200 and 600 epochs).
+
+*Verdicts that change (resolved with z, not resolved with t):*
+
+| Channel | Test set | Candidate vs. LSTM | Difference | z threshold | t threshold (Welch nu) | Verdict |
+|---|---|---|---|---|---|---|
+| `product_moisture_kg_per_kg` | excited | Transformer | -98.6 % | 91.0 % | 124.6 % (4.4) | resolved -> **not resolved** |
+| `product_moisture_kg_per_kg` | constant holdout | Transformer | -45.9 % | 45.5 % | 55.9 % (6.4) | resolved -> **not resolved** |
+
+**No other verdict changes (26 of 28 unchanged in both directions).** In particular: all six
+GRU-vs-LSTM cells remain unresolved; Transformer stays resolvably worse on `energy_target`
+(constant holdout 200 and 600 epochs, excited) and on `bed_temperature_celsius` (excited); the
+Transformer difference on `bed_temperature_celsius` (constant holdout) stays unresolved at 200 and 600
+epochs; Mamba stays resolvably worse in all six cells and xLSTM in four of six (`energy_target` and
+`bed_temperature_celsius`, both test sets; on moisture it was already unresolved, so the count of
+Befund 63 g -- 10 of 12 -- is unchanged). Sensitivity: with the naive `nu_c = nu_r = n - 1 = 4` instead
+of 3.76 no verdict differs from the one above.
+
+*Consequence for the wording.* The Transformer's deficit on moisture (medians 45.9 % and 98.6 %
+worse than LSTM) is no longer resolvable with five seeds; it can be quoted as a difference of medians
+with the threshold next to it, not as "resolvably worse". Moisture stays the channel with the least
+resolution (thresholds 41 % to 517 % with t). The statement for the comparison of this finding follows
+the t thresholds from here on.
