@@ -110,7 +110,6 @@ from typing import Any
 
 __all__ = ["build_mamba_core_class"]
 
-
 def build_mamba_core_class(torch_module: Any, state_size: int, expand: int = 2) -> type:
     """Erzeugt die ``MambaCore``-Klasse zur Laufzeit, mit ``torch_module`` als Basis.
 
