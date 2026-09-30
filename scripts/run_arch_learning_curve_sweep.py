@@ -368,7 +368,7 @@ def parse_arguments() -> argparse.Namespace:
         "--architectures",
         type=str,
         nargs="+",
-        choices=_load_worker_module().ARCHITECTURE_LABELS,
+        choices=_load_worker_module().SELECTABLE_LABELS,
         default=None,
         help="An jeden Worker durchgereicht (Default: alle -- siehe "
         "run_arch_learning_curve_worker.py --architectures). Bewusst NICHT vorbelegt mit "

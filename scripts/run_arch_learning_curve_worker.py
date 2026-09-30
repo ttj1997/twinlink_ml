@@ -55,6 +55,7 @@ from twinlink_ml.evaluation import DataSpec, ValidationPolicy, build_datasets, g
 from twinlink_ml.evaluation.evaluator import RolloutEvaluator
 from twinlink_ml.evaluation.exhaust_reconstruction import evaluate_exhaust_reconstruction
 from twinlink_ml.models import LinearARXModel, PersistenceModel, StaticRegressionModel
+from twinlink_ml.models.capacity_matched import CAPACITY_MATCHED_CONFIGS
 from twinlink_ml.simulation import PlaceholderConfigWarning, load_process_config
 from twinlink_ml.utils.checkpoints import checkpoint_path, save_checkpoint
 from twinlink_ml.utils.fingerprint_history import fingerprints_equivalent
@@ -104,6 +105,13 @@ Kapazitaets-Defaults der drei neuen Kerne (Transformer/Mamba ``hidden_size=16``,
 ``hidden_size=64`` wie GRU/LSTM) kommen unveraendert aus ``composite.py``."""
 
 
+CAPACITY_MATCHED_LABELS = tuple(CAPACITY_MATCHED_CONFIGS)
+"""Befund 67 (SX3): capacity-matched xLSTM/Mamba variants and the small-LSTM control. Selectable
+with ``--architectures`` but NOT part of the default selection (``ARCHITECTURE_LABELS``), so the
+protocol of Befund 51/58 and its tests are unchanged."""
+SELECTABLE_LABELS = ARCHITECTURE_LABELS + CAPACITY_MATCHED_LABELS
+
+
 def _excited_spec() -> DataSpec:
     return DataSpec(
         sample_time_s=25.0,
@@ -138,6 +146,12 @@ def _architecture_factory(label: str) -> Callable[[], CompositeSequenceModel]:
         CompositeTransformerSequenceModel,
         CompositeXLSTMSequenceModel,
     )
+
+    if label in CAPACITY_MATCHED_CONFIGS:
+        from twinlink_ml.models.composite import CompositeSequenceModel
+
+        config = CAPACITY_MATCHED_CONFIGS[label]
+        return lambda: CompositeSequenceModel(config)
 
     return {
         "gru": CompositeGruSequenceModel,
@@ -183,7 +197,7 @@ def parse_arguments() -> argparse.Namespace:
         "--architectures",
         type=str,
         nargs="+",
-        choices=ARCHITECTURE_LABELS,
+        choices=SELECTABLE_LABELS,
         default=list(ARCHITECTURE_LABELS),
         help="Teilmenge von ARCHITECTURE_LABELS (Default: alle) -- z. B. nur die neu "
         "hinzugekommenen Kerne rechnen, ohne GRU/LSTM/Baselines erneut zu erzeugen, die "
