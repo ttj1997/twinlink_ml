@@ -239,4 +239,6 @@ def build_xlstm_core_class(torch_module: Any) -> type:
                     layer_input = self.dropout(layer_input)
             return layer_input, tuple(states)
 
+    # Exposed so that mixed stacks (models/slstm.py) reuse the exact same mLSTM layer.
+    XLSTMCore.layer_class = _XLSTMLayer  # type: ignore[attr-defined]
     return XLSTMCore

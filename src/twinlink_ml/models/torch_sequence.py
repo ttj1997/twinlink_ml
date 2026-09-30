@@ -102,12 +102,18 @@ __all__ = [
     "XLSTMSequenceModel",
 ]
 
-RecurrentCore = Literal["gru", "lstm", "xlstm", "transformer", "mamba"]
+RecurrentCore = Literal["gru", "lstm", "xlstm", "transformer", "mamba", "slstm", "xlstm_mixed"]
 """Austauschbare Kerne. Erweiterung um weitere Kerne ändert den Trainer nicht.
 
 ``"xlstm"`` löst auf :func:`twinlink_ml.models.xlstm.build_xlstm_core_class` auf --
 **nur** der mLSTM-Anteil (kein sLSTM), siehe Modul-Docstring dort für die Gleichungen und
 die dokumentierten Vereinfachungen.
+
+``"slstm"`` (nur sLSTM-Schichten, rekurrente Speichermischung) und ``"xlstm_mixed"`` (mLSTM-
+Schichten, zuletzt eine sLSTM-Schicht; ``num_layers >= 2``) lösen auf
+:func:`twinlink_ml.models.slstm.build_slstm_core_class` bzw.
+:func:`twinlink_ml.models.slstm.build_xlstm_mixed_core_class` auf; ``num_heads`` ist die
+Kopfzahl der sLSTM-Schichten.
 
 ``"transformer"`` ist **keine** Rekurrenz im engeren Sinn -- der Name bleibt trotzdem
 stehen (kein Alias eingeführt), weil er nur intern als Typ des ``core``-Felds verwendet
@@ -162,8 +168,9 @@ class TorchSequenceConfig:
         Drei-Ziele-GRU-Verbundmodell aus Befund 28 zusammen (42819). Muss bei
         ``core="transformer"`` gerade sein (sinusoidale Positionskodierung).
     num_heads
-        Nur bei ``core="transformer"`` verwendet: Anzahl der Attention-Köpfe. Muss
-        ``hidden_size`` teilen. Bei den übrigen Kernen wirkungslos.
+        Nur bei ``core="transformer"`` (Attention-Köpfe) und ``core="slstm"``/
+        ``"xlstm_mixed"`` (Köpfe der sLSTM-Schichten) verwendet. Muss ``hidden_size``
+        teilen. Bei den übrigen Kernen wirkungslos.
     state_size
         Nur bei ``core="mamba"`` verwendet: Dimension des SSM-Zustands je Kanal
         (:math:`d_{state}` in :mod:`twinlink_ml.models.mamba`), unabhängig von
@@ -215,10 +222,19 @@ class TorchSequenceConfig:
     device: str | None = None
 
     def __post_init__(self) -> None:
-        if self.core not in ("gru", "lstm", "xlstm", "transformer", "mamba"):
+        if self.core not in (
+            "gru",
+            "lstm",
+            "xlstm",
+            "transformer",
+            "mamba",
+            "slstm",
+            "xlstm_mixed",
+        ):
             raise ValueError(
                 "unbekannter Kern "
-                f"{self.core!r}, erlaubt: gru, lstm, xlstm, transformer, mamba"
+                f"{self.core!r}, erlaubt: gru, lstm, xlstm, transformer, mamba, slstm, "
+                "xlstm_mixed"
             )
         if self.hidden_size < 1 or self.num_layers < 1:
             raise ValueError("hidden_size und num_layers müssen >= 1 sein")
@@ -240,6 +256,14 @@ class TorchSequenceConfig:
                 )
         if self.core == "mamba" and self.state_size < 1:
             raise ValueError("state_size muss bei core='mamba' >= 1 sein")
+        if self.core in ("slstm", "xlstm_mixed") and (
+            self.num_heads < 1 or self.hidden_size % self.num_heads != 0
+        ):
+            raise ValueError(
+                f"hidden_size muss bei core={self.core!r} durch num_heads teilbar sein"
+            )
+        if self.core == "xlstm_mixed" and self.num_layers < 2:
+            raise ValueError("num_layers muss bei core='xlstm_mixed' >= 2 sein")
 
 
 class TorchSequenceModel(SequenceModel):
@@ -620,6 +644,7 @@ def _build_network(
     # `_build_network` und der gesamte Trainer bleiben unverändert (siehe Modul-
     # Docstring, Abschnitt zu xLSTM/Mamba).
     from .mamba import build_mamba_core_class
+    from .slstm import build_slstm_core_class, build_xlstm_mixed_core_class
     from .xlstm import build_xlstm_core_class
 
     cell_type = {
@@ -627,6 +652,8 @@ def _build_network(
         "lstm": nn_module.LSTM,
         "xlstm": build_xlstm_core_class(torch_module),
         "mamba": build_mamba_core_class(torch_module, config.state_size),
+        "slstm": build_slstm_core_class(torch_module, config.num_heads),
+        "xlstm_mixed": build_xlstm_mixed_core_class(torch_module, config.num_heads),
     }[config.core]
 
     # Die Basisklasse ist eine Laufzeit-Attributzugriffskette (`torch_module.nn.Module`)

@@ -121,9 +121,7 @@ class ExtraTreesModel(SequenceModel):
         n_exogenous = len(dataset.exogenous_names)
         observed = set(dataset.observed_target_names)
         target_indices = tuple(
-            n_exogenous + i
-            for i, name in enumerate(dataset.target_names)
-            if name in observed
+            n_exogenous + i for i, name in enumerate(dataset.target_names) if name in observed
         )
         return tuple(range(n_exogenous)) + target_indices
 
