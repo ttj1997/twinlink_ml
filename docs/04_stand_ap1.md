@@ -8376,6 +8376,136 @@ runs per point; bootstrap intervals are over scenarios (17 for the binding popul
 convention is Befund 62 HA1's. Artifacts: `verify_ev2_ensemble`, `verify_ev3_dataset`, `verify_ev3_evaluate`,
 `verify_ev3_noise_floor`.
 
+**Third addendum to Befund 65 (2026-09-30): same reference on both sides (FA1), calibrated ensemble spread (FA2),
+controller at `0.20 - m` (FA3).** Same rules as before (audit code under `scripts/verify/`, no training, archive
+checkpoints read-only, scripts committed before they ran, `git/dirty=False`). Readings and criteria fixed in the
+scripts before the first evaluation are marked "pre-registered".
+
+**FA0 -- full test suite.** 512 tests collected; the complete run finished with exit code 0, no failure and no
+error; the progress output shows 511 passes and one skip (the quiet configuration printed no summary line, so
+the counts are read from the collection and the progress rows; the skipped test was not identified this time --
+in TE2 it was `tests/test_experiments.py:317`, the no-torch error path).
+
+**FA1 -- the EV3 factors against the true moisture.** *(a)* The noise-free truth is the simulator output; a fresh
+regeneration is bit-identical to the stored raw data: holdout truth and measured windows equal the ZW1 files, and
+re-simulating the stored EV3 actions, disturbances and initial states with the stored sensor-noise seed gives
+identical outputs and measurements (maximum difference 0). *(d) Reference noise vs moisture (answered first because
+it explains the rest):* the measurement model has a **relative** noise of 0.5 % of the reading
+(`relative_noise_std = 0.005`); measured: noise RMSE / true moisture is 0.0040-0.0052 in every moisture class of
+the holdout (through-origin slope 0.00498), and the 10 s sensor lag adds nothing visible at the 25 s step. So the
+noise scales with the moisture: run-median noise 0.000148 kg/kg over the 32 holdout runs, 0.000970 in the holdout
+class runs (6.5x) and 0.000993 at the EV3 limit points (6.7x). Against a noisy reference a comparison of the limit
+region with the dry global figure therefore carries 6.5x more noise on the local side. Its effect on the
+comparisons made so far is small and, if anything, understates the ratios: noise is 22 % of the squared local
+error against the measured reference (ZW4, excited) but only 8 % of the global one; the quotient A of ZW3 is 3.63
+vs measured and 3.60 vs truth (excited), 1.52 and 1.40 (constant); the EV3 factor (network median, excited) 3.5 vs
+measured and 3.8 vs truth. The class comparisons of GA2/ZW were not systematically shifted by the noise; they were
+shifted by the estimator and the run selection (first addendum).
+
+*(b, c) Same estimator on both sides, against the truth* (run-median over runs of the per-run RMSE, steps 1..36;
+EV3 = settled windows of the 34 runs of the 17 limit-binding scenarios; global = the 32 holdout runs; class = the 5
+holdout runs of [0.18, 0.22); 5-network median, and the ensemble). Pre-registered reading on EV3 / global:
+<= 1.5 "about like the global median run", >= 2.0 "clearly higher"; EV3 / holdout class within [0.67, 1.5]
+"consistent with the holdout class". Bootstrap 95 %: holdout runs for the denominator, EV3 scenarios for the
+numerator.
+
+| | Excited-trained | Constant-trained |
+|---|---|---|
+| global holdout, single / ensemble | 0.000422 / 0.000365 | 0.001474 / 0.001269 |
+| holdout class, single / ensemble | 0.00183 / 0.00193 | 0.00303 / 0.00284 |
+| EV3, single / ensemble | 0.00162 / 0.00137 | 0.00332 / 0.00165 |
+| EV3 / global, single [95 %] | **3.83** [2.27, 5.29]; per network 2.2-6.0 -> clearly higher | **2.25** [1.08, 3.28] -> clearly higher (by the threshold; the interval reaches 1.08) |
+| EV3 / global, ensemble [95 %] | **3.76** [2.67, 5.23] -> clearly higher | **1.30** [1.04, 2.09] -> about like (interval reaches 2.09) |
+| EV3 / holdout class, single / ensemble | 0.88 / 0.71 -> consistent | 1.10 / 0.58 (single consistent; ensemble better than the class) |
+| reserve at 90 % mark vs truth, E1t, single (median, min-max) [95 % over scenarios] | **1.97** (1.26-2.68) [1.55, 2.17] | **0.957** (0.72-2.33), 3 of 5 < 1 [0.79, 1.84] |
+| reserve, E1t, ensemble [95 %] | **2.32** [2.07, 2.65] | **1.93** [1.69, 2.23] |
+| reserve, pooled vs truth, single / ensemble | 1.64 / 2.31 | 0.93 / 1.61 |
+| reserve E4 (dangerous direction / worst case), single | 2.39 / 1.93 | 1.24 / 1.09 |
+| reserve E4, ensemble | 2.91 / 2.32 | 2.18 / 1.67 |
+| for comparison: same E1t reserve on the 5-run holdout class, single / ensemble | 1.74 / 1.65 | 1.05 / 1.12 |
+
+Against the truth the EV3 reserves are 6-23 % higher than the values against the noisy reference in the second
+addendum (excited 1.68 -> 1.97, ensemble 1.88 -> 2.32; constant 0.905 -> 0.957, ensemble 1.66 -> 1.93); the
+readings of the second addendum do not change. The EV3 error against the truth equals the error of the holdout class
+runs (ratio 0.7-1.1), so the factor to the global holdout figure is a real difference in difficulty between limit
+points and the dry runs that dominate the global median, not an effect of the reference. The global figure is the
+wrong yardstick for the operating point; the class figure or EV3 is the right one, and against the truth the
+requirement holds for the excited-trained sensor (1.97; ensemble 2.32) and only for the constant-trained ensemble
+(1.93) with a margin, not for its single networks (0.957).
+
+**FA2 -- calibration of the between-network spread.** Scale factor k chosen on VALIDATION data so that
+`|ensemble - truth| <= 2 k spread` for 95 % of the window-steps; validation runs = the 32 validation runs of each
+of the five pools of the arm (783360 window-steps); primary calibration leave-one-out (for the validation runs of
+pool s the ensemble is the four networks not trained on pool s; the five-network ensemble would contain the
+early-stopping bias of network s -- reported as sensitivity). Pre-registered "usable" on EV3 (settled, 17
+binding scenarios, against the truth): (i) overall coverage in [90 %, 99 %]; (ii) >= 80 % of the scenarios with
+coverage >= 85 %; (iii) rank correlation over the scenarios of the scenario's absolute mean error with its mean
+spread >= 0.5; all three required. Results:
+
+| | Excited-trained | Constant-trained |
+|---|---|---|
+| uncalibrated coverage at 2 spread on validation (leave-one-out) / EV3 | 79 % / 82 % | 90 % / 93 % |
+| k (leave-one-out), per validation set | **2.44** (2.27-2.60) | **1.42** (1.06-1.87) |
+| k (all five members, sensitivity) | 2.06 | 1.19 |
+| coverage on EV3 with k [95 % over scenarios] | 94.6 % [93.5, 95.7] | 96.1 % [95.3, 96.8] |
+| scenarios with coverage >= 85 % | 17 of 17 (minimum 89 %) | 17 of 17 (minimum 93 %) |
+| rank correlation, scenario offset vs mean spread | **-0.43** | **-0.30** |
+| median half-width 2 k spread vs median absolute error | 0.0060 vs 0.00097 | 0.0082 vs 0.00128 |
+| holdout test, coverage with k: all / class (uncalibrated) | 97 % / 93 % (85 % / 68 %) | 97 % / 91 % (95 % / 81 %) |
+
+Criteria (i) and (ii) pass in both arms; criterion (iii) fails in both (the sensitivity calibration gives the same
+verdict), so the calibrated spread is **not usable as an uncertainty per operating point**. Core question: the
+calibrated band holds its nominal coverage at every operating point of EV3 and on the holdout (a valid,
+conservative global width, six times the median error), but it does not rank the operating points by their
+actual uncertainty (the rank correlation is negative): the between-network spread carries the information "this
+region is harder than the dry runs" (EV2c) but not "this operating point has a larger offset", because the
+offset is largely common to the networks (EV2b). The factor is transferred across a distribution shift for the
+excited arm (validation runs are excitation runs, EV3 constant runs) and still holds.
+
+**FA3 -- controller at `0.20 - m`.** For the two margins (excited-trained 0.0016282, constant-trained 0.0044651
+kg/kg) the 25 per-instance oracles were re-solved with the decoupled mechanics of Befund 64 (kinetics fixed at
+0.20 kg/kg, quality threshold `0.20 - m`) and the Befund 52 optimiser budget (`fa3_oracle.py`). Runtime
+estimated before at about 40 min (Befund 52: 520-580 s per point, two waves of 16 workers per margin); measured
+33.4 min. 25 of 25 points feasible at both margins; 17 scenarios bind the tightened limit, at moisture 0.1984 /
+0.1955 kg/kg; the 8 scenarios that do not bind at margin 0 keep their setpoints (their 16 runs are identical to
+EV3 by content, as expected; the 34 runs of the analysis population differ). At the 17 binding scenarios the
+setpoints move by -10.4 to +0.5 K inlet temperature and -0.004 to +0.169 m/s gas velocity (excited margin), -1.0 to
++0.9 K and -0.005 to +0.032 m/s (constant margin); nozzle pressure by at most 0.011 bar. The EV3 builder was
+validated first (rebuilding EV3 from its own setpoints is bit-identical); the new sets use the same initial
+states and sensor-noise seed, so they are paired with EV3; new run IDs `ev3m<tag>-...`, 0 shared IDs and 0
+identical runs with any training pool. Pre-registered: the error "changes noticeably" if E1t (run-median vs
+truth) of the network median or the ensemble differs between margin 0 and the arm's margin by >= 20 % AND the
+paired scenario-bootstrap 95 % interval of the relative change excludes 0. Results at the arm's own margin:
+
+| E1t, settled, 34 runs | Excited-trained, margin 0.0016 | Constant-trained, margin 0.0045 |
+|---|---|---|
+| single, margin 0 -> tightened | 0.00162 -> 0.00158 (-2.4 %, [-7.6, +2.0] %) | 0.00332 -> 0.00342 (+2.8 %, [-12.2, +4.2] %) |
+| ensemble, margin 0 -> tightened | 0.00137 -> 0.00132 (-3.8 %, [-5.6, -2.8] %) | 0.00165 -> 0.00144 (-12.4 %, [-13.9, -7.0] %) |
+| reserve E1t, single, margin 0 -> tightened | 1.97 -> 2.02 | 0.957 -> 0.931 |
+| reserve E1t, ensemble | 2.32 -> 2.41 | 1.93 -> 2.20 |
+| reserve pooled / E4 dangerous, tightened, single | 1.73 / 2.47 | 0.92 / 1.24 |
+
+**No noticeable change** in any of the four comparisons (largest 12.4 %, below the 20 % threshold; the ensemble
+intervals exclude 0 but the size is below the threshold). Evaluating each arm on the other margin's set as
+information gives at most -14.7 % (constant-trained singles on the excited-margin set, interval [-36 %, +17 %]),
+none noticeable. So the error at the operating point the controller actually drives is the error at the limit
+points, and the reserves of FA1 hold at `0.20 - m`.
+
+**Verdict.** (1) The EV3 factors compare unequal noise, but the noise is relative (0.5 %) and its effect on the
+factors is small and not in the direction that created the earlier findings; against the truth the readings are
+unchanged (excited: clearly higher than the global median run; constant: single clearly higher, ensemble about
+like) and the reserves at the 90 % mark rise by 6-23 %: excited-trained 1.97 (ensemble 2.32), constant-trained
+0.957 (ensemble 1.93), the constant-trained single networks staying below 1 in 3 of 5 seeds. (2) The right
+yardstick for the operating point is the class/EV3 error, not the global holdout median. (3) The calibrated
+spread (k = 2.44 / 1.42) gives a valid conservative band but no per-operating-point uncertainty. (4) A controller at
+`0.20 - m` sees the same error. Ensemble remains the effective lever; the spread is not a substitute for the
+margin per operating point. **Caveats:** as in the earlier addenda (placeholder limit and double role of the
+critical moisture, perfect disturbance knowledge, constant disturbances, 17 scenarios, conventions for the
+thresholds); the calibration transfers from validation runs that were used for early stopping of one of the five
+members (leave-one-out avoids it for the primary factor); the FA3 oracle used the Befund 52 budget (there the
+search budget is exhausted by design); the convergence flags of the new solves were not evaluated here. Artifacts: `verify_fa1_truth_reference`,
+`verify_fa2_spread_calibration`, `verify_fa3_tightened_oracle`, `verify_fa3_evaluate`.
+
 ## Was Schritt 6, Teil 2 als Nächstes braucht
 
 Torch läuft jetzt (Befund 24); der Rahmen ist bereit, gebraucht wird die eigentliche
