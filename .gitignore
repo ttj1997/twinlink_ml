@@ -52,3 +52,4 @@ artifacts/runs/_*
 artifacts/runs/*.log
 artifacts/runs/raw_zw1/
 artifacts/runs/raw_ev3/
+artifacts/runs/raw_fa/
