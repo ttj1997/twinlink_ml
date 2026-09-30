@@ -8882,3 +8882,92 @@ worse than LSTM) is no longer resolvable with five seeds; it can be quoted as a 
 with the threshold next to it, not as "resolvably worse". Moisture stays the channel with the least
 resolution (thresholds 41 % to 517 % with t). The statement for the comparison of this finding follows
 the t thresholds from here on.
+
+**SX2 -- sLSTM implemented (commits `96f969f`, `a8547e6`; artifact `sx2_official_equivalence.json`,
+`sx3_cost_probe.json`; tests `tests/test_slstm.py`).**
+
+*Deviation from the SX0 plan, stated openly.* SX0 announced wrapping the official vanilla cell.
+Implemented instead: an own cell (`src/twinlink_ml/models/slstm.py`) whose numerical equivalence with
+the official CPU implementation is verified. Reasons: (1) the requested test "forward with and
+without stabilisation" needs an unstabilised path, which the official code does not offer, so an own
+recurrence was needed anyway; (2) the official cell allocates state arrays and writes them by index at
+every call, which is the pattern of the autoregressive rollout (one call per step); (3) it would be
+a new runtime dependency with a `bfloat16`/CUDA-oriented default configuration. The correctness
+anchor the instruction aimed at is kept: `scripts/verify/sx2_official_equivalence.py` maps the weights
+tensor by tensor into `xlstm==2.0.6` (wheel sha256 in the artifact), runs 27 cases (3 seeds x hidden
+16/32/52 with 1/4/4 heads x input scale 0.5/5/30, 40 steps, float32) and finds a maximum absolute
+deviation of **2.7e-6** at output values of order 1, all finite. No dependency was added; the package
+was used from a scratch directory only.
+
+*Cell.* Beck et al. sLSTM cell: exponential input gate, sigmoid forget gate, stabiliser state `m_t`,
+normaliser `n_t`, output `y_t = sigma(o) c_t / n_t`, recurrent matrix `R` block-diagonal over
+`num_heads` heads, GroupNorm over heads on the layer output; cell level like the mLSTM core (no
+convolution, feed-forward part or residual block). Note on the wording "memory mixing across heads":
+in the paper (and in the reference code) the mixing takes place **inside** each head; heads do not
+mix. The test `test_recurrent_memory_mixing_exists_and_is_block_diagonal_over_heads` checks exactly
+this. The deviations from the reference layer (recurrent init uniform instead of zeros, forget-gate
+bias +3 instead of the power-law schedule, m initialised at -1e30 instead of a data-dependent branch)
+are listed in the module docstring; their effect is untested.
+
+*Variants.* `core="slstm"` (sLSTM layers only), `core="xlstm_mixed"` (mLSTM layer(s), last layer
+sLSTM, `num_layers >= 2`; order fixed a priori). The mLSTM layer is the unchanged existing class
+(exposed as `XLSTMCore.layer_class`; behaviour of `core="xlstm"` unchanged).
+
+*Tests* (all pass; whole suite run once before the last test was added: no failure, one skip, 13 min
+50 s): stabilised and plain forward agree to 1e-9 (float64) on small inputs; on inputs of scale 1e4
+the stabilised forward and its gradients are finite while the plain form overflows; `n_t >= 1` and
+`|y_t| <= 1`; parameter counts equal the formula (three hidden sizes/head counts, the mixed stack,
+and the six capacity-matched configurations of SX3); the state pass-through reproduces a full
+pass; untrained composite = persistence and trained composite is finite for both new cores;
+configuration validation.
+
+**SX3 -- pre-registration (written before any capacity-matched training run).**
+
+*Protocol.* Befund 51/58: same data splits, seeds 1-5, three heads (`energy_target`,
+`product_moisture_kg_per_kg`, `bed_temperature_celsius`), both test sets, `h = 36`,
+`n_train = 64` only, hyperparameters as in the earlier runs (defaults of `TorchSequenceConfig`,
+`max_epochs = 200`, no tuning). Reference records (GRU, LSTM at 42 819 / 57 027 parameters; xLSTM and
+Mamba at 8 649 / 8 139) are the existing ones of Befund 51/58, not recomputed. Metric
+`rmse_run_median_physical`. Rank statements use the t threshold of the SX1 addendum (Welch,
+`nu_eff(R/d2) = 3.76`), two-sample form, reference LSTM.
+
+*Configurations (fixed a priori, `models/capacity_matched.py`, exact composite parameter counts):*
+mLSTM only, hidden 58, 2 layers, **50 301**; sLSTM only, hidden 48, 4 heads, 2 layers, **47 955**
+(depth-matched with the mLSTM variant); sLSTM only, hidden 112, 4 heads, 1 layer, **50 739**
+(single-layer counterpart); mixed mLSTM + sLSTM, hidden 52, 4 heads, 2 layers, **48 525**; Mamba,
+hidden 64, state 16, 1 layer, **53 211**; control LSTM, hidden 22, **8 517**. Depth was needed for the
+mLSTM because a single layer would need a hidden size of several hundred (the earlier wide attempt,
+hidden about 317, is reported as costing more than 12 h per training point); the sLSTM variant is
+therefore given at depth 2 as well, so that "sLSTM against mLSTM at the same size" is not confounded
+with depth. Capacity was matched by width/depth/heads only; a different way of matching (for
+example a wider mLSTM with several heads) could give a different result.
+
+*Readings, fixed in advance (per variant, over the 6 cells = 3 channels x 2 test sets, against LSTM):*
+(A) **capacity effect:** the variant is not resolvably worse than LSTM in all 6 cells -> "reaches LSTM
+level"; resolvably worse in at most 2 cells -> "closes most of the gap" (reported as such); (B)
+**memory mixing matters:** the sLSTM-only variant (2 layers) is resolvably better than the mLSTM-only
+variant in at least 4 of the 6 cells and resolvably worse in none; (C) **the statement holds:** a
+variant is resolvably worse than LSTM in at least 4 of 6 cells, as xLSTM and Mamba were in Befund 63 (10
+of 12). Everything in between is reported as mixed, without a verdict. The small-LSTM control is read
+as follows: if the LSTM at 8 517 parameters is resolvably worse than the LSTM at 57 027 in at least 4
+of 6 cells and not resolvably better than the small xLSTM/Mamba in any cell, the earlier deficit is
+a size effect for that comparison. Cells on which no difference of any size is resolvable (moisture,
+thresholds above 40 %) are counted as "not resolvably worse", which favours reading (A); the
+median differences are reported next to every verdict. Epoch-cap hits (200) are counted per variant
+(Befund 58 OA5b), since a capped fit is a budget statement, not a capacity statement.
+
+*Run-time estimate (before running; `sx3_cost_probe.json`).* One training step (batch 256, history 32,
+horizon 36, one thread, synthetic tensors) costs 0.03 s (LSTM, 19 009 parameters per head) and
+0.27 s (existing xLSTM), 0.10 s (existing Mamba); the new configurations 0.52 s (mLSTM, 2 x 58),
+0.12 s (sLSTM, 2 x 48), 0.10 s (sLSTM, 1 x 112), 0.25 s (mixed), 0.34 s (Mamba, hidden 64), 0.02 s
+(small LSTM). Calibrated against the recorded per-epoch costs of the four reference models at
+`n_train = 64` (the calibration factors between probe and real epoch differ by a factor of two
+between models, 1.37 to 2.77, so the estimate is uncertain by about +-40 %) and against the recorded
+epochs per head (115 to 150), one seed job (three heads, `n_train = 64`) takes about: mLSTM 3.5-4.5 h,
+sLSTM (2 layers) 0.9-1.1 h, sLSTM (1 layer) 0.7-0.9 h, mixed 1.7-2.3 h, Mamba 2.4-3.2 h, small LSTM
+0.1-0.2 h; **about 9-12 h per seed for all six, 45-60 core-hours for five seeds.** Peak memory of a
+training step is 1.3 GB (mLSTM), 0.8 GB (mixed, Mamba), 0.4 GB (sLSTM); the machine has 16 logical
+cores and 17 GB free memory. Planned as two concurrent sweeps of five processes each (mLSTM + 1-layer
+sLSTM + small LSTM; Mamba + mixed + 2-layer sLSTM), one thread per process: **wall time about 5-7 h.**
+The Befund 58 experience (real costs above the small-budget probe) applies: the probe is a lower
+bound in spirit, not a promise.
