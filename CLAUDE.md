@@ -52,7 +52,9 @@ lab book (`04_stand_ap1.md`), process setup, and synthesis documents.
 ## Code
 
 Type hints, frozen dataclasses for configs, ABCs, dependency injection, `src/` layout. Run
-ruff and pytest before every commit.
+ruff and pytest before every commit. Apply the formatter only to files you changed; format the
+whole repo only as a separate commit with the evidence of the FM2 kind (`tools/check_translation.py`
+against the previous commit reports no deviation, fingerprint regression tests and full suite green).
 
 ## Known pitfalls (one line each)
 
