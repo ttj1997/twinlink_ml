@@ -86,11 +86,23 @@ def main() -> int:
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("--output", type=Path, default=OUT_PATH)
+    parser.add_argument(
+        "--quality-limit-kg-per-kg",
+        type=float,
+        default=None,
+        help="S0.6: quality limit of the product moisture (kinetics unchanged); default: "
+        "critical moisture as before.",
+    )
     arguments = parser.parse_args()
     _suppress_placeholder_warning()
 
-    env_no_penalty = OperatingPointBanditEnv(BanditEnvConfig(include_penalty=False))
-    env_with_penalty = OperatingPointBanditEnv()
+    limit = arguments.quality_limit_kg_per_kg
+    env_no_penalty = OperatingPointBanditEnv(
+        BanditEnvConfig(include_penalty=False, product_moisture_limit_kg_per_kg=limit)
+    )
+    env_with_penalty = OperatingPointBanditEnv(
+        BanditEnvConfig(product_moisture_limit_kg_per_kg=limit)
+    )
 
     print("=" * 78)
     print("EA2: schlechteste loesbare Belohnung je Modus, 13x9-Gitter, Nominalstoergroesse")
@@ -115,6 +127,7 @@ def main() -> int:
     )
 
     output = {
+        "quality_limit_kg_per_kg": limit,
         "without_penalty": result_no_penalty,
         "with_penalty": result_with_penalty,
         "grid": {

@@ -86,6 +86,7 @@ Speicher, mehrere Linien, Netto-Zielfunktion, Anlagenmassstab -- spaetere Erweit
 
 from __future__ import annotations
 
+import dataclasses
 import warnings
 from dataclasses import dataclass
 from pathlib import Path
@@ -233,6 +234,12 @@ class BanditEnvConfig:
     :attr:`solve_failure_penalty_kw` -- das ist keine Nebenbedingungsstrafe, sondern die
     numerische Notwendigkeit, dass ohne geloeste Energie kein ``-energy_target`` existiert,
     das zurueckgegeben werden koennte."""
+    product_moisture_limit_kg_per_kg: float | None = None
+    """S0.6: quality limit of the product moisture, overriding the loaded config.
+
+    ``None`` (Default): the config decides (its own ``product_moisture_limit_kg_per_kg`` or,
+    if unset, the critical moisture). Set: ``MaterialConfig.product_moisture_limit_kg_per_kg``
+    of the loaded config is replaced; the drying kinetics keep ``critical_moisture_kg_per_kg``."""
     solve_failure_penalty_kw: float | None = None
     """EA2: ``None`` (Default, unveraendert) uebernimmt Befund 52s Sentinel
     (``operating_point.SOLVE_FAILURE_PENALTY_KW`` = 1.000.000) -- Bitgleichheit fuer VA2, das
@@ -265,6 +272,14 @@ class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
             warnings.simplefilter("ignore", PlaceholderConfigWarning)
             self._base_config: ProcessConfig = load_process_config(
                 self._env_config.process_config_path
+            )
+        if self._env_config.product_moisture_limit_kg_per_kg is not None:
+            self._base_config = dataclasses.replace(
+                self._base_config,
+                material=dataclasses.replace(
+                    self._base_config.material,
+                    product_moisture_limit_kg_per_kg=self._env_config.product_moisture_limit_kg_per_kg,
+                ),
             )
 
         self._penalty_weight_kw = (

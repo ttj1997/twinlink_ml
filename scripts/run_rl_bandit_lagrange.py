@@ -77,9 +77,25 @@ def margin_from_fa2_artifact() -> float:
     return float(value)
 
 
+_QUALITY_LIMIT_KG_PER_KG: float | None = None
+_TEST_POINTS_ARTIFACT: Path | None = None
+
+
+def _eval_env() -> OperatingPointBanditEnv:
+    return OperatingPointBanditEnv(
+        BanditEnvConfig(product_moisture_limit_kg_per_kg=_QUALITY_LIMIT_KG_PER_KG)
+    )
+
+
+def _test_points() -> Any:
+    if _TEST_POINTS_ARTIFACT is None:
+        return load_test_points()
+    return load_test_points(_TEST_POINTS_ARTIFACT)
+
+
 def mean_energy_vs_fixed(model: Any) -> dict[str, float]:
-    env = OperatingPointBanditEnv()
-    points = load_test_points()
+    env = _eval_env()
+    points = _test_points()
     energies: list[float] = []
     for point in points:
         observation = np.array(
@@ -230,11 +246,11 @@ def make_callback(
                 action, _ = self.model.predict(observation, deterministic=True)
                 return np.asarray(action, dtype=np.float64)
 
-            result = evaluate_policy(OperatingPointBanditEnv(), policy)
+            result = evaluate_policy(_eval_env(), policy, _test_points())
             metrics = flat_metrics(result)
             metrics.update(mean_energy_vs_fixed(self.model))
             margin_value, margin_n = moisture_margin_at_oracle_binding_points(
-                OperatingPointBanditEnv(), policy
+                _eval_env(), policy, _test_points()
             )
             metrics["moisture_margin_binding_median_kg_per_kg"] = margin_value
             metrics["moisture_margin_binding_n"] = float(margin_n)
@@ -268,6 +284,10 @@ def make_callback(
                             dataclasses.asdict(v) for v in result.infeasible_violations
                         ],
                         "multipliers_kw": lam.reshape(-1).tolist(),
+                        "quality_limit_kg_per_kg": _QUALITY_LIMIT_KG_PER_KG,
+                        "test_points_artifact": (
+                            str(_TEST_POINTS_ARTIFACT) if _TEST_POINTS_ARTIFACT else None
+                        ),
                     },
                     metrics=metrics,
                 )
@@ -297,7 +317,22 @@ def main() -> int:
     parser.add_argument("--update-interval-steps", type=int, required=True)
     parser.add_argument("--context-bins", type=int, nargs=2, default=(5, 5))
     parser.add_argument("--output-prefix", type=str, default="rl_bandit_lagrange_s03")
+    parser.add_argument(
+        "--quality-limit-kg-per-kg",
+        type=float,
+        default=None,
+        help="S0.6: quality limit of the product moisture (kinetics unchanged).",
+    )
+    parser.add_argument(
+        "--test-points-artifact",
+        type=Path,
+        default=None,
+        help="S0.6: oracle/fixed reference artifact (load_test_points format).",
+    )
     arguments = parser.parse_args()
+    global _QUALITY_LIMIT_KG_PER_KG, _TEST_POINTS_ARTIFACT
+    _QUALITY_LIMIT_KG_PER_KG = arguments.quality_limit_kg_per_kg
+    _TEST_POINTS_ARTIFACT = arguments.test_points_artifact
     _suppress_placeholder_warning()
 
     margin = arguments.margin_kg_per_kg
@@ -329,7 +364,9 @@ def main() -> int:
         raise SystemExit(f"{output} / {trace} exist already; use another --output-prefix")
     logger = JsonlExperimentLogger(output)
 
-    env = LagrangeBanditEnv(lagrange, BanditEnvConfig())
+    env = LagrangeBanditEnv(
+        lagrange, BanditEnvConfig(product_moisture_limit_kg_per_kg=_QUALITY_LIMIT_KG_PER_KG)
+    )
     env.reference_table  # noqa: B018  (build the failure-bound table before training)
     train_env = Monitor(env)
     model = SAC("MlpPolicy", train_env, seed=arguments.seed, verbose=0)

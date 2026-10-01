@@ -174,3 +174,31 @@ def test_bandit_env_reads_the_quality_limit(tmp_path: Path) -> None:
     default_violation = info_default["constraint_check"]["moisture_violation_kg_per_kg"]
     limited_violation = info_limited["constraint_check"]["moisture_violation_kg_per_kg"]
     assert limited_violation > default_violation
+
+
+def test_bandit_env_config_override_equals_a_config_file_limit(tmp_path: Path) -> None:
+    pytest.importorskip("gymnasium")
+    from twinlink_ml.rl import BanditEnvConfig, OperatingPointBanditEnv
+
+    point = {
+        "inlet_temperature_celsius": 75.0,
+        "gas_velocity_m_per_s": 1.2,
+        "ambient_temperature_celsius": 20.0,
+        "ambient_relative_humidity": 0.5,
+    }
+    path = tmp_path / "limited.yaml"
+    dump_process_config(_with_limit(_load("greybox_gab_placeholder.yaml", None), 0.05), path)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", PlaceholderConfigWarning)
+        from_file = OperatingPointBanditEnv(BanditEnvConfig(process_config_path=path))
+        from_override = OperatingPointBanditEnv(
+            BanditEnvConfig(product_moisture_limit_kg_per_kg=0.05)
+        )
+        default = OperatingPointBanditEnv()
+    r_file, info_file = from_file.evaluate_operating_point(**point)
+    r_over, info_over = from_override.evaluate_operating_point(**point)
+    assert r_file == r_over
+    assert info_file["constraint_check"] == info_over["constraint_check"]
+    assert from_override._base_config.material.critical_moisture_kg_per_kg == 0.20
+    assert default._base_config.material.product_moisture_limit_kg_per_kg is None
+    assert from_override._base_config.fingerprint == from_file._base_config.fingerprint

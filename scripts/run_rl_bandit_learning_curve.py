@@ -134,6 +134,22 @@ DEFAULT_TOTAL_TIMESTEPS = 10_000
 DEFAULT_SEED = 0
 
 
+_QUALITY_LIMIT_KG_PER_KG: float | None = None
+"""S0.6: quality limit of the product moisture; ``None`` = critical moisture as before."""
+_TEST_POINTS_ARTIFACT: Path | None = None
+"""S0.6: artifact with oracle/fixed reference (``load_test_points`` format); ``None`` = Befund 52."""
+
+
+def _eval_env_config() -> BanditEnvConfig:
+    return BanditEnvConfig(product_moisture_limit_kg_per_kg=_QUALITY_LIMIT_KG_PER_KG)
+
+
+def _test_points() -> Any:
+    if _TEST_POINTS_ARTIFACT is None:
+        return load_test_points()
+    return load_test_points(_TEST_POINTS_ARTIFACT)
+
+
 def _suppress_placeholder_warning() -> None:
     warnings.filterwarnings("ignore", category=PlaceholderConfigWarning)
 
@@ -143,8 +159,8 @@ def _evaluate(model: Any) -> ClosedRegretResult:
         action, _ = model.predict(observation, deterministic=True)
         return np.asarray(action, dtype=np.float64)
 
-    eval_env = OperatingPointBanditEnv()
-    return evaluate_policy(eval_env, policy)
+    eval_env = OperatingPointBanditEnv(_eval_env_config())
+    return evaluate_policy(eval_env, policy, _test_points())
 
 
 def _mean_energy_vs_fixed(model: Any) -> dict[str, float]:
@@ -156,8 +172,8 @@ def _mean_energy_vs_fixed(model: Any) -> dict[str, float]:
     Feuchtegrenze vermutlich unzulaessig ist) -- deshalb hier IMMER mitberechnet, auch mit
     Strafe, fuer die direkte Vergleichbarkeit ueber die 2x2-Matrix.
     """
-    eval_env = OperatingPointBanditEnv()
-    points = load_test_points()
+    eval_env = OperatingPointBanditEnv(_eval_env_config())
+    points = _test_points()
     energies_agent: list[float] = []
     n_solve_failed = 0
     for point in points:
@@ -284,6 +300,10 @@ def _make_checkpoint_callback(
                         ),
                         "learning_starts_explicitly_set": learning_starts is not None,
                         "solve_failure_penalty_kw": solve_failure_penalty_kw,
+                        "quality_limit_kg_per_kg": _QUALITY_LIMIT_KG_PER_KG,
+                        "test_points_artifact": (
+                            str(_TEST_POINTS_ARTIFACT) if _TEST_POINTS_ARTIFACT else None
+                        ),
                         "checkpoint/path": str(checkpoint_file.relative_to(REPO_ROOT)),
                         "infeasible_violations": [
                             dataclasses.asdict(v) for v in result.infeasible_violations
@@ -333,6 +353,7 @@ def run_training(
         ),
         include_penalty=include_penalty,
         solve_failure_penalty_kw=solve_failure_penalty_kw,
+        product_moisture_limit_kg_per_kg=_QUALITY_LIMIT_KG_PER_KG,
     )
     train_env = Monitor(OperatingPointBanditEnv(train_env_config))
     model_kwargs: dict[str, Any] = {"seed": seed, "verbose": 0}
@@ -455,6 +476,20 @@ def parse_arguments() -> argparse.Namespace:
         "siehe scripts/probe_bandit_env_solve_failure_bound.py fuer die modusabhaengige "
         "Berechnung.",
     )
+    parser.add_argument(
+        "--quality-limit-kg-per-kg",
+        type=float,
+        default=None,
+        help="S0.6: quality limit of the product moisture (kinetics unchanged); default: "
+        "critical moisture as before.",
+    )
+    parser.add_argument(
+        "--test-points-artifact",
+        type=Path,
+        default=None,
+        help="S0.6: oracle/fixed reference artifact in the load_test_points format; default: "
+        "Befund 52.",
+    )
     return parser.parse_args()
 
 
@@ -472,6 +507,9 @@ def main() -> int:
         )
     else:
         scale_kw = None
+    global _QUALITY_LIMIT_KG_PER_KG, _TEST_POINTS_ARTIFACT
+    _QUALITY_LIMIT_KG_PER_KG = arguments.quality_limit_kg_per_kg
+    _TEST_POINTS_ARTIFACT = arguments.test_points_artifact
     run_training(
         arguments.algorithm,
         arguments.total_timesteps,
