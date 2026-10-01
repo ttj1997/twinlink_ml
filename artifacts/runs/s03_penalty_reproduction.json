@@ -1,0 +1,46 @@
+{
+ "provenance": {
+  "git/commit": "b73547c1c65a49f8d6025230d441dc9322cced3e",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "reproduction_of_committed_fa2": {
+  "0": {
+   "feasibility_rerun": 1.0,
+   "pooled_rerun": -1.9984602459667704,
+   "pooled_committed_fa2": -1.9984602459667704,
+   "pooled_difference": 0.0,
+   "margin_rerun": 0.1298720295430732,
+   "margin_committed_ga1_rounded": 0.1299,
+   "margin_difference": -2.7970456926790233e-05,
+   "reproduced": true
+  },
+  "1": {
+   "feasibility_rerun": 1.0,
+   "pooled_rerun": -2.7973488622832794,
+   "pooled_committed_fa2": -2.7973488622832794,
+   "pooled_difference": 0.0,
+   "margin_rerun": 0.14541402764379638,
+   "margin_committed_ga1_rounded": 0.1454,
+   "margin_difference": 1.402764379637711e-05,
+   "reproduced": true
+  },
+  "2": {
+   "feasibility_rerun": 1.0,
+   "pooled_rerun": -3.012366063063362,
+   "pooled_committed_fa2": -3.012366063063362,
+   "pooled_difference": 0.0,
+   "margin_rerun": 0.13954511722585233,
+   "margin_committed_ga1_rounded": 0.1395,
+   "margin_difference": 4.511722585232025e-05,
+   "reproduced": true
+  }
+ },
+ "all_reproduced": true,
+ "tolerances": {
+  "pooled_atol": 1e-06,
+  "margin_atol": 6e-05,
+  "feasibility": "equal to 1.0"
+ }
+}
