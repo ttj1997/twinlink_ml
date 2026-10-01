@@ -193,14 +193,12 @@ def test_fixed_nozzle_pressure_scale_is_negligible(
     Clamp-Schwelle in ``power_breakdown_kw`` -- die Abweichung ist deshalb nicht nur
     "innerhalb einer Toleranz", sondern numerisch nicht von Null unterscheidbar.
     """
-    from twinlink_ml.rl.env import _load_regret_module
-    from twinlink_ml.simulation import GreyBoxFluidBedGranulator
+    from twinlink_ml.simulation import GreyBoxFluidBedGranulator, operating_point
     from twinlink_ml.simulation.steady_state import solve_steady_state
 
-    regret_module = _load_regret_module()
     deltas_kw: list[float] = []
     for point in anchor["grid_results"]:
-        variant_own_nozzle = regret_module.build_variant_config(
+        variant_own_nozzle = operating_point.build_variant_config(
             env._base_config,
             t_in=point["inlet_temperature_celsius"],
             u_gas=point["gas_velocity_m_per_s"],
@@ -210,8 +208,8 @@ def test_fixed_nozzle_pressure_scale_is_negligible(
         )
         solution_own_nozzle = solve_steady_state(
             GreyBoxFluidBedGranulator(variant_own_nozzle),
-            max_iterations=regret_module.DEFAULT_SEARCH_MAX_ITERATIONS,
-            tolerance=regret_module.DEFAULT_SEARCH_TOLERANCE,
+            max_iterations=operating_point.DEFAULT_SEARCH_MAX_ITERATIONS,
+            tolerance=operating_point.DEFAULT_SEARCH_TOLERANCE,
         )
         _, fixed_nozzle_info = env.evaluate_operating_point(
             inlet_temperature_celsius=point["inlet_temperature_celsius"],

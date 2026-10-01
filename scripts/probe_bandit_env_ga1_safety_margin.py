@@ -38,6 +38,7 @@ import numpy as np
 
 from twinlink_ml.rl import OperatingPointBanditEnv, load_test_points
 from twinlink_ml.simulation import PlaceholderConfigWarning
+from twinlink_ml.simulation.operating_point import BED_TEMPERATURE_LIMIT_C
 from twinlink_ml.utils.tracking import read_jsonl
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -79,7 +80,7 @@ def main() -> int:
 
     env = OperatingPointBanditEnv()
     critical_moisture = env._base_config.material.critical_moisture_kg_per_kg
-    bed_temperature_limit = env._regret_module.BED_TEMPERATURE_LIMIT_C
+    bed_temperature_limit = BED_TEMPERATURE_LIMIT_C
     points = load_test_points()
 
     # Orakel-Kennzahlen sind seedunabhaengig -- einmal berechnen.

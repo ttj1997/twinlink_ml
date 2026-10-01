@@ -154,6 +154,21 @@ from twinlink_ml.simulation import (
     ProcessConfig,
     load_process_config,
 )
+from twinlink_ml.simulation.operating_point import (  # noqa: F401  (re-exported, S0.1)
+    BED_TEMPERATURE_LIMIT_C,
+    DEFAULT_SEARCH_MAX_ITERATIONS,
+    DEFAULT_SEARCH_TOLERANCE,
+    ConstraintCheck,
+    build_variant_config,
+    check_constraints,
+    specific_energy_kwh_per_kg,
+)
+from twinlink_ml.simulation.operating_point import (
+    PENALTY_WEIGHT_KW as _PENALTY_WEIGHT_KW,
+)
+from twinlink_ml.simulation.operating_point import (
+    SOLVE_FAILURE_PENALTY_KW as _SOLVE_FAILURE_PENALTY_KW,
+)
 from twinlink_ml.simulation.steady_state import SteadyStateSolution, solve_steady_state
 from twinlink_ml.utils.tracking import environment_fingerprint
 
@@ -161,52 +176,9 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = REPO_ROOT / "conf" / "process" / "greybox_gab_placeholder.yaml"
 OUT_PATH = REPO_ROOT / "artifacts" / "runs" / "study_operating_point_regret.json"
 
-BED_TEMPERATURE_LIMIT_C = 80.0
-"""Frei gesetzter Platzhalter, Befund 46 -- siehe Moduldocstring."""
-
-_PENALTY_WEIGHT_KW = 50.0
-"""Skaliert die normierte Verletzung in die Größenordnung der Zielfunktion (~0.5-3 kW am
-Nominalpunkt), damit sie in der Suche dominiert, ohne Fließkommaauflösung zu verlieren."""
-
-_SOLVE_FAILURE_PENALTY_KW = 1.0e6
-"""Rückgabewert, wenn die Bisektion in ``solve_steady_state`` keinen Vorzeichenwechsel
-findet (``RuntimeError``) oder der Batch-Fall greift (``ValueError``) -- drängt den
-Optimierer weg, ohne den Lauf abzubrechen."""
-
-_TOLERANCE_MOISTURE_KG_PER_KG = 1.0e-4
-"""EINE Toleranz für Zulässigkeit UND Bindung (kein zweiter, abweichender Wert an
-anderer Stelle -- ein erster Gitterlauf zeigte, dass zwei verschiedene Toleranzen für
-dieselbe Größe genau den Fehler erzeugen, den eine gemeinsame Konstante strukturell
-ausschließt: 8 von 14 als "unzulässig" markierte Punkte hingen NUR daran, dass die
-Zulässigkeitsprüfung strikte Gleichheit (1e-9) verlangte, während der Optimierer
-das Optimum -- korrekt -- exakt auf die Feuchtegrenze treibt und sie nie exakter als
-auf die eigene Suchpräzision genau trifft.
-
-Bemessung von 1e-4 kg/kg: eine Größenordnung UNTER jeder real erreichbaren
-Messauflösung für Partikelfeuchte (Labor-Feuchtebestimmung, Trockenschrank- oder
-NIR-Verfahren, liegt praktisch nie besser als 1e-3 kg/kg absolut) -- die Toleranz
-verwischt also keine an der Anlage messbare Verletzung. Gleichzeitig eine
-Größenordnung ÜBER dem numerischen Restfehler des Lösers selbst
-(``residual_inf_norm`` liegt am Report-Punkt typisch bei 1e-10 oder besser, siehe
-``solve_steady_state``) -- die Toleranz blendet also keinen Löserfehler aus, sondern
-ausschließlich die Differenz zwischen "auf die Nebenbedingung optimiert" und
-"exakt auf ihr", die aus der endlichen Auflösung des Optimierers selbst folgt
-(Nelder-Mead ``xatol=1e-4`` auf den AKTIONEN, siehe ``_optimize``)."""
-
-_TOLERANCE_VELOCITY_M_PER_S = 1.0e-3
-"""Analog: eine Größenordnung unter der Unsicherheit der Fluidisierungskorrelationen
-selbst (10-30 %, siehe ``fluidization.py``-Docstring zu ``minimum_fluidization_velocity_
-m_per_s``), eine Größenordnung über der Optimierer-Auflösung."""
-
-_TOLERANCE_TEMPERATURE_K = 0.05
-"""Analog: unter typischer Thermoelement-Auflösung (>=0.1 K), über der
-Optimierer-Auflösung."""
-
 DEFAULT_POPSIZE = 10
 DEFAULT_MAXITER = 50
 DEFAULT_DE_TOL = 1.0e-4
-DEFAULT_SEARCH_MAX_ITERATIONS = 30
-DEFAULT_SEARCH_TOLERANCE = 1.0e-7
 
 _BASE_CONFIG: ProcessConfig | None = None
 """Modul-globaler Zustand -- vermeidet, die Config bei jedem Zielfunktionsaufruf neu zu
@@ -268,38 +240,6 @@ def _suppress_placeholder_warning() -> None:
     warnings.filterwarnings("ignore", category=PlaceholderConfigWarning)
 
 
-def build_variant_config(
-    base: ProcessConfig, *, t_in: float, u_gas: float, p_nozzle: float, t_amb: float, phi_amb: float
-) -> ProcessConfig:
-    """Config mit genau den fünf hier variierten Nominalwerten überschrieben.
-
-    ``solve_steady_state`` liest Stell-/Störgrößen ausschließlich über
-    ``simulator.nominal_action``/``nominal_disturbance``, also aus den ``nominal``-Feldern
-    der Config (siehe ``greybox.py``) -- es gibt keinen Parameterpfad, der einen konkreten
-    Aktions-/Störvektor an den Löser durchreicht. Eine Variante je Auswertung ist deshalb
-    der einzige Weg, den Löser an einem beliebigen Betriebspunkt auszuwerten; alle übrigen
-    Felder (inkl. Grenzen und ``max_rate_per_s``) bleiben unverändert.
-    """
-    actions = dataclasses.replace(
-        base.actions,
-        inlet_temperature_celsius=dataclasses.replace(
-            base.actions.inlet_temperature_celsius, nominal=t_in
-        ),
-        gas_velocity_m_per_s=dataclasses.replace(base.actions.gas_velocity_m_per_s, nominal=u_gas),
-        nozzle_pressure_bar=dataclasses.replace(base.actions.nozzle_pressure_bar, nominal=p_nozzle),
-    )
-    disturbances = dataclasses.replace(
-        base.disturbances,
-        ambient_temperature_celsius=dataclasses.replace(
-            base.disturbances.ambient_temperature_celsius, nominal=t_amb
-        ),
-        ambient_relative_humidity=dataclasses.replace(
-            base.disturbances.ambient_relative_humidity, nominal=phi_amb
-        ),
-    )
-    return dataclasses.replace(base, actions=actions, disturbances=disturbances)
-
-
 def evaluate_point(
     t_in: float,
     u_gas: float,
@@ -334,88 +274,6 @@ def evaluate_point(
     )
     simulator = GreyBoxFluidBedGranulator(config)
     return solve_steady_state(simulator, max_iterations=max_iterations, tolerance=tolerance)
-
-
-@dataclass(frozen=True, slots=True)
-class ConstraintCheck:
-    """BB1s drei harte Nebenbedingungen plus Löser-Gültigkeit, ausgewertet an einer Lösung."""
-
-    moisture_kg_per_kg: float
-    moisture_violation_kg_per_kg: float
-    gas_velocity_m_per_s: float
-    minimum_fluidization_velocity_m_per_s: float
-    terminal_velocity_m_per_s: float
-    bed_temperature_celsius: float
-    bed_temperature_violation_k: float
-    solver_feasible: bool
-    feasible: bool
-    binding_moisture: bool
-    binding_gas_lower: bool
-    binding_gas_upper: bool
-    binding_bed_temperature: bool
-    normalized_violation: float
-
-    def as_dict(self) -> dict[str, Any]:
-        return dataclasses.asdict(self)
-
-
-def check_constraints(
-    solution: SteadyStateSolution,
-    *,
-    critical_moisture_kg_per_kg: float,
-    gas_velocity_m_per_s: float,
-) -> ConstraintCheck:
-    moisture = solution.particle_moisture_kg_per_kg
-    moisture_violation = max(0.0, moisture - critical_moisture_kg_per_kg)
-
-    u_mf = solution.diagnostics["minimum_fluidization_velocity_m_per_s"]
-    u_terminal = solution.diagnostics["terminal_velocity_m_per_s"]
-    gas_lower_violation = max(0.0, u_mf - gas_velocity_m_per_s)
-    gas_upper_violation = max(0.0, gas_velocity_m_per_s - u_terminal)
-
-    bed_temperature_violation = max(0.0, solution.bed_temperature_celsius - BED_TEMPERATURE_LIMIT_C)
-
-    feasible = (
-        moisture_violation <= _TOLERANCE_MOISTURE_KG_PER_KG
-        and gas_lower_violation <= _TOLERANCE_VELOCITY_M_PER_S
-        and gas_upper_violation <= _TOLERANCE_VELOCITY_M_PER_S
-        and bed_temperature_violation <= _TOLERANCE_TEMPERATURE_K
-        and solution.feasible
-    )
-
-    window = max(u_terminal - u_mf, 1e-3)
-    normalized_violation = (
-        moisture_violation / max(critical_moisture_kg_per_kg, 1e-6)
-        + gas_lower_violation / window
-        + gas_upper_violation / window
-        + bed_temperature_violation / 10.0
-        + (0.0 if solution.feasible else 1.0)
-    )
-
-    return ConstraintCheck(
-        moisture_kg_per_kg=moisture,
-        moisture_violation_kg_per_kg=moisture_violation,
-        gas_velocity_m_per_s=gas_velocity_m_per_s,
-        minimum_fluidization_velocity_m_per_s=u_mf,
-        terminal_velocity_m_per_s=u_terminal,
-        bed_temperature_celsius=solution.bed_temperature_celsius,
-        bed_temperature_violation_k=bed_temperature_violation,
-        solver_feasible=solution.feasible,
-        feasible=feasible,
-        binding_moisture=abs(moisture - critical_moisture_kg_per_kg)
-        <= _TOLERANCE_MOISTURE_KG_PER_KG,
-        binding_gas_lower=abs(gas_velocity_m_per_s - u_mf) <= _TOLERANCE_VELOCITY_M_PER_S,
-        binding_gas_upper=abs(u_terminal - gas_velocity_m_per_s) <= _TOLERANCE_VELOCITY_M_PER_S,
-        binding_bed_temperature=abs(BED_TEMPERATURE_LIMIT_C - solution.bed_temperature_celsius)
-        <= _TOLERANCE_TEMPERATURE_K,
-        normalized_violation=normalized_violation,
-    )
-
-
-def specific_energy_kwh_per_kg(solution: SteadyStateSolution) -> float:
-    product_flow = solution.diagnostics["product_mass_flow_kg_per_s"]
-    total_power_kw = solution.diagnostics["power_total_kw"]
-    return total_power_kw / (3600.0 * max(product_flow, 1e-12))
 
 
 def _penalized_energy(

@@ -86,12 +86,9 @@ Speicher, mehrere Linien, Netto-Zielfunktion, Anlagenmassstab -- spaetere Erweit
 
 from __future__ import annotations
 
-import importlib.util
-import sys
 import warnings
 from dataclasses import dataclass
 from pathlib import Path
-from types import ModuleType
 from typing import Any
 
 import gymnasium as gym
@@ -104,11 +101,19 @@ from twinlink_ml.simulation import (
     ProcessConfig,
     load_process_config,
 )
+from twinlink_ml.simulation.operating_point import (
+    DEFAULT_SEARCH_MAX_ITERATIONS,
+    DEFAULT_SEARCH_TOLERANCE,
+    PENALTY_WEIGHT_KW,
+    SOLVE_FAILURE_PENALTY_KW,
+    build_variant_config,
+    check_constraints,
+    specific_energy_kwh_per_kg,
+)
 from twinlink_ml.simulation.steady_state import solve_steady_state
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 CONFIG_PATH = REPO_ROOT / "conf" / "process" / "greybox_gab_placeholder.yaml"
-REGRET_SCRIPT_PATH = REPO_ROOT / "scripts" / "study_operating_point_regret.py"
 ANCHOR_ARTIFACT_PATH = REPO_ROOT / "artifacts" / "runs" / "bb1_bb3_operating_point_regret.json"
 
 EXPECTED_CONFIG_FINGERPRINT = "2acd06f38963c3af"
@@ -156,31 +161,6 @@ DISTURBANCE_NAMES: tuple[str, str] = (
     "ambient_temperature_celsius",
     "ambient_relative_humidity",
 )
-
-_REGRET_MODULE: ModuleType | None = None
-
-
-def _load_regret_module() -> ModuleType:
-    """Laedt ``scripts/study_operating_point_regret.py`` unveraendert per importlib.
-
-    Gleiches Muster wie ``scripts/probe_critical_moisture_sensitivity.py::_load_regret_
-    module`` (``sys.modules``-Eintrag vor ``exec_module``, siehe dort fuer die
-    Begruendung). Cache auf Modulebene: die Env wird typischerweise vielfach instanziiert
-    (SB3-VecEnv, mehrere Testfaelle), das Modul soll trotzdem nur einmal pro Prozess
-    geladen werden.
-    """
-    global _REGRET_MODULE
-    if _REGRET_MODULE is not None:
-        return _REGRET_MODULE
-    spec = importlib.util.spec_from_file_location(
-        "study_operating_point_regret", REGRET_SCRIPT_PATH
-    )
-    assert spec is not None and spec.loader is not None
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    _REGRET_MODULE = module
-    return module
 
 
 def _normalise(value: float, minimum: float, maximum: float) -> float:
@@ -235,9 +215,10 @@ class BanditEnvConfig:
     process_config_path: Path = CONFIG_PATH
     fixed_nozzle_pressure_bar: float = FIXED_NOZZLE_PRESSURE_BAR
     penalty_weight_kw: float | None = None
-    """``None`` (Default) uebernimmt ``_PENALTY_WEIGHT_KW`` aus dem geladenen Befund-52-
-    Regret-Modul unveraendert -- Bitgleichheit fuer den VA2-Orakeltest. Explizit gesetzt nur
-    fuer spaeteres RL-Tuning ausserhalb dieses Auftrags (siehe Moduldocstring)."""
+    """``None`` (Default) uebernimmt ``operating_point.PENALTY_WEIGHT_KW`` (Befund 52, in S0.1
+    aus dem Skript verschoben) unveraendert -- Bitgleichheit fuer den VA2-Orakeltest.
+    Explizit gesetzt nur fuer spaeteres RL-Tuning ausserhalb dieses Auftrags (siehe
+    Moduldocstring)."""
     reward_centering: RewardCentering | None = None
     """``None`` (Default): ROHE Belohnung, bitgleich zu VA2 -- siehe :class:`RewardCentering`
     fuer den BB2-Modus mit affiner Transformation."""
@@ -254,8 +235,8 @@ class BanditEnvConfig:
     das zurueckgegeben werden koennte."""
     solve_failure_penalty_kw: float | None = None
     """EA2: ``None`` (Default, unveraendert) uebernimmt Befund 52s Sentinel
-    (``_SOLVE_FAILURE_PENALTY_KW`` = 1.000.000) -- Bitgleichheit fuer VA2, das nur loesbare
-    Orakelaktionen einspeist und den Sentinel nie beruehrt. Explizit gesetzt: ein
+    (``operating_point.SOLVE_FAILURE_PENALTY_KW`` = 1.000.000) -- Bitgleichheit fuer VA2, das
+    nur loesbare Orakelaktionen einspeist und den Sentinel nie beruehrt. Explizit gesetzt: ein
     Loeserfehlschlag liefert ``reward = -solve_failure_penalty_kw`` statt des Sentinels.
 
     KEIN fester, willkuerlich gewaehlter Ersatzwert -- die vorgesehene Berechnung (siehe
@@ -279,7 +260,6 @@ class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
 
     def __init__(self, config: BanditEnvConfig | None = None) -> None:
         self._env_config = config if config is not None else BanditEnvConfig()
-        self._regret_module = _load_regret_module()
 
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", PlaceholderConfigWarning)
@@ -290,7 +270,7 @@ class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
         self._penalty_weight_kw = (
             self._env_config.penalty_weight_kw
             if self._env_config.penalty_weight_kw is not None
-            else float(self._regret_module._PENALTY_WEIGHT_KW)
+            else PENALTY_WEIGHT_KW
         )
 
         actions = self._base_config.actions
@@ -425,8 +405,7 @@ class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
         ambient_relative_humidity: float,
     ) -> tuple[float, dict[str, Any]]:
         """Rohe Belohnung, wie vor BB2 -- unveraendert, damit VA2 bitgleich bleibt."""
-        regret_module = self._regret_module
-        variant_config = regret_module.build_variant_config(
+        variant_config = build_variant_config(
             self._base_config,
             t_in=inlet_temperature_celsius,
             u_gas=gas_velocity_m_per_s,
@@ -446,14 +425,14 @@ class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
         try:
             solution = solve_steady_state(
                 simulator,
-                max_iterations=regret_module.DEFAULT_SEARCH_MAX_ITERATIONS,
-                tolerance=regret_module.DEFAULT_SEARCH_TOLERANCE,
+                max_iterations=DEFAULT_SEARCH_MAX_ITERATIONS,
+                tolerance=DEFAULT_SEARCH_TOLERANCE,
             )
         except (RuntimeError, ValueError) as exc:
             solve_failure_penalty_kw = (
                 self._env_config.solve_failure_penalty_kw
                 if self._env_config.solve_failure_penalty_kw is not None
-                else float(regret_module._SOLVE_FAILURE_PENALTY_KW)
+                else SOLVE_FAILURE_PENALTY_KW
             )
             reward = -solve_failure_penalty_kw
             info: dict[str, Any] = {
@@ -468,7 +447,7 @@ class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
             }
             return reward, info
 
-        check = regret_module.check_constraints(
+        check = check_constraints(
             solution,
             critical_moisture_kg_per_kg=self._base_config.material.critical_moisture_kg_per_kg,
             gas_velocity_m_per_s=gas_velocity_m_per_s,
@@ -486,7 +465,7 @@ class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
             "solve_failed": False,
             "energy_target": energy_target,
             "energy_target_unit": self._base_config.energy.target,
-            "specific_energy_kwh_per_kg": regret_module.specific_energy_kwh_per_kg(solution),
+            "specific_energy_kwh_per_kg": specific_energy_kwh_per_kg(solution),
             "constraint_check": check.as_dict(),
             "infeasibility_reasons": list(solution.infeasibility_reasons),
             # Keine Projektionsmechanik in diesem Environment (siehe Moduldocstring) --
