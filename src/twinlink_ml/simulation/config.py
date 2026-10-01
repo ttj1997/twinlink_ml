@@ -119,6 +119,19 @@ class MaterialConfig:
     nucleus_diameter_m: float = 150e-6
     nucleation_solid_fraction: float = 0.008
     initial_diameter_m: float = 400e-6
+    # Quality limit of the product moisture (a specification), optional. ``None``: the
+    # limit equals ``critical_moisture_kg_per_kg`` as before. The drying kinetics always
+    # use ``critical_moisture_kg_per_kg``; only constraints read the quality limit (see
+    # ``quality_moisture_limit_kg_per_kg``). Enters the fingerprint ONLY when set
+    # (``without_unset_optional_fields``), so every existing config keeps its fingerprint.
+    product_moisture_limit_kg_per_kg: float | None = None
+
+    @property
+    def quality_moisture_limit_kg_per_kg(self) -> float:
+        """Moisture threshold of the quality constraint (not of the drying kinetics)."""
+        if self.product_moisture_limit_kg_per_kg is None:
+            return self.critical_moisture_kg_per_kg
+        return self.product_moisture_limit_kg_per_kg
 
     def __post_init__(self) -> None:
         _require_positive(
@@ -137,6 +150,13 @@ class MaterialConfig:
             )
         if not 0.0 <= self.nucleation_solid_fraction < 1.0:
             raise ValueError("nucleation_solid_fraction muss in [0, 1) liegen")
+        if (
+            self.product_moisture_limit_kg_per_kg is not None
+            and self.product_moisture_limit_kg_per_kg <= self.equilibrium_moisture_kg_per_kg
+        ):
+            raise ValueError(
+                "product_moisture_limit_kg_per_kg muss über equilibrium_moisture_kg_per_kg liegen"
+            )
         self._validate_gab_fields()
 
     def _validate_gab_fields(self) -> None:
@@ -470,7 +490,10 @@ class ProcessConfig:
         Dokumentarische Freitextfelder (``provenance.description``, ``provenance.
         open_todos``) fließen NICHT ein -- siehe :func:`without_documentary_provenance`.
         """
-        return config_fingerprint(without_documentary_provenance(self.to_dict()))
+        return config_fingerprint(self._fingerprint_payload())
+
+    def _fingerprint_payload(self) -> dict[str, Any]:
+        return without_unset_optional_fields(without_documentary_provenance(self.to_dict()))
 
     @property
     def section_fingerprints(self) -> dict[str, str]:
@@ -499,7 +522,7 @@ class ProcessConfig:
             "measurement",
             "backend",
         )
-        return section_fingerprints_of(without_documentary_provenance(self.to_dict()), sections)
+        return section_fingerprints_of(self._fingerprint_payload(), sections)
 
     def warn_if_placeholder(self) -> None:
         if self.provenance.status == "placeholder":
@@ -550,6 +573,29 @@ def without_documentary_provenance(payload: dict[str, Any]) -> dict[str, Any]:
         for key, value in payload["provenance"].items()
         if key not in _DOCUMENTARY_PROVENANCE_FIELDS
     }
+    return result
+
+
+_OPTIONAL_UNSET_OMITTED_FIELDS: dict[str, tuple[str, ...]] = {
+    "material": ("product_moisture_limit_kg_per_kg",),
+}
+"""Optional fields that are left OUT of the fingerprint payload while they are ``None``.
+
+A field added later with default ``None`` would otherwise add a key to every payload and
+move the fingerprint of every existing config and every logged record. Once set, the field
+is part of the hash like any other. Per section, the field names."""
+
+
+def without_unset_optional_fields(payload: dict[str, Any]) -> dict[str, Any]:
+    """Drop :data:`_OPTIONAL_UNSET_OMITTED_FIELDS` entries whose value is ``None``."""
+    result = dict(payload)
+    for section, names in _OPTIONAL_UNSET_OMITTED_FIELDS.items():
+        if isinstance(result.get(section), dict):
+            result[section] = {
+                key: value
+                for key, value in result[section].items()
+                if not (key in names and value is None)
+            }
     return result
 
 

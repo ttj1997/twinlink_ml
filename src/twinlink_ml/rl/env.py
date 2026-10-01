@@ -449,7 +449,9 @@ class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
 
         check = check_constraints(
             solution,
-            critical_moisture_kg_per_kg=self._base_config.material.critical_moisture_kg_per_kg,
+            critical_moisture_kg_per_kg=(
+                self._base_config.material.quality_moisture_limit_kg_per_kg
+            ),
             gas_velocity_m_per_s=gas_velocity_m_per_s,
         )
         energy_target = float(solution.diagnostics["energy_target"])
