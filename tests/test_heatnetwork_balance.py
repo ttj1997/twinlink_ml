@@ -635,9 +635,7 @@ def test_condensing_mode_matches_ma1_formula_and_conserves_mass() -> None:
     assert result.source_used_power_kw[0, 0] == pytest.approx(expected_q_rec_kw, rel=1e-6)
 
     # Massenbilanz: Restfeuchte im Luftstrom + ausgekondensiertes Wasser == Ausgangsfeuchte.
-    outlet_humidity = (
-        source_humidity - result.source_condensate_kg_per_s[0, 0] / mass_flow
-    )
+    outlet_humidity = source_humidity - result.source_condensate_kg_per_s[0, 0] / mass_flow
     assert outlet_humidity == pytest.approx(y_sat_cold, rel=1e-9)
     assert outlet_humidity * mass_flow + result.source_condensate_kg_per_s[0, 0] == pytest.approx(
         source_humidity * mass_flow, rel=1e-9

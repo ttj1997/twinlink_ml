@@ -214,11 +214,19 @@ def main() -> int:
         extrapolation[str(n_steps)] = {"estimated_wall_hours_single_process": hours}
         print(f"Hochrechnung {n_steps:>7d} Schritte: {hours:.2f} h (einstraengig, Median-Kosten)")
 
-    print(f"\n--- VA3: Disjunktheit Trainings-/Testpunkte ({arguments.disjointness_draws} Ziehungen) " + "-" * 5)
+    print(
+        f"\n--- VA3: Disjunktheit Trainings-/Testpunkte ({arguments.disjointness_draws} Ziehungen) "
+        + "-" * 5
+    )
     disjointness = check_training_disjointness(arguments.disjointness_draws, seed=arguments.seed)
-    print(f"{disjointness['n_draws_checked']} Ziehungen geprueft, keine Kollision mit den 25 Testpunkten.")
+    print(
+        f"{disjointness['n_draws_checked']} Ziehungen geprueft, keine Kollision mit den 25 Testpunkten."
+    )
 
-    print(f"\n--- {arguments.algorithm}-Rauchtest (stable-baselines3, {arguments.total_timesteps} Schritte) " + "-" * 5)
+    print(
+        f"\n--- {arguments.algorithm}-Rauchtest (stable-baselines3, {arguments.total_timesteps} Schritte) "
+        + "-" * 5
+    )
     training_info, model = run_smoke_training(
         arguments.algorithm, arguments.total_timesteps, seed=arguments.seed
     )

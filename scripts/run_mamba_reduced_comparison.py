@@ -102,8 +102,10 @@ def _check_expected(actual: Mapping[str, object]) -> None:
 
 def main() -> None:
     torch.set_num_threads(1)
-    _log("Start: Mamba-Trainingslauf, n_train=16, Standard-Produktionskonfiguration -- "
-         "GRU/LSTM/Transformer/Baselines werden NICHT neu gerechnet, siehe Moduldocstring")
+    _log(
+        "Start: Mamba-Trainingslauf, n_train=16, Standard-Produktionskonfiguration -- "
+        "GRU/LSTM/Transformer/Baselines werden NICHT neu gerechnet, siehe Moduldocstring"
+    )
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
@@ -123,13 +125,17 @@ def main() -> None:
         "data/target_names": tuple(spec.target_names),
     }
     _check_expected(actual)
-    _log("Fingerprint/Split/Seeds/Zielkanaele bitgleich zu "
-         "transformer_reduced_comparison.jsonl bestaetigt.")
+    _log(
+        "Fingerprint/Split/Seeds/Zielkanaele bitgleich zu "
+        "transformer_reduced_comparison.jsonl bestaetigt."
+    )
 
     train, validation, test = build_datasets(data, N_TRAIN, policy=ValidationPolicy.FIXED_POOL)
-    _log(f"Datensaetze gebaut: {train.n_windows} Trainingsfenster, "
-         f"{validation.n_windows if validation is not None else 0} Validierungsfenster, "
-         f"{test.n_windows} Testfenster")
+    _log(
+        f"Datensaetze gebaut: {train.n_windows} Trainingsfenster, "
+        f"{validation.n_windows if validation is not None else 0} Validierungsfenster, "
+        f"{test.n_windows} Testfenster"
+    )
 
     evaluator = RolloutEvaluator(horizons=(1, spec.horizon))
 
@@ -177,8 +183,10 @@ def main() -> None:
         n_reused = sum(1 for line in handle if line.strip())
     logger = JsonlExperimentLogger(OUTPUT_PATH)
     logger.log(record)
-    _log(f"{n_reused} bestehende Records aus {REUSED_LOG_PATH.name} uebernommen, "
-         f"1 neuer Mamba-Record angehaengt -> {OUTPUT_PATH}")
+    _log(
+        f"{n_reused} bestehende Records aus {REUSED_LOG_PATH.name} uebernommen, "
+        f"1 neuer Mamba-Record angehaengt -> {OUTPUT_PATH}"
+    )
 
     _log(f"Fertig. Mamba-Trainingszeit: {model_elapsed:.1f}s ({model_elapsed / 60.0:.1f} Min).")
 

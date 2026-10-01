@@ -39,9 +39,7 @@ def _load_script(name: str) -> types.ModuleType:
     return module
 
 
-def _write_existing_record(
-    path: Path, *, seed: int, target_names: tuple[str, ...]
-) -> None:
+def _write_existing_record(path: Path, *, seed: int, target_names: tuple[str, ...]) -> None:
     """Einen synthetischen Befund-36-artigen Record schreiben (``test_set=excited``)."""
     record = {
         "params": {
@@ -203,9 +201,7 @@ def test_study_xlstm_wide_rejects_mismatched_target_names(tmp_path: Path) -> Non
 
     log_path = tmp_path / "existing_log.jsonl"
     existing_record = {
-        "params": {
-            "data/target_names": ["energy_target", "product_moisture_kg_per_kg", "d50_um"]
-        },
+        "params": {"data/target_names": ["energy_target", "product_moisture_kg_per_kg", "d50_um"]},
         "metrics": {},
         "tags": {},
     }

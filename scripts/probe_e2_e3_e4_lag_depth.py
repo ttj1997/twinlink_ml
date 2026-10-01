@@ -46,8 +46,14 @@ EXPECTED_FP = "40aae2b4526a5ed7"
 
 def _excited_spec() -> DataSpec:
     return DataSpec(
-        sample_time_s=25.0, run_duration_s=28_800.0, n_train_max=64, n_val=32, n_test=32,
-        history_length=32, horizon=36, stride=8,
+        sample_time_s=25.0,
+        run_duration_s=28_800.0,
+        n_train_max=64,
+        n_val=32,
+        n_test=32,
+        history_length=32,
+        horizon=36,
+        stride=8,
     )
 
 
@@ -192,9 +198,7 @@ def main() -> None:
 
             # ARX: je Kanal eigene y-Lags
             for c_idx, channel in enumerate(channels):
-                y_lags_train = _y_lags(
-                    pool["train_outputs"][:, :, c_idx], run_idx_tr, t_idx_tr, k
-                )
+                y_lags_train = _y_lags(pool["train_outputs"][:, :, c_idx], run_idx_tr, t_idx_tr, k)
                 design_train_arx = np.concatenate(
                     [design_train_fir[:, :-1], y_lags_train, design_train_fir[:, -1:]], axis=-1
                 )

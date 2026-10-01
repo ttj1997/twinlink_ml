@@ -135,8 +135,7 @@ def _window_index(n_runs: int, n_steps: int, config: WindowConfig) -> np.ndarray
     span = config.history_length + config.horizon
     if n_steps < span:
         raise ValueError(
-            f"Läufe haben {n_steps} Schritte, ein Fenster braucht {span} "
-            "(history_length + horizon)"
+            f"Läufe haben {n_steps} Schritte, ein Fenster braucht {span} (history_length + horizon)"
         )
     starts = np.arange(0, n_steps - span + 1, config.stride, dtype=np.intp)
     return np.stack(
@@ -148,9 +147,7 @@ def _window_index(n_runs: int, n_steps: int, config: WindowConfig) -> np.ndarray
     )
 
 
-def _slice_windows(
-    array: np.ndarray, index: np.ndarray, offsets: np.ndarray
-) -> np.ndarray:
+def _slice_windows(array: np.ndarray, index: np.ndarray, offsets: np.ndarray) -> np.ndarray:
     """``array[run, start + offsets]`` für jede Zeile von ``index``, vektorisiert."""
     runs = index[:, 0:1]
     starts = index[:, 1:2]
@@ -188,10 +185,7 @@ def windowed_point_split(
     index = _window_index(n_runs, n_steps, config)
 
     assignments = np.array(
-        [
-            splitter.assign(run_ids[run_row], int(start)).value
-            for run_row, start in index
-        ]
+        [splitter.assign(run_ids[run_row], int(start)).value for run_row, start in index]
     )
     masks = {name: assignments == name.value for name in SplitName}
     for name in (SplitName.TRAIN, SplitName.TEST):
@@ -202,9 +196,7 @@ def windowed_point_split(
             )
     n_val_windows = int(masks[SplitName.VAL].sum())
     if splitter.ratios.val > 0.0 and n_val_windows < min_per_split:
-        raise SplitDegenerateError(
-            f"val hat {n_val_windows} Fenster, Minimum ist {min_per_split}"
-        )
+        raise SplitDegenerateError(f"val hat {n_val_windows} Fenster, Minimum ist {min_per_split}")
 
     history_offsets = np.arange(config.history_length, dtype=np.intp)
     future_offsets = np.arange(
@@ -224,9 +216,7 @@ def windowed_point_split(
 
     unobserved = set(config.unobserved_targets)
     offset = exogenous.shape[-1]
-    masked_channels = [
-        offset + i for i, name in enumerate(target_names) if name in unobserved
-    ]
+    masked_channels = [offset + i for i, name in enumerate(target_names) if name in unobserved]
     if masked_channels:
         standardised_inputs[..., masked_channels] = 0.0
 

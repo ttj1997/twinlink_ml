@@ -52,9 +52,7 @@ def test_resolve_cascade_order_is_stable_for_equal_temperatures() -> None:
     assert resolve_cascade_order(network) == ("first", "second")
 
 
-def test_fixed_routing_reorders_by_ascending_source_temperature_regardless_of_input_order() -> (
-    None
-):
+def test_fixed_routing_reorders_by_ascending_source_temperature_regardless_of_input_order() -> None:
     network = _network()
     routing = FixedRouting(connections=(("hot", "a"), ("cold", "a")))
     assert routing.route(network) == (("cold", "a"), ("hot", "a"))

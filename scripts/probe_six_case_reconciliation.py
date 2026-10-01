@@ -139,7 +139,9 @@ def _saturation_humidity(temperature_celsius: float) -> float:
 
 
 def _latent_heat(temperature_celsius: float) -> float:
-    return float(BACKEND.to_numpy(latent_heat_j_per_kg(BACKEND, BACKEND.asarray(temperature_celsius))))
+    return float(
+        BACKEND.to_numpy(latent_heat_j_per_kg(BACKEND, BACKEND.asarray(temperature_celsius)))
+    )
 
 
 def _dew_point(humidity_kg_per_kg: float) -> float:
@@ -170,7 +172,9 @@ def source_available_power_kw(source: Source) -> dict[str, float]:
     # Uebertrager-Design nutzbar) gegenueber UNTERHALB (sensibler Rest + die gesamte
     # latente Waerme -- nur nutzbar, wenn tatsaechlich bis unter den Taupunkt gekuehlt
     # wird, physikalisch niederwertiger).
-    q_above_dew_point_kw = max(0.0, capacity_w_per_k * (source.outlet_temperature_celsius - dew_point)) / 1000.0
+    q_above_dew_point_kw = (
+        max(0.0, capacity_w_per_k * (source.outlet_temperature_celsius - dew_point)) / 1000.0
+    )
     q_below_dew_point_kw = (q_sensible_w + q_latent_w) / 1000.0 - q_above_dew_point_kw
     return {
         "q_rec_kw": (q_sensible_w + q_latent_w) / 1000.0,
@@ -184,9 +188,7 @@ def source_available_power_kw(source: Source) -> dict[str, float]:
     }
 
 
-def evaluate_case(
-    stages: tuple[tuple[str, str], ...], *, minimum_pinch_k: float
-) -> dict[str, Any]:
+def evaluate_case(stages: tuple[tuple[str, str], ...], *, minimum_pinch_k: float) -> dict[str, Any]:
     """Mehrstufige Kaskade, EA1/EA2-Algorithmus (``heatnetwork.balance.evaluate_cascade``)
     manuell nachgebaut mit QUELLENEIGENEM T_kalt statt einem netzweiten Wert -- sonst
     identische Mechanik: sensible Kuehlreserve zuerst, latenter Vorrat erst danach (MA1),
@@ -211,7 +213,8 @@ def evaluate_case(
     }
     current_sink_temperature = {name: s.intake_temperature_celsius for name, s in SINKS.items()}
     capacity_sink_w_per_k = {
-        name: s.mass_flow_kg_per_s * (GAS.cp_dry_air_j_per_kg_k + s.humidity_kg_per_kg * GAS.cp_vapour_j_per_kg_k)
+        name: s.mass_flow_kg_per_s
+        * (GAS.cp_dry_air_j_per_kg_k + s.humidity_kg_per_kg * GAS.cp_vapour_j_per_kg_k)
         for name, s in SINKS.items()
     }
 
@@ -230,7 +233,9 @@ def evaluate_case(
         target_sink_temperature = max(target_sink_temperature, t_sink)
 
         power_for_target_w = capacity_sink * (target_sink_temperature - t_sink)
-        sensible_available_w = max(capacity_source * (t_source - floor_temperature[source_name]), 0.0)
+        sensible_available_w = max(
+            capacity_source * (t_source - floor_temperature[source_name]), 0.0
+        )
         power_available_w = sensible_available_w + remaining_latent_kw[source_name] * 1000.0
         power_actual_w = max(0.0, min(power_for_target_w, power_available_w))
         power_sensible_used_w = min(power_actual_w, sensible_available_w)
@@ -263,9 +268,12 @@ def evaluate_case(
 
     fuel_kg_per_h = {}
     for name, sink in SINKS.items():
-        demand_kw = sink.mass_flow_kg_per_s * (
-            sink.setpoint_temperature_celsius - current_sink_temperature[name]
-        ) * (GAS.cp_dry_air_j_per_kg_k + sink.humidity_kg_per_kg * GAS.cp_vapour_j_per_kg_k) / 1000.0
+        demand_kw = (
+            sink.mass_flow_kg_per_s
+            * (sink.setpoint_temperature_celsius - current_sink_temperature[name])
+            * (GAS.cp_dry_air_j_per_kg_k + sink.humidity_kg_per_kg * GAS.cp_vapour_j_per_kg_k)
+            / 1000.0
+        )
         demand_kw = max(demand_kw, 0.0)
         fuel_kg_per_h[name] = (
             demand_kw * 1000.0 / (FUEL_LOWER_HEATING_VALUE_J_PER_KG * HEATER_EFFICIENCY) * 3600.0
@@ -284,7 +292,9 @@ def evaluate_case(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--output", type=Path, default=OUT_PATH)
     arguments = parser.parse_args()
 
@@ -312,7 +322,9 @@ def main() -> int:
     print("\n" + "=" * 78)
     print("MA5a/b -- sechs Faelle OHNE Graedigkeitspruefung (minimum_pinch_k=0)")
     print("=" * 78)
-    no_pinch_results = {name: evaluate_case(stages, minimum_pinch_k=0.0) for name, stages in CASES.items()}
+    no_pinch_results = {
+        name: evaluate_case(stages, minimum_pinch_k=0.0) for name, stages in CASES.items()
+    }
     for name, result in no_pinch_results.items():
         sheet_fuel = SHEET_FUEL_UNCORRECTED_KG_PER_H[name]
         print(
@@ -350,7 +362,9 @@ def main() -> int:
         print("\n" + "=" * 78)
         print(f"MA5c -- sechs Faelle MIT Graedigkeit dT_min={pinch_k:.0f} K")
         print("=" * 78)
-        pinch_results = {name: evaluate_case(stages, minimum_pinch_k=pinch_k) for name, stages in CASES.items()}
+        pinch_results = {
+            name: evaluate_case(stages, minimum_pinch_k=pinch_k) for name, stages in CASES.items()
+        }
         for name, result in pinch_results.items():
             print(f"{name}: Brennstoff={result['total_fuel_kg_per_h']:7.2f} kg/h")
         best_name = min(pinch_results, key=lambda n: pinch_results[n]["total_fuel_kg_per_h"])

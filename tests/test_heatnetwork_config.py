@@ -115,7 +115,9 @@ def test_heat_network_config_default_cold_temperature_is_fifteen_celsius() -> No
 def test_heat_network_config_rejects_unknown_recovery_mode() -> None:
     with pytest.raises(ValueError, match="recovery_mode"):
         HeatNetworkConfig(
-            sources=(_source(),), sinks=(_sink(),), recovery_mode="both"  # type: ignore[arg-type]
+            sources=(_source(),),
+            sinks=(_sink(),),
+            recovery_mode="both",  # type: ignore[arg-type]
         )
 
 
@@ -126,9 +128,7 @@ def test_heat_network_config_rejects_cold_temperature_out_of_range() -> None:
 
 def test_fingerprint_changes_with_recovery_mode() -> None:
     base = HeatNetworkConfig(sources=(_source(),), sinks=(_sink(),))
-    changed = HeatNetworkConfig(
-        sources=(_source(),), sinks=(_sink(),), recovery_mode="condensing"
-    )
+    changed = HeatNetworkConfig(sources=(_source(),), sinks=(_sink(),), recovery_mode="condensing")
     assert base.fingerprint != changed.fingerprint
 
 

@@ -290,7 +290,9 @@ def compute_steady_state_reference(
         base_config=steady_state_base,
     )
     backend = NumpyBackend()
-    outlet_temperature = solution.bed_temperature_celsius - steady_state_base.exhaust.outlet_duct_heat_loss_k
+    outlet_temperature = (
+        solution.bed_temperature_celsius - steady_state_base.exhaust.outlet_duct_heat_loss_k
+    )
     q_rec = compute_recoverable_power_kw(
         backend,
         steady_state_base.gas,
@@ -372,7 +374,11 @@ def _run_grid_point(task: GridPointTask) -> dict[str, Any]:
     """
     regret_module = _load_regret_module()
     point = task.point
-    t_in, u_gas, p_nozzle = point.inlet_temperature_celsius, point.gas_velocity_m_per_s, point.nozzle_pressure_bar
+    t_in, u_gas, p_nozzle = (
+        point.inlet_temperature_celsius,
+        point.gas_velocity_m_per_s,
+        point.nozzle_pressure_bar,
+    )
     fixed_t_in, fixed_u_gas, fixed_p_nozzle = task.fixed_setpoint
 
     steady_state = compute_steady_state_reference(regret_module, task.steady_state_base, point)
@@ -420,8 +426,12 @@ def _run_grid_point(task: GridPointTask) -> dict[str, Any]:
     deviation_rel_pct = {
         "solid_mass_kg": _rel_pct(end_solid_mass, steady_state.solid_mass_kg),
         "d50_um": _rel_pct(end_d50_um, steady_state.d50_um),
-        "particle_moisture_kg_per_kg": _rel_pct(end_moisture, steady_state.particle_moisture_kg_per_kg),
-        "bed_temperature_celsius": _rel_pct(end_bed_temperature, steady_state.bed_temperature_celsius),
+        "particle_moisture_kg_per_kg": _rel_pct(
+            end_moisture, steady_state.particle_moisture_kg_per_kg
+        ),
+        "bed_temperature_celsius": _rel_pct(
+            end_bed_temperature, steady_state.bed_temperature_celsius
+        ),
     }
 
     return {
@@ -452,7 +462,10 @@ def _run_grid_point(task: GridPointTask) -> dict[str, Any]:
             "energy_target_kw": float(optimal_energy.mean()),
             "q_rec_kw": float(optimal_q_rec.mean()),
         },
-        "deviation_end_vs_fixed_point": {"absolute": deviation_abs, "relative_pct": deviation_rel_pct},
+        "deviation_end_vs_fixed_point": {
+            "absolute": deviation_abs,
+            "relative_pct": deviation_rel_pct,
+        },
         "cb2_constraint_series_optimal_setpoint": cb2_constraint_series(
             optimal_trajectory, task.critical_moisture_kg_per_kg
         ),
@@ -540,7 +553,10 @@ def _cb4_objective(
     bed_temperature_violation = np.maximum(0.0, bed_temperature - BED_TEMPERATURE_LIMIT_C) / 10.0
     mean_violation = float(
         np.mean(
-            moisture_violation + fluid_lower_violation + fluid_upper_violation + bed_temperature_violation
+            moisture_violation
+            + fluid_lower_violation
+            + fluid_upper_violation
+            + bed_temperature_violation
         )
     )
 
@@ -566,7 +582,14 @@ def optimize_cb4_point(
     critical_moisture_kg_per_kg: float,
     workers: int,
 ) -> dict[str, Any]:
-    args = (t_amb, phi_amb, transient_config, spray_rate, solid_fraction, critical_moisture_kg_per_kg)
+    args = (
+        t_amb,
+        phi_amb,
+        transient_config,
+        spray_rate,
+        solid_fraction,
+        critical_moisture_kg_per_kg,
+    )
     start = time.perf_counter()
     deadline = start + _CB4_TIME_LIMIT_S
 
@@ -636,7 +659,11 @@ def optimize_cb4_point(
         "extrapolated_full_search_s": (
             None
             if not time_budget_hit
-            else de_elapsed / max(de_result.nfev, 1) * _CB4_DE_POPSIZE * len(bounds) * (_CB4_DE_MAXITER + 1)
+            else de_elapsed
+            / max(de_result.nfev, 1)
+            * _CB4_DE_POPSIZE
+            * len(bounds)
+            * (_CB4_DE_MAXITER + 1)
         ),
     }
 
@@ -699,12 +726,16 @@ def run_cb4(
 
 
 def parse_arguments() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--config", type=Path, default=CONFIG_PATH)
     parser.add_argument("--regret-json", type=Path, default=REGRET_STUDY_PATH)
     parser.add_argument("--output", type=Path, default=OUT_PATH)
     parser.add_argument("--workers", type=int, default=-1, help="-1 = alle Kerne")
-    parser.add_argument("--cb4", action="store_true", help="CB4 (Reoptimierung, 4 Eckpunkte) zusaetzlich ausfuehren")
+    parser.add_argument(
+        "--cb4", action="store_true", help="CB4 (Reoptimierung, 4 Eckpunkte) zusaetzlich ausfuehren"
+    )
     return parser.parse_args()
 
 
@@ -723,7 +754,9 @@ def main() -> int:
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
         steady_state_base = load_process_config(arguments.config)
-    if not fingerprints_equivalent(steady_state_base.fingerprint, EXPECTED_STEADY_STATE_FINGERPRINT):
+    if not fingerprints_equivalent(
+        steady_state_base.fingerprint, EXPECTED_STEADY_STATE_FINGERPRINT
+    ):
         raise RuntimeError(
             f"Beharrungszustands-Config hat Fingerprint {steady_state_base.fingerprint!r}, "
             f"erwartet {EXPECTED_STEADY_STATE_FINGERPRINT!r} -- weicht von Befund 52 ab."
@@ -736,7 +769,9 @@ def main() -> int:
         )
 
     regret_json = json.loads(arguments.regret_json.read_text())
-    if not fingerprints_equivalent(regret_json["config_fingerprint"], EXPECTED_STEADY_STATE_FINGERPRINT):
+    if not fingerprints_equivalent(
+        regret_json["config_fingerprint"], EXPECTED_STEADY_STATE_FINGERPRINT
+    ):
         raise RuntimeError(
             f"{arguments.regret_json} hat config_fingerprint "
             f"{regret_json['config_fingerprint']!r}, erwartet {EXPECTED_STEADY_STATE_FINGERPRINT!r}."
@@ -757,10 +792,14 @@ def main() -> int:
     print("=" * 78)
     print(f"Beharrungszustands-Config  {steady_state_base.fingerprint}  (Befund 52)")
     print(f"Transiente Config          {transient_config.fingerprint}  (CB1-CB4)")
-    print(f"Chargendauer               {BATCH_DURATION_S:.0f} s, Delta_t={SAMPLE_TIME_S:.0f} s, "
-          f"{N_STEPS} Schritte")
-    print(f"Fester Betriebspunkt (Befund 52)  T_in={fixed_setpoint[0]:.2f} C, "
-          f"u_gas={fixed_setpoint[1]:.3f} m/s, p_nozzle={fixed_setpoint[2]:.3f} bar")
+    print(
+        f"Chargendauer               {BATCH_DURATION_S:.0f} s, Delta_t={SAMPLE_TIME_S:.0f} s, "
+        f"{N_STEPS} Schritte"
+    )
+    print(
+        f"Fester Betriebspunkt (Befund 52)  T_in={fixed_setpoint[0]:.2f} C, "
+        f"u_gas={fixed_setpoint[1]:.3f} m/s, p_nozzle={fixed_setpoint[2]:.3f} bar"
+    )
     print(f"git/commit={env['git/commit']}  git/dirty={env['git/dirty']}")
     print(f"Worker                     {workers}")
     print("=" * 78, flush=True)
@@ -778,8 +817,10 @@ def main() -> int:
         for point in grid_points
     ]
 
-    print(f"\n--- CB1/CB2/CB3: {len(tasks)} Gitterpunkte, je 2 Rollouts (optimal + fest) "
-          + "-" * 5, flush=True)
+    print(
+        f"\n--- CB1/CB2/CB3: {len(tasks)} Gitterpunkte, je 2 Rollouts (optimal + fest) " + "-" * 5,
+        flush=True,
+    )
     cb1_records_by_index: dict[int, dict[str, Any]] = {}
     start = time.perf_counter()
     with Pool(workers) as pool:
@@ -787,8 +828,7 @@ def main() -> int:
             index = record["grid_index"]
             elapsed = time.perf_counter() - start
             print(
-                f"[{n_done:2d}/{len(tasks)}] Punkt {index + 1}  "
-                f"(kumulativ {elapsed:6.1f} s)",
+                f"[{n_done:2d}/{len(tasks)}] Punkt {index + 1}  (kumulativ {elapsed:6.1f} s)",
                 flush=True,
             )
             cb1_records_by_index[index] = record
@@ -813,7 +853,8 @@ def main() -> int:
     n_moisture_violated = sum(
         1
         for record in cb1_records
-        if record["cb2_constraint_series_optimal_setpoint"]["moisture"]["fraction_steps_violating"] > 0.0
+        if record["cb2_constraint_series_optimal_setpoint"]["moisture"]["fraction_steps_violating"]
+        > 0.0
     )
     print(
         f"\n--- CB2: {n_moisture_violated}/{len(cb1_records)} Gitterpunkte verletzen die "

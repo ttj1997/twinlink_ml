@@ -95,7 +95,8 @@ def main() -> int:
         oracle_per_point.append(
             {
                 "moisture_margin_kg_per_kg": critical_moisture - check["moisture_kg_per_kg"],
-                "bed_temperature_margin_k": bed_temperature_limit - check["bed_temperature_celsius"],
+                "bed_temperature_margin_k": bed_temperature_limit
+                - check["bed_temperature_celsius"],
                 "gas_velocity_m_per_s": point.oracle_gas_velocity_m_per_s,
                 "binding_moisture": bool(check["binding_moisture"]),
             }
@@ -146,7 +147,8 @@ def main() -> int:
                 {
                     "solve_failed": False,
                     "moisture_margin_kg_per_kg": critical_moisture - check["moisture_kg_per_kg"],
-                    "bed_temperature_margin_k": bed_temperature_limit - check["bed_temperature_celsius"],
+                    "bed_temperature_margin_k": bed_temperature_limit
+                    - check["bed_temperature_celsius"],
                     "gas_velocity_m_per_s": u_gas,
                     "binding_moisture": bool(check["binding_moisture"]),
                 }
@@ -200,10 +202,15 @@ def main() -> int:
             f"  Median Delta u_gas (Agent - Orakel), bindende Punkte: "
             f"{per_seed[seed_key]['median_gas_velocity_delta_agent_minus_oracle_binding_subset_m_per_s']:+.4f} m/s"
         )
-        print(f"  Agent bindet Gutsfeuchte selbst an {n_agent_binding_moisture}/{len(points)} Punkten")
+        print(
+            f"  Agent bindet Gutsfeuchte selbst an {n_agent_binding_moisture}/{len(points)} Punkten"
+        )
 
     median_across_seeds_binding_subset = _median(
-        [per_seed[str(s)]["median_moisture_margin_agent_binding_subset_kg_per_kg"] for s in range(3)]
+        [
+            per_seed[str(s)]["median_moisture_margin_agent_binding_subset_kg_per_kg"]
+            for s in range(3)
+        ]
     )
     median_gas_delta_binding_subset = _median(
         [
@@ -217,7 +224,9 @@ def main() -> int:
         f"Median ueber Seeds, Feuchtemarge Agent an bindenden Punkten: "
         f"{median_across_seeds_binding_subset:.4f} kg/kg (kritisch={critical_moisture} kg/kg)"
     )
-    print(f"Median ueber Seeds, Delta u_gas an bindenden Punkten: {median_gas_delta_binding_subset:+.4f} m/s")
+    print(
+        f"Median ueber Seeds, Delta u_gas an bindenden Punkten: {median_gas_delta_binding_subset:+.4f} m/s"
+    )
 
     output = {
         "critical_moisture_kg_per_kg": critical_moisture,

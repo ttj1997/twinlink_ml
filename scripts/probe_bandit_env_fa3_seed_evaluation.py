@@ -140,7 +140,9 @@ def _inspect_checkpoint_actions(
         "mean_absolute_distance_to_oracle_inlet_temperature_celsius": float(
             physical_distance_inlet.mean()
         ),
-        "mean_absolute_distance_to_oracle_gas_velocity_m_per_s": float(physical_distance_gas.mean()),
+        "mean_absolute_distance_to_oracle_gas_velocity_m_per_s": float(
+            physical_distance_gas.mean()
+        ),
         "mean_normalised_distance_to_oracle": float(normalised_distance.mean()),
         "median_normalised_distance_to_oracle": float(np.median(normalised_distance)),
     }
@@ -231,14 +233,18 @@ def main() -> int:
             per_seed[str(seed)] = {**scalar_metrics, **action_stats}
 
         median_metrics = {
-            key: _median_or_nan([per_seed[str(s)][key] for s in seeds]) for key in _SCALAR_METRIC_KEYS
+            key: _median_or_nan([per_seed[str(s)][key] for s in seeds])
+            for key in _SCALAR_METRIC_KEYS
         }
         median_distance = _median_or_nan(
             [per_seed[str(s)]["mean_normalised_distance_to_oracle"] for s in seeds]
         )
         per_checkpoint[str(checkpoint)] = {
             "per_seed": per_seed,
-            "median": {**median_metrics, "median_mean_normalised_distance_to_oracle": median_distance},
+            "median": {
+                **median_metrics,
+                "median_mean_normalised_distance_to_oracle": median_distance,
+            },
         }
 
         print(f"\n--- Schritt {checkpoint} " + "-" * 20)

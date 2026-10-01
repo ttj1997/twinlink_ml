@@ -575,9 +575,7 @@ def config_fingerprint(payload: dict[str, Any]) -> str:
     )
 
 
-def section_fingerprints_of(
-    payload: dict[str, Any], sections: tuple[str, ...]
-) -> dict[str, str]:
+def section_fingerprints_of(payload: dict[str, Any], sections: tuple[str, ...]) -> dict[str, str]:
     """:func:`config_fingerprint` je benanntem Abschnitt von ``payload``.
 
     Gemeinsame Basis für :attr:`ProcessConfig.section_fingerprints` und die entsprechende

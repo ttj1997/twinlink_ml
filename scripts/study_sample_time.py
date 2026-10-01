@@ -95,9 +95,7 @@ def _sequence_length_context(
     return context
 
 
-def _spread(
-    records: list[RunRecord], label: str, key: str
-) -> tuple[float, float, float]:
+def _spread(records: list[RunRecord], label: str, key: str) -> tuple[float, float, float]:
     """Median, Minimum, Maximum einer Metrik über alle Seeds eines Modells."""
     values = np.asarray([r.metrics[key] for r in records if r.params["model/label"] == label])
     return float(np.median(values)), float(np.min(values)), float(np.max(values))

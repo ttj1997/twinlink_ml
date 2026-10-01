@@ -139,9 +139,7 @@ def dew_point_celsius(
     :returns: Taupunkt in °C.
     """
     p_partial = (
-        absolute_humidity_kg_per_kg
-        * gas.pressure_pa
-        / (0.622 + absolute_humidity_kg_per_kg)
+        absolute_humidity_kg_per_kg * gas.pressure_pa / (0.622 + absolute_humidity_kg_per_kg)
     )
     low = backend.zeros_like(p_partial) - 40.0
     high = backend.zeros_like(p_partial) + 100.0

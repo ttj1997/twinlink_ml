@@ -106,9 +106,7 @@ def test_outlet_temperature_subtracts_duct_loss(
     ``outlet_temperature_celsius`` ist um ``loss_k`` niedriger als ``bed_temperature_celsius``.
     """
     loss_k = 3.5
-    lossy_config = replace(
-        config, exhaust=replace(config.exhaust, outlet_duct_heat_loss_k=loss_k)
-    )
+    lossy_config = replace(config, exhaust=replace(config.exhaust, outlet_duct_heat_loss_k=loss_k))
     t_gas_out, _y_gas_out, outlet_temperature, _solution = _reconstruct_at_solution(
         lossy_config, simulator, backend
     )

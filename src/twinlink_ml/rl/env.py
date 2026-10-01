@@ -303,12 +303,8 @@ class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
 
         self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(2,), dtype=np.float32)
         self.observation_space = spaces.Box(
-            low=np.array(
-                [self._t_amb_range.minimum, self._phi_range.minimum], dtype=np.float32
-            ),
-            high=np.array(
-                [self._t_amb_range.maximum, self._phi_range.maximum], dtype=np.float32
-            ),
+            low=np.array([self._t_amb_range.minimum, self._phi_range.minimum], dtype=np.float32),
+            high=np.array([self._t_amb_range.maximum, self._phi_range.maximum], dtype=np.float32),
             dtype=np.float32,
         )
 
@@ -329,12 +325,8 @@ class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
         super().reset(seed=seed)
         options = options or {}
         if "ambient_temperature_celsius" in options or "ambient_relative_humidity" in options:
-            t_amb = float(
-                options.get("ambient_temperature_celsius", self._t_amb_range.nominal)
-            )
-            phi_amb = float(
-                options.get("ambient_relative_humidity", self._phi_range.nominal)
-            )
+            t_amb = float(options.get("ambient_temperature_celsius", self._t_amb_range.nominal))
+            phi_amb = float(options.get("ambient_relative_humidity", self._phi_range.nominal))
         else:
             t_amb = float(
                 self.np_random.uniform(self._t_amb_range.minimum, self._t_amb_range.maximum)
@@ -350,9 +342,7 @@ class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
         }
         return observation, info
 
-    def step(
-        self, action: np.ndarray
-    ) -> tuple[np.ndarray, float, bool, bool, dict[str, Any]]:
+    def step(self, action: np.ndarray) -> tuple[np.ndarray, float, bool, bool, dict[str, Any]]:
         if self._disturbance is None:
             raise RuntimeError("step() vor reset() aufgerufen")
         t_amb, phi_amb = self._disturbance

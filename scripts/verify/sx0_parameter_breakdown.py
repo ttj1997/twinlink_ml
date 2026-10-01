@@ -33,9 +33,7 @@ def main() -> None:
     require_clean_tree()
     out: dict[str, Any] = {"_provenance": provenance(), "cores": {}}
     for name, config in CONFIGS.items():
-        network = _build_network(
-            torch, n_exogenous=N_EXOGENOUS, n_targets=N_TARGETS, config=config
-        )
+        network = _build_network(torch, n_exogenous=N_EXOGENOUS, n_targets=N_TARGETS, config=config)
         tensors = {key: int(value.numel()) for key, value in network.named_parameters()}
         per_head = sum(tensors.values())
         out["cores"][name] = {

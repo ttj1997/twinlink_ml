@@ -174,22 +174,30 @@ def main() -> int:
 
         mean = result["normalised_action_mean"]
         std = result["normalised_action_std"]
-        print(f"normierte Aktion, Mittelwert ueber 25 Kontexte: t_in={mean[0]:+.4f}  "
-              f"u_gas={mean[1]:+.4f}")
-        print(f"normierte Aktion, Streuung ueber 25 Kontexte:   t_in={std[0]:.4f}  "
-              f"u_gas={std[1]:.4f}  (Kollaps-Schwelle {COLLAPSE_STD_THRESHOLD})")
+        print(
+            f"normierte Aktion, Mittelwert ueber 25 Kontexte: t_in={mean[0]:+.4f}  "
+            f"u_gas={mean[1]:+.4f}"
+        )
+        print(
+            f"normierte Aktion, Streuung ueber 25 Kontexte:   t_in={std[0]:.4f}  "
+            f"u_gas={std[1]:.4f}  (Kollaps-Schwelle {COLLAPSE_STD_THRESHOLD})"
+        )
         print(f"Kollaps (kontextunabhaengig)? {result['collapsed_ignoring_context']}")
-        print(f"an Schranke gesaettigt? t_in={result['at_corner_inlet_temperature']} "
-              f"({result['corner_direction_inlet_temperature']})  "
-              f"u_gas={result['at_corner_gas_velocity']} "
-              f"({result['corner_direction_gas_velocity']})")
+        print(
+            f"an Schranke gesaettigt? t_in={result['at_corner_inlet_temperature']} "
+            f"({result['corner_direction_inlet_temperature']})  "
+            f"u_gas={result['at_corner_gas_velocity']} "
+            f"({result['corner_direction_gas_velocity']})"
+        )
         print(f"HEISSE ECKE (hoch/hoch)? {result['is_hot_corner']}")
         print("erste 3 physikalische Aktionen:")
         for entry in result["per_point"][:3]:
-            print(f"  t_amb={entry['ambient_temperature_celsius']:5.1f} "
-                  f"phi={entry['ambient_relative_humidity']:.2f} -> "
-                  f"t_in={entry['inlet_temperature_celsius']:6.2f} °C  "
-                  f"u_gas={entry['gas_velocity_m_per_s']:.4f} m/s")
+            print(
+                f"  t_amb={entry['ambient_temperature_celsius']:5.1f} "
+                f"phi={entry['ambient_relative_humidity']:.2f} -> "
+                f"t_in={entry['inlet_temperature_celsius']:6.2f} °C  "
+                f"u_gas={entry['gas_velocity_m_per_s']:.4f} m/s"
+            )
 
     arguments.output.parent.mkdir(parents=True, exist_ok=True)
     arguments.output.write_text(json.dumps(results, indent=2, sort_keys=True))

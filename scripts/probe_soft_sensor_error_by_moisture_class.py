@@ -126,7 +126,9 @@ def _collect_predictions(
         raise RuntimeError("Datensatz liefert keine Fenster.")
     for batch in batches:
         if batch.future_targets_truth is None:
-            raise RuntimeError("Datensatz enthaelt keine rauschfreie Referenz (future_targets_truth).")
+            raise RuntimeError(
+                "Datensatz enthaelt keine rauschfreie Referenz (future_targets_truth)."
+            )
         predictions.append(model.predict(batch))
         references.append(batch.future_targets)
         truths.append(batch.future_targets_truth)
@@ -143,7 +145,9 @@ def _collect_predictions(
     }
 
 
-def _moisture_channel(arrays: dict[str, Any]) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+def _moisture_channel(
+    arrays: dict[str, Any],
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Extrahiert `product_moisture_kg_per_kg` (Kanal `MOISTURE_INDEX`) aus Vorhersage,
     Referenz und Wahrheit, jeweils zu 1D ueber (Fenster x Schritte 1..36) geglaettet, plus
     `run_index` auf dieselbe Laenge expandiert (ein Laufindex war je FENSTER gespeichert,
@@ -161,7 +165,9 @@ def _rmse(prediction: np.ndarray, reference: np.ndarray) -> float:
     return float(np.sqrt(np.mean((prediction - reference) ** 2)))
 
 
-def _rmse_per_run_median(prediction: np.ndarray, reference: np.ndarray, run_index: np.ndarray) -> float | None:
+def _rmse_per_run_median(
+    prediction: np.ndarray, reference: np.ndarray, run_index: np.ndarray
+) -> float | None:
     """Wie `twinlink_ml.evaluation.evaluator.per_run_rmse_median` (die Definition hinter
     Befund 62 HA1s 0,000543-kg/kg-Zahl: RMSE je Lauf, dann Median ueber Laeufe) -- NICHT
     der gepoolte/geglaettete RMSE ueber alle Fenster/Schritte (siehe Moduldocstring von
@@ -203,9 +209,13 @@ def _error_by_class(
     global_rmse_per_run_median = _rmse_per_run_median(prediction, reference, run_index)
     boundary_mask = (truth >= BOUNDARY_CLASS_LOW) & (truth < BOUNDARY_CLASS_HIGH)
     n_boundary = int(np.count_nonzero(boundary_mask))
-    boundary_rmse = _rmse(prediction[boundary_mask], reference[boundary_mask]) if n_boundary > 0 else None
+    boundary_rmse = (
+        _rmse(prediction[boundary_mask], reference[boundary_mask]) if n_boundary > 0 else None
+    )
     boundary_rmse_per_run_median = (
-        _rmse_per_run_median(prediction[boundary_mask], reference[boundary_mask], run_index[boundary_mask])
+        _rmse_per_run_median(
+            prediction[boundary_mask], reference[boundary_mask], run_index[boundary_mask]
+        )
         if n_boundary > 0
         else None
     )
@@ -219,9 +229,13 @@ def _error_by_class(
             {
                 "class": label,
                 "n_points": n,
-                "rmse_pooled_kg_per_kg": _rmse(prediction[mask], reference[mask]) if n > 0 else None,
+                "rmse_pooled_kg_per_kg": _rmse(prediction[mask], reference[mask])
+                if n > 0
+                else None,
                 "rmse_per_run_median_kg_per_kg": (
-                    _rmse_per_run_median(prediction[mask], reference[mask], run_index[mask]) if n > 0 else None
+                    _rmse_per_run_median(prediction[mask], reference[mask], run_index[mask])
+                    if n > 0
+                    else None
                 ),
             }
         )
@@ -254,11 +268,23 @@ def _error_by_class(
 
 
 def parse_arguments() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--config", type=Path, default=worker.CONFIG_PATH)
-    parser.add_argument("--seeds", type=int, nargs="+", default=[1], help="Trainings-Seeds (Befund-51/58-Nummerierung)")
-    parser.add_argument("--num-threads", type=int, default=1, help="torch.set_num_threads (wie Befund 51/58)")
-    parser.add_argument("--checkpoint-dir", type=Path, default=REPO_ROOT / "artifacts" / "checkpoints")
+    parser.add_argument(
+        "--seeds",
+        type=int,
+        nargs="+",
+        default=[1],
+        help="Trainings-Seeds (Befund-51/58-Nummerierung)",
+    )
+    parser.add_argument(
+        "--num-threads", type=int, default=1, help="torch.set_num_threads (wie Befund 51/58)"
+    )
+    parser.add_argument(
+        "--checkpoint-dir", type=Path, default=REPO_ROOT / "artifacts" / "checkpoints"
+    )
     parser.add_argument("--output", type=Path, default=OUT_PATH)
     return parser.parse_args()
 
@@ -310,9 +336,15 @@ def main() -> int:
             )
         data_elapsed = time.perf_counter() - seed_start
 
-        train, validation, test_excited = build_datasets(excited, N_TRAIN, policy=ValidationPolicy.FIXED_POOL)
+        train, validation, test_excited = build_datasets(
+            excited, N_TRAIN, policy=ValidationPolicy.FIXED_POOL
+        )
         test_constant = TrajectoryWindowDataset.from_trajectory(
-            holdout.trajectory, holdout.split, SplitName.TEST, excited_spec.window, scalers=train.scalers
+            holdout.trajectory,
+            holdout.split,
+            SplitName.TEST,
+            excited_spec.window,
+            scalers=train.scalers,
         )
 
         print(f"--- Seed {seed}: Training (LSTM, n_train={N_TRAIN}) ---", flush=True)
@@ -396,11 +428,15 @@ def main() -> int:
     aggregate: dict[str, Any] | None = None
     if len(arguments.seeds) > 1:
         global_rmses = [
-            per_seed[str(s)]["error_by_class_test_constant_holdout"]["global_rmse_per_run_median_kg_per_kg"]
+            per_seed[str(s)]["error_by_class_test_constant_holdout"][
+                "global_rmse_per_run_median_kg_per_kg"
+            ]
             for s in arguments.seeds
         ]
         boundary_rmses = [
-            per_seed[str(s)]["error_by_class_test_constant_holdout"]["boundary_class_rmse_per_run_median_kg_per_kg"]
+            per_seed[str(s)]["error_by_class_test_constant_holdout"][
+                "boundary_class_rmse_per_run_median_kg_per_kg"
+            ]
             for s in arguments.seeds
         ]
         boundary_rmses_finite = [v for v in boundary_rmses if v is not None]

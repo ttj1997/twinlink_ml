@@ -173,8 +173,8 @@ def evaluate_recoverable_power(
     ``outlet_temperature_celsius``/``Y_gas_out_kg_per_kg``-Spalten an -- kein zweiter
     Rückrechnungs-Durchlauf.
     """
-    reconstructed_array, reference_array, run_array, resolved_horizons = (
-        reconstruct_exhaust_arrays(model, data, test, horizons=horizons, batch_size=batch_size)
+    reconstructed_array, reference_array, run_array, resolved_horizons = reconstruct_exhaust_arrays(
+        model, data, test, horizons=horizons, batch_size=batch_size
     )
 
     outlet_index = EXHAUST_TARGET_NAMES.index("outlet_temperature_celsius")

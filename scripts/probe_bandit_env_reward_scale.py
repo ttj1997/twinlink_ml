@@ -146,9 +146,7 @@ def measure_feasible_random_energy_spread_kw(
     }
 
 
-def measure_observed_penalty_kw(
-    xa3_path: Path, penalty_weight_kw: float
-) -> dict[str, Any]:
+def measure_observed_penalty_kw(xa3_path: Path, penalty_weight_kw: float) -> dict[str, Any]:
     """(c) Strafe fuer die in XA3 TATSAECHLICH beobachteten Bettemperaturverletzungen."""
     if not xa3_path.exists():
         return {"available": False, "reason": f"{xa3_path} nicht gefunden"}
@@ -209,27 +207,39 @@ def main() -> int:
     print("=" * 78)
 
     gap = measure_oracle_fixed_gap_kw()
-    print(f"\n(a) E_fest - E_Orakel je Testpunkt [kW]: median={gap['median_kw']:.4f}  "
-          f"p95={gap['p95_kw']:.4f}  max={gap['max_kw']:.4f}  min={gap['min_kw']:.4f}")
+    print(
+        f"\n(a) E_fest - E_Orakel je Testpunkt [kW]: median={gap['median_kw']:.4f}  "
+        f"p95={gap['p95_kw']:.4f}  max={gap['max_kw']:.4f}  min={gap['min_kw']:.4f}"
+    )
 
-    print(f"\n(b) Spannweite Energie ueber zulaessige Zufallsaktionen [kW] "
-          f"({arguments.n_repetitions} Wiederholungen, dieselben Seeds wie YA1) ...")
+    print(
+        f"\n(b) Spannweite Energie ueber zulaessige Zufallsaktionen [kW] "
+        f"({arguments.n_repetitions} Wiederholungen, dieselben Seeds wie YA1) ..."
+    )
     spread = measure_feasible_random_energy_spread_kw(env, arguments.n_repetitions)
-    print(f"    n_feasible={int(spread['n_feasible_samples'])}/{int(spread['n_total_samples'])}  "
-          f"median={spread['median_kw']:.4f}  span=[{spread['min_kw']:.4f}, "
-          f"{spread['max_kw']:.4f}] ({spread['span_kw']:.4f} kW)")
+    print(
+        f"    n_feasible={int(spread['n_feasible_samples'])}/{int(spread['n_total_samples'])}  "
+        f"median={spread['median_kw']:.4f}  span=[{spread['min_kw']:.4f}, "
+        f"{spread['max_kw']:.4f}] ({spread['span_kw']:.4f} kW)"
+    )
 
     penalty = measure_observed_penalty_kw(arguments.xa3_artifact, env._penalty_weight_kw)
-    print(f"\n(c) Strafe fuer XA3s beobachtete Bettemperaturverletzungen [kW] "
-          f"(_PENALTY_WEIGHT_KW={env._penalty_weight_kw}):")
+    print(
+        f"\n(c) Strafe fuer XA3s beobachtete Bettemperaturverletzungen [kW] "
+        f"(_PENALTY_WEIGHT_KW={env._penalty_weight_kw}):"
+    )
     if penalty["available"]:
         for checkpoint, stats in penalty["per_checkpoint"].items():
-            print(f"    Schritt {checkpoint:>6s}: n={int(stats['n_violations']):2d}  "
-                  f"median={stats['median_penalty_kw']:.2f}  "
-                  f"[{stats['min_penalty_kw']:.2f}, {stats['max_penalty_kw']:.2f}]")
-        print(f"    GESAMT ({int(penalty['overall_n_violations'])} Verletzungen): "
-              f"median={penalty['overall_median_penalty_kw']:.2f}  "
-              f"[{penalty['overall_min_penalty_kw']:.2f}, {penalty['overall_max_penalty_kw']:.2f}]")
+            print(
+                f"    Schritt {checkpoint:>6s}: n={int(stats['n_violations']):2d}  "
+                f"median={stats['median_penalty_kw']:.2f}  "
+                f"[{stats['min_penalty_kw']:.2f}, {stats['max_penalty_kw']:.2f}]"
+            )
+        print(
+            f"    GESAMT ({int(penalty['overall_n_violations'])} Verletzungen): "
+            f"median={penalty['overall_median_penalty_kw']:.2f}  "
+            f"[{penalty['overall_min_penalty_kw']:.2f}, {penalty['overall_max_penalty_kw']:.2f}]"
+        )
     else:
         print(f"    nicht verfuegbar: {penalty['reason']}")
 

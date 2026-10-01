@@ -112,8 +112,12 @@ def _run_batch(
 
     for seed in staggered:
         process, output, _log_path = _launch(
-            python, seed, config=config, checkpoint_dir=checkpoint_dir,
-            work_dir=work_dir, num_threads=num_threads,
+            python,
+            seed,
+            config=config,
+            checkpoint_dir=checkpoint_dir,
+            work_dir=work_dir,
+            num_threads=num_threads,
         )
         handles.append((process, seed, output))
         print(f"  gestartet (gestaffelt): mamba seed={seed}, PID {process.pid}")
@@ -148,8 +152,12 @@ def _run_batch(
 
     for seed in rest:
         process, output, _log_path = _launch(
-            python, seed, config=config, checkpoint_dir=checkpoint_dir,
-            work_dir=work_dir, num_threads=num_threads,
+            python,
+            seed,
+            config=config,
+            checkpoint_dir=checkpoint_dir,
+            work_dir=work_dir,
+            num_threads=num_threads,
         )
         handles.append((process, seed, output))
         print(f"  gestartet: mamba seed={seed}, PID {process.pid}")

@@ -124,7 +124,9 @@ def _penalized_energy_decoupled(
         critical_moisture_kg_per_kg=effective_critical_moisture_kg_per_kg,
         gas_velocity_m_per_s=u_gas,
     )
-    objective = regret_module._objective_components(solution, regret_module._BASE_CONFIG)["objective_value"]
+    objective = regret_module._objective_components(solution, regret_module._BASE_CONFIG)[
+        "objective_value"
+    ]
     return float(objective + regret_module._PENALTY_WEIGHT_KW * check.normalized_violation)
 
 
@@ -140,7 +142,13 @@ def _penalized_energy_decoupled_toplevel(
     Modul-Global `_REGRET_MODULE` aufgeloest, das der Pool-Initializer in jedem Worker
     setzt (dasselbe Muster wie `regret_module._BASE_CONFIG`)."""
     return _penalized_energy_decoupled(
-        x, t_amb, phi_amb, max_iterations, tolerance, effective_critical_moisture_kg_per_kg, _REGRET_MODULE
+        x,
+        t_amb,
+        phi_amb,
+        max_iterations,
+        tolerance,
+        effective_critical_moisture_kg_per_kg,
+        _REGRET_MODULE,
     )
 
 
@@ -171,7 +179,13 @@ def optimize_grid_point_decoupled(
     boundary` unveraendert weiterverwendet werden kann."""
     regret_module = _REGRET_MODULE
     assert regret_module is not None and regret_module._BASE_CONFIG is not None
-    args = (t_amb, phi_amb, budget.search_max_iterations, budget.search_tolerance, effective_critical_moisture_kg_per_kg)
+    args = (
+        t_amb,
+        phi_amb,
+        budget.search_max_iterations,
+        budget.search_tolerance,
+        effective_critical_moisture_kg_per_kg,
+    )
     de_result, refine_result, de_elapsed, refine_elapsed = regret_module._optimize(
         _penalized_energy_decoupled_toplevel, bounds, args, budget, de_workers=1
     )
@@ -249,7 +263,9 @@ def _grid_point_task_decoupled(
 ) -> dict[str, Any]:
     index, t_amb, phi_amb, bounds, budget, effective_critical_moisture_kg_per_kg = task
     start = time.perf_counter()
-    result = optimize_grid_point_decoupled(t_amb, phi_amb, bounds, budget, effective_critical_moisture_kg_per_kg)
+    result = optimize_grid_point_decoupled(
+        t_amb, phi_amb, bounds, budget, effective_critical_moisture_kg_per_kg
+    )
     result["_grid_index"] = index
     result["_wall_elapsed_s"] = time.perf_counter() - start
     return result
@@ -287,9 +303,15 @@ def run_oracle_grid_decoupled(
             for index, (t_amb, phi_amb) in enumerate(grid_points)
         ]
         grid_results_by_index: dict[int, dict[str, Any]] = {}
-        for n_done, result in enumerate(pool.imap_unordered(_grid_point_task_decoupled, tasks), start=1):
+        for n_done, result in enumerate(
+            pool.imap_unordered(_grid_point_task_decoupled, tasks), start=1
+        ):
             index = result["_grid_index"]
-            status = "OK" if not result.get("solve_failed") and result.get("feasible") else "UNZULAESSIG/FEHLER"
+            status = (
+                "OK"
+                if not result.get("solve_failed") and result.get("feasible")
+                else "UNZULAESSIG/FEHLER"
+            )
             print(
                 f"  [{n_done}/{len(grid_points)}] Punkt {index + 1} -> {status:20s} "
                 f"({result['_wall_elapsed_s']:5.1f}s)",
@@ -298,7 +320,9 @@ def run_oracle_grid_decoupled(
             grid_results_by_index[index] = result
     grid_results = [grid_results_by_index[i] for i in range(len(grid_points))]
     elapsed = time.perf_counter() - start
-    n_infeasible = sum(1 for r in grid_results if r.get("solve_failed") or not r.get("feasible", False))
+    n_infeasible = sum(
+        1 for r in grid_results if r.get("solve_failed") or not r.get("feasible", False)
+    )
     print(f"  {label}: {elapsed:.0f}s, {n_infeasible}/{len(grid_results)} unzulaessig", flush=True)
     return grid_results
 
@@ -328,7 +352,10 @@ def main() -> int:
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
         base_config = load_process_config(arguments.config)
     # Kinetik bleibt UNVERAENDERT bei 0,20 kg/kg -- derselbe Fingerprint wie Befund 52/54/KA1.
-    assert base_config.material.critical_moisture_kg_per_kg == ka1.CRITICAL_MOISTURE_REFERENCE_KG_PER_KG
+    assert (
+        base_config.material.critical_moisture_kg_per_kg
+        == ka1.CRITICAL_MOISTURE_REFERENCE_KG_PER_KG
+    )
 
     da1 = ka1.load_da1_artifact()
     if not fingerprints_equivalent(base_config.fingerprint, da1["base_config_fingerprint"]):
@@ -365,7 +392,9 @@ def main() -> int:
             for t, phi in regret_module.build_grid(base_config, ka1.GRID_SIZE)
         ]
     )
-    ka1._assert_same_grid(reference_grid_coords, fresh_grid_coords, context="frisches Gitter vs. DA1 0,20 kg/kg")
+    ka1._assert_same_grid(
+        reference_grid_coords, fresh_grid_coords, context="frisches Gitter vs. DA1 0,20 kg/kg"
+    )
 
     binding_at_reference = [
         bool(r["constraint_check"]["binding_moisture"]) for r in r_reference["grid_results"]
@@ -391,7 +420,9 @@ def main() -> int:
     for label, spec in boundaries.items():
         if label not in RECOMPUTED_LABELS:
             grid_results_by_boundary[label] = r_reference["grid_results"]
-            reused_flags[label] = "probe_critical_moisture_sensitivity.json#results_by_value.0.20.grid_results (Marge 0 -- Kinetik und Schwelle fallen zusammen)"
+            reused_flags[label] = (
+                "probe_critical_moisture_sensitivity.json#results_by_value.0.20.grid_results (Marge 0 -- Kinetik und Schwelle fallen zusammen)"
+            )
             print(f"\n{label}: unveraendert (Marge 0) -- keine neue Rechnung.")
             continue
         grid_results_by_boundary[label] = run_oracle_grid_decoupled(
@@ -405,7 +436,9 @@ def main() -> int:
         )
         reused_flags[label] = None
         new_coords = ka1._grid_coordinates(grid_results_by_boundary[label])
-        ka1._assert_same_grid(reference_grid_coords, new_coords, context=f"Gitter {label} vs. Referenz")
+        ka1._assert_same_grid(
+            reference_grid_coords, new_coords, context=f"Gitter {label} vs. Referenz"
+        )
     total_elapsed = time.perf_counter() - total_start
 
     ka1_output: dict[str, Any] = {}
@@ -460,7 +493,9 @@ def main() -> int:
     print("KA3 (entkoppelt): Gegenprobe zum RL-Agenten")
     print("=" * 88)
     agent_all = ka2_output["rl_agent_margin"]["aggregate"]["all"]
-    print(f"Diese Studie (entkoppelt), rl_agent_margin, gepoolt (alle 9 Punkte): {agent_all['pooled_remaining_fraction']}")
+    print(
+        f"Diese Studie (entkoppelt), rl_agent_margin, gepoolt (alle 9 Punkte): {agent_all['pooled_remaining_fraction']}"
+    )
     print(
         f"Befund 62 FA3, RL-Agent, gepoolt (25 Punkte, Schritt 10000, Median ueber 3 Seeds): "
         f"{fa3_reference['pooled_closed_regret_fraction_step10000_median']}"
@@ -487,7 +522,9 @@ def main() -> int:
         "ka2_cost_and_remaining_fraction": ka2_output,
         "ka3_rl_agent_counterfactual": {
             "boundary_label": "rl_agent_margin",
-            "this_study_pooled_remaining_fraction_all_points": agent_all["pooled_remaining_fraction"],
+            "this_study_pooled_remaining_fraction_all_points": agent_all[
+                "pooled_remaining_fraction"
+            ],
             "fa3_pooled_closed_regret_fraction_step10000_median": fa3_reference[
                 "pooled_closed_regret_fraction_step10000_median"
             ],

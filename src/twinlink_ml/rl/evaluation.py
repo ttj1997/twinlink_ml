@@ -415,9 +415,7 @@ def flat_metrics(result: ClosedRegretResult) -> dict[str, float]:
     """
     moisture_violation = result.mean_moisture_violation_of_infeasible_kg_per_kg
     n_bed_temp = sum(1 for v in result.infeasible_violations if v.bed_temperature_violation_k > 0)
-    n_moisture = sum(
-        1 for v in result.infeasible_violations if v.moisture_violation_kg_per_kg > 0
-    )
+    n_moisture = sum(1 for v in result.infeasible_violations if v.moisture_violation_kg_per_kg > 0)
     n_gas = sum(
         1
         for v in result.infeasible_violations

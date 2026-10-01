@@ -50,7 +50,9 @@ BUDGET_POINTS = (8, 16, 32, 64)
 
 
 def _load(path: Path) -> list[dict]:
-    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    return [
+        json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()
+    ]
 
 
 def _metric_values(
@@ -85,7 +87,9 @@ def _print_tables(records: list[dict]) -> None:
         print(f"\n{'=' * 100}\nTestmenge: {test_set}\n{'=' * 100}")
         for target in TARGETS:
             for horizon in HORIZONS:
-                print(f"\n--- {target}, h={horizon} -- rmse_run_median_physical  |  nrmse_run_median ---")
+                print(
+                    f"\n--- {target}, h={horizon} -- rmse_run_median_physical  |  nrmse_run_median ---"
+                )
                 header = "".join(f"{label:>15}" for label in ARCHITECTURE_ORDER)
                 print(f"{'n_train':>8} {header}")
                 for n_train in BUDGET_POINTS:
@@ -125,7 +129,9 @@ def _print_tables(records: list[dict]) -> None:
 
 
 def _print_ranges(records: list[dict]) -> None:
-    print(f"\n{'=' * 100}\nSpannweiten (Min..Max ueber 5 Seeds), rmse_run_median_physical\n{'=' * 100}")
+    print(
+        f"\n{'=' * 100}\nSpannweiten (Min..Max ueber 5 Seeds), rmse_run_median_physical\n{'=' * 100}"
+    )
     for test_set in TEST_SETS:
         for target in TARGETS:
             for horizon in HORIZONS:
@@ -150,7 +156,9 @@ def _print_ranges(records: list[dict]) -> None:
 
 
 def _check_monotonicity(records: list[dict]) -> None:
-    print(f"\n{'=' * 100}\nMonotonie (Median-rmse_run_median_physical ueber n_train, absteigend erwartet)\n{'=' * 100}")
+    print(
+        f"\n{'=' * 100}\nMonotonie (Median-rmse_run_median_physical ueber n_train, absteigend erwartet)\n{'=' * 100}"
+    )
     for test_set in TEST_SETS:
         for target in TARGETS:
             for horizon in HORIZONS:
@@ -183,7 +191,9 @@ def _check_monotonicity(records: list[dict]) -> None:
 
 
 def _epoch_ceiling(records: list[dict]) -> None:
-    print(f"\n{'=' * 100}\nOA5b: Epochenobergrenze (training/epochs_run vs. model/net_max_epochs)\n{'=' * 100}")
+    print(
+        f"\n{'=' * 100}\nOA5b: Epochenobergrenze (training/epochs_run vs. model/net_max_epochs)\n{'=' * 100}"
+    )
     binding_by_arch: dict[str, list[bool]] = {label: [] for label in TORCH_ARCHITECTURES}
     for label in TORCH_ARCHITECTURES:
         for n_train in BUDGET_POINTS:

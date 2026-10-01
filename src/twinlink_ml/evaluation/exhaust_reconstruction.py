@@ -318,9 +318,7 @@ def reconstruct_exhaust_arrays(
             inlet_absolute_humidity_kg_per_kg=true_inlet_humidity,
         )
 
-        reference.append(
-            np.stack([t_gas_reference, y_gas_reference, outlet_reference], axis=-1)
-        )
+        reference.append(np.stack([t_gas_reference, y_gas_reference, outlet_reference], axis=-1))
         reconstructed.append(
             np.stack([t_gas_reconstructed, y_gas_reconstructed, outlet_reconstructed], axis=-1)
         )
@@ -346,8 +344,8 @@ def evaluate_exhaust_reconstruction(
     Dünner Aggregations-Wrapper um :func:`reconstruct_exhaust_arrays` -- siehe dort für
     Voraussetzungen (``test.target_names``) und den Leck-/Fehlpaarungs-Schutz.
     """
-    reconstructed_array, reference_array, run_array, resolved_horizons = (
-        reconstruct_exhaust_arrays(model, data, test, horizons=horizons, batch_size=batch_size)
+    reconstructed_array, reference_array, run_array, resolved_horizons = reconstruct_exhaust_arrays(
+        model, data, test, horizons=horizons, batch_size=batch_size
     )
 
     by_horizon = pooled_nrmse(

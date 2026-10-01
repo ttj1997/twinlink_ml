@@ -93,13 +93,17 @@ def main() -> None:
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
         data = generate_data(config, spec, master_seed=SEED)
-    _log(f"Daten generiert: Pool {spec.pool_size} Laeufe (n_train_max={spec.n_train_max}, "
-         f"n_val={spec.n_val}, n_test={spec.n_test}), Praefix n_train={N_TRAIN}")
+    _log(
+        f"Daten generiert: Pool {spec.pool_size} Laeufe (n_train_max={spec.n_train_max}, "
+        f"n_val={spec.n_val}, n_test={spec.n_test}), Praefix n_train={N_TRAIN}"
+    )
 
     train, validation, test = build_datasets(data, N_TRAIN, policy=ValidationPolicy.FIXED_POOL)
-    _log(f"Datensaetze gebaut: {train.n_windows} Trainingsfenster, "
-         f"{validation.n_windows if validation is not None else 0} Validierungsfenster, "
-         f"{test.n_windows} Testfenster")
+    _log(
+        f"Datensaetze gebaut: {train.n_windows} Trainingsfenster, "
+        f"{validation.n_windows if validation is not None else 0} Validierungsfenster, "
+        f"{test.n_windows} Testfenster"
+    )
 
     evaluator = RolloutEvaluator(horizons=(1, spec.horizon))
     logger = JsonlExperimentLogger(OUTPUT_PATH)
@@ -144,8 +148,10 @@ def main() -> None:
 
     logger.close()
     total_elapsed = time.perf_counter() - overall_start
-    _log(f"Fertig. Gesamtzeit: {total_elapsed:.1f}s ({total_elapsed / 60.0:.1f} Min). "
-         f"Log: {OUTPUT_PATH}")
+    _log(
+        f"Fertig. Gesamtzeit: {total_elapsed:.1f}s ({total_elapsed / 60.0:.1f} Min). "
+        f"Log: {OUTPUT_PATH}"
+    )
 
 
 if __name__ == "__main__":

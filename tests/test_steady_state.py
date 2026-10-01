@@ -47,6 +47,7 @@ def _load_regret_module() -> ModuleType:
     spec.loader.exec_module(module)
     return module
 
+
 # Vorfaktor der Exponentialhüllkurve für den langsamen Zustand (d50/N), siehe
 # test_slow_state_approaches_transient_within_exponential_envelope.
 _ENVELOPE_FACTOR = 10.0
@@ -261,6 +262,4 @@ def test_solve_steady_state_defaults_do_not_reproduce_befund_52() -> None:
         max_iterations=regret_module.DEFAULT_SEARCH_MAX_ITERATIONS,
         tolerance=regret_module.DEFAULT_SEARCH_TOLERANCE,
     )
-    assert solution.diagnostics["energy_target"] == pytest.approx(
-        point["energy_target"], rel=1e-6
-    )
+    assert solution.diagnostics["energy_target"] == pytest.approx(point["energy_target"], rel=1e-6)

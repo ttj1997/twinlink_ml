@@ -144,9 +144,7 @@ def print_comparison(
         checkpoint = record["tags"]["checkpoint"]
         pooled_value = m["pooled_closed_regret_fraction"]
         pooled_text = f"{pooled_value:.4f}" if np.isfinite(pooled_value) else "n. def."
-        print(
-            f"XA3 {checkpoint:>6s}  (a)={m['feasibility_rate']:.2f}  (b)={pooled_text}"
-        )
+        print(f"XA3 {checkpoint:>6s}  (a)={m['feasibility_rate']:.2f}  (b)={pooled_text}")
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -165,7 +163,9 @@ def main() -> int:
     seeds = tuple(range(arguments.n_repetitions))
 
     print("=" * 78)
-    print(f"Zufallsbaseline      {arguments.n_repetitions} Wiederholungen, Seeds {seeds[0]}..{seeds[-1]}")
+    print(
+        f"Zufallsbaseline      {arguments.n_repetitions} Wiederholungen, Seeds {seeds[0]}..{seeds[-1]}"
+    )
     print("Aktion               gleichverteilt in [-1, 1]^2, keine Politik, kein Training")
     print("=" * 78)
 

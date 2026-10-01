@@ -94,7 +94,9 @@ EXTRA_BOUNDARIES: dict[str, dict[str, Any]] = {
 INTERPOLATION_TARGETS = (0.90, 0.50, 0.00)
 
 
-def _linear_interp_margin(points: list[tuple[float, float]], target_remaining: float) -> dict[str, Any] | None:
+def _linear_interp_margin(
+    points: list[tuple[float, float]], target_remaining: float
+) -> dict[str, Any] | None:
     """`points`: (margin, remaining), aufsteigend nach Marge sortiert (= absteigend nach
     verbleibendem Anteil, wie im gesamten Datensatz beobachtet). Sucht das Intervall, in dem
     `target_remaining` liegt, und interpoliert linear. `None`, falls ausserhalb des
@@ -116,7 +118,9 @@ def _linear_interp_margin(points: list[tuple[float, float]], target_remaining: f
 
 
 def parse_arguments() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--config", type=Path, default=ka1.CONFIG_PATH)
     parser.add_argument("--workers", type=int, default=-1, help="-1 = alle Kerne")
     parser.add_argument("--output", type=Path, default=OUT_PATH)
@@ -134,7 +138,10 @@ def main() -> int:
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
         base_config = load_process_config(arguments.config)
-    assert base_config.material.critical_moisture_kg_per_kg == ka1.CRITICAL_MOISTURE_REFERENCE_KG_PER_KG
+    assert (
+        base_config.material.critical_moisture_kg_per_kg
+        == ka1.CRITICAL_MOISTURE_REFERENCE_KG_PER_KG
+    )
 
     da1 = ka1.load_da1_artifact()
     if not fingerprints_equivalent(base_config.fingerprint, da1["base_config_fingerprint"]):
@@ -147,9 +154,13 @@ def main() -> int:
         raise RuntimeError("DA1s Fixpunkt bei 0,20 kg/kg ist nicht ueberall zulaessig.")
 
     if not MA2_ARTIFACT_PATH.exists():
-        raise RuntimeError(f"MA2-Artefakt fehlt: {MA2_ARTIFACT_PATH} -- Befund 64 zuerst reproduzieren.")
+        raise RuntimeError(
+            f"MA2-Artefakt fehlt: {MA2_ARTIFACT_PATH} -- Befund 64 zuerst reproduzieren."
+        )
     ma2_artifact = json.loads(MA2_ARTIFACT_PATH.read_text())
-    if not fingerprints_equivalent(base_config.fingerprint, ma2_artifact["base_config_fingerprint"]):
+    if not fingerprints_equivalent(
+        base_config.fingerprint, ma2_artifact["base_config_fingerprint"]
+    ):
         raise RuntimeError("Aktuelle Config-Fingerprint weicht vom MA2-Artefakt ab.")
 
     regret_module = ka1._load_regret_module()
@@ -174,8 +185,12 @@ def main() -> int:
             for t, phi in regret_module.build_grid(base_config, ka1.GRID_SIZE)
         ]
     )
-    ka1._assert_same_grid(reference_grid_coords, fresh_grid_coords, context="frisches Gitter vs. DA1 0,20 kg/kg")
-    binding_at_reference = [bool(r["constraint_check"]["binding_moisture"]) for r in r_reference["grid_results"]]
+    ka1._assert_same_grid(
+        reference_grid_coords, fresh_grid_coords, context="frisches Gitter vs. DA1 0,20 kg/kg"
+    )
+    binding_at_reference = [
+        bool(r["constraint_check"]["binding_moisture"]) for r in r_reference["grid_results"]
+    ]
 
     print("=" * 88)
     print("GA1: zwei zusaetzliche Stuetzstellen (0,19 / 0,185 kg/kg), entkoppelt wie MA2")
@@ -203,7 +218,9 @@ def main() -> int:
             label=label,
         )
         new_coords = ka1._grid_coordinates(grid_results_by_boundary[label])
-        ka1._assert_same_grid(reference_grid_coords, new_coords, context=f"Gitter {label} vs. Referenz")
+        ka1._assert_same_grid(
+            reference_grid_coords, new_coords, context=f"Gitter {label} vs. Referenz"
+        )
     total_elapsed = time.perf_counter() - total_start
 
     ka1_output: dict[str, Any] = {}
@@ -213,7 +230,9 @@ def main() -> int:
     print("=" * 88)
     for label, spec in EXTRA_BOUNDARIES.items():
         n_infeasible = sum(
-            1 for r in grid_results_by_boundary[label] if r.get("solve_failed") or not r.get("feasible", False)
+            1
+            for r in grid_results_by_boundary[label]
+            if r.get("solve_failed") or not r.get("feasible", False)
         )
         ka1_output[label] = {
             **spec,
@@ -245,7 +264,9 @@ def main() -> int:
     # Gesamter Datensatz: sieben MA2-Stuetzstellen + zwei neue, aufsteigend nach Marge.
     merged_points: list[tuple[str, float, float]] = []
     for label, spec in ma2_artifact["ka1_boundaries"].items():
-        remaining = ma2_artifact["ka2_cost_and_remaining_fraction"][label]["aggregate"]["all"]["pooled_remaining_fraction"]
+        remaining = ma2_artifact["ka2_cost_and_remaining_fraction"][label]["aggregate"]["all"][
+            "pooled_remaining_fraction"
+        ]
         merged_points.append((label, spec["margin_kg_per_kg"], remaining))
     for label, spec in EXTRA_BOUNDARIES.items():
         remaining = ka2_output[label]["aggregate"]["all"]["pooled_remaining_fraction"]

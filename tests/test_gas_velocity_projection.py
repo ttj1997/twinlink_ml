@@ -168,9 +168,7 @@ def test_project_action_clips_to_pre_step_margins() -> None:
     rho_p = material.particle_density_kg_per_m3
     diameter = (6.0 * solid_mass / (np.pi * rho_p * particle_count)) ** (1.0 / 3.0)
     bed_temperature = state[..., IDX_BED_TEMPERATURE]
-    humidity = absolute_humidity_kg_per_kg(
-        backend, gas, disturbance[..., 0], disturbance[..., 1]
-    )
+    humidity = absolute_humidity_kg_per_kg(backend, gas, disturbance[..., 0], disturbance[..., 1])
     u_mf = minimum_fluidization_velocity_m_per_s(
         backend, gas, material, diameter, bed_temperature, humidity
     )

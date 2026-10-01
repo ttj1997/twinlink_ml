@@ -636,9 +636,7 @@ def main() -> None:
     all_requested = np.concatenate(
         [g["requested_actions"][..., gv_idx].reshape(-1) for g in groups]
     )
-    all_realised = np.concatenate(
-        [g["realised_actions"][..., gv_idx].reshape(-1) for g in groups]
-    )
+    all_realised = np.concatenate([g["realised_actions"][..., gv_idx].reshape(-1) for g in groups])
     all_mask = np.concatenate([g["projected_mask"].reshape(-1) for g in groups])
     all_shortfall = np.abs(all_realised - all_requested)
 
@@ -718,9 +716,7 @@ def main() -> None:
         )
 
     abort_std = std_drop_fraction > STD_DROP_ABORT_FRACTION
-    abort_hot = (
-        hot_before > 0.0 and hot_drop_fraction > HOT_FRACTION_DROP_ABORT_FRACTION
-    )
+    abort_hot = hot_before > 0.0 and hot_drop_fraction > HOT_FRACTION_DROP_ABORT_FRACTION
     # (f) allein (Punktanteil != 0) ist NICHT das Abbruchkriterium -- Stellvertreter fuer
     # "Projektion korrekt platziert", das T1 (Betrag der Restverletzung) klaert. Massgeblich
     # ist, ob die relative Ueberschreitung ueber die Korrelationsunsicherheit von u_terminal
@@ -777,9 +773,7 @@ def main() -> None:
             f"Laeufe betroffen: {rep['a_runs_affected_fraction']:.4%} "
             f"({rep['a_runs_affected']}/{rep['n_runs']})"
         )
-        print(
-            f"  b) gas_velocity gepoolt vorher: {rep['b_gas_velocity_before_pooled']}"
-        )
+        print(f"  b) gas_velocity gepoolt vorher: {rep['b_gas_velocity_before_pooled']}")
         print(f"     gas_velocity gepoolt nachher: {rep['b_gas_velocity_after_pooled']}")
         print(
             f"  c) mittlere Kuerzung (betroffene Punkte): "

@@ -241,7 +241,9 @@ def _set_objective_value_fn(
     _OBJECTIVE_VALUE_FN = fn
 
 
-def _objective_components(solution: SteadyStateSolution, base_config: ProcessConfig) -> dict[str, float]:
+def _objective_components(
+    solution: SteadyStateSolution, base_config: ProcessConfig
+) -> dict[str, float]:
     """Zielgröße plus Diagnosefelder für einen Beharrungszustand.
 
     Ohne Override (``_OBJECTIVE_VALUE_FN is None``, der Stand vor MA4): reine
@@ -283,12 +285,8 @@ def build_variant_config(
         inlet_temperature_celsius=dataclasses.replace(
             base.actions.inlet_temperature_celsius, nominal=t_in
         ),
-        gas_velocity_m_per_s=dataclasses.replace(
-            base.actions.gas_velocity_m_per_s, nominal=u_gas
-        ),
-        nozzle_pressure_bar=dataclasses.replace(
-            base.actions.nozzle_pressure_bar, nominal=p_nozzle
-        ),
+        gas_velocity_m_per_s=dataclasses.replace(base.actions.gas_velocity_m_per_s, nominal=u_gas),
+        nozzle_pressure_bar=dataclasses.replace(base.actions.nozzle_pressure_bar, nominal=p_nozzle),
     )
     disturbances = dataclasses.replace(
         base.disturbances,
@@ -362,7 +360,10 @@ class ConstraintCheck:
 
 
 def check_constraints(
-    solution: SteadyStateSolution, *, critical_moisture_kg_per_kg: float, gas_velocity_m_per_s: float
+    solution: SteadyStateSolution,
+    *,
+    critical_moisture_kg_per_kg: float,
+    gas_velocity_m_per_s: float,
 ) -> ConstraintCheck:
     moisture = solution.particle_moisture_kg_per_kg
     moisture_violation = max(0.0, moisture - critical_moisture_kg_per_kg)
@@ -401,7 +402,8 @@ def check_constraints(
         bed_temperature_violation_k=bed_temperature_violation,
         solver_feasible=solution.feasible,
         feasible=feasible,
-        binding_moisture=abs(moisture - critical_moisture_kg_per_kg) <= _TOLERANCE_MOISTURE_KG_PER_KG,
+        binding_moisture=abs(moisture - critical_moisture_kg_per_kg)
+        <= _TOLERANCE_MOISTURE_KG_PER_KG,
         binding_gas_lower=abs(gas_velocity_m_per_s - u_mf) <= _TOLERANCE_VELOCITY_M_PER_S,
         binding_gas_upper=abs(u_terminal - gas_velocity_m_per_s) <= _TOLERANCE_VELOCITY_M_PER_S,
         binding_bed_temperature=abs(BED_TEMPERATURE_LIMIT_C - solution.bed_temperature_celsius)
@@ -614,7 +616,11 @@ def _grid_point_task(
 
 
 def _fixed_point_worker(
-    x: tuple[float, float, float], t_amb: float, phi_amb: float, max_iterations: int, tolerance: float
+    x: tuple[float, float, float],
+    t_amb: float,
+    phi_amb: float,
+    max_iterations: int,
+    tolerance: float,
 ) -> tuple[float, float] | None:
     """Ein Gitterpunkt für einen festen Kandidaten -- Ziel des Pools in BB3(a)."""
     assert _BASE_CONFIG is not None
@@ -654,7 +660,10 @@ def _fixed_point_objective(
     siehe ``scipy._lib._util._FunctionWrapper``) -- ein keyword-only-Parameter hier
     führte zu ``TypeError: takes 5 positional arguments but 6 were given``, weil das
     fünfte ``args``-Element (der Gewichtungsfaktor) keinen keyword-Slot findet."""
-    tasks = [(tuple(float(v) for v in x), t_amb, phi_amb, max_iterations, tolerance) for t_amb, phi_amb in grid_points]
+    tasks = [
+        (tuple(float(v) for v in x), t_amb, phi_amb, max_iterations, tolerance)
+        for t_amb, phi_amb in grid_points
+    ]
     results = pool.starmap(_fixed_point_worker, tasks)
     energies: list[float] = []
     violation_sum = 0.0
@@ -794,7 +803,9 @@ def action_bounds(base: ProcessConfig) -> list[tuple[float, float]]:
     ]
 
 
-def compute_regret(grid_results: list[dict[str, Any]], fixed_point: dict[str, Any]) -> dict[str, Any]:
+def compute_regret(
+    grid_results: list[dict[str, Any]], fixed_point: dict[str, Any]
+) -> dict[str, Any]:
     absolute_kw: list[float] = []
     relative_pct: list[float] = []
     for grid_point, fixed in zip(grid_results, fixed_point["per_grid_point"], strict=True):
@@ -829,7 +840,9 @@ def compute_regret(grid_results: list[dict[str, Any]], fixed_point: dict[str, An
     }
 
 
-def compute_setpoint_spread(grid_results: list[dict[str, Any]], base: ProcessConfig) -> dict[str, Any]:
+def compute_setpoint_spread(
+    grid_results: list[dict[str, Any]], base: ProcessConfig
+) -> dict[str, Any]:
     feasible = [r for r in grid_results if not r.get("solve_failed") and r.get("feasible", False)]
     variables = {
         "inlet_temperature_celsius": base.actions.inlet_temperature_celsius,
@@ -912,9 +925,13 @@ def main() -> int:
     print("=" * 78)
     print(f"Config              {arguments.config}")
     print(f"Fingerprint         {base_config.fingerprint}")
-    print(f"Gitter              {arguments.grid_size}x{arguments.grid_size} = {len(grid_points)} Punkte")
-    print(f"Fest (Nominalwert)  spray_rate={base_config.actions.spray_rate_kg_per_h.nominal} kg/h, "
-          f"suspension_solid_fraction={base_config.disturbances.suspension_solid_fraction.nominal}")
+    print(
+        f"Gitter              {arguments.grid_size}x{arguments.grid_size} = {len(grid_points)} Punkte"
+    )
+    print(
+        f"Fest (Nominalwert)  spray_rate={base_config.actions.spray_rate_kg_per_h.nominal} kg/h, "
+        f"suspension_solid_fraction={base_config.disturbances.suspension_solid_fraction.nominal}"
+    )
     print(f"Zielgröße           energy_target = {base_config.energy.target}")
     print(f"Worker              {workers}")
     print(f"git/commit={env['git/commit']}  git/dirty={env['git/dirty']}")
@@ -929,8 +946,10 @@ def main() -> int:
     # Worker explizit, unabhängig von der Startmethode (fork unter Linux, spawn unter
     # Windows) -- s. Docstring von ``_BASE_CONFIG``.
     with Pool(workers, initializer=_set_base_config, initargs=(base_config,)) as pool:
-        print(f"\n--- BB2: Optimierung je Gitterpunkt ({len(grid_points)} Punkte, über {workers} "
-              f"Worker verteilt) " + "-" * 10)
+        print(
+            f"\n--- BB2: Optimierung je Gitterpunkt ({len(grid_points)} Punkte, über {workers} "
+            f"Worker verteilt) " + "-" * 10
+        )
         print(
             "Hinweis: ``differential_evolution`` erschöpft bei diesem Suchbudget planmäßig "
             "sein Iterationslimit (kein Fehlschlag, siehe Modul-Docstring) -- konvergiert "
@@ -946,7 +965,11 @@ def main() -> int:
         for n_done, result in enumerate(pool.imap_unordered(_grid_point_task, tasks), start=1):
             index = result["_grid_index"]
             t_amb, phi_amb = grid_points[index]
-            status = "OK" if not result.get("solve_failed") and result.get("feasible") else "UNZULAESSIG/FEHLER"
+            status = (
+                "OK"
+                if not result.get("solve_failed") and result.get("feasible")
+                else "UNZULAESSIG/FEHLER"
+            )
             conv = "" if result["converged"] else "  [VERFEINERUNG NICHT KONVERGIERT]"
             print(
                 f"[{n_done:2d}/{len(grid_points)}] (Punkt {index + 1}) T_amb={t_amb:5.1f} °C "
@@ -955,12 +978,16 @@ def main() -> int:
             grid_results_by_index[index] = result
         grid_results = [grid_results_by_index[i] for i in range(len(grid_points))]
 
-        n_infeasible = sum(1 for r in grid_results if r.get("solve_failed") or not r.get("feasible", False))
+        n_infeasible = sum(
+            1 for r in grid_results if r.get("solve_failed") or not r.get("feasible", False)
+        )
         n_not_converged = sum(1 for r in grid_results if not r["converged"])
         n_de_budget_exhausted = sum(1 for r in grid_results if not r["de_converged"])
-        print(f"\nGitterpunkte gesamt: {len(grid_results)}, unzulässig/Fehler: {n_infeasible}, "
-              f"Verfeinerung nicht konvergiert: {n_not_converged} "
-              f"(DE-Suchbudget erschöpft, planmäßig: {n_de_budget_exhausted}/{len(grid_results)})")
+        print(
+            f"\nGitterpunkte gesamt: {len(grid_results)}, unzulässig/Fehler: {n_infeasible}, "
+            f"Verfeinerung nicht konvergiert: {n_not_converged} "
+            f"(DE-Suchbudget erschöpft, planmäßig: {n_de_budget_exhausted}/{len(grid_results)})"
+        )
 
         output: dict[str, Any] = {
             "environment": env,
@@ -982,7 +1009,9 @@ def main() -> int:
                     "\n*** BEFUND: kein an JEDEM Gitterpunkt zulässiger fester Betriebspunkt "
                     "gefunden. ***"
                 )
-                verification = verify_no_feasible_fixed_point_exists(grid_points, bounds, budget, pool)
+                verification = verify_no_feasible_fixed_point_exists(
+                    grid_points, bounds, budget, pool
+                )
                 print(
                     f"Verifikations-Suche (nur Verletzung minimiert): "
                     f"minimale gefundene Verletzung = {verification['minimum_violation_found']:.4f} "

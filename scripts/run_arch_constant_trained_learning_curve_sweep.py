@@ -22,7 +22,9 @@ import time
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-WORKER_SCRIPT = Path(__file__).resolve().parent / "run_arch_constant_trained_learning_curve_worker.py"
+WORKER_SCRIPT = (
+    Path(__file__).resolve().parent / "run_arch_constant_trained_learning_curve_worker.py"
+)
 SEEDS = (1, 2, 3, 4, 5)
 
 
@@ -229,7 +231,9 @@ def main() -> None:
     seeds = arguments.seeds
     batches = [seeds[i : i + arguments.parallel] for i in range(0, len(seeds), arguments.parallel)]
 
-    print(f"{len(seeds)} Jobs (Seeds) in {len(batches)} Batches (Parallelitaet {arguments.parallel})")
+    print(
+        f"{len(seeds)} Jobs (Seeds) in {len(batches)} Batches (Parallelitaet {arguments.parallel})"
+    )
     start = time.perf_counter()
     all_results: list[tuple[int, int, Path]] = []
     for index, batch in enumerate(batches):

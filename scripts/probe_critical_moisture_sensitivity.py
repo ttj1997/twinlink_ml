@@ -85,7 +85,9 @@ def _suppress_placeholder_warning() -> None:
     warnings.filterwarnings("ignore", category=PlaceholderConfigWarning)
 
 
-def build_variant_config(base: ProcessConfig, *, critical_moisture_kg_per_kg: float) -> ProcessConfig:
+def build_variant_config(
+    base: ProcessConfig, *, critical_moisture_kg_per_kg: float
+) -> ProcessConfig:
     material = dataclasses.replace(
         base.material, critical_moisture_kg_per_kg=critical_moisture_kg_per_kg
     )
@@ -118,7 +120,9 @@ def run_regret_study(
     grid_points = regret_module.build_grid(variant_config, grid_size)
 
     start = time.perf_counter()
-    print(f"\n=== {label}: Gitter {grid_size}x{grid_size} = {len(grid_points)} Punkte ===", flush=True)
+    print(
+        f"\n=== {label}: Gitter {grid_size}x{grid_size} = {len(grid_points)} Punkte ===", flush=True
+    )
 
     with Pool(workers) as pool:
         tasks = [
@@ -126,7 +130,9 @@ def run_regret_study(
             for index, (t_amb, phi_amb) in enumerate(grid_points)
         ]
         grid_results_by_index: dict[int, dict[str, Any]] = {}
-        for n_done, result in enumerate(pool.imap_unordered(regret_module._grid_point_task, tasks), start=1):
+        for n_done, result in enumerate(
+            pool.imap_unordered(regret_module._grid_point_task, tasks), start=1
+        ):
             index = result["_grid_index"]
             print(
                 f"  [{n_done:2d}/{len(grid_points)}] Punkt {index + 1} "
@@ -148,7 +154,9 @@ def run_regret_study(
         output["fixed_point"] = fixed_point
         if fixed_point["feasible_everywhere"]:
             output["regret"] = regret_module.compute_regret(grid_results, fixed_point)
-            output["setpoint_spread"] = regret_module.compute_setpoint_spread(grid_results, variant_config)
+            output["setpoint_spread"] = regret_module.compute_setpoint_spread(
+                grid_results, variant_config
+            )
         else:
             verification = regret_module.verify_no_feasible_fixed_point_exists(
                 grid_points, bounds, budget, pool
@@ -158,7 +166,8 @@ def run_regret_study(
     n_binding_moisture = sum(
         1
         for r in grid_results
-        if not r.get("solve_failed") and r.get("constraint_check", {}).get("binding_moisture", False)
+        if not r.get("solve_failed")
+        and r.get("constraint_check", {}).get("binding_moisture", False)
     )
     output["n_binding_moisture"] = n_binding_moisture
     output["n_grid_points"] = len(grid_results)
@@ -168,7 +177,8 @@ def run_regret_study(
             "ambient_relative_humidity": r["ambient_relative_humidity"],
         }
         for r in grid_results
-        if not r.get("solve_failed") and r.get("constraint_check", {}).get("binding_moisture", False)
+        if not r.get("solve_failed")
+        and r.get("constraint_check", {}).get("binding_moisture", False)
     ]
     output["elapsed_s"] = time.perf_counter() - start
 
@@ -202,7 +212,8 @@ def load_anchor_5x5() -> dict[str, Any]:
     n_binding = sum(
         1
         for r in anchor["grid_results"]
-        if not r.get("solve_failed") and r.get("constraint_check", {}).get("binding_moisture", False)
+        if not r.get("solve_failed")
+        and r.get("constraint_check", {}).get("binding_moisture", False)
     )
     return {
         "source": str(ANCHOR_5X5_PATH),

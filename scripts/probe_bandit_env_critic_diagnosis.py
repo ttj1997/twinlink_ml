@@ -162,9 +162,7 @@ def diagnose_checkpoint(path: Path, env: OperatingPointBanditEnv) -> dict[str, A
                 "deterministic_action_normalised": deterministic_action.tolist(),
                 "q_at_corner": q_corner_values,
                 "q_at_oracle": q_oracle_values,
-                "min_q_corner_gt_min_q_oracle": bool(
-                    min(q_corner_values) > min(q_oracle_values)
-                ),
+                "min_q_corner_gt_min_q_oracle": bool(min(q_corner_values) > min(q_oracle_values)),
             }
         )
 
@@ -235,14 +233,20 @@ def main() -> int:
         results[str(step)] = result
 
         print(f"(a) mu Mittelwert: {result['mu_mean']}  |mu| max: {result['mu_abs_max']}")
-        print(f"    Kontexte mit |mu| > {SATURATION_MU_THRESHOLD} (gesaettigt): "
-              f"{result['n_contexts_saturated']} von je {result['n_contexts']}")
+        print(
+            f"    Kontexte mit |mu| > {SATURATION_MU_THRESHOLD} (gesaettigt): "
+            f"{result['n_contexts_saturated']} von je {result['n_contexts']}"
+        )
         print(f"(b) Q(Ecke) Mittelwert:   {[round(v, 2) for v in result['q_corner_mean']]}")
         print(f"    Q(Orakel) Mittelwert: {[round(v, 2) for v in result['q_oracle_mean']]}")
-        print(f"    Kontexte mit Q(Ecke) > Q(Orakel): "
-              f"{result['n_contexts_corner_ranked_above_oracle']} von {result['n_contexts']}")
-        print(f"(c) Q an Proxy-Aktionen (Kontext 0, Q(Ecke) dort = "
-              f"{[round(v, 2) for v in result['q_corner_at_context_0']]}):")
+        print(
+            f"    Kontexte mit Q(Ecke) > Q(Orakel): "
+            f"{result['n_contexts_corner_ranked_above_oracle']} von {result['n_contexts']}"
+        )
+        print(
+            f"(c) Q an Proxy-Aktionen (Kontext 0, Q(Ecke) dort = "
+            f"{[round(v, 2) for v in result['q_corner_at_context_0']]}):"
+        )
         for label, q in result["proxy_unvisited_action_q_at_context_0"].items():
             print(f"    {label:30s}: {[round(v, 2) for v in q]}")
 

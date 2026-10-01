@@ -196,12 +196,18 @@ def main() -> int:
         index = grid_result["_grid_index"]
 
         solution = regret_module.evaluate_point(
-            t_in, u_gas, p_nozzle, t_amb, phi_amb,
+            t_in,
+            u_gas,
+            p_nozzle,
+            t_amb,
+            phi_amb,
             max_iterations=regret_module.DEFAULT_SEARCH_MAX_ITERATIONS,
             tolerance=regret_module.DEFAULT_SEARCH_TOLERANCE,
             base_config=base_config,
         )
-        outlet_temperature = solution.bed_temperature_celsius - base_config.exhaust.outlet_duct_heat_loss_k
+        outlet_temperature = (
+            solution.bed_temperature_celsius - base_config.exhaust.outlet_duct_heat_loss_k
+        )
         q_rec_steady = float(
             compute_recoverable_power_kw(
                 NumpyBackend(),
@@ -221,9 +227,15 @@ def main() -> int:
         for label, initial_state in (("nominal", None), ("warmstart", warm_initial_state)):
             trajectory = rollout_with_initial_state(
                 transient_config,
-                t_in=t_in, u_gas=u_gas, p_nozzle=p_nozzle, t_amb=t_amb, phi_amb=phi_amb,
-                spray_rate=spray_rate, solid_fraction=solid_fraction,
-                n_steps=transient_module.N_STEPS, run_id=f"db1_{label}_{index:02d}",
+                t_in=t_in,
+                u_gas=u_gas,
+                p_nozzle=p_nozzle,
+                t_amb=t_amb,
+                phi_amb=phi_amb,
+                spray_rate=spray_rate,
+                solid_fraction=solid_fraction,
+                n_steps=transient_module.N_STEPS,
+                run_id=f"db1_{label}_{index:02d}",
                 initial_state=initial_state,
             )
             q_rec = q_rec_series_kw(transient_config, trajectory)
@@ -254,7 +266,9 @@ def main() -> int:
 
     summary = {
         label: {
-            "batch_mean_deviation_pct": _agg([p[label]["batch_mean_deviation_pct"] for p in per_point]),
+            "batch_mean_deviation_pct": _agg(
+                [p[label]["batch_mean_deviation_pct"] for p in per_point]
+            ),
             "convergence_time_s": _agg([p[label]["convergence_time_s"] for p in per_point]),
         }
         for label in ("nominal", "warmstart")

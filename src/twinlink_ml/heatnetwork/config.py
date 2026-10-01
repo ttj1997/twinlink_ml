@@ -285,8 +285,7 @@ class HeatNetworkConfig:
             )
         if self.recovery_mode not in ("sensible", "condensing"):
             raise ValueError(
-                f"recovery_mode muss 'sensible' oder 'condensing' sein, ist "
-                f"{self.recovery_mode!r}"
+                f"recovery_mode muss 'sensible' oder 'condensing' sein, ist {self.recovery_mode!r}"
             )
         if not -40.0 <= self.cold_temperature_celsius <= 100.0:
             raise ValueError(

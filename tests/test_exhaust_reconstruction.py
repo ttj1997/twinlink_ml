@@ -56,9 +56,7 @@ def test_rescaled_dry_air_mass_flow_matches_true_value_when_prediction_is_exact(
 
     true_bed_temperature = backend.asarray(np.array([solution.bed_temperature_celsius]))
     true_dry_flow = backend.asarray(np.array([solution.dry_air_mass_flow_kg_per_s]))
-    inlet_humidity = backend.asarray(
-        np.array([solution.diagnostics["inlet_humidity_kg_per_kg"]])
-    )
+    inlet_humidity = backend.asarray(np.array([solution.diagnostics["inlet_humidity_kg_per_kg"]]))
 
     rescaled = rescale_dry_air_mass_flow_kg_per_s(
         backend,
@@ -89,13 +87,9 @@ def test_rescaled_dry_air_mass_flow_decreases_for_overpredicted_bed_temperature(
     assert solution.feasible, solution.infeasibility_reasons
 
     true_bed_temperature = backend.asarray(np.array([solution.bed_temperature_celsius]))
-    predicted_bed_temperature = backend.asarray(
-        np.array([solution.bed_temperature_celsius + 3.0])
-    )
+    predicted_bed_temperature = backend.asarray(np.array([solution.bed_temperature_celsius + 3.0]))
     true_dry_flow = backend.asarray(np.array([solution.dry_air_mass_flow_kg_per_s]))
-    inlet_humidity = backend.asarray(
-        np.array([solution.diagnostics["inlet_humidity_kg_per_kg"]])
-    )
+    inlet_humidity = backend.asarray(np.array([solution.diagnostics["inlet_humidity_kg_per_kg"]]))
 
     rescaled = rescale_dry_air_mass_flow_kg_per_s(
         backend,

@@ -189,9 +189,7 @@ def _q_rec_kw(
     return (q_sensible_w + q_latent_w) / 1000.0
 
 
-def _net_objective(
-    solution: SteadyStateSolution, base_config: ProcessConfig
-) -> dict[str, float]:
+def _net_objective(solution: SteadyStateSolution, base_config: ProcessConfig) -> dict[str, float]:
     """Override fuer ``regret_module._objective_components`` (MA4) -- liest die aktive
     Variante aus ``_VARIANT`` (im Pool-Initializer gesetzt)."""
     assert _VARIANT is not None
@@ -253,7 +251,9 @@ def run_variant_study(
     )
 
     start = time.perf_counter()
-    print(f"\n=== {label}: Gitter {grid_size}x{grid_size} = {len(grid_points)} Punkte ===", flush=True)
+    print(
+        f"\n=== {label}: Gitter {grid_size}x{grid_size} = {len(grid_points)} Punkte ===", flush=True
+    )
 
     # Gilt auch fuer den MAIN-Prozess selbst: find_fixed_operating_point() ruft dessen
     # abschliessende Pro-Gitterpunkt-Auswertung direkt hier auf, nicht ueber den Pool (siehe
@@ -298,10 +298,14 @@ def run_variant_study(
         output["fixed_point"] = fixed_point
         if fixed_point["feasible_everywhere"]:
             output["regret"] = regret_module.compute_regret(grid_results, fixed_point)
-            output["setpoint_spread"] = regret_module.compute_setpoint_spread(grid_results, base_config)
+            output["setpoint_spread"] = regret_module.compute_setpoint_spread(
+                grid_results, base_config
+            )
         else:
-            output["fixed_point_verification"] = regret_module.verify_no_feasible_fixed_point_exists(
-                grid_points, bounds, budget, pool
+            output["fixed_point_verification"] = (
+                regret_module.verify_no_feasible_fixed_point_exists(
+                    grid_points, bounds, budget, pool
+                )
             )
 
     output["elapsed_s"] = time.perf_counter() - start

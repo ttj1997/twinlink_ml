@@ -176,7 +176,9 @@ def main() -> int:
     resolution_results = []
     for n_segments in RESOLUTION_STUDY_VALUES:
         pinch = _pinch_target(
-            cold_temperature_celsius=15.0, minimum_pinch_k=20.0, n_segments_below_dew_point=n_segments
+            cold_temperature_celsius=15.0,
+            minimum_pinch_k=20.0,
+            n_segments_below_dew_point=n_segments,
         )
         resolution_results.append(
             {
@@ -192,7 +194,9 @@ def main() -> int:
     finest_hot = resolution_results[-1]["minimum_hot_utility_kw"]
     finest_cold = resolution_results[-1]["minimum_cold_utility_kw"]
     for entry in resolution_results:
-        entry["relative_change_hot_to_finest"] = abs(entry["minimum_hot_utility_kw"] - finest_hot) / finest_hot
+        entry["relative_change_hot_to_finest"] = (
+            abs(entry["minimum_hot_utility_kw"] - finest_hot) / finest_hot
+        )
         entry["relative_change_cold_to_finest"] = (
             abs(entry["minimum_cold_utility_kw"] - finest_cold) / finest_cold
         )
@@ -249,8 +253,12 @@ def main() -> int:
                 "pinch_minimum_hot_utility_kw": pinch["result"].minimum_hot_utility_kw,
                 "pinch_minimum_cold_utility_kw": pinch["result"].minimum_cold_utility_kw,
                 "pinch_fuel_kg_per_h": pinch_fuel,
-                "pinch_temperature_hot_side_celsius": pinch["result"].pinch_temperature_hot_side_celsius,
-                "pinch_temperature_cold_side_celsius": pinch["result"].pinch_temperature_cold_side_celsius,
+                "pinch_temperature_hot_side_celsius": pinch[
+                    "result"
+                ].pinch_temperature_hot_side_celsius,
+                "pinch_temperature_cold_side_celsius": pinch[
+                    "result"
+                ].pinch_temperature_cold_side_celsius,
                 "six_case_fuel_kg_per_h": six_case_fuel,
                 "best_case_name": best_case_name,
                 "best_case_fuel_kg_per_h": best_case_fuel,
@@ -263,7 +271,9 @@ def main() -> int:
     print("PA4 -- Composite Curves und Grand Composite Curve (T_kalt=15, dT_min=20)")
     print("=" * 88)
     reference_pinch = _pinch_target(
-        cold_temperature_celsius=15.0, minimum_pinch_k=20.0, n_segments_below_dew_point=N_SEGMENTS_BELOW_DEW_POINT
+        cold_temperature_celsius=15.0,
+        minimum_pinch_k=20.0,
+        n_segments_below_dew_point=N_SEGMENTS_BELOW_DEW_POINT,
     )
     hot_composite = composite_curve_kw(reference_pinch["hot_segments"])
     cold_composite = composite_curve_kw(reference_pinch["cold_segments"])
@@ -280,8 +290,16 @@ def main() -> int:
 
     all_results: dict[str, Any] = {
         "sources": {
-            "Q1": {"mass_flow_kg_per_s": 20.0, "outlet_temperature_celsius": 125.233, "outlet_humidity_kg_per_kg": 0.06482},
-            "Q2": {"mass_flow_kg_per_s": 8.0, "outlet_temperature_celsius": 81.416, "outlet_humidity_kg_per_kg": 0.01998},
+            "Q1": {
+                "mass_flow_kg_per_s": 20.0,
+                "outlet_temperature_celsius": 125.233,
+                "outlet_humidity_kg_per_kg": 0.06482,
+            },
+            "Q2": {
+                "mass_flow_kg_per_s": 8.0,
+                "outlet_temperature_celsius": 81.416,
+                "outlet_humidity_kg_per_kg": 0.01998,
+            },
         },
         "sinks": {
             "S1": {"mass_flow_kg_per_s": 20.0, "intake_celsius": 15.0, "setpoint_celsius": 300.0},

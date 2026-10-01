@@ -226,9 +226,7 @@ def main() -> None:
         )
         if proc.returncode != 0:
             print(f"   FEHLGESCHLAGEN (returncode {proc.returncode}):\n{proc.stderr[-2000:]}")
-            results.append(
-                {"hidden_size": hidden_size, "batch_size": batch_size, "failed": True}
-            )
+            results.append({"hidden_size": hidden_size, "batch_size": batch_size, "failed": True})
             continue
         result = json.loads(proc.stdout.strip().splitlines()[-1])
         results.append(result)

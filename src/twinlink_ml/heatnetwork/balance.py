@@ -469,9 +469,7 @@ def evaluate_cascade(
         )
         for name, state in source_by_name.items()
     }
-    remaining_latent_power_w = {
-        name: array.copy() for name, array in source_latent_power_w.items()
-    }
+    remaining_latent_power_w = {name: array.copy() for name, array in source_latent_power_w.items()}
     current_source_temperature_celsius = {
         name: array.copy() for name, array in initial_source_temperature_celsius.items()
     }

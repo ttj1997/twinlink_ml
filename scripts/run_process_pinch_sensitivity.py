@@ -280,7 +280,10 @@ def evaluate_grid_point(
     record["pinch_temperature_hot_side_c"] = pinch_result.pinch_temperature_hot_side_celsius
     record["pinch_temperature_cold_side_c"] = pinch_result.pinch_temperature_cold_side_celsius
     record["pinch_location"] = _locate_pinch(
-        pinch_result.pinch_temperature_hot_side_celsius, hot_segments, cold_segments, MINIMUM_PINCH_K
+        pinch_result.pinch_temperature_hot_side_celsius,
+        hot_segments,
+        cold_segments,
+        MINIMUM_PINCH_K,
     )
     record["minimum_hot_utility_kw"] = pinch_result.minimum_hot_utility_kw
     record["minimum_cold_utility_kw"] = pinch_result.minimum_cold_utility_kw
@@ -378,7 +381,9 @@ def main() -> int:
                 cheaper_process, pricier_process = by_energy[i], by_energy[j]
                 if cheaper_process["pinch_fuel_kg_per_h"] > pricier_process["pinch_fuel_kg_per_h"]:
                     inversion_found = True
-                    effect_kw = pricier_process["energy_target_kw"] - cheaper_process["energy_target_kw"]
+                    effect_kw = (
+                        pricier_process["energy_target_kw"] - cheaper_process["energy_target_kw"]
+                    )
                     if effect_kw > max_inversion_effect_kw:
                         max_inversion_effect_kw = effect_kw
                         max_inversion_pair = (cheaper_process, pricier_process)
@@ -395,7 +400,9 @@ def main() -> int:
                 f"({cheap['pinch_fuel_kg_per_h']:.2f} vs. {pricy['pinch_fuel_kg_per_h']:.2f} kg/h)."
             )
         else:
-            print("NEIN -- keine Inversion gefunden: hoehere Prozessleistung geht in diesem Gitter nie mit niedrigerem Standort-Brennstoffbedarf einher.")
+            print(
+                "NEIN -- keine Inversion gefunden: hoehere Prozessleistung geht in diesem Gitter nie mit niedrigerem Standort-Brennstoffbedarf einher."
+            )
     else:
         print("Zu wenige zulaessige Punkte fuer einen Vergleich.")
 

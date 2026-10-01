@@ -124,18 +124,14 @@ def test_point_split_scaler_comes_from_training_windows_only(trajectory_and_ids)
 
 
 def test_point_split_ratios_converge(trajectory_and_ids) -> None:
-    train, val, test = _split(
-        trajectory_and_ids, ratios=SplitRatios(0.70, 0.15, 0.15), seed=7
-    )
+    train, val, test = _split(trajectory_and_ids, ratios=SplitRatios(0.70, 0.15, 0.15), seed=7)
     total = train.n_windows + val.n_windows + test.n_windows
     assert train.n_windows / total == pytest.approx(0.70, abs=0.03)
     assert test.n_windows / total == pytest.approx(0.15, abs=0.03)
 
 
 def test_point_split_val_optional_when_ratio_zero(trajectory_and_ids) -> None:
-    train, val, test = _split(
-        trajectory_and_ids, ratios=SplitRatios(0.85, 0.0, 0.15), seed=3
-    )
+    train, val, test = _split(trajectory_and_ids, ratios=SplitRatios(0.85, 0.0, 0.15), seed=3)
     assert val is None
     assert train.n_windows > 0 and test.n_windows > 0
 

@@ -23,9 +23,7 @@ def test_dew_point_matches_scalar_steady_state_solver() -> None:
     gas = GasConfig()
     humidity = np.array([0.005, 0.0171, 0.03, 0.05])
 
-    vectorised = backend.to_numpy(
-        dew_point_celsius(backend, gas, backend.asarray(humidity))
-    )
+    vectorised = backend.to_numpy(dew_point_celsius(backend, gas, backend.asarray(humidity)))
     for y, expected in zip(humidity, vectorised, strict=True):
         scalar = _solve_dew_point(
             backend=backend,

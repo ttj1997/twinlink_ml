@@ -152,8 +152,10 @@ def main() -> None:
     _ = full_forward_backward()  # Warmup
     fwd_bwd_time = full_forward_backward()
     print(f"\nVolles Fwd+Bwd (1 Batch, {history.shape[0]} Fenster): {fwd_bwd_time * 1e3:.3f} ms")
-    print(f"  davon reines Fwd (Encoder+Decoder-Loop, kein Backward): "
-          f"{(encoder_time + decoder_total) * 1e3:.3f} ms")
+    print(
+        f"  davon reines Fwd (Encoder+Decoder-Loop, kein Backward): "
+        f"{(encoder_time + decoder_total) * 1e3:.3f} ms"
+    )
 
     # ---------------------------------------------------------------- A2: Inferenzvergleich
     print("\n=== A2: Inferenzvergleich gegen geloggten GRU-Wert (Befund 36) ===")

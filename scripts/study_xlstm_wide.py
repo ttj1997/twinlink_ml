@@ -84,9 +84,7 @@ def _existing_target_names(log_path: Path) -> tuple[str, ...] | None:
     return None
 
 
-def _check_target_names_consistency(
-    log_path: Path, target_names: tuple[str, ...]
-) -> None:
+def _check_target_names_consistency(log_path: Path, target_names: tuple[str, ...]) -> None:
     """Bricht hart ab, wenn ``log_path`` bereits Records mit anderer Zielkanalzahl traegt.
 
     Eigene Funktion (nicht inline in ``main()``), damit die Schemapruefung ohne vollen

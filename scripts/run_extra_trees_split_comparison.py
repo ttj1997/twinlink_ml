@@ -88,8 +88,7 @@ def main() -> None:
     logger = JsonlExperimentLogger(OUTPUT_PATH)
 
     _log(
-        f"Start: Splitvergleich Extra Trees, {len(MASTER_SEEDS)} Seeds, "
-        f"n_estimators={N_ESTIMATORS}"
+        f"Start: Splitvergleich Extra Trees, {len(MASTER_SEEDS)} Seeds, n_estimators={N_ESTIMATORS}"
     )
 
     for master_seed in MASTER_SEEDS:

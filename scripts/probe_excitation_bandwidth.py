@@ -59,9 +59,7 @@ BED_TEMPERATURE_VALIDITY_LIMIT_C = 80.0  # thermo.py:268, dokumentierte Modellgr
 # ------------------------------------------------------------------------ Aufbau
 
 
-def _load(
-    config_path: Path, *, sample_time_s: float = SAMPLE_TIME_S
-) -> GreyBoxFluidBedGranulator:
+def _load(config_path: Path, *, sample_time_s: float = SAMPLE_TIME_S) -> GreyBoxFluidBedGranulator:
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
         base = load_process_config(config_path)
@@ -250,8 +248,7 @@ def _aggregate_lag1(
     out: dict[str, dict[str, dict[str, float]]] = {}
     for channel in channels:
         out[channel] = {
-            metric: _median_range([d[channel][metric] for d in list_of_dicts])
-            for metric in metrics
+            metric: _median_range([d[channel][metric] for d in list_of_dicts]) for metric in metrics
         }
     return out
 

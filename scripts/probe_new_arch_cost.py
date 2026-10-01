@@ -129,7 +129,9 @@ def main() -> None:
     model.fit(train, seed=data.seeds.model_seed, validation=validation, verbose=True)
     elapsed = time.perf_counter() - start
 
-    _log(f"-- {arguments.architecture!r}: Training fertig ({elapsed:.2f}s, {elapsed / 60.0:.2f} Min) --")
+    _log(
+        f"-- {arguments.architecture!r}: Training fertig ({elapsed:.2f}s, {elapsed / 60.0:.2f} Min) --"
+    )
     describe = model.describe()
     _log(f"   net_actual_device={describe.get('net_actual_device')!r}")
     for target, history in model.training_history.items():

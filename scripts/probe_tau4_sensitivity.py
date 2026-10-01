@@ -106,8 +106,10 @@ def _suppress_placeholder_warning() -> None:
 
 
 def solid_inflow_kg_per_s(config: ProcessConfig) -> float:
-    spray_solid = config.actions.spray_rate_kg_per_h.nominal / 3600.0 * (
-        config.disturbances.suspension_solid_fraction.nominal
+    spray_solid = (
+        config.actions.spray_rate_kg_per_h.nominal
+        / 3600.0
+        * (config.disturbances.suspension_solid_fraction.nominal)
     )
     seed = config.operation.seed_mass_flow_kg_per_h / 3600.0
     return spray_solid + seed
@@ -148,7 +150,10 @@ def run_regret_study(
     grid_points = regret_module.build_grid(variant_config, grid_size)
 
     start = time.perf_counter()
-    print(f"\n=== {label}: Gitter {grid_size}x{grid_size} = {len(grid_points)} Punkte (BB1-BB3) ===", flush=True)
+    print(
+        f"\n=== {label}: Gitter {grid_size}x{grid_size} = {len(grid_points)} Punkte (BB1-BB3) ===",
+        flush=True,
+    )
 
     with Pool(workers) as pool:
         tasks = [
@@ -156,7 +161,9 @@ def run_regret_study(
             for index, (t_amb, phi_amb) in enumerate(grid_points)
         ]
         grid_results_by_index: dict[int, dict[str, Any]] = {}
-        for n_done, result in enumerate(pool.imap_unordered(regret_module._grid_point_task, tasks), start=1):
+        for n_done, result in enumerate(
+            pool.imap_unordered(regret_module._grid_point_task, tasks), start=1
+        ):
             index = result["_grid_index"]
             print(
                 f"  [{n_done:2d}/{len(grid_points)}] Punkt {index + 1} "
@@ -178,10 +185,14 @@ def run_regret_study(
         output["fixed_point"] = fixed_point
         if fixed_point["feasible_everywhere"]:
             output["regret"] = regret_module.compute_regret(grid_results, fixed_point)
-            output["setpoint_spread"] = regret_module.compute_setpoint_spread(grid_results, variant_config)
+            output["setpoint_spread"] = regret_module.compute_setpoint_spread(
+                grid_results, variant_config
+            )
         else:
-            output["fixed_point_verification"] = regret_module.verify_no_feasible_fixed_point_exists(
-                grid_points, bounds, budget, pool
+            output["fixed_point_verification"] = (
+                regret_module.verify_no_feasible_fixed_point_exists(
+                    grid_points, bounds, budget, pool
+                )
             )
 
     output["elapsed_s"] = time.perf_counter() - start
@@ -193,7 +204,10 @@ def run_regret_study(
             flush=True,
         )
     else:
-        print(f"  Kein ueberall zulaessiger fester Betriebspunkt | {output['elapsed_s']:.0f}s", flush=True)
+        print(
+            f"  Kein ueberall zulaessiger fester Betriebspunkt | {output['elapsed_s']:.0f}s",
+            flush=True,
+        )
     return output
 
 
@@ -229,7 +243,9 @@ def run_transient_study(
             steady_state_energy_target_kw=grid_result["energy_target"],
             steady_state_feasible=grid_result["feasible"],
         )
-        steady_state = transient_module.compute_steady_state_reference(regret_module, variant_config, point)
+        steady_state = transient_module.compute_steady_state_reference(
+            regret_module, variant_config, point
+        )
         trajectory = transient_module.rollout_constant_setpoint(
             transient_config,
             t_in=point.inlet_temperature_celsius,
@@ -400,7 +416,11 @@ def main() -> int:
         variant_config, setpoint_kg = build_variant_config(base_config, tau4_s=tau4)
         label = f"tau4={tau4:.0f}s"
         stationary = run_regret_study(
-            regret_module, variant_config, grid_size=arguments.grid_size, workers=workers, label=label
+            regret_module,
+            variant_config,
+            grid_size=arguments.grid_size,
+            workers=workers,
+            label=label,
         )
         stationary["bed_mass_solid_setpoint_kg"] = setpoint_kg
         stationary["solid_inflow_kg_per_s"] = solid_inflow_kg_per_s(variant_config)

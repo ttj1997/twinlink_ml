@@ -54,8 +54,14 @@ EXPECTED_FP_CHECKPOINT = "82f65f576a2e5253"
 
 def _excited_spec() -> DataSpec:
     return DataSpec(
-        sample_time_s=25.0, run_duration_s=28_800.0, n_train_max=64, n_val=32, n_test=32,
-        history_length=32, horizon=36, stride=8,
+        sample_time_s=25.0,
+        run_duration_s=28_800.0,
+        n_train_max=64,
+        n_val=32,
+        n_test=32,
+        history_length=32,
+        horizon=36,
+        stride=8,
     )
 
 

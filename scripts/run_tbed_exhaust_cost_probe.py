@@ -98,7 +98,9 @@ def main() -> None:
     model_start = time.perf_counter()
     model.fit(train, seed=data.seeds.model_seed, validation=validation, verbose=True)
     model_elapsed = time.perf_counter() - model_start
-    _log(f"-- Modell 'gru': Training fertig ({model_elapsed:.1f}s, {model_elapsed / 60.0:.1f} Min) --")
+    _log(
+        f"-- Modell 'gru': Training fertig ({model_elapsed:.1f}s, {model_elapsed / 60.0:.1f} Min) --"
+    )
 
     epoch_counts: dict[str, int] = {}
     for target, history in model.training_history.items():
@@ -109,7 +111,9 @@ def main() -> None:
     _log(f"-- Vier-Ziele-NRMSE --\n{result.format()}")
 
     exhaust_result = evaluate_exhaust_reconstruction(model, data, test, horizons=(1, spec.horizon))
-    _log(f"-- End-zu-End-Exhaust-Metrik (korrigiert, ohne Massenstrom-Leck) --\n{exhaust_result.format()}")
+    _log(
+        f"-- End-zu-End-Exhaust-Metrik (korrigiert, ohne Massenstrom-Leck) --\n{exhaust_result.format()}"
+    )
 
     summary = {
         "config": {
@@ -133,7 +137,9 @@ def main() -> None:
             for target, by_horizon in exhaust_result.nrmse_run_spread.items()
         },
     }
-    output_path = Path("/tmp/claude-1000/-home-johncox-PhD-twinlink-ml--2--twinlink-ml--1--twinlink-ml/7142dce7-c169-4e7c-b6c7-b52081c05dea/scratchpad/tbed_exhaust_cost_probe.json")
+    output_path = Path(
+        "/tmp/claude-1000/-home-johncox-PhD-twinlink-ml--2--twinlink-ml--1--twinlink-ml/7142dce7-c169-4e7c-b6c7-b52081c05dea/scratchpad/tbed_exhaust_cost_probe.json"
+    )
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False))
     _log(f"Zusammenfassung geschrieben nach {output_path}")

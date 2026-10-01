@@ -91,9 +91,7 @@ class FixedRouting(HeatNetworkRouting):
                 raise ValueError(f"connections referenziert unbekannte Senke {sink_name!r}")
         order = resolve_cascade_order(network)
         rank = {name: index for index, name in enumerate(order)}
-        return tuple(
-            sorted(self.connections, key=lambda pair: rank[pair[0]])
-        )
+        return tuple(sorted(self.connections, key=lambda pair: rank[pair[0]]))
 
 
 @dataclass(frozen=True, slots=True)
@@ -117,8 +115,7 @@ class MatrixRouting(HeatNetworkRouting):
         n_sinks = len(network.sinks)
         if self.assignment.shape != (n_sources, n_sinks):
             raise ValueError(
-                f"assignment muss Form ({n_sources}, {n_sinks}) haben, ist "
-                f"{self.assignment.shape}"
+                f"assignment muss Form ({n_sources}, {n_sinks}) haben, ist {self.assignment.shape}"
             )
         order = resolve_cascade_order(network)
         rank = {name: index for index, name in enumerate(order)}

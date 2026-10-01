@@ -135,9 +135,7 @@ def test_expected_labels_reflects_architecture_selection() -> None:
         "mamba",
     }
 
-    only_new = module._expected_labels(
-        ["transformer", "xlstm", "mamba"], skip_baselines=True
-    )
+    only_new = module._expected_labels(["transformer", "xlstm", "mamba"], skip_baselines=True)
     assert set(only_new) == {"transformer", "xlstm", "mamba"}
 
     new_with_baselines = module._expected_labels(["xlstm"], skip_baselines=False)

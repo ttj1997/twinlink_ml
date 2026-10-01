@@ -77,9 +77,12 @@ def _pinch_fuel_kg_per_h(*, cold_temperature_celsius: float, minimum_pinch_k: fl
         cold_temperature_celsius=cold_temperature_celsius,
         minimum_pinch_k=minimum_pinch_k,
     )
-    return result.minimum_hot_utility_kw * 1000.0 / (
-        FUEL_LOWER_HEATING_VALUE_J_PER_KG * HEATER_EFFICIENCY
-    ) * 3600.0
+    return (
+        result.minimum_hot_utility_kw
+        * 1000.0
+        / (FUEL_LOWER_HEATING_VALUE_J_PER_KG * HEATER_EFFICIENCY)
+        * 3600.0
+    )
 
 
 # --- Lehrbuchfall: Vierstrom-Aufgabe, konstantes cp -----------------------------------

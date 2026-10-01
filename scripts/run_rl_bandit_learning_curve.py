@@ -166,12 +166,13 @@ def _mean_energy_vs_fixed(model: Any) -> dict[str, float]:
             dtype=np.float32,
         )
         action, _ = model.predict(observation, deterministic=True)
-        t_in = eval_env._inlet_bound.minimum + 0.5 * (
-            float(action[0]) + 1.0
-        ) * eval_env._inlet_bound.span
-        u_gas = eval_env._gas_bound.minimum + 0.5 * (
-            float(action[1]) + 1.0
-        ) * eval_env._gas_bound.span
+        t_in = (
+            eval_env._inlet_bound.minimum
+            + 0.5 * (float(action[0]) + 1.0) * eval_env._inlet_bound.span
+        )
+        u_gas = (
+            eval_env._gas_bound.minimum + 0.5 * (float(action[1]) + 1.0) * eval_env._gas_bound.span
+        )
         _, info = eval_env.evaluate_operating_point(
             inlet_temperature_celsius=t_in,
             gas_velocity_m_per_s=u_gas,
@@ -359,29 +360,41 @@ def run_training(
     )
 
     print("=" * 78)
-    print(f"Algorithmus         {algorithm} (stable-baselines3, "
-          f"Hyperparameter-Default ausser evtl. gamma/learning_starts)")
+    print(
+        f"Algorithmus         {algorithm} (stable-baselines3, "
+        f"Hyperparameter-Default ausser evtl. gamma/learning_starts)"
+    )
     print(f"total_timesteps     {total_timesteps}")
     print(f"Zwischenauswertungen {checkpoints}")
     print(f"Seed                {seed}")
     print(f"run_uid             {run_uid}")
-    print(f"Belohnung           "
-          f"{'zentriert (scale_kw=' + str(reward_centering_scale_kw) + ')' if reward_centering_scale_kw is not None else 'roh (VA2-Modus)'}"
-          f"{' -- OHNE Strafe (DA1)' if not include_penalty else ' -- MIT Strafe'}")
-    print(f"gamma               {model.gamma} "
-          f"({'CB2: explizit gesetzt' if gamma is not None else 'SB3-Default'})")
-    print(f"learning_starts     {model.learning_starts} "
-          f"({'DA1: explizit gesetzt' if learning_starts is not None else 'SB3-Default'})")
-    print(f"Loeserfehlschlag    "
-          f"{f'begrenzt auf {solve_failure_penalty_kw:.6f} kW (EA2)' if solve_failure_penalty_kw is not None else 'Befund-52-Sentinel (1000000 kW)'}")
+    print(
+        f"Belohnung           "
+        f"{'zentriert (scale_kw=' + str(reward_centering_scale_kw) + ')' if reward_centering_scale_kw is not None else 'roh (VA2-Modus)'}"
+        f"{' -- OHNE Strafe (DA1)' if not include_penalty else ' -- MIT Strafe'}"
+    )
+    print(
+        f"gamma               {model.gamma} "
+        f"({'CB2: explizit gesetzt' if gamma is not None else 'SB3-Default'})"
+    )
+    print(
+        f"learning_starts     {model.learning_starts} "
+        f"({'DA1: explizit gesetzt' if learning_starts is not None else 'SB3-Default'})"
+    )
+    print(
+        f"Loeserfehlschlag    "
+        f"{f'begrenzt auf {solve_failure_penalty_kw:.6f} kW (EA2)' if solve_failure_penalty_kw is not None else 'Befund-52-Sentinel (1000000 kW)'}"
+    )
     print(f"Checkpoints unter   {CHECKPOINT_DIR}")
     print(f"git/commit={env_info['git/commit']}  git/dirty={env_info['git/dirty']}")
     print("=" * 78)
 
     model.learn(total_timesteps=total_timesteps, callback=callback)
     wall_s_total = time.perf_counter() - run_start
-    print(f"\nTraining fertig: {wall_s_total:.1f} s fuer {total_timesteps} Schritte "
-          f"({1000.0 * wall_s_total / total_timesteps:.1f} ms/Schritt inkl. SB3-Overhead).")
+    print(
+        f"\nTraining fertig: {wall_s_total:.1f} s fuer {total_timesteps} Schritte "
+        f"({1000.0 * wall_s_total / total_timesteps:.1f} ms/Schritt inkl. SB3-Overhead)."
+    )
     print(f"Lernkurve geschrieben: {output}")
 
 
@@ -432,8 +445,7 @@ def parse_arguments() -> argparse.Namespace:
         "--learning-starts",
         type=int,
         default=None,
-        help="DA1: explizit gesetzte Laenge der SB3-Zufalls-Aufwaermphase (SB3-Default "
-        "sonst 100).",
+        help="DA1: explizit gesetzte Laenge der SB3-Zufalls-Aufwaermphase (SB3-Default sonst 100).",
     )
     parser.add_argument(
         "--solve-failure-penalty-kw",

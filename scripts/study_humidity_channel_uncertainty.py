@@ -327,7 +327,9 @@ def main() -> None:
             base_sensible, base_condensing = baseline_by_scale[label]
             d_sensible_kw = q_sensible - base_sensible
             d_condensing_kw = q_condensing - base_condensing
-            d_sensible_pct = 100.0 * d_sensible_kw / base_sensible if base_sensible else float("nan")
+            d_sensible_pct = (
+                100.0 * d_sensible_kw / base_sensible if base_sensible else float("nan")
+            )
             d_condensing_pct = (
                 100.0 * d_condensing_kw / base_condensing if base_condensing else float("nan")
             )

@@ -296,9 +296,7 @@ class PinchResult:
     cascade_kw: tuple[float, ...]
 
 
-def _segment_active(
-    high_low_cp: tuple[float, float, float], t_high: float, t_low: float
-) -> bool:
+def _segment_active(high_low_cp: tuple[float, float, float], t_high: float, t_low: float) -> bool:
     high, low, _ = high_low_cp
     return high >= t_high - _BOUNDARY_TOLERANCE_K and low <= t_low + _BOUNDARY_TOLERANCE_K
 
@@ -340,12 +338,8 @@ def compute_pinch_target(
     net_kw: list[float] = []
     for t_high, t_low in pairwise(boundaries):
         delta_t = t_high - t_low
-        cp_hot = sum(
-            entry[2] for entry in shifted_hot if _segment_active(entry, t_high, t_low)
-        )
-        cp_cold = sum(
-            entry[2] for entry in shifted_cold if _segment_active(entry, t_high, t_low)
-        )
+        cp_hot = sum(entry[2] for entry in shifted_hot if _segment_active(entry, t_high, t_low))
+        cp_cold = sum(entry[2] for entry in shifted_cold if _segment_active(entry, t_high, t_low))
         net_kw.append((cp_hot - cp_cold) * delta_t)
 
     cascade = [0.0]

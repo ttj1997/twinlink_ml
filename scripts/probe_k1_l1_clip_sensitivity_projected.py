@@ -103,9 +103,7 @@ def main() -> None:
         shutil.copyfile(scratch_out, FINAL_OUT_PATH)
 
     moisture = next(
-        entry
-        for entry in payload["results"]
-        if entry["max_driving_humidity_kg_per_kg"] == 0.50
+        entry for entry in payload["results"] if entry["max_driving_humidity_kg_per_kg"] == 0.50
     )["channels"]["product_moisture_kg_per_kg"]
     print(
         "\n=== K1 (projiziert, max_driving_humidity=0.50, Default) ==="

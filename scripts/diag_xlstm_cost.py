@@ -121,8 +121,7 @@ def main() -> None:
 
     # ------------------------------------------------------- (a) xLSTM, echte Pro-Schritt-Zeit
     print(
-        "\n=== (a) xLSTM: Pro-Schritt-Zeit ueber 68 sequenzielle mLSTM-Schritte "
-        "(ERGEBNISOFFEN) ==="
+        "\n=== (a) xLSTM: Pro-Schritt-Zeit ueber 68 sequenzielle mLSTM-Schritte (ERGEBNISOFFEN) ==="
     )
     xlstm_config = TorchSequenceConfig(core="xlstm", hidden_size=HIDDEN_SIZE, num_layers=1)
     xlstm_net = _build_network(torch, n_exogenous=n_exogenous, n_targets=1, config=xlstm_config)

@@ -111,7 +111,9 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = REPO_ROOT / "conf" / "process" / "greybox_gab_placeholder.yaml"
 REGRET_SCRIPT_PATH = REPO_ROOT / "scripts" / "study_operating_point_regret.py"
 DA1_ARTIFACT_PATH = REPO_ROOT / "artifacts" / "runs" / "probe_critical_moisture_sensitivity.json"
-HA1_ARTIFACT_PATH = REPO_ROOT / "artifacts" / "runs" / "rl_bandit_ha1_margin_vs_prediction_error.json"
+HA1_ARTIFACT_PATH = (
+    REPO_ROOT / "artifacts" / "runs" / "rl_bandit_ha1_margin_vs_prediction_error.json"
+)
 FA3_ARTIFACT_PATH = REPO_ROOT / "artifacts" / "runs" / "rl_bandit_fa3_seed_evaluation.json"
 OUT_PATH = REPO_ROOT / "artifacts" / "runs" / "probe_margin_energy_cost.json"
 
@@ -146,7 +148,9 @@ def _suppress_placeholder_warning() -> None:
     warnings.filterwarnings("ignore", category=PlaceholderConfigWarning)
 
 
-def build_variant_config(base: ProcessConfig, *, critical_moisture_kg_per_kg: float) -> ProcessConfig:
+def build_variant_config(
+    base: ProcessConfig, *, critical_moisture_kg_per_kg: float
+) -> ProcessConfig:
     """Wie in `probe_critical_moisture_sensitivity.py` -- nur `material.critical_moisture_
     kg_per_kg` ueberschrieben, sonst unveraendert."""
     material = dataclasses.replace(
@@ -171,16 +175,27 @@ def run_oracle_grid(
     grid_points = regret_module.build_grid(variant_config, grid_size)
 
     start = time.perf_counter()
-    print(f"\n=== {label}: Gitter {grid_size}x{grid_size} = {len(grid_points)} Punkte (nur Orakel) ===", flush=True)
-    with Pool(workers, initializer=regret_module._set_base_config, initargs=(variant_config,)) as pool:
+    print(
+        f"\n=== {label}: Gitter {grid_size}x{grid_size} = {len(grid_points)} Punkte (nur Orakel) ===",
+        flush=True,
+    )
+    with Pool(
+        workers, initializer=regret_module._set_base_config, initargs=(variant_config,)
+    ) as pool:
         tasks = [
             (index, t_amb, phi_amb, bounds, budget)
             for index, (t_amb, phi_amb) in enumerate(grid_points)
         ]
         grid_results_by_index: dict[int, dict[str, Any]] = {}
-        for n_done, result in enumerate(pool.imap_unordered(regret_module._grid_point_task, tasks), start=1):
+        for n_done, result in enumerate(
+            pool.imap_unordered(regret_module._grid_point_task, tasks), start=1
+        ):
             index = result["_grid_index"]
-            status = "OK" if not result.get("solve_failed") and result.get("feasible") else "UNZULAESSIG/FEHLER"
+            status = (
+                "OK"
+                if not result.get("solve_failed") and result.get("feasible")
+                else "UNZULAESSIG/FEHLER"
+            )
             print(
                 f"  [{n_done}/{len(grid_points)}] Punkt {index + 1} -> {status:20s} "
                 f"({result['_wall_elapsed_s']:5.1f}s)",
@@ -189,28 +204,38 @@ def run_oracle_grid(
             grid_results_by_index[index] = result
     grid_results = [grid_results_by_index[i] for i in range(len(grid_points))]
     elapsed = time.perf_counter() - start
-    n_infeasible = sum(1 for r in grid_results if r.get("solve_failed") or not r.get("feasible", False))
+    n_infeasible = sum(
+        1 for r in grid_results if r.get("solve_failed") or not r.get("feasible", False)
+    )
     print(f"  {label}: {elapsed:.0f}s, {n_infeasible}/{len(grid_results)} unzulaessig", flush=True)
     return grid_results
 
 
 def _grid_coordinates(grid_results: list[dict[str, Any]]) -> list[tuple[float, float]]:
-    return [(r["ambient_temperature_celsius"], r["ambient_relative_humidity"]) for r in grid_results]
+    return [
+        (r["ambient_temperature_celsius"], r["ambient_relative_humidity"]) for r in grid_results
+    ]
 
 
-def _assert_same_grid(a: list[tuple[float, float]], b: list[tuple[float, float]], *, context: str) -> None:
+def _assert_same_grid(
+    a: list[tuple[float, float]], b: list[tuple[float, float]], *, context: str
+) -> None:
     if len(a) != len(b):
         raise RuntimeError(f"{context}: unterschiedliche Gittergroesse ({len(a)} vs {len(b)})")
     for (t1, p1), (t2, p2) in zip(a, b, strict=True):
         if abs(t1 - t2) > _TOLERANCE_GRID_MATCH or abs(p1 - p2) > _TOLERANCE_GRID_MATCH:
-            raise RuntimeError(f"{context}: Gitterkoordinaten weichen ab ({t1},{p1}) vs ({t2},{p2})")
+            raise RuntimeError(
+                f"{context}: Gitterkoordinaten weichen ab ({t1},{p1}) vs ({t2},{p2})"
+            )
 
 
 def _assert_same_budget(a: dict[str, Any], b: dict[str, Any], *, context: str) -> None:
     keys = ("seed", "popsize", "maxiter", "de_tol", "search_max_iterations", "search_tolerance")
     for key in keys:
         if a[key] != b[key]:
-            raise RuntimeError(f"{context}: Budgetfeld {key!r} weicht ab ({a[key]!r} vs {b[key]!r})")
+            raise RuntimeError(
+                f"{context}: Budgetfeld {key!r} weicht ab ({a[key]!r} vs {b[key]!r})"
+            )
 
 
 def load_da1_artifact() -> dict[str, Any]:
@@ -221,9 +246,13 @@ def load_margin_sources() -> dict[str, Any]:
     ha1 = json.loads(HA1_ARTIFACT_PATH.read_text())
     return {
         "excited_3x_rmse_kg_per_kg": ha1["cases"]["excited_trained"]["3x_rmse_kg_per_kg"],
-        "excited_rmse_median_kg_per_kg": ha1["cases"]["excited_trained"]["rmse_run_median_physical_kg_per_kg"],
+        "excited_rmse_median_kg_per_kg": ha1["cases"]["excited_trained"][
+            "rmse_run_median_physical_kg_per_kg"
+        ],
         "constant_3x_rmse_kg_per_kg": ha1["cases"]["constant_trained"]["3x_rmse_kg_per_kg"],
-        "constant_rmse_median_kg_per_kg": ha1["cases"]["constant_trained"]["rmse_run_median_physical_kg_per_kg"],
+        "constant_rmse_median_kg_per_kg": ha1["cases"]["constant_trained"][
+            "rmse_run_median_physical_kg_per_kg"
+        ],
         "agent_margin_kg_per_kg": ha1["ga1_margin_kg_per_kg"],
         "ha1_source": str(HA1_ARTIFACT_PATH.relative_to(REPO_ROOT)),
     }
@@ -307,7 +336,13 @@ def compute_ka2_for_boundary(
 ) -> dict[str, Any]:
     per_point: list[dict[str, Any]] = []
     for i, (rb, rr, fp, binds) in enumerate(
-        zip(grid_results_boundary, grid_results_reference, fixed_point_per_point, binding_at_reference, strict=True)
+        zip(
+            grid_results_boundary,
+            grid_results_reference,
+            fixed_point_per_point,
+            binding_at_reference,
+            strict=True,
+        )
     ):
         feasible = not rb.get("solve_failed") and rb.get("feasible", False)
         entry: dict[str, Any] = {
@@ -349,14 +384,18 @@ def compute_ka2_for_boundary(
         remaining_denom = [
             p["energy_fixed_kw"] - p["energy_oracle_reference_kw"] for p in feasible_points
         ]
-        remaining_finite = [p["remaining_fraction"] for p in feasible_points if p["remaining_fraction"] is not None]
+        remaining_finite = [
+            p["remaining_fraction"] for p in feasible_points if p["remaining_fraction"] is not None
+        ]
         return {
             "n_points": len(subset),
             "n_feasible": len(feasible_points),
             "median_cost_abs_kw": _median_or_none(cost_abs),
             "median_cost_rel_pct": _median_or_none(cost_rel),
             "pooled_cost_rel_pct": (
-                100.0 * _pooled(cost_abs, e_oracle_ref) if _pooled(cost_abs, e_oracle_ref) is not None else None
+                100.0 * _pooled(cost_abs, e_oracle_ref)
+                if _pooled(cost_abs, e_oracle_ref) is not None
+                else None
             ),
             "median_remaining_fraction": _median_or_none(remaining_finite),
             "pooled_remaining_fraction": _pooled(remaining_num, remaining_denom),
@@ -403,7 +442,9 @@ def main() -> int:
 
     da1 = load_da1_artifact()
     if da1["grid_size"] != GRID_SIZE:
-        raise RuntimeError(f"DA1-Artefakt hat Gitter {da1['grid_size']}x{da1['grid_size']}, erwartet {GRID_SIZE}x{GRID_SIZE}")
+        raise RuntimeError(
+            f"DA1-Artefakt hat Gitter {da1['grid_size']}x{da1['grid_size']}, erwartet {GRID_SIZE}x{GRID_SIZE}"
+        )
     if not fingerprints_equivalent(base_config.fingerprint, da1["base_config_fingerprint"]):
         raise RuntimeError(
             f"Aktuelle Config hat Fingerprint {base_config.fingerprint!r}, DA1-Artefakt "
@@ -414,7 +455,9 @@ def main() -> int:
     r_reference = da1["results_by_value"]["0.20"]
     r_015 = da1["results_by_value"]["0.15"]
     if not r_reference["fixed_point"]["feasible_everywhere"]:
-        raise RuntimeError("DA1s Fixpunkt bei 0,20 kg/kg ist nicht ueberall zulaessig -- E_fest nicht verwendbar.")
+        raise RuntimeError(
+            "DA1s Fixpunkt bei 0,20 kg/kg ist nicht ueberall zulaessig -- E_fest nicht verwendbar."
+        )
 
     margins = load_margin_sources()
     fa3_reference = load_fa3_reference()
@@ -442,12 +485,18 @@ def main() -> int:
             for t, phi in regret_module.build_grid(base_config, GRID_SIZE)
         ]
     )
-    _assert_same_grid(reference_grid_coords, fresh_grid_coords, context="frisches Gitter vs. DA1 0,20 kg/kg")
+    _assert_same_grid(
+        reference_grid_coords, fresh_grid_coords, context="frisches Gitter vs. DA1 0,20 kg/kg"
+    )
     fixed_point_coords = [
         (p["ambient_temperature_celsius"], p["ambient_relative_humidity"])
         for p in r_reference["fixed_point"]["per_grid_point"]
     ]
-    _assert_same_grid(reference_grid_coords, fixed_point_coords, context="E_fest-Gitter vs. Orakel-Gitter (0,20 kg/kg)")
+    _assert_same_grid(
+        reference_grid_coords,
+        fixed_point_coords,
+        context="E_fest-Gitter vs. Orakel-Gitter (0,20 kg/kg)",
+    )
 
     binding_at_reference = [
         bool(r["constraint_check"]["binding_moisture"]) for r in r_reference["grid_results"]
@@ -473,12 +522,16 @@ def main() -> int:
     for label, spec in boundaries.items():
         if label == "oracle_anchor":
             grid_results_by_boundary[label] = r_reference["grid_results"]
-            reused_flags[label] = "probe_critical_moisture_sensitivity.json#results_by_value.0.20.grid_results"
+            reused_flags[label] = (
+                "probe_critical_moisture_sensitivity.json#results_by_value.0.20.grid_results"
+            )
             print(f"\n{label}: wiederverwendet von DA1 (0,20 kg/kg, Anker) -- keine neue Rechnung.")
             continue
         if label == "grid_0.15":
             grid_results_by_boundary[label] = r_015["grid_results"]
-            reused_flags[label] = "probe_critical_moisture_sensitivity.json#results_by_value.0.15.grid_results"
+            reused_flags[label] = (
+                "probe_critical_moisture_sensitivity.json#results_by_value.0.15.grid_results"
+            )
             print(f"\n{label}: wiederverwendet von DA1 (0,15 kg/kg) -- keine neue Rechnung.")
             continue
         variant_config = build_variant_config(
@@ -548,7 +601,9 @@ def main() -> int:
     print("KA3: Gegenprobe zum RL-Agenten")
     print("=" * 88)
     agent_all = ka2_output["rl_agent_margin"]["aggregate"]["all"]
-    print(f"Diese Studie, rl_agent_margin, gepoolt (alle 9 Punkte): {agent_all['pooled_remaining_fraction']}")
+    print(
+        f"Diese Studie, rl_agent_margin, gepoolt (alle 9 Punkte): {agent_all['pooled_remaining_fraction']}"
+    )
     print(
         f"Befund 62 FA3, RL-Agent, gepoolt (25 Punkte, Schritt 10000, Median ueber 3 Seeds): "
         f"{fa3_reference['pooled_closed_regret_fraction_step10000_median']}"
@@ -568,7 +623,9 @@ def main() -> int:
         "ka2_cost_and_remaining_fraction": ka2_output,
         "ka3_rl_agent_counterfactual": {
             "boundary_label": "rl_agent_margin",
-            "this_study_pooled_remaining_fraction_all_points": agent_all["pooled_remaining_fraction"],
+            "this_study_pooled_remaining_fraction_all_points": agent_all[
+                "pooled_remaining_fraction"
+            ],
             "fa3_pooled_closed_regret_fraction_step10000_median": fa3_reference[
                 "pooled_closed_regret_fraction_step10000_median"
             ],

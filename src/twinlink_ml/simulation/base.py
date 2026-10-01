@@ -373,9 +373,7 @@ class ProcessSimulator(ABC):
                 requested_np = backend.to_numpy(requested_action)
                 requested_actions_steps.append(requested_np)
                 assert n_projected_steps is not None
-                n_projected_steps = n_projected_steps + np.any(
-                    action_np != requested_np, axis=-1
-                )
+                n_projected_steps = n_projected_steps + np.any(action_np != requested_np, axis=-1)
             result = self.step(state, action, disturbance)
             state = result.state
             states.append(backend.to_numpy(state))
@@ -384,9 +382,7 @@ class ProcessSimulator(ABC):
             for key, value in result.diagnostics.items():
                 diagnostics.setdefault(key, []).append(backend.to_numpy(value))
 
-        requested_actions = (
-            np.stack(requested_actions_steps, axis=1) if projection_active else None
-        )
+        requested_actions = np.stack(requested_actions_steps, axis=1) if projection_active else None
 
         return Trajectory(
             run_id=run_id if run_id is not None else tuple(f"run_{i:05d}" for i in range(n_batch)),

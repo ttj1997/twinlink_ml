@@ -110,14 +110,18 @@ def _localize_diffs(
         child_qualname = f"{qualname}.{name}" if qualname else name
         if name not in old_children:
             findings.append(
-                Finding(path, "hard", f"{child_qualname}: neu (nicht durch Uebersetzung "
-                "erklaerbar)")
+                Finding(
+                    path, "hard", f"{child_qualname}: neu (nicht durch Uebersetzung erklaerbar)"
+                )
             )
             any_child_reported = True
         elif name not in new_children:
             findings.append(
-                Finding(path, "hard", f"{child_qualname}: entfernt (nicht durch Uebersetzung "
-                "erklaerbar)")
+                Finding(
+                    path,
+                    "hard",
+                    f"{child_qualname}: entfernt (nicht durch Uebersetzung erklaerbar)",
+                )
             )
             any_child_reported = True
         else:

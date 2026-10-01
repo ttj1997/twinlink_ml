@@ -98,8 +98,10 @@ def main() -> None:
     _log("Fingerprint/Split/Seeds bitgleich bestaetigt.")
 
     train, validation, test = build_datasets(data, N_TRAIN, policy=ValidationPolicy.FIXED_POOL)
-    _log(f"{train.n_windows} Trainingsfenster, {test.n_windows} Testfenster, "
-         f"{len(np.unique(test.full_batch().run_index))} Testlaeufe")
+    _log(
+        f"{train.n_windows} Trainingsfenster, {test.n_windows} Testfenster, "
+        f"{len(np.unique(test.full_batch().run_index))} Testlaeufe"
+    )
 
     scaler = test.target_scaler
     target_names = test.target_names
@@ -164,13 +166,14 @@ def main() -> None:
     worst_prediction = xlstm_pred[mask, :36, energy_index]
     worst_reference = xlstm_ref[mask, :36, energy_index]
     print(
-        "\n=== (a) Endlichkeitspruefung auf dem schlimmsten Lauf "
-        "(xLSTM, energy_target, h<=36) ==="
+        "\n=== (a) Endlichkeitspruefung auf dem schlimmsten Lauf (xLSTM, energy_target, h<=36) ==="
     )
     print(f"  Fenster in diesem Lauf: {mask.sum()}")
     print(f"  Vorhersage: isfinite ueberall = {bool(np.all(np.isfinite(worst_prediction)))}")
-    print(f"  Vorhersage: min={worst_prediction.min():.4f}  max={worst_prediction.max():.4f}  "
-          f"mean={worst_prediction.mean():.4f}")
+    print(
+        f"  Vorhersage: min={worst_prediction.min():.4f}  max={worst_prediction.max():.4f}  "
+        f"mean={worst_prediction.mean():.4f}"
+    )
     print(
         f"  Referenz (Messung):  min={worst_reference.min():.4f}  "
         f"max={worst_reference.max():.4f}  mean={worst_reference.mean():.4f}"
