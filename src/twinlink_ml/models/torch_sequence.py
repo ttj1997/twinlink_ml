@@ -284,6 +284,7 @@ class TorchSequenceModel(SequenceModel):
         self._target_names: tuple[str, ...] = ()
         self._autoregressive_index: tuple[int, ...] = ()
         self._history: list[dict[str, float]] = []
+        self._best_epoch: int | None = None
         self._n_train_windows = 0
 
     # ------------------------------------------------------------------- Interface
@@ -355,6 +356,28 @@ class TorchSequenceModel(SequenceModel):
             "epochs_run": epochs_run,
             "gradient_steps": epochs_run * batches_per_epoch,
             "train_loss_ratio_last10": ratio,
+            **self._loss_curves(),
+        }
+
+    def _loss_curves(self) -> dict[str, Any]:
+        """Per-epoch training/validation loss and the epoch whose weights were kept (VH1).
+
+        Lists of floats rounded to 7 significant digits (compact; relative error 1e-7). The
+        validation list is empty when the fit ran without validation or with ``patience=0``
+        (no validation loss is computed then). ``best_epoch`` is the epoch whose weights were
+        restored at the end of :meth:`fit` (the last epoch that improved the validation loss by
+        more than the early-stopping tolerance); without validation the weights of the last
+        epoch are kept, so ``best_epoch`` is the last epoch. With early stopping,
+        ``epochs_run == best_epoch + 1 + patience``.
+        """
+        epochs_run = len(self._history)
+        best = self._best_epoch if self._best_epoch is not None else epochs_run - 1
+        return {
+            "loss_history_train": [float(f"{r['train_loss']:.7g}") for r in self._history],
+            "loss_history_val": [
+                float(f"{r['val_loss']:.7g}") for r in self._history if "val_loss" in r
+            ],
+            "best_epoch": best,
         }
 
     def describe(self) -> dict[str, Any]:
@@ -426,6 +449,7 @@ class TorchSequenceModel(SequenceModel):
         best_state: dict[str, Any] | None = None
         stale = 0
         self._history = []
+        self._best_epoch = None
 
         for epoch in range(config.max_epochs):
             self._network.train()
@@ -467,6 +491,7 @@ class TorchSequenceModel(SequenceModel):
                 record["val_loss"] = validation_loss
                 if validation_loss < best_loss - 1e-6:
                     best_loss, stale = validation_loss, 0
+                    self._best_epoch = epoch
                     best_state = {
                         key: value.detach().clone()
                         for key, value in self._network.state_dict().items()

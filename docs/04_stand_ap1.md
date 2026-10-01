@@ -9085,3 +9085,38 @@ estimate was too low by a factor of two. Full learning curves (SX4) have not bee
 
 *Test suite.* Complete run before this commit: 13 min 30 s, no failure reported (the quiet configuration
 prints no summary line; progress rows complete up to 100 %).
+
+**Addendum to Befund 67 (2026-10-01): loss history is now stored with every training run.** Reason:
+the learning-rate question of Befund 67 could not be answered because neither records nor checkpoints
+contain validation curves.
+
+*VH1.* `TorchSequenceModel.training_diagnostics()` now also returns, per head (the composite adds the
+`/<head>` suffix, the workers the `training/` prefix): `loss_history_train` and `loss_history_val`
+(one float per epoch, rounded to 7 significant digits; the validation list is empty without validation
+or with `patience = 0`) and `best_epoch`, the epoch whose weights are restored at the end of `fit` (the
+last epoch that improved the validation loss by more than the early-stopping tolerance; without
+validation the last epoch). With early stopping, `epochs_run == best_epoch + 1 + patience`. The values
+sit **in the record itself** (all workers and `run_learning_curve` take them from the same method, so no
+worker was changed); a companion file with a hash was not needed at this size. Size, measured on a real
+record (small LSTM, three heads, all at the 200-epoch cap, i.e. the maximum): 15.2 kB of history per
+training, 24.4 kB per record (previously about 8.6 kB per record, e.g. the SX3 logs); each training
+writes two records (excited, constant holdout). A sweep like Befund 51/58 (about 100 network trainings)
+therefore grows by at most about 3 MB, one like SX3 (30 trainings) by at most about 0.9 MB. The MLflow
+logger moves the histories into a JSON artifact of the run instead of passing long lists as parameters.
+
+*VH2.* Existing records are unchanged. `utils.tracking.training_curves(params, head)` returns `None`
+for records without a history; `tests/test_training_curves.py::test_old_records_without_history_are_still_read`
+checks this on the committed `arch_learning_curve_projected.jsonl` (no `loss_history` key, flat readers
+of the analysis scripts still find their integer keys).
+
+*VH3.* Short fit (GRU, hidden 8, patience 3, at most 80 epochs, 3 heads): history lengths equal
+`epochs_run`, `val[best_epoch]` equals the minimum of the validation curve, and every head that stopped
+early satisfies `epochs_run == best_epoch + 1 + patience` (at least one head did; the test fails
+otherwise). Through the real worker path (`run_arch_learning_curve_worker.py`, seed 1, `n_train = 8`,
+small LSTM) all three heads ran to the cap, with `best_epoch` = 199, 194, 199 equal to the argmin of the
+stored validation curve. That demonstration ran on a dirty working tree and was not committed as an
+artifact.
+
+*Test suite (with summary line):* **529 passed, 1 skipped in 786.91 s (0:13:06)**, run with
+`-o addopts="--strict-markers"`. The earlier statement that the quiet configuration prints no summary
+line refers to the default `-q`.

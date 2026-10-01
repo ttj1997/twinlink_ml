@@ -50,8 +50,10 @@ __all__ = [
     "MlflowExperimentLogger",
     "MultiExperimentLogger",
     "RunRecord",
+    "TrainingCurves",
     "environment_fingerprint",
     "read_jsonl",
+    "training_curves",
 ]
 
 _GIT_CWD = Path(__file__).resolve().parent
@@ -541,6 +543,31 @@ class RunRecord:
         }
 
 
+@dataclass(frozen=True, slots=True)
+class TrainingCurves:
+    """Loss history of one head, as stored in records written after VH1 (Befund 67)."""
+
+    train: tuple[float, ...]
+    validation: tuple[float, ...]
+    best_epoch: int
+
+
+def training_curves(params: Mapping[str, Any], head: str) -> TrainingCurves | None:
+    """Loss history of ``head`` from a record's params; ``None`` for records without one.
+
+    Records written before the history was stored (everything up to Befund 67, SX3) have no
+    ``training/loss_history_*`` keys and stay valid; callers must handle ``None``.
+    """
+    train = params.get(f"training/loss_history_train/{head}")
+    if train is None:
+        return None
+    return TrainingCurves(
+        train=tuple(float(v) for v in train),
+        validation=tuple(float(v) for v in params.get(f"training/loss_history_val/{head}", ())),
+        best_epoch=int(params[f"training/best_epoch/{head}"]),
+    )
+
+
 def _relativize_path_params(params: Mapping[str, Any]) -> dict[str, Any]:
     """Macht absolute Pfade in ``*/path``-Parametern relativ zum Repository-Wurzelverzeichnis.
 
@@ -655,7 +682,13 @@ class MlflowExperimentLogger(ExperimentLogger):
 
         with mlflow.start_run(run_name=record.run_uid):
             mlflow.set_tags(dict(record.tags))
-            mlflow.log_params(_jsonable(dict(record.params)))
+            params = _jsonable(dict(record.params))
+            # Loss histories are long lists (MLflow limits the length of a parameter value):
+            # stored as a JSON artifact of the run instead of as parameters.
+            curves = {k: params.pop(k) for k in list(params) if "/loss_history_" in k}
+            mlflow.log_params(params)
+            if curves:
+                mlflow.log_dict(curves, "loss_history.json")
             mlflow.log_metrics({key: float(v) for key, v in record.metrics.items()})
 
 
