@@ -406,6 +406,54 @@ def evaluate_policy(
     )
 
 
+def moisture_margin_at_oracle_binding_points(
+    env: OperatingPointBanditEnv,
+    policy: PolicyFn,
+    test_points: tuple[TestPoint, ...] | None = None,
+) -> tuple[float, int]:
+    """Median distance of the product moisture to the TRUE quality limit (S0.3 gate G3).
+
+    Evaluated only at the test points where the Befund 52 oracle binds the moisture limit,
+    with the same definition as ``probe_bandit_env_ga1_safety_margin.py`` (limit - moisture).
+    Solver failures are skipped. Returns ``(median, number of binding contexts used)``;
+    the median is NaN when no context is usable.
+    """
+    points = test_points if test_points is not None else load_test_points()
+    limit = env._base_config.material.quality_moisture_limit_kg_per_kg
+    margins: list[float] = []
+    for point in points:
+        _, oracle_info = env.evaluate_operating_point(
+            inlet_temperature_celsius=point.oracle_inlet_temperature_celsius,
+            gas_velocity_m_per_s=point.oracle_gas_velocity_m_per_s,
+            ambient_temperature_celsius=point.ambient_temperature_celsius,
+            ambient_relative_humidity=point.ambient_relative_humidity,
+        )
+        if (
+            oracle_info.get("solve_failed")
+            or not oracle_info["constraint_check"]["binding_moisture"]
+        ):
+            continue
+        observation = np.array(
+            [point.ambient_temperature_celsius, point.ambient_relative_humidity],
+            dtype=np.float32,
+        )
+        applied = np.clip(np.asarray(policy(observation), dtype=np.float64), -1.0, 1.0)
+        _, info = env.evaluate_operating_point(
+            inlet_temperature_celsius=_denormalise(
+                float(applied[0]), env._inlet_bound.minimum, env._inlet_bound.maximum
+            ),
+            gas_velocity_m_per_s=_denormalise(
+                float(applied[1]), env._gas_bound.minimum, env._gas_bound.maximum
+            ),
+            ambient_temperature_celsius=point.ambient_temperature_celsius,
+            ambient_relative_humidity=point.ambient_relative_humidity,
+        )
+        if info.get("solve_failed"):
+            continue
+        margins.append(limit - float(info["constraint_check"]["moisture_kg_per_kg"]))
+    return (float(np.median(margins)) if margins else float("nan")), len(margins)
+
+
 def flat_metrics(result: ClosedRegretResult) -> dict[str, float]:
     """Skalare Sicht auf :class:`ClosedRegretResult`, fuer flache Ablagen (``RunRecord.metrics``).
 
