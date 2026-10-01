@@ -66,6 +66,20 @@ G2_POOLED_MEDIAN_MIN_EXCLUSIVE = 0.0
 G3_MARGIN_MEDIAN_MAX_KG_PER_KG = 0.02
 # -------------------------------------------------------------------------------------------
 
+# --- reproduction check of the penalty arm (seeds 0-2), fixed before any run ---------------
+# A deviation beyond these tolerances means something is wrong with the S0.1 move: STOP and
+# report before the Lagrange results are looked at.
+REPRO_POOLED_ATOL = 1e-6
+REPRO_MARGIN_ATOL = 6e-5  # the committed GA1 values are rounded to four decimals
+# feasibility must equal the committed 1.0 exactly.
+# --- lambda history per cell, definitions fixed before any run ----------------------------
+LAMBDA_WINDOW_UPDATES = 10  # last 10 of 40 updates = steps 7750-10000
+LAMBDA_RUNAWAY_KW = 5.0  # > 10 x lambda_0 = 0.5 kW, or strictly rising over the window
+LAMBDA_OSCILLATION_SIGN_CHANGES = 4  # of 9 deltas in the window ...
+LAMBDA_OSCILLATION_RANGE_KW = 0.1  # ... and a range above this
+# converged: none of these; inactive: lambda stays 0 over the window.
+# -------------------------------------------------------------------------------------------
+
 COMMITTED_FA2 = {  # Befund 62 FA3: step 10000, pooled closed-regret fraction (committed)
     0: -1.9984602459667704,
     1: -2.7973488622832794,
@@ -167,19 +181,127 @@ def _trace_summary(prefix: str) -> dict[str, Any]:
     return out
 
 
+def classify_lambda_series(series: list[float]) -> dict[str, Any]:
+    """Category of one cell's lambda history by the pre-registered definitions."""
+    window = series[-LAMBDA_WINDOW_UPDATES:]
+    deltas = np.diff(window)
+    signs = np.sign(deltas[np.abs(deltas) > 1e-12])
+    sign_changes = int(np.sum(signs[1:] != signs[:-1])) if signs.size > 1 else 0
+    value_range = float(max(window) - min(window))
+    rising = bool(np.all(deltas > 0.0))
+    if max(window) == 0.0:
+        category = "inactive"
+    elif window[-1] > LAMBDA_RUNAWAY_KW or (rising and window[-1] > 2.0 * window[0]):
+        category = "runaway"
+    elif (
+        sign_changes >= LAMBDA_OSCILLATION_SIGN_CHANGES
+        and value_range > LAMBDA_OSCILLATION_RANGE_KW
+    ):
+        category = "oscillating"
+    else:
+        category = "converged"
+    return {
+        "category": category,
+        "final_kw": float(window[-1]),
+        "window_range_kw": value_range,
+        "window_sign_changes": sign_changes,
+        "drift_over_window_kw": float(window[-1] - window[0]),
+    }
+
+
+def lambda_cells(prefix: str) -> dict[str, Any]:
+    out: dict[str, Any] = {}
+    for seed in SEEDS:
+        path = RUNS / f"{prefix}_lambda_seed{seed}.jsonl"
+        history = [json.loads(x) for x in path.read_text(encoding="utf-8").splitlines() if x]
+        matrix = np.array([h["multipliers_kw"] for h in history])  # (updates, cells)
+        solved = np.array([h["n_solved_per_bin"] for h in history]).sum(axis=0)
+        cells = [classify_lambda_series(matrix[:, c].tolist()) for c in range(matrix.shape[1])]
+        counts: dict[str, int] = {}
+        for cell in cells:
+            counts[cell["category"]] = counts.get(cell["category"], 0) + 1
+        out[str(seed)] = {
+            "n_updates": len(history),
+            "category_counts": counts,
+            "cells": cells,
+            "n_solved_samples_per_cell": solved.tolist(),
+        }
+    return out
+
+
+def _margin_ratio(arm: dict[int, dict[str, float]], margin_m: float) -> dict[str, Any]:
+    """Actual distance to the TRUE limit at the binding contexts, in units of m (target ~ 1)."""
+    values = [arm[seed]["moisture_margin_binding_median_kg_per_kg"] / margin_m for seed in SEEDS]
+    return {"m_kg_per_kg": margin_m, **_summary(values)}
+
+
+def reproduction_table(penalty: dict[int, dict[str, float]]) -> tuple[dict[str, Any], bool]:
+    rows: dict[str, Any] = {}
+    ok = True
+    for seed in COMMITTED_FA2:
+        metrics = penalty[seed]
+        pooled_diff = metrics["pooled_closed_regret_fraction"] - COMMITTED_FA2[seed]
+        margin_diff = (
+            metrics["moisture_margin_binding_median_kg_per_kg"] - COMMITTED_GA1_MARGIN[seed]
+        )
+        row_ok = (
+            metrics["feasibility_rate"] == 1.0
+            and abs(pooled_diff) <= REPRO_POOLED_ATOL
+            and abs(margin_diff) <= REPRO_MARGIN_ATOL
+        )
+        ok = ok and row_ok
+        rows[str(seed)] = {
+            "feasibility_rerun": metrics["feasibility_rate"],
+            "pooled_rerun": metrics["pooled_closed_regret_fraction"],
+            "pooled_committed_fa2": COMMITTED_FA2[seed],
+            "pooled_difference": pooled_diff,
+            "margin_rerun": metrics["moisture_margin_binding_median_kg_per_kg"],
+            "margin_committed_ga1_rounded": COMMITTED_GA1_MARGIN[seed],
+            "margin_difference": margin_diff,
+            "reproduced": row_ok,
+        }
+    return rows, ok
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument("--lagrange-prefix", required=True)
+    parser.add_argument("--lagrange-prefix", default=None)
     parser.add_argument("--penalty-prefix", required=True)
     parser.add_argument("--output-name", default="s03_gate")
+    parser.add_argument("--global-prefix", default=None, help="sensitivity arm, no gate")
+    parser.add_argument(
+        "--penalty-only",
+        action="store_true",
+        help="evaluate ONLY the penalty arm: reproduction check of seeds 0-2 against FA2",
+    )
     arguments = parser.parse_args()
     require_clean_tree()
 
     nu = _nu_eff()
-    lagrange = _arm(arguments.lagrange_prefix)
     penalty = _arm(arguments.penalty_prefix)
+    reproduction, reproduced = reproduction_table(penalty)
+    if arguments.penalty_only:
+        path = write_artifact(
+            arguments.output_name,
+            {
+                "provenance": provenance(),
+                "reproduction_of_committed_fa2": reproduction,
+                "all_reproduced": reproduced,
+                "tolerances": {
+                    "pooled_atol": REPRO_POOLED_ATOL,
+                    "margin_atol": REPRO_MARGIN_ATOL,
+                    "feasibility": "equal to 1.0",
+                },
+            },
+        )
+        print(json.dumps(reproduction, indent=1))
+        print("all_reproduced:", reproduced, "written:", path)
+        return 0 if reproduced else 2
+    if arguments.lagrange_prefix is None:
+        raise SystemExit("--lagrange-prefix is required unless --penalty-only")
+    lagrange = _arm(arguments.lagrange_prefix)
 
     feas_l = _column(lagrange, "feasibility_rate")
     pooled_l = _column(lagrange, "pooled_closed_regret_fraction")
@@ -204,15 +326,9 @@ def main() -> int:
         and g3_diff > g3_two["threshold"]
     )
 
-    reproduction = {
-        str(seed): {
-            "pooled_rerun": pooled_p[SEEDS.index(seed)],
-            "pooled_committed_fa2": COMMITTED_FA2[seed],
-            "margin_rerun": margin_p[SEEDS.index(seed)],
-            "margin_committed_ga1_rounded": COMMITTED_GA1_MARGIN[seed],
-        }
-        for seed in COMMITTED_FA2
-    }
+    margin_m = float(
+        _final_record(arguments.lagrange_prefix, 0)["params"]["lagrange"]["margin_kg_per_kg"]
+    )
     payload: dict[str, Any] = {
         "provenance": provenance(),
         "test_set": "25 Befund-52 grid points (ambient temperature x relative humidity)",
@@ -255,7 +371,26 @@ def main() -> int:
         },
         "reproduction_of_committed_fa2": reproduction,
         "lagrange_trace_summary": _trace_summary(arguments.lagrange_prefix),
+        "margin_in_units_of_m": {
+            "lagrange": _margin_ratio(lagrange, margin_m),
+            "penalty": _margin_ratio(penalty, margin_m),
+        },
+        "lambda_per_cell": lambda_cells(arguments.lagrange_prefix),
     }
+    if arguments.global_prefix:
+        global_arm = _arm(arguments.global_prefix)
+        payload["global_sensitivity_no_gate"] = {
+            "feasibility_rate": _summary(_column(global_arm, "feasibility_rate")),
+            "pooled_closed_regret_fraction": _summary(
+                _column(global_arm, "pooled_closed_regret_fraction")
+            ),
+            "moisture_margin_binding_median_kg_per_kg": _summary(
+                _column(global_arm, "moisture_margin_binding_median_kg_per_kg")
+            ),
+            "margin_in_units_of_m": _margin_ratio(global_arm, margin_m),
+            "lambda_per_cell": lambda_cells(arguments.global_prefix),
+            "trace_summary": _trace_summary(arguments.global_prefix),
+        }
     path = write_artifact(arguments.output_name, payload)
     print(json.dumps(payload["gate"], indent=1))
     print("written:", path)
