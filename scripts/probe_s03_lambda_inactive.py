@@ -1,4 +1,4 @@
-r"""S0.3 diagnosis (after the gate): why was lambda 0 in every cell of every run?
+r"""S0.3 diagnosis after the gate: why was lambda 0 in every cell of every run?
 
 Reads the committed per-step traces of the Lagrange arms (5x5 cells and global) and counts how
 often the signed constraint was positive (product moisture above the tightened limit). Then
