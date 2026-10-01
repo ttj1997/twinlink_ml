@@ -1,0 +1,1779 @@
+{
+ "provenance": {
+  "git/commit": "637a82fdaeb014fba371ffa15bc712b90c38befb",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "divergence_threshold_ratio": 10.0,
+ "all_metrics_finite": true,
+ "training": {
+  "lstm": {
+   "energy_target": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 186,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.0329820017693134
+     },
+     {
+      "seed": 2,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.0282405988334111
+     },
+     {
+      "seed": 3,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.0351314065317003
+     },
+     {
+      "seed": 4,
+      "epochs_run": 175,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.0063191023383051
+     },
+     {
+      "seed": 5,
+      "epochs_run": 162,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.914621083606025
+     }
+    ],
+    "n_at_cap": 2,
+    "n_early_stopped": 3
+   },
+   "product_moisture_kg_per_kg": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 80,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9466243903575772
+     },
+     {
+      "seed": 2,
+      "epochs_run": 182,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.0276764059585577
+     },
+     {
+      "seed": 3,
+      "epochs_run": 53,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.0728429061159428
+     },
+     {
+      "seed": 4,
+      "epochs_run": 99,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9644904264453464
+     },
+     {
+      "seed": 5,
+      "epochs_run": 65,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.014714557793379
+     }
+    ],
+    "n_at_cap": 0,
+    "n_early_stopped": 5
+   },
+   "bed_temperature_celsius": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 164,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.0067874116235835
+     },
+     {
+      "seed": 2,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9983721240643381
+     },
+     {
+      "seed": 3,
+      "epochs_run": 180,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9862784431404481
+     },
+     {
+      "seed": 4,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9951457322820365
+     },
+     {
+      "seed": 5,
+      "epochs_run": 102,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.0280644288504204
+     }
+    ],
+    "n_at_cap": 2,
+    "n_early_stopped": 3
+   }
+  },
+  "gru": {
+   "energy_target": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 197,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.0095022285556683
+     },
+     {
+      "seed": 2,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.0065039992625406
+     },
+     {
+      "seed": 3,
+      "epochs_run": 178,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9360910765636615
+     },
+     {
+      "seed": 4,
+      "epochs_run": 142,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9807775834418541
+     },
+     {
+      "seed": 5,
+      "epochs_run": 185,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9915342548498886
+     }
+    ],
+    "n_at_cap": 1,
+    "n_early_stopped": 4
+   },
+   "product_moisture_kg_per_kg": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 76,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.0410279269681382
+     },
+     {
+      "seed": 2,
+      "epochs_run": 106,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.3166447827244414
+     },
+     {
+      "seed": 3,
+      "epochs_run": 118,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9349839350169328
+     },
+     {
+      "seed": 4,
+      "epochs_run": 84,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.4458987964115704
+     },
+     {
+      "seed": 5,
+      "epochs_run": 65,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9968706241168394
+     }
+    ],
+    "n_at_cap": 0,
+    "n_early_stopped": 5
+   },
+   "bed_temperature_celsius": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 113,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9918648186601154
+     },
+     {
+      "seed": 2,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.0064078444236
+     },
+     {
+      "seed": 3,
+      "epochs_run": 186,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.0037932543596728
+     },
+     {
+      "seed": 4,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9918439418894681
+     },
+     {
+      "seed": 5,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9942728604359546
+     }
+    ],
+    "n_at_cap": 3,
+    "n_early_stopped": 2
+   }
+  },
+  "xlstm": {
+   "energy_target": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 23,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.0900065891212614
+     },
+     {
+      "seed": 2,
+      "epochs_run": 25,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.908358509317783
+     },
+     {
+      "seed": 3,
+      "epochs_run": 24,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.3640818215362605
+     },
+     {
+      "seed": 4,
+      "epochs_run": 129,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9896639687937295
+     },
+     {
+      "seed": 5,
+      "epochs_run": 32,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.5039526789902689
+     }
+    ],
+    "n_at_cap": 0,
+    "n_early_stopped": 5
+   },
+   "product_moisture_kg_per_kg": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 102,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.00008051029875
+     },
+     {
+      "seed": 2,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.0122030160347402
+     },
+     {
+      "seed": 3,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.0693264047089763
+     },
+     {
+      "seed": 4,
+      "epochs_run": 66,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.7092872111122059
+     },
+     {
+      "seed": 5,
+      "epochs_run": 176,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.0234110322694492
+     }
+    ],
+    "n_at_cap": 2,
+    "n_early_stopped": 3
+   },
+   "bed_temperature_celsius": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 75,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.996058516254209
+     },
+     {
+      "seed": 2,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9812138849258438
+     },
+     {
+      "seed": 3,
+      "epochs_run": 159,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9837631339694474
+     },
+     {
+      "seed": 4,
+      "epochs_run": 51,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9711777058975798
+     },
+     {
+      "seed": 5,
+      "epochs_run": 137,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.0008950857348475
+     }
+    ],
+    "n_at_cap": 1,
+    "n_early_stopped": 4
+   }
+  },
+  "mamba": {
+   "energy_target": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 105,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9717308922898253
+     },
+     {
+      "seed": 2,
+      "epochs_run": 192,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9933514289690122
+     },
+     {
+      "seed": 3,
+      "epochs_run": 147,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9791851243602275
+     },
+     {
+      "seed": 4,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9871262641465299
+     },
+     {
+      "seed": 5,
+      "epochs_run": 167,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9831028644709116
+     }
+    ],
+    "n_at_cap": 1,
+    "n_early_stopped": 4
+   },
+   "product_moisture_kg_per_kg": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 130,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.0067655752981237
+     },
+     {
+      "seed": 2,
+      "epochs_run": 59,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9485757996557286
+     },
+     {
+      "seed": 3,
+      "epochs_run": 70,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9605255105036502
+     },
+     {
+      "seed": 4,
+      "epochs_run": 52,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9584395646938514
+     },
+     {
+      "seed": 5,
+      "epochs_run": 27,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9079186626485295
+     }
+    ],
+    "n_at_cap": 0,
+    "n_early_stopped": 5
+   },
+   "bed_temperature_celsius": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 171,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9839529629589948
+     },
+     {
+      "seed": 2,
+      "epochs_run": 149,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9738964910738747
+     },
+     {
+      "seed": 3,
+      "epochs_run": 162,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9798556939275626
+     },
+     {
+      "seed": 4,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9905306223303587
+     },
+     {
+      "seed": 5,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.98070467960802
+     }
+    ],
+    "n_at_cap": 2,
+    "n_early_stopped": 3
+   }
+  },
+  "mlstm_cm": {
+   "energy_target": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 114,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9826194507997555
+     },
+     {
+      "seed": 2,
+      "epochs_run": 33,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.7831524679471642
+     },
+     {
+      "seed": 3,
+      "epochs_run": 45,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.7482563521466445
+     },
+     {
+      "seed": 4,
+      "epochs_run": 23,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.8363840217117434
+     },
+     {
+      "seed": 5,
+      "epochs_run": 62,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.2101605570992353
+     }
+    ],
+    "n_at_cap": 0,
+    "n_early_stopped": 5
+   },
+   "product_moisture_kg_per_kg": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 87,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.7222649695039737
+     },
+     {
+      "seed": 2,
+      "epochs_run": 97,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9680982157538717
+     },
+     {
+      "seed": 3,
+      "epochs_run": 85,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9431592127501666
+     },
+     {
+      "seed": 4,
+      "epochs_run": 96,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.026642419390995
+     },
+     {
+      "seed": 5,
+      "epochs_run": 51,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9015176904249929
+     }
+    ],
+    "n_at_cap": 0,
+    "n_early_stopped": 5
+   },
+   "bed_temperature_celsius": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 189,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.3021747221873718
+     },
+     {
+      "seed": 2,
+      "epochs_run": 33,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.6848841009077795
+     },
+     {
+      "seed": 3,
+      "epochs_run": 129,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.1776050186630147
+     },
+     {
+      "seed": 4,
+      "epochs_run": 57,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.8410972010582624
+     },
+     {
+      "seed": 5,
+      "epochs_run": 35,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.579972075984231
+     }
+    ],
+    "n_at_cap": 0,
+    "n_early_stopped": 5
+   }
+  },
+  "slstm_cm": {
+   "energy_target": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.0000368656786753
+     },
+     {
+      "seed": 2,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9079378520390339
+     },
+     {
+      "seed": 3,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.006257047687423
+     },
+     {
+      "seed": 4,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9861458577513105
+     },
+     {
+      "seed": 5,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9185137902976039
+     }
+    ],
+    "n_at_cap": 5,
+    "n_early_stopped": 0
+   },
+   "product_moisture_kg_per_kg": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 145,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9265399439758017
+     },
+     {
+      "seed": 2,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9883653867742593
+     },
+     {
+      "seed": 3,
+      "epochs_run": 159,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9833720112021427
+     },
+     {
+      "seed": 4,
+      "epochs_run": 148,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.8078750620948693
+     },
+     {
+      "seed": 5,
+      "epochs_run": 113,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.149796894502757
+     }
+    ],
+    "n_at_cap": 1,
+    "n_early_stopped": 4
+   },
+   "bed_temperature_celsius": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.011157526785119
+     },
+     {
+      "seed": 2,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9842375547714954
+     },
+     {
+      "seed": 3,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9838551250684646
+     },
+     {
+      "seed": 4,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9622544808277754
+     },
+     {
+      "seed": 5,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9880915248343123
+     }
+    ],
+    "n_at_cap": 5,
+    "n_early_stopped": 0
+   }
+  },
+  "slstm_l1_cm": {
+   "energy_target": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9378078018141706
+     },
+     {
+      "seed": 2,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.0134669936295697
+     },
+     {
+      "seed": 3,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.068792305633041
+     },
+     {
+      "seed": 4,
+      "epochs_run": 142,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9678771497549957
+     },
+     {
+      "seed": 5,
+      "epochs_run": 191,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.0234245821651045
+     }
+    ],
+    "n_at_cap": 3,
+    "n_early_stopped": 2
+   },
+   "product_moisture_kg_per_kg": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 197,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.8607776099946226
+     },
+     {
+      "seed": 2,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.5168140492274819
+     },
+     {
+      "seed": 3,
+      "epochs_run": 89,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.721966087426943
+     },
+     {
+      "seed": 4,
+      "epochs_run": 102,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.8810715857938956
+     },
+     {
+      "seed": 5,
+      "epochs_run": 71,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9471144330323252
+     }
+    ],
+    "n_at_cap": 1,
+    "n_early_stopped": 4
+   },
+   "bed_temperature_celsius": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 177,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.99280375734856
+     },
+     {
+      "seed": 2,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9964655069832086
+     },
+     {
+      "seed": 3,
+      "epochs_run": 166,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.0102583392602076
+     },
+     {
+      "seed": 4,
+      "epochs_run": 148,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.0296222325741298
+     },
+     {
+      "seed": 5,
+      "epochs_run": 137,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9729788269200873
+     }
+    ],
+    "n_at_cap": 1,
+    "n_early_stopped": 4
+   }
+  },
+  "mixed_cm": {
+   "energy_target": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 175,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.995199811408512
+     },
+     {
+      "seed": 2,
+      "epochs_run": 23,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.2217396545837094
+     },
+     {
+      "seed": 3,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.0368229887394333
+     },
+     {
+      "seed": 4,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9613167935659271
+     },
+     {
+      "seed": 5,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.0063439353665922
+     }
+    ],
+    "n_at_cap": 3,
+    "n_early_stopped": 2
+   },
+   "product_moisture_kg_per_kg": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.8388391433469387
+     },
+     {
+      "seed": 2,
+      "epochs_run": 130,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.8701814127604557
+     },
+     {
+      "seed": 3,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.1579206587078994
+     },
+     {
+      "seed": 4,
+      "epochs_run": 152,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.0031086331282875
+     },
+     {
+      "seed": 5,
+      "epochs_run": 73,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.7049529997815143
+     }
+    ],
+    "n_at_cap": 2,
+    "n_early_stopped": 3
+   },
+   "bed_temperature_celsius": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9801633182419335
+     },
+     {
+      "seed": 2,
+      "epochs_run": 159,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9564426401360067
+     },
+     {
+      "seed": 3,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.012726098461959
+     },
+     {
+      "seed": 4,
+      "epochs_run": 26,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.5279502959826842
+     },
+     {
+      "seed": 5,
+      "epochs_run": 195,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.3349869499249738
+     }
+    ],
+    "n_at_cap": 2,
+    "n_early_stopped": 3
+   }
+  },
+  "mamba_cm": {
+   "energy_target": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 184,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9870530368851179
+     },
+     {
+      "seed": 2,
+      "epochs_run": 111,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9471685013558575
+     },
+     {
+      "seed": 3,
+      "epochs_run": 25,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9085435549163701
+     },
+     {
+      "seed": 4,
+      "epochs_run": 117,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9812228590124799
+     },
+     {
+      "seed": 5,
+      "epochs_run": 46,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9491682913229859
+     }
+    ],
+    "n_at_cap": 0,
+    "n_early_stopped": 5
+   },
+   "product_moisture_kg_per_kg": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 49,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9801436252256313
+     },
+     {
+      "seed": 2,
+      "epochs_run": 28,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9637175685376358
+     },
+     {
+      "seed": 3,
+      "epochs_run": 48,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9934485221974748
+     },
+     {
+      "seed": 4,
+      "epochs_run": 39,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9310476383270505
+     },
+     {
+      "seed": 5,
+      "epochs_run": 30,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9111969698072975
+     }
+    ],
+    "n_at_cap": 0,
+    "n_early_stopped": 5
+   },
+   "bed_temperature_celsius": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 192,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9988439517099779
+     },
+     {
+      "seed": 2,
+      "epochs_run": 142,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9866470935599877
+     },
+     {
+      "seed": 3,
+      "epochs_run": 72,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9234413097099786
+     },
+     {
+      "seed": 4,
+      "epochs_run": 152,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9811891151266869
+     },
+     {
+      "seed": 5,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9704322094402171
+     }
+    ],
+    "n_at_cap": 1,
+    "n_early_stopped": 4
+   }
+  },
+  "lstm_small": {
+   "energy_target": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9790502521359976
+     },
+     {
+      "seed": 2,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9710502634897413
+     },
+     {
+      "seed": 3,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.0026253477965217
+     },
+     {
+      "seed": 4,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9958003927940143
+     },
+     {
+      "seed": 5,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9978136723712512
+     }
+    ],
+    "n_at_cap": 5,
+    "n_early_stopped": 0
+   },
+   "product_moisture_kg_per_kg": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.960459519719078
+     },
+     {
+      "seed": 2,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.1477476598299758
+     },
+     {
+      "seed": 3,
+      "epochs_run": 131,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 1.055904293631807
+     },
+     {
+      "seed": 4,
+      "epochs_run": 196,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9473731680037227
+     },
+     {
+      "seed": 5,
+      "epochs_run": 66,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9490839424635374
+     }
+    ],
+    "n_at_cap": 2,
+    "n_early_stopped": 3
+   },
+   "bed_temperature_celsius": {
+    "fits": [
+     {
+      "seed": 1,
+      "epochs_run": 107,
+      "at_epoch_cap": false,
+      "train_loss_ratio_last10": 0.9817465806135325
+     },
+     {
+      "seed": 2,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.0045516288763578
+     },
+     {
+      "seed": 3,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9726771757786461
+     },
+     {
+      "seed": 4,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 0.9947038385321397
+     },
+     {
+      "seed": 5,
+      "epochs_run": 200,
+      "at_epoch_cap": true,
+      "train_loss_ratio_last10": 1.000573703433883
+     }
+    ],
+    "n_at_cap": 4,
+    "n_early_stopped": 1
+   }
+  }
+ },
+ "divergence": {
+  "lstm": {
+   "energy_target/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 0.9710070544131594,
+     "2": 1.0,
+     "3": 0.9771170256378645,
+     "4": 1.141453433476619,
+     "5": 1.08473987454531
+    },
+    "seeds_above_threshold": []
+   },
+   "energy_target/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.0158455441007002,
+     "2": 1.0,
+     "3": 0.9777241099772239,
+     "4": 0.9411701149183203,
+     "5": 1.0331954955613123
+    },
+    "seeds_above_threshold": []
+   },
+   "product_moisture_kg_per_kg/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.288960941522717,
+     "2": 0.9077284728438492,
+     "3": 0.95252153493075,
+     "4": 1.0,
+     "5": 1.5782538742488672
+    },
+    "seeds_above_threshold": []
+   },
+   "product_moisture_kg_per_kg/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.224038444099621,
+     "2": 0.7841395742785604,
+     "3": 1.0,
+     "4": 0.894648669411175,
+     "5": 1.441635330227025
+    },
+    "seeds_above_threshold": []
+   },
+   "bed_temperature_celsius/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 0.9963825431817589,
+     "2": 1.0,
+     "3": 0.9680292126395287,
+     "4": 1.0429330325914334,
+     "5": 1.062899119571021
+    },
+    "seeds_above_threshold": []
+   },
+   "bed_temperature_celsius/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.0053385663467473,
+     "2": 1.0,
+     "3": 0.9147038813976431,
+     "4": 0.9289860898582534,
+     "5": 1.0669893974151592
+    },
+    "seeds_above_threshold": []
+   }
+  },
+  "gru": {
+   "energy_target/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.0182178883693278,
+     "2": 0.976987218035017,
+     "3": 1.016484546418061,
+     "4": 1.1346131026141397,
+     "5": 1.0479836021730407
+    },
+    "seeds_above_threshold": []
+   },
+   "energy_target/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 0.9799677523784271,
+     "2": 0.956640445703171,
+     "3": 0.9837780232447692,
+     "4": 0.9944016750158065,
+     "5": 0.9471979706086887
+    },
+    "seeds_above_threshold": []
+   },
+   "product_moisture_kg_per_kg/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.9536134771435067,
+     "2": 1.081563257083335,
+     "3": 0.8081065305876345,
+     "4": 1.1924609634563172,
+     "5": 1.4360549087769876
+    },
+    "seeds_above_threshold": []
+   },
+   "product_moisture_kg_per_kg/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.6334679106254355,
+     "2": 1.023148429452343,
+     "3": 0.9869109613907896,
+     "4": 1.277064586401127,
+     "5": 1.1985952045878456
+    },
+    "seeds_above_threshold": []
+   },
+   "bed_temperature_celsius/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 0.9875933987963033,
+     "2": 0.9973971817786882,
+     "3": 0.9470050070933695,
+     "4": 1.056888774932261,
+     "5": 1.0296425271637837
+    },
+    "seeds_above_threshold": []
+   },
+   "bed_temperature_celsius/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 0.9790071434096981,
+     "2": 0.9712287245444556,
+     "3": 0.9184560933383182,
+     "4": 0.9282333199468265,
+     "5": 0.9646014583238777
+    },
+    "seeds_above_threshold": []
+   }
+  },
+  "xlstm": {
+   "energy_target/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 35.000235722018715,
+     "2": 35.24776133456119,
+     "3": 29.55112119611558,
+     "4": 3.677445721409179,
+     "5": 29.993328822641004
+    },
+    "seeds_above_threshold": [
+     1,
+     2,
+     3,
+     5
+    ]
+   },
+   "energy_target/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 23.28043848070874,
+     "2": 21.443310087316743,
+     "3": 20.012654289577284,
+     "4": 2.150013207851954,
+     "5": 29.61278174293624
+    },
+    "seeds_above_threshold": [
+     1,
+     2,
+     3,
+     5
+    ]
+   },
+   "product_moisture_kg_per_kg/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 5.541415488828149,
+     "2": 1.399693549094792,
+     "3": 1.2688480811437335,
+     "4": 10.725803106891972,
+     "5": 2.4016190457813713
+    },
+    "seeds_above_threshold": [
+     4
+    ]
+   },
+   "product_moisture_kg_per_kg/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 2.519201904729733,
+     "2": 1.8280410956246043,
+     "3": 1.139911555122464,
+     "4": 5.00779837003102,
+     "5": 2.135778225743144
+    },
+    "seeds_above_threshold": []
+   },
+   "bed_temperature_celsius/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 5.2459930907002175,
+     "2": 3.5994072149146,
+     "3": 3.0715100892576506,
+     "4": 5.004252797072459,
+     "5": 3.416184246913249
+    },
+    "seeds_above_threshold": []
+   },
+   "bed_temperature_celsius/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 2.426103440965074,
+     "2": 1.9980373838659766,
+     "3": 1.527487093474714,
+     "4": 1.758957584786854,
+     "5": 1.8018780847361744
+    },
+    "seeds_above_threshold": []
+   }
+  },
+  "mamba": {
+   "energy_target/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 4.210940825498278,
+     "2": 3.617783188111332,
+     "3": 3.6785098061377335,
+     "4": 4.117322043878307,
+     "5": 3.743997004936834
+    },
+    "seeds_above_threshold": []
+   },
+   "energy_target/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 2.3559215911400027,
+     "2": 1.9089859395333102,
+     "3": 2.3013690306643926,
+     "4": 2.1798872840645442,
+     "5": 2.3222732150879866
+    },
+    "seeds_above_threshold": []
+   },
+   "product_moisture_kg_per_kg/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 13.53885467927763,
+     "2": 8.77698466742569,
+     "3": 7.409896523163001,
+     "4": 9.87882764303228,
+     "5": 15.30460720788225
+    },
+    "seeds_above_threshold": [
+     1,
+     5
+    ]
+   },
+   "product_moisture_kg_per_kg/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 8.98857717179878,
+     "2": 10.097989363952156,
+     "3": 8.077250507486028,
+     "4": 9.496118810305845,
+     "5": 11.78637015210285
+    },
+    "seeds_above_threshold": [
+     2,
+     5
+    ]
+   },
+   "bed_temperature_celsius/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 3.6019457057424025,
+     "2": 4.159347366476017,
+     "3": 2.851159770511321,
+     "4": 3.4287340186161046,
+     "5": 3.6637057359473886
+    },
+    "seeds_above_threshold": []
+   },
+   "bed_temperature_celsius/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 2.564790533258777,
+     "2": 1.9553205438140988,
+     "3": 2.458447467408728,
+     "4": 1.9801399719031043,
+     "5": 2.5482832093830665
+    },
+    "seeds_above_threshold": []
+   }
+  },
+  "mlstm_cm": {
+   "energy_target/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 3.4931092269293313,
+     "2": 35.904784650218474,
+     "3": 20.11260615760577,
+     "4": 39.3636231407443,
+     "5": 31.364610595735186
+    },
+    "seeds_above_threshold": [
+     2,
+     3,
+     4,
+     5
+    ]
+   },
+   "energy_target/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 2.626465665695292,
+     "2": 28.741468227084635,
+     "3": 11.534011834419978,
+     "4": 15.062245098537426,
+     "5": 19.381022146623355
+    },
+    "seeds_above_threshold": [
+     2,
+     3,
+     4,
+     5
+    ]
+   },
+   "product_moisture_kg_per_kg/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 5.153699015487425,
+     "2": 1.635113037074641,
+     "3": 2.26007144986462,
+     "4": 2.4142826131335253,
+     "5": 8.041624510334136
+    },
+    "seeds_above_threshold": []
+   },
+   "product_moisture_kg_per_kg/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 2.8316615054132823,
+     "2": 1.260964106139449,
+     "3": 1.551809473083612,
+     "4": 2.277857965689027,
+     "5": 6.07109309530715
+    },
+    "seeds_above_threshold": []
+   },
+   "bed_temperature_celsius/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.8985081711274139,
+     "2": 10.801068495939768,
+     "3": 1.399413057074077,
+     "4": 5.963842279086792,
+     "5": 11.781830363784726
+    },
+    "seeds_above_threshold": [
+     2,
+     5
+    ]
+   },
+   "bed_temperature_celsius/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.44796742271368,
+     "2": 4.462202078420778,
+     "3": 1.1329018357056624,
+     "4": 2.3668167103066233,
+     "5": 8.31224097377648
+    },
+    "seeds_above_threshold": []
+   }
+  },
+  "slstm_cm": {
+   "energy_target/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.1705560183897334,
+     "2": 1.1154053806892856,
+     "3": 1.0376917478762029,
+     "4": 1.185197621414367,
+     "5": 1.1605310338823445
+    },
+    "seeds_above_threshold": []
+   },
+   "energy_target/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 0.9623742357003015,
+     "2": 1.0469998981230904,
+     "3": 1.0219901050813363,
+     "4": 1.0524029483661073,
+     "5": 1.1173581862808233
+    },
+    "seeds_above_threshold": []
+   },
+   "product_moisture_kg_per_kg/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 3.7427983522388764,
+     "2": 1.7690235209641927,
+     "3": 1.501584378665239,
+     "4": 3.2640112903106493,
+     "5": 4.802300824836106
+    },
+    "seeds_above_threshold": []
+   },
+   "product_moisture_kg_per_kg/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 2.6733582694851465,
+     "2": 1.412515070483298,
+     "3": 2.306770722901384,
+     "4": 2.586398153008546,
+     "5": 4.732712385969589
+    },
+    "seeds_above_threshold": []
+   },
+   "bed_temperature_celsius/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.0800455930535553,
+     "2": 1.1011741793830288,
+     "3": 1.0325049435999902,
+     "4": 1.2188566470775901,
+     "5": 1.1985430974209457
+    },
+    "seeds_above_threshold": []
+   },
+   "bed_temperature_celsius/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.0431626267115062,
+     "2": 1.1392924726875828,
+     "3": 0.9175561333892653,
+     "4": 1.0536258281646413,
+     "5": 1.001351962557378
+    },
+    "seeds_above_threshold": []
+   }
+  },
+  "slstm_l1_cm": {
+   "energy_target/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.1047081905523835,
+     "2": 1.0519957786303709,
+     "3": 1.0136110916879966,
+     "4": 1.1476553776439748,
+     "5": 1.111225225477118
+    },
+    "seeds_above_threshold": []
+   },
+   "energy_target/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.0118163171554182,
+     "2": 1.0376577545721977,
+     "3": 1.0124821437261227,
+     "4": 1.0187334855652415,
+     "5": 0.9861820064922976
+    },
+    "seeds_above_threshold": []
+   },
+   "product_moisture_kg_per_kg/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 3.6901669833335213,
+     "2": 1.6936410275960525,
+     "3": 2.3005582647208813,
+     "4": 3.0551810587533996,
+     "5": 4.965161536220111
+    },
+    "seeds_above_threshold": []
+   },
+   "product_moisture_kg_per_kg/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 2.5245086286578515,
+     "2": 2.0040906347565612,
+     "3": 2.0352364373296905,
+     "4": 2.2055425833023947,
+     "5": 3.9687330728328245
+    },
+    "seeds_above_threshold": []
+   },
+   "bed_temperature_celsius/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.0481418902219868,
+     "2": 1.0939444385278083,
+     "3": 1.0438877640769673,
+     "4": 1.1585264661707297,
+     "5": 1.245925323382917
+    },
+    "seeds_above_threshold": []
+   },
+   "bed_temperature_celsius/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 0.9969580069313669,
+     "2": 1.0495514805876383,
+     "3": 1.1010356537411943,
+     "4": 1.019331661962058,
+     "5": 1.0446552221613843
+    },
+    "seeds_above_threshold": []
+   }
+  },
+  "mixed_cm": {
+   "energy_target/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.055704904033832,
+     "2": 33.37060559619483,
+     "3": 0.997066561896647,
+     "4": 1.1249571723973844,
+     "5": 1.114406110219759
+    },
+    "seeds_above_threshold": [
+     2
+    ]
+   },
+   "energy_target/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 0.9460241075516909,
+     "2": 26.791303186745562,
+     "3": 0.9699466466664862,
+     "4": 1.0190091405941302,
+     "5": 1.00168467316037
+    },
+    "seeds_above_threshold": [
+     2
+    ]
+   },
+   "product_moisture_kg_per_kg/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 4.547134988839932,
+     "2": 1.5616972301468877,
+     "3": 0.9629536870457849,
+     "4": 1.8860826972966198,
+     "5": 2.7338602825282243
+    },
+    "seeds_above_threshold": []
+   },
+   "product_moisture_kg_per_kg/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 3.2916790388889727,
+     "2": 1.2108057676008315,
+     "3": 1.2784448581218242,
+     "4": 1.5835019809004063,
+     "5": 1.5960403526118654
+    },
+    "seeds_above_threshold": []
+   },
+   "bed_temperature_celsius/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 0.9861683314757518,
+     "2": 1.1291284797275412,
+     "3": 0.9775427771891692,
+     "4": 10.755117809531589,
+     "5": 1.0818457132062433
+    },
+    "seeds_above_threshold": [
+     4
+    ]
+   },
+   "bed_temperature_celsius/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 0.9735382598761887,
+     "2": 1.0001597345864017,
+     "3": 0.9890482756416796,
+     "4": 4.147395876640621,
+     "5": 0.9287019953378908
+    },
+    "seeds_above_threshold": []
+   }
+  },
+  "mamba_cm": {
+   "energy_target/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 3.729976344931857,
+     "2": 4.209461041377957,
+     "3": 5.060016740183192,
+     "4": 4.583698518338568,
+     "5": 4.573929146917925
+    },
+    "seeds_above_threshold": []
+   },
+   "energy_target/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 2.560363936092895,
+     "2": 2.862868948036022,
+     "3": 3.6122223660411343,
+     "4": 1.9786251719801768,
+     "5": 3.3910674400717014
+    },
+    "seeds_above_threshold": []
+   },
+   "product_moisture_kg_per_kg/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 11.616726118020472,
+     "2": 9.225200121131993,
+     "3": 6.992609633748048,
+     "4": 11.170399400847424,
+     "5": 11.327437900417337
+    },
+    "seeds_above_threshold": [
+     1,
+     4,
+     5
+    ]
+   },
+   "product_moisture_kg_per_kg/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 11.889447204821778,
+     "2": 10.295630850542116,
+     "3": 6.061159924567434,
+     "4": 11.452038658277566,
+     "5": 8.973651559608225
+    },
+    "seeds_above_threshold": [
+     1,
+     2,
+     4
+    ]
+   },
+   "bed_temperature_celsius/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 3.1880978186105797,
+     "2": 3.174868733061733,
+     "3": 3.287443541182622,
+     "4": 2.8851801668408643,
+     "5": 2.927197778697214
+    },
+    "seeds_above_threshold": []
+   },
+   "bed_temperature_celsius/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.8222516605814403,
+     "2": 1.830684570698132,
+     "3": 1.9820245081159504,
+     "4": 1.5278891822070477,
+     "5": 1.6516289247972415
+    },
+    "seeds_above_threshold": []
+   }
+  },
+  "lstm_small": {
+   "energy_target/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.0409121649883581,
+     "2": 1.096241254862573,
+     "3": 1.0671256328931253,
+     "4": 1.194509782421389,
+     "5": 1.0548837640922182
+    },
+    "seeds_above_threshold": []
+   },
+   "energy_target/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.0554309205753158,
+     "2": 1.0870498443359322,
+     "3": 0.9882745080883557,
+     "4": 1.0248827105439418,
+     "5": 0.9820801949839443
+    },
+    "seeds_above_threshold": []
+   },
+   "product_moisture_kg_per_kg/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.3318060139363004,
+     "2": 0.8579684239936216,
+     "3": 0.8520545093695218,
+     "4": 1.092129069849484,
+     "5": 1.8852040578716625
+    },
+    "seeds_above_threshold": []
+   },
+   "product_moisture_kg_per_kg/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.049896476067825,
+     "2": 0.8996699770088816,
+     "3": 1.0946575010547952,
+     "4": 0.9913519313940075,
+     "5": 1.6411009860586225
+    },
+    "seeds_above_threshold": []
+   },
+   "bed_temperature_celsius/excited": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.1014498269167456,
+     "2": 1.0846193953012415,
+     "3": 0.9984840490478423,
+     "4": 1.074411520480566,
+     "5": 1.0579687682518375
+    },
+    "seeds_above_threshold": []
+   },
+   "bed_temperature_celsius/constant_holdout": {
+    "ratio_to_lstm_median_by_seed": {
+     "1": 1.0669834359316341,
+     "2": 0.9379678166871478,
+     "3": 0.9458286919416049,
+     "4": 0.9598860126676432,
+     "5": 0.9446275210851618
+    },
+    "seeds_above_threshold": []
+   }
+  }
+ }
+}
