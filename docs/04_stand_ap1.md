@@ -9120,3 +9120,116 @@ artifact.
 *Test suite (with summary line):* **529 passed, 1 skipped in 786.91 s (0:13:06)**, run with
 `-o addopts="--strict-markers"`. The earlier statement that the quiet configuration prints no summary
 line refers to the default `-q`.
+
+### 68. Lagrangian treatment of the moisture constraint on the bandit -- gate not met: the multiplier was never active (lambda = 0 in all 125 cell series), the margin stays at the penalty arm's level
+
+**a) Purpose and scope.** Befund 62 (GA1/FA3) left an open question: the penalty agent keeps a median
+distance of 0.1395 kg/kg to the moisture limit and ends with a negative pooled closed-regret fraction;
+Befund 64/65 give a margin of m = 0.00596 kg/kg as the realistic soft-sensor margin. Stage S0 asks
+whether a Lagrangian treatment of the moisture constraint lets the agent sit near the tightened limit
+`limit - m` instead of far below it. One-step bandit of Befund 62, SAC with stable-baselines3 default
+hyperparameters, 10 000 steps, seeds 0-4, checkpoints 1000/2500/5000/10000 as FA2. **Test set (named):**
+the 25 Befund 52 grid points (ambient temperature x relative humidity), disjoint from the continuous
+training draws; deterministic policy at step 10 000.
+
+**b) Preparation (S0.1, S0.2), commits `7939a7d`, `ddaea5e`.** `check_constraints`, the penalty weight, the
+solver-failure value and the tolerances moved from `scripts/study_operating_point_regret.py` to
+`src/twinlink_ml/simulation/operating_point.py`; `rl/env.py` no longer loads a script. New optional field
+`MaterialConfig.product_moisture_limit_kg_per_kg` (default `None` = critical moisture as before); it enters
+the fingerprint only when set, the kinetics keep `critical_moisture_kg_per_kg`. All three `conf/process`
+configs in three variants keep their fingerprints (compared before/after by hand, including all section
+fingerprints, and fixed as a regression test). VA2 passes bit for bit. Full suite, not quiet:
+529 passed, 1 skipped in 830.45 s after S0.1; 546 passed, 1 skipped in 828.60 s after S0.2; 557 passed,
+1 skipped in 801.98 s before the runs (the 529 also confirms the figure given in the formatting commit
+`e4dc0f7`). *Deviation reported:* two callers used `env._regret_module` (one test,
+`probe_bandit_env_ga1_safety_margin.py`) and were adapted.
+
+**c) Design (code `5eccdef`, gate additions `6b21ff4`, both before any run).** Signed constraint
+`g = (moisture - (limit - m)) / limit`; reward `-(E + P v_rest + lambda_b g)` with `v_rest` the Befund 52
+normalised violation without its moisture part (bed temperature, fluidisation window, solver validity keep
+the penalty, as in the penalty arm); one multiplier per context cell (5 x 5 equal-width cells of the two
+disturbance ranges; a global multiplier would enforce the constraint only in expectation), projected dual
+ascent every 250 steps, replay buffer relabelled after every update (the bandit has no bootstrapping),
+solver failure = worst Lagrangian cost of a solvable action on the 13 x 9 reference grid (rule of
+Befund 62 FA1), not the 1e6 sentinel. Settings confirmed before training: `m = 0.005961819615175404` kg/kg
+(median half-width of the calibrated ensemble band, excited-trained arm, Befund 65 FA2, EV3 settled
+binding, read from `verify_fa2_spread_calibration.json`; the alternative "offset + 3 spread" 0.0056 differs
+by 0.0004), `lambda_0 = 0.5` kW (order of magnitude of lambda* = 0.4-0.5 kW, a finite-difference estimate
+from the cost of Befund 64), `eta = 0.2` kW, 5 x 5 cells. A global-lambda arm (1 x 1, otherwise identical)
+was run as a sensitivity without gate; the penalty arm (FA2 configuration, solver-failure value 155.579 kW)
+was rerun for seeds 0-4 so that both arms share seeds and checkpoints. A 200-step dry run of the callback
+was done in a scratch directory to debug the code; nothing from it is used.
+
+**d) Gate, fixed in `scripts/analyze_s03_gate.py` before the runs.** G1: feasibility against the true
+limit, median >= 0.96 and no seed below 0.92. G2: pooled closed-regret fraction (feasible points, raw
+energy) with median > 0 and above `t(nu_eff, 0.975) sigma_hat / sqrt(n)` (SX1, Befund 67: `nu_eff = 3.7623`,
+`sigma_hat = R / d2(5)`). G3: median over seeds of the distance to the true limit at the 17 contexts where
+the Befund 52 oracle binds the moisture limit <= 0.02 kg/kg, and the difference to the penalty arm above the
+SX1 two-sample threshold. The 0.02 kg/kg is a setting by the author (at margin 0.02 about 78 % of the
+control benefit remains, Befund 64), confirmed before the runs.
+
+**e) Reproduction check (stop condition, answered first).** The rerun penalty arm reproduces the committed
+FA2 values bit for bit: pooled closed-regret fraction at step 10 000, seeds 0/1/2, difference 0.0 in all
+three (-1.9985, -2.7973, -3.0124); distance to the limit 0.12987 / 0.14541 / 0.13955 kg/kg against the
+committed (rounded) 0.1299 / 0.1454 / 0.1395. The move of S0.1 did not change behaviour. Artifact
+`s03_penalty_reproduction.json`.
+
+**f) Result: the gate is not met (G1 yes, G2 no, G3 no).** Artifact `s03_gate.json` (`git/dirty=False`, commit
+`d455086`; run records at commit `6b21ff4`, all 15 runs `git/dirty=False`). Step 10 000, five seeds, per-seed
+values in the artifact:
+
+| | Lagrange per cell | Penalty (FA2 configuration) | Lagrange global (no gate) |
+|---|---|---|---|
+| feasibility against the true limit | 1.0 in all seeds | 1.0 in all seeds | 1.0 in all seeds |
+| pooled closed-regret fraction, median (min to max) | -1.651 (-3.191 to -0.984) | -2.136 (-3.012 to -1.952) | -1.538 (-3.201 to -0.986) |
+| distance to the true limit at the 17 binding contexts [kg/kg], median (min to max) | 0.1138 (0.0993 to 0.1340) | 0.1299 (0.1230 to 0.1454) | 0.1135 (0.0999 to 0.1306) |
+| the same in units of m | 19.1 (16.7 to 22.5) | 21.8 (20.6 to 24.4) | 19.05 |
+
+G1 holds (median 1.0, minimum 1.0). G2 fails: the median is negative, i.e. worse than the fixed operating
+point (threshold of the one-sample test 1.208; the spread of the five seeds is as large as the median). G3
+fails twice: 0.1138 kg/kg is far above 0.02, and the difference to the penalty arm (0.0161 kg/kg) is below
+its threshold (0.0191 kg/kg, Welch `nu = 6.43`, `t = 2.41`), i.e. not resolved. The ranking against the
+penalty arm in the pooled fraction is not resolved either (difference +0.485, threshold 1.183). The
+distance to the limit is about 19 times m, not close to m.
+
+**g) Lambda history per cell: it neither converges, oscillates nor runs away -- it is zero.** With the
+categories fixed before the runs (last 10 of 40 updates: converged / oscillating / runaway / inactive),
+all 25 cells of all 5 seeds are *inactive* (lambda = 0 over the whole window and at the end); the global
+arm likewise (5 of 5). The checkpoint log shows a mean lambda of 0.000 already at step 1000, i.e. dual
+ascent drove lambda from 0.5 kW to 0 within the first updates (slack: typical early actions have
+`g` about -0.85) and never raised it again. Number of training steps with `g > 0` (moisture above the
+tightened limit) out of 10 000: 10 / 12 / 8 / 11 / 12 (per cell) and 10 / 12 / 8 / 10 / 12 (global), with a
+95th percentile of the visited moisture of 0.08-0.11 kg/kg against the limit 0.2 kg/kg. The critic loss
+falls from 367.4 to 2.69 (seed 0, median of the first and last 100 steps), 27 solver-failure steps in seed 0.
+Artifacts `s03_gate.json` (lambda per cell, trace summary), `s03_lambda_inactive_diagnosis.json`.
+
+**h) Diagnosis (stated as evidence, not as a tested remedy).** On the 13 x 9 reference grid at the nominal
+disturbance, 3 of 117 points have `g > 0` (2 further points are solver failures); **all three have a
+solver solution that is infeasible** (`solver_feasible` false), which adds the fixed +1.0 to the normalised
+violation and therefore 50 kW to the `v_rest` term. That term was deliberately kept as in the penalty arm
+(design decision 2). So the region above the tightened limit is almost entirely behind the same large
+penalty step as in the penalty arm; the Lagrange term never received a positive signal, and the agent,
+like the penalty agent, stays far below the limit. The two arms differ only in the moisture term, and the
+result is accordingly close (see f). Not tested: whether moving the solver-feasibility term out of `v_rest`
+(into the multiplier-handled constraint or a bounded term) would make lambda active and let the agent
+approach the limit; the reference grid covers the nominal disturbance only; the per-context picture of
+the cliff was not mapped.
+
+**i) Caveats.** Five seeds, `sigma_hat` from the range with `nu_eff = 3.76`; the seed spread of the pooled
+fraction (-3.2 to -1.0) is large. m is the median half-width of the band, so about half of the window steps
+have a wider band; FA2 gives no per-operating-point band. The gate and its constants were not changed after
+the runs. *Deviations reported:* (1) the first call of `analyze_s03_gate.py` failed on the artifact helper
+(`provenance` key instead of `_provenance`); fixed in `b73547c` after the runs, plumbing only, no gate
+constant or evaluation logic changed. (2) Two commits of the diagnosis script (`c7d7ce6`, `f3a32e4`) carry the
+message "lambda-inactive diagnosis artifact" although they contain only the script (a failed lint step did
+not stop the chained commit); history was not rewritten; the artifact is in `2ff8c42`. (3) The first start of
+the diagnosis script was refused by the clean-tree guard and run after the commit.
+
+**j) Open.** The penalty-dominance question of Befund 62 (YA2) is not closed by this stage: the constraint
+handling did not become the binding difference, because the cliff sits in the term that was left
+unchanged. No setting was changed after the runs; any rerun with other settings or another split of the
+penalty terms needs a decision.
+
+Artifacts (`artifacts/runs/`): `s03_penalty_reproduction`, `s03_gate`, `s03_lambda_inactive_diagnosis`, and
+the run records `rl_bandit_lagrange_s03_*`, `rl_bandit_lagrange_s03_global_*`,
+`rl_bandit_sac_learning_curve_s03_penalty_*` (checkpoints under `artifacts/checkpoints/`, git-ignored).
