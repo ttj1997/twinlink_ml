@@ -286,7 +286,7 @@ def main() -> int:
         path = write_artifact(
             arguments.output_name,
             {
-                "provenance": provenance(),
+                "_provenance": provenance(),
                 "reproduction_of_committed_fa2": reproduction,
                 "all_reproduced": reproduced,
                 "tolerances": {
@@ -330,7 +330,7 @@ def main() -> int:
         _final_record(arguments.lagrange_prefix, 0)["params"]["lagrange"]["margin_kg_per_kg"]
     )
     payload: dict[str, Any] = {
-        "provenance": provenance(),
+        "_provenance": provenance(),
         "test_set": "25 Befund-52 grid points (ambient temperature x relative humidity)",
         "evaluation_step": EVALUATION_STEP,
         "seeds": list(SEEDS),
