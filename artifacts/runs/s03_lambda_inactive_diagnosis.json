@@ -1,0 +1,196 @@
+{
+ "provenance": {
+  "git/commit": "65b3eba01188eab96cfd96bdd3f25d2a3947cfda",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "trace_counts": {
+  "rl_bandit_lagrange_s03": {
+   "0": {
+    "n_steps": 10000,
+    "n_solve_failed": 27,
+    "n_steps_g_tilde_positive": 10,
+    "g_tilde_max": 1.717396524759321,
+    "moisture_p95_kg_per_kg": 0.10180757101234233,
+    "moisture_max_kg_per_kg": 0.5375174853366889
+   },
+   "1": {
+    "n_steps": 10000,
+    "n_solve_failed": 21,
+    "n_steps_g_tilde_positive": 12,
+    "g_tilde_max": 2.6186352029050495,
+    "moisture_p95_kg_per_kg": 0.08311631250606379,
+    "moisture_max_kg_per_kg": 0.7177652209658345
+   },
+   "2": {
+    "n_steps": 10000,
+    "n_solve_failed": 21,
+    "n_steps_g_tilde_positive": 8,
+    "g_tilde_max": 1.2511008225905342,
+    "moisture_p95_kg_per_kg": 0.10436806302088104,
+    "moisture_max_kg_per_kg": 0.4442583449029315
+   },
+   "3": {
+    "n_steps": 10000,
+    "n_solve_failed": 19,
+    "n_steps_g_tilde_positive": 11,
+    "g_tilde_max": 1.938972417851756,
+    "moisture_p95_kg_per_kg": 0.08973310164601174,
+    "moisture_max_kg_per_kg": 0.5818326639551759
+   },
+   "4": {
+    "n_steps": 10000,
+    "n_solve_failed": 32,
+    "n_steps_g_tilde_positive": 12,
+    "g_tilde_max": 2.207109998380173,
+    "moisture_p95_kg_per_kg": 0.09978996841510102,
+    "moisture_max_kg_per_kg": 0.6354601800608592
+   }
+  },
+  "rl_bandit_lagrange_s03_global": {
+   "0": {
+    "n_steps": 10000,
+    "n_solve_failed": 27,
+    "n_steps_g_tilde_positive": 10,
+    "g_tilde_max": 1.717396524759321,
+    "moisture_p95_kg_per_kg": 0.09934306251445726,
+    "moisture_max_kg_per_kg": 0.5375174853366889
+   },
+   "1": {
+    "n_steps": 10000,
+    "n_solve_failed": 22,
+    "n_steps_g_tilde_positive": 12,
+    "g_tilde_max": 2.6186352029050495,
+    "moisture_p95_kg_per_kg": 0.08355147450681666,
+    "moisture_max_kg_per_kg": 0.7177652209658345
+   },
+   "2": {
+    "n_steps": 10000,
+    "n_solve_failed": 21,
+    "n_steps_g_tilde_positive": 8,
+    "g_tilde_max": 1.2511008225905342,
+    "moisture_p95_kg_per_kg": 0.11070230126007925,
+    "moisture_max_kg_per_kg": 0.4442583449029315
+   },
+   "3": {
+    "n_steps": 10000,
+    "n_solve_failed": 19,
+    "n_steps_g_tilde_positive": 10,
+    "g_tilde_max": 1.9486604647777346,
+    "moisture_p95_kg_per_kg": 0.08338668741722861,
+    "moisture_max_kg_per_kg": 0.5837702733403716
+   },
+   "4": {
+    "n_steps": 10000,
+    "n_solve_failed": 33,
+    "n_steps_g_tilde_positive": 12,
+    "g_tilde_max": 2.1743155825747236,
+    "moisture_p95_kg_per_kg": 0.10491534484741287,
+    "moisture_max_kg_per_kg": 0.6289012968997694
+   }
+  }
+ },
+ "reference_grid": {
+  "disturbance": "nominal (ambient temperature and humidity at their nominal values)",
+  "n_points": 117,
+  "n_solve_failed": 2,
+  "n_g_tilde_positive": 3,
+  "n_g_tilde_positive_with_solver_infeasible": 3,
+  "n_g_tilde_positive_with_rest_penalty": 3,
+  "points_g_tilde_positive": [
+   {
+    "t_in": 65.0,
+    "u_gas": 0.8,
+    "solve_failed": false,
+    "energy_kw": 0.8096639188503276,
+    "rest_penalty_kw": 50.0,
+    "g_tilde": 2.125195030171397,
+    "moisture_kg_per_kg": 0.619077186419104,
+    "solver_feasible": false
+   },
+   {
+    "t_in": 70.0,
+    "u_gas": 0.8,
+    "solve_failed": false,
+    "energy_kw": 0.8853125844767946,
+    "rest_penalty_kw": 50.0,
+    "g_tilde": 1.2314857384388418,
+    "moisture_kg_per_kg": 0.440335328072593,
+    "solver_feasible": false
+   },
+   {
+    "t_in": 75.0,
+    "u_gas": 0.8,
+    "solve_failed": false,
+    "energy_kw": 0.9603582881337644,
+    "rest_penalty_kw": 50.0,
+    "g_tilde": 0.3218079015793304,
+    "moisture_kg_per_kg": 0.2583997607006907,
+    "solver_feasible": false
+   }
+  ],
+  "closest_to_tightened_limit": [
+   {
+    "t_in": 65.0,
+    "u_gas": 1.0125,
+    "solve_failed": false,
+    "energy_kw": 1.0094702628807704,
+    "rest_penalty_kw": 0.0,
+    "g_tilde": -0.020505175755521354,
+    "moisture_kg_per_kg": 0.18993714523372035,
+    "solver_feasible": true
+   },
+   {
+    "t_in": 80.0,
+    "u_gas": 0.8,
+    "solve_failed": false,
+    "energy_kw": 1.033066700622134,
+    "rest_penalty_kw": 0.0,
+    "g_tilde": -0.08270106029314633,
+    "moisture_kg_per_kg": 0.17749796832619535,
+    "solver_feasible": true
+   },
+   {
+    "t_in": 60.0,
+    "u_gas": 1.225,
+    "solve_failed": false,
+    "energy_kw": 1.0936995345656364,
+    "rest_penalty_kw": 0.0,
+    "g_tilde": -0.16299941706045928,
+    "moisture_kg_per_kg": 0.16143829697273276,
+    "solver_feasible": true
+   },
+   {
+    "t_in": 70.0,
+    "u_gas": 1.0125,
+    "solve_failed": false,
+    "energy_kw": 1.1022868721150911,
+    "rest_penalty_kw": 0.0,
+    "g_tilde": -0.19119222662091512,
+    "moisture_kg_per_kg": 0.1557997350606416,
+    "solver_feasible": true
+   },
+   {
+    "t_in": 85.0,
+    "u_gas": 0.8,
+    "solve_failed": false,
+    "energy_kw": 1.1035087045295646,
+    "rest_penalty_kw": 0.0,
+    "g_tilde": -0.22453345938398372,
+    "moisture_kg_per_kg": 0.14913148850802788,
+    "solver_feasible": true
+   },
+   {
+    "t_in": 65.0,
+    "u_gas": 1.225,
+    "solve_failed": false,
+    "energy_kw": 1.2066385133008848,
+    "rest_penalty_kw": 0.0,
+    "g_tilde": -0.31742141987092326,
+    "moisture_kg_per_kg": 0.13055389641063997,
+    "solver_feasible": true
+   }
+  ]
+ }
+}
