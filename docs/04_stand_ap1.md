@@ -8994,3 +8994,94 @@ step) follows from the construction and stands. (2) The statement that the earli
 attempt (hidden size about 317, Befund 29) "cost more than 12 h per training point" **because of** this
 growth is **not measured**: the only trace is a sentence in the `composite.py` docstring; neither the
 duration nor its cause is documented by a run in the repository.
+
+**SX3 -- result (2026-10-01).** Data: 60 new records (5 seeds x 6 configurations x 2 test sets), one
+`git/commit` (`d3ef3a0`), `git/dirty = False`, fingerprint `bddca37f716f5cfc`, run time 668 and 710 min
+(ten processes in parallel; the pre-registered estimate of 5-7 h was too low by a factor of about
+two). Artifacts: `sx3_capacity_matched_a/b.jsonl` (raw), `sx3_capacity_matched.json` (pre-registered
+analysis), `sx3_diagnostics.json`, `sx3_timing.json`. All statements below: **under the fixed protocol
+without tuning** (hyperparameters of the earlier, smaller models, `max_epochs = 200`), `n_train = 64`,
+5 seeds, `rmse_run_median_physical`, `h = 36`, reference LSTM 57 027 parameters, t thresholds of the SX1
+addendum.
+
+*Medians (h = 36, ratio to the LSTM median in brackets).*
+
+| Channel, test set | LSTM | xLSTM 8.6k | mLSTM 50k | sLSTM 2L 48k | sLSTM 1L 51k | mixed 49k | Mamba 8.1k | Mamba 53k | LSTM 8.5k |
+|---|---|---|---|---|---|---|---|---|---|
+| `energy_target` [kW], excited | 0.0143 | 0.428 (30) | 0.447 (31) | 0.0166 (1.2) | 0.0158 (1.1) | 0.0159 (1.1) | 0.0534 (3.7) | 0.0652 (4.6) | 0.0152 (1.1) |
+| `energy_target`, constant | 0.0143 | 0.306 (21) | 0.215 (15) | 0.0149 (1.0) | 0.0145 (1.0) | 0.0143 (1.0) | 0.0329 (2.3) | 0.0409 (2.9) | 0.0146 (1.0) |
+| `product_moisture` [kg/kg], excited | 5.11e-4 | 12.3e-4 (2.4) | 12.3e-4 (2.4) | 16.7e-4 (3.3) | 15.6e-4 (3.1) | 9.6e-4 (1.9) | 50.5e-4 (9.9) | 57.1e-4 (11) | 5.6e-4 (1.1) |
+| `product_moisture`, constant | 5.43e-4 | 11.6e-4 (2.1) | 12.4e-4 (2.3) | 14.0e-4 (2.6) | 12.0e-4 (2.2) | 8.6e-4 (1.6) | 51.5e-4 (9.5) | 55.9e-4 (10) | 5.7e-4 (1.0) |
+| `bed_temperature` [K], excited | 0.429 | 1.54 (3.6) | 2.56 (6.0) | 0.472 (1.1) | 0.469 (1.1) | 0.464 (1.1) | 1.54 (3.6) | 1.36 (3.2) | 0.461 (1.1) |
+| `bed_temperature`, constant | 0.449 | 0.809 (1.8) | 1.06 (2.4) | 0.468 (1.0) | 0.469 (1.0) | 0.444 (1.0) | 1.10 (2.5) | 0.818 (1.8) | 0.425 (0.9) |
+
+*Pre-registered readings (cells resolvably worse than LSTM, of 6). The rule counts unresolved cells as
+"not resolvably worse", which favours reading A when the seed spread inflates the threshold -- hence
+the medians above.*
+- **mLSTM only (2 x 58): 1 of 6, formal reading A' ("closes most of the gap"), substantively not so.**
+  The medians are 31 and 15 times the LSTM's on `energy_target` and 6 times on bed temperature
+  (excited); the other cells stay unresolved only because the seed spread (see divergence) raises the
+  threshold (14-20 in ratio units on energy).
+- **sLSTM only, 2 layers and 1 layer: 3 of 6 each ("mixed").** On `energy_target` and bed temperature
+  within 0-16 % of the LSTM median, no divergence; on moisture 2.2-3.3 times worse.
+- **Mixed mLSTM + sLSTM: 0 of 6, formal reading A ("reaches LSTM level").** Medians 1.0-1.1 on energy
+  and bed temperature, 1.6-1.9 on moisture; but one seed diverged on `energy_target` (33 and 27 times)
+  and one on bed temperature (excited); the zero comes from the inflated thresholds (14-18 on energy).
+- **Mamba 53k: 6 of 6, reading C ("the statement holds").** Not better than Mamba 8k (3-5 times worse
+  on energy, 10 times on moisture, 2-3 times on bed temperature). **A six-fold larger Mamba does not
+  close the gap under this protocol.**
+- **Control LSTM at 8 517 parameters: 1 of 6 against the 57k LSTM** (median 6 % worse), and resolvably
+  better than the small xLSTM in 4 of 6 and than the small Mamba in 6 of 6 cells. The pre-registered
+  size-effect criterion (at least 4 cells worse than the large LSTM, none better than the small
+  xLSTM/Mamba) is **not met**: a small LSTM is not a poor model here, so the size of xLSTM/Mamba alone
+  does not explain their deficit.
+- **Reading B (sLSTM resolvably better than mLSTM in at least 4 cells, worse in none): not met** (1
+  cell resolvably better, 0 worse; same for sLSTM 1L and mixed). Descriptively the sLSTM variants do not
+  diverge on energy where the mLSTM does; the threshold is inflated by exactly this divergence.
+
+*Summary, in the pre-registered terms.* No variant shows the pattern "capacity effect" cleanly. The
+deficit splits by component: (1) Mamba -- not a size effect; (2) the mLSTM layer -- unstable on
+`energy_target` also at six times the size (below); (3) the variants with recurrent memory mixing (sLSTM,
+mixed) get close to the LSTM on energy and bed temperature but stay 1.6-3.3 times behind on moisture.
+"All stay behind" holds under the fixed protocol without tuning for Mamba and the mLSTM-only variant, and
+for moisture in all variants; it does not hold for sLSTM/mixed on energy and bed temperature. These are
+statements about this protocol, not about the architectures in general.
+
+*Divergence (per seed, ratio to the LSTM median above 10; no non-finite value anywhere).* The documented
+divergent optimisation of Befund 58 is on `energy_target`, not on moisture (on moisture the spread is
+large, up to 10.7 times for the xLSTM, but not of that kind). On `energy_target` (excited and constant
+holdout alike): xLSTM 8.6k seeds 1, 2, 3, 5; **mLSTM 50k seeds 2, 3, 4, 5** (seed 1: 3.5 times); mixed
+seed 2; sLSTM (both) none; Mamba none. Bed temperature (excited): mLSTM seeds 2, 5; mixed seed 4.
+Moisture: xLSTM seed 4 (excited), Mamba 8k seeds 1, 5 (excited) and 2, 5 (constant), Mamba 53k seeds 1,
+4, 5 (excited) and 1, 2, 4 (constant), which is a uniformly large Mamba deficit rather than a
+divergence (all five seeds are 6-12 times the LSTM). **The instability returns with the
+capacity-matched mLSTM and also, once in five seeds, in the mixed variant; it does not occur in the
+sLSTM-only variants.**
+
+*Early stopping and epoch cap.* Heads (of 15) that ran to the cap of 200 epochs: LSTM 4, GRU 4, xLSTM 3,
+Mamba 3, **mLSTM 50k 0, sLSTM 2L 11, sLSTM 1L 5, mixed 7**, Mamba 53k 1, small LSTM 11. The diverging
+mLSTM fits stopped early (`energy_target`: 114, 33, 45, 23, 62 epochs for seeds 1-5), in two of five
+with a training-loss ratio of the last ten epochs above 1 (1.78, 1.21: the training loss was rising);
+mixed seed 2 stopped at 23 epochs (ratio 1.22). So the mLSTM failures are not a budget effect: they end
+by patience with a training loss that is not improving or is rising. The sLSTM-only variant is the
+opposite: 11 of 15 heads were at the cap, so its remaining gap to the LSTM (and the small LSTM's) is
+partly a budget statement, not a capacity statement. A learning-rate diagnosis from validation curves
+is **not possible from the stored data**: neither the records nor the checkpoints contain the
+validation curves (only epochs run, gradient steps and the training-loss ratio). A single re-run with
+the history logged would be needed; none was made.
+
+*Cost (TE3a protocol, one thread, idle machine, commit `ec771b6`, warm-up excluded, forward and
+reversed round agree within 2 %).* Inference per window (3 heads) and training time per epoch (3
+heads), ratio to the LSTM (51.0 us; 4.31 s per epoch): small LSTM 26.7 us (0.52), 2.08 s (0.48);
+**sLSTM 1L 360 us (7.1), 11.9 s (2.8); sLSTM 2L 370 us (7.2), 13.7 s (3.2); mixed 919 us (18), 27.9 s
+(6.5); mLSTM 1750 us (34), 56.3 s (13).** The variants closest to LSTM level (mixed by the formal rule;
+sLSTM descriptively) are 7-18 times slower per window and 3-6 times slower per epoch than the LSTM; only
+the small LSTM, within 6 % of the large one at 8.5k parameters, is cheaper than the LSTM.
+
+*Limitations.* One protocol, no tuning: a different learning rate, a longer budget (sLSTM) or a different
+way to reach the parameter band (wider multi-head mLSTM, an initialisation or constraint against the
+instability) could change the picture. The pilot (`n_train = 8`, one seed) was not used. The run-time
+estimate was too low by a factor of two. Full learning curves (SX4) have not been started.
+
+*Test suite.* Complete run before this commit: 13 min 30 s, no failure reported (the quiet configuration
+prints no summary line; progress rows complete up to 100 %).
