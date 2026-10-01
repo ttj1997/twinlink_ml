@@ -1,0 +1,51 @@
+{
+  "grid": {
+    "ambient_relative_humidity": 0.5,
+    "ambient_temperature_celsius": 20.0,
+    "t_in_celsius": [
+      60.0,
+      65.0,
+      70.0,
+      75.0,
+      80.0,
+      85.0,
+      90.0,
+      95.0,
+      100.0,
+      105.0,
+      110.0,
+      115.0,
+      120.0
+    ],
+    "u_gas_m_per_s": [
+      0.8,
+      1.0125,
+      1.225,
+      1.4375,
+      1.65,
+      1.8625,
+      2.075,
+      2.2875,
+      2.5
+    ]
+  },
+  "quality_limit_kg_per_kg": 0.15,
+  "with_penalty": {
+    "at_gas_velocity_m_per_s": 0.8,
+    "at_inlet_temperature_celsius": 65.0,
+    "n_grid_points": 117,
+    "n_solve_failed": 2,
+    "n_solved": 115,
+    "solve_failure_penalty_kw": 207.16872605855167,
+    "worst_solvable_reward_kw": -207.16872605855167
+  },
+  "without_penalty": {
+    "at_gas_velocity_m_per_s": 2.5,
+    "at_inlet_temperature_celsius": 120.0,
+    "n_grid_points": 117,
+    "n_solve_failed": 2,
+    "n_solved": 115,
+    "solve_failure_penalty_kw": 4.500066942725786,
+    "worst_solvable_reward_kw": -4.500066942725786
+  }
+}
