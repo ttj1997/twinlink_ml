@@ -4,23 +4,28 @@ Arms, all in the environment of arm C (quality limit 0.15, Lagrange term, lambda
 0.005961819615175404, 5 x 5 cells, eta 0.2 kW, update every 250 steps), seeds 0-4, 10 000 steps:
 
     C  SAC, stable-baselines3 defaults (S0.6, exists)
-    F  TD3, defaults (deterministic policy; stable-baselines3 TD3 has no action noise by default)
-    G  SAC with a clearly smaller target entropy (value fixed with the user before training)
+    F  TD3, defaults (deterministic policy; stable-baselines3 TD3 has NO action noise by default,
+       so it explores only during the first 100 random steps -- a test WITHOUT exploration after
+       step 100, to be labelled so in the finding)
+    G  SAC with target_entropy = -6 (default -2; confirmed with the user before training)
+    H  TD3 with Gaussian action noise sigma = 0.1 (added after the first S0.8 plan; the readings
+       below were extended BEFORE any S0.8 evaluation, only the F runs were in progress)
 
 Pure evaluation of records and checkpoints at step 10 000 (deterministic policy), on the 25
 Befund 52 grid points with the oracle and fixed operating point of the limit 0.15
 (``s05_limit015_oracle_and_fixed``). Gate G1-G3 per arm as in S0.6 (constants of S0.3), against the
 limit 0.15 and the penalty arm E of S0.6. THE READINGS ARE FIXED HERE before any S0.8 run:
 
-  An arm X in {F, G} QUALIFIES iff
+  An arm X in {F, G, H} QUALIFIES iff
     (i)  it is clearly closer to the limit than C: the median distance to the true limit at the
          binding contexts is smaller than that of C by more than the SX1 two-sample threshold
          (``t(nu_W, 0.975) * sqrt((s_C^2 + s_X^2) / n)``, nu_eff = 3.7623), AND
     (ii) its pooled closed-regret fraction is positive and above the one-sample t threshold (G2).
-  L1  both F and G qualify: the spread of the policy was the cause; RL is viable with a
-      deterministic or narrow policy.
-  L2  exactly one qualifies: report which; it narrows down the mechanism.
-  L3  neither qualifies: the cause lies in the critic or the learning budget, not in the spread.
+  L1  G qualifies AND at least one of F, H qualifies: the spread of the policy was the cause; RL
+      is viable with a deterministic or narrow policy.
+  L2  at least one of F, G, H qualifies but not as in L1: report which; it narrows down the
+      mechanism.
+  L3  none qualifies: the cause lies in the critic or the learning budget, not in the spread.
 
 Also reported (not part of the readings): per arm the lambda history per cell (categories of S0.3),
 the number of active lambda series, the number of training steps with g_tilde > 0, the distance in
@@ -64,6 +69,7 @@ ARMS: dict[str, dict[str, str]] = {
     "C_SAC_default": {"prefix": "rl_bandit_lagrange_s06_l015_lam05", "algorithm": "SAC"},
     "F_TD3_default": {"prefix": "rl_bandit_lagrange_s08_td3", "algorithm": "TD3"},
     "G_SAC_low_entropy": {"prefix": "rl_bandit_lagrange_s08_sac_lowent", "algorithm": "SAC"},
+    "H_TD3_noise": {"prefix": "rl_bandit_lagrange_s08_td3_noise", "algorithm": "TD3"},
 }
 PENALTY_E = "rl_bandit_sac_learning_curve_s06_penalty_l015"
 
@@ -143,7 +149,7 @@ def main() -> int:
 
     dist_c = _col(evaluated["C_SAC_default"], "moisture_margin_binding_median_kg_per_kg")
     qualify: dict[str, Any] = {}
-    for name in ("F_TD3_default", "G_SAC_low_entropy"):
+    for name in ("F_TD3_default", "G_SAC_low_entropy", "H_TD3_noise"):
         dist_x = _col(evaluated[name], "moisture_margin_binding_median_kg_per_kg")
         pooled_x = _col(evaluated[name], "pooled_closed_regret_fraction")
         two = g3.two_sample_threshold(dist_c, dist_x, nu)
@@ -159,12 +165,14 @@ def main() -> int:
             "pooled_positive_and_resolved": bool(positive),
             "qualifies": bool(closer > two["threshold"] and positive),
         }
-    n_qualify = sum(1 for v in qualify.values() if v["qualifies"])
+    q = {k: v["qualifies"] for k, v in qualify.items()}
+    l1 = q["G_SAC_low_entropy"] and (q["F_TD3_default"] or q["H_TD3_noise"])
+    any_q = any(q.values())
     readings = {
-        "L1_both_qualify_spread_was_the_cause": n_qualify == 2,
-        "L2_exactly_one_qualifies": n_qualify == 1,
-        "L2_which": [k for k, v in qualify.items() if v["qualifies"]] if n_qualify == 1 else [],
-        "L3_neither_critic_or_budget": n_qualify == 0,
+        "L1_G_and_a_TD3_arm_qualify_spread_was_the_cause": l1,
+        "L2_some_arm_qualifies_not_L1": any_q and not l1,
+        "L2_which": [k for k, v in q.items() if v] if any_q and not l1 else [],
+        "L3_none_critic_or_budget": not any_q,
     }
     payload = {
         "_provenance": provenance(),

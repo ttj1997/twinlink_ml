@@ -125,6 +125,7 @@ def make_callback(
     *,
     algorithm: str,
     target_entropy: float | None,
+    action_noise_sigma: float | None,
     lagrange: LagrangeConfig,
     logger: JsonlExperimentLogger,
     trace_path: Path,
@@ -282,6 +283,7 @@ def make_callback(
                         "lagrange": dataclasses.asdict(lagrange),
                         "algorithm": algorithm,
                         "target_entropy": target_entropy,
+                        "action_noise_sigma": action_noise_sigma,
                         "test_set": "25 Befund-52 grid points (ambient T x relative humidity)",
                         "checkpoint/path": str(checkpoint_file.relative_to(REPO_ROOT)),
                         "infeasible_violations": [
@@ -326,6 +328,12 @@ def main() -> int:
         choices=["SAC", "TD3"],
         default="SAC",
         help="S0.8: TD3 = deterministic policy (stable-baselines3 default, no action noise).",
+    )
+    parser.add_argument(
+        "--action-noise-sigma",
+        type=float,
+        default=None,
+        help="S0.8: TD3 Gaussian action noise (normalised action units); default: none.",
     )
     parser.add_argument(
         "--target-entropy",
@@ -391,11 +399,20 @@ def main() -> int:
         if arguments.algorithm != "SAC":
             raise SystemExit("--target-entropy applies to SAC only")
         model_kwargs["target_entropy"] = arguments.target_entropy
+    if arguments.action_noise_sigma is not None:
+        if arguments.algorithm != "TD3":
+            raise SystemExit("--action-noise-sigma applies to TD3 only")
+        from stable_baselines3.common.noise import NormalActionNoise
+
+        model_kwargs["action_noise"] = NormalActionNoise(
+            mean=np.zeros(2), sigma=arguments.action_noise_sigma * np.ones(2)
+        )
     model = algorithm_cls("MlpPolicy", train_env, **model_kwargs)
     run_start = time.perf_counter()
     callback = make_callback(
         algorithm=arguments.algorithm,
         target_entropy=arguments.target_entropy,
+        action_noise_sigma=arguments.action_noise_sigma,
         lagrange=lagrange,
         logger=logger,
         trace_path=trace,
