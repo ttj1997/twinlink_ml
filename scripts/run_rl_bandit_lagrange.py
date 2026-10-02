@@ -123,6 +123,8 @@ def mean_energy_vs_fixed(model: Any) -> dict[str, float]:
 
 def make_callback(
     *,
+    algorithm: str,
+    target_entropy: float | None,
     lagrange: LagrangeConfig,
     logger: JsonlExperimentLogger,
     trace_path: Path,
@@ -269,7 +271,7 @@ def make_callback(
                 RunRecord(
                     run_uid=f"{run_uid}_step{checkpoint:06d}",
                     group="rl_bandit_lagrange_s03",
-                    tags={"algorithm": "SAC", "checkpoint": str(checkpoint), "arm": "lagrange"},
+                    tags={"algorithm": algorithm, "checkpoint": str(checkpoint), "arm": "lagrange"},
                     params={
                         **env_info,
                         "seed": seed,
@@ -278,6 +280,8 @@ def make_callback(
                         "wall_s_since_training_start": wall,
                         "hyperparameters": "stable-baselines3 default, keine Abstimmung",
                         "lagrange": dataclasses.asdict(lagrange),
+                        "algorithm": algorithm,
+                        "target_entropy": target_entropy,
                         "test_set": "25 Befund-52 grid points (ambient T x relative humidity)",
                         "checkpoint/path": str(checkpoint_file.relative_to(REPO_ROOT)),
                         "infeasible_violations": [
@@ -318,6 +322,18 @@ def main() -> int:
     parser.add_argument("--context-bins", type=int, nargs=2, default=(5, 5))
     parser.add_argument("--output-prefix", type=str, default="rl_bandit_lagrange_s03")
     parser.add_argument(
+        "--algorithm",
+        choices=["SAC", "TD3"],
+        default="SAC",
+        help="S0.8: TD3 = deterministic policy (stable-baselines3 default, no action noise).",
+    )
+    parser.add_argument(
+        "--target-entropy",
+        type=float,
+        default=None,
+        help="S0.8: SAC target entropy; default: stable-baselines3 auto (-dim(action) = -2).",
+    )
+    parser.add_argument(
         "--quality-limit-kg-per-kg",
         type=float,
         default=None,
@@ -343,7 +359,7 @@ def main() -> int:
             flush=True,
         )
 
-    from stable_baselines3 import SAC
+    from stable_baselines3 import SAC, TD3
     from stable_baselines3.common.monitor import Monitor
 
     lagrange = LagrangeConfig(
@@ -369,9 +385,17 @@ def main() -> int:
     )
     env.reference_table  # noqa: B018  (build the failure-bound table before training)
     train_env = Monitor(env)
-    model = SAC("MlpPolicy", train_env, seed=arguments.seed, verbose=0)
+    algorithm_cls = {"SAC": SAC, "TD3": TD3}[arguments.algorithm]
+    model_kwargs: dict[str, Any] = {"seed": arguments.seed, "verbose": 0}
+    if arguments.target_entropy is not None:
+        if arguments.algorithm != "SAC":
+            raise SystemExit("--target-entropy applies to SAC only")
+        model_kwargs["target_entropy"] = arguments.target_entropy
+    model = algorithm_cls("MlpPolicy", train_env, **model_kwargs)
     run_start = time.perf_counter()
     callback = make_callback(
+        algorithm=arguments.algorithm,
+        target_entropy=arguments.target_entropy,
         lagrange=lagrange,
         logger=logger,
         trace_path=trace,
