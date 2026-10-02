@@ -1,0 +1,2085 @@
+{
+ "provenance": {
+  "git/commit": "f1c013d539608ea5a12c0f506a04b691cf334084",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "source_artifact": "m0_line_b_spray_rate",
+ "scale_factor_k": 271.79706373319294,
+ "scale_basis": {
+  "partner_q2_dry_air_flow_kg_per_s": 8.0,
+  "line_a_nominal_dry_air_flow_kg_per_s": 0.029433724890615912
+ },
+ "network": {
+  "t_kalt_celsius": 29.1,
+  "dt_min_k": 20.0,
+  "eta_h": 0.8,
+  "h_u_j_per_kg": 45000000.0,
+  "recovery_mode": "condensing",
+  "n_allocations": 343,
+  "co2_electricity_kg_per_kwh": 0.366,
+  "co2_gas_kg_per_kwh": 0.201
+ },
+ "lb1": {
+  "1.5": [
+   {
+    "t_amb": 5.0,
+    "phi_amb": 0.25,
+    "t_in": 84.50855678267641,
+    "t_out": 37.98887910446428,
+    "y_out": 0.01838485002363329,
+    "dew_point": 23.573890179395676,
+    "dry_air_flow_lab_kg_per_s": 0.016030406395442807,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.14821994122194818,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    }
+   },
+   {
+    "t_amb": 5.0,
+    "phi_amb": 0.55,
+    "t_in": 85.47925502637669,
+    "t_out": 38.736011421214684,
+    "y_out": 0.02008724423721909,
+    "dew_point": 25.007142275571823,
+    "dry_air_flow_lab_kg_per_s": 0.01595072299156728,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.16036618897278393,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    }
+   },
+   {
+    "t_amb": 5.0,
+    "phi_amb": 0.85,
+    "t_in": 86.41634318949926,
+    "t_out": 39.45604981476507,
+    "y_out": 0.021798003368700712,
+    "dew_point": 26.34036496281624,
+    "dry_air_flow_lab_kg_per_s": 0.015872173108462784,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.17202364006202328,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    }
+   },
+   {
+    "t_amb": 20.0,
+    "phi_amb": 0.25,
+    "t_in": 60.00924345644301,
+    "t_out": 32.10757126506638,
+    "y_out": 0.014550807644166074,
+    "dew_point": 19.846296831965446,
+    "dry_air_flow_lab_kg_per_s": 0.02496855746023956,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.0775776853495952,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    }
+   },
+   {
+    "t_amb": 20.0,
+    "phi_amb": 0.55,
+    "t_in": 86.20962065606464,
+    "t_out": 40.83196223618108,
+    "y_out": 0.025331300455999725,
+    "dew_point": 28.8162998855114,
+    "dry_air_flow_lab_kg_per_s": 0.01575962513534624,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.19471205512934966,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    }
+   },
+   {
+    "t_amb": 20.0,
+    "phi_amb": 0.85,
+    "t_in": 88.55260050394446,
+    "t_out": 42.55818560360616,
+    "y_out": 0.030041271283934093,
+    "dew_point": 31.665603667497635,
+    "dry_air_flow_lab_kg_per_s": 0.015525860887943305,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.22187906234068042,
+     "latent_kw": 0.16136898174708098,
+     "condensate_kg_per_s": 6.634788305790542e-05
+    }
+   },
+   {
+    "t_amb": 35.0,
+    "phi_amb": 0.25,
+    "t_in": 90.41994471902834,
+    "t_out": 45.00000751315723,
+    "y_out": 0.026597562685695353,
+    "dew_point": 29.62720587849617,
+    "dry_air_flow_lab_kg_per_s": 0.015491865702889908,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.2599845560475799,
+     "latent_kw": 0.03126094815359075,
+     "condensate_kg_per_s": 1.2853137634743748e-05
+    }
+   },
+   {
+    "t_amb": 35.0,
+    "phi_amb": 0.55,
+    "t_in": 89.83527559339001,
+    "t_out": 45.00000148520695,
+    "y_out": 0.03753517486275662,
+    "dew_point": 35.444443076848984,
+    "dry_air_flow_lab_kg_per_s": 0.015230714195290445,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.2605284769094833,
+     "latent_kw": 0.4359025684086916,
+     "condensate_kg_per_s": 0.00017922411308729508
+    }
+   },
+   {
+    "t_amb": 35.0,
+    "phi_amb": 0.85,
+    "t_in": 93.90479916419207,
+    "t_out": 48.17882407316425,
+    "y_out": 0.04924458186899608,
+    "dew_point": 40.12955740094185,
+    "dry_air_flow_lab_kg_per_s": 0.01482336247309489,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.31041337165426686,
+     "latent_kw": 0.8464017807771747,
+     "condensate_kg_per_s": 0.00034800347478813236
+    }
+   }
+  ],
+  "2.0": [
+   {
+    "t_amb": 5.0,
+    "phi_amb": 0.25,
+    "t_in": 105.79898879025419,
+    "t_out": 43.13641659623888,
+    "y_out": 0.024440397879644922,
+    "dew_point": 28.223241418600082,
+    "dry_air_flow_lab_kg_per_s": 0.01577080174320751,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.2327568238218822,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    }
+   },
+   {
+    "t_amb": 5.0,
+    "phi_amb": 0.55,
+    "t_in": 106.58829735444957,
+    "t_out": 43.717911149585696,
+    "y_out": 0.026161447000901054,
+    "dew_point": 29.3519888818264,
+    "dry_air_flow_lab_kg_per_s": 0.01570010686187877,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.24204745528022295,
+     "latent_kw": 0.015027971960652543,
+     "condensate_kg_per_s": 6.178846240757746e-06
+    }
+   },
+   {
+    "t_amb": 5.0,
+    "phi_amb": 0.85,
+    "t_in": 107.33941368788093,
+    "t_out": 44.27993744347671,
+    "y_out": 0.027886219313109598,
+    "dew_point": 30.41691854596138,
+    "dry_air_flow_lab_kg_per_s": 0.015633450711733197,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.2510478242112368,
+     "latent_kw": 0.08054540710009842,
+     "condensate_kg_per_s": 3.311675635101034e-05
+    }
+   },
+   {
+    "t_amb": 20.0,
+    "phi_amb": 0.25,
+    "t_in": 98.67411563772205,
+    "t_out": 42.612812616102154,
+    "y_out": 0.025039922670126752,
+    "dew_point": 28.624462634325027,
+    "dry_air_flow_lab_kg_per_s": 0.016997569182033583,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.2417604835937289,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    }
+   },
+   {
+    "t_amb": 20.0,
+    "phi_amb": 0.55,
+    "t_in": 106.97014845892963,
+    "t_out": 45.407254362348326,
+    "y_out": 0.031509203098404166,
+    "dew_point": 32.469767183065414,
+    "dry_air_flow_lab_kg_per_s": 0.015491964865042085,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.2689531989884184,
+     "latent_kw": 0.21632689990788567,
+     "condensate_kg_per_s": 8.894418061002136e-05
+    }
+   },
+   {
+    "t_amb": 20.0,
+    "phi_amb": 0.85,
+    "t_in": 108.80709868678466,
+    "t_out": 46.77257947022448,
+    "y_out": 0.03622738268565108,
+    "dew_point": 34.838577657938,
+    "dry_air_flow_lab_kg_per_s": 0.01531651621146651,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.29054581437900134,
+     "latent_kw": 0.3896399651370324,
+     "condensate_kg_per_s": 0.00016020294954898176
+    }
+   },
+   {
+    "t_amb": 35.0,
+    "phi_amb": 0.25,
+    "t_in": 102.13032395056446,
+    "t_out": 45.00040180326394,
+    "y_out": 0.03133134322252088,
+    "dew_point": 32.37419381737709,
+    "dry_air_flow_lab_kg_per_s": 0.016135806393432938,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.27305690531994453,
+     "latent_kw": 0.21833728254853454,
+     "condensate_kg_per_s": 8.977076221758503e-05
+    }
+   },
+   {
+    "t_amb": 35.0,
+    "phi_amb": 0.55,
+    "t_in": 89.69517700314613,
+    "t_out": 45.01602031974922,
+    "y_out": 0.03759803511923271,
+    "dew_point": 35.47306731343269,
+    "dry_air_flow_lab_kg_per_s": 0.020234386343033175,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.3465049846617723,
+     "latent_kw": 0.5822010747535077,
+     "condensate_kg_per_s": 0.0002393756743441267
+    }
+   },
+   {
+    "t_amb": 35.0,
+    "phi_amb": 0.85,
+    "t_in": 113.16021320306947,
+    "t_out": 51.46978130942421,
+    "y_out": 0.05564391308150404,
+    "dew_point": 42.26105123758316,
+    "dry_air_flow_lab_kg_per_s": 0.014670538310141952,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.03857276021129695,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.364111324110842,
+     "latent_kw": 1.0660112462690046,
+     "condensate_kg_per_s": 0.00043829730311319474
+    }
+   }
+  ],
+  "2.5": [
+   {
+    "t_amb": 5.0,
+    "phi_amb": 0.25,
+    "t_in": 119.98914430311017,
+    "t_out": 46.099980759136,
+    "y_out": 0.02878004979947066,
+    "dew_point": 30.945232957601547,
+    "dry_air_flow_lab_kg_per_s": 0.016595798484195807,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.29892360176414945,
+     "latent_kw": 0.12158185769490855,
+     "condensate_kg_per_s": 4.9989153980954654e-05
+    }
+   },
+   {
+    "t_amb": 5.0,
+    "phi_amb": 0.55,
+    "t_in": 119.95792459584737,
+    "t_out": 46.47247823536206,
+    "y_out": 0.030300838912664777,
+    "dew_point": 31.81039795279503,
+    "dry_air_flow_lab_kg_per_s": 0.016654141469826456,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.3073658095888996,
+     "latent_kw": 0.18360978137248987,
+     "condensate_kg_per_s": 7.549232926240426e-05
+    }
+   },
+   {
+    "t_amb": 5.0,
+    "phi_amb": 0.85,
+    "t_in": 117.1644589123386,
+    "t_out": 46.34385769786911,
+    "y_out": 0.03102305765933,
+    "dew_point": 32.20734253525734,
+    "dry_air_flow_lab_kg_per_s": 0.017223275398142484,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.31591519428717674,
+     "latent_kw": 0.22013804020298183,
+     "condensate_kg_per_s": 9.051115517897929e-05
+    }
+   },
+   {
+    "t_amb": 20.0,
+    "phi_amb": 0.25,
+    "t_in": 119.97710144056607,
+    "t_out": 46.94781207029882,
+    "y_out": 0.03145206646670731,
+    "dew_point": 32.43911936879158,
+    "dry_air_flow_lab_kg_per_s": 0.016354091730367757,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.31071156877427664,
+     "latent_kw": 0.22609282039027925,
+     "condensate_kg_per_s": 9.295950092191503e-05
+    }
+   },
+   {
+    "t_amb": 20.0,
+    "phi_amb": 0.55,
+    "t_in": 119.99232975711536,
+    "t_out": 47.91879947786879,
+    "y_out": 0.03562088283016197,
+    "dew_point": 34.55067053437233,
+    "dry_air_flow_lab_kg_per_s": 0.01648278077247373,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.3325985971986357,
+     "latent_kw": 0.39499493147245446,
+     "condensate_kg_per_s": 0.00016240467801225276
+    }
+   },
+   {
+    "t_amb": 20.0,
+    "phi_amb": 0.85,
+    "t_in": 119.99948688599736,
+    "t_out": 48.8574993567988,
+    "y_out": 0.03986240438618577,
+    "dew_point": 36.47552892565727,
+    "dry_air_flow_lab_kg_per_s": 0.016607354017536075,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.3544166421509646,
+     "latent_kw": 0.5693029954966478,
+     "condensate_kg_per_s": 0.0002340725470334085
+    }
+   },
+   {
+    "t_amb": 35.0,
+    "phi_amb": 0.25,
+    "t_in": 101.88956066415713,
+    "t_out": 45.00075438112948,
+    "y_out": 0.03133186945800435,
+    "dew_point": 32.37447753548622,
+    "dry_air_flow_lab_kg_per_s": 0.020169286834496186,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.34132104076373215,
+     "latent_kw": 0.2729410423451914,
+     "condensate_kg_per_s": 0.00011222144530604099
+    }
+   },
+   {
+    "t_amb": 35.0,
+    "phi_amb": 0.55,
+    "t_in": 119.94219549796352,
+    "t_out": 50.54427034141524,
+    "y_out": 0.047240038403464496,
+    "dew_point": 39.40755531191826,
+    "dry_air_flow_lab_kg_per_s": 0.016471040579772445,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.02602159066690691,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.3863639714625737,
+     "latent_kw": 0.860180261982376,
+     "condensate_kg_per_s": 0.00035366858495875403
+    }
+   },
+   {
+    "t_amb": 35.0,
+    "phi_amb": 0.85,
+    "t_in": 119.96024924541777,
+    "t_out": 52.56136504252041,
+    "y_out": 0.058045003953746004,
+    "dew_point": 43.00090044736862,
+    "dry_air_flow_lab_kg_per_s": 0.01672119033749654,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.06447415153476167,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.4370101351293414,
+     "latent_kw": 1.3126678214410101,
+     "condensate_kg_per_s": 0.0005397117225871016
+    }
+   }
+  ],
+  "3.0": [
+   {
+    "t_amb": 5.0,
+    "phi_amb": 0.25,
+    "t_in": 119.99416128094231,
+    "t_out": 46.25179771188215,
+    "y_out": 0.02902193313518338,
+    "dew_point": 31.08561083674431,
+    "dry_air_flow_lab_kg_per_s": 0.019740943111314163,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.3589017202019665,
+     "latent_kw": 0.15623698315668014,
+     "condensate_kg_per_s": 6.423782920094473e-05
+    }
+   },
+   {
+    "t_amb": 5.0,
+    "phi_amb": 0.55,
+    "t_in": 119.9995890471548,
+    "t_out": 46.6291707766556,
+    "y_out": 0.030555676250646376,
+    "dew_point": 31.95144757628441,
+    "dry_air_flow_lab_kg_per_s": 0.019800431382411526,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.36889373756670885,
+     "latent_kw": 0.23056965942901994,
+     "condensate_kg_per_s": 9.480018176277809e-05
+    }
+   },
+   {
+    "t_amb": 5.0,
+    "phi_amb": 0.85,
+    "t_in": 116.3765111844044,
+    "t_out": 46.343994716105406,
+    "y_out": 0.031023277944336024,
+    "dew_point": 32.20746353268623,
+    "dry_air_flow_lab_kg_per_s": 0.020667758440917318,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.3790982358690427,
+     "latent_kw": 0.2641745225201054,
+     "condensate_kg_per_s": 0.00010861703493000453
+    }
+   },
+   {
+    "t_amb": 20.0,
+    "phi_amb": 0.25,
+    "t_in": 119.99999441582204,
+    "t_out": 47.05015462252514,
+    "y_out": 0.03162267200510044,
+    "dew_point": 32.53048077225685,
+    "dry_air_flow_lab_kg_per_s": 0.019505396789863343,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.37281934286147905,
+     "latent_kw": 0.27775271599409035,
+     "condensate_kg_per_s": 0.00011419979552622341
+    }
+   },
+   {
+    "t_amb": 20.0,
+    "phi_amb": 0.55,
+    "t_in": 119.97335518026466,
+    "t_out": 48.01197835586257,
+    "y_out": 0.03578468957964465,
+    "dew_point": 34.628876596689224,
+    "dry_air_flow_lab_kg_per_s": 0.01966275162334659,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.3988436284404823,
+     "latent_kw": 0.4790337949903101,
+     "condensate_kg_per_s": 0.00019695779118576896
+    }
+   },
+   {
+    "t_amb": 20.0,
+    "phi_amb": 0.85,
+    "t_in": 119.97120253634557,
+    "t_out": 48.947440748095175,
+    "y_out": 0.04002890056996566,
+    "dew_point": 36.54712602496147,
+    "dry_air_flow_lab_kg_per_s": 0.01980854163979988,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.42477915830529694,
+     "latent_kw": 0.6870616587658612,
+     "condensate_kg_per_s": 0.00028248977031295223
+    }
+   },
+   {
+    "t_amb": 35.0,
+    "phi_amb": 0.25,
+    "t_in": 101.77881068895348,
+    "t_out": 45.01115185786315,
+    "y_out": 0.03134739265577732,
+    "dew_point": 32.38283887505531,
+    "dry_air_flow_lab_kg_per_s": 0.024186512619742376,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.0,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.4095825502682045,
+     "latent_kw": 0.32821734495853677,
+     "condensate_kg_per_s": 0.00013494864865055842
+    }
+   },
+   {
+    "t_amb": 35.0,
+    "phi_amb": 0.55,
+    "t_in": 119.84680135614579,
+    "t_out": 50.57729413653912,
+    "y_out": 0.047307061274265816,
+    "dew_point": 39.43215951323509,
+    "dry_air_flow_lab_kg_per_s": 0.019717442241469412,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.031866278967281135,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.46328041890199606,
+     "latent_kw": 1.032933833202738,
+     "condensate_kg_per_s": 0.0004246973143779471
+    }
+   },
+   {
+    "t_amb": 35.0,
+    "phi_amb": 0.85,
+    "t_in": 119.80886333701153,
+    "t_out": 52.58766922108919,
+    "y_out": 0.05810472266545695,
+    "dew_point": 43.0189248919487,
+    "dry_air_flow_lab_kg_per_s": 0.02002152166614971,
+    "to_t_kalt_plus_dt_min": {
+     "sensible_kw": 0.07779410965151934,
+     "latent_kw": 0.0,
+     "condensate_kg_per_s": 0.0
+    },
+    "to_t_kalt": {
+     "sensible_kw": 0.5239035582260284,
+     "latent_kw": 1.5746626047674164,
+     "condensate_kg_per_s": 0.0006474325438857469
+    }
+   }
+  ]
+ },
+ "lb2": {
+  "1.5": {
+   "per_scenario": [
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "n_tied_with_best": 8,
+     "co2_best_kg_per_h": 1132.4067321264222,
+     "co2_worst_kg_per_h": 1549.0148144326656,
+     "difference_kg_per_h": 416.60808230624343,
+     "relative_difference_to_best": 0.36789615470047665,
+     "lines_only_best_kg_per_h": 138.72838324892228,
+     "relative_difference_to_lines_only": 3.0030486375575913,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.005600249141340309,
+     "gas_kw_best": 5598.039545822774,
+     "electric_kw_scaled": 19.674271628536687
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "n_tied_with_best": 8,
+     "co2_best_kg_per_h": 1133.3506648990112,
+     "co2_worst_kg_per_h": 1549.9064755146926,
+     "difference_kg_per_h": 416.55581061568137,
+     "relative_difference_to_best": 0.3675436239787261,
+     "lines_only_best_kg_per_h": 139.67231602151128,
+     "relative_difference_to_lines_only": 2.982379203560472,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.006397477467931688,
+     "gas_kw_best": 5602.7463300660675,
+     "electric_kw_scaled": 19.668449605823998
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "n_tied_with_best": 8,
+     "co2_best_kg_per_h": 1134.257482888566,
+     "co2_worst_kg_per_h": 1550.7617342546737,
+     "difference_kg_per_h": 416.5042513661076,
+     "relative_difference_to_best": 0.36720432322422386,
+     "lines_only_best_kg_per_h": 140.5791340110663,
+     "relative_difference_to_lines_only": 2.96277434269385,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.007160724377952154,
+     "gas_kw_best": 5607.269778208139,
+     "electric_kw_scaled": 19.661905652268423
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 49,
+     "co2_best_kg_per_h": 1132.8059074809003,
+     "co2_worst_kg_per_h": 1535.527137019054,
+     "difference_kg_per_h": 402.7212295381537,
+     "relative_difference_to_best": 0.355507706023279,
+     "lines_only_best_kg_per_h": 139.12755860340042,
+     "relative_difference_to_lines_only": 2.8946186764202357,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.0,
+     "gas_kw_best": 5574.136655797515,
+     "electric_kw_scaled": 33.891911654644055
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 16,
+     "co2_best_kg_per_h": 1129.2964424792901,
+     "co2_worst_kg_per_h": 1533.9941726896259,
+     "difference_kg_per_h": 404.69773021033575,
+     "relative_difference_to_best": 0.35836270706905854,
+     "lines_only_best_kg_per_h": 135.61809360179032,
+     "relative_difference_to_lines_only": 2.9840983563641044,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.00825355100325189,
+     "gas_kw_best": 5582.495106769598,
+     "electric_kw_scaled": 19.71291261912807
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 16,
+     "co2_best_kg_per_h": 1129.3232867880338,
+     "co2_worst_kg_per_h": 1536.026955321785,
+     "difference_kg_per_h": 406.70366853375117,
+     "relative_difference_to_best": 0.36013041906757975,
+     "lines_only_best_kg_per_h": 135.64493791053386,
+     "relative_difference_to_lines_only": 2.9982959541180754,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.011894337145826703,
+     "gas_kw_best": 5582.756271445459,
+     "electric_kw_scaled": 19.642831222667855
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 196,
+     "co2_best_kg_per_h": 1120.5921997694904,
+     "co2_worst_kg_per_h": 1521.013540431237,
+     "difference_kg_per_h": 400.4213406617466,
+     "relative_difference_to_best": 0.35733011593701497,
+     "lines_only_best_kg_per_h": 126.91385089199063,
+     "relative_difference_to_lines_only": 3.1550641466432463,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.0,
+     "gas_kw_best": 5540.059675616949,
+     "electric_kw_scaled": 19.235532706239493
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 196,
+     "co2_best_kg_per_h": 1119.765611590883,
+     "co2_worst_kg_per_h": 1520.6691433279216,
+     "difference_kg_per_h": 400.9035317370385,
+     "relative_difference_to_best": 0.35802450761768206,
+     "lines_only_best_kg_per_h": 126.08726271338314,
+     "relative_difference_to_lines_only": 3.1795720131410694,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.0,
+     "gas_kw_best": 5535.261754469764,
+     "electric_kw_scaled": 19.61201896847093
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 40,
+     "co2_best_kg_per_h": 1126.1177802309348,
+     "co2_worst_kg_per_h": 1524.6101167536247,
+     "difference_kg_per_h": 398.4923365226898,
+     "relative_difference_to_best": 0.3538638173717232,
+     "lines_only_best_kg_per_h": 132.4394313534351,
+     "relative_difference_to_lines_only": 3.0088647501003787,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.0013650278526024051,
+     "gas_kw_best": 5566.9014189673935,
+     "electric_kw_scaled": 19.59178966800212
+    }
+   ],
+   "median_relative_difference_to_best": 0.35836270706905854,
+   "median_relative_difference_to_lines_only": 2.9982959541180754,
+   "median_relative_difference_lines_only_allocations": 0.005600249141340309,
+   "criterion_met": true,
+   "n_distinct_best_allocations": 3,
+   "n_scenarios_best_differs_from_modal": 5,
+   "n_scenarios_with_ties": 9,
+   "is_control": true
+  },
+  "2.0": {
+   "per_scenario": [
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 16,
+     "co2_best_kg_per_h": 1151.6358167798821,
+     "co2_worst_kg_per_h": 1570.7217811284243,
+     "difference_kg_per_h": 419.0859643485421,
+     "relative_difference_to_best": 0.363904941338451,
+     "lines_only_best_kg_per_h": 157.95746790238198,
+     "relative_difference_to_lines_only": 2.6531570169733163,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.006208427136334871,
+     "gas_kw_best": 5693.684388174306,
+     "electric_kw_scaled": 19.686488406684088
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 16,
+     "co2_best_kg_per_h": 1152.4220368367091,
+     "co2_worst_kg_per_h": 1571.4099770358987,
+     "difference_kg_per_h": 418.98794019918955,
+     "relative_difference_to_best": 0.36357161422326867,
+     "lines_only_best_kg_per_h": 158.7436879592093,
+     "relative_difference_to_lines_only": 2.639399056338243,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.006810391639296934,
+     "gas_kw_best": 5697.607041978269,
+     "electric_kw_scaled": 19.68038633627578
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 16,
+     "co2_best_kg_per_h": 1151.9697185020277,
+     "co2_worst_kg_per_h": 1572.0822446314824,
+     "difference_kg_per_h": 420.11252612945464,
+     "relative_difference_to_best": 0.36469059853044666,
+     "lines_only_best_kg_per_h": 158.2913696245278,
+     "relative_difference_to_lines_only": 2.6540456825029377,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.006601587237830445,
+     "gas_kw_best": 5695.36458975359,
+     "electric_kw_scaled": 19.676054539770742
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 28,
+     "co2_best_kg_per_h": 1148.0270285465365,
+     "co2_worst_kg_per_h": 1556.667993104766,
+     "difference_kg_per_h": 408.6409645582296,
+     "relative_difference_to_best": 0.3559506478480658,
+     "lines_only_best_kg_per_h": 154.34867966903647,
+     "relative_difference_to_lines_only": 2.6475183683751724,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.00646185772331152,
+     "gas_kw_best": 5661.081155354127,
+     "electric_kw_scaled": 27.731465356166208
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 16,
+     "co2_best_kg_per_h": 1143.7037678393738,
+     "co2_worst_kg_per_h": 1555.1739402421308,
+     "difference_kg_per_h": 411.47017240275704,
+     "relative_difference_to_best": 0.359769884451885,
+     "lines_only_best_kg_per_h": 150.02541896187392,
+     "relative_difference_to_lines_only": 2.7426697105730082,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.011993471683683246,
+     "gas_kw_best": 5654.205300096802,
+     "electric_kw_scaled": 19.695362076274602
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 16,
+     "co2_best_kg_per_h": 1142.8038691380445,
+     "co2_worst_kg_per_h": 1556.8249674795459,
+     "difference_kg_per_h": 414.02109834150133,
+     "relative_difference_to_best": 0.36228534880073093,
+     "lines_only_best_kg_per_h": 149.12552026054476,
+     "relative_difference_to_lines_only": 2.776326262722464,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.014792929314800855,
+     "gas_kw_best": 5649.804419779162,
+     "electric_kw_scaled": 19.65349935090959
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 196,
+     "co2_best_kg_per_h": 1136.5317585430814,
+     "co2_worst_kg_per_h": 1536.9530992048278,
+     "difference_kg_per_h": 400.4213406617464,
+     "relative_difference_to_best": 0.35231865511179905,
+     "lines_only_best_kg_per_h": 142.8534096655814,
+     "relative_difference_to_lines_only": 2.803022634175336,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.0,
+     "gas_kw_best": 5618.08253117785,
+     "electric_kw_scaled": 19.9376223397087
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 196,
+     "co2_best_kg_per_h": 1140.596311137749,
+     "co2_worst_kg_per_h": 1541.4998428747874,
+     "difference_kg_per_h": 400.9035317370385,
+     "relative_difference_to_best": 0.35148590945129027,
+     "lines_only_best_kg_per_h": 146.91796226024886,
+     "relative_difference_to_lines_only": 2.7287577745387077,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.0,
+     "gas_kw_best": 5631.433575875252,
+     "electric_kw_scaled": 23.710826193505472
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 28,
+     "co2_best_kg_per_h": 1140.2377429413634,
+     "co2_worst_kg_per_h": 1544.4741685982742,
+     "difference_kg_per_h": 404.2364256569108,
+     "relative_difference_to_best": 0.35451942207608417,
+     "lines_only_best_kg_per_h": 146.5593940638636,
+     "relative_difference_to_lines_only": 2.7581747880368814,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.006385748335925277,
+     "gas_kw_best": 5637.122339125212,
+     "electric_kw_scaled": 19.606974801081094
+    }
+   ],
+   "median_relative_difference_to_best": 0.359769884451885,
+   "median_relative_difference_to_lines_only": 2.7287577745387077,
+   "median_relative_difference_lines_only_allocations": 0.00646185772331152,
+   "criterion_met": true,
+   "n_distinct_best_allocations": 2,
+   "n_scenarios_best_differs_from_modal": 2,
+   "n_scenarios_with_ties": 9,
+   "is_control": false
+  },
+  "2.5": {
+   "per_scenario": [
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 16,
+     "co2_best_kg_per_h": 1168.193325169744,
+     "co2_worst_kg_per_h": 1592.9385589692968,
+     "difference_kg_per_h": 424.7452337995528,
+     "relative_difference_to_best": 0.3635915602734978,
+     "lines_only_best_kg_per_h": 174.51497629224406,
+     "relative_difference_to_lines_only": 2.4338612239689463,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.006210519313727291,
+     "gas_kw_best": 5774.710723016351,
+     "electric_kw_scaled": 20.42751323349007
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 16,
+     "co2_best_kg_per_h": 1167.8080203184973,
+     "co2_worst_kg_per_h": 1593.7898327363969,
+     "difference_kg_per_h": 425.9818124178996,
+     "relative_difference_to_best": 0.3647704117511723,
+     "lines_only_best_kg_per_h": 174.12967144099738,
+     "relative_difference_to_lines_only": 2.446348223669856,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.007604815566532757,
+     "gas_kw_best": 5772.636398695196,
+     "electric_kw_scaled": 20.51394584907893
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 16,
+     "co2_best_kg_per_h": 1168.1402693340415,
+     "co2_worst_kg_per_h": 1595.5539287693375,
+     "difference_kg_per_h": 427.41365943529604,
+     "relative_difference_to_best": 0.3658924109165119,
+     "lines_only_best_kg_per_h": 174.46192045654172,
+     "relative_difference_to_lines_only": 2.4498965637705696,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.009029095816661621,
+     "gas_kw_best": 5773.448042752714,
+     "electric_kw_scaled": 20.975991094934322
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 28,
+     "co2_best_kg_per_h": 1159.77640313247,
+     "co2_worst_kg_per_h": 1577.1494984506398,
+     "difference_kg_per_h": 417.3730953181698,
+     "relative_difference_to_best": 0.3598737603135191,
+     "lines_only_best_kg_per_h": 166.09805425497015,
+     "relative_difference_to_lines_only": 2.5128114666381216,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.009905607856613223,
+     "gas_kw_best": 5720.0887694371095,
+     "electric_kw_scaled": 27.427760862324757
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 16,
+     "co2_best_kg_per_h": 1158.3969697859814,
+     "co2_worst_kg_per_h": 1576.4599819172674,
+     "difference_kg_per_h": 418.0630121312861,
+     "relative_difference_to_best": 0.3608978813269211,
+     "lines_only_best_kg_per_h": 164.71862090848145,
+     "relative_difference_to_lines_only": 2.5380434211112304,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.014893287402592069,
+     "gas_kw_best": 5725.738517122566,
+     "electric_kw_scaled": 20.556087006408596
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 16,
+     "co2_best_kg_per_h": 1159.4370784221974,
+     "co2_worst_kg_per_h": 1578.3423001053575,
+     "difference_kg_per_h": 418.9052216831601,
+     "relative_difference_to_best": 0.3613005220198935,
+     "lines_only_best_kg_per_h": 165.75872954469742,
+     "relative_difference_to_lines_only": 2.527198554391676,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.016488699288836645,
+     "gas_kw_best": 5730.578945300286,
+     "electric_kw_scaled": 20.739645947649528
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 196,
+     "co2_best_kg_per_h": 1156.291042286679,
+     "co2_worst_kg_per_h": 1556.7123829484253,
+     "difference_kg_per_h": 400.4213406617464,
+     "relative_difference_to_best": 0.3462980564736314,
+     "lines_only_best_kg_per_h": 162.61269340917906,
+     "relative_difference_to_lines_only": 2.4624236415184035,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.0,
+     "gas_kw_best": 5710.438960382004,
+     "electric_kw_scaled": 23.204402322120345
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 28,
+     "co2_best_kg_per_h": 1154.4153692269535,
+     "co2_worst_kg_per_h": 1561.2547670609986,
+     "difference_kg_per_h": 406.83939783404503,
+     "relative_difference_to_best": 0.3524202888137935,
+     "lines_only_best_kg_per_h": 160.73702034945336,
+     "relative_difference_to_lines_only": 2.5310870946191995,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.005141880691506381,
+     "gas_kw_best": 5705.44752951731,
+     "electric_kw_scaled": 20.8208081802571
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 28,
+     "co2_best_kg_per_h": 1158.2794116930804,
+     "co2_worst_kg_per_h": 1564.994912560956,
+     "difference_kg_per_h": 406.71550086787556,
+     "relative_difference_to_best": 0.35113764154140603,
+     "lines_only_best_kg_per_h": 164.6010628155804,
+     "relative_difference_to_lines_only": 2.470916614454434,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.008426590667138661,
+     "gas_kw_best": 5723.767335011678,
+     "electric_kw_scaled": 21.31742446921574
+    }
+   ],
+   "median_relative_difference_to_best": 0.3608978813269211,
+   "median_relative_difference_to_lines_only": 2.470916614454434,
+   "median_relative_difference_lines_only_allocations": 0.008426590667138661,
+   "criterion_met": true,
+   "n_distinct_best_allocations": 2,
+   "n_scenarios_best_differs_from_modal": 1,
+   "n_scenarios_with_ties": 9,
+   "is_control": false
+  },
+  "3.0": {
+   "per_scenario": [
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 16,
+     "co2_best_kg_per_h": 1187.0289809964422,
+     "co2_worst_kg_per_h": 1618.7775753102005,
+     "difference_kg_per_h": 431.7485943137583,
+     "relative_difference_to_best": 0.36372203309756623,
+     "lines_only_best_kg_per_h": 193.35063211894246,
+     "relative_difference_to_lines_only": 2.232982584965959,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.008419731984161984,
+     "gas_kw_best": 5863.817758389647,
+     "electric_kw_scaled": 22.955222841866746
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 16,
+     "co2_best_kg_per_h": 1186.2119483785384,
+     "co2_worst_kg_per_h": 1619.7626203146478,
+     "difference_kg_per_h": 433.55067193610944,
+     "relative_difference_to_best": 0.36549174245693633,
+     "lines_only_best_kg_per_h": 192.5335995010385,
+     "relative_difference_to_lines_only": 2.2518182439827648,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.010257093709411575,
+     "gas_kw_best": 5859.560817516492,
+     "electric_kw_scaled": 23.06072146919
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 16,
+     "co2_best_kg_per_h": 1186.6287673096867,
+     "co2_worst_kg_per_h": 1622.235780395974,
+     "difference_kg_per_h": 435.6070130862872,
+     "relative_difference_to_best": 0.36709628578606873,
+     "lines_only_best_kg_per_h": 192.95041843218695,
+     "relative_difference_to_lines_only": 2.2576111346417354,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.011989734914636244,
+     "gas_kw_best": 5860.239572739566,
+     "electric_kw_scaled": 23.82681199189604
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 28,
+     "co2_best_kg_per_h": 1177.2934327422663,
+     "co2_worst_kg_per_h": 1599.8961547667627,
+     "difference_kg_per_h": 422.6027220244964,
+     "relative_difference_to_best": 0.35896124982208477,
+     "lines_only_best_kg_per_h": 183.6150838647664,
+     "relative_difference_to_lines_only": 2.3015686572664467,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.012796884964230554,
+     "gas_kw_best": 5802.625129687083,
+     "electric_kw_scaled": 29.96115211793038
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 16,
+     "co2_best_kg_per_h": 1177.4800813953402,
+     "co2_worst_kg_per_h": 1599.5540506831567,
+     "difference_kg_per_h": 422.07396928781645,
+     "relative_difference_to_best": 0.3584552944519022,
+     "lines_only_best_kg_per_h": 183.8017325178402,
+     "relative_difference_to_lines_only": 2.296354683418716,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.017234858970079536,
+     "gas_kw_best": 5815.939093537525,
+     "electric_kw_scaled": 23.159354082780315
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 8,
+     "co2_best_kg_per_h": 1179.027494545329,
+     "co2_worst_kg_per_h": 1601.777296430975,
+     "difference_kg_per_h": 422.74980188564587,
+     "relative_difference_to_best": 0.35855805215863246,
+     "lines_only_best_kg_per_h": 185.3491456678292,
+     "relative_difference_to_lines_only": 2.280829514279342,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.018645848140878992,
+     "gas_kw_best": 5823.184515465205,
+     "electric_kw_scaled": 23.40821567437932
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 196,
+     "co2_best_kg_per_h": 1176.2206701093046,
+     "co2_worst_kg_per_h": 1576.642010771051,
+     "difference_kg_per_h": 400.4213406617464,
+     "relative_difference_to_best": 0.34043045734312405,
+     "lines_only_best_kg_per_h": 182.54232123180464,
+     "relative_difference_to_lines_only": 2.1935808527013534,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.0,
+     "gas_kw_best": 5802.836716076189,
+     "electric_kw_scaled": 26.913907590137548
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 28,
+     "co2_best_kg_per_h": 1174.3089869834844,
+     "co2_worst_kg_per_h": 1581.760172961795,
+     "difference_kg_per_h": 407.4511859783106,
+     "relative_difference_to_best": 0.34697101912244926,
+     "lines_only_best_kg_per_h": 180.63063810598445,
+     "relative_difference_to_lines_only": 2.2557147018394517,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.005575750772453359,
+     "gas_kw_best": 5799.401769600794,
+     "electric_kw_scaled": 23.577134682308
+    },
+    {
+     "n_allocations_evaluated": 343,
+     "n_rejected": 0,
+     "best_connections": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "n_tied_with_best": 28,
+     "co2_best_kg_per_h": 1178.5166380899022,
+     "co2_worst_kg_per_h": 1586.2052707181906,
+     "difference_kg_per_h": 407.68863262828836,
+     "relative_difference_to_best": 0.34593370975997045,
+     "lines_only_best_kg_per_h": 184.83828921240217,
+     "relative_difference_to_lines_only": 2.2056503247538903,
+     "n_allocations_with_q1_fixed": 49,
+     "relative_difference_lines_only_allocations": 0.009107617062005172,
+     "gas_kw_best": 5819.126322080549,
+     "electric_kw_scaled": 24.2411129828193
+    }
+   ],
+   "median_relative_difference_to_best": 0.35855805215863246,
+   "median_relative_difference_to_lines_only": 2.2557147018394517,
+   "median_relative_difference_lines_only_allocations": 0.010257093709411575,
+   "criterion_met": true,
+   "n_distinct_best_allocations": 3,
+   "n_scenarios_best_differs_from_modal": 2,
+   "n_scenarios_with_ties": 9,
+   "is_control": false
+  }
+ },
+ "lb3": {
+  "2.0": {
+   "n_interior_inlet_temperature": 9,
+   "interior_majority": true,
+   "lb2_met": true,
+   "qualifies": true
+  },
+  "2.5": {
+   "n_interior_inlet_temperature": 3,
+   "interior_majority": false,
+   "lb2_met": true,
+   "qualifies": false
+  },
+  "3.0": {
+   "n_interior_inlet_temperature": 4,
+   "interior_majority": false,
+   "lb2_met": true,
+   "qualifies": false
+  }
+ },
+ "chosen_spray_rate_kg_per_h": 2.0
+}
