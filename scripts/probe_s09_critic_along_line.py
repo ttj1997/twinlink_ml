@@ -9,9 +9,11 @@ seeds 0-4. At the test contexts where the Befund 52 oracle of the arm's referenc
     is the start of a line in the direction of increasing product moisture: the unit gradient of the
     moisture with respect to the two normalised actions (central differences, step 0.01), i.e. the
     direction towards the validity boundary 0.20 kg/kg;
-  * the line is followed until the moisture reaches 0.20 (coarse scan of 40 points, then 10
-    bisection steps for the crossing, ``s_cliff``) and a little beyond (to 1.15 * s_cliff), but not
-    outside the action box; 20 equally spaced points on [0, s_end];
+  * the line is the straight line clipped to the action box (the policy mean often sits near the
+    lower gas-velocity bound: that coordinate stays at the bound and the inlet temperature keeps
+    moving); it is followed until the moisture reaches 0.20 (coarse scan of 40 points, then 10
+    bisection steps for the crossing, ``s_cliff``) and a little beyond (to 1.15 * s_cliff), at most
+    to the end of the clipped path; 20 equally spaced points on [0, s_end];
   * at every point: the true reward from the simulator (the reward the arm was trained on: the
     Lagrangian reward with the FINAL multipliers for the Lagrange arms, the penalty reward with the
     arm's solver-failure value for the penalty arms), both critics separately and their minimum, and
@@ -207,14 +209,16 @@ def _line_task(task: tuple[str, int, int]) -> dict[str, Any]:
     if not np.all(np.isfinite(gradient)) or np.linalg.norm(gradient) == 0.0:
         return {"arm": arm, "seed": seed, "context_index": index, "skipped": "no gradient"}
     direction = gradient / np.linalg.norm(gradient)
-
     with np.errstate(divide="ignore", invalid="ignore"):
         limits = np.where(
             direction > 0,
             (1.0 - a0) / direction,
             np.where(direction < 0, (-1.0 - a0) / direction, np.inf),
         )
-    s_bound = float(np.min(limits))
+    # The path is the straight line CLIPPED to the action box: a coordinate that reaches its bound
+    # stays there and the other one keeps moving. The path ends when every moving coordinate has
+    # reached its bound.
+    s_bound = float(np.max(limits[np.isfinite(limits)]))
 
     def moisture(s: float) -> float:
         return _evaluate(plain, t_amb, phi, np.clip(a0 + s * direction, -1.0, 1.0))[0]
