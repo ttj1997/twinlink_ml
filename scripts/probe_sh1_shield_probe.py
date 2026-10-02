@@ -28,6 +28,7 @@ import json
 import sys
 import time
 import warnings
+from itertools import pairwise
 from multiprocessing import Pool
 from pathlib import Path
 from typing import Any
@@ -132,7 +133,7 @@ def main() -> int:
             solved = [
                 (t, x) for t, x in zip(GRID_T_IN, g["moisture"], strict=True) if x is not None
             ]
-            for (t0, x0), (t1, x1) in zip(solved[:-1], solved[1:], strict=True):
+            for (t0, x0), (t1, x1) in pairwise(solved):
                 if x1 > x0 + MONOTONE_TOLERANCE:
                     violations.append(
                         {
