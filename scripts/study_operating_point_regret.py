@@ -140,16 +140,13 @@ import json
 import time
 import warnings
 from collections.abc import Callable
-from dataclasses import dataclass
 from multiprocessing import Pool, cpu_count
 from pathlib import Path
 from typing import Any
 
 import numpy as np
-from scipy.optimize import differential_evolution, minimize
 
 from twinlink_ml.simulation import (
-    GreyBoxFluidBedGranulator,
     PlaceholderConfigWarning,
     ProcessConfig,
     load_process_config,
@@ -169,7 +166,15 @@ from twinlink_ml.simulation.operating_point import (
 from twinlink_ml.simulation.operating_point import (
     SOLVE_FAILURE_PENALTY_KW as _SOLVE_FAILURE_PENALTY_KW,
 )
-from twinlink_ml.simulation.steady_state import SteadyStateSolution, solve_steady_state
+from twinlink_ml.simulation.oracle_search import (
+    OptimizationBudget,
+    action_bounds,
+    build_grid,
+    compute_regret,
+    evaluate_point,
+)
+from twinlink_ml.simulation.oracle_search import run_de_nm as _optimize
+from twinlink_ml.simulation.steady_state import SteadyStateSolution
 from twinlink_ml.utils.tracking import environment_fingerprint
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -240,42 +245,6 @@ def _suppress_placeholder_warning() -> None:
     warnings.filterwarnings("ignore", category=PlaceholderConfigWarning)
 
 
-def evaluate_point(
-    t_in: float,
-    u_gas: float,
-    p_nozzle: float,
-    t_amb: float,
-    phi_amb: float,
-    *,
-    max_iterations: int,
-    tolerance: float,
-    base_config: ProcessConfig,
-) -> SteadyStateSolution:
-    """Bewusst OHNE eigenes ``temperature_bracket_celsius`` -- ein erster Versuch, das
-    Modul-Default (``ambient+10`` / ``max(inlet, susp)+5``, siehe ``steady_state.py``)
-    durch eine breitere, "physikalisch begründete" Marge zu ersetzen, hat sich als
-    Fehlschlag erwiesen: ``ambient+10`` ist keine willkürliche Wahl, sondern hält die
-    äußere Bisektion aktiv im Trocknungsregime (siehe dortiger Docstring, Abschnitt zur
-    unteren Bracket-Grenze) -- eine niedrigere Grenze reicht in die Kondensationsbranche
-    hinein, in der die INNERE Feuchte-Bisektion strukturell keinen Vorzeichenwechsel
-    findet. Das brach nicht nur die wenigen Randfälle, die es beheben sollte, sondern
-    praktisch jede Kandidatenauswertung (siehe Modul-Docstring, Abschnitt
-    "Laufzeit-Kompromiss"). Der eigentliche Befund aus dem ersten vollen Gitterlauf --
-    Such- und Report-Präzision fanden am Bracket-Rand unterschiedliches Vorzeichen, weil
-    sie MIT UNTERSCHIEDLICHER Bisektionspräzision liefen -- wird stattdessen dadurch
-    behoben, dass ``optimize_grid_point``/``find_fixed_operating_point`` für den
-    ENDGÜLTIGEN Report dieselbe (Such-)Präzision verwenden wie während der Suche, siehe
-    dort. Ein danach verbleibender Bracket-Fehlschlag ist damit ein echter Befund
-    (der angenommene Beharrungszustand liegt außerhalb des dokumentierten Gültigkeits-
-    bereichs des Lösers), keine Artefakt-Diagnose mehr.
-    """
-    config = build_variant_config(
-        base_config, t_in=t_in, u_gas=u_gas, p_nozzle=p_nozzle, t_amb=t_amb, phi_amb=phi_amb
-    )
-    simulator = GreyBoxFluidBedGranulator(config)
-    return solve_steady_state(simulator, max_iterations=max_iterations, tolerance=tolerance)
-
-
 def _penalized_energy(
     x: np.ndarray, t_amb: float, phi_amb: float, max_iterations: int, tolerance: float
 ) -> float:
@@ -302,57 +271,6 @@ def _penalized_energy(
     )
     objective = _objective_components(solution, _BASE_CONFIG)["objective_value"]
     return float(objective + _PENALTY_WEIGHT_KW * check.normalized_violation)
-
-
-@dataclass(frozen=True, slots=True)
-class OptimizationBudget:
-    """Suchbudget für ``differential_evolution`` + Nelder-Mead, geteilt von BB2 und BB3(a)."""
-
-    seed: int
-    popsize: int
-    maxiter: int
-    de_tol: float
-    search_max_iterations: int
-    search_tolerance: float
-    workers: int
-
-
-def _optimize(
-    objective: Callable[..., float],
-    bounds: list[tuple[float, float]],
-    args: tuple,
-    budget: OptimizationBudget,
-    *,
-    de_workers: int | Callable[[Callable, list], list],
-) -> tuple[Any, Any, float, float]:
-    """DE + Nelder-Mead-Verfeinerung, gemeinsam für BB2 und BB3(a) verwendet."""
-    de_start = time.perf_counter()
-    de_result = differential_evolution(
-        objective,
-        bounds,
-        args=args,
-        seed=budget.seed,
-        polish=False,
-        workers=de_workers,
-        updating="deferred" if de_workers != 1 else "immediate",
-        popsize=budget.popsize,
-        maxiter=budget.maxiter,
-        tol=budget.de_tol,
-    )
-    de_elapsed = time.perf_counter() - de_start
-
-    refine_start = time.perf_counter()
-    refine_result = minimize(
-        objective,
-        de_result.x,
-        args=args,
-        method="Nelder-Mead",
-        bounds=bounds,
-        options={"xatol": 1e-4, "fatol": 1e-7, "maxiter": 200, "adaptive": True},
-    )
-    refine_elapsed = time.perf_counter() - refine_start
-
-    return de_result, refine_result, de_elapsed, refine_elapsed
 
 
 def optimize_grid_point(
@@ -634,67 +552,6 @@ def verify_no_feasible_fixed_point_exists(
         "minimum_violation_found": best_fun / _PENALTY_WEIGHT_KW,
         "de_elapsed_s": de_elapsed,
         "refine_elapsed_s": refine_elapsed,
-    }
-
-
-def build_grid(base: ProcessConfig, grid_size: int) -> list[tuple[float, float]]:
-    disturbances = base.disturbances
-    t_amb_values = np.linspace(
-        disturbances.ambient_temperature_celsius.minimum,
-        disturbances.ambient_temperature_celsius.maximum,
-        grid_size,
-    )
-    phi_values = np.linspace(
-        disturbances.ambient_relative_humidity.minimum,
-        disturbances.ambient_relative_humidity.maximum,
-        grid_size,
-    )
-    return [(float(t), float(phi)) for t in t_amb_values for phi in phi_values]
-
-
-def action_bounds(base: ProcessConfig) -> list[tuple[float, float]]:
-    actions = base.actions
-    return [
-        (actions.inlet_temperature_celsius.minimum, actions.inlet_temperature_celsius.maximum),
-        (actions.gas_velocity_m_per_s.minimum, actions.gas_velocity_m_per_s.maximum),
-        (actions.nozzle_pressure_bar.minimum, actions.nozzle_pressure_bar.maximum),
-    ]
-
-
-def compute_regret(
-    grid_results: list[dict[str, Any]], fixed_point: dict[str, Any]
-) -> dict[str, Any]:
-    absolute_kw: list[float] = []
-    relative_pct: list[float] = []
-    for grid_point, fixed in zip(grid_results, fixed_point["per_grid_point"], strict=True):
-        if grid_point.get("solve_failed") or not grid_point.get("feasible", False):
-            continue
-        if fixed.get("solve_failed") or not fixed.get("feasible", False):
-            continue
-        instance_optimum = grid_point["energy_target"]
-        fixed_energy = fixed["energy_target"]
-        regret = fixed_energy - instance_optimum
-        absolute_kw.append(regret)
-        denom = abs(instance_optimum) if abs(instance_optimum) > 1e-9 else 1e-9
-        relative_pct.append(100.0 * regret / denom)
-
-    if not absolute_kw:
-        return {"n_points": 0}
-
-    absolute_arr = np.asarray(absolute_kw)
-    relative_arr = np.asarray(relative_pct)
-    return {
-        "n_points": len(absolute_kw),
-        "absolute_kw": {
-            "median": float(np.median(absolute_arr)),
-            "p95": float(np.percentile(absolute_arr, 95)),
-            "max": float(np.max(absolute_arr)),
-        },
-        "relative_pct": {
-            "median": float(np.median(relative_arr)),
-            "p95": float(np.percentile(relative_arr, 95)),
-            "max": float(np.max(relative_arr)),
-        },
     }
 
 
