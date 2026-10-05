@@ -17,6 +17,19 @@
 > gas-fired heaters main case, electric as sensitivity), a fixed check step of the table
 > method against the direct method (1.6, M3), and a working assumption for the conference date
 > (D1). RU1-RU3 are in the repository now; D2 is resolved by that file.
+>
+> **Revision 2026-10-02 (third pass, M0).** All remaining decisions D1, D4 (line B), D6-D15 are
+> confirmed by the project lead as recommended below (D1: working assumption stays, the date
+> follows; D8: the transfer of the margin to line B is marked as an assumption in every finding;
+> D10: the two additional external-source states are synthetic, e.g. part load of the spray
+> tower, and marked as placeholders because the partner model supplies one data case only; D11: the
+> result of the shield experiment (Befund 69) is added to the RL comparison if it passes its gate).
+> **Change of a criterion, with reason:** the first line-B criterion (median outlet-temperature
+> difference of at least 10 K) was an unsuitable proxy and is replaced by LB1-LB3 (below): with
+> condensing recovery (Befund 57) the moisture of the exhaust, hence its dew point, decides, not
+> the dry temperature. The first criterion, its script and its artifact stay as they are; the
+> result under it (no candidate qualifies) is in "M0 results". M0 results are at the end of this
+> file.
 
 ## MO1 Design
 
@@ -25,7 +38,7 @@
 | Element | Content | Source / status |
 |---|---|---|
 | Line A | fluidised-bed line, steady-state grey-box **laboratory model** (`solve_steady_state`) | existing config |
-| Line B | a defined, justified variation of line A, **synthetic** and labelled as such everywhere; **not** derived from the retracted parametrisation of Befund 56 | which parameters differ and why: to be fixed and justified in M0 (D4) |
+| Line B | line A with a **higher spray rate** (other product, higher water load); same geometry, same critical moisture; **synthetic**, labelled as such everywhere; qualitatively backed by the plant data, where two products had very different operating points, but **no number** from the retracted parametrisation of Befund 56 | **2.0 kg/h** (line A: 1.5), chosen by LB3, see "M0 results" below and the caveat there |
 | Scale | stationary mass and energy flows of each line scaled **linearly** to plant size; factor chosen so that the exhaust flow of one line equals that of the fluidised-bed source of the partner model (8 kg/s *(finding, Befund 60)*; the lab model runs at 0.0294 kg/s *(finding, Befund 57)*, factor about 272 *(derived)*) | a scaling computation, never a plant statement; the process model itself is not re-solved at plant size |
 | External source | one fixed exhaust stream (partner model: spray-tower line Q1, 20 kg/s, 125.233 degC, Y = 0.06482) | Befund 60, data case PA2 *(finding)*; mapping to be confirmed (D4) |
 | External sink | one fixed sink (partner model: S1, 20 kg/s, 15 -> 300 degC) | Befund 60 *(finding)* |
@@ -288,21 +301,107 @@ recommendation.
 
 | # | Decision | Status / recommendation |
 |---|---|---|
-| D1 | Conference date | **working assumption end of June 2027** (about 39 weeks from 2026-10-01) until confirmed; plan built for an earlier due date (MO2) |
+| D1 | Conference date | **working assumption end of June 2027** (about 39 weeks from 2026-10-01) until confirmed (confirmed to stay, the date follows); plan built for an earlier due date (MO2) |
 | D2 | Stage plan RU1-RU3 | **resolved**: filed as `docs/10_bestandsaufnahme_rl_umgebung.md`, reconciled there |
 | D3 | Quality limit | **fixed**: 0.15 main case, 0.20 separately as stress case |
-| D4 | Mapping, scale, line B | **fixed**: lab lines; linear scaling of stationary flows, factor so that one line's exhaust flow equals that of the fluidised-bed source of the partner model; labelled scaling everywhere; line B a defined, justified, synthetic variation of line A, not derived from Befund 56. Open inside it: which parameters differ (recommendation: geometry and d50, not the critical moisture, so one validity boundary) |
+| D4 | Mapping, scale, line B | **fixed**: lab lines; linear scaling of stationary flows, factor so that one line's exhaust flow equals that of the fluidised-bed source of the partner model; labelled scaling everywhere; line B a defined, justified, synthetic variation of line A, not derived from Befund 56. Line B differs in the water load only: a higher spray rate (other product), same geometry, same critical moisture; 2.0 kg/h by LB3 (see M0 results) |
 | D5 | Heater carrier, objective | **fixed**: per-carrier objective rewritten; gas-fired heaters main, electric as sensitivity |
-| D6 | Variables | open; recommend 4 process set points, nozzle pressure fixed at its lower bound after one 6-variable check on one scenario, spray rate fixed as in Befund 52 |
-| D7 | Heat allocation | open; recommend enumerated discrete routings over a pruned list now; the continuous split is extension X3 |
-| D8 | Margin for line B | open; recommend `m_B = m_A`, sensitivity `{0.5, 1, 2} m`; no soft sensor exists for line B; constant-trained band half-width 0.0082 kg/kg as an upper sensitivity |
-| D9 | Weighting | open; recommend CO2 primary with the Befund 57 factors, kWh sum from the same run, no cost variant |
-| D10 | Scenario set | open; recommend 7 x 7 ambient x 3 external-source states (about 150 optima); the external states need a definition from the partner model |
-| D11 | RL comparison scope | open; recommend the existing single-line results only (S0.3, S0.6), compared on the Befund 52 grid; wording "did not reach the oracle under this budget", never "RL cannot" |
-| D12 | Transient check | open; recommend yes, about 5 scenarios, Befund 53 pattern (batch-averaged `Q_rec` differs from the steady value, Befund 52 d) |
-| D13 | Method | open, with the check step fixed: tables primary, direct DE as check on at least 12 optima, at least half binding |
-| D14 | Pinch parameters for arm P | open; recommend `dT_min` 20 K, `T_kalt` 29.1 degC primary; {10, 20} K x {15, 29.1} degC sensitivity; per-source `T_kalt` (10 / 15 in the partner model) is not representable in the network-wide config and needs the probe-script route (docs/06) |
-| D15 (new) | Storage and sequential RL environment (RU2/RU3) | open; recommend extensions X1/X2 after the core, only if time remains; not part of the core |
+| D6 | Variables | **fixed (confirmed 2026-10-02)**:  4 process set points, nozzle pressure fixed at its lower bound after one 6-variable check on one scenario, spray rate fixed as in Befund 52 |
+| D7 | Heat allocation | **fixed (confirmed 2026-10-02)**:  enumerated discrete routings over a pruned list now; the continuous split is extension X3 |
+| D8 | Margin for line B | **fixed (confirmed 2026-10-02)**:  `m_B = m_A`, sensitivity `{0.5, 1, 2} m`; no soft sensor exists for line B; constant-trained band half-width 0.0082 kg/kg as an upper sensitivity |
+| D9 | Weighting | **fixed (confirmed 2026-10-02)**:  CO2 primary with the Befund 57 factors, kWh sum from the same run, no cost variant |
+| D10 | Scenario set | **fixed (confirmed 2026-10-02)**:  7 x 7 ambient x 3 external-source states (about 150 optima); the external states need a definition from the partner model |
+| D11 | RL comparison scope | **fixed (confirmed 2026-10-02)**:  the existing single-line results only (S0.3, S0.6), compared on the Befund 52 grid; wording "did not reach the oracle under this budget", never "RL cannot" |
+| D12 | Transient check | **fixed (confirmed 2026-10-02)**:  yes, about 5 scenarios, Befund 53 pattern (batch-averaged `Q_rec` differs from the steady value, Befund 52 d) |
+| D13 | Method | **fixed (confirmed 2026-10-02)**, with the check step: tables primary, direct DE as check on at least 12 optima, at least half binding |
+| D14 | Pinch parameters for arm P | **fixed (confirmed 2026-10-02)**:  `dT_min` 20 K, `T_kalt` 29.1 degC primary; {10, 20} K x {15, 29.1} degC sensitivity; per-source `T_kalt` (10 / 15 in the partner model) is not representable in the network-wide config and needs the probe-script route (docs/06) |
+| D15 (new) | Storage and sequential RL environment (RU2/RU3) | **fixed (confirmed 2026-10-02)**:  extensions X1/X2 after the core, only if time remains; not part of the core |
 
-Blocking before M0: D4's open inside-point (line B parameters), D6-D8, D10. The rest has a
-default above.
+All decisions are fixed; the blocking list of the second pass is empty. D8: the margin transfer to line B is marked as an assumption in every finding. D10: the two extra external-source states are synthetic placeholders.
+
+## M0 results (2026-10-02)
+
+Branch `m0` (fixed worktree `twinlink_m0`, merged fast-forward into `master`); every script was
+committed before it ran, every run record has `git/dirty=False`. Artifacts: `m0_cost_per_call`,
+`m0_line_b_spray_rate`, `m0_line_b_network`. A lab-book entry is deferred to the M1 report (the
+number of the next Befund is to be agreed, since Befund 69 belongs to the shield experiment).
+
+**M0.1 Helpers moved to `src/`.** `evaluate_point`, `OptimizationBudget`, `run_de_nm` (was
+`_optimize`), `build_grid`, `action_bounds`, `compute_regret` now live in
+`src/twinlink_ml/simulation/oracle_search.py`; the script re-imports them; the function bodies were
+checked equal to HEAD by AST comparison (docstrings aside); 3 new tests. Full suite: 561 passed,
+1 skipped in 988.55 s; ruff clean.
+
+**M0.2 Cost per call (measured, single process).** Steady-state solve at the search precision of
+Befund 52: median of the three round medians 0.209 s (rounds 0.178 / 0.209 / 0.258 s; 23 of 24
+points solved per round, a failed solve costs 0.013-0.020 s); at the solver defaults 0.49-0.67 s
+(11 of 12 solved). Cascade on the partner data case: 1.30-1.40 ms per call in sensible mode,
+0.056-0.081 ms in condensing mode (the difference was not investigated). Pinch target (50
+segments): 4.1 ms. So the estimate of about 0.3 s per solve in 1.6 was somewhat high; the
+solve dominates and the network and the pinch are negligible by two orders of magnitude, which
+makes the enumeration of 343 allocations cheap (87 ms per scenario in the smoke test). The
+increase from round 1 to round 3 is unexplained. Processor load, sampled at phase ends: 5 %
+(start), 4 % (after the search-precision phase), **62 %** (after the solver-defaults phase), 7 %,
+9 %: another session's `pytest -q -x` process (not started by this work) was running on the machine
+from 13:51 and probably explains the 62 % reading; the search-precision phase itself ran at 4-5 %.
+The 164 ms per environment step supplied in RU1 lies within the first round (178 ms median),
+consistent as an order of magnitude, not reproduced exactly.
+
+**M0.3 Line B under the first criterion (outlet temperature difference of at least 10 K).**
+Spray rates 1.5 (line A) / 2.0 / 2.5 / 3.0 kg/h, 3 x 3 ambient grid, quality limit `0.15 - m`,
+oracle of Befund 52 (artifact `m0_line_b_spray_rate`). All optima solver- and constraint-feasible
+at all 9 scenarios. Median `|T_out(s) - T_out(1.5)|` at the optima: 4.6 K (2.0), 6.9 K (2.5),
+6.9 K (3.0): no candidate meets 10 K. From 2.5 kg/h on the inlet-temperature optimum sits at the
+upper bound of 120 degC in most scenarios. The criterion was an unsuitable proxy (see the
+revision note at the top); the result stands as measured.
+
+**M0.4 Line B under LB1-LB3 (artifact `m0_line_b_network`; evaluation only, the stored optima
+re-solved at their set points; criteria committed before the run, script `f1c013d`).** Scale
+factor `k = 271.797` (8 kg/s over the dry-air flow of line A at the nominal point, 0.029434 kg/s):
+a scaling computation, not a plant statement. Network: Q1 and S1 from the partner data case, line
+exhausts LA/LB as sources, line inlets SA/SB as sinks, condensing, `T_kalt` 29.1 degC, `dT_min` 20 K,
+`eta_H` 0.80, `H_u` 45 MJ/kg, gas-fired heaters, CO2 factors 0.366 / 0.201 kg/kWh.
+
+*LB1 (descriptive, lab scale).* Dew point of the exhaust over the 9 scenarios [degC] / `Y_out`
+[kg/kg] / `T_out` [degC]: 1.5: 19.8-40.1 / 0.0146-0.0492 / 32.1-48.2; 2.0: 28.2-42.3 /
+0.0244-0.0556 / 42.6-51.5; 2.5: 30.9-43.0 / 0.0288-0.0580 / 45.0-52.6; 3.0: 31.1-43.0 /
+0.0290-0.0581 / 45.0-52.6. Recoverable down to `T_kalt + dT_min` = 49.1 degC: zero in all scenarios
+for 1.5 and in 8 of 9 for 2.0 (maximum 0.039 kW sensible), in 7 of 9 for 2.5 and 3.0 (maximum
+0.064 / 0.078 kW), latent part zero everywhere. Recoverable down to `T_kalt` = 29.1 degC
+(sensible; latent): 1.5: 0.078-0.31 kW; latent only in 4 of 9 scenarios (maximum 0.85 kW); 2.0:
+0.23-0.36 kW; latent in 7 of 9 (maximum 1.07 kW); 2.5: 0.30-0.44 kW; latent in 9 of 9
+(0.12-1.31 kW); 3.0: 0.36-0.52 kW; latent in 9 of 9 (0.16-1.58 kW). So the water load raises the
+dew point mainly at the dry end (minimum 19.8 -> 28.2-31.1 degC, maximum 40.1 -> 42.3-43.0 degC)
+and makes condensation available in more scenarios, while the heat above the floor of 49.1 degC
+is practically nil for all lines.
+
+*LB2 (decisive criterion as fixed).* Median over the 9 scenarios of (CO2 of the worst allocation
+minus CO2 of the best) / CO2 of the best, whole site: 0.358 (control, line B = line A at 1.5),
+0.360 (2.0), 0.361 (2.5), 0.359 (3.0); **met for every candidate, and for the control.** The
+criterion therefore does not discriminate between spray rates: the difference is the allocation of
+the fixed partner source Q1 (125 degC) between S1 and the line inlets, independent of line B. In the
+best allocation Q1 feeds S1, SA and SB; the line exhausts feed S1 without recovering anything; in
+every scenario between 8 and 196 allocations tie with the best (extra connections of the line
+exhausts add nothing). Number of distinct best allocations over the 9 scenarios / scenarios whose best differs
+from the most frequent one: 3 / 5 (control), 2 / 2 (2.0), 2 / 1 (2.5), 3 / 2 (3.0). Descriptive
+measure added before the run, which isolates what the lines themselves decide (allocations of the
+two lines only, Q1 held at its best connections, relative to the best site CO2): median 0.56 %
+(control), 0.65 % (2.0), 0.84 % (2.5), 1.03 % (3.0): all below 2 %, increasing with the spray
+rate. Relative to the CO2 of the two line sinks plus line electricity only, the criterion
+difference is a factor 2.3-3.0 (not part of the criterion).
+
+*LB3 (choice).* Interior inlet temperature (below 120 degC minus 0.05 K) in 9 of 9 scenarios for
+2.0, 3 of 9 for 2.5, 4 of 9 for 3.0. **The smallest rate that meets LB2 and has an interior optimum
+in the majority is 2.0 kg/h; line B = 2.0 kg/h by the rule.**
+
+*Caveats, to be stated in every use.* (1) LB2 as fixed does not select; the choice of 2.0 rests on
+LB3 alone, i.e. on the interior optimum, not on the allocation being decisive. (2) What the
+allocation decides in this system is mainly the distribution of the fixed source Q1; the lab
+exhaust at 32-53 degC offers almost nothing to the sinks at `dT_min` 20 K (zero above 49.1 degC in
+most scenarios), and the lines-only allocation effect is 0.6-1.0 % of the site CO2 for every
+candidate. This bears on the design: the claim that heat allocation is a real decision between the
+two lines is not supported by this pre-check at lab-scale exhaust temperatures; it holds for Q1.
+(3) The lines are optimised individually, not jointly with the allocation. (4) All kW and kg CO2e/h
+of the network evaluation are scaled by `k`, a scaling computation; the site is dominated by the
+fixed sink S1 (20 kg/s to 300 degC). (5) `T_kalt` 29.1 degC, `dT_min` 20 K, `eta_H`, `H_u` are
+placeholders. (6) Line B is synthetic.
