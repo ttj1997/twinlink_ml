@@ -38,8 +38,6 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-import numpy as np
-
 sys.path.insert(0, str(Path(__file__).resolve().parent / "verify"))
 
 from _common import RUNS_DIR, provenance, require_clean_tree, write_artifact
