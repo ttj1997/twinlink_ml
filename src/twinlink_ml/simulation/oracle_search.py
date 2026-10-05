@@ -30,6 +30,7 @@ __all__ = [
     "compute_regret",
     "evaluate_point",
     "run_de_nm",
+    "with_gas_velocity_minimum",
 ]
 
 
@@ -146,6 +147,22 @@ def action_bounds(base: ProcessConfig) -> list[tuple[float, float]]:
         (actions.gas_velocity_m_per_s.minimum, actions.gas_velocity_m_per_s.maximum),
         (actions.nozzle_pressure_bar.minimum, actions.nozzle_pressure_bar.maximum),
     ]
+
+
+def with_gas_velocity_minimum(
+    bounds: list[tuple[float, float]], minimum_m_per_s: float
+) -> list[tuple[float, float]]:
+    """Bounds of :func:`action_bounds` with the gas-velocity lower bound replaced (a run parameter).
+
+    The config is not touched: the default stays what it is, only the search box of one run
+    changes. The new minimum must lie inside the box (below the upper bound).
+    """
+    low, high = bounds[1]
+    if not minimum_m_per_s < high:
+        raise ValueError(f"gas-velocity minimum {minimum_m_per_s} must be below the bound {high}")
+    out = list(bounds)
+    out[1] = (float(minimum_m_per_s), high)
+    return out
 
 
 def compute_regret(

@@ -87,6 +87,7 @@ from twinlink_ml.simulation.oracle_search import (  # noqa: E402
     OptimizationBudget,
     action_bounds,
     build_grid,
+    with_gas_velocity_minimum,
 )
 
 MARGIN_KG_PER_KG = 0.005961819615175404
@@ -269,13 +270,18 @@ def analyse(
     return {"per_point": rows, "summary": summary}
 
 
-def run_arms(quality_limit: float) -> int:
+def run_arms(quality_limit: float, gas_velocity_min: float | None) -> int:
     config = _load_config()
     workers = cpu_count()
     budget = _budget(workers)
     grid = build_grid(config, 5)
     bounds = action_bounds(config)
+    config_default_min = bounds[1][0]
     tag = f"l{round(quality_limit * 100):03d}"
+    if gas_velocity_min is not None:
+        # run parameter, not a changed default: only the search box of this run
+        bounds = with_gas_velocity_minimum(bounds, gas_velocity_min)
+        tag += f"_umin{round(gas_velocity_min * 100):03d}"
     spec_m0 = OracleSpec(quality_limit, "co2_gas_heater", GAS_HEATER_EFFICIENCY)
     spec_m = OracleSpec(quality_limit - MARGIN_KG_PER_KG, "co2_gas_heater", GAS_HEATER_EFFICIENCY)
 
@@ -288,6 +294,9 @@ def run_arms(quality_limit: float) -> int:
         {
             "_provenance": provenance(),
             "quality_limit_kg_per_kg": quality_limit,
+            "gas_velocity_lower_bound_m_per_s": bounds[1][0],
+            "gas_velocity_lower_bound_config_default_m_per_s": config_default_min,
+            "gas_velocity_lower_bound_is_run_parameter": gas_velocity_min is not None,
             "margin_kg_per_kg": MARGIN_KG_PER_KG,
             "kinetics_boundary_kg_per_kg": KINETICS_BOUNDARY_KG_PER_KG,
             "gas_heater_efficiency": GAS_HEATER_EFFICIENCY,
@@ -310,6 +319,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--stage", choices=("anchor", "arms"), required=True)
     parser.add_argument("--quality-limit", type=float, choices=(0.15, 0.20), default=0.15)
+    parser.add_argument(
+        "--gas-velocity-min",
+        type=float,
+        default=None,
+        help="lower bound of the gas velocity for this run in m/s (default: the config value)",
+    )
     arguments = parser.parse_args()
     require_clean_tree()
     assert Path(twinlink_ml.__file__).resolve().is_relative_to(REPO_ROOT), (
@@ -317,7 +332,7 @@ def main() -> int:
     )
     if arguments.stage == "anchor":
         return run_anchor()
-    return run_arms(arguments.quality_limit)
+    return run_arms(arguments.quality_limit, arguments.gas_velocity_min)
 
 
 if __name__ == "__main__":

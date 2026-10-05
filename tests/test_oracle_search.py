@@ -92,3 +92,26 @@ def test_grid_and_bounds_follow_the_config() -> None:
     bounds = oracle.action_bounds(config)
     assert len(bounds) == 3
     assert all(low < high for low, high in bounds)
+
+
+def test_gas_velocity_minimum_is_a_run_parameter_not_a_default() -> None:
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", PlaceholderConfigWarning)
+        config = load_process_config(CONFIG_PATH)
+    default = oracle.action_bounds(config)
+    shifted = oracle.with_gas_velocity_minimum(default, 1.26)
+    assert shifted[0] == default[0] and shifted[2] == default[2]
+    assert shifted[1] == (1.26, default[1][1])
+    # the config and the input list are untouched
+    assert config.actions.gas_velocity_m_per_s.minimum == 0.8
+    assert default[1][0] == 0.8
+    # the config default value reproduces the default bounds exactly
+    assert oracle.with_gas_velocity_minimum(default, default[1][0]) == default
+
+
+def test_gas_velocity_minimum_must_lie_below_the_upper_bound() -> None:
+    import pytest
+
+    bounds = [(60.0, 120.0), (0.8, 2.5), (1.0, 4.0)]
+    with pytest.raises(ValueError):
+        oracle.with_gas_velocity_minimum(bounds, 2.5)
