@@ -58,6 +58,9 @@ ARTIFACTS = {
     "0.80": "m1_margin_cost_l015",
     "1.26": "m1_margin_cost_l015_umin126",
 }
+CONFIG_DEFAULT_BOUND = (
+    0.8  # conf/process/greybox_gab_placeholder.yaml; artifact m1_margin_cost_l015
+)
 AT_BOUND_TOLERANCE_M_PER_S = 1.0e-3
 STABLE_RELATIVE_CHANGE = 0.5
 REMAINING_THRESHOLD = 0.5
@@ -73,6 +76,11 @@ def _arm_counts(arm: list[dict[str, Any]]) -> dict[str, int]:
         ),
         "n_not_converged": sum(not r.get("converged", True) for r in arm),
     }
+
+
+def _bound(artifact: dict[str, Any]) -> float:
+    """Lower gas-velocity bound of a run; the 0.80 artifact predates the field (config default)."""
+    return float(artifact.get("gas_velocity_lower_bound_m_per_s", CONFIG_DEFAULT_BOUND))
 
 
 def _figures(artifact: dict[str, Any]) -> dict[str, Any]:
@@ -96,7 +104,7 @@ def _figures(artifact: dict[str, Any]) -> dict[str, Any]:
             "remaining_median": float(np.median(remaining)),
             "remaining_pooled": float(np.sum(f - m) / np.sum(f - m0)),
         }
-    bound = artifact["gas_velocity_lower_bound_m_per_s"]
+    bound = _bound(artifact)
     m0_arm, m_arm = artifact["arm_M0_oracle"], artifact["arm_M_oracle"]
     out["descriptive"] = {
         "gas_velocity_lower_bound_m_per_s": bound,
@@ -152,8 +160,8 @@ def main() -> int:
         bound: json.loads((RUNS_DIR / f"{name}.json").read_text("utf-8"))
         for bound, name in ARTIFACTS.items()
     }
-    assert loaded["0.80"]["gas_velocity_lower_bound_m_per_s"] == 0.8
-    assert loaded["1.26"]["gas_velocity_lower_bound_m_per_s"] == 1.26
+    assert _bound(loaded["0.80"]) == 0.8
+    assert _bound(loaded["1.26"]) == 1.26
     assert loaded["1.26"]["gas_velocity_lower_bound_is_run_parameter"] is True
     assert loaded["1.26"]["quality_limit_kg_per_kg"] == loaded["0.80"]["quality_limit_kg_per_kg"]
     assert loaded["1.26"]["margin_kg_per_kg"] == loaded["0.80"]["margin_kg_per_kg"]
