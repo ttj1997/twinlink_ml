@@ -1,0 +1,269 @@
+{
+ "provenance": {
+  "git/commit": "f0910fe04ded90c4eb80499826570dd4cf62e583",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "test_set": "25 Befund-52 grid points; line A, gas heater, limit 0.15, margin m, scaled site",
+ "source_artifacts": {
+  "1.26": "m2_site_network_l015_umin126",
+  "0.80": "m2_site_network_l015_umin080"
+ },
+ "stability_rule": {
+  "same_direction": true,
+  "relative_change_below": 0.5,
+  "none_threshold": 1e-06
+ },
+ "statements": {
+  "S1_routing_effect_best": {
+   "figures": {
+    "site_co2": {
+     "value_1.26": -0.007098355886610243,
+     "value_0.80": -0.002273237110646063,
+     "direction_1.26": "negative",
+     "direction_0.80": "negative",
+     "same_direction": true,
+     "relative_change": 2.122576106718961,
+     "stable": false
+    },
+    "line_co2": {
+     "value_1.26": -0.08379755263660259,
+     "value_0.80": -0.031470210217640314,
+     "direction_1.26": "negative",
+     "direction_0.80": "negative",
+     "same_direction": true,
+     "relative_change": 1.6627579560822476,
+     "stable": false
+    },
+    "site_kwh": {
+     "value_1.26": -0.007116427679511533,
+     "value_0.80": -0.002276602635228361,
+     "direction_1.26": "negative",
+     "direction_0.80": "negative",
+     "same_direction": true,
+     "relative_change": 2.12589802427146,
+     "stable": false
+    }
+   },
+   "stable": false
+  },
+  "S2_setpoint_effect": {
+   "figures": {
+    "site_co2": {
+     "value_1.26": -0.010721400223970187,
+     "value_0.80": -0.004827232724072677,
+     "direction_1.26": "negative",
+     "direction_0.80": "negative",
+     "same_direction": true,
+     "relative_change": 1.2210241015528818,
+     "stable": false
+    },
+    "line_co2": {
+     "value_1.26": -0.1376819089260001,
+     "value_0.80": -0.06879881797572815,
+     "direction_1.26": "negative",
+     "direction_0.80": "negative",
+     "same_direction": true,
+     "relative_change": 1.0012249189306353,
+     "stable": false
+    },
+    "site_kwh": {
+     "value_1.26": -0.010831769631375474,
+     "value_0.80": -0.004870235291013407,
+     "direction_1.26": "negative",
+     "direction_0.80": "negative",
+     "same_direction": true,
+     "relative_change": 1.2240752210395942,
+     "stable": false
+    }
+   },
+   "stable": false
+  },
+  "S3_joint_effect": {
+   "figures": {
+    "site_co2": {
+     "value_1.26": 0.0,
+     "value_0.80": 7.950332760795214e-07,
+     "direction_1.26": "none",
+     "direction_0.80": "none",
+     "same_direction": true,
+     "relative_change": 0.0,
+     "stable": true
+    },
+    "line_co2": {
+     "value_1.26": 4.0322455671265217e-16,
+     "value_0.80": 1.2599951573148612e-05,
+     "direction_1.26": "none",
+     "direction_0.80": "positive",
+     "same_direction": false,
+     "relative_change": 0.9999999999679979,
+     "stable": false
+    },
+    "site_kwh": {
+     "value_1.26": 0.0,
+     "value_0.80": -3.97125330387946e-06,
+     "direction_1.26": "none",
+     "direction_0.80": "negative",
+     "same_direction": false,
+     "relative_change": 1.0,
+     "stable": false
+    }
+   },
+   "stable": false
+  },
+  "S4_total_effect": {
+   "figures": {
+    "site_co2": {
+     "value_1.26": -0.01711604363375116,
+     "value_0.80": -0.006869808262789714,
+     "direction_1.26": "negative",
+     "direction_0.80": "negative",
+     "same_direction": true,
+     "relative_change": 1.491487823096917,
+     "stable": false
+    },
+    "line_co2": {
+     "value_1.26": -0.20212321252955354,
+     "value_0.80": -0.09808576645981296,
+     "direction_1.26": "negative",
+     "direction_0.80": "negative",
+     "same_direction": true,
+     "relative_change": 1.0606783208689725,
+     "stable": false
+    },
+    "site_kwh": {
+     "value_1.26": -0.01728734255444281,
+     "value_0.80": -0.0068963560459448965,
+     "direction_1.26": "negative",
+     "direction_0.80": "negative",
+     "same_direction": true,
+     "relative_change": 1.5067357948561664,
+     "stable": false
+    }
+   },
+   "stable": false
+  }
+ },
+ "overall": "partly stable",
+ "unstable_statements": [
+  "S1_routing_effect_best",
+  "S2_setpoint_effect",
+  "S3_joint_effect",
+  "S4_total_effect"
+ ],
+ "descriptive": {
+  "1.26": {
+   "n_points": 25,
+   "n_feasible_in_all_arms": 25,
+   "n_masked": 0,
+   "n_m_worse_than_s": 12,
+   "n_m_on_lower_gas_bound": 18,
+   "n_s_on_lower_gas_bound": 25,
+   "n_m_binding_moisture": 11,
+   "routing_share_of_total_site_co2_abs_medians": 0.4147317353217901,
+   "effects_rel_median_site_co2": {
+    "routing_effect_best": -0.007098355886610243,
+    "setpoint_effect": -0.010721400223970187,
+    "joint_effect": 0.0,
+    "total_effect": -0.01711604363375116
+   },
+   "effects_rel_median_line_co2": {
+    "routing_effect_best": -0.08379755263660259,
+    "setpoint_effect": -0.1376819089260001,
+    "joint_effect": 4.0322455671265217e-16,
+    "total_effect": -0.20212321252955354
+   },
+   "effects_abs_median_site_co2_kg_per_h": {
+    "routing_effect_best": -7.70626813447484,
+    "setpoint_effect": -11.553286955858084,
+    "joint_effect": 0.0,
+    "total_effect": -18.581332167637356
+   },
+   "best_allocations": {
+    "F_best": {
+     "[[\"Q1\", \"S1\"], [\"Q1\", \"SA\"], [\"LA\", \"S1\"]]": 20,
+     "[[\"Q1\", \"S1\"], [\"LA\", \"S1\"]]": 5
+    },
+    "S": {
+     "[[\"Q1\", \"S1\"], [\"Q1\", \"SA\"], [\"LA\", \"S1\"]]": 16,
+     "[[\"Q1\", \"S1\"], [\"LA\", \"S1\"]]": 9
+    },
+    "M": {
+     "[[\"Q1\", \"S1\"], [\"Q1\", \"SA\"], [\"LA\", \"S1\"]]": 16,
+     "[[\"Q1\", \"S1\"], [\"LA\", \"S1\"]]": 9
+    }
+   },
+   "arm_failures": {
+    "F": {
+     "solve_failed": 0,
+     "infeasible": 0
+    },
+    "S": {
+     "solve_failed": 0,
+     "infeasible": 0
+    },
+    "M": {
+     "solve_failed": 0,
+     "infeasible": 0
+    }
+   }
+  },
+  "0.80": {
+   "n_points": 25,
+   "n_feasible_in_all_arms": 25,
+   "n_masked": 0,
+   "n_m_worse_than_s": 14,
+   "n_m_on_lower_gas_bound": 8,
+   "n_s_on_lower_gas_bound": 22,
+   "n_m_binding_moisture": 22,
+   "routing_share_of_total_site_co2_abs_medians": 0.3318653305524051,
+   "effects_rel_median_site_co2": {
+    "routing_effect_best": -0.002273237110646063,
+    "setpoint_effect": -0.004827232724072677,
+    "joint_effect": 7.950332760795214e-07,
+    "total_effect": -0.006869808262789714
+   },
+   "effects_rel_median_line_co2": {
+    "routing_effect_best": -0.031470210217640314,
+    "setpoint_effect": -0.06879881797572815,
+    "joint_effect": 1.2599951573148612e-05,
+    "total_effect": -0.09808576645981296
+   },
+   "effects_abs_median_site_co2_kg_per_h": {
+    "routing_effect_best": -2.434738810341969,
+    "setpoint_effect": -5.158429507224582,
+    "joint_effect": 0.0008432124764112814,
+    "total_effect": -7.33652655518199
+   },
+   "best_allocations": {
+    "F_best": {
+     "[[\"Q1\", \"S1\"], [\"Q1\", \"SA\"], [\"LA\", \"S1\"]]": 21,
+     "[[\"Q1\", \"S1\"], [\"LA\", \"S1\"]]": 4
+    },
+    "S": {
+     "[[\"Q1\", \"S1\"], [\"Q1\", \"SA\"], [\"LA\", \"S1\"]]": 19,
+     "[[\"Q1\", \"S1\"], [\"LA\", \"S1\"]]": 6
+    },
+    "M": {
+     "[[\"Q1\", \"S1\"], [\"Q1\", \"SA\"], [\"LA\", \"S1\"]]": 19,
+     "[[\"Q1\", \"S1\"], [\"LA\", \"S1\"]]": 6
+    }
+   },
+   "arm_failures": {
+    "F": {
+     "solve_failed": 0,
+     "infeasible": 0
+    },
+    "S": {
+     "solve_failed": 0,
+     "infeasible": 0
+    },
+    "M": {
+     "solve_failed": 0,
+     "infeasible": 0
+    }
+   }
+  }
+ }
+}
