@@ -53,6 +53,7 @@ from twinlink_ml.rl.lagrange import (
     dual_ascent,
     relabel_rewards,
 )
+from twinlink_ml.rl.shield import ShieldConfig, ShieldedLagrangeBanditEnv
 from twinlink_ml.simulation import PlaceholderConfigWarning
 from twinlink_ml.utils.seeding import seed_everything
 from twinlink_ml.utils.tracking import JsonlExperimentLogger, RunRecord, environment_fingerprint
@@ -133,6 +134,7 @@ def make_callback(
     seed: int,
     run_uid: str,
     run_start: float,
+    shield: ShieldConfig | None = None,
 ) -> Any:
     from stable_baselines3.common.callbacks import BaseCallback
 
@@ -204,6 +206,24 @@ def make_callback(
                     "ent_coef": float(values.get("train/ent_coef", float("nan"))),
                 }
             )
+            if shield is not None:
+                self.trace[-1].update(
+                    {
+                        "shield_active": bool(info["shield_active"]),
+                        "shield_saturated": bool(info["shield_saturated"]),
+                        "proposed_t_in_celsius": float(
+                            info["shield_proposed_inlet_temperature_celsius"]
+                        ),
+                        "executed_t_in_celsius": float(
+                            info["shield_executed_inlet_temperature_celsius"]
+                        ),
+                        "proposed_moisture_kg_per_kg": float(
+                            info["shield_proposed_moisture_kg_per_kg"]
+                        ),
+                        "shield_n_solves": int(info["shield_n_solves"]),
+                        "env_step_seconds": float(info["shield_step_seconds"]),
+                    }
+                )
 
             if self.num_timesteps % lagrange.update_interval_steps == 0:
                 self._dual_update()
@@ -284,6 +304,7 @@ def make_callback(
                         "algorithm": algorithm,
                         "target_entropy": target_entropy,
                         "action_noise_sigma": action_noise_sigma,
+                        "shield": dataclasses.asdict(shield) if shield is not None else None,
                         "test_set": "25 Befund-52 grid points (ambient T x relative humidity)",
                         "checkpoint/path": str(checkpoint_file.relative_to(REPO_ROOT)),
                         "infeasible_violations": [
@@ -342,6 +363,11 @@ def main() -> int:
         help="S0.8: SAC target entropy; default: stable-baselines3 auto (-dim(action) = -2).",
     )
     parser.add_argument(
+        "--shield",
+        action="store_true",
+        help="SH1: execute the moisture-shielded action (see twinlink_ml.rl.shield).",
+    )
+    parser.add_argument(
         "--quality-limit-kg-per-kg",
         type=float,
         default=None,
@@ -388,8 +414,12 @@ def main() -> int:
         raise SystemExit(f"{output} / {trace} exist already; use another --output-prefix")
     logger = JsonlExperimentLogger(output)
 
-    env = LagrangeBanditEnv(
-        lagrange, BanditEnvConfig(product_moisture_limit_kg_per_kg=_QUALITY_LIMIT_KG_PER_KG)
+    env_config = BanditEnvConfig(product_moisture_limit_kg_per_kg=_QUALITY_LIMIT_KG_PER_KG)
+    shield = ShieldConfig() if arguments.shield else None
+    env: LagrangeBanditEnv = (
+        ShieldedLagrangeBanditEnv(lagrange, env_config, shield=shield)
+        if shield is not None
+        else LagrangeBanditEnv(lagrange, env_config)
     )
     env.reference_table  # noqa: B018  (build the failure-bound table before training)
     train_env = Monitor(env)
@@ -420,6 +450,7 @@ def main() -> int:
         seed=arguments.seed,
         run_uid=run_uid,
         run_start=run_start,
+        shield=shield,
     )
     model.learn(total_timesteps=max(CHECKPOINTS), callback=callback)
     return 0

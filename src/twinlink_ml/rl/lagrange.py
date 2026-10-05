@@ -242,6 +242,23 @@ class LagrangeBanditEnv(OperatingPointBanditEnv):
             ambient_temperature_celsius=ambient_temperature_celsius,
             ambient_relative_humidity=ambient_relative_humidity,
         )
+        return self.lagrangian_reward(
+            info,
+            ambient_temperature_celsius=ambient_temperature_celsius,
+            ambient_relative_humidity=ambient_relative_humidity,
+        )
+
+    def lagrangian_reward(
+        self,
+        info: dict[str, Any],
+        *,
+        ambient_temperature_celsius: float,
+        ambient_relative_humidity: float,
+    ) -> tuple[float, dict[str, Any]]:
+        """Lagrangian reward of a point already solved by the plain environment.
+
+        ``info`` is the plain info dict and is extended in place.
+        """
         bin_index = self.bin_of(ambient_temperature_celsius, ambient_relative_humidity)
         multiplier = float(self._multipliers.reshape(-1)[bin_index])
         info["lagrange_bin"] = bin_index
