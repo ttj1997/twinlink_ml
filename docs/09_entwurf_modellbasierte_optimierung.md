@@ -23,7 +23,8 @@
 > follows; D8: the transfer of the margin to line B is marked as an assumption in every finding;
 > D10: the two additional external-source states are synthetic, e.g. part load of the spray
 > tower, and marked as placeholders because the partner model supplies one data case only; D11: the
-> result of the shield experiment (Befund 69) is added to the RL comparison if it passes its gate).
+> result of the shield experiment (third addendum to Befund 68) and of SH3 (fourth addendum) is part of
+> the RL comparison, see D11 below; the shield did not pass its gate).
 > **Change of a criterion, with reason:** the first line-B criterion (median outlet-temperature
 > difference of at least 10 K) was an unsuitable proxy and is replaced by LB1-LB3 (below): with
 > condensing recovery (Befund 57) the moisture of the exhaust, hence its dew point, decides, not
@@ -311,11 +312,12 @@ recommendation.
 | D8 | Margin for line B | **fixed (confirmed 2026-10-02)**:  `m_B = m_A`, sensitivity `{0.5, 1, 2} m`; no soft sensor exists for line B; constant-trained band half-width 0.0082 kg/kg as an upper sensitivity |
 | D9 | Weighting | **fixed (confirmed 2026-10-02)**:  CO2 primary with the Befund 57 factors, kWh sum from the same run, no cost variant |
 | D10 | Scenario set | **fixed (confirmed 2026-10-02)**:  7 x 7 ambient x 3 external-source states (about 150 optima); the external states need a definition from the partner model |
-| D11 | RL comparison scope | **fixed (confirmed 2026-10-02)**:  the existing single-line results only (S0.3, S0.6), compared on the Befund 52 grid; wording "did not reach the oracle under this budget", never "RL cannot" |
+| D11 | RL comparison scope | **fixed (confirmed 2026-10-02)**:  the existing single-line results only (S0.3, S0.6), compared on the Befund 52 grid; wording "did not reach the oracle under this budget", never "RL cannot" **Update 2026-10-05:** the shield experiment is recorded (third addendum to Befund 68): gate not met (G1, G2, G3 false), RL stays a diagnostic finding. SH3 (fourth addendum): about half of the distance of the agents to the fixed operating point (0.49-0.52 of the gap per arm) arises at the lower bound of the gas velocity, which the oracle reaches at 22 of 25 points and which a tanh-squashed policy does not reach exactly (no agent action within 0.01 m/s of 0.80 m/s); reading PARTLY. Wording for the comparison, unchanged: "did not reach the oracle under this budget", never "RL cannot". |
 | D12 | Transient check | **fixed (confirmed 2026-10-02)**:  yes, about 5 scenarios, Befund 53 pattern (batch-averaged `Q_rec` differs from the steady value, Befund 52 d) |
 | D13 | Method | **fixed (confirmed 2026-10-02)**, with the check step: tables primary, direct DE as check on at least 12 optima, at least half binding |
 | D14 | Pinch parameters for arm P | **fixed (confirmed 2026-10-02)**:  `dT_min` 20 K, `T_kalt` 29.1 degC primary; {10, 20} K x {15, 29.1} degC sensitivity; per-source `T_kalt` (10 / 15 in the partner model) is not representable in the network-wide config and needs the probe-script route (docs/06) |
 | D15 (new) | Storage and sequential RL environment (RU2/RU3) | **fixed (confirmed 2026-10-02)**:  extensions X1/X2 after the core, only if time remains; not part of the core |
+| D16 (new) | Lower bound of the gas velocity (0.80 m/s, placeholder) in M2 onwards | open; recommend both: keep 0.80 as the labelled base case ("at 0.80 m/s"), and vary it as a sensitivity {0.46 (2 u_mf), 0.80, 1.26 (laboratory minimum)}; details and cost in "Gas-velocity bound" |
 
 All decisions are fixed; the blocking list of the second pass is empty. D8: the margin transfer to line B is marked as an assumption in every finding. D10: the two extra external-source states are synthetic placeholders.
 
@@ -323,8 +325,8 @@ All decisions are fixed; the blocking list of the second pass is empty. D8: the 
 
 Branch `m0` (fixed worktree `twinlink_m0`, merged fast-forward into `master`); every script was
 committed before it ran, every run record has `git/dirty=False`. Artifacts: `m0_cost_per_call`,
-`m0_line_b_spray_rate`, `m0_line_b_network`. A lab-book entry is deferred to the M1 report (the
-number of the next Befund is to be agreed, since Befund 69 belongs to the shield experiment).
+`m0_line_b_spray_rate`, `m0_line_b_network`. The lab-book entry for M0 and M1 is Befund 69 (the
+shield experiment is recorded as the third and fourth addendum to Befund 68, not as its own Befund).
 
 **M0.1 Helpers moved to `src/`.** `evaluate_point`, `OptimizationBudget`, `run_de_nm` (was
 `_optimize`), `build_grid`, `action_bounds`, `compute_regret` now live in
@@ -406,7 +408,10 @@ of the network evaluation are scaled by `k`, a scaling computation; the site is 
 fixed sink S1 (20 kg/s to 300 degC). (5) `T_kalt` 29.1 degC, `dT_min` 20 K, `eta_H`, `H_u` are
 placeholders. (6) Line B is synthetic.
 
-## M1 results (2026-10-05)
+## M1 results (2026-10-05) -- at the gas-velocity lower bound 0.80 m/s
+
+**Every M1 number holds at the lower bound 0.80 m/s of the gas velocity in the config, a
+placeholder that sets the optimum at 21-23 of 25 points (see "Gas-velocity bound" below).**
 
 Single line A (spray rate 1.5 kg/h), no network (`Q_recovered` = 0), objective `co2_gas_heater`
 (D5 main case: gas-fired air heater, `eta_gas` 0.80, factors 0.366 / 0.201 kg CO2e/kWh), margin
@@ -468,7 +473,38 @@ settings or placeholders; five-seed or resolution statements do not apply to the
 optimiser, but the DE seed spread was not measured here (planned in M3 on a subset); the electric
 heater is reported only through the second booking of each solution, not optimised.
 
-**Next.** M2 (one line plus the fixed external source and sink, scaled; arms F, F+R, S, M) after
-confirmation of the points above. Open for the project lead: push of `master`, merge of the branch
-`m1` into `master`, and the number of the lab-book entry for M0/M1 (to be agreed with the shield
-experiment's Befund 69).
+**Gas-velocity bound (read-only check, 2026-10-05; from the committed artifacts, no new run).**
+(a) *Origin of 0.80 m/s.* The bound is `actions.gas_velocity_m_per_s.minimum` in all three process
+configs and the default of `ActionSpaceConfig`, with the config comment "the lower bound must lie
+above u_mf(d_50,max): u_mf(750 um) about 0.24 m/s". It is part of the first commit of both
+repositories (`313e455`, 2026-08-25 in the archive checkout; `7384455`, 2026-09-25 in this one,
+which starts a fresh history), so there is no separate commit or reasoning for the number. In
+`docs/02_prozess_setup.md` it is a placeholder (`PLH`, "Platzhalter") next to the laboratory range
+1.26-1.88 m/s (80-120 m3/h at an assumed 0.0177 m2); the statement that the placeholder ranges are
+confirmed by the laboratory values covers that the laboratory range lies inside [0.8, 2.5], not the
+value 0.8. The laboratory never ran below 1.26 m/s. (b) *Physical lower bound over the contexts.*
+In the 100 oracle solutions of M1 (25 contexts, both limits, M0 and M) the minimum fluidisation
+velocity at the d50 placeholder (750 um, constant over contexts and actions) is 0.2258-0.2317 m/s
+and the terminal velocity 3.46-3.55 m/s; the fluidisation check never binds (0 of 100 points at the
+lower fluidisation bound), and at the optimum `u/u_mf` is at least 3.46. So 0.80 m/s is about 3.5
+times the physical minimum and lies 0.57 m/s above it. (c) *Consequence.* The 0.80 m/s is a set
+bound, not a physical one: at 21 (L_q 0.15, M0) / 22 (M) / 23 (L_q 0.20, both arms) of the 25
+points the optimum sits on it (within 1e-3 m/s), the fixed operating point sits at 0.800-0.8005
+m/s, and the regime "no constraint binds" of Befund 52 c is the regime in which this box bound
+binds. Hence the optimum, the regret of Befund 52, the SH3 result (half of the agent's gap is the
+approach to this bound) and every M1 number depend on this placeholder. Where the optimum would lie
+without it is not known (the unconstrained optimum was never computed); at a physical bound near
+0.23 m/s the optimum is a different problem, and bubbling, mixing and the ideal-mixing assumption of
+the model would then be the limit, not the fluidisation window. The d50 placeholder itself has the
+unresolved contradiction of Befund 62 (the plant grid failed at the same d50).
+*Proposal for M2 onwards (D16):* state the bound as a placeholder, keep 0.80 as the labelled base
+case so that M1 and M2 stay comparable, and vary it as a sensitivity over {0.46 m/s (= 2 u_mf at
+0.23, a common engineering factor, not from this repository), 0.80, 1.26 m/s (the laboratory
+minimum)}: a physical justification cannot fix a number without a fluidisation-quality limit from
+the application partner (the factor 2 is an assumption). Cost, by the M1 measurements: the M1 arms
+take about 1 h per limit and bound (oracle 17 min x 2, fixed-point search 18 min); two additional
+bounds at the main limit 0.15 are about 2 h, at both limits about 4 h.
+
+**Next.** M2 (one line plus the fixed external source and sink, scaled; arms F, F+R, S, M), after the
+release of the project lead and after the decision on D16. The branch `m1` is merged into `master`
+(merge commit); the lab-book entry is Befund 69.
