@@ -106,11 +106,17 @@ def _evaluate(prefix: str, *, shielded: bool) -> dict[int, dict[str, float]]:
             if shield_env is None:
                 return action
             inlet, gas = shield_env._inlet_bound, shield_env._gas_bound
+            # the observation is float32: take the exact context of the nearest test point
+            exact = min(
+                points,
+                key=lambda p: abs(p.ambient_temperature_celsius - float(observation[0]))
+                + abs(p.ambient_relative_humidity - float(observation[1])),
+            )
             record, _ = shield_env.shield_action(
                 _denormalise(float(action[0]), inlet.minimum, inlet.maximum),
                 _denormalise(float(action[1]), gas.minimum, gas.maximum),
-                float(observation[0]),
-                float(observation[1]),
+                exact.ambient_temperature_celsius,
+                exact.ambient_relative_humidity,
             )
             return np.array([_normalise(record["t_exec"], inlet.minimum, inlet.maximum), action[1]])
 
