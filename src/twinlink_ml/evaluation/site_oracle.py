@@ -9,9 +9,13 @@ every objective call. The quality threshold is an explicit argument decoupled fr
 (decoupled mechanics of Befund 64).
 
 Penalty and failure value are those of ``carrier_oracle`` for the CO2 objectives (the Befund 52
-constants converted with the gas factor); they are only used by the ordinal DE and never enter a
-table or a learned function. A solver failure of a final report is flagged and counted, not
-replaced.
+constants converted with the gas factor) MULTIPLIED BY THE SCALE FACTOR ``k`` of the site: the line
+part of the site objective is ``k`` times the laboratory objective, so the penalty must be too, or
+the network credit outweighs the constraint (the first M2 attempt, artifact
+``m2_attempt1_penalty_unscaled_l015_umin126``, put the joint optimum at the inlet-temperature bound
+with the tightened limit violated at 11 of 25 points). They are only used by the ordinal DE and
+never enter a table or a learned function. A solver failure of a final report is flagged and
+counted, not replaced.
 
 Process-pool state is a module global set by :func:`init_worker` (Windows ``spawn``).
 """
@@ -48,15 +52,17 @@ __all__ = [
     "evaluate_site_point",
     "init_worker",
     "optimize_point",
+    "penalty_weight",
     "run_site_grid",
+    "solve_failure_value",
 ]
 
 _BASE_CONFIG: ProcessConfig | None = None
 _ALLOCATIONS = all_allocations(1)
 _FIXED = fixed_allocation(1)
 _ALL_TO_ALL = all_to_all_allocation(1)
-_PENALTY_WEIGHT = PENALTY_WEIGHT_KW * GAS_CO2_KG_PER_KWH
-_FAILURE_VALUE = SOLVE_FAILURE_PENALTY_KW * GAS_CO2_KG_PER_KWH
+_PENALTY_WEIGHT_LAB = PENALTY_WEIGHT_KW * GAS_CO2_KG_PER_KWH
+_FAILURE_VALUE_LAB = SOLVE_FAILURE_PENALTY_KW * GAS_CO2_KG_PER_KWH
 
 
 def init_worker(base_config: ProcessConfig) -> None:
@@ -73,6 +79,16 @@ class SiteOracleSpec:
     site: SiteSpec
     search_max_iterations: int = 30
     search_tolerance: float = 1.0e-7
+
+
+def penalty_weight(spec: SiteOracleSpec) -> float:
+    """Weight of the normalised violation in kg CO2e/h of the SITE (lab weight times ``k``)."""
+    return _PENALTY_WEIGHT_LAB * spec.site.scale_factor
+
+
+def solve_failure_value(spec: SiteOracleSpec) -> float:
+    """Objective value of a solver failure (ordinal optimiser only), scaled like the penalty."""
+    return _FAILURE_VALUE_LAB * spec.site.scale_factor
 
 
 def _site_results(
@@ -107,16 +123,16 @@ def penalized_objective(x: Any, t_amb: float, phi_amb: float, spec: SiteOracleSp
             base_config=_BASE_CONFIG,
         )
     except (RuntimeError, ValueError):
-        return _FAILURE_VALUE
+        return solve_failure_value(spec)
     results, _ = _site_results(solution, _BASE_CONFIG, spec, t_amb, phi_amb, t_in)
     if not results:
-        return _FAILURE_VALUE
+        return solve_failure_value(spec)
     check = check_constraints(
         solution,
         critical_moisture_kg_per_kg=spec.quality_threshold_kg_per_kg,
         gas_velocity_m_per_s=u_gas,
     )
-    return float(_best(results).co2_kg_per_h + _PENALTY_WEIGHT * check.normalized_violation)
+    return float(_best(results).co2_kg_per_h + penalty_weight(spec) * check.normalized_violation)
 
 
 def evaluate_site_point(

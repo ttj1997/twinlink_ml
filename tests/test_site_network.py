@@ -14,7 +14,7 @@ from twinlink_ml.evaluation import site_network as sn
 from twinlink_ml.evaluation import site_oracle as so
 from twinlink_ml.simulation import PlaceholderConfigWarning, load_process_config
 from twinlink_ml.simulation.operating_point import check_constraints
-from twinlink_ml.simulation.oracle_search import evaluate_point
+from twinlink_ml.simulation.oracle_search import build_grid, evaluate_point
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = REPO_ROOT / "scripts"
@@ -140,7 +140,7 @@ def test_search_objective_is_best_site_co2_plus_penalty(config) -> None:
         gas_velocity_m_per_s=0.9,
     )
     expected = (
-        min(r.co2_kg_per_h for r in results) + so._PENALTY_WEIGHT * check.normalized_violation
+        min(r.co2_kg_per_h for r in results) + so.penalty_weight(spec) * check.normalized_violation
     )
     assert so.penalized_objective(x, 12.0, 0.6, spec) == pytest.approx(expected, rel=1e-12)
 
@@ -155,3 +155,29 @@ def test_site_point_reports_the_three_routings(config) -> None:
     assert best <= out["routing_fixed"]["co2_kg_per_h"] + 1e-12
     assert best <= out["routing_all_to_all"]["co2_kg_per_h"] + 1e-12
     assert out["n_allocations_evaluated"] + out["n_allocations_rejected"] == 9
+
+
+def test_penalty_is_scaled_like_the_line_part_of_the_objective() -> None:
+    """The line part of the site objective is k times the lab one; the penalty must be too."""
+    spec = so.SiteOracleSpec(0.144, sn.SiteSpec(271.79706373319294))
+    lab = 50.0 * 0.201  # Befund 52 penalty weight in kW times the gas factor
+    assert so.penalty_weight(spec) == pytest.approx(lab * 271.79706373319294)
+    assert so.solve_failure_value(spec) == pytest.approx(1.0e6 * 0.201 * 271.79706373319294)
+    unit = so.SiteOracleSpec(0.144, sn.SiteSpec(1.0))
+    assert so.penalty_weight(unit) == pytest.approx(lab)
+
+
+def test_a_violated_limit_is_not_worth_the_network_credit(config) -> None:
+    """Regression of the first M2 attempt.
+
+    Lowering the inlet temperature to gain recovered heat while violating the tightened moisture
+    limit must cost more than it saves.
+    """
+    spec = so.SiteOracleSpec(0.15 - 0.005961819615175404, sn.SiteSpec(271.79706373319294))
+    so.init_worker(config)
+    # context 14 of the 5 x 5 grid at the lower gas bound 1.26: the first attempt ended at 60 degC
+    t_amb, phi = build_grid(config, 5)[14]
+    at_limit = so.penalized_objective((64.6, 1.26, 1.0), t_amb, phi, spec)
+    violating = so.penalized_objective((60.0, 1.26, 1.0), t_amb, phi, spec)
+    assert at_limit < 1.0e6 and violating < 1.0e6, "a solver failure would make the test vacuous"
+    assert violating > at_limit

@@ -43,6 +43,13 @@ at M3 with the check step; (2) the nozzle pressure stays a search variable as in
 the two-line stages), so that F and S can be taken from M1 unchanged; the optima of M1 have p in
 1.000-1.011 bar.
 
+Penalty scale (found in the first attempt, artifact ``m2_attempt1_penalty_unscaled_l015_umin126``): the
+line part of the site objective is ``k`` times the laboratory one, so the constraint penalty and the
+solver-failure value of the ordinal DE are multiplied by ``k`` as well
+(``site_oracle.penalty_weight``); unscaled, the network credit outweighed the penalty and the joint
+optimum sat at the inlet-temperature bound with the tightened limit violated at 11 of 25 points
+(1.26 m/s). The run-time estimate below is unchanged by it.
+
 Run-time estimate (before the run, 16 logical CPUs, nothing else running): the M arm of M1 took
 337.7 cpu-min over 16 workers at bound 0.80 (about 21 min wall) and 16.5 min at 1.26; the site
 objective adds at most about 12 ms (9 cascades, 1.3 ms each, M0) to a 170-210 ms solve, i.e. at most
