@@ -1,4 +1,4 @@
-r"""SH3: is the lower bound of the gas velocity the main cause of the negative pooled closed regret?
+r"""SH3: is the lower bound of the gas velocity the main cause of the negative pooled closed regret?.
 
 Evaluation of existing step-10 000 checkpoints, NO training. Arms (all SAC, environment of arm C:
 quality limit 0.15, Lagrange term, m = 0.005961819615175404): C (``rl_bandit_lagrange_s06_l015_lam05``),
