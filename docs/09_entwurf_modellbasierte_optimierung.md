@@ -317,7 +317,7 @@ recommendation.
 | D13 | Method | **fixed (confirmed 2026-10-02)**, with the check step: tables primary, direct DE as check on at least 12 optima, at least half binding |
 | D14 | Pinch parameters for arm P | **fixed (confirmed 2026-10-02)**:  `dT_min` 20 K, `T_kalt` 29.1 degC primary; {10, 20} K x {15, 29.1} degC sensitivity; per-source `T_kalt` (10 / 15 in the partner model) is not representable in the network-wide config and needs the probe-script route (docs/06) |
 | D15 (new) | Storage and sequential RL environment (RU2/RU3) | **fixed (confirmed 2026-10-02)**:  extensions X1/X2 after the core, only if time remains; not part of the core |
-| D16 (new) | Lower bound of the gas velocity (0.80 m/s, placeholder) in M2 onwards | open; recommend both: keep 0.80 as the labelled base case ("at 0.80 m/s"), and vary it as a sensitivity {0.46 (2 u_mf), 0.80, 1.26 (laboratory minimum)}; details and cost in "Gas-velocity bound" |
+| D16 | Lower bound of the gas velocity (0.80 m/s, placeholder) in M2 onwards | **decided (project lead, 2026-10-05)**: 0.80 stays the base case and is labelled "at lower bound 0.80 (placeholder)" in every heading and caption; the bound is a run parameter, the config default is not changed; sensitivity of M1 (line A, gas heater, `m` = 0.00596, main limit 0.15) at **1.26 m/s** (laboratory minimum) is run before M2; the third value (a multiple of `u_mf`) follows when the factor has been clarified with process expertise, nothing is computed for it until then. Stability rule fixed before the run: a statement is stable iff it points in the same direction at both values and its figure changes by less than half |
 
 All decisions are fixed; the blocking list of the second pass is empty. D8: the margin transfer to line B is marked as an assumption in every finding. D10: the two extra external-source states are synthetic placeholders.
 
@@ -508,3 +508,5 @@ bounds at the main limit 0.15 are about 2 h, at both limits about 4 h.
 **Next.** M2 (one line plus the fixed external source and sink, scaled; arms F, F+R, S, M), after the
 release of the project lead and after the decision on D16. The branch `m1` is merged into `master`
 (merge commit); the lab-book entry is Befund 69.
+
+**Decision on the gas-velocity bound (project lead, 2026-10-05).** The lower bound 0.80 m/s is a placeholder without derivation; the laboratory runs 1.26-1.88 m/s, the optimum sits on 0.80 at 22 of 25 points, i.e. below the laboratory range, where the model extrapolates. Regret, fixed operating point and M1 hold "at lower bound 0.80 (placeholder)" (addendum to Befund 52). M2 starts only after the sensitivity of M1 at 1.26 m/s has been reported and after the release of the project lead.
