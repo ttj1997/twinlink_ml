@@ -405,3 +405,70 @@ two lines is not supported by this pre-check at lab-scale exhaust temperatures; 
 of the network evaluation are scaled by `k`, a scaling computation; the site is dominated by the
 fixed sink S1 (20 kg/s to 300 degC). (5) `T_kalt` 29.1 degC, `dT_min` 20 K, `eta_H`, `H_u` are
 placeholders. (6) Line B is synthetic.
+
+## M1 results (2026-10-05)
+
+Single line A (spray rate 1.5 kg/h), no network (`Q_recovered` = 0), objective `co2_gas_heater`
+(D5 main case: gas-fired air heater, `eta_gas` 0.80, factors 0.366 / 0.201 kg CO2e/kWh), margin
+`m` = 0.005961819615175404 kg/kg, kinetics at the critical moisture 0.20 (decoupled mechanics of
+Befund 64). **Test set (named):** the 25 ambient grid points of Befund 52 (temperature x relative
+humidity). Arms: F fixed operating point against `L_q`, M0 oracle against `L_q`, M oracle against
+`L_q - m`; the optimiser budget is that of Befund 52 (asserted against the committed artifact).
+Code and settings were committed before any run (`851c23a`, settings and anchor rule in the script
+docstring); all run records `git/dirty=False`. The artifacts and code are on the branch `m1` of the
+fixed worktree `twinlink_m0` (commits `4faf95d`, `b65b3bb`, `e8e085b`), **not merged into master and
+not pushed**. Full suite in the worktree before the code commit: 571 passed, 2 skipped in 1442.46 s
+(the extra skip is the denylist test, which passed in the main checkout).
+
+**Anchor (stop condition, answered first).** The legacy objective (Befund 52 `energy_target`,
+threshold 0.15) of the new code path at grid points 0, 12, 24 reproduces the optimum of
+`s05_limit015_oracle_and_fixed.json` bit for bit: set points and energy, all differences 0.0
+(artifact `m1_anchor_s05`). The new objective function and penalty scaling (the Befund 52 constants
+converted from kW to kg CO2e/h with the gas factor, a setting of this study) are therefore the only
+difference to the earlier machinery.
+
+**Result (artifacts `m1_margin_cost_l015`, `m1_margin_cost_l020`; per point and pooled; all 25
+points feasible and converged in all arms, no solver failure).** `L_q` = 0.15 is the main case;
+`L_q` = 0.20 is the stress case and is reported separately, not pooled.
+
+| | `L_q` 0.15 (main) | `L_q` 0.20 (stress) |
+|---|---|---|
+| points where M0 binds the limit | 22 of 25 | 17 of 25 |
+| remaining control benefit, CO2, median (all points) | 85.4 % | 93.8 % |
+| remaining control benefit, CO2, pooled (all points) | 85.0 % | 94.2 % |
+| remaining control benefit, CO2, median (binding points) | 84.9 % | 93.4 % |
+| remaining control benefit, kWh sum, median / pooled (all points) | 85.5 % / 85.0 % | 93.8 % / 94.3 % |
+| cost of the margin M - M0, CO2, median / maximum | +1.30 % / +1.81 % (0.0039 kg CO2e/h) | +1.06 % / +1.35 % (0.0030 kg CO2e/h) |
+| cost of the margin, kWh sum, median | +1.34 % (0.0196 kW) | +1.10 % (0.0144 kW) |
+| distance of M to the validity boundary 0.20, binding points | 0.0560 kg/kg = 9.4 m | 0.00596 kg/kg = 1.0 m |
+| fixed operating point F [degC, m/s, bar] | 93.0, 0.800, 1.002 | 90.4, 0.800, 1.01 |
+
+Remaining control benefit = `(F - M) / (F - M0)`, the definition of Befund 64 KA2. CO2 and kWh sum
+come from the same solutions (the kWh sum is `E_el + E_gas` of the CO2-optimal point of the gas
+booking), and they give nearly the same fractions, because the gas heater term dominates in this
+configuration; the weighting matters again in the electric-heater sensitivity (M5).
+
+**Reading.** With the margin that the calibrated ensemble band of Befund 65 FA2 gives, the CO2
+cost is about 1.1-1.3 % (median, maximum 1.8 %), and 85 % (main case) to 94 % (stress case) of the
+benefit of a per-instance optimum over a fixed operating point remains. The stress-case value
+agrees in size with a linear interpolation of the Befund 65 table at this margin (about 94 %,
+derived in 2026-10-02 above), but is not the same quantity (that table is for the electric gross
+power); the agreement is a plausibility check, not a confirmation. In the main case the benefit is
+smaller to begin with (the room for control is about 40 % smaller at `L_q` = 0.15, S0.5) and the
+same margin takes a larger share of it. At `L_q` = 0.20 the tightened limit sits 1.0 m below the
+validity boundary and the solver still returns valid, converged optima at all 25 points; that case
+is the one where the model is closest to its edge, which is why it is reported separately.
+
+**Caveats, to be stated in every use.** One laboratory line, no network, no scaling; the
+steady state, not a batch (Befund 53); the margin is the constant median half-width of the band
+and is a coverage band, not a guarantee (Befund 65 FA2: not usable per operating point); the
+optimiser budget is exhausted by design as in Befund 52 (DE + Nelder-Mead, `converged` refers to
+the refinement); `eta_gas` 0.80, the CO2 factors and the penalty scaling for the CO2 objective are
+settings or placeholders; five-seed or resolution statements do not apply to the deterministic
+optimiser, but the DE seed spread was not measured here (planned in M3 on a subset); the electric
+heater is reported only through the second booking of each solution, not optimised.
+
+**Next.** M2 (one line plus the fixed external source and sink, scaled; arms F, F+R, S, M) after
+confirmation of the points above. Open for the project lead: push of `master`, merge of the branch
+`m1` into `master`, and the number of the lab-book entry for M0/M1 (to be agreed with the shield
+experiment's Befund 69).
