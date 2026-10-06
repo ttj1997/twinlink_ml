@@ -1,7 +1,6 @@
 # Partner model v4 (`Model_v4.xlsx`): one-to-one reconstruction, deviation list, proposed reference values
 
-Branch `v4` (worktree), not merged. Lab book entry: placeholder "Befund NN" at the end of
-`docs/04_stand_ap1.md`; the number is assigned at the merge. No comparison with the lab model:
+Merged to `master` as Befund 72 (`docs/04_stand_ap1.md`; 71 is already used by the unmerged branch `m3`, so 72 was taken to avoid a clash). No comparison with the lab model:
 the inputs of the partner model (300 degC inlet air, product dried to equilibrium moisture)
 are outside it.
 
@@ -158,3 +157,18 @@ belong to two different devices (electric lab heater vs. gas-fired heater of the
 Open point to settle with the unification: in M1 the same fuel quantity passes the 0.98 (lab heater, electric)
 and then the 0.80; in M2 and M3 the site model books the sink demand directly. Whether the two routes give
 the same gas power for one line is not shown here (no run).
+
+### Planned follow-up (noted only; own task AFTER the end of the M3 run; nothing is changed now)
+
+a) **Check the double efficiency in M1.** Compute the gas demand of one line at one operating point on both
+   routes: the M1 route (heater power x 0.98 = duty, duty / 0.80 = gas) and the site model of M2
+   (sink demand booked directly, 0.80 and 45 MJ/kg). Expectation if the efficiency is counted twice: M1 too
+   high by the factor 1/0.98.
+
+b) **Unification.** One central configuration for gas-fired heaters with `eta` = 0.80 and `H_u` = 45 MJ/kg
+   (partner model); 0.98 only for the sensitivity with an electric heater. Remove the defaults 0.90 and
+   50 MJ/kg from `HeatNetworkConfig`, so that the values are always passed explicitly.
+
+c) **Regression test.** M2 and `m3` stay bit-identical (they already use 0.80 / 45). Recompute M1; the
+   percentages must not change, only absolute figures.
+
