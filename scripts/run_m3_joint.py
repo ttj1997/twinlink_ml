@@ -57,6 +57,7 @@ min; in total about 4-5 h wall. Another job on the machine stretches this.
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import json
 import sys
 import time
@@ -195,6 +196,7 @@ def stage_lineb() -> int:
     results = run_oracle_grid(
         configs["B"], grid, bounds, budget, spec, workers=workers, label="line B alone"
     )
+    (RUNS_DIR / "_m3_line_b_results.json").write_text(json.dumps(results), encoding="utf-8")
     write_artifact(
         f"m3_line_b_optimum_{SUFFIX}",
         {
@@ -203,7 +205,7 @@ def stage_lineb() -> int:
             "spray_rate_kg_per_h": SPRAY["B"],
             "quality_threshold_kg_per_kg": THRESHOLD,
             "objective": "co2_gas_heater (line only, no network)",
-            "budget": budget.__dict__,
+            "budget": dataclasses.asdict(budget),
             "config_fingerprint": configs["B"].fingerprint,
             "n_failed": sum(bool(r.get("solve_failed")) for r in results),
             "n_infeasible": sum((not r.get("solve_failed")) and not r["feasible"] for r in results),
