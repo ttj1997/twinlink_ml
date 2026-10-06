@@ -1,55 +1,60 @@
 r"""Nested search of the joint optimum of two lines over all allocations (stage M3', scheme C).
 
-THE RULES BELOW WERE FIXED BEFORE ANY RUN OF THE JOINT STAGE (project lead, 2026-10-06).
+THE RULES BELOW WERE FIXED BEFORE ANY RUN OF THE JOINT STAGE (project lead, 2026-10-06); the one
+extension of the duplicate rule (step 2) is marked.
 
 Problem: four set points (inlet temperature and gas velocity of the lines A and B; the nozzle
-pressure
-of both at its lower bound 1.0 bar, D6) against the site CO2 of one ALLOCATION (every source
-feeds at
-least one sink; 441 sets including the order of the two stages Q1 -> SA, Q1 -> SB) with the duty
-limit
-of the shared exchanger, plus the constraint penalty. Discrete and continuous variables are NOT
-mixed
-in one DE run: for EVERY allocation the four set points are optimised, then the best allocation is
-chosen, so that a missing coupling gain cannot be a search error of a mixed search.
+pressure of both at its lower bound 1.0 bar, D6) against the site CO2 of one ALLOCATION (every
+source
+feeds at least one sink; 441 sets including the order of the two stages Q1 -> SA, Q1 -> SB) with
+the
+duty limit of the shared exchanger, plus the constraint penalty. Discrete and continuous variables
+are NOT mixed in one DE run: for EVERY allocation the four set points are optimised, then the best
+allocation is chosen, so that a missing coupling gain cannot be a search error of a mixed search.
 
 Scheme C (the direct search on true solves for 441 allocations would take about 780 h):
 
 1. every allocation: DE + Nelder-Mead (budget of Befund 52 / M1 / M2: popsize 10, maxiter 50,
    tolerance 1e-4, Nelder-Mead refinement) on the response tables of the two lines
-   (:mod:`twinlink_ml.evaluation.line_tables`, bilinear), giving a table optimum ``x_i`` and a table
+   (:mod:`twinlink_ml.evaluation.line_tables`, bilinear), giving a table optimum ``x_i`` and a
+   table
    value ``V_i``; the penalty weight and the failure value are the laboratory ones times the scale
    factor ``k`` (Befund 70 c), the penalty of a cell is the sum of both lines;
 2. every allocation with ``V_i <= V_min + W`` (``W`` = 5 kg CO2e/h, the polishing window) is
-   polished with
-   TRUE solves: the table error ``E_i = |V_i - f_true(x_i)|`` is measured at the table optimum,
-   then a
-   Nelder-Mead search on true solves starts there; of two allocations that differ only in the order
-   of the two Q1 stages and have the same table value (within 1e-6) only one is polished; the
-   allocation chosen by S2 is always polished (decomposition), its error is not part of ``E_max``;
+   polished
+   with TRUE solves: the table error ``E_i = |V_i - f_true(x_i)|`` is measured at the table
+   optimum,
+   then a Nelder-Mead search on true solves starts there. EXTENSION OF THE DUPLICATE RULE (found
+   when
+   the first run of the control did not finish: the window of the scenario 12 held 56 allocations
+   with only 4 distinct table values): of allocations with the same table value (within 1e-6 kg
+   CO2e/h) AND the same table optimum (within 1e-6 in every set point) only one is polished. They
+   are
+   the same optimisation problem (the order of the Q1 stages without a limit, or connections that
+   carry no heat), recognised because the DE runs with the same seed give identical trajectories
+   for
+   identical objectives; the skipped ones are listed with their twin (``duplicate_of``). The
+   allocation chosen by S2 is always polished (decomposition); its error is not part of ``E_max``;
 3. error rule: if ``E_max`` (largest table error over the polished allocations of the window)
-   exceeds
-   ``W / 2``, the window is widened to ``W = 4 * E_max`` and the search repeats the polishing for
-   the
+   exceeds ``W / 2``, the window is widened to ``W = 4 * E_max`` and the polishing is repeated
+   for the
    newly included allocations, until ``E_max <= W / 2`` (or all allocations are polished); window
    and
    ``E_max`` are reported per scenario and case;
-4. the joint optimum M3' is the polished allocation with the lowest true value. Value = site CO2
-   of the
-   best allocation plus the penalty; the CO2 itself and the feasibility of both lines (true check
+4. the joint optimum M3' is the polished allocation with the lowest true value. Value = site CO2 of
+   the best allocation plus the penalty; the CO2 itself and the feasibility of both lines (true
+   check
    against the tightened limit) are reported.
 
 S2 ("each line on its own, then the best allocation"): the set points of the two lines are the
-optima of
-each line ignoring the network (A: arm S of M2, B: the optimum of line B on its own, same
-method), at the
-nozzle pressure 1.0 bar; S2 is the best of the 441 allocations at these fixed set points, with
-the same
-limit. Coupling gain ``G = value(S2) - value(M3')`` (kg CO2e/h); split by the allocation: ``G_set
-= value(S2) -
-value(best set points for the allocation of S2)`` (the gain of the set points alone) and
-``G_alloc = G - G_set``
-(the further gain from another allocation).
+optima
+of each line ignoring the network (A: arm S of M2, B: the optimum of line B on its own, same
+method),
+at the nozzle pressure 1.0 bar; S2 is the best of the 441 allocations at these fixed set points,
+with
+the same limit. Coupling gain ``G = value(S2) - value(M3')`` (kg CO2e/h); split by the allocation:
+``G_set = value(S2) - value(best set points for the allocation of S2)`` (the gain of the set points
+alone) and ``G_alloc = G - G_set`` (the further gain from another allocation).
 """
 
 from __future__ import annotations
@@ -83,6 +88,7 @@ POLISH_WINDOW_KG_PER_H = 5.0
 ERROR_HALF_WINDOW = 0.5
 WINDOW_WIDENING_FACTOR = 4.0
 DUPLICATE_TOLERANCE = 1.0e-6
+DUPLICATE_X_TOLERANCE = 1.0e-6
 BOUNDS_T_IN = (60.0, 120.0)
 
 SearchRecord = dict[str, Any]
@@ -255,6 +261,7 @@ def nested_search(
     order = np.argsort(table_v)
     polished: dict[int, dict[str, Any]] = {}
     skipped_duplicates: list[int] = []
+    duplicate_of: dict[int, int] = {}
     window = window_kg_per_h
     widened = False
     s2_index = allocations.index(s2_allocation) if s2_allocation in allocations else None
@@ -299,13 +306,14 @@ def nested_search(
                 (
                     j
                     for j in polished
-                    if equivalent_order_variant(allocations[i], allocations[j])
-                    and abs(table_v[i] - table_v[j]) <= DUPLICATE_TOLERANCE
+                    if abs(table_v[i] - table_v[j]) <= DUPLICATE_TOLERANCE
+                    and float(np.max(np.abs(table_x[i] - table_x[j]))) <= DUPLICATE_X_TOLERANCE
                 ),
                 None,
             )
             if twin is not None:
                 skipped_duplicates.append(i)
+                duplicate_of[i] = twin
                 continue
             polish_one(i, forced=False)
         if s2_index is not None and s2_index not in polished:
@@ -336,6 +344,7 @@ def nested_search(
             "table_error_rule_met": bool(e_max <= ERROR_HALF_WINDOW * window),
             "n_polished": len(polished),
             "n_skipped_duplicates": len(skipped_duplicates),
+            "duplicate_of": {str(i): j for i, j in duplicate_of.items()},
             "n_true_failed_at_table_optimum": sum(
                 e["true_solve_failed_at_table_optimum"] for e in polished.values()
             ),
