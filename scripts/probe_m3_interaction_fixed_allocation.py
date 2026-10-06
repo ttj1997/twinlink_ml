@@ -1,4 +1,4 @@
-r"""M3' stage 0b: how much of the stage-0 interaction is a switch of the best allocation?
+r"""M3' stage 0b: how much of the stage-0 interaction is a switch of the best allocation.
 
 Added AFTER the result of stage 0 (``m3_interaction_check``, rule met: joint runs justified), as a
 DESCRIPTIVE addition without a decision rule, because a spot check had shown that the mixed second
