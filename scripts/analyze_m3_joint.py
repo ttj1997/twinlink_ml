@@ -16,8 +16,9 @@ Befund 52 ambient grid points; lines A (1.5 kg/h) and B (2.0 kg/h), scaled site,
 * ``G(c) - G(control)`` for c = 0.5, 1.0, 1.5 is the additional effect of the synthetic exchanger limit; it
   is reported descriptively (median, range, number of scenarios with a positive difference) next to the
   seed spread of that case, WITHOUT a decision rule.
-* Per scenario and case: whether M3' chooses another allocation than S2 (exact tuple, and the same set of
-  connections), and the split of G into the gain of the set points for the allocation of S2 and the further
+* Per scenario and case: whether M3' chooses another allocation than S2 (exact tuple, the same set of
+  connections, and, because many allocations are equivalent (connections that carry no heat), whether the
+  change of the allocation brings a material gain: ``G_alloc`` above 0.2 kg CO2e/h), and the split of G into the gain of the set points for the allocation of S2 and the further
   gain from another allocation (separating gain from the allocation from gain from the set points).
 * Table accuracy rule: at the three check scenarios and for every case the table-based M3' value must not
   exceed the value of the direct true-solve DE for the same allocation by more than 3 times the measured seed
@@ -109,8 +110,12 @@ def main() -> int:
             "n_polished_median": float(
                 np.median([r["search"]["n_polished"] for r in rows if "search" in r])
             ),
-            "n_other_allocation": sum(not r["same_allocation"] for r in valid),
-            "n_other_connections": sum(not r["same_connections"] for r in valid),
+            "n_other_allocation_exact_tuple": sum(not r["same_allocation"] for r in valid),
+            "n_other_connections_exact_set": sum(not r["same_connections"] for r in valid),
+            "n_allocation_gain_material": sum(
+                (r["gain_from_other_allocation_kg_per_h"] or 0.0) > RESOLUTION_FLOOR_KG_PER_H
+                for r in valid
+            ),
             "gain_setpoints_only_median": float(
                 np.median(
                     [
@@ -136,6 +141,10 @@ def main() -> int:
                     if _valid(r)
                     else None,
                     "gain_relative_to_line_co2": r.get("gain_relative_to_line_co2"),
+                    "allocation_gain_material": (
+                        r.get("gain_from_other_allocation_kg_per_h") or 0.0
+                    )
+                    > RESOLUTION_FLOOR_KG_PER_H,
                     "same_allocation": r.get("same_allocation"),
                     "same_connections": r.get("same_connections"),
                     "gain_setpoints": r.get("gain_setpoints_for_s2_allocation_kg_per_h"),
