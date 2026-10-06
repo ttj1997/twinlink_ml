@@ -115,9 +115,7 @@ Connection to the per-carrier objective (D5, `docs/09`) -- described, nothing ch
 gas-fired heater uses `E_gas = (Q_heater - Q_rec) / eta_H` and `CO2 = 0.201 * E_gas` (gas factor, kg
 CO2e/kWh). The partner's gas flow is the same quantity expressed in mass: `E_gas = m_gas * H_u`. Hence (i)
 the model predicts the process state, the heater power follows from it, gas and CO2 follow from the power;
-(ii) `eta` and `H_u` are inputs of one function, kept in one place (partner: 80 %, 45 MJ/kg; repo
-placeholders: `eta_gas` 0.80 in D5, `H_u` 50 MJ/kg and `eta_H` 0.90 in `HeatNetworkConfig`, i.e. three
-different values for one quantity, to be reconciled once and named); (iii) the mass flow is for
+(ii) `eta` and `H_u` are inputs of one function, kept in one place (the values in the repository are listed in section 6; nothing is unified here); (iii) the mass flow is for
 plausibility against the partner's table; the objective needs `E_gas` in kW, not kg/h.
 
 ## 5. Caveats
@@ -127,4 +125,36 @@ plausibility against the partner's table; the objective needs `E_gas` in kW, not
 * `cp_gas`, the moisture basis and `T_cold` are questions, not corrections.
 * The cascade is energy- and temperature-limited, not a heat-exchanger design (no area, no dT profile beyond the
   check A4).
+* The efficiency and the calorific value occur with several values in the repository (section 6).
 * The feedback to the partner is in `local/` (not in the repository).
+
+## 6. Efficiency and calorific value in the repository (inventory only, nothing changed)
+
+The unification is decided after the M3 run. State of `master` (commit `b582c21`) and of branch `m3`
+(commit `54e4bbb`; `m3` differs from `master` in `site_network.py` and `heatnetwork` only by the shared cap
+and `with_spray_rate`, not in the values below).
+
+| Quantity | Value | Where | Status |
+|---|---|---|---|
+| efficiency, process air heater (electric) | **0.98** | `EnergyConfig.heater_efficiency` (`simulation/config.py`, the three `conf/process/*.yaml`) | placeholder of the lab simulator; converts electric heater power to thermal duty |
+| efficiency, heat-network heater | **0.90** | `DEFAULT_HEATER_EFFICIENCY` in `heatnetwork/config.py` | placeholder default, no source; overridden in the site model (`SiteSpec`) and in the pinch/six-case scripts that were checked, **not verified for every older script** |
+| efficiency, gas heater (partner case) | **0.80** | `SiteSpec.heater_efficiency` (`evaluation/site_network.py`), `OracleSpec.gas_heater_efficiency` (`evaluation/carrier_oracle.py`), `GAS_HEATER_EFFICIENCY` in `run_m1_margin_cost.py`, `HEATER_EFFICIENCY` in the pinch and six-case scripts | taken from the partner workbook (80 %), also `Inputs!I6` of v4 |
+| calorific value | **50 MJ/kg** | `DEFAULT_FUEL_LOWER_HEATING_VALUE_J_PER_KG` in `heatnetwork/config.py` | placeholder default (natural gas H, rule of thumb); overridden in the same places as the 0.90 |
+| calorific value | **45 MJ/kg** | `SiteSpec.fuel_lower_heating_value_j_per_kg`, pinch/six-case scripts | taken from the partner workbook (45000 kJ/kg), also `Inputs!I5` of v4 |
+
+So there are three efficiencies (0.98, 0.90, 0.80) and two calorific values (50, 45 MJ/kg); the partner
+workbook v4 agrees with 0.80 and 45 MJ/kg. The 0.98 and the 0.80 are not alternatives for one thing: they
+belong to two different devices (electric lab heater vs. gas-fired heater of the network).
+
+**Which value which stage used** (from code and docstrings; the artifacts were not re-opened):
+
+| Stage | Efficiency | Calorific value | Mechanism |
+|---|---|---|---|
+| M1 (single line, `run_m1_margin_cost.py`, `OracleSpec` with `co2_gas_heater`) | 0.98 converts heater power to duty, then 0.80 for the gas: `E_gas = duty / eta_gas` (`carrier_energy.py`) | not used (the carrier energy is in kW, not kg) | the 0.90 and the 50 MJ/kg do not enter |
+| M2 (site network, `run_m2_site_network.py`, `SiteSpec(k)`) | 0.80 set explicitly in the `HeatNetworkConfig` built by `site_network.py`; the line's inlet-air sink is fed from the cascade | 45 MJ/kg (`SiteSpec`); gas power is `fuel_mass_flow * H_u` | the 0.90 and the 50 MJ/kg are overridden; the docstring of `site_network.py` says the fuel is what the sink needs after recovery, so the 0.98 does not enter the heater of the site model |
+| M3 joint stage (branch `m3`, `run_m3_joint.py`) | line tables via `OracleSpec(.., "co2_gas_heater", m1.GAS_HEATER_EFFICIENCY)` = 0.80 (with the 0.98 as in M1); the site model `SiteSpec(k)` with 0.80 | 45 MJ/kg (`SiteSpec`) | `joint_search.site_spec_with_cap` copies `heater_efficiency` from the given `SiteSpec` |
+| Befund 57-68 (older network studies) | 0.90 via the default where not overridden; 0.80 in the six-case and pinch scripts | 50 MJ/kg by default; 45 MJ/kg in the pinch/six-case scripts | to be checked case by case if these numbers are reused |
+
+Open point to settle with the unification: in M1 the same fuel quantity passes the 0.98 (lab heater, electric)
+and then the 0.80; in M2 and M3 the site model books the sink demand directly. Whether the two routes give
+the same gas power for one line is not shown here (no run).

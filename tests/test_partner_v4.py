@@ -72,12 +72,23 @@ def test_scenario_finished_cells_match_workbook(workbook_values):
         assert sheet[address].value == pytest.approx(value, rel=1e-12, abs=1e-18), address
 
 
-def test_open_cells_are_still_open_in_workbook(workbook_values):
-    """If the partner fills a #REF! cell, this test says so and the reconstruction needs a look."""
+def test_partner_workbook_is_still_the_draft_with_open_cells(workbook_values):
+    """NEW VERSION OF THE PARTNER WORKBOOK -> reconcile the reconstruction (not a code error).
+
+    This test records the state of the draft the reconstruction was made against: the cells below
+    are ``#REF!``. If it fails, the partner has filled one of them. Nothing in the code is broken:
+    compare the new cell values with ``proposed_cell_values`` (``docs/11``, section 3), update the
+    reconstruction and the deviation list, then update the cell list here.
+    """
     _, wb = workbook_values
     sheet = wb["Scenarios"]
-    for address in ("F25", "H25", "L25", "P25", "E34", "G34", "K34", "O34", "E36", "K36"):
-        assert sheet[address].value == "#REF!", address
+    watched = ("F25", "H25", "L25", "P25", "E34", "G34", "K34", "O34", "E36", "K36")
+    filled = {a: sheet[a].value for a in watched if sheet[a].value != "#REF!"}
+    assert not filled, (
+        "NEW VERSION OF THE PARTNER WORKBOOK -- reconcile the reconstruction with it "
+        "(docs/11, section 3; compare with partner_v4.cascade.proposed_cell_values). "
+        f"This is not a code error. Cells that are no longer #REF!: {filled}"
+    )
 
 
 # --- model tests ---------------------------------------------------------------------
@@ -238,3 +249,109 @@ def test_proposal_covers_the_open_cells():
         assert address in cells, address
     # row 36 is the sum of the heaters (kg/h, no factor 3600)
     assert cells["E36"] == pytest.approx(cells["E21"] + cells["E34"])
+
+
+# --- order of the cascade (synthetic, deliberately different dryers) -------------------
+
+
+def synthetic_unequal_dryers(*, swap: bool = False) -> ExcelInputs:
+    """SYNTHETIC inputs, not partner data: the two dryers differ on purpose.
+
+    Dryer "big": 100 kg/h air, 5 kg/h spray (exhaust 225.14 degC). Dryer "hot": 50 kg/h air,
+    1 kg/h spray (exhaust 268.89 degC, small flow). All other values as the partner's draft.
+    ``swap=True`` exchanges the roles of dryer 1 and 2.
+    """
+    big = ExcelDryerInputs(100.0, 6.0, 300.0, 5.0, 0.4, 15.0)
+    hot = ExcelDryerInputs(50.0, 6.0, 300.0, 1.0, 0.4, 15.0)
+    d1, d2 = (hot, big) if swap else (big, hot)
+    return ExcelInputs(
+        dryer_1=d1,
+        dryer_2=d2,
+        material=default_inputs().material,
+        ambient_temperature_celsius=15.0,
+        ambient_pressure_atm=1.0,
+    )
+
+
+def _gas_kg_per_h(air_kg_per_h: float, t_in: float, t_out: float) -> float:
+    """Gas of a heater: air * (1.2 + 0.006*2) kJ/(kg K) * dT / (0.8 * 45000 kJ/kg)."""
+    return air_kg_per_h * 1.212 * (t_out - t_in) / (0.8 * 45000.0)
+
+
+def test_exhaust_temperatures_of_the_synthetic_dryers_by_hand():
+    """Hand calculation of the two exhaust temperatures (sheet formula; 0.6*4.2 + 0.4*1 = 2.92).
+
+    Big (100 kg/h, spray 5): Y = 6 + 1000*5*0.5992/100 = 35.96 g/kg;
+      numerator 100*(1.212*300 - 29.96e-3*2500) + 5*15*2.92 = 100*288.7 + 219 = 29089,
+      denominator 100*(1.2 + 0.03596*2) + 2*1.0084 = 129.2088; T = 225.14 degC.
+    Hot (50 kg/h, spray 1): Y = 6 + 1000*1*0.5992/50 = 17.984 g/kg;
+      numerator 50*(363.6 - 11.984e-3*2500) + 1*15*2.92 = 16682 + 43.8 = 16725.8,
+      denominator 50*(1.2 + 0.017984*2) + 0.4*1.0084 = 62.20176; T = 268.89 degC.
+    """
+    e = synthetic_unequal_dryers()
+    big = ab.dryer_as_built(e.dryer_1, e.material)
+    hot = ab.dryer_as_built(e.dryer_2, e.material)
+    assert big.outlet_moisture_g_per_kg == pytest.approx(35.96)
+    assert hot.outlet_moisture_g_per_kg == pytest.approx(17.984)
+    assert big.outlet_temperature_celsius == pytest.approx(29089.0 / 129.2088, rel=1e-9)
+    assert hot.outlet_temperature_celsius == pytest.approx(16725.8 / 62.20176, rel=1e-9)
+    assert big.outlet_temperature_celsius < hot.outlet_temperature_celsius
+
+
+def test_cascade_order_matters_cases_3_and_5_for_unequal_dryers():
+    """Sink 1 (big, 100 kg/h) with the hotter small source 2 (synthetic inputs, see above).
+
+    Case 3 (order 2,1): source 2 first offers 4.612 kW (energy-limited, sink to about 152 degC),
+    then source 1 lifts the sink to its own exhaust temperature T1 = 225.14 degC; the hotter
+    source 2 is used up before. Final sink temperature T1.
+    Case 5 (order 1,2): source 1 first lifts the sink to T1 (7.07 kW); then the hotter source 2
+    lifts it further to its own exhaust temperature T2 = 268.89 degC. Final sink temperature T2.
+    Heater 1 gas = 100*1.212*(300 - T_final)/36000 kg/h; heater 2 has no recovery in these
+    cases (50 kg/h, 15 -> 300 degC: 0.47975 kg/h).
+    """
+    e = synthetic_unequal_dryers()
+    si = e.to_si()
+    t1, t2 = 29089.0 / 129.2088, 16725.8 / 62.20176
+    heater_2 = _gas_kg_per_h(50.0, 15.0, 300.0)
+    case3 = k.evaluate_case(si, 3)
+    case5 = k.evaluate_case(si, 5)
+    assert case3.sink_1.heater_in_celsius == pytest.approx(t1, rel=1e-9)
+    assert case5.sink_1.heater_in_celsius == pytest.approx(t2, rel=1e-9)
+    assert case3.total_gas_kg_per_h == pytest.approx(_gas_kg_per_h(100.0, t1, 300.0) + heater_2)
+    assert case5.total_gas_kg_per_h == pytest.approx(_gas_kg_per_h(100.0, t2, 300.0) + heater_2)
+    assert case5.total_gas_kg_per_h < case3.total_gas_kg_per_h - 0.1
+    # stage by stage: case 5 stage 1 is the whole lift to T1 (C = 100/3600*1212 W/K)
+    assert case5.sink_1.stages[0].power_w == pytest.approx(100 / 3600 * 1212 * (t1 - 15.0))
+    assert case3.sink_1.stages[0].source == 2 and case5.sink_1.stages[0].source == 1
+
+
+def test_cascade_order_matters_cases_4_and_6_when_the_roles_are_swapped():
+    """Same synthetic dryers with dryer 1 and 2 exchanged: sink 2 is now the big one (100 kg/h).
+
+    The hot small source is now source 1. Case 4 (order 2,1): the big source 2 first lifts the
+    sink to its own 225.14 degC, then the hotter source 1 lifts it to 268.89 degC. Case 6 (order
+    1,2): source 1 first (energy-limited, about 152 degC), then source 2 up to 225.14 degC.
+    Final 268.89 vs 225.14 degC; heater 1 (50 kg/h) has no recovery in these cases.
+    """
+    si = synthetic_unequal_dryers(swap=True).to_si()
+    t_big, t_hot = 29089.0 / 129.2088, 16725.8 / 62.20176
+    heater_1 = _gas_kg_per_h(50.0, 15.0, 300.0)  # sink 1 has no recovery in cases 4 and 6
+    case4 = k.evaluate_case(si, 4)
+    case6 = k.evaluate_case(si, 6)
+    assert case4.sink_2.heater_in_celsius == pytest.approx(t_hot, rel=1e-9)
+    assert case6.sink_2.heater_in_celsius == pytest.approx(t_big, rel=1e-9)
+    assert case4.total_gas_kg_per_h == pytest.approx(_gas_kg_per_h(100.0, t_hot, 300.0) + heater_1)
+    assert case6.total_gas_kg_per_h == pytest.approx(_gas_kg_per_h(100.0, t_big, 300.0) + heater_1)
+    assert case4.total_gas_kg_per_h < case6.total_gas_kg_per_h - 0.1
+
+
+def test_order_is_visible_in_the_stage_powers_even_when_the_total_is_equal():
+    """With the hot source on the OTHER side the totals of 4 and 6 coincide, the stages do not.
+
+    Unswapped synthetic dryers, sink 2 (hot, small flow): its own source is the hot one, so both
+    orders end at T2 = 268.89 degC (equal total), but the stage powers differ.
+    """
+    si = synthetic_unequal_dryers().to_si()
+    case4, case6 = k.evaluate_case(si, 4), k.evaluate_case(si, 6)
+    assert case4.total_gas_kg_per_h == pytest.approx(case6.total_gas_kg_per_h)
+    assert case4.sink_2.stages[0].power_w != pytest.approx(case6.sink_2.stages[0].power_w)
