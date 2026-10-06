@@ -30,13 +30,14 @@ own sink), ``all_to_all`` (every source feeds every sink), ``best`` (the allocat
 
 from __future__ import annotations
 
+import dataclasses
 import itertools
 from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
 
-from twinlink_ml.heatnetwork.balance import SinkState, SourceState, evaluate_cascade
+from twinlink_ml.heatnetwork.balance import SharedCap, SinkState, SourceState, evaluate_cascade
 from twinlink_ml.heatnetwork.config import HeatNetworkConfig, HeatSinkConfig, HeatSourceConfig
 from twinlink_ml.heatnetwork.routing import FixedRouting
 from twinlink_ml.simulation.backend import NumpyBackend
@@ -59,6 +60,7 @@ __all__ = [
     "fixed_allocation",
     "line_state",
     "scale_factor",
+    "with_spray_rate",
 ]
 
 Allocation = tuple[tuple[str, str], ...]
@@ -84,6 +86,10 @@ class SiteSpec:
     fuel_lower_heating_value_j_per_kg: float = 45.0e6
     external_source: HeatSourceConfig = EXTERNAL_SOURCE_Q1
     external_sink: HeatSinkConfig = EXTERNAL_SINK_S1
+    shared_cap_kw: float | None = None
+    """E1: duty limit of ONE exchanger that carries the heat of the external source into the inlet
+    air of all lines (the sum of the stages ``Q1 -> SA``, ``Q1 -> SB``); ``None``: no limit, the
+    results are bit-identical to those of M2. Synthetic: no duty figure exists in the repository."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -110,6 +116,7 @@ class SiteResult:
     gas_kw_lines: float
     recovered_kw_lines: float
     recovered_kw_total: float
+    recovered_kw_external_to_lines: float = 0.0
 
     @property
     def co2_kg_per_h(self) -> float:
@@ -138,6 +145,17 @@ class SiteResult:
             "kwh_sum_kw": self.kwh_sum_kw,
             "co2_lines_kg_per_h": self.co2_lines_kg_per_h,
         }
+
+
+def with_spray_rate(config: ProcessConfig, spray_kg_per_h: float) -> ProcessConfig:
+    """Config of a line with another spray rate (line B, D4); only the nominal rate changes."""
+    actions = dataclasses.replace(
+        config.actions,
+        spray_rate_kg_per_h=dataclasses.replace(
+            config.actions.spray_rate_kg_per_h, nominal=spray_kg_per_h
+        ),
+    )
+    return dataclasses.replace(config, actions=actions)
 
 
 def scale_factor(nominal_dry_air_flow_kg_per_s: float) -> float:
@@ -176,17 +194,37 @@ def line_state(
     )
 
 
-def all_allocations(n_lines: int) -> list[Allocation]:
-    """Every set of connections in which each source feeds at least one sink (D7)."""
+def _capped_pairs(n_lines: int) -> tuple[tuple[str, str], ...]:
+    return tuple(("Q1", f"S{x}") for x in "AB"[:n_lines])
+
+
+def all_allocations(n_lines: int, *, order_variants: bool = False) -> list[Allocation]:
+    """Every set of connections in which each source feeds at least one sink (D7).
+
+    ``order_variants``: for a set in which the external source feeds more than one line, the order
+    of those stages decides who is served first when the exchanger of ``SiteSpec.shared_cap_kw``
+    limits the total; the variant with the other order is added (needed with a cap; without one
+    the order has no effect on independent sinks).
+    """
     letters = "AB"[:n_lines]
     sources = ["Q1", *(f"L{x}" for x in letters)]
     sinks = ["S1", *(f"S{x}" for x in letters)]
     nonempty = [s for size in range(1, len(sinks) + 1) for s in itertools.combinations(sinks, size)]
+    capped = _capped_pairs(n_lines)
     out: list[Allocation] = []
     for choice in itertools.product(nonempty, repeat=len(sources)):
-        out.append(
-            tuple((src, snk) for src, subset in zip(sources, choice, strict=True) for snk in subset)
+        allocation = tuple(
+            (src, snk) for src, subset in zip(sources, choice, strict=True) for snk in subset
         )
+        out.append(allocation)
+        if order_variants:
+            present = [pair for pair in allocation if pair in capped]
+            if len(present) > 1:
+                positions = [i for i, pair in enumerate(allocation) if pair in capped]
+                swapped = list(allocation)
+                for position, pair in zip(positions, reversed(present), strict=True):
+                    swapped[position] = pair
+                out.append(tuple(swapped))
     return out
 
 
@@ -256,6 +294,16 @@ def evaluate_site(
 ) -> tuple[list[SiteResult], int]:
     """Cascade for every allocation; returns the results and the number rejected by the cascade."""
     network, source_states, sink_states = _network(lines, spec)
+    shared_caps = (
+        (
+            SharedCap(
+                stages=tuple((spec.external_source.name, f"S{x.name}") for x in lines),
+                power_kw=spec.shared_cap_kw,
+            ),
+        )
+        if spec.shared_cap_kw is not None
+        else ()
+    )
     electric_kw = spec.scale_factor * sum(x.electric_kw for x in lines)
     h_u = spec.fuel_lower_heating_value_j_per_kg
     results: list[SiteResult] = []
@@ -263,13 +311,16 @@ def evaluate_site(
     for connections in allocations:
         try:
             stages = FixedRouting(connections).route(network)
-            cascade = evaluate_cascade(network, stages, source_states, sink_states)
+            cascade = evaluate_cascade(network, stages, source_states, sink_states, shared_caps)
         except (ValueError, RuntimeError):
             rejected += 1
             continue
         gas_kw_per_sink = cascade.fuel_mass_flow_kg_per_s[:, 0] * h_u / 1000.0
         stage_kw = np.asarray(cascade.stage_recovered_power_kw)[:, 0]
         to_lines = np.array([name != spec.external_sink.name for name in cascade.stage_sink_names])
+        from_external = np.array(
+            [name == spec.external_source.name for name in cascade.stage_source_names]
+        )
         results.append(
             SiteResult(
                 connections=connections,
@@ -278,6 +329,7 @@ def evaluate_site(
                 gas_kw_lines=float(gas_kw_per_sink[1:].sum()),
                 recovered_kw_lines=float(np.sum(stage_kw[to_lines])),
                 recovered_kw_total=float(np.sum(stage_kw)),
+                recovered_kw_external_to_lines=float(np.sum(stage_kw[to_lines & from_external])),
             )
         )
     return results, rejected
