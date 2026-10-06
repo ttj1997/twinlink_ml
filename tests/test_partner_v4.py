@@ -1,0 +1,240 @@
+"""Tests of the reconstruction of the partner workbook ``Model_v4.xlsx``.
+
+Two groups:
+
+* **Workbook tests** read ``local/Model_v4.xlsx`` (confidential, never committed) and compare
+  the as-built reproduction with the values Excel stored for the FINISHED cells (Balances F4,
+  F5, F11, F12; Scenarios rows 21, 34, 36). Skipped when the file is missing.
+* **Model tests** need no workbook: hand calculations, mass/enthalpy closure, the unit errors.
+"""
+
+from __future__ import annotations
+
+import math
+from pathlib import Path
+
+import pytest
+
+from twinlink_ml.partner_v4 import as_built as ab
+from twinlink_ml.partner_v4 import cascade as k
+from twinlink_ml.partner_v4 import corrected as c
+from twinlink_ml.partner_v4.inputs import (
+    ExcelDryerInputs,
+    ExcelInputs,
+    ExcelMaterialInputs,
+    load_excel_inputs,
+)
+
+WORKBOOK = Path(__file__).resolve().parents[1] / "local" / "Model_v4.xlsx"
+
+
+def default_inputs() -> ExcelInputs:
+    """The sheet ``Inputs`` as of the draft (both dryers identical), typed in by hand."""
+    dryer = ExcelDryerInputs(50.0, 6.0, 300.0, 5.0, 0.4, 15.0)
+    return ExcelInputs(
+        dryer_1=dryer,
+        dryer_2=dryer,
+        material=ExcelMaterialInputs(1.2, 45000.0, 80.0, 4.2, 1.0, 2.0, 2.0, 2500.0, 4.2),
+        ambient_temperature_celsius=15.0,
+        ambient_pressure_atm=1.0,
+    )
+
+
+# --- workbook tests ------------------------------------------------------------------
+
+
+@pytest.fixture(scope="module")
+def workbook_values():
+    if not WORKBOOK.exists():
+        pytest.skip("local/Model_v4.xlsx not available")
+    openpyxl = pytest.importorskip("openpyxl")
+    wb = openpyxl.load_workbook(WORKBOOK, data_only=True)
+    return load_excel_inputs(WORKBOOK), wb
+
+
+def test_balances_match_workbook(workbook_values):
+    inputs, wb = workbook_values
+    sheet = wb["Balances"]
+    d1 = ab.dryer_as_built(inputs.dryer_1, inputs.material)
+    d2 = ab.dryer_as_built(inputs.dryer_2, inputs.material)
+    assert d1.outlet_moisture_g_per_kg == pytest.approx(sheet["F4"].value, rel=1e-12)
+    assert d1.outlet_temperature_celsius == pytest.approx(sheet["F5"].value, rel=1e-12)
+    assert d2.outlet_moisture_g_per_kg == pytest.approx(sheet["F11"].value, rel=1e-12)
+    assert d2.outlet_temperature_celsius == pytest.approx(sheet["F12"].value, rel=1e-12)
+
+
+def test_scenario_finished_cells_match_workbook(workbook_values):
+    inputs, wb = workbook_values
+    sheet = wb["Scenarios"]
+    cells = ab.scenario_cells_as_built(inputs)
+    assert set(cells) == {"E21", "G21", "I21", "K21", "O21", "I34", "M34", "I36", "M36"}
+    for address, value in cells.items():
+        assert sheet[address].value == pytest.approx(value, rel=1e-12, abs=1e-18), address
+
+
+def test_open_cells_are_still_open_in_workbook(workbook_values):
+    """If the partner fills a #REF! cell, this test says so and the reconstruction needs a look."""
+    _, wb = workbook_values
+    sheet = wb["Scenarios"]
+    for address in ("F25", "H25", "L25", "P25", "E34", "G34", "K34", "O34", "E36", "K36"):
+        assert sheet[address].value == "#REF!", address
+
+
+# --- model tests ---------------------------------------------------------------------
+
+
+def test_as_built_dryer_hand_values():
+    r = ab.dryer_as_built(default_inputs().dryer_1, default_inputs().material)
+    assert r.outlet_moisture_g_per_kg == pytest.approx(65.92)
+    assert r.outlet_temperature_celsius == pytest.approx(10909.0 / 68.6088, rel=1e-9)
+
+
+def test_corrected_dryer_equals_as_built_and_closes_balances():
+    e = default_inputs()
+    si = e.to_si()
+    res = c.dryer_balance(si.dryer_1, si.material)
+    old = ab.dryer_as_built(e.dryer_1, e.material)
+    assert res.outlet_humidity_kg_per_kg * 1e3 == pytest.approx(old.outlet_moisture_g_per_kg)
+    assert res.outlet_temperature_celsius == pytest.approx(old.outlet_temperature_celsius)
+    assert abs(c.dryer_enthalpy_residual_w(si.dryer_1, si.material, res)) < 1e-9
+    # water: spray water = evaporated + residual product moisture
+    water = si.dryer_1.spray_mass_flow_kg_per_s * (1 - 0.4)
+    residual = res.product_solids_kg_per_s * 0.002
+    assert res.evaporation_kg_per_s + residual == pytest.approx(water)
+
+
+def test_gas_for_50_kg_per_h_from_15_to_300_is_048_kg_per_h():
+    si = default_inputs().to_si()
+    stream = c.Stream(50 / 3600, 0.006, 15.0)
+    power = c.heater_power_w(stream, 15.0, 300.0, si.material)
+    assert power == pytest.approx(4797.5, rel=1e-9)  # W
+    gas_kg_per_h = c.gas_mass_flow_kg_per_s(power, si.material) * 3600
+    assert gas_kg_per_h == pytest.approx(0.47975, rel=1e-9)
+
+
+def test_sheet_total_is_25_5_times_too_low():
+    e = default_inputs()
+    cells = ab.scenario_cells_as_built(e)
+    right = (
+        c.gas_mass_flow_kg_per_s(
+            c.heater_power_w(c.Stream(50 / 3600, 0.006, 15.0), 15.0, 300.0, e.to_si().material),
+            e.to_si().material,
+        )
+        * 3600
+    )
+    assert right / cells["M36"] == pytest.approx(25.5, abs=0.05)
+    # decomposition: (1.2+6*2)/(1.2+0.006*2) * 1e-6 * 3600
+    assert cells["M36"] / right == pytest.approx(13.2 / 1.212 * 1e-6 * 3600, rel=1e-9)
+
+
+def test_recovery_formula_factor_and_round_trip():
+    m = default_inputs().material
+    t = ab.preheater_outlet_temperature_as_built(15.0, 1.0, 50.0, 6.0, m)
+    assert t - 15.0 == pytest.approx(1000 / (50 * 13.2))
+    # the sheet's energy formula gives back the 1 kW although dT is 39.2 times too small
+    assert ab.preheater_energy_kw_as_built(15.0, t, 50.0, 6.0, m) == pytest.approx(1.0)
+    right = 1.0 * 3600 / (50 * 1.212)
+    assert right / (t - 15.0) == pytest.approx(3.6 * 13.2 / 1.212, rel=1e-9)
+
+
+def test_antoine_with_restored_decimals_gives_boiling_point():
+    assert c.saturation_pressure_pa(99.99) == pytest.approx(101325.0, rel=0.01)
+    assert c.saturation_pressure_pa(100.0) == pytest.approx(101325.0, rel=0.02)
+    # continuity at the switch of the two ranges
+    assert c.saturation_pressure_pa(99.999) == pytest.approx(
+        c.saturation_pressure_pa(100.0), rel=0.01
+    )
+    # stored coefficients (decimal point lost) are unusable
+    assert 101962 - 1730.63 / (233426 + 100.0) > 1e5
+
+
+def test_dew_point_inverts_saturation_humidity():
+    p = 101325.0
+    t = 45.0
+    y = c.saturation_humidity_kg_per_kg(t, p)
+    assert c.dew_point_celsius(y, p) == pytest.approx(t, abs=1e-6)
+    assert math.isinf(c.saturation_humidity_kg_per_kg(130.0, p))
+
+
+def test_heat_release_continuous_at_dew_point_and_monotone():
+    si = default_inputs().to_si()
+    stream = c.exhaust_stream(si.dryer_1, c.dryer_balance(si.dryer_1, si.material))
+    p = si.ambient.pressure_pa
+    t_dp = c.dew_point_celsius(stream.humidity_kg_per_kg, p)
+    h = lambda t: c.stream_enthalpy_j_per_kg_dry(stream.humidity_kg_per_kg, t, p, si.material)  # noqa: E731
+    assert h(t_dp - 1e-6) == pytest.approx(h(t_dp + 1e-6), rel=1e-6)
+    assert h(20.0) < h(40.0) < h(60.0) < h(150.0)
+    q = c.stream_heat_release_w(stream, 15.0, p, si.material)
+    assert q == pytest.approx(4559.3, rel=1e-3)
+    # inverse
+    t_back = c.temperature_at_released_heat(stream, 0.5 * q, 15.0, p, si.material)
+    released = stream.dry_air_kg_per_s * (h(stream.temperature_celsius) - h(t_back))
+    assert released == pytest.approx(0.5 * q, rel=1e-6)
+
+
+def test_cascade_cases_hand_values():
+    si = default_inputs().to_si()
+    none = k.evaluate_case(si, 0)
+    assert none.total_gas_kg_per_h == pytest.approx(2 * 0.47975, rel=1e-9)
+    one = k.evaluate_case(si, 1)
+    # both sinks reach the exhaust temperature (159.003 degC): heater from there to 300
+    t_ex = 159.00292673826098
+    gas_each = 50 / 3600 * 1212.0 * (300 - t_ex) / (0.8 * 45e6) * 3600
+    assert one.total_gas_kg_per_h == pytest.approx(2 * gas_each, rel=1e-9)
+    # crossed case is identical for identical dryers, and case 3 = case 5, 4 = 6
+    assert k.evaluate_case(si, 2).total_gas_kg_per_h == pytest.approx(one.total_gas_kg_per_h)
+    assert k.evaluate_case(si, 3).total_gas_kg_per_h == pytest.approx(
+        k.evaluate_case(si, 5).total_gas_kg_per_h
+    )
+    # second stage of a cascade adds nothing: the sink is already at the source temperature
+    assert k.evaluate_case(si, 3).sink_1.stages[1].power_w == 0.0
+
+
+def test_counter_current_is_never_better_than_sheet_structure():
+    si = default_inputs().to_si()
+    for case in range(1, 7):
+        sheet = k.evaluate_case(si, case, mode="sheet").total_gas_kg_per_h
+        cc0 = k.evaluate_case(si, case, mode="counter_current", dt_min_k=0.0).total_gas_kg_per_h
+        cc20 = k.evaluate_case(si, case, mode="counter_current", dt_min_k=20.0).total_gas_kg_per_h
+        assert sheet <= cc0 * (1 + 1e-9)
+        assert cc0 <= cc20 * (1 + 1e-9)
+
+
+def test_proposal_covers_the_open_cells():
+    cells = k.proposed_cell_values(default_inputs().to_si())
+    for address in (
+        "F25",
+        "H25",
+        "L25",
+        "P25",
+        "E26",
+        "K26",
+        "O26",
+        "K29",
+        "L29",
+        "O29",
+        "P29",
+        "K30",
+        "O30",
+        "E33",
+        "G33",
+        "K33",
+        "O33",
+        "E34",
+        "G34",
+        "K34",
+        "O34",
+        "E36",
+        "G36",
+        "K36",
+        "O36",
+        "E20",
+        "G20",
+        "I20",
+        "J20",
+        "F12",
+        "H12",
+    ):
+        assert address in cells, address
+    # row 36 is the sum of the heaters (kg/h, no factor 3600)
+    assert cells["E36"] == pytest.approx(cells["E21"] + cells["E34"])
