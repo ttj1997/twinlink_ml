@@ -117,6 +117,13 @@ def test_document_balances_agree_with_the_workbook(workbook):
         assert document[address] == pytest.approx(stored, rel=1e-12, abs=1e-12), address
 
 
+def test_no_stored_number_in_scenarios_is_negative(workbook):
+    """Finding (docs/11, 7.5): the draft has no negative recovery (or any negative number)."""
+    _, path = workbook
+    negative = {a: v for a, (_, v) in dev.read_formula_cells(path, "Scenarios").items() if v < 0.0}
+    assert not negative, NEW_VERSION + f"Negative numbers in Scenarios: {negative}"
+
+
 def test_gas_formula_text_is_still_the_recorded_one(workbook):
     """The deviation 'efficiency /1000, moisture in g/kg' is about this exact formula text."""
     _, path = workbook
