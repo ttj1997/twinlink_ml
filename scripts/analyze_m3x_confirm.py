@@ -13,11 +13,17 @@ Criteria as fixed in the module docstring of ``run_m3x_confirm.py`` before the r
 (c) descriptive: allocation, set points, CO2 split (electricity, fuel of S1 / SA / SB), power of every stage,
     the exhaust of both lines, for the best S2 and the best M3' (re-evaluated with true solves).
 
-    python scripts/analyze_m3x_confirm.py
+    python scripts/analyze_m3x_confirm.py [--input NAME --output NAME [--t-max 100]]
+
+Defaults: the first run (artifact ``m3x_confirm_umin126``, evaluation ``m3x_confirm_evaluation_umin126``).
+For the sensitivity run (``--t-max 100``) the pre-fixed criterion is added to the output: the gain is NOT
+bound to the box limit iff the minimum over the seeds of G exceeds 1 kg CO2e/h in at least four of the five
+scenarios.
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 import warnings
@@ -55,7 +61,7 @@ def _boundary_flags(x: list[float], p: tuple[float, float] = (1.0, 1.0)) -> dict
         if abs(t - T_BOUNDS[0]) < T_TOL:
             flags[name].append("inlet temperature at the lower bound 60")
         if abs(t - T_BOUNDS[1]) < T_TOL:
-            flags[name].append("inlet temperature at the upper bound 120")
+            flags[name].append(f"inlet temperature at the upper bound {T_BOUNDS[1]:g}")
         if abs(u - U_BOUNDS[0]) < U_TOL:
             flags[name].append("gas velocity at the lower bound 1.26")
         if abs(u - U_BOUNDS[1]) < U_TOL:
@@ -138,9 +144,16 @@ def _describe(
 
 
 def main() -> int:
+    global T_BOUNDS
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--input", default=f"m3x_confirm_{c.SUFFIX}")
+    parser.add_argument("--output", default=f"m3x_confirm_evaluation_{c.SUFFIX}")
+    parser.add_argument("--t-max", type=float, default=120.0)
+    arguments = parser.parse_args()
+    T_BOUNDS = (60.0, arguments.t_max)
     require_clean_tree()
     warnings.filterwarnings("ignore")
-    art = json.loads((RUNS_DIR / f"m3x_confirm_{c.SUFFIX}.json").read_text("utf-8"))
+    art = json.loads((RUNS_DIR / f"{arguments.input}.json").read_text("utf-8"))
     configs, k, grid, _ = m3._setup()
     allocations = sn.all_allocations(2, order_variants=True)
     records = art["records"]
@@ -229,8 +242,14 @@ def main() -> int:
         "scenarios": out,
         "n_confirmed": n_confirmed,
         "overall_confirmed": bool(n_confirmed >= c.OVERALL_MIN_CONFIRMED),
+        "inlet_temperature_upper_bound_celsius": arguments.t_max,
+        "sensitivity_criterion": {
+            "rule": "gain not bound to the box limit iff min-over-seeds G >= 1 kg/h in at least 4 of 5",
+            "n_scenarios_above_1": n_confirmed,
+            "not_bound_to_box_limit": bool(n_confirmed >= 4),
+        },
     }
-    write_artifact(f"m3x_confirm_evaluation_{c.SUFFIX}", payload)
+    write_artifact(arguments.output, payload)
     for s, v in out.items():
         print(s, v["verdict"], {sd: round(g, 3) for sd, g in v["gain_per_seed"].items()})
     print("overall confirmed:", payload["overall_confirmed"], n_confirmed, "of", len(out))

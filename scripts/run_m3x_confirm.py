@@ -43,7 +43,27 @@ about 11 shortlisted allocations x 5 seeds = 55 runs; together about 105 runs on
 (range 2-4 h, the polishing of the main stage took up to 2.7 h for single scenarios; here no tables and no
 polishing).
 
-    PYTHONPATH=<worktree>/src python scripts/run_m3x_confirm.py [--resume]
+Extension of 2026-10-07 (project lead; the first run above covered 16, 17, 22, 23, 24 by a mix-up of the
+order: the five LARGEST gains of Befund 73 are 18, 19, 22, 23, 24). The script is now parameterised; the
+defaults reproduce the first run exactly (scenarios 16, 17, 22, 23, 24, box 60-120 degC, no cap):
+
+* ``--scenarios 18,19 --name m3x_confirm_s18_19_umin126``: the two largest gains not yet protected, same
+  method and criteria.
+* ``--t-max 100 --scenarios 18,19,22,23,24 --name m3x_sens_tmax100_umin126``: sensitivity to the upper bound of
+  the inlet temperature of BOTH lines, 100 degC (the laboratory range 50-100 degC), as a RUN PARAMETER, the
+  default box (60-120 degC) is not changed; the S2 line searches use the same box. Same shortlists as at 120.
+  Fixed beforehand: the gain is NOT bound to the box limit iff G (minimum over the seeds against the best S2,
+  as above) exceeds 1 kg CO2e/h in at least four of the five scenarios.
+* ``--scenarios <the other 18> --shortlist-cap 5 --name m3x_robust_rest_umin126``: robustness re-measurement of
+  the verdict of Befund 73 on all 25 scenarios (together with the first run, 16, 17, 22, 23, 24, and the
+  18/19 run, all at the box 60-120 degC and 1.26 m/s; evaluated by ``analyze_m3x_robust.py``). Shortlist cap
+  5 per scenario (cost: the uncapped rule would give up to 15 allocations at scenarios 15, 20, 21 where the
+  gain is about zero and many allocations are tied): kept first the allocations chosen by M3' (all seeds of
+  the joint stage) and by S2, then the others by ascending polished value; the cap can only lower M3'
+  (a conservative bias against a gain, in tied scenarios).
+
+    PYTHONPATH=<worktree>/src python scripts/run_m3x_confirm.py [--resume] [--scenarios ..] [--t-max ..]
+        [--shortlist-cap N] [--name ..]
 """
 
 from __future__ import annotations
@@ -78,7 +98,10 @@ from twinlink_ml.evaluation import site_network as sn  # noqa: E402
 from twinlink_ml.evaluation.site_oracle import SiteOracleSpec  # noqa: E402
 from twinlink_ml.simulation.oracle_search import run_de_nm  # noqa: E402
 
-SCENARIOS = (16, 17, 22, 23, 24)
+SCENARIOS: tuple[int, ...] = (16, 17, 22, 23, 24)
+T_MAX = 120.0
+SHORTLIST_CAP: int | None = None
+ARTIFACT = f"m3x_confirm_{m3.SUFFIX}"
 SEEDS = (0, 1, 2, 3, 4)
 SHORTLIST_WINDOW = 1.0
 SUFFIX = m3.SUFFIX
@@ -109,28 +132,32 @@ def shortlists() -> dict[int, list[list[list[str]]]]:
     for s in SCENARIOS:
         row = rows[s]
         chosen: dict[tuple[tuple[str, str], ...], list[list[str]]] = {}
+        capped: dict[tuple[tuple[str, str], ...], list[list[str]]] = {}
         polished = [
             e for e in row["search"]["polished"].values() if e.get("polished_value") is not None
         ]
         best = min(e["polished_value"] for e in polished)
         seen_values: set[float] = set()
+        near: list[list[list[str]]] = []
         for e in sorted(polished, key=lambda e: e["polished_value"]):
             if (
                 e["polished_value"] <= best + SHORTLIST_WINDOW
                 and round(e["polished_value"], 2) not in seen_values
             ):
                 seen_values.add(round(e["polished_value"], 2))
-                chosen.setdefault(_allocation_key(e["allocation"]), e["allocation"])
-        chosen.setdefault(
-            _allocation_key(row["search"]["m3"]["allocation"]), row["search"]["m3"]["allocation"]
-        )
+                near.append(e["allocation"])
+        priority = [row["search"]["m3"]["allocation"]]
         for r in seeds["records"]:
             if r["case"] == "control" and r["grid_index"] == s and "search" in r:
-                chosen.setdefault(
-                    _allocation_key(r["search"]["m3"]["allocation"]),
-                    r["search"]["m3"]["allocation"],
-                )
-        chosen.setdefault(_allocation_key(row["s2"]["allocation"]), row["s2"]["allocation"])
+                priority.append(r["search"]["m3"]["allocation"])
+        priority.append(row["s2"]["allocation"])
+        for allocation in priority + near:
+            chosen.setdefault(_allocation_key(allocation), allocation)
+        if SHORTLIST_CAP is not None:
+            for allocation in priority + near:
+                if len(capped) < SHORTLIST_CAP:
+                    capped.setdefault(_allocation_key(allocation), allocation)
+            chosen = capped
         out[s] = list(chosen.values())
     return out
 
@@ -142,7 +169,7 @@ def _task(task: dict[str, Any]) -> dict[str, Any]:
     if task["kind"] == "line":
         spec = co.OracleSpec(THRESHOLD, "co2_gas_heater", m1.GAS_HEATER_EFFICIENCY)
         co.init_worker(configs[task["line"]])
-        base_bounds = [(60.0, 120.0), (m3.BOUND, 2.5), (1.0, 4.0)]
+        base_bounds = [(60.0, task["t_max"]), (m3.BOUND, 2.5), (1.0, 4.0)]
         result = co.optimize_point(task["t_amb"], task["phi"], base_bounds, budget, spec)
         return {
             **{k: task[k] for k in ("kind", "line", "seed", "scenario")},
@@ -158,7 +185,8 @@ def _task(task: dict[str, Any]) -> dict[str, Any]:
         }
     spec = SiteOracleSpec(THRESHOLD, js.site_spec_with_cap(sn.SiteSpec(task["k"]), None))
     allocation = tuple(tuple(c) for c in task["allocation"])
-    bounds = [(60.0, 120.0), (m3.BOUND, 2.5), (60.0, 120.0), (m3.BOUND, 2.5)]
+    t_max = task["t_max"]
+    bounds = [(60.0, t_max), (m3.BOUND, 2.5), (60.0, t_max), (m3.BOUND, 2.5)]
     de, refine, _, _ = run_de_nm(
         js._true_value,
         bounds,
@@ -188,9 +216,18 @@ def _key(row: dict[str, Any]) -> tuple[Any, ...]:
 
 
 def main() -> int:
+    global SCENARIOS, T_MAX, SHORTLIST_CAP
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--scenarios", default=None, help="comma-separated grid indices")
+    parser.add_argument("--t-max", type=float, default=T_MAX)
+    parser.add_argument("--shortlist-cap", type=int, default=None)
+    parser.add_argument("--name", default=ARTIFACT)
     arguments = parser.parse_args()
+    if arguments.scenarios:
+        SCENARIOS = tuple(int(v) for v in arguments.scenarios.split(","))
+    T_MAX = arguments.t_max
+    SHORTLIST_CAP = arguments.shortlist_cap
     require_clean_tree()
     assert Path(twinlink_ml.__file__).resolve().is_relative_to(REPO_ROOT)
     configs, k, grid, _ = m3._setup()
@@ -210,6 +247,7 @@ def main() -> int:
                         "t_amb": t_amb,
                         "phi": phi,
                         "k": k,
+                        "t_max": T_MAX,
                     }
                 )
     for s in SCENARIOS:
@@ -224,9 +262,10 @@ def main() -> int:
                         "seed": seed,
                         "t_amb": t_amb,
                         "phi": phi,
+                        "t_max": T_MAX,
                     }
                 )
-    scratch = RUNS_DIR / "_m3x_confirm.jsonl"
+    scratch = RUNS_DIR / f"_{arguments.name}.jsonl"
     done: dict[tuple[Any, ...], dict[str, Any]] = {}
     if arguments.resume and scratch.exists():
         for line in scratch.read_text("utf-8").splitlines():
@@ -252,9 +291,11 @@ def main() -> int:
                 flush=True,
             )
     write_artifact(
-        f"m3x_confirm_{SUFFIX}",
+        arguments.name,
         {
             "_provenance": provenance(),
+            "inlet_temperature_upper_bound_celsius": T_MAX,
+            "shortlist_cap": SHORTLIST_CAP,
             "scenarios": list(SCENARIOS),
             "seeds": list(SEEDS),
             "shortlists": {str(s): lists[s] for s in SCENARIOS},
