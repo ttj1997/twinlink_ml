@@ -1,0 +1,1568 @@
+{
+ "provenance": {
+  "git/commit": "572b7bfafdc756dd39bccd258218ca626061ceff",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "test_set": "25 Befund-52 grid points; lines A and B, scaled site; lower bound 1.26 m/s",
+ "rule": {
+  "main_result": "control (no limit)",
+  "gain_median_min_kg_per_h": 1.0,
+  "seed_factor": 3.0,
+  "per_scenario_min_kg_per_h": 0.2,
+  "scenario_share_min": 0.6,
+  "accuracy_factor": 3.0
+ },
+ "seed_spread": {
+  "control": {
+   "per_scenario": {
+    "2": {
+     "values": [
+      1162.2248787443846,
+      1162.2248903056027,
+      1162.2248882960043
+     ],
+     "spread": 1.1561218116185046e-05
+    },
+    "12": {
+     "values": [
+      1157.0613457895922,
+      1157.0612618779323,
+      1157.061469344475
+     ],
+     "spread": 0.00020746654263348319
+    },
+    "17": {
+     "values": [
+      1155.5008784420659,
+      1152.7064878075194,
+      1153.6033303372474
+     ],
+     "spread": 2.7943906345465166
+    }
+   },
+   "largest": 2.7943906345465166
+  },
+  "c0.5": {
+   "per_scenario": {
+    "2": {
+     "values": [
+      1185.1971346483733,
+      1185.197134648208,
+      1185.1971347908232
+     ],
+     "spread": 1.4261513570090756e-07
+    },
+    "12": {
+     "values": [
+      1166.6138361990388,
+      1166.613785965839,
+      1166.6138600489812
+     ],
+     "spread": 7.408314218082523e-05
+    },
+    "17": {
+     "values": [
+      1155.485886995244,
+      1155.4821535462147,
+      1155.1713579787597
+     ],
+     "spread": 0.31452901648435727
+    }
+   },
+   "largest": 0.31452901648435727
+  },
+  "c1.0": {
+   "per_scenario": {
+    "2": {
+     "values": [
+      1163.2383843355133,
+      1163.2383834296581,
+      1163.2384510944382
+     ],
+     "spread": 6.766478009012644e-05
+    },
+    "12": {
+     "values": [
+      1157.0612633374117,
+      1157.0613193494062,
+      1157.0612936710831
+     ],
+     "spread": 5.601199450211425e-05
+    },
+    "17": {
+     "values": [
+      1153.9324760948891,
+      1153.9146797581627,
+      1155.4892173911226
+     ],
+     "spread": 1.5745376329598457
+    }
+   },
+   "largest": 1.5745376329598457
+  },
+  "c1.5": {
+   "per_scenario": {
+    "2": {
+     "values": [
+      1162.2242173583697,
+      1162.2242146849717,
+      1162.224230593669
+     ],
+     "spread": 1.5908697378108627e-05
+    },
+    "12": {
+     "values": [
+      1157.0614823851768,
+      1157.0612880543695,
+      1157.0613069553647
+     ],
+     "spread": 0.00019433080728958885
+    },
+    "17": {
+     "values": [
+      1152.7438691011002,
+      1152.7893318006738,
+      1153.685659622633
+     ],
+     "spread": 0.9417905215327664
+    }
+   },
+   "largest": 0.9417905215327664
+  }
+ },
+ "cases": {
+  "control": {
+   "n_scenarios": 25,
+   "n_valid_both_feasible": 25,
+   "n_masked": 0,
+   "gain_penalised_value_kg_per_h": {
+    "0": -0.05290762204799648,
+    "1": 0.00040484506553184474,
+    "2": -0.0005920647511175048,
+    "3": 0.003918875523822862,
+    "4": -0.0453377120031746,
+    "5": 0.9375990828154954,
+    "6": 1.17208243320556,
+    "7": 0.8185121866877125,
+    "8": 0.38441605770663045,
+    "9": 0.003842693501837857,
+    "10": 1.2418510531965694,
+    "11": 0.5572049517859341,
+    "12": 0.0012994393371172919,
+    "13": 0.18081656398476298,
+    "14": 1.4971544911199999,
+    "15": -0.0020799838175662444,
+    "16": 1.6573133378258262,
+    "17": -0.16596230066829776,
+    "18": 5.588245215615416,
+    "19": 9.40809351076814,
+    "20": -0.003055204454312843,
+    "21": 0.005755756843882409,
+    "22": 7.027112425177847,
+    "23": 11.896439157410668,
+    "24": 17.414613647883698
+   },
+   "table_error_max_kg_per_h": 6.134286153425137,
+   "n_window_widened": 5,
+   "window_final_max_kg_per_h": 22.1789949447284,
+   "n_polished_median": 13.0,
+   "n_other_allocation_exact_tuple": 21,
+   "n_other_connections_exact_set": 21,
+   "n_allocation_gain_material": 5,
+   "gain_setpoints_only_median": 0.0034713236493644217,
+   "gain_other_allocation_median": 1.1627126241364749e-05,
+   "per_scenario": [
+    {
+     "grid_index": 0,
+     "gain_co2_kg_per_h": -0.05290762204799648,
+     "gain_relative_to_line_co2": -0.0003142772273176959,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.1409243211451212,
+     "gain_other_allocation": 0.08801669909712473,
+     "valid": true
+    },
+    {
+     "grid_index": 1,
+     "gain_co2_kg_per_h": 0.00040484506553184474,
+     "gain_relative_to_line_co2": 2.4033846425270486e-06,
+     "allocation_gain_material": false,
+     "same_allocation": true,
+     "same_connections": true,
+     "gain_setpoints": 0.00040484506553184474,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 2,
+     "gain_co2_kg_per_h": -0.0005920647511175048,
+     "gain_relative_to_line_co2": -3.512779713579136e-06,
+     "allocation_gain_material": false,
+     "same_allocation": true,
+     "same_connections": true,
+     "gain_setpoints": -0.0005920647511175048,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 3,
+     "gain_co2_kg_per_h": 0.003918875523822862,
+     "gain_relative_to_line_co2": 2.3227061977223825e-05,
+     "allocation_gain_material": false,
+     "same_allocation": true,
+     "same_connections": true,
+     "gain_setpoints": 0.003918875523822862,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 4,
+     "gain_co2_kg_per_h": -0.0453377120031746,
+     "gain_relative_to_line_co2": -0.00026747651458823986,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.12821165964965076,
+     "gain_other_allocation": 0.08287394764647615,
+     "valid": true
+    },
+    {
+     "grid_index": 5,
+     "gain_co2_kg_per_h": 0.9375990828154954,
+     "gain_relative_to_line_co2": 0.005627918737090081,
+     "allocation_gain_material": false,
+     "same_allocation": true,
+     "same_connections": true,
+     "gain_setpoints": 0.9375990828154954,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 6,
+     "gain_co2_kg_per_h": 1.17208243320556,
+     "gain_relative_to_line_co2": 0.007027641776728674,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 1.1715339383238188,
+     "gain_other_allocation": 0.000548494881741135,
+     "valid": true
+    },
+    {
+     "grid_index": 7,
+     "gain_co2_kg_per_h": 0.8185121866877125,
+     "gain_relative_to_line_co2": 0.004903867335280585,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.8185121866877125,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 8,
+     "gain_co2_kg_per_h": 0.38441605770663045,
+     "gain_relative_to_line_co2": 0.0022951525825902815,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.38441605770663045,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 9,
+     "gain_co2_kg_per_h": 0.003842693501837857,
+     "gain_relative_to_line_co2": 2.2857863575133944e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.0034713236493644217,
+     "gain_other_allocation": 0.00037136985247343546,
+     "valid": true
+    },
+    {
+     "grid_index": 10,
+     "gain_co2_kg_per_h": 1.2418510531965694,
+     "gain_relative_to_line_co2": 0.0076830845250838225,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 1.241839426070328,
+     "gain_other_allocation": 1.1627126241364749e-05,
+     "valid": true
+    },
+    {
+     "grid_index": 11,
+     "gain_co2_kg_per_h": 0.5572049517859341,
+     "gain_relative_to_line_co2": 0.0034513777960441397,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.5271358189459079,
+     "gain_other_allocation": 0.030069132840026214,
+     "valid": true
+    },
+    {
+     "grid_index": 12,
+     "gain_co2_kg_per_h": 0.0012994393371172919,
+     "gain_relative_to_line_co2": 7.953269476536946e-06,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.0011613850961111893,
+     "gain_other_allocation": 0.00013805424100610253,
+     "valid": true
+    },
+    {
+     "grid_index": 13,
+     "gain_co2_kg_per_h": 0.18081656398476298,
+     "gain_relative_to_line_co2": 0.0010941172858657444,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.18081656398476298,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 14,
+     "gain_co2_kg_per_h": 1.4971544911199999,
+     "gain_relative_to_line_co2": 0.009024457529178099,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 1.4971544911199999,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 15,
+     "gain_co2_kg_per_h": -0.0020799838175662444,
+     "gain_relative_to_line_co2": -1.2983200462677532e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.0020799838175662444,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 16,
+     "gain_co2_kg_per_h": 1.6573133378258262,
+     "gain_relative_to_line_co2": 0.010189758368526395,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.061968726542772856,
+     "gain_other_allocation": 1.719282064368599,
+     "valid": true
+    },
+    {
+     "grid_index": 17,
+     "gain_co2_kg_per_h": -0.16596230066829776,
+     "gain_relative_to_line_co2": -0.0010266350664082274,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -1.5304308693232542,
+     "gain_other_allocation": 1.3644685686549565,
+     "valid": true
+    },
+    {
+     "grid_index": 18,
+     "gain_co2_kg_per_h": 5.588245215615416,
+     "gain_relative_to_line_co2": 0.03450048775924799,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 5.588245215615416,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 19,
+     "gain_co2_kg_per_h": 9.40809351076814,
+     "gain_relative_to_line_co2": 0.057432664469361634,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 9.40809351076814,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 20,
+     "gain_co2_kg_per_h": -0.003055204454312843,
+     "gain_relative_to_line_co2": -1.8899485495427944e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.003055204454312843,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 21,
+     "gain_co2_kg_per_h": 0.005755756843882409,
+     "gain_relative_to_line_co2": 3.567828552450145e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.003653915341146785,
+     "gain_other_allocation": 0.002101841502735624,
+     "valid": true
+    },
+    {
+     "grid_index": 22,
+     "gain_co2_kg_per_h": 7.027112425177847,
+     "gain_relative_to_line_co2": 0.04366965964005979,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.1962325688175497,
+     "gain_other_allocation": 7.223344993995397,
+     "valid": true
+    },
+    {
+     "grid_index": 23,
+     "gain_co2_kg_per_h": 11.896439157410668,
+     "gain_relative_to_line_co2": 0.07416246049207893,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.39660713286184546,
+     "gain_other_allocation": 12.293046290272514,
+     "valid": true
+    },
+    {
+     "grid_index": 24,
+     "gain_co2_kg_per_h": 17.414613647883698,
+     "gain_relative_to_line_co2": 0.10693259960244371,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.033363343774453824,
+     "gain_other_allocation": 17.44797699165815,
+     "valid": true
+    }
+   ],
+   "verdict": {
+    "n_scenarios": 25,
+    "gain_median_kg_per_h": 0.38441605770663045,
+    "gain_min_kg_per_h": -0.16596230066829776,
+    "gain_max_kg_per_h": 17.414613647883698,
+    "gain_relative_to_line_co2_median": 0.0022951525825902815,
+    "share_above_per_scenario_threshold": 0.52,
+    "n_above_per_scenario_threshold": 13,
+    "seed_spread_kg_per_h": 2.7943906345465166,
+    "criterion_i_median": false,
+    "criterion_ii_seed_spread": false,
+    "criterion_iii_share": false,
+    "demonstrated": false
+   }
+  },
+  "c0.5": {
+   "n_scenarios": 25,
+   "n_valid_both_feasible": 25,
+   "n_masked": 0,
+   "gain_penalised_value_kg_per_h": {
+    "0": 0.0009094238935176691,
+    "1": 0.000655506301427522,
+    "2": 9.31807821871189e-05,
+    "3": 0.007931931711937068,
+    "4": 0.003646904138577156,
+    "5": 1.1452300754640419,
+    "6": 1.1906123780668167,
+    "7": 1.2075560167183994,
+    "8": 1.0574476817291725,
+    "9": 0.07641778567040092,
+    "10": 0.0012315384765315684,
+    "11": 0.0003651293220627849,
+    "12": 0.002191273083781198,
+    "13": 1.1666393575330858,
+    "14": 3.5122629851750844,
+    "15": -0.0020799838175662444,
+    "16": 0.8985205433316423,
+    "17": -0.150970853846502,
+    "18": 3.9853163875372957,
+    "19": 6.870559083561375,
+    "20": -0.003055204454312843,
+    "21": 0.003653915341146785,
+    "22": -0.027282184258638154,
+    "23": -0.007810531491259098,
+    "24": 0.10903042464724422
+   },
+   "table_error_max_kg_per_h": 8.714889049750582,
+   "n_window_widened": 5,
+   "window_final_max_kg_per_h": 34.85955619900233,
+   "n_polished_median": 41.0,
+   "n_other_allocation_exact_tuple": 24,
+   "n_other_connections_exact_set": 24,
+   "n_allocation_gain_material": 8,
+   "gain_setpoints_only_median": 9.31807821871189e-05,
+   "gain_other_allocation_median": 0.009118133622905589,
+   "per_scenario": [
+    {
+     "grid_index": 0,
+     "gain_co2_kg_per_h": 0.0009094238935176691,
+     "gain_relative_to_line_co2": 4.74674975005432e-06,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.0008416076193498156,
+     "gain_other_allocation": 6.781627416785341e-05,
+     "valid": true
+    },
+    {
+     "grid_index": 1,
+     "gain_co2_kg_per_h": 0.000655506301427522,
+     "gain_relative_to_line_co2": 3.4220260433721106e-06,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.0002525294335100625,
+     "gain_other_allocation": 0.00040297686791745946,
+     "valid": true
+    },
+    {
+     "grid_index": 2,
+     "gain_co2_kg_per_h": 9.31807821871189e-05,
+     "gain_relative_to_line_co2": 4.865357540581687e-07,
+     "allocation_gain_material": false,
+     "same_allocation": true,
+     "same_connections": true,
+     "gain_setpoints": 9.31807821871189e-05,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 3,
+     "gain_co2_kg_per_h": 0.007931931711937068,
+     "gain_relative_to_line_co2": 4.142097250452698e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.00791339996339957,
+     "gain_other_allocation": 1.853174853749806e-05,
+     "valid": true
+    },
+    {
+     "grid_index": 4,
+     "gain_co2_kg_per_h": 0.003646904138577156,
+     "gain_relative_to_line_co2": 1.9042314504571185e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.003622743422511121,
+     "gain_other_allocation": 2.4160716066035093e-05,
+     "valid": true
+    },
+    {
+     "grid_index": 5,
+     "gain_co2_kg_per_h": 1.1452300754640419,
+     "gain_relative_to_line_co2": 0.006336753147417491,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 1.1452080053331883,
+     "gain_other_allocation": 2.2070130853535375e-05,
+     "valid": true
+    },
+    {
+     "grid_index": 6,
+     "gain_co2_kg_per_h": 1.1906123780668167,
+     "gain_relative_to_line_co2": 0.00658535676896979,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 1.1906073372090304,
+     "gain_other_allocation": 5.040857786298147e-06,
+     "valid": true
+    },
+    {
+     "grid_index": 7,
+     "gain_co2_kg_per_h": 1.2075560167183994,
+     "gain_relative_to_line_co2": 0.006658597034588663,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 1.1968990909549575,
+     "gain_other_allocation": 0.010656925763441905,
+     "valid": true
+    },
+    {
+     "grid_index": 8,
+     "gain_co2_kg_per_h": 1.0574476817291725,
+     "gain_relative_to_line_co2": 0.005826488118116435,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.5620139877298698,
+     "gain_other_allocation": 0.4954336939993027,
+     "valid": true
+    },
+    {
+     "grid_index": 9,
+     "gain_co2_kg_per_h": 0.07641778567040092,
+     "gain_relative_to_line_co2": 0.0004207220846019224,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.042223657113254376,
+     "gain_other_allocation": 0.1186414427836553,
+     "valid": true
+    },
+    {
+     "grid_index": 10,
+     "gain_co2_kg_per_h": 0.0012315384765315684,
+     "gain_relative_to_line_co2": 7.4188255512866606e-06,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.006299825806308945,
+     "gain_other_allocation": 0.007531364282840514,
+     "valid": true
+    },
+    {
+     "grid_index": 11,
+     "gain_co2_kg_per_h": 0.0003651293220627849,
+     "gain_relative_to_line_co2": 2.1647540125737056e-06,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.008753004300842804,
+     "gain_other_allocation": 0.009118133622905589,
+     "valid": true
+    },
+    {
+     "grid_index": 12,
+     "gain_co2_kg_per_h": 0.002191273083781198,
+     "gain_relative_to_line_co2": 1.2670882953839589e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.0020133134635216265,
+     "gain_other_allocation": 0.00017795962025957124,
+     "valid": true
+    },
+    {
+     "grid_index": 13,
+     "gain_co2_kg_per_h": 1.1666393575330858,
+     "gain_relative_to_line_co2": 0.006593393037126457,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.0013504623573226127,
+     "gain_other_allocation": 1.1652888951757632,
+     "valid": true
+    },
+    {
+     "grid_index": 14,
+     "gain_co2_kg_per_h": 3.5122629851750844,
+     "gain_relative_to_line_co2": 0.01948786114489685,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.5939427573414378,
+     "gain_other_allocation": 2.9183202278336466,
+     "valid": true
+    },
+    {
+     "grid_index": 15,
+     "gain_co2_kg_per_h": -0.0020799838175662444,
+     "gain_relative_to_line_co2": -1.2983200462677532e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.0020799838175662444,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 16,
+     "gain_co2_kg_per_h": 0.8985205433316423,
+     "gain_relative_to_line_co2": 0.005524427407141701,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.061968726542772856,
+     "gain_other_allocation": 0.9604892698744152,
+     "valid": true
+    },
+    {
+     "grid_index": 17,
+     "gain_co2_kg_per_h": -0.150970853846502,
+     "gain_relative_to_line_co2": -0.000933898674218711,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -1.4358272563260925,
+     "gain_other_allocation": 1.2848564024795905,
+     "valid": true
+    },
+    {
+     "grid_index": 18,
+     "gain_co2_kg_per_h": 3.9853163875372957,
+     "gain_relative_to_line_co2": 0.024462027712651862,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.002956096987645651,
+     "gain_other_allocation": 3.9882724845249413,
+     "valid": true
+    },
+    {
+     "grid_index": 19,
+     "gain_co2_kg_per_h": 6.870559083561375,
+     "gain_relative_to_line_co2": 0.04135740974360567,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 1.152650838776026e-05,
+     "gain_other_allocation": 6.870547557052987,
+     "valid": true
+    },
+    {
+     "grid_index": 20,
+     "gain_co2_kg_per_h": -0.003055204454312843,
+     "gain_relative_to_line_co2": -1.8899485495427944e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.003055204454312843,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 21,
+     "gain_co2_kg_per_h": 0.003653915341146785,
+     "gain_relative_to_line_co2": 2.2649573003131976e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.003653915341146785,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 22,
+     "gain_co2_kg_per_h": -0.027282184258638154,
+     "gain_relative_to_line_co2": -0.00016954385083457266,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.1962325688175497,
+     "gain_other_allocation": 0.16895038455891154,
+     "valid": true
+    },
+    {
+     "grid_index": 23,
+     "gain_co2_kg_per_h": -0.007810531491259098,
+     "gain_relative_to_line_co2": -4.869089191128332e-05,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.39660713286184546,
+     "gain_other_allocation": 0.38879660137058636,
+     "valid": true
+    },
+    {
+     "grid_index": 24,
+     "gain_co2_kg_per_h": 0.10903042464724422,
+     "gain_relative_to_line_co2": 0.0006694898307264495,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.033363343774453824,
+     "gain_other_allocation": 0.14239376842169804,
+     "valid": true
+    }
+   ],
+   "additional_effect_of_the_limit": {
+    "n": 25,
+    "median_kg_per_h": 0.0006852455333046237,
+    "min_kg_per_h": -17.305583223236454,
+    "max_kg_per_h": 2.0151084940550845,
+    "n_positive": 14,
+    "seed_spread_kg_per_h": 0.31452901648435727
+   }
+  },
+  "c1.0": {
+   "n_scenarios": 25,
+   "n_valid_both_feasible": 25,
+   "n_masked": 0,
+   "gain_penalised_value_kg_per_h": {
+    "0": 0.000908894018493811,
+    "1": 0.00019520086038937734,
+    "2": 4.784083535014361e-05,
+    "3": 0.0024252224245628895,
+    "4": 0.0011278489557753346,
+    "5": 0.18065890266439055,
+    "6": 0.0011696170897721458,
+    "7": 0.001081484807855304,
+    "8": 0.0008826257114833425,
+    "9": 0.016433814939091462,
+    "10": 1.2418510778343261,
+    "11": 0.560882735001087,
+    "12": 0.0013818915176670998,
+    "13": -0.008651868632114201,
+    "14": -0.002297089073636016,
+    "15": 0.0018842674453480868,
+    "16": 1.65775215019994,
+    "17": 1.4024400465084454,
+    "18": 3.0426679651468476,
+    "19": 4.485832561727875,
+    "20": -0.003055204454312843,
+    "21": 0.003653915341146785,
+    "22": -0.03685444288362305,
+    "23": -0.025691881883858514,
+    "24": 2.131833406148644
+   },
+   "table_error_max_kg_per_h": 1.8114032083644815,
+   "n_window_widened": 0,
+   "window_final_max_kg_per_h": 5.0,
+   "n_polished_median": 34.0,
+   "n_other_allocation_exact_tuple": 23,
+   "n_other_connections_exact_set": 23,
+   "n_allocation_gain_material": 5,
+   "gain_setpoints_only_median": 1.8712283463173662e-05,
+   "gain_other_allocation_median": 0.0013631792342039262,
+   "per_scenario": [
+    {
+     "grid_index": 0,
+     "gain_co2_kg_per_h": 0.000908894018493811,
+     "gain_relative_to_line_co2": 5.380009399932064e-06,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.0009010527044210903,
+     "gain_other_allocation": 7.841314072720706e-06,
+     "valid": true
+    },
+    {
+     "grid_index": 1,
+     "gain_co2_kg_per_h": 0.00019520086038937734,
+     "gain_relative_to_line_co2": 1.1550322363257502e-06,
+     "allocation_gain_material": false,
+     "same_allocation": true,
+     "same_connections": true,
+     "gain_setpoints": 0.00019520086038937734,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 2,
+     "gain_co2_kg_per_h": 4.784083535014361e-05,
+     "gain_relative_to_line_co2": 2.821468025928271e-07,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.00016342874937436136,
+     "gain_other_allocation": 0.00021126958472450497,
+     "valid": true
+    },
+    {
+     "grid_index": 3,
+     "gain_co2_kg_per_h": 0.0024252224245628895,
+     "gain_relative_to_line_co2": 1.4250725406886964e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.005393231037714941,
+     "gain_other_allocation": 0.00781845346227783,
+     "valid": true
+    },
+    {
+     "grid_index": 4,
+     "gain_co2_kg_per_h": 0.0011278489557753346,
+     "gain_relative_to_line_co2": 6.579977421996559e-06,
+     "allocation_gain_material": false,
+     "same_allocation": true,
+     "same_connections": true,
+     "gain_setpoints": 0.0011278489557753346,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 5,
+     "gain_co2_kg_per_h": 0.18065890266439055,
+     "gain_relative_to_line_co2": 0.0010824078023561026,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.18053167604671216,
+     "gain_other_allocation": 0.00012722661767838872,
+     "valid": true
+    },
+    {
+     "grid_index": 6,
+     "gain_co2_kg_per_h": 0.0011696170897721458,
+     "gain_relative_to_line_co2": 6.954072380273149e-06,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.000966613971058905,
+     "gain_other_allocation": 0.00020300311871324084,
+     "valid": true
+    },
+    {
+     "grid_index": 7,
+     "gain_co2_kg_per_h": 0.001081484807855304,
+     "gain_relative_to_line_co2": 6.373754252351004e-06,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.0008889966190963605,
+     "gain_other_allocation": 0.00019248818875894358,
+     "valid": true
+    },
+    {
+     "grid_index": 8,
+     "gain_co2_kg_per_h": 0.0008826257114833425,
+     "gain_relative_to_line_co2": 5.128777889587771e-06,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.010079378886985069,
+     "gain_other_allocation": 0.010962004598468411,
+     "valid": true
+    },
+    {
+     "grid_index": 9,
+     "gain_co2_kg_per_h": 0.016433814939091462,
+     "gain_relative_to_line_co2": 9.42243287476084e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.061850536548945456,
+     "gain_other_allocation": 0.07828435148803692,
+     "valid": true
+    },
+    {
+     "grid_index": 10,
+     "gain_co2_kg_per_h": 1.2418510778343261,
+     "gain_relative_to_line_co2": 0.0076830846775127045,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 1.2418479388006745,
+     "gain_other_allocation": 3.1390336516778916e-06,
+     "valid": true
+    },
+    {
+     "grid_index": 11,
+     "gain_co2_kg_per_h": 0.560882735001087,
+     "gain_relative_to_line_co2": 0.003474158317442519,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.5282812970438044,
+     "gain_other_allocation": 0.03260143795728254,
+     "valid": true
+    },
+    {
+     "grid_index": 12,
+     "gain_co2_kg_per_h": 0.0013818915176670998,
+     "gain_relative_to_line_co2": 8.457921284520122e-06,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 1.8712283463173662e-05,
+     "gain_other_allocation": 0.0013631792342039262,
+     "valid": true
+    },
+    {
+     "grid_index": 13,
+     "gain_co2_kg_per_h": -0.008651868632114201,
+     "gain_relative_to_line_co2": -5.204419789452493e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.008651868632114201,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 14,
+     "gain_co2_kg_per_h": -0.002297089073636016,
+     "gain_relative_to_line_co2": -1.3512350000334855e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.013598739737744836,
+     "gain_other_allocation": 0.01130165066410882,
+     "valid": true
+    },
+    {
+     "grid_index": 15,
+     "gain_co2_kg_per_h": 0.0018842674453480868,
+     "gain_relative_to_line_co2": 1.1761544374357784e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.0020799838175662444,
+     "gain_other_allocation": 0.003964251262914331,
+     "valid": true
+    },
+    {
+     "grid_index": 16,
+     "gain_co2_kg_per_h": 1.65775215019994,
+     "gain_relative_to_line_co2": 0.010192456344798767,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.061968726542772856,
+     "gain_other_allocation": 1.7197208767427128,
+     "valid": true
+    },
+    {
+     "grid_index": 17,
+     "gain_co2_kg_per_h": 1.4024400465084454,
+     "gain_relative_to_line_co2": 0.008675428844279609,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 1.4024400465084454,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 18,
+     "gain_co2_kg_per_h": 3.0426679651468476,
+     "gain_relative_to_line_co2": 0.018784703397351613,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 1.2175053046184985,
+     "gain_other_allocation": 1.825162660528349,
+     "valid": true
+    },
+    {
+     "grid_index": 19,
+     "gain_co2_kg_per_h": 4.485832561727875,
+     "gain_relative_to_line_co2": 0.027384221477877203,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 1.373184123796591,
+     "gain_other_allocation": 3.112648437931284,
+     "valid": true
+    },
+    {
+     "grid_index": 20,
+     "gain_co2_kg_per_h": -0.003055204454312843,
+     "gain_relative_to_line_co2": -1.8899485495427944e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.003055204454312843,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 21,
+     "gain_co2_kg_per_h": 0.003653915341146785,
+     "gain_relative_to_line_co2": 2.2649573003131976e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.003653915341146785,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 22,
+     "gain_co2_kg_per_h": -0.03685444288362305,
+     "gain_relative_to_line_co2": -0.00022903020182021779,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.1962325688175497,
+     "gain_other_allocation": 0.15937812593392664,
+     "valid": true
+    },
+    {
+     "grid_index": 23,
+     "gain_co2_kg_per_h": -0.025691881883858514,
+     "gain_relative_to_line_co2": -0.00016016331861722657,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.39660713286184546,
+     "gain_other_allocation": 0.37091525097798694,
+     "valid": true
+    },
+    {
+     "grid_index": 24,
+     "gain_co2_kg_per_h": 2.131833406148644,
+     "gain_relative_to_line_co2": 0.01309029833495673,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.033363343774453824,
+     "gain_other_allocation": 2.1651967499230977,
+     "valid": true
+    }
+   ],
+   "additional_effect_of_the_limit": {
+    "n": 25,
+    "median_kg_per_h": -0.0014936530992599728,
+    "min_kg_per_h": -15.282780241735054,
+    "max_kg_per_h": 1.5684023471767432,
+    "n_positive": 10,
+    "seed_spread_kg_per_h": 1.5745376329598457
+   }
+  },
+  "c1.5": {
+   "n_scenarios": 25,
+   "n_valid_both_feasible": 25,
+   "n_masked": 0,
+   "gain_penalised_value_kg_per_h": {
+    "0": 0.0005641931365971686,
+    "1": 0.00040910691632234375,
+    "2": 6.932126370884362e-05,
+    "3": 0.004798462268126968,
+    "4": 0.00029709180671488866,
+    "5": 0.9375991027450254,
+    "6": 1.1720824609542433,
+    "7": 0.8187096191954879,
+    "8": 0.38454560142508853,
+    "9": 0.003893265067745233,
+    "10": 1.241852811265744,
+    "11": 0.560780347089576,
+    "12": 0.001162843752581466,
+    "13": 0.1790104426088419,
+    "14": 1.49667046776176,
+    "15": -0.0020799838175662444,
+    "16": 0.14488174068446824,
+    "17": 2.591047040297326,
+    "18": 3.0426679651468476,
+    "19": 4.485832561727875,
+    "20": -0.003055204454312843,
+    "21": 0.003653915341146785,
+    "22": -0.06827613570226276,
+    "23": -0.025691881883858514,
+    "24": 4.447024362210641
+   },
+   "table_error_max_kg_per_h": 1.2774780150189144,
+   "n_window_widened": 0,
+   "window_final_max_kg_per_h": 5.0,
+   "n_polished_median": 33.0,
+   "n_other_allocation_exact_tuple": 23,
+   "n_other_connections_exact_set": 23,
+   "n_allocation_gain_material": 5,
+   "gain_setpoints_only_median": 0.003653915341146785,
+   "gain_other_allocation_median": 0.00013869335998606402,
+   "per_scenario": [
+    {
+     "grid_index": 0,
+     "gain_co2_kg_per_h": 0.0005641931365971686,
+     "gain_relative_to_line_co2": 3.3513707057289063e-06,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.0005410155024492269,
+     "gain_other_allocation": 2.3177634147941717e-05,
+     "valid": true
+    },
+    {
+     "grid_index": 1,
+     "gain_co2_kg_per_h": 0.00040910691632234375,
+     "gain_relative_to_line_co2": 2.428685350404446e-06,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.00038648033319077513,
+     "gain_other_allocation": 2.2626583131568623e-05,
+     "valid": true
+    },
+    {
+     "grid_index": 2,
+     "gain_co2_kg_per_h": 6.932126370884362e-05,
+     "gain_relative_to_line_co2": 4.112900293700594e-07,
+     "allocation_gain_material": false,
+     "same_allocation": true,
+     "same_connections": true,
+     "gain_setpoints": 6.932126370884362e-05,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 3,
+     "gain_co2_kg_per_h": 0.004798462268126968,
+     "gain_relative_to_line_co2": 2.8440347191337063e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.0016934471502736415,
+     "gain_other_allocation": 0.003105015117853327,
+     "valid": true
+    },
+    {
+     "grid_index": 4,
+     "gain_co2_kg_per_h": 0.00029709180671488866,
+     "gain_relative_to_line_co2": 1.7527369040426481e-06,
+     "allocation_gain_material": false,
+     "same_allocation": true,
+     "same_connections": true,
+     "gain_setpoints": 0.00029709180671488866,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 5,
+     "gain_co2_kg_per_h": 0.9375991027450254,
+     "gain_relative_to_line_co2": 0.005627918856716665,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.9375988567876448,
+     "gain_other_allocation": 2.459573806845583e-07,
+     "valid": true
+    },
+    {
+     "grid_index": 6,
+     "gain_co2_kg_per_h": 1.1720824609542433,
+     "gain_relative_to_line_co2": 0.0070276419431058845,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 1.172082364299058,
+     "gain_other_allocation": 9.665518518886529e-08,
+     "valid": true
+    },
+    {
+     "grid_index": 7,
+     "gain_co2_kg_per_h": 0.8187096191954879,
+     "gain_relative_to_line_co2": 0.004905050192227064,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.7802346389885315,
+     "gain_other_allocation": 0.03847498020695639,
+     "valid": true
+    },
+    {
+     "grid_index": 8,
+     "gain_co2_kg_per_h": 0.38454560142508853,
+     "gain_relative_to_line_co2": 0.0022959260221852643,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.38121149595917814,
+     "gain_other_allocation": 0.0033341054659103975,
+     "valid": true
+    },
+    {
+     "grid_index": 9,
+     "gain_co2_kg_per_h": 0.003893265067745233,
+     "gain_relative_to_line_co2": 2.315868328759314e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.003754571707759169,
+     "gain_other_allocation": 0.00013869335998606402,
+     "valid": true
+    },
+    {
+     "grid_index": 10,
+     "gain_co2_kg_per_h": 1.241852811265744,
+     "gain_relative_to_line_co2": 0.0076830954019067995,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 1.2415059140826088,
+     "gain_other_allocation": 0.0003468971831352974,
+     "valid": true
+    },
+    {
+     "grid_index": 11,
+     "gain_co2_kg_per_h": 0.560780347089576,
+     "gain_relative_to_line_co2": 0.0034735241174713243,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.5274343765859157,
+     "gain_other_allocation": 0.03334597050366028,
+     "valid": true
+    },
+    {
+     "grid_index": 12,
+     "gain_co2_kg_per_h": 0.001162843752581466,
+     "gain_relative_to_line_co2": 7.117230838882217e-06,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.00034643735421013844,
+     "gain_other_allocation": 0.0015092811067916045,
+     "valid": true
+    },
+    {
+     "grid_index": 13,
+     "gain_co2_kg_per_h": 0.1790104426088419,
+     "gain_relative_to_line_co2": 0.0010831884828057913,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.1790104426088419,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 14,
+     "gain_co2_kg_per_h": 1.49667046776176,
+     "gain_relative_to_line_co2": 0.009021539962376894,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 1.49667046776176,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 15,
+     "gain_co2_kg_per_h": -0.0020799838175662444,
+     "gain_relative_to_line_co2": -1.2983200462677532e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.0020799838175662444,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 16,
+     "gain_co2_kg_per_h": 0.14488174068446824,
+     "gain_relative_to_line_co2": 0.0008907850410007276,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.061968726542772856,
+     "gain_other_allocation": 0.2068504672272411,
+     "valid": true
+    },
+    {
+     "grid_index": 17,
+     "gain_co2_kg_per_h": 2.591047040297326,
+     "gain_relative_to_line_co2": 0.016028096378339813,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 2.591047040297326,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 18,
+     "gain_co2_kg_per_h": 3.0426679651468476,
+     "gain_relative_to_line_co2": 0.018784703397351613,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 2.791423062956028,
+     "gain_other_allocation": 0.25124490219081963,
+     "valid": true
+    },
+    {
+     "grid_index": 19,
+     "gain_co2_kg_per_h": 4.485832561727875,
+     "gain_relative_to_line_co2": 0.027384221477877203,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 3.3993592252136295,
+     "gain_other_allocation": 1.0864733365142456,
+     "valid": true
+    },
+    {
+     "grid_index": 20,
+     "gain_co2_kg_per_h": -0.003055204454312843,
+     "gain_relative_to_line_co2": -1.8899485495427944e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.003055204454312843,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 21,
+     "gain_co2_kg_per_h": 0.003653915341146785,
+     "gain_relative_to_line_co2": 2.2649573003131976e-05,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": 0.003653915341146785,
+     "gain_other_allocation": 0.0,
+     "valid": true
+    },
+    {
+     "grid_index": 22,
+     "gain_co2_kg_per_h": -0.06827613570226276,
+     "gain_relative_to_line_co2": -0.00042429883389561525,
+     "allocation_gain_material": false,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.1962325688175497,
+     "gain_other_allocation": 0.12795643311528693,
+     "valid": true
+    },
+    {
+     "grid_index": 23,
+     "gain_co2_kg_per_h": -0.025691881883858514,
+     "gain_relative_to_line_co2": -0.00016016331861722657,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.39660713286184546,
+     "gain_other_allocation": 0.37091525097798694,
+     "valid": true
+    },
+    {
+     "grid_index": 24,
+     "gain_co2_kg_per_h": 4.447024362210641,
+     "gain_relative_to_line_co2": 0.027306484379248448,
+     "allocation_gain_material": true,
+     "same_allocation": false,
+     "same_connections": false,
+     "gain_setpoints": -0.033363343774453824,
+     "gain_other_allocation": 4.480387705985095,
+     "valid": true
+    }
+   ],
+   "additional_effect_of_the_limit": {
+    "n": 25,
+    "median_kg_per_h": 1.9929530026274733e-08,
+    "min_kg_per_h": -12.967589285673057,
+    "max_kg_per_h": 2.757009340965624,
+    "n_positive": 13,
+    "seed_spread_kg_per_h": 0.9417905215327664
+   }
+  }
+ },
+ "accuracy_check": [
+  {
+   "case": "control",
+   "grid_index": 2,
+   "table_based_value": 1162.2248787443846,
+   "direct_value": 1162.2266104988478,
+   "excess_of_table_over_direct": -0.0017317544632078352,
+   "allowed": 8.38317190363955,
+   "met": true
+  },
+  {
+   "case": "control",
+   "grid_index": 12,
+   "table_based_value": 1157.0613457895922,
+   "direct_value": 1157.0628351370021,
+   "excess_of_table_over_direct": -0.0014893474099153536,
+   "allowed": 8.38317190363955,
+   "met": true
+  },
+  {
+   "case": "control",
+   "grid_index": 17,
+   "table_based_value": 1155.5008784420659,
+   "direct_value": 1155.4991957550137,
+   "excess_of_table_over_direct": 0.001682687052152687,
+   "allowed": 8.38317190363955,
+   "met": true
+  },
+  {
+   "case": "c0.5",
+   "grid_index": 2,
+   "table_based_value": 1185.1971346483733,
+   "direct_value": 1185.1971977667847,
+   "excess_of_table_over_direct": -6.311841138995078e-05,
+   "allowed": 0.9435870494530718,
+   "met": true
+  },
+  {
+   "case": "c0.5",
+   "grid_index": 12,
+   "table_based_value": 1166.6138361990388,
+   "direct_value": 1166.6777450568916,
+   "excess_of_table_over_direct": -0.06390885785276623,
+   "allowed": 0.9435870494530718,
+   "met": true
+  },
+  {
+   "case": "c0.5",
+   "grid_index": 17,
+   "table_based_value": 1155.485886995244,
+   "direct_value": 1155.581465320237,
+   "excess_of_table_over_direct": -0.09557832499285723,
+   "allowed": 0.9435870494530718,
+   "met": true
+  },
+  {
+   "case": "c1.0",
+   "grid_index": 2,
+   "table_based_value": 1163.2383843355133,
+   "direct_value": 1163.2385735753146,
+   "excess_of_table_over_direct": -0.000189239801329677,
+   "allowed": 4.723612898879537,
+   "met": true
+  },
+  {
+   "case": "c1.0",
+   "grid_index": 12,
+   "table_based_value": 1157.0612633374117,
+   "direct_value": 1157.0633453604346,
+   "excess_of_table_over_direct": -0.0020820230229219305,
+   "allowed": 4.723612898879537,
+   "met": true
+  },
+  {
+   "case": "c1.0",
+   "grid_index": 17,
+   "table_based_value": 1153.9324760948891,
+   "direct_value": 1153.9516075351514,
+   "excess_of_table_over_direct": -0.019131440262299293,
+   "allowed": 4.723612898879537,
+   "met": true
+  },
+  {
+   "case": "c1.5",
+   "grid_index": 2,
+   "table_based_value": 1162.2242173583697,
+   "direct_value": 1162.2242423599848,
+   "excess_of_table_over_direct": -2.500161508578458e-05,
+   "allowed": 2.8253715645982993,
+   "met": true
+  },
+  {
+   "case": "c1.5",
+   "grid_index": 12,
+   "table_based_value": 1157.0614823851768,
+   "direct_value": 1157.0623880994146,
+   "excess_of_table_over_direct": -0.000905714237887878,
+   "allowed": 2.8253715645982993,
+   "met": true
+  },
+  {
+   "case": "c1.5",
+   "grid_index": 17,
+   "table_based_value": 1152.7438691011002,
+   "direct_value": 1152.7450532917364,
+   "excess_of_table_over_direct": -0.001184190636195126,
+   "allowed": 2.8253715645982993,
+   "met": true
+  }
+ ],
+ "accuracy_rule_met_everywhere": true,
+ "six_variable_check": [
+  {
+   "grid_index": 12,
+   "six_variable_value": 1157.1436950112125,
+   "four_variable_value": 1157.0613457895922,
+   "difference": -0.08234922162023395,
+   "resolution": 2.7943906345465166,
+   "within_resolution": true
+  }
+ ]
+}
