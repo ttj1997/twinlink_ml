@@ -1,0 +1,2703 @@
+{
+ "provenance": {
+  "git/commit": "d4999fd0224b6622ad4cfbbf31fef7f3520e4218",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "criteria": {
+  "confirmed_min_kg_per_h": 1.0,
+  "weak_min_kg_per_h": 0.2,
+  "overall_min_confirmed_scenarios": 3
+ },
+ "scenarios": {
+  "18": {
+   "ambient": [
+    27.5,
+    0.7
+   ],
+   "best_s2": {
+    "seed_a": 3,
+    "seed_b": 3,
+    "value": 1155.6519709183415,
+    "co2": 1155.6519709183415,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "set_points": [
+     66.07178194963853,
+     1.2600142112877104,
+     79.24688420064871,
+     1.2600000001419285
+    ],
+    "feasible": true
+   },
+   "s2_pairs_value_min_median_max": [
+    1155.6519709183415,
+    1155.6559518521685,
+    1155.686810334338
+   ],
+   "per_seed_m3": {
+    "0": {
+     "value": 1150.0673819174062,
+     "co2": 1150.0673819174062,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      66.06491270021007,
+      1.260225655150515,
+      90.71018366451895,
+      1.2600151846065142
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1150.0674,
+      1150.0674
+     ],
+     "box_boundaries": {
+      "A": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.14403801519478016,
+     "moisture_b": 0.09022955780480972
+    },
+    "1": {
+     "value": 1150.0657762600347,
+     "co2": 1150.0657762600347,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      66.07220568658222,
+      1.2600016195873809,
+      90.71477539020003,
+      1.26
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1150.0658,
+      1150.0658
+     ],
+     "box_boundaries": {
+      "A": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.14403807479335867,
+     "moisture_b": 0.09021626732180708
+    },
+    "2": {
+     "value": 1150.1200701481093,
+     "co2": 1150.1200701481093,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "set_points": [
+      66.07270045025736,
+      1.2600145039155484,
+      90.65827609482685,
+      1.261846076058232
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1150.1201,
+      1150.1201
+     ],
+     "box_boundaries": {
+      "A": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.14403145935114658,
+     "moisture_b": 0.09011548612558533
+    },
+    "3": {
+     "value": 1150.0671621303034,
+     "co2": 1150.0671621303034,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      66.07138414416407,
+      1.260027965498848,
+      90.7130167322959,
+      1.260042070844783
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1150.0672,
+      1150.0672
+     ],
+     "box_boundaries": {
+      "A": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.14403783639904472,
+     "moisture_b": 0.09021555213886524
+    },
+    "4": {
+     "value": 1150.0693665008687,
+     "co2": 1150.0693665008687,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      66.07179847194415,
+      1.2600140565627806,
+      90.71068628934624,
+      1.2601222116003594
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1150.0694,
+      1150.0694
+     ],
+     "box_boundaries": {
+      "A": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.14403807479335867,
+     "moisture_b": 0.0902107246540078
+    }
+   },
+   "gain_per_seed": {
+    "0": 5.584589000935239,
+    "1": 5.586194658306795,
+    "2": 5.531900770232141,
+    "3": 5.584808788038117,
+    "4": 5.582604417472794
+   },
+   "gain_min_over_seeds": 5.531900770232141,
+   "gain_max_over_seeds": 5.586194658306795,
+   "verdict": "confirmed",
+   "description_best_s2": {
+    "set_points": [
+     66.07178194963853,
+     1.2600142112877104,
+     79.24688420064871,
+     1.2600000001419285
+    ],
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "box_boundaries": {
+     "A": [
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ],
+     "B": [
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ]
+    },
+    "lines": {
+     "A": {
+      "inlet_temperature_celsius": 66.07178194963853,
+      "gas_velocity_m_per_s": 1.2600142112877104,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "distance_to_tightened_limit_kg_per_kg": 4.599288744300267e-08,
+      "distance_to_quality_limit_kg_per_kg": 0.005961865608062861,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.05596186560806288,
+      "bed_temperature_celsius": 38.32981785116878,
+      "bed_temperature_margin_to_80_k": 41.67018214883122,
+      "outlet_temperature_celsius": 38.32981785116878,
+      "outlet_humidity_kg_per_kg": 0.027283336409338308,
+      "dew_point_celsius": 30.051721185445786,
+      "dry_air_flow_lab_kg_per_s": 0.024632110580745412,
+      "electric_kw_lab": 0.06433348094113935,
+      "feasible": true
+     },
+     "B": {
+      "inlet_temperature_celsius": 79.24688420064871,
+      "gas_velocity_m_per_s": 1.2600000001419285,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "distance_to_tightened_limit_kg_per_kg": 4.599288744300267e-08,
+      "distance_to_quality_limit_kg_per_kg": 0.005961865608062861,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.05596186560806288,
+      "bed_temperature_celsius": 41.725186010280446,
+      "bed_temperature_margin_to_80_k": 38.274813989719554,
+      "outlet_temperature_celsius": 41.725186010280446,
+      "outlet_humidity_kg_per_kg": 0.031141610802127573,
+      "dew_point_celsius": 32.2716860473156,
+      "dry_air_flow_lab_kg_per_s": 0.024366222313392572,
+      "electric_kw_lab": 0.06429082585525396,
+      "feasible": true
+     }
+    },
+    "stage_power_kw": {
+     "LA->S1": 67.61528128583318,
+     "LB->S1": 68.94634583892156,
+     "Q1->S1": 1695.7096708752451,
+     "Q1->SA": 17.153407967757317,
+     "Q1->SB": 11.744212912201295
+    },
+    "fuel_kw_by_sink": {
+     "S1": 4943.673377499999,
+     "SA": 313.01124645666494,
+     "SB": 429.1696917476039
+    },
+    "electric_kw_scaled": 34.959708911977074,
+    "co2_kg_per_h_by_part": {
+     "electricity": 12.79525346178361,
+     "fuel_S1": 993.6783488775,
+     "fuel_SA": 62.915260537789656,
+     "fuel_SB": 86.2631080412684
+    },
+    "co2_kg_per_h_total": 1155.6519709183417
+   },
+   "description_best_m3": {
+    "set_points": [
+     66.07220568658222,
+     1.2600016195873809,
+     90.71477539020003,
+     1.26
+    ],
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "box_boundaries": {
+     "A": [
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ],
+     "B": [
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ]
+    },
+    "lines": {
+     "A": {
+      "inlet_temperature_celsius": 66.07220568658222,
+      "gas_velocity_m_per_s": 1.2600016195873809,
+      "moisture_kg_per_kg": 0.14403807479335867,
+      "distance_to_tightened_limit_kg_per_kg": 1.055914659042756e-07,
+      "distance_to_quality_limit_kg_per_kg": 0.005961925206641322,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.05596192520664134,
+      "bed_temperature_celsius": 38.3299363821865,
+      "bed_temperature_margin_to_80_k": 41.6700636178135,
+      "outlet_temperature_celsius": 38.3299363821865,
+      "outlet_humidity_kg_per_kg": 0.027283453061371803,
+      "dew_point_celsius": 30.051794201135635,
+      "dry_air_flow_lab_kg_per_s": 0.024631855051223957,
+      "electric_kw_lab": 0.06433258066883173,
+      "feasible": true
+     },
+     "B": {
+      "inlet_temperature_celsius": 90.71477539020003,
+      "gas_velocity_m_per_s": 1.26,
+      "moisture_kg_per_kg": 0.09021626732180708,
+      "distance_to_tightened_limit_kg_per_kg": 0.05382191306301749,
+      "distance_to_quality_limit_kg_per_kg": 0.05978373267819291,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.10978373267819293,
+      "bed_temperature_celsius": 50.24069145077475,
+      "bed_temperature_margin_to_80_k": 29.759308549225253,
+      "outlet_temperature_celsius": 50.24069145077475,
+      "outlet_humidity_kg_per_kg": 0.03192890632641379,
+      "dew_point_celsius": 32.6933391392231,
+      "dry_air_flow_lab_kg_per_s": 0.023724612319587928,
+      "electric_kw_lab": 0.06154313188826367,
+      "feasible": true
+     }
+    },
+    "stage_power_kw": {
+     "LA->S1": 67.61768817667914,
+     "LA->SB": 0.0,
+     "LB->S1": 241.85972745749214,
+     "LB->SA": 0.0,
+     "Q1->S1": 1522.793882365829,
+     "Q1->SA": 70.38846863894393,
+     "Q1->SB": 46.92372139608438
+    },
+    "fuel_kw_by_sink": {
+     "S1": 4943.673377499999,
+     "SA": 246.46762520932091,
+     "SB": 469.28161769377107
+    },
+    "electric_kw_scaled": 34.21264906834193,
+    "co2_kg_per_h_by_part": {
+     "electricity": 12.521829559013147,
+     "fuel_S1": 993.6783488775,
+     "fuel_SA": 49.539992667073506,
+     "fuel_SB": 94.32560515644799
+    },
+    "co2_kg_per_h_total": 1150.0657762600347
+   }
+  },
+  "19": {
+   "ambient": [
+    27.5,
+    0.85
+   ],
+   "best_s2": {
+    "seed_a": 1,
+    "seed_b": 4,
+    "value": 1157.488710307623,
+    "co2": 1157.488710307623,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "set_points": [
+     67.85014264680517,
+     1.2600344886018382,
+     80.80797826921223,
+     1.2600142521771436
+    ],
+    "feasible": true
+   },
+   "s2_pairs_value_min_median_max": [
+    1157.488710307623,
+    1157.4907767027867,
+    1157.5194464419817
+   ],
+   "per_seed_m3": {
+    "0": {
+     "value": 1148.090235215048,
+     "co2": 1148.090235215048,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "set_points": [
+      67.35601104105297,
+      1.275622043516277,
+      98.98796445676734,
+      1.2600020004455201
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1148.0902,
+      1148.0902
+     ],
+     "box_boundaries": {
+      "A": [
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.0690358265061497
+    },
+    "1": {
+     "value": 1148.0598183846962,
+     "co2": 1148.0598183846962,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      67.849054757346,
+      1.2600734581905073,
+      99.23332292801467,
+      1.26
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1148.0598,
+      1148.0598
+     ],
+     "box_boundaries": {
+      "A": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.14403682322321038,
+     "moisture_b": 0.06842958976577837
+    },
+    "2": {
+     "value": 1153.4101500097022,
+     "co2": 1153.4101500097022,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      89.55092792706631,
+      1.2600176353450492,
+      80.80856745167758,
+      1.2600004442451862
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1153.4102,
+      1153.4102
+     ],
+     "box_boundaries": {
+      "A": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.05611109997968991,
+     "moisture_b": 0.14403807479335867
+    },
+    "3": {
+     "value": 1148.0662379248733,
+     "co2": 1148.0662379248733,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      67.71227890290422,
+      1.2643462196335475,
+      99.16795868592445,
+      1.2600083700897171
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1148.0662,
+      1148.0662
+     ],
+     "box_boundaries": {
+      "A": [
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.14403801519478016,
+     "moisture_b": 0.06858943315328093
+    },
+    "4": {
+     "value": 1148.1462421732458,
+     "co2": 1148.1462421732458,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      66.72228626561007,
+      1.2961946531800508,
+      98.65702704837702,
+      1.2603118512382054
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1148.1462,
+      1148.1462
+     ],
+     "box_boundaries": {
+      "A": [
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.14403247252698087,
+     "moisture_b": 0.06982729562845912
+    }
+   },
+   "gain_per_seed": {
+    "0": 9.398475092574927,
+    "1": 9.428891922926823,
+    "2": 4.078560297920831,
+    "3": 9.422472382749675,
+    "4": 9.342468134377214
+   },
+   "gain_min_over_seeds": 4.078560297920831,
+   "gain_max_over_seeds": 9.428891922926823,
+   "verdict": "confirmed",
+   "description_best_s2": {
+    "set_points": [
+     67.85014264680517,
+     1.2600344886018382,
+     80.80797826921223,
+     1.2600142521771436
+    ],
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "box_boundaries": {
+     "A": [
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ],
+     "B": [
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ]
+    },
+    "lines": {
+     "A": {
+      "inlet_temperature_celsius": 67.85014264680517,
+      "gas_velocity_m_per_s": 1.2600344886018382,
+      "moisture_kg_per_kg": 0.14403807479335867,
+      "distance_to_tightened_limit_kg_per_kg": 1.055914659042756e-07,
+      "distance_to_quality_limit_kg_per_kg": 0.005961925206641322,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.05596192520664134,
+      "bed_temperature_celsius": 39.83136319870078,
+      "bed_temperature_margin_to_80_k": 40.16863680129922,
+      "outlet_temperature_celsius": 39.83136319870078,
+      "outlet_humidity_kg_per_kg": 0.030979301172285256,
+      "dew_point_celsius": 32.18353733420372,
+      "dry_air_flow_lab_kg_per_s": 0.024377580769480735,
+      "electric_kw_lab": 0.0642481368548366,
+      "feasible": true
+     },
+     "B": {
+      "inlet_temperature_celsius": 80.80797826921223,
+      "gas_velocity_m_per_s": 1.2600142521771436,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "distance_to_tightened_limit_kg_per_kg": 4.599288744300267e-08,
+      "distance_to_quality_limit_kg_per_kg": 0.005961865608062861,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.05596186560806288,
+      "bed_temperature_celsius": 43.007385586116,
+      "bed_temperature_margin_to_80_k": 36.992614413884,
+      "outlet_temperature_celsius": 43.007385586116,
+      "outlet_humidity_kg_per_kg": 0.03486668667339211,
+      "dew_point_celsius": 34.186238795518875,
+      "dry_air_flow_lab_kg_per_s": 0.02413230331942212,
+      "electric_kw_lab": 0.06421525409431966,
+      "feasible": true
+     }
+    },
+    "stage_power_kw": {
+     "LA->S1": 98.105661112818,
+     "LB->S1": 64.49231059885352,
+     "Q1->S1": 1669.6733262883286,
+     "Q1->SA": 25.069254109854167,
+     "Q1->SB": 17.2069270616462
+    },
+    "fuel_kw_by_sink": {
+     "S1": 4943.673377499999,
+     "SA": 317.14646583614297,
+     "SB": 434.2521187946618
+    },
+    "electric_kw_scaled": 34.91597245718991,
+    "co2_kg_per_h_by_part": {
+     "electricity": 12.779245919331506,
+     "fuel_S1": 993.6783488775,
+     "fuel_SA": 63.74643963306474,
+     "fuel_SB": 87.28467587772703
+    },
+    "co2_kg_per_h_total": 1157.4887103076233
+   },
+   "description_best_m3": {
+    "set_points": [
+     67.849054757346,
+     1.2600734581905073,
+     99.23332292801467,
+     1.26
+    ],
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "box_boundaries": {
+     "A": [
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ],
+     "B": [
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ]
+    },
+    "lines": {
+     "A": {
+      "inlet_temperature_celsius": 67.849054757346,
+      "gas_velocity_m_per_s": 1.2600734581905073,
+      "moisture_kg_per_kg": 0.14403682322321038,
+      "distance_to_tightened_limit_kg_per_kg": 1.3571616142016296e-06,
+      "distance_to_quality_limit_kg_per_kg": 0.005963176776789619,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.055963176776789636,
+      "bed_temperature_celsius": 39.83116714063246,
+      "bed_temperature_margin_to_80_k": 40.16883285936754,
+      "outlet_temperature_celsius": 39.83116714063246,
+      "outlet_humidity_kg_per_kg": 0.030978954570806162,
+      "dew_point_celsius": 32.18334957957268,
+      "dry_air_flow_lab_kg_per_s": 0.02437834997574205,
+      "electric_kw_lab": 0.06425084355754794,
+      "feasible": true
+     },
+     "B": {
+      "inlet_temperature_celsius": 99.23332292801467,
+      "gas_velocity_m_per_s": 1.26,
+      "moisture_kg_per_kg": 0.06842958976577837,
+      "distance_to_tightened_limit_kg_per_kg": 0.0756085906190462,
+      "distance_to_quality_limit_kg_per_kg": 0.08157041023422162,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.13157041023422164,
+      "bed_temperature_celsius": 56.785866986638936,
+      "bed_temperature_margin_to_80_k": 23.214133013361064,
+      "outlet_temperature_celsius": 56.785866986638936,
+      "outlet_humidity_kg_per_kg": 0.03607736712353964,
+      "dew_point_celsius": 34.76778373122215,
+      "dry_air_flow_lab_kg_per_s": 0.023124250466930164,
+      "electric_kw_lab": 0.06029784496187333,
+      "feasible": true
+     }
+    },
+    "stage_power_kw": {
+     "LA->S1": 98.10167995768272,
+     "LA->SB": 0.0,
+     "LB->S1": 344.28213507300757,
+     "LB->SA": 0.0,
+     "Q1->S1": 1389.88748296931,
+     "Q1->SA": 110.86853887071383,
+     "Q1->SB": 72.9154154313495
+    },
+    "fuel_kw_by_sink": {
+     "S1": 4943.673377499999,
+     "SA": 209.89896003510398,
+     "SB": 496.52715579029046
+    },
+    "electric_kw_scaled": 33.85196783139874,
+    "co2_kg_per_h_by_part": {
+     "electricity": 12.389820226291938,
+     "fuel_S1": 993.6783488775,
+     "fuel_SA": 42.1896909670559,
+     "fuel_SB": 99.80195831384839
+    },
+    "co2_kg_per_h_total": 1148.0598183846962
+   }
+  },
+  "22": {
+   "ambient": [
+    35.0,
+    0.55
+   ],
+   "best_s2": {
+    "seed_a": 2,
+    "seed_b": 4,
+    "value": 1154.5923156376437,
+    "co2": 1154.5923156376437,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "set_points": [
+     73.9586677887403,
+     1.2600000515406218,
+     82.95811652264415,
+     1.2600439674632598
+    ],
+    "feasible": true
+   },
+   "s2_pairs_value_min_median_max": [
+    1154.5923156376437,
+    1154.5939243602922,
+    1154.6008914666081
+   ],
+   "per_seed_m3": {
+    "0": {
+     "value": 1149.6695372820423,
+     "co2": 1149.6695372820423,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      92.3170217050404,
+      1.2616810178557913,
+      82.95243454248401,
+      1.2602405514740158
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1154.6497,
+      1149.6695
+     ],
+     "box_boundaries": {
+      "A": [
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.04959679655530849,
+     "moisture_b": 0.12693298477465292
+    },
+    "1": {
+     "value": 1149.6533229544677,
+     "co2": 1149.6533229544677,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      92.32713681894901,
+      1.2611140741845137,
+      82.9592425883445,
+      1.2600047774506586
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1154.6215,
+      1149.6533
+     ],
+     "box_boundaries": {
+      "A": [
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.0496181328464069,
+     "moisture_b": 0.12695074515104204
+    },
+    "2": {
+     "value": 1149.6267794784578,
+     "co2": 1149.6267794784578,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      92.34714255942893,
+      1.26,
+      82.95930643557412,
+      1.260003585686244
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1154.6665,
+      1149.6268
+     ],
+     "box_boundaries": {
+      "A": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.049659971048504864,
+     "moisture_b": 0.12695068555246358
+    },
+    "3": {
+     "value": 1149.6274054948803,
+     "co2": 1149.6274054948803,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      92.3465977570142,
+      1.2600183357683377,
+      82.95915034168348,
+      1.2600085161756538
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1154.7242,
+      1149.6274
+     ],
+     "box_boundaries": {
+      "A": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.04965967305561243,
+     "moisture_b": 0.1269503875595711
+    },
+    "4": {
+     "value": 1149.636973949095,
+     "co2": 1149.636973949095,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      92.33952080194118,
+      1.2604278758238312,
+      82.95946050420004,
+      1.2600002718830638
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1149.637,
+      1154.6234
+     ],
+     "box_boundaries": {
+      "A": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.04964376023515636,
+     "moisture_b": 0.12695062595388507
+    }
+   },
+   "gain_per_seed": {
+    "0": 4.922778355601395,
+    "1": 4.938992683175911,
+    "2": 4.965536159185831,
+    "3": 4.964910142763301,
+    "4": 4.955341688548742
+   },
+   "gain_min_over_seeds": 4.922778355601395,
+   "gain_max_over_seeds": 4.965536159185831,
+   "verdict": "confirmed",
+   "description_best_s2": {
+    "set_points": [
+     73.9586677887403,
+     1.2600000515406218,
+     82.95811652264415,
+     1.2600439674632598
+    ],
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "box_boundaries": {
+     "A": [
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ],
+     "B": [
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ]
+    },
+    "lines": {
+     "A": {
+      "inlet_temperature_celsius": 73.9586677887403,
+      "gas_velocity_m_per_s": 1.2600000515406218,
+      "moisture_kg_per_kg": 0.10279794443049482,
+      "distance_to_tightened_limit_kg_per_kg": 0.041240235954329754,
+      "distance_to_quality_limit_kg_per_kg": 0.04720205556950517,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.09720205556950519,
+      "bed_temperature_celsius": 45.00004250598094,
+      "bed_temperature_margin_to_80_k": 34.99995749401906,
+      "outlet_temperature_celsius": 45.00004250598094,
+      "outlet_humidity_kg_per_kg": 0.03120253839075396,
+      "dew_point_celsius": 32.30466619133949,
+      "dry_air_flow_lab_kg_per_s": 0.023987477106421486,
+      "electric_kw_lab": 0.062189939895030646,
+      "feasible": true
+     },
+     "B": {
+      "inlet_temperature_celsius": 82.95811652264415,
+      "gas_velocity_m_per_s": 1.2600439674632598,
+      "moisture_kg_per_kg": 0.1269477652221177,
+      "distance_to_tightened_limit_kg_per_kg": 0.017090415162706873,
+      "distance_to_quality_limit_kg_per_kg": 0.02305223477788229,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.07305223477788231,
+      "bed_temperature_celsius": 45.00000640125819,
+      "bed_temperature_margin_to_80_k": 34.99999359874181,
+      "outlet_temperature_celsius": 45.00000640125819,
+      "outlet_humidity_kg_per_kg": 0.034901269216894515,
+      "dew_point_celsius": 34.20310750603676,
+      "dry_air_flow_lab_kg_per_s": 0.02398831588595375,
+      "electric_kw_lab": 0.06337280173555683,
+      "feasible": true
+     }
+    },
+    "stage_power_kw": {
+     "LB->S1": 203.0601299839488,
+     "LA->S1": 0.0007331425002191452,
+     "Q1->S1": 1629.210434873551
+    },
+    "fuel_kw_by_sink": {
+     "S1": 4943.673377499999,
+     "SA": 330.97714751469215,
+     "SB": 407.44708550517305
+    },
+    "electric_kw_scaled": 34.127584489483226,
+    "co2_kg_per_h_by_part": {
+     "electricity": 12.490695923150861,
+     "fuel_S1": 993.6783488775,
+     "fuel_SA": 66.52640665045313,
+     "fuel_SB": 81.89686418653979
+    },
+    "co2_kg_per_h_total": 1154.5923156376437
+   },
+   "description_best_m3": {
+    "set_points": [
+     92.34714255942893,
+     1.26,
+     82.95930643557412,
+     1.260003585686244
+    ],
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "box_boundaries": {
+     "A": [
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ],
+     "B": [
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ]
+    },
+    "lines": {
+     "A": {
+      "inlet_temperature_celsius": 92.34714255942893,
+      "gas_velocity_m_per_s": 1.26,
+      "moisture_kg_per_kg": 0.049659971048504864,
+      "distance_to_tightened_limit_kg_per_kg": 0.09437820933631971,
+      "distance_to_quality_limit_kg_per_kg": 0.10034002895149513,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.15034002895149515,
+      "bed_temperature_celsius": 59.677062744684775,
+      "bed_temperature_margin_to_80_k": 20.322937255315225,
+      "outlet_temperature_celsius": 59.677062744684775,
+      "outlet_humidity_kg_per_kg": 0.03203342763671502,
+      "dew_point_celsius": 32.748593240976334,
+      "dry_air_flow_lab_kg_per_s": 0.02292967550748814,
+      "electric_kw_lab": 0.05925751155216486,
+      "feasible": true
+     },
+     "B": {
+      "inlet_temperature_celsius": 82.95930643557412,
+      "gas_velocity_m_per_s": 1.260003585686244,
+      "moisture_kg_per_kg": 0.12695068555246358,
+      "distance_to_tightened_limit_kg_per_kg": 0.017087494832360994,
+      "distance_to_quality_limit_kg_per_kg": 0.023049314447536412,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.07304931444753643,
+      "bed_temperature_celsius": 45.0000217648807,
+      "bed_temperature_margin_to_80_k": 34.9999782351193,
+      "outlet_temperature_celsius": 45.0000217648807,
+      "outlet_humidity_kg_per_kg": 0.03490174138247366,
+      "dew_point_celsius": 34.203336983919144,
+      "dry_air_flow_lab_kg_per_s": 0.023987545952168923,
+      "electric_kw_lab": 0.06337012160598822,
+      "feasible": true
+     }
+    },
+    "stage_power_kw": {
+     "LB->S1": 203.06044195766748,
+     "LB->SA": 0.0,
+     "LA->S1": 298.0319941359016,
+     "LA->SB": 0.0,
+     "Q1->S1": 1331.178861906431,
+     "Q1->SA": 72.44994917100307,
+     "Q1->SB": 53.93815864443227
+    },
+    "fuel_kw_by_sink": {
+     "S1": 4943.673377499999,
+     "SA": 375.15128071743186,
+     "SB": 340.0214187464034
+    },
+    "electric_kw_scaled": 33.32983062493714,
+    "co2_kg_per_h_by_part": {
+     "electricity": 12.198718008726992,
+     "fuel_S1": 993.6783488775,
+     "fuel_SA": 75.4054074242038,
+     "fuel_SB": 68.34430516802709
+    },
+    "co2_kg_per_h_total": 1149.6267794784578
+   }
+  },
+  "23": {
+   "ambient": [
+    35.0,
+    0.7
+   ],
+   "best_s2": {
+    "seed_a": 4,
+    "seed_b": 3,
+    "value": 1154.0889666209528,
+    "co2": 1154.0889666209528,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "set_points": [
+     73.77461644961906,
+     1.2600004062531445,
+     82.67437785249166,
+     1.2600117592516369
+    ],
+    "feasible": true
+   },
+   "s2_pairs_value_min_median_max": [
+    1154.0889666209528,
+    1154.0897055421742,
+    1154.0927896562916
+   ],
+   "per_seed_m3": {
+    "0": {
+     "value": 1144.4773098897017,
+     "co2": 1144.4773098897017,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      99.65545778759599,
+      1.2612110802648973,
+      82.67472010327539,
+      1.2600005814800863
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1144.4773,
+      1154.3336
+     ],
+     "box_boundaries": {
+      "A": [
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.04059347769756799,
+     "moisture_b": 0.14185021097709524
+    },
+    "1": {
+     "value": 1144.4746904991925,
+     "co2": 1144.4746904991925,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      99.65685664989888,
+      1.2610825520262725,
+      82.67477212031329,
+      1.260000884248143
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1144.4747,
+      1154.1043
+     ],
+     "box_boundaries": {
+      "A": [
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.04059842437958243,
+     "moisture_b": 0.14184985338562434
+    },
+    "2": {
+     "value": 1144.4859773074027,
+     "co2": 1144.4859773074027,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      99.65071481854599,
+      1.2616309146394618,
+      82.67467200077945,
+      1.260001722752976
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1154.1225,
+      1144.486
+     ],
+     "box_boundaries": {
+      "A": [
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.04057726688421949,
+     "moisture_b": 0.14185027057567373
+    },
+    "3": {
+     "value": 1144.4529825817724,
+     "co2": 1144.4529825817724,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      99.66940232374434,
+      1.2600126574375718,
+      82.67473224945873,
+      1.26
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1154.2154,
+      1144.453
+     ],
+     "box_boundaries": {
+      "A": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.040639189807267634,
+     "moisture_b": 0.14185038977283068
+    },
+    "4": {
+     "value": 1144.4561306522562,
+     "co2": 1144.4561306522562,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      99.66861661435917,
+      1.2600212446105141,
+      82.65964018831079,
+      1.2605302573014203
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1144.4561,
+      1154.0933
+     ],
+     "box_boundaries": {
+      "A": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.04063966659589553,
+     "moisture_b": 0.1418062272261717
+    }
+   },
+   "gain_per_seed": {
+    "0": 9.61165673125106,
+    "1": 9.614276121760213,
+    "2": 9.602989313550097,
+    "3": 9.635984039180357,
+    "4": 9.632835968696554
+   },
+   "gain_min_over_seeds": 9.602989313550097,
+   "gain_max_over_seeds": 9.635984039180357,
+   "verdict": "confirmed",
+   "description_best_s2": {
+    "set_points": [
+     73.77461644961906,
+     1.2600004062531445,
+     82.67437785249166,
+     1.2600117592516369
+    ],
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "box_boundaries": {
+     "A": [
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ],
+     "B": [
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ]
+    },
+    "lines": {
+     "A": {
+      "inlet_temperature_celsius": 73.77461644961906,
+      "gas_velocity_m_per_s": 1.2600004062531445,
+      "moisture_kg_per_kg": 0.11517811874531746,
+      "distance_to_tightened_limit_kg_per_kg": 0.02886006163950712,
+      "distance_to_quality_limit_kg_per_kg": 0.03482188125468254,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.08482188125468255,
+      "bed_temperature_celsius": 45.00000201312402,
+      "bed_temperature_margin_to_80_k": 34.99999798687598,
+      "outlet_temperature_celsius": 45.00000201312402,
+      "outlet_humidity_kg_per_kg": 0.03679805651002622,
+      "dew_point_celsius": 35.105416625738144,
+      "dry_air_flow_lab_kg_per_s": 0.023781381983090155,
+      "electric_kw_lab": 0.06270688085197659,
+      "feasible": true
+     },
+     "B": {
+      "inlet_temperature_celsius": 82.67437785249166,
+      "gas_velocity_m_per_s": 1.2600117592516369,
+      "moisture_kg_per_kg": 0.1418494957941534,
+      "distance_to_tightened_limit_kg_per_kg": 0.002188684590671175,
+      "distance_to_quality_limit_kg_per_kg": 0.008150504205846593,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.05815050420584661,
+      "bed_temperature_celsius": 45.00000127179557,
+      "bed_temperature_margin_to_80_k": 34.99999872820443,
+      "outlet_temperature_celsius": 45.00000127179557,
+      "outlet_humidity_kg_per_kg": 0.04048916364308872,
+      "dew_point_celsius": 36.74360916018486,
+      "dry_air_flow_lab_kg_per_s": 0.02378159631620795,
+      "electric_kw_lab": 0.0640007793910833,
+      "feasible": true
+     }
+    },
+    "stage_power_kw": {
+     "LB->S1": 203.0600258250808,
+     "LA->S1": 1.505341549136574e-05,
+     "Q1->S1": 1629.2112571215039
+    },
+    "fuel_kw_by_sink": {
+     "S1": 4943.673377499999,
+     "SA": 329.82342359469294,
+     "SB": 405.52994914684706
+    },
+    "electric_kw_scaled": 34.43877000656671,
+    "co2_kg_per_h_by_part": {
+     "electricity": 12.604589822403417,
+     "fuel_S1": 993.6783488775,
+     "fuel_SA": 66.29450814253329,
+     "fuel_SB": 81.51151977851626
+    },
+    "co2_kg_per_h_total": 1154.088966620953
+   },
+   "description_best_m3": {
+    "set_points": [
+     99.66940232374434,
+     1.2600126574375718,
+     82.67473224945873,
+     1.26
+    ],
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ],
+     [
+      "LB",
+      "SB"
+     ]
+    ],
+    "box_boundaries": {
+     "A": [
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ],
+     "B": [
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ]
+    },
+    "lines": {
+     "A": {
+      "inlet_temperature_celsius": 99.66940232374434,
+      "gas_velocity_m_per_s": 1.2600126574375718,
+      "moisture_kg_per_kg": 0.040639189807267634,
+      "distance_to_tightened_limit_kg_per_kg": 0.10339899057755694,
+      "distance_to_quality_limit_kg_per_kg": 0.10936081019273236,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.15936081019273238,
+      "bed_temperature_celsius": 65.63736467064936,
+      "bed_temperature_margin_to_80_k": 14.362635329350638,
+      "outlet_temperature_celsius": 65.63736467064936,
+      "outlet_humidity_kg_per_kg": 0.03797891412013358,
+      "dew_point_celsius": 35.64555749297142,
+      "dry_air_flow_lab_kg_per_s": 0.022332947095079866,
+      "electric_kw_lab": 0.05860827777134812,
+      "feasible": true
+     },
+     "B": {
+      "inlet_temperature_celsius": 82.67473224945873,
+      "gas_velocity_m_per_s": 1.26,
+      "moisture_kg_per_kg": 0.14185038977283068,
+      "distance_to_tightened_limit_kg_per_kg": 0.002187790611993895,
+      "distance_to_quality_limit_kg_per_kg": 0.008149610227169313,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.05814961022716933,
+      "bed_temperature_celsius": 45.000008902642904,
+      "bed_temperature_margin_to_80_k": 34.999991097357096,
+      "outlet_temperature_celsius": 45.000008902642904,
+      "outlet_humidity_kg_per_kg": 0.040489300337800696,
+      "dew_point_celsius": 36.74366757273674,
+      "dry_air_flow_lab_kg_per_s": 0.02378137380044079,
+      "electric_kw_lab": 0.06399999563101727,
+      "feasible": true
+     }
+    },
+    "stage_power_kw": {
+     "LB->S1": 203.0601807770668,
+     "LB->SA": 0.0,
+     "LB->SB": 0.0,
+     "LA->S1": 419.0556078971884,
+     "LA->SA": 0.0,
+     "LA->SB": 0.0,
+     "Q1->S1": 1210.1555093257448,
+     "Q1->SB": 112.4381501116593,
+     "Q1->SA": 73.69957657100954
+    },
+    "fuel_kw_by_sink": {
+     "S1": 4943.673377499999,
+     "SA": 424.4605161410192,
+     "SB": 264.98148166999636
+    },
+    "electric_kw_scaled": 33.324568700159446,
+    "co2_kg_per_h_by_part": {
+     "electricity": 12.196792144258357,
+     "fuel_S1": 993.6783488775,
+     "fuel_SA": 85.31656374434486,
+     "fuel_SB": 53.261277815669274
+    },
+    "co2_kg_per_h_total": 1144.4529825817724
+   }
+  },
+  "24": {
+   "ambient": [
+    35.0,
+    0.85
+   ],
+   "best_s2": {
+    "seed_a": 2,
+    "seed_b": 4,
+    "value": 1156.5251058057104,
+    "co2": 1156.5251058057104,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "set_points": [
+     73.5525589460881,
+     1.2600000000215004,
+     84.39806473149562,
+     1.2600181254751077
+    ],
+    "feasible": true
+   },
+   "s2_pairs_value_min_median_max": [
+    1156.5251058057104,
+    1156.5277085480395,
+    1156.5303277493583
+   ],
+   "per_seed_m3": {
+    "0": {
+     "value": 1145.1429181342637,
+     "co2": 1145.1429181342637,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      99.97333953499296,
+      1.2601415823863884,
+      77.35612707840383,
+      1.464491543236432
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1156.6625,
+      1145.1429,
+      1145.1429
+     ],
+     "box_boundaries": {
+      "A": [
+       "inlet temperature at the upper bound 100",
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.04191334781674452,
+     "moisture_b": 0.14403813439193713
+    },
+    "1": {
+     "value": 1145.1502832195583,
+     "co2": 1145.1502832195583,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      99.94653692662786,
+      1.260026143957035,
+      77.30659078983797,
+      1.4661892060364594
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1157.167,
+      1145.1503,
+      1145.1503
+     ],
+     "box_boundaries": {
+      "A": [
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.04195739116624653,
+     "moisture_b": 0.1440313401539896
+    },
+    "2": {
+     "value": 1145.1146377684024,
+     "co2": 1145.1146377684024,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      100.0,
+      1.2604081134940326,
+      77.29436738553335,
+      1.4667668135004823
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1145.1146,
+      1156.7329,
+      1145.1146
+     ],
+     "box_boundaries": {
+      "A": [
+       "inlet temperature at the upper bound 100",
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.04186119906056826,
+     "moisture_b": 0.14399140910640318
+    },
+    "3": {
+     "value": 1145.1058782172179,
+     "co2": 1145.1058782172179,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      99.99995355502097,
+      1.2600035345678284,
+      77.30838563385487,
+      1.4661006184114194
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1145.1059,
+      1156.5421,
+      1145.1059
+     ],
+     "box_boundaries": {
+      "A": [
+       "inlet temperature at the upper bound 100",
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.04188372732323639,
+     "moisture_b": 0.14403813439193713
+    },
+    "4": {
+     "value": 1145.1059673230284,
+     "co2": 1145.1059673230284,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      99.99996707776353,
+      1.26,
+      77.3081890793666,
+      1.4661100562465696
+     ],
+     "feasible": true,
+     "values_by_allocation": [
+      1145.106,
+      1156.5258,
+      1145.1197
+     ],
+     "box_boundaries": {
+      "A": [
+       "inlet temperature at the upper bound 100",
+       "gas velocity at the lower bound 1.26",
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ],
+      "B": [
+       "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+      ]
+     },
+     "moisture_a": 0.04188396571755035,
+     "moisture_b": 0.14403747880757378
+    }
+   },
+   "gain_per_seed": {
+    "0": 11.382187671446673,
+    "1": 11.37482258615205,
+    "2": 11.410468037307965,
+    "3": 11.419227588492504,
+    "4": 11.419138482682001
+   },
+   "gain_min_over_seeds": 11.37482258615205,
+   "gain_max_over_seeds": 11.419227588492504,
+   "verdict": "confirmed",
+   "description_best_s2": {
+    "set_points": [
+     73.5525589460881,
+     1.2600000000215004,
+     84.39806473149562,
+     1.2600181254751077
+    ],
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "box_boundaries": {
+     "A": [
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ],
+     "B": [
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ]
+    },
+    "lines": {
+     "A": {
+      "inlet_temperature_celsius": 73.5525589460881,
+      "gas_velocity_m_per_s": 1.2600000000215004,
+      "moisture_kg_per_kg": 0.1307852580923271,
+      "distance_to_tightened_limit_kg_per_kg": 0.013252922292497471,
+      "distance_to_quality_limit_kg_per_kg": 0.01921474190767289,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.0692147419076729,
+      "bed_temperature_celsius": 45.000001999888354,
+      "bed_temperature_margin_to_80_k": 34.999998000111646,
+      "outlet_temperature_celsius": 45.000001999888354,
+      "outlet_humidity_kg_per_kg": 0.04247404027094712,
+      "dew_point_celsius": 37.567687183618546,
+      "dry_air_flow_lab_kg_per_s": 0.0235752694539956,
+      "electric_kw_lab": 0.06336876256535126,
+      "feasible": true
+     },
+     "B": {
+      "inlet_temperature_celsius": 84.39806473149562,
+      "gas_velocity_m_per_s": 1.2600181254751077,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "distance_to_tightened_limit_kg_per_kg": 4.599288744300267e-08,
+      "distance_to_quality_limit_kg_per_kg": 0.005961865608062861,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.05596186560806288,
+      "bed_temperature_celsius": 46.45398548225862,
+      "bed_temperature_margin_to_80_k": 33.54601451774138,
+      "outlet_temperature_celsius": 46.45398548225862,
+      "outlet_humidity_kg_per_kg": 0.04633589778494413,
+      "dew_point_celsius": 39.07237991690636,
+      "dry_air_flow_lab_kg_per_s": 0.023468355405561636,
+      "electric_kw_lab": 0.0640043613024706,
+      "feasible": true
+     }
+    },
+    "stage_power_kw": {
+     "LA->S1": 203.06004060973294,
+     "LB->S1": 29.524588593010538,
+     "Q1->S1": 1599.6866687972567
+    },
+    "fuel_kw_by_sink": {
+     "S1": 4943.673377499999,
+     "SA": 328.34187995646664,
+     "SB": 418.8022409297432
+    },
+    "electric_kw_scaled": 34.619641065798255,
+    "co2_kg_per_h_by_part": {
+     "electricity": 12.67078863008216,
+     "fuel_S1": 993.6783488775,
+     "fuel_SA": 65.9967178712498,
+     "fuel_SB": 84.1792504268784
+    },
+    "co2_kg_per_h_total": 1156.5251058057104
+   },
+   "description_best_m3": {
+    "set_points": [
+     99.99995355502097,
+     1.2600035345678284,
+     77.30838563385487,
+     1.4661006184114194
+    ],
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "box_boundaries": {
+     "A": [
+      "inlet temperature at the upper bound 100",
+      "gas velocity at the lower bound 1.26",
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ],
+     "B": [
+      "nozzle pressure at the lower bound 1.0 (fixed, D6)"
+     ]
+    },
+    "lines": {
+     "A": {
+      "inlet_temperature_celsius": 99.99995355502097,
+      "gas_velocity_m_per_s": 1.2600035345678284,
+      "moisture_kg_per_kg": 0.04188372732323639,
+      "distance_to_tightened_limit_kg_per_kg": 0.10215445306158819,
+      "distance_to_quality_limit_kg_per_kg": 0.1081162726767636,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.15811627267676362,
+      "bed_temperature_celsius": 65.95583426041972,
+      "bed_temperature_margin_to_80_k": 14.04416573958028,
+      "outlet_temperature_celsius": 65.95583426041972,
+      "outlet_humidity_kg_per_kg": 0.043752752176465876,
+      "dew_point_celsius": 38.079669028520584,
+      "dry_air_flow_lab_kg_per_s": 0.02211844299460471,
+      "electric_kw_lab": 0.05861582373270427,
+      "feasible": true
+     },
+     "B": {
+      "inlet_temperature_celsius": 77.30838563385487,
+      "gas_velocity_m_per_s": 1.4661006184114194,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "distance_to_tightened_limit_kg_per_kg": 4.599288744300267e-08,
+      "distance_to_quality_limit_kg_per_kg": 0.005961865608062861,
+      "distance_to_kinetics_validity_boundary_kg_per_kg": 0.05596186560806288,
+      "bed_temperature_celsius": 45.00000222375307,
+      "bed_temperature_margin_to_80_k": 34.99999777624693,
+      "outlet_temperature_celsius": 45.00000222375307,
+      "outlet_humidity_kg_per_kg": 0.04409347113255758,
+      "dew_point_celsius": 38.21371749043465,
+      "dry_air_flow_lab_kg_per_s": 0.02743152150857811,
+      "electric_kw_lab": 0.07953029202798759,
+      "feasible": true
+     }
+    },
+    "stage_power_kw": {
+     "LB->S1": 203.06004515552988,
+     "LB->SA": 0.0,
+     "LA->S1": 425.52912533655297,
+     "LA->SB": 0.0,
+     "Q1->S1": 1203.6821275079171,
+     "Q1->SA": 107.45769406561206,
+     "Q1->SB": 95.46007257087831
+    },
+    "fuel_kw_by_sink": {
+     "S1": 4943.673377499999,
+     "SA": 385.0564253708036,
+     "SB": 299.94391284399137
+    },
+    "electric_kw_scaled": 37.54770862990181,
+    "co2_kg_per_h_by_part": {
+     "electricity": 13.742461358544062,
+     "fuel_S1": 993.6783488775,
+     "fuel_SA": 77.39634149953153,
+     "fuel_SB": 60.28872648164227
+    },
+    "co2_kg_per_h_total": 1145.1058782172179
+   }
+  }
+ },
+ "n_confirmed": 5,
+ "overall_confirmed": true,
+ "inlet_temperature_upper_bound_celsius": 100.0,
+ "sensitivity_criterion": {
+  "rule": "gain not bound to the box limit iff min-over-seeds G >= 1 kg/h in at least 4 of 5",
+  "n_scenarios_above_1": 5,
+  "not_bound_to_box_limit": true
+ }
+}
