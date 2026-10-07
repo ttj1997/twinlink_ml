@@ -39,6 +39,7 @@ __all__ = [
     "CaseResult",
     "Mode",
     "Order",
+    "Rule",
     "SinkResult",
     "StageResult",
     "balances_cells",
@@ -48,6 +49,7 @@ __all__ = [
 ]
 
 Mode = Literal["equal_outlet", "counter_current"]
+Rule = Literal["drawn", "by_temperature", "bypass", "by_temperature_and_bypass"]
 Order = tuple[tuple[int, ...], tuple[int, ...]]
 
 
@@ -119,6 +121,7 @@ def _sink(
     sources: tuple[int, ...],
     exhausts: dict[int, c.Stream],
     mode: Mode,
+    rule: Rule = "drawn",
 ) -> SinkResult:
     plant = inputs.plant
     m = plant.material
@@ -133,11 +136,18 @@ def _sink(
         if mode == "equal_outlet"
         else loops.counter_current_infinite_area_loop
     )
+    if rule in ("by_temperature", "by_temperature_and_bypass"):
+        sources = tuple(sorted(sources, key=lambda i: exhausts[i].temperature_celsius))
     stages = []
     for source in sources:
         exhaust = exhausts[source]
         flow = inputs.htm_flow_kg_per_s[source - 1]
-        result = solve(exhaust, gas, flow, inputs.cp_htm_j_per_kg_k, m)
+        if rule in ("bypass", "by_temperature_and_bypass") and (
+            exhaust.temperature_celsius <= gas.temperature_celsius
+        ):
+            result = loops.LoopResult(gas.temperature_celsius, exhaust.temperature_celsius, 0.0)
+        else:
+            result = solve(exhaust, gas, flow, inputs.cp_htm_j_per_kg_k, m)
         stages.append(
             StageResult(
                 source=source,
@@ -169,17 +179,23 @@ def evaluate_case(
     *,
     order: Order | None = None,
     mode: Mode = "equal_outlet",
+    rule: Rule = "drawn",
 ) -> CaseResult:
     """Evaluate one case; ``case=0`` is no recovery (both heaters from ambient).
 
     ``order`` overrides the sources of each sink (default: the case drawing).
+
+    ``rule`` is a PROPOSAL, not part of the workbook (``"drawn"`` reproduces the workbook):
+    ``"by_temperature"`` orders the stages of a sink by the actual exhaust temperature (coldest
+    first), ``"bypass"`` skips a stage whose exhaust is not warmer than the gas (it would cool
+    it), both together combine them. A bypassed stage is kept with 0 W and unchanged temperatures.
     """
     order_1, order_2 = order if order is not None else ((), ()) if case == 0 else CASES[case]
     exhausts = _exhausts(inputs)
     return CaseResult(
         case,
-        _sink(inputs, 1, order_1, exhausts, mode),
-        _sink(inputs, 2, order_2, exhausts, mode),
+        _sink(inputs, 1, order_1, exhausts, mode, rule),
+        _sink(inputs, 2, order_2, exhausts, mode, rule),
     )
 
 

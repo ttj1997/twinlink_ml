@@ -37,6 +37,8 @@ __all__ = [
     "negative_recovery_scan",
     "read_formula_cells",
     "reference_scan",
+    "rule_comparison",
+    "stage_order_check",
 ]
 
 _GAS_ROWS = {26, 39}
@@ -381,3 +383,50 @@ EQUATION_TO_CELLS: dict[str, str] = {
     ),
 }
 """Which cells realise which equation of the document (read from the formulas)."""
+
+
+def stage_order_check(inputs: ExcelInputsV41) -> list[dict[str, object]]:
+    """Per case and stage: does the circuit arrive colder than the gas it should heat.
+
+    ``htm_colder_than_gas``: the medium leaving the recovery exchanger (``T2``) is colder than the
+    gas entering the stage; ``exhaust_colder_than_gas``: the exhaust itself is colder; with equal
+    outlet temperatures the stage then cools the gas (``recovered_kw`` < 0). "low/high temperature"
+    names the position (first/second stage), not the temperature of the circuit.
+    """
+    si = inputs.to_si()
+    rows = []
+    for case in range(1, 7):
+        for number, stage in enumerate(k.evaluate_case(si, case).stages, 1):
+            rows.append(
+                {
+                    "case": case,
+                    "source": stage.source,
+                    "gas_in_celsius": stage.sink_in_celsius,
+                    "gas_out_celsius": stage.sink_out_celsius,
+                    "exhaust_in_celsius": stage.exhaust_in_celsius,
+                    "htm_hot_celsius": stage.exhaust_out_celsius,
+                    "recovered_kw": stage.recovered_w / 1e3,
+                    "exhaust_colder_than_gas": stage.exhaust_in_celsius < stage.sink_in_celsius,
+                    "htm_colder_than_gas": stage.exhaust_out_celsius < stage.sink_in_celsius,
+                    "reverses": stage.recovered_w < 0.0,
+                    "stage_of_sink": number,
+                }
+            )
+    return rows
+
+
+def rule_comparison(inputs: ExcelInputsV41) -> list[dict[str, object]]:
+    """Gas and recovered heat per case for the proposed stage rules (document model only)."""
+    si = inputs.to_si()
+    rows = []
+    for case in range(1, 7):
+        row: dict[str, object] = {"case": case}
+        for rule in ("drawn", "by_temperature", "bypass", "by_temperature_and_bypass"):
+            r = k.evaluate_case(si, case, rule=rule)  # type: ignore[arg-type]
+            row[rule] = {
+                "gas_kg_per_h": r.total_gas_kg_per_h,
+                "recovered_kw": r.total_recovered_w / 1e3,
+                "stage_kw": [s.recovered_w / 1e3 for s in r.stages],
+            }
+        rows.append(row)
+    return rows

@@ -446,3 +446,74 @@ def test_counter_current_single_exchanger_limit():
     a, b, cc = loops.loop_capacity_rates(exhaust, gas, flow, si.cp_htm_j_per_kg_k, m)
     assert b < min(a, cc)  # the medium is the smallest: Q = B (T_c,in - T_h,in)
     assert r.recovered_w == pytest.approx(b * (exhaust.temperature_celsius - 15.0), rel=1e-9)
+
+
+# --- intermediate version (file not available; inputs set directly) ----------------------
+
+
+def intermediate_inputs() -> ExcelInputsV41:
+    """The intermediate version of the partner workbook, inputs as communicated (no file).
+
+    Dryer 1: 100 kg/h, 6 g/kg, 300 degC, spray 12 kg/h; dryer 2: 50 kg/h, 6 g/kg, 150 degC,
+    spray 3 kg/h; circuits 40 kg/h (1) and 20 kg/h (2). The material properties are those of
+    the later versions.
+    """
+    plant = ExcelInputs(
+        dryer_1=ExcelDryerInputs(100.0, 6.0, 300.0, 12.0, 0.4, 15.0),
+        dryer_2=ExcelDryerInputs(50.0, 6.0, 150.0, 3.0, 0.4, 15.0),
+        material=default_inputs().plant.material,
+        ambient_temperature_celsius=15.0,
+        ambient_pressure_atm=1.0,
+    )
+    return ExcelInputsV41(plant, (40.0, 20.0))
+
+
+def test_intermediate_version_scenario_6_has_the_negative_recovery():
+    """Expected by the partner's cell Scenarios!O37: -0.056 kW; gas 15 -> 81.2 -> 77.85 degC.
+
+    Hand: exhaust 1 is the hot one here (134.66 degC); case 6 sends it first into sink 2.
+    Stage 1 (circuit 1, 40 kg/h): gas 15 -> 81.20, circuit 105.08 -> 81.20 degC. Stage 2 gets
+    exhaust 2 (72.28 degC, circuit leaves the recovery exchanger at 75.44 degC) but the gas is at
+    81.20 degC: it is cooled to 77.85 degC, ``Q = B (T2 - T1) = -0.0563 kW``.
+    """
+    inputs = intermediate_inputs()
+    first, second = k.evaluate_case(inputs.to_si(), 6).stages
+    assert first.source == 1 and second.source == 2
+    assert first.sink_out_celsius == pytest.approx(81.2, abs=0.01)
+    assert first.exhaust_out_celsius == pytest.approx(105.08, abs=0.01)
+    assert second.exhaust_out_celsius == pytest.approx(75.44, abs=0.01)
+    assert second.sink_out_celsius == pytest.approx(77.85, abs=0.01)
+    assert second.recovered_w / 1e3 == pytest.approx(-0.056, abs=0.0005)
+    cells = ab.scenario_cells_as_built(inputs)
+    assert cells["P30"] == pytest.approx(81.2, abs=0.01)
+    assert cells["O36"] == pytest.approx(75.44, abs=0.01)
+    assert cells["P36"] == pytest.approx(77.85, abs=0.01)
+    assert cells["O37"] == pytest.approx(-0.056, abs=0.0005)
+
+
+def test_stage_order_check_flags_exactly_the_reversing_stages():
+    """v4.1 draft: none; intermediate version: only the second stage of scenario 6."""
+    for inputs, expected in ((default_inputs(), set()), (intermediate_inputs(), {(6, 2)})):
+        rows = dev.stage_order_check(inputs)
+        assert {(r["case"], r["source"]) for r in rows if r["reverses"]} == expected
+        for r in rows:
+            # reversing <=> the exhaust is colder than the gas <=> the circuit leaves colder
+            assert r["reverses"] == (r["recovered_kw"] < 0.0)
+            assert r["reverses"] == r["exhaust_colder_than_gas"] == r["htm_colder_than_gas"]
+
+
+def test_proposed_rules_avoid_the_reversal_and_never_use_more_gas():
+    """Proposals only: coldest exhaust first, or bypass a stage that would cool the gas."""
+    si = intermediate_inputs().to_si()
+    for case in (3, 4, 5, 6):
+        drawn = k.evaluate_case(si, case)
+        for rule in ("by_temperature", "bypass", "by_temperature_and_bypass"):
+            r = k.evaluate_case(si, case, rule=rule)
+            assert min(s.recovered_w for s in r.stages) >= 0.0
+            assert r.total_gas_kg_per_h <= drawn.total_gas_kg_per_h + 1e-12
+    drawn6 = k.evaluate_case(si, 6)
+    assert min(s.recovered_w for s in drawn6.stages) < 0.0
+    # bypass leaves the first stage as it is and the second at exactly 0 kW
+    bypass6 = k.evaluate_case(si, 6, rule="bypass")
+    assert bypass6.stages[1].recovered_w == 0.0
+    assert bypass6.stages[0] == drawn6.stages[0]

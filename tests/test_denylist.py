@@ -4,10 +4,15 @@ Verhindert, dass reale Partner-/Personennamen (siehe ``local.example/README.md``
 versehentlich wieder committet werden. ``local/`` existiert nur lokal beim Pflegenden
 des Repos und ist gitignored -- in Cloud-Sitzungen fehlt es normalerweise, dann wird
 dieser Test uebersprungen (er kann dort seine eigene Referenz nicht lesen).
+
+Suchreihenfolge fuer ``denylist.txt``: ``$TWINLINK_LOCAL_DIR`` (wie bei den Partner-Tests),
+``<Repo>/local``, ``local/`` des Haupt-Checkouts (in einem Git-Worktree liegt ``local/``
+nur dort). Erst wenn keine der drei Stellen die Datei hat, wird uebersprungen.
 """
 
 from __future__ import annotations
 
+import os
 import subprocess
 from pathlib import Path
 
@@ -25,6 +30,34 @@ def _repo_root() -> Path | None:
     except (OSError, subprocess.CalledProcessError):
         return None
     return Path(out.stdout.strip())
+
+
+def _main_checkout(repo_root: Path) -> Path | None:
+    """Erster Eintrag von ``git worktree list`` (der Haupt-Checkout), falls ermittelbar."""
+    try:
+        out = subprocess.run(
+            ["git", "worktree", "list", "--porcelain"],
+            capture_output=True,
+            text=True,
+            check=True,
+            cwd=repo_root,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    first = out.stdout.splitlines()[0] if out.stdout else ""
+    return Path(first.removeprefix("worktree ")) if first.startswith("worktree ") else None
+
+
+def _find_denylist(repo_root: Path) -> Path | None:
+    candidates = []
+    env = os.environ.get("TWINLINK_LOCAL_DIR")
+    if env:
+        candidates.append(Path(env) / "denylist.txt")
+    candidates.append(repo_root / "local" / "denylist.txt")
+    main = _main_checkout(repo_root)
+    if main is not None:
+        candidates.append(main / "local" / "denylist.txt")
+    return next((c for c in candidates if c.is_file()), None)
 
 
 def _denylist_terms(denylist_path: Path) -> list[str]:
@@ -51,8 +84,8 @@ def test_denylist_terms_not_present_in_tracked_files() -> None:
     repo_root = _repo_root()
     if repo_root is None:
         pytest.skip("kein Git-Repository (git rev-parse --show-toplevel schlug fehl)")
-    denylist_path = repo_root / "local" / "denylist.txt"
-    if not denylist_path.is_file():
+    denylist_path = _find_denylist(repo_root)
+    if denylist_path is None:
         pytest.skip("local/denylist.txt fehlt (Normalfall in Cloud-Sitzungen)")
 
     terms = _denylist_terms(denylist_path)
