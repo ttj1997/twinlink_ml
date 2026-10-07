@@ -302,3 +302,70 @@ hot-first case.
 * Rows 26, 39, 41 of the workbook are 108.91 times too high as long as the gas formula is not changed; every other number agrees.
 * `cp_gas` (1.2) and the moisture basis remain questions. The workbook file in `local/` is named `Model v4.1.xlsx`.
 * Feedback to the partner (English, not in the repository): `local/feedback_model_v4.md`, section "Model v4.1".
+
+## 8. Intermediate version, stage order, proposed rule (addendum of 2026-10-07 to section 7)
+
+Script `scripts/report_partner_v4_1_stage_order.py`, artifact `artifacts/runs/partner_v4_1_stage_order.json` (script commit
+`04cbbc7`, clean tree). The intermediate version of the partner workbook is not available as a file; its inputs were communicated and are
+set directly in the rebuild (`intermediate_inputs()` in the test and the script): dryer 1 100 kg/h, 6 g/kg, 300 degC, spray 12 kg/h; dryer 2
+50 kg/h, 6 g/kg, 150 degC, spray 3 kg/h; solid fraction 0.4, spray 15 degC; ambient 15 degC; circuits 40 kg/h (1) and 20 kg/h (2); material
+properties as in v4.1. **Only the inputs are taken over; no cell of that file was seen**, so the only check against it is the one below.
+
+### 8.1 Reproduction of the intermediate version, scenario 6 (the negative recovery)
+
+The statement in 7.5 that a negative recovery in scenario 6 "is not found" holds for `Model_v4.1.xlsx`; it is **superseded for the
+intermediate version**, where it exists. With the inputs above, in scenario 6 (sink 2: source 1 first, source 2 second) the rebuild gives
+(both as-built and document model; the stage energy is the same formula):
+
+| Quantity | Rebuild | Expected (partner's cells of that version) |
+|---|---|---|
+| stage 1 (circuit 1, 40 kg/h): gas, degC | 15 -> 81.20 | 15 -> 81.2 |
+| stage 1: circuit, degC | 105.08 -> 81.20 | 105.1 -> 81.2 |
+| stage 2: circuit leaves the recovery exchanger at, degC | 75.44 | 75.4 |
+| stage 2: gas, degC | 81.20 -> 77.85 | -> 77.85 |
+| stage 2: recovered heat (cell `Scenarios!O37` there), kW | -0.0563 | -0.056 |
+
+All five agree with the expected values within their stated precision (tested in `test_intermediate_version_scenario_6_has_the_negative_recovery`).
+The cause is the one found in 7.5: here exhaust 1 is the **hot** one (134.66 degC; dryer 1 at 300 degC) and exhaust 2 the cold one (72.28 degC), the
+reverse of v4.1, so scenario 6 (source 1 first) is the hot-first order, and the second stage meets gas that is already warmer than its exhaust.
+
+### 8.2 "Low/high temperature" does not fix the order of the circuit temperatures
+
+The labels name the **position** (first and second stage), not the temperature of the circuit; which circuit is warmer depends on the dryer
+inputs. In v4.1 source 2 is the hot one, in the intermediate version source 1. The cases of the drawings put the same source numbers in the same
+positions in both, so the same case is cold-first in one version and hot-first in the other. Check per case and stage (`stage_order_check`;
+a stage reverses exactly when the exhaust, and with it the circuit leaving the recovery exchanger, is colder than the gas entering the stage; the
+test asserts the equivalence):
+
+| Version | Stages that reverse (cool the gas) | Stages that come close |
+|---|---|---|
+| `Model_v4.1.xlsx` | none of the 12 | case 3/4 second stage 0.2129 kW (hot first) |
+| intermediate | **scenario 6, second stage (source 2): -0.0563 kW**; none of the other 11 | scenario 5, second stage (source 2): +0.0896 kW (gas 60.75 degC against exhaust 2 at 72.28 degC) |
+
+Effect of the stage order in the intermediate version (document model, gas of both heaters in kg/h; the corrected gas formula is used):
+case 3 1.0052, case 4 1.0592, case 5 1.0238, case 6 1.0810 (case 6 is the worst of the six and the only one with a negative stage).
+
+### 8.3 Proposed rule (a proposal; **not** built into the as-built reproduction of the workbook)
+
+Two ways to keep a stage from cooling the gas, both implemented only as an option of the document model (`evaluate_case(..., rule=...)`,
+default `"drawn"` = the workbook):
+
+1. **Order the stages by the actual exhaust temperature, coldest first** (`by_temperature`). The position labels then follow the temperature.
+2. **Bypass a stage whose exhaust is not warmer than the gas entering it** (`bypass`), so that its recovery is 0 and not negative.
+
+Comparison (artifact `rule_comparison`; gas in kg/h, recovered heat in kW):
+
+| Version, case | Drawn | By temperature | Bypass | Both |
+|---|---|---|---|---|
+| intermediate, 6 | 1.0810, 1.058 | 1.0592, 1.2759 | 1.0753, 1.1143 | 1.0592, 1.2759 |
+| intermediate, 5 | 1.0238, 1.630 | 1.0052, 1.8154 | 1.0238, 1.630 | 1.0052, 1.8154 |
+| intermediate, 3 / 4 | 1.0052, 1.8154 / 1.0592, 1.2759 | same | same | same |
+| v4.1, 3 / 4 | 1.2720, 1.4202 | 1.2534, 1.6061 | 1.2720, 1.4202 | 1.2534, 1.6061 |
+| v4.1, 5 / 6 | 1.2534, 1.6061 | same | same | same |
+
+Reading: reordering is the stronger rule (it also improves the cases that do not reverse but are hot-first, e.g. v4.1 case 3/4: 1.2720 -> 1.2534,
+intermediate case 5: 1.0238 -> 1.0052); the bypass only removes the negative stage (intermediate case 6: 1.0810 -> 1.0753) and leaves the order.
+With the reordering, cases 3 and 5, and cases 4 and 6, become equal in the totals (the sink and the two sources are the same, only the order differed),
+so the two stage orders are no longer alternatives: **if a rule by temperature is adopted, the scenarios 3 to 6 no longer compare the
+orders**, and the order becomes a result, not a scenario. Bypass without reordering keeps the comparison of the orders meaningful. Which is
+wanted is a question for the project and the partner. Neither rule is a statement about the plant (equal outlet temperatures, section 7.5).

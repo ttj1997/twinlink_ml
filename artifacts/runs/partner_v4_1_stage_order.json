@@ -1,0 +1,820 @@
+{
+ "provenance": {
+  "git/commit": "04cbbc70dcc0a76f8320736f5a885ca1db3e8dc8",
+  "git/dirty": false,
+  "python": "3.14.2"
+ },
+ "note": "intermediate = inputs set directly (the file is not available); rules are proposals, not part of the workbook",
+ "inputs": {
+  "v4_1": {
+   "dryer_1": {
+    "air_mass_flow_kg_per_h": 100.0,
+    "air_moisture_g_per_kg": 6.0,
+    "air_temperature_celsius": 150.0,
+    "spray_mass_flow_kg_per_h": 6.0,
+    "spray_solid_fraction_kg_per_kg": 0.4,
+    "spray_temperature_celsius": 15.0
+   },
+   "dryer_2": {
+    "air_mass_flow_kg_per_h": 100.0,
+    "air_moisture_g_per_kg": 6.0,
+    "air_temperature_celsius": 300.0,
+    "spray_mass_flow_kg_per_h": 12.0,
+    "spray_solid_fraction_kg_per_kg": 0.4,
+    "spray_temperature_celsius": 15.0
+   },
+   "circuit_flows_kg_per_h": [
+    20.0,
+    20.0
+   ]
+  },
+  "intermediate": {
+   "dryer_1": {
+    "air_mass_flow_kg_per_h": 100.0,
+    "air_moisture_g_per_kg": 6.0,
+    "air_temperature_celsius": 300.0,
+    "spray_mass_flow_kg_per_h": 12.0,
+    "spray_solid_fraction_kg_per_kg": 0.4,
+    "spray_temperature_celsius": 15.0
+   },
+   "dryer_2": {
+    "air_mass_flow_kg_per_h": 50.0,
+    "air_moisture_g_per_kg": 6.0,
+    "air_temperature_celsius": 150.0,
+    "spray_mass_flow_kg_per_h": 3.0,
+    "spray_solid_fraction_kg_per_kg": 0.4,
+    "spray_temperature_celsius": 15.0
+   },
+   "circuit_flows_kg_per_h": [
+    40.0,
+    20.0
+   ]
+  }
+ },
+ "stage_order_check": {
+  "v4_1": [
+   {
+    "case": 1,
+    "source": 1,
+    "gas_in_celsius": 15.0,
+    "gas_out_celsius": 31.91203281813084,
+    "exhaust_in_celsius": 72.27856833576739,
+    "htm_hot_celsius": 56.313680170005334,
+    "recovered_kw": 0.5693717715437383,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 1
+   },
+   {
+    "case": 1,
+    "source": 2,
+    "gas_in_celsius": 15.0,
+    "gas_out_celsius": 50.86187278872202,
+    "exhaust_in_celsius": 134.66350360971342,
+    "htm_hot_celsius": 102.60543209816377,
+    "recovered_kw": 1.2073497172203078,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 2
+   },
+   {
+    "case": 2,
+    "source": 2,
+    "gas_in_celsius": 15.0,
+    "gas_out_celsius": 50.86187278872202,
+    "exhaust_in_celsius": 134.66350360971342,
+    "htm_hot_celsius": 102.60543209816377,
+    "recovered_kw": 1.2073497172203078,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 1
+   },
+   {
+    "case": 2,
+    "source": 1,
+    "gas_in_celsius": 15.0,
+    "gas_out_celsius": 31.91203281813084,
+    "exhaust_in_celsius": 72.27856833576739,
+    "htm_hot_celsius": 56.313680170005334,
+    "recovered_kw": 0.5693717715437383,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 2
+   },
+   {
+    "case": 3,
+    "source": 2,
+    "gas_in_celsius": 15.0,
+    "gas_out_celsius": 50.86187278872202,
+    "exhaust_in_celsius": 134.66350360971342,
+    "htm_hot_celsius": 102.60543209816377,
+    "recovered_kw": 1.2073497172203078,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 1
+   },
+   {
+    "case": 3,
+    "source": 1,
+    "gas_in_celsius": 50.86187278872202,
+    "gas_out_celsius": 57.18535238102484,
+    "exhaust_in_celsius": 72.27856833576739,
+    "htm_hot_celsius": 66.30923007849036,
+    "recovered_kw": 0.21289047960752874,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 2
+   },
+   {
+    "case": 4,
+    "source": 2,
+    "gas_in_celsius": 15.0,
+    "gas_out_celsius": 50.86187278872202,
+    "exhaust_in_celsius": 134.66350360971342,
+    "htm_hot_celsius": 102.60543209816377,
+    "recovered_kw": 1.2073497172203078,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 1
+   },
+   {
+    "case": 4,
+    "source": 1,
+    "gas_in_celsius": 50.86187278872202,
+    "gas_out_celsius": 57.18535238102484,
+    "exhaust_in_celsius": 72.27856833576739,
+    "htm_hot_celsius": 66.30923007849036,
+    "recovered_kw": 0.21289047960752874,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 2
+   },
+   {
+    "case": 5,
+    "source": 1,
+    "gas_in_celsius": 15.0,
+    "gas_out_celsius": 31.91203281813084,
+    "exhaust_in_celsius": 72.27856833576739,
+    "htm_hot_celsius": 56.313680170005334,
+    "recovered_kw": 0.5693717715437383,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 1
+   },
+   {
+    "case": 5,
+    "source": 2,
+    "gas_in_celsius": 31.91203281813084,
+    "gas_out_celsius": 62.70555016657918,
+    "exhaust_in_celsius": 134.66350360971342,
+    "htm_hot_celsius": 107.1361966264832,
+    "recovered_kw": 1.0367150840644273,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 2
+   },
+   {
+    "case": 6,
+    "source": 1,
+    "gas_in_celsius": 15.0,
+    "gas_out_celsius": 31.91203281813084,
+    "exhaust_in_celsius": 72.27856833576739,
+    "htm_hot_celsius": 56.313680170005334,
+    "recovered_kw": 0.5693717715437383,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 1
+   },
+   {
+    "case": 6,
+    "source": 2,
+    "gas_in_celsius": 31.91203281813084,
+    "gas_out_celsius": 62.70555016657918,
+    "exhaust_in_celsius": 134.66350360971342,
+    "htm_hot_celsius": 107.1361966264832,
+    "recovered_kw": 1.0367150840644273,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 2
+   }
+  ],
+  "intermediate": [
+   {
+    "case": 1,
+    "source": 1,
+    "gas_in_celsius": 15.0,
+    "gas_out_celsius": 60.75411521344461,
+    "exhaust_in_celsius": 134.66350360971342,
+    "htm_hot_celsius": 93.76244118885823,
+    "recovered_kw": 1.5403885455193027,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 1
+   },
+   {
+    "case": 1,
+    "source": 2,
+    "gas_in_celsius": 15.0,
+    "gas_out_celsius": 36.48947412476198,
+    "exhaust_in_celsius": 72.27856833576739,
+    "htm_hot_celsius": 51.99259474334028,
+    "recovered_kw": 0.36173948110016024,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 2
+   },
+   {
+    "case": 2,
+    "source": 2,
+    "gas_in_celsius": 15.0,
+    "gas_out_celsius": 28.225714264998132,
+    "exhaust_in_celsius": 72.27856833576739,
+    "htm_hot_celsius": 47.308530561638285,
+    "recovered_kw": 0.4452657135882703,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 1
+   },
+   {
+    "case": 2,
+    "source": 1,
+    "gas_in_celsius": 15.0,
+    "gas_out_celsius": 81.19727414715722,
+    "exhaust_in_celsius": 134.66350360971342,
+    "htm_hot_celsius": 105.07557660738176,
+    "recovered_kw": 1.1143207814771456,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 2
+   },
+   {
+    "case": 3,
+    "source": 2,
+    "gas_in_celsius": 15.0,
+    "gas_out_celsius": 28.225714264998132,
+    "exhaust_in_celsius": 72.27856833576739,
+    "htm_hot_celsius": 47.308530561638285,
+    "recovered_kw": 0.4452657135882703,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 1
+   },
+   {
+    "case": 3,
+    "source": 1,
+    "gas_in_celsius": 28.225714264998132,
+    "gas_out_celsius": 68.92289201625313,
+    "exhaust_in_celsius": 134.66350360971342,
+    "htm_hot_celsius": 98.28299882251565,
+    "recovered_kw": 1.3701383176255846,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 2
+   },
+   {
+    "case": 4,
+    "source": 2,
+    "gas_in_celsius": 15.0,
+    "gas_out_celsius": 36.48947412476198,
+    "exhaust_in_celsius": 72.27856833576739,
+    "htm_hot_celsius": 51.99259474334028,
+    "recovered_kw": 0.36173948110016024,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 1
+   },
+   {
+    "case": 4,
+    "source": 1,
+    "gas_in_celsius": 36.48947412476198,
+    "gas_out_celsius": 90.79887463456701,
+    "exhaust_in_celsius": 134.66350360971342,
+    "htm_hot_celsius": 110.3890512470324,
+    "recovered_kw": 0.9142082419150515,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 2
+   },
+   {
+    "case": 5,
+    "source": 1,
+    "gas_in_celsius": 15.0,
+    "gas_out_celsius": 60.75411521344461,
+    "exhaust_in_celsius": 134.66350360971342,
+    "htm_hot_celsius": 93.76244118885823,
+    "recovered_kw": 1.5403885455193027,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 1
+   },
+   {
+    "case": 5,
+    "source": 2,
+    "gas_in_celsius": 60.75411521344461,
+    "gas_out_celsius": 63.41513011805475,
+    "exhaust_in_celsius": 72.27856833576739,
+    "htm_hot_celsius": 67.25459448042078,
+    "recovered_kw": 0.0895875017885407,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 2
+   },
+   {
+    "case": 6,
+    "source": 1,
+    "gas_in_celsius": 15.0,
+    "gas_out_celsius": 81.19727414715722,
+    "exhaust_in_celsius": 134.66350360971342,
+    "htm_hot_celsius": 105.07557660738176,
+    "recovered_kw": 1.1143207814771456,
+    "exhaust_colder_than_gas": false,
+    "htm_colder_than_gas": false,
+    "reverses": false,
+    "stage_of_sink": 1
+   },
+   {
+    "case": 6,
+    "source": 2,
+    "gas_in_celsius": 81.19727414715722,
+    "gas_out_celsius": 77.85120067973527,
+    "exhaust_in_celsius": 72.27856833576739,
+    "htm_hot_celsius": 75.43724767823801,
+    "recovered_kw": -0.05632557003493612,
+    "exhaust_colder_than_gas": true,
+    "htm_colder_than_gas": true,
+    "reverses": true,
+    "stage_of_sink": 2
+   }
+  ]
+ },
+ "rule_comparison": {
+  "v4_1": [
+   {
+    "case": 1,
+    "drawn": {
+     "gas_kg_per_h": 1.2363278511235953,
+     "recovered_kw": 1.7767214887640461,
+     "stage_kw": [
+      0.5693717715437383,
+      1.2073497172203078
+     ]
+    },
+    "by_temperature": {
+     "gas_kg_per_h": 1.2363278511235953,
+     "recovered_kw": 1.7767214887640461,
+     "stage_kw": [
+      0.5693717715437383,
+      1.2073497172203078
+     ]
+    },
+    "bypass": {
+     "gas_kg_per_h": 1.2363278511235953,
+     "recovered_kw": 1.7767214887640461,
+     "stage_kw": [
+      0.5693717715437383,
+      1.2073497172203078
+     ]
+    },
+    "by_temperature_and_bypass": {
+     "gas_kg_per_h": 1.2363278511235953,
+     "recovered_kw": 1.7767214887640461,
+     "stage_kw": [
+      0.5693717715437383,
+      1.2073497172203078
+     ]
+    }
+   },
+   {
+    "case": 2,
+    "drawn": {
+     "gas_kg_per_h": 1.2363278511235953,
+     "recovered_kw": 1.7767214887640461,
+     "stage_kw": [
+      1.2073497172203078,
+      0.5693717715437383
+     ]
+    },
+    "by_temperature": {
+     "gas_kg_per_h": 1.2363278511235953,
+     "recovered_kw": 1.7767214887640461,
+     "stage_kw": [
+      1.2073497172203078,
+      0.5693717715437383
+     ]
+    },
+    "bypass": {
+     "gas_kg_per_h": 1.2363278511235953,
+     "recovered_kw": 1.7767214887640461,
+     "stage_kw": [
+      1.2073497172203078,
+      0.5693717715437383
+     ]
+    },
+    "by_temperature_and_bypass": {
+     "gas_kg_per_h": 1.2363278511235953,
+     "recovered_kw": 1.7767214887640461,
+     "stage_kw": [
+      1.2073497172203078,
+      0.5693717715437383
+     ]
+    }
+   },
+   {
+    "case": 3,
+    "drawn": {
+     "gas_kg_per_h": 1.2719759803172166,
+     "recovered_kw": 1.4202401968278366,
+     "stage_kw": [
+      1.2073497172203078,
+      0.21289047960752874
+     ]
+    },
+    "by_temperature": {
+     "gas_kg_per_h": 1.2533913144391835,
+     "recovered_kw": 1.6060868556081656,
+     "stage_kw": [
+      0.5693717715437383,
+      1.0367150840644273
+     ]
+    },
+    "bypass": {
+     "gas_kg_per_h": 1.2719759803172166,
+     "recovered_kw": 1.4202401968278366,
+     "stage_kw": [
+      1.2073497172203078,
+      0.21289047960752874
+     ]
+    },
+    "by_temperature_and_bypass": {
+     "gas_kg_per_h": 1.2533913144391835,
+     "recovered_kw": 1.6060868556081656,
+     "stage_kw": [
+      0.5693717715437383,
+      1.0367150840644273
+     ]
+    }
+   },
+   {
+    "case": 4,
+    "drawn": {
+     "gas_kg_per_h": 1.2719759803172161,
+     "recovered_kw": 1.4202401968278366,
+     "stage_kw": [
+      1.2073497172203078,
+      0.21289047960752874
+     ]
+    },
+    "by_temperature": {
+     "gas_kg_per_h": 1.2533913144391833,
+     "recovered_kw": 1.6060868556081656,
+     "stage_kw": [
+      0.5693717715437383,
+      1.0367150840644273
+     ]
+    },
+    "bypass": {
+     "gas_kg_per_h": 1.2719759803172161,
+     "recovered_kw": 1.4202401968278366,
+     "stage_kw": [
+      1.2073497172203078,
+      0.21289047960752874
+     ]
+    },
+    "by_temperature_and_bypass": {
+     "gas_kg_per_h": 1.2533913144391833,
+     "recovered_kw": 1.6060868556081656,
+     "stage_kw": [
+      0.5693717715437383,
+      1.0367150840644273
+     ]
+    }
+   },
+   {
+    "case": 5,
+    "drawn": {
+     "gas_kg_per_h": 1.2533913144391835,
+     "recovered_kw": 1.6060868556081656,
+     "stage_kw": [
+      0.5693717715437383,
+      1.0367150840644273
+     ]
+    },
+    "by_temperature": {
+     "gas_kg_per_h": 1.2533913144391835,
+     "recovered_kw": 1.6060868556081656,
+     "stage_kw": [
+      0.5693717715437383,
+      1.0367150840644273
+     ]
+    },
+    "bypass": {
+     "gas_kg_per_h": 1.2533913144391835,
+     "recovered_kw": 1.6060868556081656,
+     "stage_kw": [
+      0.5693717715437383,
+      1.0367150840644273
+     ]
+    },
+    "by_temperature_and_bypass": {
+     "gas_kg_per_h": 1.2533913144391835,
+     "recovered_kw": 1.6060868556081656,
+     "stage_kw": [
+      0.5693717715437383,
+      1.0367150840644273
+     ]
+    }
+   },
+   {
+    "case": 6,
+    "drawn": {
+     "gas_kg_per_h": 1.2533913144391833,
+     "recovered_kw": 1.6060868556081656,
+     "stage_kw": [
+      0.5693717715437383,
+      1.0367150840644273
+     ]
+    },
+    "by_temperature": {
+     "gas_kg_per_h": 1.2533913144391833,
+     "recovered_kw": 1.6060868556081656,
+     "stage_kw": [
+      0.5693717715437383,
+      1.0367150840644273
+     ]
+    },
+    "bypass": {
+     "gas_kg_per_h": 1.2533913144391833,
+     "recovered_kw": 1.6060868556081656,
+     "stage_kw": [
+      0.5693717715437383,
+      1.0367150840644273
+     ]
+    },
+    "by_temperature_and_bypass": {
+     "gas_kg_per_h": 1.2533913144391833,
+     "recovered_kw": 1.6060868556081656,
+     "stage_kw": [
+      0.5693717715437383,
+      1.0367150840644273
+     ]
+    }
+   }
+  ],
+  "intermediate": [
+   {
+    "case": 1,
+    "drawn": {
+     "gas_kg_per_h": 0.9965371973380538,
+     "recovered_kw": 1.902128026619463,
+     "stage_kw": [
+      1.5403885455193027,
+      0.36173948110016024
+     ]
+    },
+    "by_temperature": {
+     "gas_kg_per_h": 0.9965371973380538,
+     "recovered_kw": 1.902128026619463,
+     "stage_kw": [
+      1.5403885455193027,
+      0.36173948110016024
+     ]
+    },
+    "bypass": {
+     "gas_kg_per_h": 0.9965371973380538,
+     "recovered_kw": 1.902128026619463,
+     "stage_kw": [
+      1.5403885455193027,
+      0.36173948110016024
+     ]
+    },
+    "by_temperature_and_bypass": {
+     "gas_kg_per_h": 0.9965371973380538,
+     "recovered_kw": 1.902128026619463,
+     "stage_kw": [
+      1.5403885455193027,
+      0.36173948110016024
+     ]
+    }
+   },
+   {
+    "case": 2,
+    "drawn": {
+     "gas_kg_per_h": 1.030791350493458,
+     "recovered_kw": 1.559586495065416,
+     "stage_kw": [
+      0.4452657135882703,
+      1.1143207814771456
+     ]
+    },
+    "by_temperature": {
+     "gas_kg_per_h": 1.030791350493458,
+     "recovered_kw": 1.559586495065416,
+     "stage_kw": [
+      0.4452657135882703,
+      1.1143207814771456
+     ]
+    },
+    "bypass": {
+     "gas_kg_per_h": 1.030791350493458,
+     "recovered_kw": 1.559586495065416,
+     "stage_kw": [
+      0.4452657135882703,
+      1.1143207814771456
+     ]
+    },
+    "by_temperature_and_bypass": {
+     "gas_kg_per_h": 1.030791350493458,
+     "recovered_kw": 1.559586495065416,
+     "stage_kw": [
+      0.4452657135882703,
+      1.1143207814771456
+     ]
+    }
+   },
+   {
+    "case": 3,
+    "drawn": {
+     "gas_kg_per_h": 1.0052095968786146,
+     "recovered_kw": 1.8154040312138549,
+     "stage_kw": [
+      0.4452657135882703,
+      1.3701383176255846
+     ]
+    },
+    "by_temperature": {
+     "gas_kg_per_h": 1.0052095968786146,
+     "recovered_kw": 1.8154040312138549,
+     "stage_kw": [
+      0.4452657135882703,
+      1.3701383176255846
+     ]
+    },
+    "bypass": {
+     "gas_kg_per_h": 1.0052095968786146,
+     "recovered_kw": 1.8154040312138549,
+     "stage_kw": [
+      0.4452657135882703,
+      1.3701383176255846
+     ]
+    },
+    "by_temperature_and_bypass": {
+     "gas_kg_per_h": 1.0052095968786146,
+     "recovered_kw": 1.8154040312138549,
+     "stage_kw": [
+      0.4452657135882703,
+      1.3701383176255846
+     ]
+    }
+   },
+   {
+    "case": 4,
+    "drawn": {
+     "gas_kg_per_h": 1.059155227698479,
+     "recovered_kw": 1.2759477230152114,
+     "stage_kw": [
+      0.36173948110016024,
+      0.9142082419150515
+     ]
+    },
+    "by_temperature": {
+     "gas_kg_per_h": 1.059155227698479,
+     "recovered_kw": 1.2759477230152114,
+     "stage_kw": [
+      0.36173948110016024,
+      0.9142082419150515
+     ]
+    },
+    "bypass": {
+     "gas_kg_per_h": 1.059155227698479,
+     "recovered_kw": 1.2759477230152114,
+     "stage_kw": [
+      0.36173948110016024,
+      0.9142082419150515
+     ]
+    },
+    "by_temperature_and_bypass": {
+     "gas_kg_per_h": 1.059155227698479,
+     "recovered_kw": 1.2759477230152114,
+     "stage_kw": [
+      0.36173948110016024,
+      0.9142082419150515
+     ]
+    }
+   },
+   {
+    "case": 5,
+    "drawn": {
+     "gas_kg_per_h": 1.0237523952692156,
+     "recovered_kw": 1.6299760473078433,
+     "stage_kw": [
+      1.5403885455193027,
+      0.0895875017885407
+     ]
+    },
+    "by_temperature": {
+     "gas_kg_per_h": 1.0052095968786146,
+     "recovered_kw": 1.8154040312138549,
+     "stage_kw": [
+      0.4452657135882703,
+      1.3701383176255846
+     ]
+    },
+    "bypass": {
+     "gas_kg_per_h": 1.0237523952692156,
+     "recovered_kw": 1.6299760473078433,
+     "stage_kw": [
+      1.5403885455193027,
+      0.0895875017885407
+     ]
+    },
+    "by_temperature_and_bypass": {
+     "gas_kg_per_h": 1.0052095968786146,
+     "recovered_kw": 1.8154040312138549,
+     "stage_kw": [
+      0.4452657135882703,
+      1.3701383176255846
+     ]
+    }
+   },
+   {
+    "case": 6,
+    "drawn": {
+     "gas_kg_per_h": 1.0809504788557789,
+     "recovered_kw": 1.0579952114422095,
+     "stage_kw": [
+      1.1143207814771456,
+      -0.05632557003493612
+     ]
+    },
+    "by_temperature": {
+     "gas_kg_per_h": 1.059155227698479,
+     "recovered_kw": 1.2759477230152114,
+     "stage_kw": [
+      0.36173948110016024,
+      0.9142082419150515
+     ]
+    },
+    "bypass": {
+     "gas_kg_per_h": 1.0753179218522853,
+     "recovered_kw": 1.1143207814771456,
+     "stage_kw": [
+      1.1143207814771456,
+      0.0
+     ]
+    },
+    "by_temperature_and_bypass": {
+     "gas_kg_per_h": 1.059155227698479,
+     "recovered_kw": 1.2759477230152114,
+     "stage_kw": [
+      0.36173948110016024,
+      0.9142082419150515
+     ]
+    }
+   }
+  ]
+ },
+ "exhausts": {
+  "v4_1": [
+   {
+    "temperature_celsius": 72.27856833576739,
+    "humidity_g_per_kg": 41.952
+   },
+   {
+    "temperature_celsius": 134.66350360971342,
+    "humidity_g_per_kg": 77.904
+   }
+  ],
+  "intermediate": [
+   {
+    "temperature_celsius": 134.66350360971342,
+    "humidity_g_per_kg": 77.904
+   },
+   {
+    "temperature_celsius": 72.27856833576739,
+    "humidity_g_per_kg": 41.952
+   }
+  ]
+ }
+}
