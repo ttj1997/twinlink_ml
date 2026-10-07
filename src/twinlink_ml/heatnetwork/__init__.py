@@ -6,10 +6,12 @@ der Excel-Vorlage des Verbundpartners.
 
 from .balance import (
     BINDING_DEW_POINT,
+    BINDING_EXCHANGER_CAP,
     BINDING_LABELS,
     BINDING_PINCH,
     BINDING_SINK_SATISFIED,
     HeatNetworkResult,
+    SharedCap,
     SinkState,
     SourceState,
     binding_label,
@@ -41,6 +43,7 @@ from .routing import FixedRouting, HeatNetworkRouting, MatrixRouting, resolve_ca
 
 __all__ = [
     "BINDING_DEW_POINT",
+    "BINDING_EXCHANGER_CAP",
     "BINDING_LABELS",
     "BINDING_PINCH",
     "BINDING_SINK_SATISFIED",
@@ -59,6 +62,7 @@ __all__ = [
     "MatrixRouting",
     "PinchResult",
     "RecoveryMode",
+    "SharedCap",
     "SinkState",
     "SourceState",
     "StreamSegment",

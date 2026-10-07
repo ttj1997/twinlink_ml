@@ -1,0 +1,6071 @@
+{
+ "provenance": {
+  "git/commit": "a88b4d561bbe5df574466a6722b97fa2869252a8",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "added_after": "m3_interaction_check (descriptive, no decision rule)",
+ "resolution_kg_per_h": 0.5,
+ "per_bound": {
+  "1.26": {
+   "summary_by_case": {
+    "none": {
+     "n_scenarios_with_a_value": 25,
+     "median_kg_per_h": 0.6039845331588367,
+     "max_kg_per_h": 20.419260964070872,
+     "n_at_or_above_resolution": 24,
+     "median_n_grid_points_with_another_best_allocation": 6.0
+    },
+    "c0.5": {
+     "n_scenarios_with_a_value": 25,
+     "median_kg_per_h": 2.357211043121879,
+     "max_kg_per_h": 2.5538948021767283,
+     "n_at_or_above_resolution": 20,
+     "median_n_grid_points_with_another_best_allocation": 6.0
+    },
+    "c1.0": {
+     "n_scenarios_with_a_value": 25,
+     "median_kg_per_h": 2.357211043121879,
+     "max_kg_per_h": 2.5538948021767283,
+     "n_at_or_above_resolution": 20,
+     "median_n_grid_points_with_another_best_allocation": 6.0
+    },
+    "c1.5": {
+     "n_scenarios_with_a_value": 25,
+     "median_kg_per_h": 2.3592884556489935,
+     "max_kg_per_h": 7.015354686561523,
+     "n_at_or_above_resolution": 20,
+     "median_n_grid_points_with_another_best_allocation": 6.0
+    },
+    "control_c2.5": {
+     "n_scenarios_with_a_value": 25,
+     "median_kg_per_h": 7.9673487711709186,
+     "max_kg_per_h": 20.419260964070872,
+     "n_at_or_above_resolution": 25,
+     "median_n_grid_points_with_another_best_allocation": 6.0
+    }
+   },
+   "scenarios": [
+    {
+     "grid_index": 0,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.6039845331588367,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c0.5": {
+       "cap_kw": 90.14784258118026,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 4.547473508864641e-13,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.0": {
+       "cap_kw": 180.2956851623605,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.2737367544323206e-13,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c1.5": {
+       "cap_kw": 270.44352774354076,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.2737367544323206e-13,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "control_c2.5": {
+       "cap_kw": 450.7392129059013,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 3.520205429041198,
+       "n_grid_points_with_another_best_allocation": 7
+      }
+     }
+    },
+    {
+     "grid_index": 1,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.6019273756414805,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c0.5": {
+       "cap_kw": 90.17678393637269,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "SB"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 4.547473508864641e-13,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.0": {
+       "cap_kw": 180.35356787274537,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.2737367544323206e-13,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c1.5": {
+       "cap_kw": 270.5303518091181,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.2737367544323206e-13,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "control_c2.5": {
+       "cap_kw": 450.8839196818634,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 3.5262109403263366,
+       "n_grid_points_with_another_best_allocation": 7
+      }
+     }
+    },
+    {
+     "grid_index": 2,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.5998033323037362,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c0.5": {
+       "cap_kw": 90.20565652286952,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "SB"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 4.547473508864641e-13,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "c1.0": {
+       "cap_kw": 180.41131304573904,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 4.547473508864641e-13,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c1.5": {
+       "cap_kw": 270.61696956860857,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 4.547473508864641e-13,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "control_c2.5": {
+       "cap_kw": 451.0282826143476,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 3.5321456730885075,
+       "n_grid_points_with_another_best_allocation": 7
+      }
+     }
+    },
+    {
+     "grid_index": 3,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.5976095333417106,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c0.5": {
+       "cap_kw": 90.23445534902804,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "SB"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.2737367544323206e-13,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c1.0": {
+       "cap_kw": 180.46891069805608,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.2737367544323206e-13,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c1.5": {
+       "cap_kw": 270.7033660470841,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.0,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "control_c2.5": {
+       "cap_kw": 451.1722767451402,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 3.5380829101711697,
+       "n_grid_points_with_another_best_allocation": 7
+      }
+     }
+    },
+    {
+     "grid_index": 4,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.5953432682276798,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c0.5": {
+       "cap_kw": 90.26320675646835,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "SB"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.2737367544323206e-13,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "c1.0": {
+       "cap_kw": 180.5264135129367,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 4.547473508864641e-13,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c1.5": {
+       "cap_kw": 270.7896202694051,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 4.547473508864641e-13,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "control_c2.5": {
+       "cap_kw": 451.3160337823417,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 3.5439675346719923,
+       "n_grid_points_with_another_best_allocation": 8
+      }
+     }
+    },
+    {
+     "grid_index": 5,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.5538948021767283,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c0.5": {
+       "cap_kw": 66.2460770231879,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.5538948021767283,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "c1.0": {
+       "cap_kw": 132.4921540463758,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.5538948021767283,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.5": {
+       "cap_kw": 198.73823106956368,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.5538948021767283,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "control_c2.5": {
+       "cap_kw": 331.2303851159395,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.5538948021767283,
+       "n_grid_points_with_another_best_allocation": 6
+      }
+     }
+    },
+    {
+     "grid_index": 6,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.5469554374017207,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c0.5": {
+       "cap_kw": 66.28742154944882,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.5469554374017207,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "c1.0": {
+       "cap_kw": 132.57484309889765,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.5469554374017207,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.5": {
+       "cap_kw": 198.86226464834647,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.5469554374017207,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "control_c2.5": {
+       "cap_kw": 331.4371077472441,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.5469554374017207,
+       "n_grid_points_with_another_best_allocation": 6
+      }
+     }
+    },
+    {
+     "grid_index": 7,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.539518514446627,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c0.5": {
+       "cap_kw": 66.32857391722901,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.539518514446627,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "c1.0": {
+       "cap_kw": 132.65714783445802,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.539518514446627,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.5": {
+       "cap_kw": 198.98572175168704,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.539518514446627,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "control_c2.5": {
+       "cap_kw": 331.642869586145,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.539518514446627,
+       "n_grid_points_with_another_best_allocation": 6
+      }
+     }
+    },
+    {
+     "grid_index": 8,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.531559496614136,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c0.5": {
+       "cap_kw": 66.3696083749596,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.531559496614136,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.0": {
+       "cap_kw": 132.7392167499192,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.531559496614136,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c1.5": {
+       "cap_kw": 199.1088251248788,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.531559496614136,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "control_c2.5": {
+       "cap_kw": 331.848041874798,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.531559496614136,
+       "n_grid_points_with_another_best_allocation": 7
+      }
+     }
+    },
+    {
+     "grid_index": 9,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.5230496727986065,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c0.5": {
+       "cap_kw": 66.41052044882778,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.5230496727986065,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "c1.0": {
+       "cap_kw": 132.82104089765556,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.5230496727986065,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.5": {
+       "cap_kw": 199.23156134648335,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.5230496727986065,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "control_c2.5": {
+       "cap_kw": 332.05260224413894,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.5230496727986065,
+       "n_grid_points_with_another_best_allocation": 6
+      }
+     }
+    },
+    {
+     "grid_index": 10,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.5503893941699971,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c0.5": {
+       "cap_kw": 42.42054013542837,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.4746013568662875,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.0": {
+       "cap_kw": 84.84108027085674,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.4746013568662875,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.5": {
+       "cap_kw": 127.2616204062851,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.4746013568662875,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "control_c2.5": {
+       "cap_kw": 238.0437796519442,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 7.9733097338448715,
+       "n_grid_points_with_another_best_allocation": 6
+      }
+     }
+    },
+    {
+     "grid_index": 11,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.5448175556243768,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c0.5": {
+       "cap_kw": 42.476193861719274,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.4711801037155965,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.0": {
+       "cap_kw": 84.95238772343855,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.4711801037155965,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.5": {
+       "cap_kw": 127.42858158515781,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.4711801037155965,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "control_c2.5": {
+       "cap_kw": 238.4323175569488,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 7.9673487711709186,
+       "n_grid_points_with_another_best_allocation": 7
+      }
+     }
+    },
+    {
+     "grid_index": 12,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.538754947716825,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c0.5": {
+       "cap_kw": 42.531487672331295,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.4673498237539206,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.0": {
+       "cap_kw": 85.06297534466259,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.4673498237539206,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.5": {
+       "cap_kw": 127.59446301699388,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.4673498237539206,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "control_c2.5": {
+       "cap_kw": 238.82057458400436,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 7.960792981733675,
+       "n_grid_points_with_another_best_allocation": 6
+      }
+     }
+    },
+    {
+     "grid_index": 13,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.543554305443422,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c0.5": {
+       "cap_kw": 42.58656803107174,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.463069454871629,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.0": {
+       "cap_kw": 85.17313606214348,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.463069454871629,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.5": {
+       "cap_kw": 127.75970409321522,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.463069454871629,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "control_c2.5": {
+       "cap_kw": 241.52341709607413,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 9.804413095736663,
+       "n_grid_points_with_another_best_allocation": 7
+      }
+     }
+    },
+    {
+     "grid_index": 14,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.6276374587512237,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "c0.5": {
+       "cap_kw": 42.64150801704145,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.45831500529448,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.0": {
+       "cap_kw": 85.2830160340829,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.45831500529448,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.5": {
+       "cap_kw": 127.92452405112437,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.45831500529448,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "control_c2.5": {
+       "cap_kw": 264.1079102073498,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 8.390528682061586,
+       "n_grid_points_with_another_best_allocation": 5
+      }
+     }
+    },
+    {
+     "grid_index": 15,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.5214594056010355,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "c0.5": {
+       "cap_kw": 18.66808233580629,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.3609926104418264,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.0": {
+       "cap_kw": 37.33616467161258,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.3609926104418264,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.5": {
+       "cap_kw": 56.00424700741887,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.3609926104418264,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "control_c2.5": {
+       "cap_kw": 153.3742900383115,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 9.337150894424667,
+       "n_grid_points_with_another_best_allocation": 5
+      }
+     }
+    },
+    {
+     "grid_index": 16,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.5166272870817465,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c0.5": {
+       "cap_kw": 18.737959891696494,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.3592884556489935,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.0": {
+       "cap_kw": 37.47591978339299,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.3592884556489935,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.5": {
+       "cap_kw": 56.21387967508949,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.3592884556489935,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "control_c2.5": {
+       "cap_kw": 153.93263646253243,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 9.78981483425764,
+       "n_grid_points_with_another_best_allocation": 6
+      }
+     }
+    },
+    {
+     "grid_index": 17,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.6140372942211343,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "c0.5": {
+       "cap_kw": 18.807288364613605,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.357211043121879,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.0": {
+       "cap_kw": 37.61457672922721,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.357211043121879,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.5": {
+       "cap_kw": 56.421865093840815,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.357211043121879,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "control_c2.5": {
+       "cap_kw": 180.65030059080803,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 9.76941981067148,
+       "n_grid_points_with_another_best_allocation": 4
+      }
+     }
+    },
+    {
+     "grid_index": 18,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 4.909249629433589,
+       "n_grid_points_with_another_best_allocation": 3
+      },
+      "c0.5": {
+       "cap_kw": 25.14504697347459,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.3547130302940786,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.0": {
+       "cap_kw": 50.29009394694918,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 1.2727164049481416,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c1.5": {
+       "cap_kw": 75.43514092042376,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 1.884959191047301,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "control_c2.5": {
+       "cap_kw": 278.53286984423045,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 7.963656497938246,
+       "n_grid_points_with_another_best_allocation": 3
+      }
+     }
+    },
+    {
+     "grid_index": 19,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 12.519408576345768,
+       "n_grid_points_with_another_best_allocation": 2
+      },
+      "c0.5": {
+       "cap_kw": 33.06257719607082,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.3517737188005867,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.0": {
+       "cap_kw": 66.12515439214164,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 1.2915735866711202,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c1.5": {
+       "cap_kw": 99.18773158821246,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.0581156169430415,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "control_c2.5": {
+       "cap_kw": 377.2173677056365,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 12.519408576345768,
+       "n_grid_points_with_another_best_allocation": 2
+      }
+     }
+    },
+    {
+     "grid_index": 20,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 0.4838170353050373,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "c0.5": {
+       "cap_kw": 0.0,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 1.2086252690226047,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "c1.0": {
+       "cap_kw": 0.0,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 1.2086252690226047,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "c1.5": {
+       "cap_kw": 0.0,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 1.2086252690226047,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "control_c2.5": {
+       "cap_kw": 68.9950817343963,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 10.696265890298719,
+       "n_grid_points_with_another_best_allocation": 4
+      }
+     }
+    },
+    {
+     "grid_index": 21,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 0.5465210102361198,
+       "n_grid_points_with_another_best_allocation": 1
+      },
+      "c0.5": {
+       "cap_kw": 0.0,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 1.2070183017806357,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "c1.0": {
+       "cap_kw": 0.0,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 1.2070183017806357,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "c1.5": {
+       "cap_kw": 0.0,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 1.2070183017806357,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "control_c2.5": {
+       "cap_kw": 162.93902479802927,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 10.007976820044405,
+       "n_grid_points_with_another_best_allocation": 1
+      }
+     }
+    },
+    {
+     "grid_index": 22,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 11.483547762101352,
+       "n_grid_points_with_another_best_allocation": 1
+      },
+      "c0.5": {
+       "cap_kw": 8.885869285203363,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 1.2049270516267825,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "c1.0": {
+       "cap_kw": 17.771738570406725,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 1.2049270516267825,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "c1.5": {
+       "cap_kw": 26.657607855610088,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 0.9645241559580882,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "control_c2.5": {
+       "cap_kw": 292.61027473702904,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 11.483547762101352,
+       "n_grid_points_with_another_best_allocation": 1
+      }
+     }
+    },
+    {
+     "grid_index": 23,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 20.419260964070872,
+       "n_grid_points_with_another_best_allocation": 0
+      },
+      "c0.5": {
+       "cap_kw": 20.97271718661641,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 1.2022751146405426,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "c1.0": {
+       "cap_kw": 41.94543437323282,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 0.7433817191536036,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "c1.5": {
+       "cap_kw": 62.918151559849235,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 0.7433817191536036,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "control_c2.5": {
+       "cap_kw": 318.76500136320436,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 20.419260964070872,
+       "n_grid_points_with_another_best_allocation": 0
+      }
+     }
+    },
+    {
+     "grid_index": 24,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 20.29718683538431,
+       "n_grid_points_with_another_best_allocation": 1
+      },
+      "c0.5": {
+       "cap_kw": 33.08227463487288,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 1.1989977200178146,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "c1.0": {
+       "cap_kw": 66.16454926974576,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 0.7326346240668045,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "c1.5": {
+       "cap_kw": 99.24682390461865,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 7.015354686561523,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "control_c2.5": {
+       "cap_kw": 319.5290067529286,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 2,
+       "max_abs_fixed_allocation_difference": 20.29718683538431,
+       "n_grid_points_with_another_best_allocation": 1
+      }
+     }
+    }
+   ]
+  },
+  "0.80": {
+   "summary_by_case": {
+    "none": {
+     "n_scenarios_with_a_value": 20,
+     "median_kg_per_h": 0.2543324995505145,
+     "max_kg_per_h": 10.597126330384299,
+     "n_at_or_above_resolution": 4,
+     "median_n_grid_points_with_another_best_allocation": 6.0
+    },
+    "c0.5": {
+     "n_scenarios_with_a_value": 20,
+     "median_kg_per_h": 0.6238521999741806,
+     "max_kg_per_h": 16.610670380856845,
+     "n_at_or_above_resolution": 14,
+     "median_n_grid_points_with_another_best_allocation": 7.0
+    },
+    "c1.0": {
+     "n_scenarios_with_a_value": 20,
+     "median_kg_per_h": 2.3074070597042464,
+     "max_kg_per_h": 10.457198561331325,
+     "n_at_or_above_resolution": 11,
+     "median_n_grid_points_with_another_best_allocation": 6.5
+    },
+    "c1.5": {
+     "n_scenarios_with_a_value": 20,
+     "median_kg_per_h": 4.22715307099088,
+     "max_kg_per_h": 7.094598986433084,
+     "n_at_or_above_resolution": 16,
+     "median_n_grid_points_with_another_best_allocation": 6.5
+    },
+    "control_c2.5": {
+     "n_scenarios_with_a_value": 20,
+     "median_kg_per_h": 2.2992862201443813,
+     "max_kg_per_h": 10.597126330384299,
+     "n_at_or_above_resolution": 13,
+     "median_n_grid_points_with_another_best_allocation": 6.0
+    }
+   },
+   "scenarios": [
+    {
+     "grid_index": 0,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.23365148810125902,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c0.5": {
+       "cap_kw": 47.44029813535179,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.6633295150791128,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c1.0": {
+       "cap_kw": 94.88059627070358,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.1097749528200893,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c1.5": {
+       "cap_kw": 142.32089440605537,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 4.268598080084075,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "control_c2.5": {
+       "cap_kw": 237.20149067675894,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.23365148810125902,
+       "n_grid_points_with_another_best_allocation": 8
+      }
+     }
+    },
+    {
+     "grid_index": 1,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.23678213456719277,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c0.5": {
+       "cap_kw": 47.45675227081086,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.7334745524419759,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.0": {
+       "cap_kw": 94.91350454162172,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.5050391665884035,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c1.5": {
+       "cap_kw": 142.3702568124326,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 4.3365939973391505,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "control_c2.5": {
+       "cap_kw": 237.2837613540543,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.23678213456719277,
+       "n_grid_points_with_another_best_allocation": 8
+      }
+     }
+    },
+    {
+     "grid_index": 2,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.24565669306366544,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c0.5": {
+       "cap_kw": 47.47327573603889,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.869060187884088,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "c1.0": {
+       "cap_kw": 94.94655147207779,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.532067751202476,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c1.5": {
+       "cap_kw": 142.4198272081167,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 4.466235930607809,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "control_c2.5": {
+       "cap_kw": 237.36637868019446,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.24565669306366544,
+       "n_grid_points_with_another_best_allocation": 8
+      }
+     }
+    },
+    {
+     "grid_index": 3,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.24569694776755568,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c0.5": {
+       "cap_kw": 47.489871312101506,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "SB"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.2737367544323206e-13,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c1.0": {
+       "cap_kw": 94.97974262420301,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SB"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 10.457198561331325,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c1.5": {
+       "cap_kw": 142.4696139363045,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 4.699488567004437,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "control_c2.5": {
+       "cap_kw": 237.44935656050754,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.24569694776755568,
+       "n_grid_points_with_another_best_allocation": 8
+      }
+     }
+    },
+    {
+     "grid_index": 4,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.24564785935444888,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c0.5": {
+       "cap_kw": 47.506542833246044,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 16.610670380856845,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c1.0": {
+       "cap_kw": 95.01308566649209,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SB"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 9.352654895110163,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c1.5": {
+       "cap_kw": 142.51962849973813,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 5.2549431751497195,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "control_c2.5": {
+       "cap_kw": 237.53271416623022,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.24564785935444888,
+       "n_grid_points_with_another_best_allocation": 8
+      }
+     }
+    },
+    {
+     "grid_index": 5,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.2302802975452778,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "c0.5": {
+       "cap_kw": 31.561413543523546,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.8999561265775355,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c1.0": {
+       "cap_kw": 63.12282708704709,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.35064161338050326,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "c1.5": {
+       "cap_kw": 94.68424063057064,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.7533296032686394,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "control_c2.5": {
+       "cap_kw": 157.80706771761774,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 1.5186903548483315,
+       "n_grid_points_with_another_best_allocation": 4
+      }
+     }
+    },
+    {
+     "grid_index": 6,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.2537394701676021,
+       "n_grid_points_with_another_best_allocation": 3
+      },
+      "c0.5": {
+       "cap_kw": 31.58533110678036,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.8982470954940709,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c1.0": {
+       "cap_kw": 63.17066221356072,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.3280947054868193,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "c1.5": {
+       "cap_kw": 94.75599332034108,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.7779440894591971,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "control_c2.5": {
+       "cap_kw": 159.14808422166692,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.4266895084595035,
+       "n_grid_points_with_another_best_allocation": 3
+      }
+     }
+    },
+    {
+     "grid_index": 7,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.25428960689532687,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c0.5": {
+       "cap_kw": 31.60946958576846,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.8867799541988006,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "c1.0": {
+       "cap_kw": 63.21893917153692,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.3359563150190752,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "c1.5": {
+       "cap_kw": 94.82840875730537,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.7726848660890937,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "control_c2.5": {
+       "cap_kw": 164.3731372838912,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.341482539308572,
+       "n_grid_points_with_another_best_allocation": 7
+      }
+     }
+    },
+    {
+     "grid_index": 8,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.25437539220570216,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c0.5": {
+       "cap_kw": 31.63384422306338,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.8678655790743051,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "c1.0": {
+       "cap_kw": 63.26768844612676,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.7394178455483598,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c1.5": {
+       "cap_kw": 94.90153266919015,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 6.616136700338757,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "control_c2.5": {
+       "cap_kw": 169.5999402120165,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.2570899009801906,
+       "n_grid_points_with_another_best_allocation": 7
+      }
+     }
+    },
+    {
+     "grid_index": 9,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.2541793131358645,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c0.5": {
+       "cap_kw": 31.6584694765607,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "SA"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.8493797834303223,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "c1.0": {
+       "cap_kw": 63.3169389531214,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 3.393682526597786,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c1.5": {
+       "cap_kw": 94.9754084296821,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 7.094598986433084,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "control_c2.5": {
+       "cap_kw": 174.82816792266254,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 3.0815247318264483,
+       "n_grid_points_with_another_best_allocation": 8
+      }
+     }
+    },
+    {
+     "grid_index": 10,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.25574835099700977,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c0.5": {
+       "cap_kw": 15.751877610331467,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.3502041816129804,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c1.0": {
+       "cap_kw": 31.503755220662935,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.3675358437283194,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "c1.5": {
+       "cap_kw": 47.2556328309944,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.7799839429387703,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "control_c2.5": {
+       "cap_kw": 100.5705560894939,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 3.380201321143204,
+       "n_grid_points_with_another_best_allocation": 8
+      }
+     }
+    },
+    {
+     "grid_index": 11,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.2633743472799779,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "c0.5": {
+       "cap_kw": 15.784990605233723,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.368322327155056,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c1.0": {
+       "cap_kw": 31.569981210467446,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.35089935209316536,
+       "n_grid_points_with_another_best_allocation": 5
+      },
+      "c1.5": {
+       "cap_kw": 47.35497181570117,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.7863648285867839,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "control_c2.5": {
+       "cap_kw": 108.95200000014275,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 3.2461893931740633,
+       "n_grid_points_with_another_best_allocation": 5
+      }
+     }
+    },
+    {
+     "grid_index": 12,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.2675412431672157,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "c0.5": {
+       "cap_kw": 16.05701109989818,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.4452170884246698,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c1.0": {
+       "cap_kw": 32.11402219979636,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 3.3621180544046183,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c1.5": {
+       "cap_kw": 48.17103329969454,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 4.185708061897685,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "control_c2.5": {
+       "cap_kw": 118.23886586116511,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 4.12672889632654,
+       "n_grid_points_with_another_best_allocation": 4
+      }
+     }
+    },
+    {
+     "grid_index": 13,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.29931800112490237,
+       "n_grid_points_with_another_best_allocation": 4
+      },
+      "c0.5": {
+       "cap_kw": 18.267147087785908,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.5463311297605742,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c1.0": {
+       "cap_kw": 36.534294175571816,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 3.251299009025388,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c1.5": {
+       "cap_kw": 54.801441263357724,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 4.632600426797353,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "control_c2.5": {
+       "cap_kw": 156.30981241956653,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.29931800112490237,
+       "n_grid_points_with_another_best_allocation": 4
+      }
+     }
+    },
+    {
+     "grid_index": 14,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.680307973151457,
+       "n_grid_points_with_another_best_allocation": 7
+      },
+      "c0.5": {
+       "cap_kw": 20.47747882281964,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.5441413698929409,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c1.0": {
+       "cap_kw": 40.95495764563928,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 3.811658210502628,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c1.5": {
+       "cap_kw": 61.432436468458924,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 5.282454966605883,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "control_c2.5": {
+       "cap_kw": 172.2969179663274,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 2.680307973151457,
+       "n_grid_points_with_another_best_allocation": 7
+      }
+     }
+    },
+    {
+     "grid_index": 15,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 0.2130961729419596,
+       "n_grid_points_with_another_best_allocation": 3
+      },
+      "c0.5": {
+       "cap_kw": 0.010339454017990076,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 0.0,
+       "n_grid_points_with_another_best_allocation": 3
+      },
+      "c1.0": {
+       "cap_kw": 0.020678908035980152,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 0.0,
+       "n_grid_points_with_another_best_allocation": 3
+      },
+      "c1.5": {
+       "cap_kw": 0.03101836205397023,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 0.0,
+       "n_grid_points_with_another_best_allocation": 3
+      },
+      "control_c2.5": {
+       "cap_kw": 50.012424063299974,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 4.194028955769454,
+       "n_grid_points_with_another_best_allocation": 3
+      }
+     }
+    },
+    {
+     "grid_index": 16,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 0.2602167570396432,
+       "n_grid_points_with_another_best_allocation": 1
+      },
+      "c0.5": {
+       "cap_kw": 1.4852193587356564,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 2.2737367544323206e-13,
+       "n_grid_points_with_another_best_allocation": 3
+      },
+      "c1.0": {
+       "cap_kw": 2.9704387174713127,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 0.0,
+       "n_grid_points_with_another_best_allocation": 3
+      },
+      "c1.5": {
+       "cap_kw": 4.455658076206969,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 0.0,
+       "n_grid_points_with_another_best_allocation": 3
+      },
+      "control_c2.5": {
+       "cap_kw": 91.28389289599808,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 0.2602167570396432,
+       "n_grid_points_with_another_best_allocation": 1
+      }
+     }
+    },
+    {
+     "grid_index": 17,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 0.7336214532278973,
+       "n_grid_points_with_another_best_allocation": 0
+      },
+      "c0.5": {
+       "cap_kw": 4.93529244508951,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 0.7047599807501683,
+       "n_grid_points_with_another_best_allocation": 3
+      },
+      "c1.0": {
+       "cap_kw": 9.87058489017902,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 0.0,
+       "n_grid_points_with_another_best_allocation": 3
+      },
+      "c1.5": {
+       "cap_kw": 14.80587733526853,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 0.0,
+       "n_grid_points_with_another_best_allocation": 3
+      },
+      "control_c2.5": {
+       "cap_kw": 116.270435330964,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 0.7336214532278973,
+       "n_grid_points_with_another_best_allocation": 0
+      }
+     }
+    },
+    {
+     "grid_index": 18,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 3.8635568351360234,
+       "n_grid_points_with_another_best_allocation": 0
+      },
+      "c0.5": {
+       "cap_kw": 8.385964754940375,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 0.5843748848692485,
+       "n_grid_points_with_another_best_allocation": 3
+      },
+      "c1.0": {
+       "cap_kw": 16.77192950988075,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 2.2737367544323206e-13,
+       "n_grid_points_with_another_best_allocation": 3
+      },
+      "c1.5": {
+       "cap_kw": 25.157894264821124,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 2.2737367544323206e-13,
+       "n_grid_points_with_another_best_allocation": 3
+      },
+      "control_c2.5": {
+       "cap_kw": 141.26870959278756,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 1,
+       "max_abs_fixed_allocation_difference": 3.8635568351360234,
+       "n_grid_points_with_another_best_allocation": 0
+      }
+     }
+    },
+    {
+     "grid_index": 19,
+     "cases": {
+      "none": {
+       "cap_kw": null,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 10.597126330384299,
+       "n_grid_points_with_another_best_allocation": 3
+      },
+      "c0.5": {
+       "cap_kw": 11.836578523722029,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "SA"
+        ],
+        [
+         "LA",
+         "SB"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 0.5233928853574525,
+       "n_grid_points_with_another_best_allocation": 8
+      },
+      "c1.0": {
+       "cap_kw": 23.673157047444057,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 3.029786288306923,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "c1.5": {
+       "cap_kw": 35.50973557116609,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 5.437423181381746,
+       "n_grid_points_with_another_best_allocation": 6
+      },
+      "control_c2.5": {
+       "cap_kw": 164.4407533281242,
+       "centre_allocation": [
+        [
+         "Q1",
+         "S1"
+        ],
+        [
+         "Q1",
+         "SA"
+        ],
+        [
+         "Q1",
+         "SB"
+        ],
+        [
+         "LA",
+         "S1"
+        ],
+        [
+         "LB",
+         "S1"
+        ]
+       ],
+       "n_blocks": 4,
+       "max_abs_fixed_allocation_difference": 10.597126330384299,
+       "n_grid_points_with_another_best_allocation": 3
+      }
+     }
+    },
+    {
+     "grid_index": 20,
+     "cases": {
+      "none": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "c0.5": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "c1.0": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "c1.5": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "control_c2.5": {
+       "max_abs_fixed_allocation_difference": null
+      }
+     }
+    },
+    {
+     "grid_index": 21,
+     "cases": {
+      "none": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "c0.5": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "c1.0": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "c1.5": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "control_c2.5": {
+       "max_abs_fixed_allocation_difference": null
+      }
+     }
+    },
+    {
+     "grid_index": 22,
+     "cases": {
+      "none": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "c0.5": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "c1.0": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "c1.5": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "control_c2.5": {
+       "max_abs_fixed_allocation_difference": null
+      }
+     }
+    },
+    {
+     "grid_index": 23,
+     "cases": {
+      "none": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "c0.5": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "c1.0": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "c1.5": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "control_c2.5": {
+       "max_abs_fixed_allocation_difference": null
+      }
+     }
+    },
+    {
+     "grid_index": 24,
+     "cases": {
+      "none": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "c0.5": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "c1.0": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "c1.5": {
+       "max_abs_fixed_allocation_difference": null
+      },
+      "control_c2.5": {
+       "max_abs_fixed_allocation_difference": null
+      }
+     }
+    }
+   ]
+  }
+ }
+}

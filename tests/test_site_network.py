@@ -181,3 +181,53 @@ def test_a_violated_limit_is_not_worth_the_network_credit(config) -> None:
     violating = so.penalized_objective((60.0, 1.26, 1.0), t_amb, phi, spec)
     assert at_limit < 1.0e6 and violating < 1.0e6, "a solver failure would make the test vacuous"
     assert violating > at_limit
+
+
+def test_without_a_limit_the_m2_results_are_reproduced_bit_for_bit(config) -> None:
+    """E1 regression: the code with the cap argument gives the M2 numbers exactly (== on floats)."""
+    import json
+
+    artifact = json.loads(
+        (REPO_ROOT / "artifacts" / "runs" / "m2_site_network_l015_umin126.json").read_text("utf-8")
+    )
+    spec = so.SiteOracleSpec(0.15, sn.SiteSpec(artifact["scale_factor_k"]))
+    for index in (0, 12, 24):
+        stored = artifact["arm_F"][index]
+        out = so.evaluate_site_point(
+            config,
+            spec,
+            t_in=stored["inlet_temperature_celsius"],
+            u_gas=stored["gas_velocity_m_per_s"],
+            p_nozzle=stored["nozzle_pressure_bar"],
+            t_amb=stored["ambient_temperature_celsius"],
+            phi_amb=stored["ambient_relative_humidity"],
+        )
+        for routing in ("routing_fixed", "routing_all_to_all", "routing_best"):
+            assert out[routing] == stored[routing], (index, routing)
+
+
+def test_order_variants_and_the_cap_on_two_lines(config) -> None:
+    plain, variants = sn.all_allocations(2), sn.all_allocations(2, order_variants=True)
+    assert len(variants) > len(plain) and set(plain) <= set(variants)
+    both = [a for a in variants if ("Q1", "SA") in a and ("Q1", "SB") in a]
+    swapped = [a for a in both if a.index(("Q1", "SB")) < a.index(("Q1", "SA"))]
+    assert both and len(swapped) * 2 == len(both)
+    _, a = _state(config, "A", 90.0, 1.0, 10.0, 0.5)
+    _, b = _state(config, "B", 90.0, 1.0, 10.0, 0.5)
+    k = 271.79706373319294
+    free, _ = sn.evaluate_site((a, b), sn.SiteSpec(k), variants)
+    base = min(r.co2_kg_per_h for r in free)
+    big, _ = sn.evaluate_site((a, b), sn.SiteSpec(k, shared_cap_kw=1.0e9), variants)
+    assert [r.co2_kg_per_h for r in big] == [r.co2_kg_per_h for r in free]  # bit for bit
+    tight, _ = sn.evaluate_site((a, b), sn.SiteSpec(k, shared_cap_kw=1.0), variants)
+    assert min(r.co2_kg_per_h for r in tight) >= base - 1e-9
+    zero, _ = sn.evaluate_site((a, b), sn.SiteSpec(k, shared_cap_kw=0.0), variants)
+    assert min(r.co2_kg_per_h for r in zero) >= min(r.co2_kg_per_h for r in tight) - 1e-9
+
+
+def test_with_spray_rate_changes_only_the_nominal_spray_rate(config) -> None:
+    other = sn.with_spray_rate(config, 2.0)
+    assert other.actions.spray_rate_kg_per_h.nominal == 2.0
+    assert config.actions.spray_rate_kg_per_h.nominal == 1.5
+    assert other.actions.inlet_temperature_celsius == config.actions.inlet_temperature_celsius
+    assert other.material == config.material

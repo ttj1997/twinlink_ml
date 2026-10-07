@@ -167,10 +167,12 @@ from .config import HeatNetworkConfig, HeatSinkConfig, HeatSourceConfig
 
 __all__ = [
     "BINDING_DEW_POINT",
+    "BINDING_EXCHANGER_CAP",
     "BINDING_LABELS",
     "BINDING_PINCH",
     "BINDING_SINK_SATISFIED",
     "HeatNetworkResult",
+    "SharedCap",
     "SinkState",
     "SourceState",
     "binding_label",
@@ -188,10 +190,15 @@ BINDING_SINK_SATISFIED: Final = 2
 """Senke erreicht ihren Sollwert, ohne dass Grädigkeit oder Taupunkt anstehen -- kein
 physikalischer Grenzfall, siehe Moduldocstring."""
 
+BINDING_EXCHANGER_CAP: Final = 3
+"""Stufe durch die Leistungsgrenze eines geteilten Übertragers begrenzt (E1, :class:`SharedCap`);
+tritt nur auf, wenn ``evaluate_cascade`` mit ``shared_caps`` aufgerufen wird."""
+
 BINDING_LABELS: Final[dict[int, str]] = {
     BINDING_PINCH: "pinch",
     BINDING_DEW_POINT: "dew_point",
     BINDING_SINK_SATISFIED: "sink_satisfied",
+    BINDING_EXCHANGER_CAP: "exchanger_cap",
 }
 
 _POWER_TOLERANCE_W = 1e-6
@@ -359,6 +366,28 @@ def binding_label(code: int) -> str:
     return BINDING_LABELS[code]
 
 
+@dataclass(frozen=True, slots=True)
+class SharedCap:
+    """E1: Leistungsgrenze EINES Übertragers, den mehrere Stufen gemeinsam nutzen.
+
+    ``stages`` sind ``(Quellenname, Senkenname)``-Paare; die Summe der übertragenen Leistung aller
+    Stufen der Gruppe, die in der Stufenliste vorkommen, darf ``power_kw`` nicht überschreiten. Die
+    Stufen bedienen die Grenze in der Reihenfolge der Kaskade (die erste nimmt, was sie nach
+    Pinch und Taupunkt bekäme, höchstens die Grenze; die nächste den Rest). Pairs, die in der
+    Stufenliste fehlen, tun nichts -- eine Verschaltung ohne diese Stufen ist von der Grenze nicht
+    betroffen. Ohne ``shared_caps`` ist die Kaskade bitgleich zum Stand vor E1.
+    """
+
+    stages: tuple[tuple[str, str], ...]
+    power_kw: float
+
+    def __post_init__(self) -> None:
+        if not self.stages:
+            raise ValueError("SharedCap braucht mindestens eine Stufe")
+        if not self.power_kw >= 0.0:
+            raise ValueError(f"power_kw muss >= 0 sein, ist {self.power_kw}")
+
+
 def _shared_step_count(sources: tuple[SourceState, ...], sinks: tuple[SinkState, ...]) -> int:
     shapes = {state.outlet_temperature_celsius.shape[0] for state in sources}
     shapes |= {state.intake_temperature_celsius.shape[0] for state in sinks}
@@ -384,6 +413,7 @@ def evaluate_cascade(
     stages: tuple[tuple[str, str], ...],
     sources: tuple[SourceState, ...],
     sinks: tuple[SinkState, ...],
+    shared_caps: tuple[SharedCap, ...] = (),
 ) -> HeatNetworkResult:
     r"""Werte die Kaskade entlang ``stages`` aus -- der eigentliche Rechenkern (EA2/EA3).
 
@@ -417,6 +447,9 @@ def evaluate_cascade(
     graduelle Entfeuchtung über den Kühlverlauf) -- danach ist die Quelle für diese Stufe
     ohnehin ausgeschöpft.
 
+    ``shared_caps`` (E1, optional): Leistungsgrenzen geteilter Übertrager, siehe
+    :class:`SharedCap`. Leer (Default) heißt: Rechenweg und Ergebnis bitgleich zum Stand vor E1.
+
     :raises ValueError: wenn ``stages`` eine Quelle/Senke referenziert, die nicht in
         ``sources``/``sinks`` vorkommt, oder wenn Quellen/Senken unterschiedliche Schrittzahlen
         mitbringen.
@@ -424,7 +457,15 @@ def evaluate_cascade(
     source_by_name = {state.name: state for state in sources}
     sink_by_name = {state.name: state for state in sinks}
     _validate_stage_names(stages, source_by_name, sink_by_name)
+    for cap in shared_caps:
+        _validate_stage_names(cap.stages, source_by_name, sink_by_name)
     n_steps = _shared_step_count(sources, sinks)
+    cap_group_of_stage: dict[int, int] = {}
+    for group_index, cap in enumerate(shared_caps):
+        for stage_index, pair in enumerate(stages):
+            if pair in cap.stages:
+                cap_group_of_stage[stage_index] = group_index
+    remaining_cap_w = [np.full(n_steps, cap.power_kw * 1000.0) for cap in shared_caps]
 
     gas = config.gas
     backend = NumpyBackend()
@@ -514,6 +555,11 @@ def evaluate_cascade(
         # ``sensible_available_w`` (IEEE-754: ``x + 0.0 == x``).
         power_available_w = sensible_available_w + remaining_latent_power_w[source_name]
         power_actual_w = np.clip(np.minimum(power_for_target_w, power_available_w), 0.0, None)
+        power_uncapped_w = power_actual_w
+        group_index = cap_group_of_stage.get(stage_index)
+        if group_index is not None:
+            power_actual_w = np.minimum(power_actual_w, remaining_cap_w[group_index])
+            remaining_cap_w[group_index] = remaining_cap_w[group_index] - power_actual_w
         # Sensibler Anteil zuerst (senkt die Quellentemperatur), latenter Anteil erst danach
         # (Kondensation setzt erst bei Erreichen von ``floor_temperature`` ein) -- ``np.minimum``
         # gibt hier ``power_actual_w`` unverändert zurück, solange kein latenter Vorrat
@@ -521,13 +567,19 @@ def evaluate_cascade(
         power_sensible_used_w = np.minimum(power_actual_w, sensible_available_w)
         power_latent_used_w = power_actual_w - power_sensible_used_w
 
-        dew_point_binds = power_actual_w < power_for_target_w - _POWER_TOLERANCE_W
+        dew_point_binds = power_uncapped_w < power_for_target_w - _POWER_TOLERANCE_W
         pinch_binds = (~dew_point_binds) & (
             pinch_cap_temperature < setpoint_temperature - _TEMPERATURE_TOLERANCE_K
         )
         binding_code = np.full(n_steps, BINDING_SINK_SATISFIED, dtype=np.int64)
         binding_code = np.where(pinch_binds, BINDING_PINCH, binding_code)
         binding_code = np.where(dew_point_binds, BINDING_DEW_POINT, binding_code)
+        if group_index is not None:
+            binding_code = np.where(
+                power_actual_w < power_uncapped_w - _POWER_TOLERANCE_W,
+                BINDING_EXCHANGER_CAP,
+                binding_code,
+            )
 
         stage_power_kw[stage_index] = power_actual_w / 1000.0
         stage_binding_code[stage_index] = binding_code

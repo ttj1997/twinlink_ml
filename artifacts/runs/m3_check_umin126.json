@@ -1,0 +1,1047 @@
+{
+ "provenance": {
+  "git/commit": "d4e9f92eaadac0d63d6b71de2adf14a193c2a70f",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "results": [
+  {
+   "kind": "direct4",
+   "case": "control",
+   "grid_index": 2,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   "direct_value": 1162.2266104988478,
+   "detail": {
+    "solve_failed": false,
+    "value": 1162.2266104988478,
+    "co2_kg_per_h": 1162.2266104988478,
+    "co2_lines_kg_per_h": 168.54826162134785,
+    "kwh_sum_kw": 5753.39596275529,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SB"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.14093084330535238,
+    "moisture_b": 0.14403491606869884,
+    "recovered_kw_external_to_lines": 200.65006453166635,
+    "set_points": [
+     60.00120581300702,
+     1.26,
+     73.94003560847412,
+     1.2600332139485797
+    ]
+   },
+   "wall_s": 1521.9141808999702,
+   "table_based_value": 1162.2248787443846
+  },
+  {
+   "kind": "direct4",
+   "case": "control",
+   "grid_index": 12,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   "direct_value": 1157.0628351370021,
+   "detail": {
+    "solve_failed": false,
+    "value": 1157.0628351370021,
+    "co2_kg_per_h": 1157.0628351370021,
+    "co2_lines_kg_per_h": 163.3844862595022,
+    "kwh_sum_kw": 5726.824068020039,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ],
+     [
+      "LB",
+      "SB"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.14403813439193713,
+    "moisture_b": 0.14403801519478016,
+    "recovered_kw_external_to_lines": 82.09209668315358,
+    "set_points": [
+     60.02123822812922,
+     1.3159251285588385,
+     75.7499475002831,
+     1.2600066969565233
+    ]
+   },
+   "wall_s": 1518.547603199957,
+   "table_based_value": 1157.0613457895922
+  },
+  {
+   "kind": "six_variables",
+   "case": "control",
+   "grid_index": 12,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   "direct_value": 1157.1436950112125,
+   "detail": {
+    "value": 1157.1436950112125,
+    "set_points": [
+     61.07346660637765,
+     1.2838468701765637,
+     1.0066543337866933,
+     75.3183992567384,
+     1.2698630132702204,
+     1.0122716259569293
+    ]
+   },
+   "wall_s": 1880.5503994999453,
+   "table_based_value": 1157.0613457895922
+  },
+  {
+   "kind": "direct4",
+   "case": "control",
+   "grid_index": 17,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "direct_value": 1155.4991957550137,
+   "detail": {
+    "solve_failed": false,
+    "value": 1155.4991957550137,
+    "co2_kg_per_h": 1155.4991957550137,
+    "co2_lines_kg_per_h": 161.82084687751367,
+    "kwh_sum_kw": 5720.0766585490655,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13706665027198073,
+    "moisture_b": 0.14403712121610285,
+    "recovered_kw_external_to_lines": 13.605402467714288,
+    "set_points": [
+     65.15971013623813,
+     1.2610110580363338,
+     77.5788961141418,
+     1.2600022798703863
+    ]
+   },
+   "wall_s": 1268.4260100000538,
+   "table_based_value": 1155.5008784420659
+  },
+  {
+   "kind": "direct4",
+   "case": "c0.5",
+   "grid_index": 2,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "direct_value": 1185.1971977667847,
+   "detail": {
+    "solve_failed": false,
+    "value": 1185.1971977667847,
+    "co2_kg_per_h": 1185.1971977667847,
+    "co2_lines_kg_per_h": 191.51884888928487,
+    "kwh_sum_kw": 5867.677897476614,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.14093733955040746,
+    "moisture_b": 0.1440377768004662,
+    "recovered_kw_external_to_lines": 90.20565652286952,
+    "set_points": [
+     60.0,
+     1.2600005593420285,
+     73.94097392711444,
+     1.2600007098524388
+    ]
+   },
+   "wall_s": 1520.210549899959,
+   "table_based_value": 1185.1971346483733
+  },
+  {
+   "kind": "direct4",
+   "case": "c0.5",
+   "grid_index": 12,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "direct_value": 1166.6777450568916,
+   "detail": {
+    "solve_failed": false,
+    "value": 1166.6777450568916,
+    "co2_kg_per_h": 1166.6777450568916,
+    "co2_lines_kg_per_h": 172.99939617939185,
+    "kwh_sum_kw": 5775.480618648487,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.14403813439193713,
+    "moisture_b": 0.14403807479335867,
+    "recovered_kw_external_to_lines": 42.531487672331295,
+    "set_points": [
+     61.887412206036615,
+     1.2600192494459683,
+     75.49315985681483,
+     1.2658491887894234
+    ]
+   },
+   "wall_s": 1508.427143399953,
+   "table_based_value": 1166.6138361990388
+  },
+  {
+   "kind": "direct4",
+   "case": "c0.5",
+   "grid_index": 17,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "direct_value": 1155.581465320237,
+   "detail": {
+    "solve_failed": false,
+    "value": 1155.581465320237,
+    "co2_kg_per_h": 1155.581465320237,
+    "co2_lines_kg_per_h": 161.9031164427367,
+    "kwh_sum_kw": 5720.4426348345005,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13714901550744996,
+    "moisture_b": 0.14403807479335867,
+    "recovered_kw_external_to_lines": 13.259788867688632,
+    "set_points": [
+     65.18061923420684,
+     1.2600096993018042,
+     77.42272087287577,
+     1.2636685024811052
+    ]
+   },
+   "wall_s": 1282.1241368000628,
+   "table_based_value": 1155.485886995244
+  },
+  {
+   "kind": "direct4",
+   "case": "c1.0",
+   "grid_index": 2,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   "direct_value": 1163.2385735753146,
+   "detail": {
+    "solve_failed": false,
+    "value": 1163.2385735753146,
+    "co2_kg_per_h": 1163.2385735753146,
+    "co2_lines_kg_per_h": 169.56022469781468,
+    "kwh_sum_kw": 5758.430973484921,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "SB"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.14093668396604414,
+    "moisture_b": 0.14403807479335867,
+    "recovered_kw_external_to_lines": 177.60360082123103,
+    "set_points": [
+     60.0,
+     1.2600035532710214,
+     73.9409394627124,
+     1.2600002906459133
+    ]
+   },
+   "wall_s": 1536.0567624999676,
+   "table_based_value": 1163.2383843355133
+  },
+  {
+   "kind": "direct4",
+   "case": "c1.0",
+   "grid_index": 12,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "direct_value": 1157.0633453604346,
+   "detail": {
+    "solve_failed": false,
+    "value": 1157.0633453604346,
+    "co2_kg_per_h": 1157.0633453604346,
+    "co2_lines_kg_per_h": 163.38499648293453,
+    "kwh_sum_kw": 5726.92089498376,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.1440379555962017,
+    "moisture_b": 0.14403706161752433,
+    "recovered_kw_external_to_lines": 81.93651953160212,
+    "set_points": [
+     60.20339884125737,
+     1.3102658134347167,
+     75.75024466160329,
+     1.2600036910429866
+    ]
+   },
+   "wall_s": 1517.6209610999795,
+   "table_based_value": 1157.0612633374117
+  },
+  {
+   "kind": "direct4",
+   "case": "c1.0",
+   "grid_index": 17,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   "direct_value": 1153.9516075351514,
+   "detail": {
+    "solve_failed": false,
+    "value": 1153.9516075351514,
+    "co2_kg_per_h": 1153.9516075351514,
+    "co2_lines_kg_per_h": 160.27325865765133,
+    "kwh_sum_kw": 5712.547388961543,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ],
+     [
+      "LB",
+      "SB"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13694214884152106,
+    "moisture_b": 0.12742002435804994,
+    "recovered_kw_external_to_lines": 37.61457672922721,
+    "set_points": [
+     65.14231724926452,
+     1.2621032650033113,
+     80.56922066207245,
+     1.2600004683749284
+    ]
+   },
+   "wall_s": 1231.7368404999143,
+   "table_based_value": 1153.9324760948891
+  },
+  {
+   "kind": "direct4",
+   "case": "c1.5",
+   "grid_index": 2,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   "direct_value": 1162.2242423599848,
+   "detail": {
+    "solve_failed": false,
+    "value": 1162.2242423599848,
+    "co2_kg_per_h": 1162.2242423599848,
+    "co2_lines_kg_per_h": 168.545893482485,
+    "kwh_sum_kw": 5753.384593235117,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SB"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.14093739914898595,
+    "moisture_b": 0.14403813439193713,
+    "recovered_kw_external_to_lines": 200.65258627957488,
+    "set_points": [
+     60.00000460475029,
+     1.26,
+     73.94091362944891,
+     1.260000587061432
+    ]
+   },
+   "wall_s": 1517.264541600016,
+   "table_based_value": 1162.2242173583697
+  },
+  {
+   "kind": "direct4",
+   "case": "c1.5",
+   "grid_index": 12,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "direct_value": 1157.0623880994146,
+   "detail": {
+    "solve_failed": false,
+    "value": 1157.0623880994146,
+    "co2_kg_per_h": 1157.0623880994146,
+    "co2_lines_kg_per_h": 163.38403922191458,
+    "kwh_sum_kw": 5727.599230497997,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.1440377768004662,
+    "moisture_b": 0.14403807479335867,
+    "recovered_kw_external_to_lines": 80.78687492439681,
+    "set_points": [
+     61.5927726094739,
+     1.2685496422324312,
+     75.75001525180059,
+     1.2600049089058665
+    ]
+   },
+   "wall_s": 1512.1060951999389,
+   "table_based_value": 1157.0614823851768
+  },
+  {
+   "kind": "direct4",
+   "case": "c1.5",
+   "grid_index": 17,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   "direct_value": 1152.7450532917364,
+   "detail": {
+    "solve_failed": false,
+    "value": 1152.7450532917364,
+    "co2_kg_per_h": 1152.7450532917364,
+    "co2_lines_kg_per_h": 159.06670441423645,
+    "kwh_sum_kw": 5706.709110962369,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ],
+     [
+      "LB",
+      "SB"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13713709579175254,
+    "moisture_b": 0.11565508616895016,
+    "recovered_kw_external_to_lines": 56.42147855025546,
+    "set_points": [
+     65.18172669861231,
+     1.260032041919791,
+     82.99709254672322,
+     1.2600035545005719
+    ]
+   },
+   "wall_s": 1272.649059599964,
+   "table_based_value": 1152.7438691011002
+  }
+ ]
+}
