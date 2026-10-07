@@ -178,8 +178,7 @@ c) **Regression test.** M2 and `m3` stay bit-identical (they already use 0.80 / 
 `Model_v4.xlsx` and its rebuild (sections 1-6, `partner_v4`, `tests/test_partner_v4.py`) are unchanged and stay valid for that
 file. The new version is reconstructed in its own package, `src/twinlink_ml/partner_v4_1/` (tests `tests/test_partner_v4_1.py`,
 script `scripts/report_partner_v4_1_comparison.py`, artifact `artifacts/runs/partner_v4_1_comparison.json`, script commit
-`8f7f31a`, run on a clean tree). Lab book: Befund NN (placeholder; the number is assigned at the merge, after 73, which is
-reserved for branch `m3`). The workbook and the equation document (`Flow diagram and balance equations v4.docx`) are in
+`8f7f31a`, run on a clean tree). Lab book: Befund 74. The workbook and the equation document (`Flow diagram and balance equations v4.docx`) are in
 `local/` and not in the repository; in the working copy the workbook is named `Model v4.1.xlsx` (the tests also accept
 `Model_v4_1.xlsx`; `TWINLINK_LOCAL_DIR` names the directory when `local/` is not in the checkout, e.g. in a worktree).
 No comparison with the lab model, as for v4.
@@ -372,7 +371,7 @@ wanted is a question for the project and the partner. Neither rule is a statemen
 
 ## 9. Dryer block of the equation document against the fluidised-bed model (feedback to the partner)
 
-Branch `partner-v4-1`, not merged. Lab book: Befund NN (placeholder; the second unnumbered entry of this branch, after the one for Model_v4.1; the numbers are assigned at the merge, after 73, which is reserved for `m3`). **Question:** how well does the simplified dryer block (equations 1.3 and 1.5 of the equation document) describe the exhaust and the heat demand of the fluidised bed, and which of its simplifications matters how much?
+Branch `partner-v4-1`, merged into master. Lab book: Befund 75. **Question:** how well does the simplified dryer block (equations 1.3 and 1.5 of the equation document) describe the exhaust and the heat demand of the fluidised bed, and which of its simplifications matters how much?
 
 Code: `src/twinlink_ml/partner_v4_1/dryer_block.py` (the block, generalised so that its properties can be exchanged), `src/twinlink_ml/evaluation/dryer_block_comparison.py` (mapping, step chain, recovery to `T_cold`), tests `tests/test_dryer_block_comparison.py` (13), script `scripts/report_dryer_block_vs_bed.py` (commit `7768b6d`, run on a clean tree, one process), artifact `artifacts/runs/dryer_block_vs_bed.json` (commit `1a4b997`). This is a comparison of two models, no plant data; the bed model is the laboratory grey-box model with its placeholder parameters (`greybox_gab_placeholder.yaml`), in steady state (Befund 53 for the batch caveat). All powers are thermal (no efficiency; the bed model's 0.98 belongs to its electric heater and does not enter).
 
