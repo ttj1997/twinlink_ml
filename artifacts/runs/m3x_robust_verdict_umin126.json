@@ -1,0 +1,236 @@
+{
+ "provenance": {
+  "git/commit": "cfdf4735ca40e0ef0ba3140ac8072e3d903b3068",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "note": "re-measurement; the verdict of Befund 73 stands as measured",
+ "inputs": [
+  "m3x_confirm_evaluation_umin126",
+  "m3x_confirm_s18_19_evaluation_umin126",
+  "m3x_robust_rest_evaluation_umin126"
+ ],
+ "n_masked": 0,
+ "rows": {
+  "0": {
+   "valid": true,
+   "g_best_kg_per_h": 0.0004657538695482799,
+   "g_median_seed_kg_per_h": -0.00017083955935959239,
+   "m3_spread_kg_per_h": 0.02464056517374047,
+   "g_befund73_kg_per_h": -0.05290762204799648,
+   "s2_co2_lines_befund73": 168.34697982909637
+  },
+  "1": {
+   "valid": true,
+   "g_best_kg_per_h": 0.0003053354703297373,
+   "g_median_seed_kg_per_h": 0.00010055094821836974,
+   "m3_spread_kg_per_h": 0.0015358253767772112,
+   "g_befund73_kg_per_h": 0.00040484506553184474,
+   "s2_co2_lines_befund73": 168.44788735363173
+  },
+  "2": {
+   "valid": true,
+   "g_best_kg_per_h": 4.984816860087449e-05,
+   "g_median_seed_kg_per_h": -0.0010805719514337397,
+   "m3_spread_kg_per_h": 0.0023736673829262145,
+   "g_befund73_kg_per_h": -0.0005920647511175048,
+   "s2_co2_lines_befund73": 168.54593780213332
+  },
+  "3": {
+   "valid": true,
+   "g_best_kg_per_h": 9.63070992838766e-05,
+   "g_median_seed_kg_per_h": -0.00536342914369925,
+   "m3_spread_kg_per_h": 0.006452921195432282,
+   "g_befund73_kg_per_h": 0.003918875523822862,
+   "s2_co2_lines_befund73": 168.72024226161983
+  },
+  "4": {
+   "valid": true,
+   "g_best_kg_per_h": -0.0005814897483560344,
+   "g_median_seed_kg_per_h": -0.017274006709385503,
+   "m3_spread_kg_per_h": 0.04696214576551938,
+   "g_befund73_kg_per_h": -0.0453377120031746,
+   "s2_co2_lines_befund73": 169.5016553994231
+  },
+  "5": {
+   "valid": true,
+   "g_best_kg_per_h": 0.9371372391831301,
+   "g_median_seed_kg_per_h": 0.9370764011482606,
+   "m3_spread_kg_per_h": 0.00028360476039779314,
+   "g_befund73_kg_per_h": 0.9375990828154954,
+   "s2_co2_lines_befund73": 166.59783600576324
+  },
+  "6": {
+   "valid": true,
+   "g_best_kg_per_h": 1.1713941265554695,
+   "g_median_seed_kg_per_h": 1.167684707654871,
+   "m3_spread_kg_per_h": 0.007039953478169991,
+   "g_befund73_kg_per_h": 1.17208243320556,
+   "s2_co2_lines_befund73": 166.78175559357516
+  },
+  "7": {
+   "valid": true,
+   "g_best_kg_per_h": 0.8113629420920461,
+   "g_median_seed_kg_per_h": 0.8110831919696011,
+   "m3_spread_kg_per_h": 0.003304145031279404,
+   "g_befund73_kg_per_h": 0.8185121866877125,
+   "s2_co2_lines_befund73": 166.91156810033885
+  },
+  "8": {
+   "valid": true,
+   "g_best_kg_per_h": 0.3825868757094213,
+   "g_median_seed_kg_per_h": 0.38210502036122307,
+   "m3_spread_kg_per_h": 0.013629635702500309,
+   "g_befund73_kg_per_h": 0.38441605770663045,
+   "s2_co2_lines_befund73": 167.49041463412559
+  },
+  "9": {
+   "valid": true,
+   "g_best_kg_per_h": -0.00020311783691795426,
+   "g_median_seed_kg_per_h": -0.0021989290628425806,
+   "m3_spread_kg_per_h": 0.035194546810544125,
+   "g_befund73_kg_per_h": 0.003842693501837857,
+   "s2_co2_lines_befund73": 168.11253987963045
+  },
+  "10": {
+   "valid": true,
+   "g_best_kg_per_h": 1.2385465618040143,
+   "g_median_seed_kg_per_h": 1.238543103589791,
+   "m3_spread_kg_per_h": 0.00024702368477846903,
+   "g_befund73_kg_per_h": 1.2418510531965694,
+   "s2_co2_lines_befund73": 161.63443850476457
+  },
+  "11": {
+   "valid": true,
+   "g_best_kg_per_h": 0.5604683159788237,
+   "g_median_seed_kg_per_h": 0.5603113840127207,
+   "m3_spread_kg_per_h": 0.002712808531441624,
+   "g_befund73_kg_per_h": 0.5572049517859341,
+   "s2_co2_lines_befund73": 161.44420712927598
+  },
+  "12": {
+   "valid": true,
+   "g_best_kg_per_h": -0.0006361720352288103,
+   "g_median_seed_kg_per_h": -0.0015864300894463668,
+   "m3_spread_kg_per_h": 0.013255207069278185,
+   "g_befund73_kg_per_h": 0.0012994393371172919,
+   "s2_co2_lines_befund73": 163.3842963514296
+  },
+  "13": {
+   "valid": true,
+   "g_best_kg_per_h": 0.17737882477717903,
+   "g_median_seed_kg_per_h": 0.15784512070899837,
+   "m3_spread_kg_per_h": 0.08553457572634215,
+   "g_befund73_kg_per_h": 0.18081656398476298,
+   "s2_co2_lines_befund73": 165.26250551072127
+  },
+  "14": {
+   "valid": true,
+   "g_best_kg_per_h": 1.4970385444514704,
+   "g_median_seed_kg_per_h": 1.4969824215647805,
+   "m3_spread_kg_per_h": 0.040470514559729054,
+   "g_befund73_kg_per_h": 1.4971544911199999,
+   "s2_co2_lines_befund73": 165.89966613276897
+  },
+  "15": {
+   "valid": true,
+   "g_best_kg_per_h": 0.00010111372671417485,
+   "g_median_seed_kg_per_h": -0.00019530112626853224,
+   "m3_spread_kg_per_h": 0.011738757032162539,
+   "g_befund73_kg_per_h": -0.0020799838175662444,
+   "s2_co2_lines_befund73": 160.2057846634595
+  },
+  "16": {
+   "valid": true,
+   "g_best_kg_per_h": 1.6543081872580387,
+   "g_median_seed_kg_per_h": 1.6509703183376132,
+   "m3_spread_kg_per_h": 1.470042770060445,
+   "g_befund73_kg_per_h": 1.6573133378258262,
+   "s2_co2_lines_befund73": 162.64500863385052
+  },
+  "17": {
+   "valid": true,
+   "g_best_kg_per_h": 2.5419280640433044,
+   "g_median_seed_kg_per_h": 2.540056747433482,
+   "m3_spread_kg_per_h": 0.013970071157928032,
+   "g_befund73_kg_per_h": -0.16596230066829776,
+   "s2_co2_lines_befund73": 161.65656726389776
+  },
+  "18": {
+   "valid": true,
+   "g_best_kg_per_h": 5.587167971383224,
+   "g_median_seed_kg_per_h": 5.563480908056363,
+   "m3_spread_kg_per_h": 0.08937009621263314,
+   "g_befund73_kg_per_h": 5.588245215615416,
+   "s2_co2_lines_befund73": 161.97583218566135
+  },
+  "19": {
+   "valid": true,
+   "g_best_kg_per_h": 9.430487373144842,
+   "g_median_seed_kg_per_h": 9.379708887405286,
+   "m3_spread_kg_per_h": 0.16833218718693388,
+   "g_befund73_kg_per_h": 9.40809351076814,
+   "s2_co2_lines_befund73": 163.81084871636133
+  },
+  "20": {
+   "valid": true,
+   "g_best_kg_per_h": -4.083680164512771e-05,
+   "g_median_seed_kg_per_h": -0.06172341124056402,
+   "m3_spread_kg_per_h": 0.08909048883333526,
+   "g_befund73_kg_per_h": -0.003055204454312843,
+   "s2_co2_lines_befund73": 161.6554299878661
+  },
+  "21": {
+   "valid": true,
+   "g_best_kg_per_h": -0.0021185435834922828,
+   "g_median_seed_kg_per_h": -0.024417499203764237,
+   "m3_spread_kg_per_h": 0.07115595385926099,
+   "g_befund73_kg_per_h": 0.005755756843882409,
+   "s2_co2_lines_befund73": 161.323806883314
+  },
+  "22": {
+   "valid": true,
+   "g_best_kg_per_h": 7.167270809786032,
+   "g_median_seed_kg_per_h": 4.960687216781253,
+   "m3_spread_kg_per_h": 2.223449695945874,
+   "g_befund73_kg_per_h": 7.027112425177847,
+   "s2_co2_lines_befund73": 160.91520939475373
+  },
+  "23": {
+   "valid": true,
+   "g_best_kg_per_h": 11.898212417043396,
+   "g_median_seed_kg_per_h": 11.845213918501486,
+   "m3_spread_kg_per_h": 0.14112277649701355,
+   "g_befund73_kg_per_h": 11.896439157410668,
+   "s2_co2_lines_befund73": 160.41052411794362
+  },
+  "24": {
+   "valid": true,
+   "g_best_kg_per_h": 17.57475400194039,
+   "g_median_seed_kg_per_h": 17.53416877797781,
+   "m3_spread_kg_per_h": 0.713280865335264,
+   "g_befund73_kg_per_h": 17.414613647883698,
+   "s2_co2_lines_befund73": 162.8559832326916
+  }
+ },
+ "verdict_direct_five_seeds": {
+  "n_scenarios": 25,
+  "gain_median_kg_per_h": 0.5604683159788237,
+  "gain_min_kg_per_h": -0.0021185435834922828,
+  "gain_max_kg_per_h": 17.57475400194039,
+  "gain_relative_to_line_co2_median": 0.0034715913685898336,
+  "share_above_per_scenario_threshold": 0.56,
+  "n_above_per_scenario_threshold": 14,
+  "seed_spread_kg_per_h": 2.223449695945874,
+  "criterion_i_median": false,
+  "criterion_ii_seed_spread": false,
+  "criterion_iii_share": false,
+  "demonstrated": false
+ },
+ "median_g_befund73": 0.38441605770663045,
+ "median_g_with_median_seed": 0.5603113840127207,
+ "scenarios_where_direct_search_better_than_befund73_by_more_than_resolution": [
+  17
+ ]
+}
