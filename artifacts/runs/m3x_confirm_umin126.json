@@ -1,0 +1,6064 @@
+{
+ "provenance": {
+  "git/commit": "0917d504bf4224cdd1f4f87e48d27fbcfffa347e",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "scenarios": [
+  16,
+  17,
+  22,
+  23,
+  24
+ ],
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "shortlists": {
+  "16": [
+   [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ]
+  ],
+  "17": [
+   [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ]
+  ],
+  "22": [
+   [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ]
+  ],
+  "23": [
+   [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ]
+  ],
+  "24": [
+   [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ]
+  ]
+ },
+ "scale_factor_k": 271.79706373319294,
+ "quality_threshold_kg_per_kg": 0.14403818038482458,
+ "records": [
+  {
+   "kind": "joint",
+   "seed": 0,
+   "scenario": 16,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1156.4478146486513,
+   "detail": {
+    "solve_failed": false,
+    "value": 1156.4478146486513,
+    "co2_kg_per_h": 1156.4478146486513,
+    "co2_lines_kg_per_h": 162.76946577115115,
+    "kwh_sum_kw": 5723.008476408533,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.12459576692070064,
+    "moisture_b": 0.14403807479335867,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     65.3515530087166,
+     1.2600061628244192,
+     71.20388970680216,
+     1.3747205009693246
+    ]
+   },
+   "wall_s": 1211.6334565000143
+  },
+  {
+   "kind": "joint",
+   "seed": 0,
+   "scenario": 16,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1154.668975298771,
+   "detail": {
+    "solve_failed": false,
+    "value": 1154.668975298771,
+    "co2_kg_per_h": 1154.668975298771,
+    "co2_lines_kg_per_h": 160.99062642127114,
+    "kwh_sum_kw": 5716.301854843889,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.1245903434500583,
+    "moisture_b": 0.12264439026387423,
+    "recovered_kw_external_to_lines": 31.252891934669904,
+    "set_points": [
+     65.34978432145364,
+     1.2600852018333963,
+     79.92526505776428,
+     1.260071707866577
+    ]
+   },
+   "wall_s": 1379.9249698000494
+  },
+  {
+   "kind": "joint",
+   "seed": 1,
+   "scenario": 16,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1154.6657703765045,
+   "detail": {
+    "solve_failed": false,
+    "value": 1154.6657703765045,
+    "co2_kg_per_h": 1154.6657703765045,
+    "co2_lines_kg_per_h": 160.98742149900445,
+    "kwh_sum_kw": 5716.288109898545,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.12459695889227039,
+    "moisture_b": 0.12265201888192058,
+    "recovered_kw_external_to_lines": 31.24694195898297,
+    "set_points": [
+     65.3514812207151,
+     1.2600016657081874,
+     79.92660962541292,
+     1.2600053928989217
+    ]
+   },
+   "wall_s": 1296.3108142000856
+  },
+  {
+   "kind": "joint",
+   "seed": 1,
+   "scenario": 16,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1156.343219266551,
+   "detail": {
+    "solve_failed": false,
+    "value": 1156.343219266551,
+    "co2_kg_per_h": 1156.343219266551,
+    "co2_lines_kg_per_h": 162.664870389051,
+    "kwh_sum_kw": 5724.107131122516,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.1245963629064855,
+    "moisture_b": 0.14403765760330922,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     65.35155524465216,
+     1.2600030938734534,
+     75.02726876034012,
+     1.2777516159741842
+    ]
+   },
+   "wall_s": 1341.5059250000631
+  },
+  {
+   "kind": "joint",
+   "seed": 2,
+   "scenario": 16,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1156.356127977043,
+   "detail": {
+    "solve_failed": false,
+    "value": 1156.356127977043,
+    "co2_kg_per_h": 1156.356127977043,
+    "co2_lines_kg_per_h": 162.67777909954305,
+    "kwh_sum_kw": 5724.031298610926,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.12458915147848855,
+    "moisture_b": 0.14403807479335867,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     65.35292417579069,
+     1.2600022879843633,
+     74.66367039378251,
+     1.2864103850380213
+    ]
+   },
+   "wall_s": 1301.318827799987
+  },
+  {
+   "kind": "joint",
+   "seed": 2,
+   "scenario": 16,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1156.1356801999111,
+   "detail": {
+    "solve_failed": false,
+    "value": 1156.1356801999111,
+    "co2_kg_per_h": 1156.1356801999111,
+    "co2_lines_kg_per_h": 162.45733132241105,
+    "kwh_sum_kw": 5722.952934341178,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.09251659365567579,
+    "moisture_b": 0.14403807479335867,
+    "recovered_kw_external_to_lines": 44.93133575384731,
+    "set_points": [
+     72.56047975740913,
+     1.260734951584297,
+     73.80192631756019,
+     1.3073860420122003
+    ]
+   },
+   "wall_s": 1563.040593200014
+  },
+  {
+   "kind": "joint",
+   "seed": 3,
+   "scenario": 16,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1156.4098337269775,
+   "detail": {
+    "solve_failed": false,
+    "value": 1156.4098337269775,
+    "co2_kg_per_h": 1156.4098337269775,
+    "co2_lines_kg_per_h": 162.7314848494775,
+    "kwh_sum_kw": 5723.508896899348,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.12459427695623847,
+    "moisture_b": 0.14403569085021917,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     65.35140108371525,
+     1.260018414895402,
+     72.73719103130463,
+     1.334223174554955
+    ]
+   },
+   "wall_s": 1247.2645746000344
+  },
+  {
+   "kind": "joint",
+   "seed": 3,
+   "scenario": 16,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1154.6998822227126,
+   "detail": {
+    "solve_failed": false,
+    "value": 1154.6998822227126,
+    "co2_kg_per_h": 1154.6998822227126,
+    "co2_lines_kg_per_h": 161.0215333452127,
+    "kwh_sum_kw": 5716.435901030276,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.12459672049795643,
+    "moisture_b": 0.12248991074843553,
+    "recovered_kw_external_to_lines": 31.344000080502866,
+    "set_points": [
+     65.3514136145192,
+     1.260004840999248,
+     79.89341662811849,
+     1.2615154598296465
+    ]
+   },
+   "wall_s": 1361.7640960999997
+  },
+  {
+   "kind": "joint",
+   "seed": 4,
+   "scenario": 16,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1156.3339266208252,
+   "detail": {
+    "solve_failed": false,
+    "value": 1156.3339266208252,
+    "co2_kg_per_h": 1156.3339266208252,
+    "co2_lines_kg_per_h": 162.6555777433253,
+    "kwh_sum_kw": 5724.2682067847345,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.12456793438454712,
+    "moisture_b": 0.14403813439193713,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     65.34328014275339,
+     1.260388030303817,
+     75.59323925207278,
+     1.2644858711121931
+    ]
+   },
+   "wall_s": 1354.7030031000031
+  },
+  {
+   "kind": "joint",
+   "seed": 4,
+   "scenario": 16,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1154.6656374298507,
+   "detail": {
+    "solve_failed": false,
+    "value": 1154.6656374298507,
+    "co2_kg_per_h": 1154.6656374298507,
+    "co2_lines_kg_per_h": 160.98728855235063,
+    "kwh_sum_kw": 5716.287549407198,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.12459707808942737,
+    "moisture_b": 0.12265243607197,
+    "recovered_kw_external_to_lines": 31.246742998171694,
+    "set_points": [
+     65.35151680417633,
+     1.2600000965095641,
+     79.92675853302649,
+     1.2600001565530956
+    ]
+   },
+   "wall_s": 1386.8564521000953
+  },
+  {
+   "kind": "joint",
+   "seed": 0,
+   "scenario": 17,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1155.4881952665783,
+   "detail": {
+    "solve_failed": false,
+    "value": 1155.4881952665783,
+    "co2_kg_per_h": 1155.4881952665783,
+    "co2_lines_kg_per_h": 161.8098463890785,
+    "kwh_sum_kw": 5720.02971763168,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13711283917030828,
+    "moisture_b": 0.14403753840615224,
+    "recovered_kw_external_to_lines": 13.599382345129719,
+    "set_points": [
+     65.17131664267546,
+     1.2604527134685628,
+     77.57729677186846,
+     1.2600380038721237
+    ]
+   },
+   "wall_s": 1344.5225666000042
+  },
+  {
+   "kind": "joint",
+   "seed": 0,
+   "scenario": 17,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1155.4991957550137,
+   "detail": {
+    "solve_failed": false,
+    "value": 1155.4991957550137,
+    "co2_kg_per_h": 1155.4991957550137,
+    "co2_lines_kg_per_h": 161.82084687751367,
+    "kwh_sum_kw": 5720.0766585490655,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13706665027198073,
+    "moisture_b": 0.14403712121610285,
+    "recovered_kw_external_to_lines": 13.605402467714288,
+    "set_points": [
+     65.15971013623813,
+     1.2610110580363338,
+     77.5788961141418,
+     1.2600022798703863
+    ]
+   },
+   "wall_s": 1398.4961687000468
+  },
+  {
+   "kind": "joint",
+   "seed": 0,
+   "scenario": 17,
+   "allocation_index": 2,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1152.7078697725772,
+   "detail": {
+    "solve_failed": false,
+    "value": 1152.7078697725772,
+    "co2_kg_per_h": 1152.7078697725772,
+    "co2_lines_kg_per_h": 159.0295208950773,
+    "kwh_sum_kw": 5706.5275843337995,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13714961149323485,
+    "moisture_b": 0.115324135262611,
+    "recovered_kw_external_to_lines": 56.981877331511626,
+    "set_points": [
+     65.18080239678375,
+     1.2600016143905333,
+     83.06787793967811,
+     1.2600465307621043
+    ]
+   },
+   "wall_s": 1589.7592380000278
+  },
+  {
+   "kind": "joint",
+   "seed": 0,
+   "scenario": 17,
+   "allocation_index": 3,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1152.7078697725772,
+   "detail": {
+    "solve_failed": false,
+    "value": 1152.7078697725772,
+    "co2_kg_per_h": 1152.7078697725772,
+    "co2_lines_kg_per_h": 159.0295208950773,
+    "kwh_sum_kw": 5706.5275843337995,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13714961149323485,
+    "moisture_b": 0.115324135262611,
+    "recovered_kw_external_to_lines": 56.981877331511626,
+    "set_points": [
+     65.18080239678375,
+     1.2600016143905333,
+     83.06787793967811,
+     1.2600465307621043
+    ]
+   },
+   "wall_s": 1642.6084991000826
+  },
+  {
+   "kind": "joint",
+   "seed": 1,
+   "scenario": 17,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1155.5230610640676,
+   "detail": {
+    "solve_failed": false,
+    "value": 1155.5230610640676,
+    "co2_kg_per_h": 1155.5230610640676,
+    "co2_lines_kg_per_h": 161.84471218656773,
+    "kwh_sum_kw": 5720.184976509131,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13714865791597902,
+    "moisture_b": 0.14403789599762318,
+    "recovered_kw_external_to_lines": 13.452171382614395,
+    "set_points": [
+     65.18067114987976,
+     1.260009924046472,
+     77.5106387836564,
+     1.2616006120398957
+    ]
+   },
+   "wall_s": 1391.8197346000234
+  },
+  {
+   "kind": "joint",
+   "seed": 1,
+   "scenario": 17,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1155.4776157975045,
+   "detail": {
+    "solve_failed": false,
+    "value": 1155.4776157975045,
+    "co2_kg_per_h": 1155.4776157975045,
+    "co2_lines_kg_per_h": 161.79926692000456,
+    "kwh_sum_kw": 5719.984376437447,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13714949229607787,
+    "moisture_b": 0.14403813439193713,
+    "recovered_kw_external_to_lines": 13.600439239983626,
+    "set_points": [
+     65.18073550347583,
+     1.2600039848040077,
+     77.57874407952612,
+     1.2600016347224279
+    ]
+   },
+   "wall_s": 1507.3663241999457
+  },
+  {
+   "kind": "joint",
+   "seed": 1,
+   "scenario": 17,
+   "allocation_index": 3,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1152.7204047336456,
+   "detail": {
+    "solve_failed": false,
+    "value": 1152.7204047336456,
+    "co2_kg_per_h": 1152.7204047336456,
+    "co2_lines_kg_per_h": 159.0420558561457,
+    "kwh_sum_kw": 5706.583549216196,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13712350731585743,
+    "moisture_b": 0.11530208378857075,
+    "recovered_kw_external_to_lines": 56.99659502231091,
+    "set_points": [
+     65.17876734435751,
+     1.2601823199752498,
+     83.06102673086639,
+     1.2603078220098154
+    ]
+   },
+   "wall_s": 1465.8386388999643
+  },
+  {
+   "kind": "joint",
+   "seed": 1,
+   "scenario": 17,
+   "allocation_index": 2,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1152.7204047336456,
+   "detail": {
+    "solve_failed": false,
+    "value": 1152.7204047336456,
+    "co2_kg_per_h": 1152.7204047336456,
+    "co2_lines_kg_per_h": 159.0420558561457,
+    "kwh_sum_kw": 5706.583549216196,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13712350731585743,
+    "moisture_b": 0.11530208378857075,
+    "recovered_kw_external_to_lines": 56.99659502231091,
+    "set_points": [
+     65.17876734435751,
+     1.2601823199752498,
+     83.06102673086639,
+     1.2603078220098154
+    ]
+   },
+   "wall_s": 1561.5557620000327
+  },
+  {
+   "kind": "joint",
+   "seed": 2,
+   "scenario": 17,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1155.4925566464578,
+   "detail": {
+    "solve_failed": false,
+    "value": 1155.4925566464578,
+    "co2_kg_per_h": 1155.4925566464578,
+    "co2_lines_kg_per_h": 161.81420776895806,
+    "kwh_sum_kw": 5720.050369974506,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.1371493730989209,
+    "moisture_b": 0.1440379555962017,
+    "recovered_kw_external_to_lines": 13.55170129939262,
+    "set_points": [
+     65.18080530009621,
+     1.2600025735700613,
+     77.55632626447418,
+     1.2605281324686843
+    ]
+   },
+   "wall_s": 1420.1886879999656
+  },
+  {
+   "kind": "joint",
+   "seed": 2,
+   "scenario": 17,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1155.4811471081455,
+   "detail": {
+    "solve_failed": false,
+    "value": 1155.4811471081455,
+    "co2_kg_per_h": 1155.4811471081455,
+    "co2_lines_kg_per_h": 161.80279823064552,
+    "kwh_sum_kw": 5719.999498966384,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13713572502444735,
+    "moisture_b": 0.14403807479335867,
+    "recovered_kw_external_to_lines": 13.601392729683198,
+    "set_points": [
+     65.17731085478422,
+     1.260169275145281,
+     77.5788346642831,
+     1.26
+    ]
+   },
+   "wall_s": 1385.4975738000358
+  },
+  {
+   "kind": "joint",
+   "seed": 2,
+   "scenario": 17,
+   "allocation_index": 2,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1152.7064346624877,
+   "detail": {
+    "solve_failed": false,
+    "value": 1152.7064346624877,
+    "co2_kg_per_h": 1152.7064346624877,
+    "co2_lines_kg_per_h": 159.02808578498767,
+    "kwh_sum_kw": 5706.521143400573,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13714949229607787,
+    "moisture_b": 0.11532538683275924,
+    "recovered_kw_external_to_lines": 56.98445310810152,
+    "set_points": [
+     65.18078892889852,
+     1.2600024194304886,
+     83.06969811767934,
+     1.260000003113347
+    ]
+   },
+   "wall_s": 1578.9983454999747
+  },
+  {
+   "kind": "joint",
+   "seed": 2,
+   "scenario": 17,
+   "allocation_index": 3,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1152.7064346624877,
+   "detail": {
+    "solve_failed": false,
+    "value": 1152.7064346624877,
+    "co2_kg_per_h": 1152.7064346624877,
+    "co2_lines_kg_per_h": 159.02808578498767,
+    "kwh_sum_kw": 5706.521143400573,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13714949229607787,
+    "moisture_b": 0.11532538683275924,
+    "recovered_kw_external_to_lines": 56.98445310810152,
+    "set_points": [
+     65.18078892889852,
+     1.2600024194304886,
+     83.06969811767934,
+     1.260000003113347
+    ]
+   },
+   "wall_s": 1565.6443016999401
+  },
+  {
+   "kind": "joint",
+   "seed": 3,
+   "scenario": 17,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1155.5194927880482,
+   "detail": {
+    "solve_failed": false,
+    "value": 1155.5194927880482,
+    "co2_kg_per_h": 1155.5194927880482,
+    "co2_lines_kg_per_h": 161.8411439105482,
+    "kwh_sum_kw": 5720.167797765756,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13711260077599435,
+    "moisture_b": 0.14403801519478016,
+    "recovered_kw_external_to_lines": 13.496374297940363,
+    "set_points": [
+     65.17127789127547,
+     1.260455035670099,
+     77.53002671515625,
+     1.2611448657876188
+    ]
+   },
+   "wall_s": 1440.0842990999809
+  },
+  {
+   "kind": "joint",
+   "seed": 3,
+   "scenario": 17,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1158.0718185626513,
+   "detail": {
+    "solve_failed": false,
+    "value": 1158.0718185626513,
+    "co2_kg_per_h": 1158.0718185626513,
+    "co2_lines_kg_per_h": 164.39346968515147,
+    "kwh_sum_kw": 5724.512307766778,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.021336640601162006,
+    "moisture_b": 0.13097484117049468,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     118.26146262425837,
+     1.2601880999892479,
+     63.41480521192989,
+     1.78653072035971
+    ]
+   },
+   "wall_s": 1685.3497839999618
+  },
+  {
+   "kind": "joint",
+   "seed": 3,
+   "scenario": 17,
+   "allocation_index": 2,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1152.7083059790975,
+   "detail": {
+    "solve_failed": false,
+    "value": 1152.7083059790975,
+    "co2_kg_per_h": 1152.7083059790975,
+    "co2_lines_kg_per_h": 159.02995710159757,
+    "kwh_sum_kw": 5706.5295734112115,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13714955189465636,
+    "moisture_b": 0.11532359887540462,
+    "recovered_kw_external_to_lines": 56.98140266467826,
+    "set_points": [
+     65.18086210864462,
+     1.2600000459506318,
+     83.06739158940098,
+     1.2600601945998255
+    ]
+   },
+   "wall_s": 1620.1843212000094
+  },
+  {
+   "kind": "joint",
+   "seed": 3,
+   "scenario": 17,
+   "allocation_index": 3,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1152.7083059790975,
+   "detail": {
+    "solve_failed": false,
+    "value": 1152.7083059790975,
+    "co2_kg_per_h": 1152.7083059790975,
+    "co2_lines_kg_per_h": 159.02995710159757,
+    "kwh_sum_kw": 5706.5295734112115,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13714955189465636,
+    "moisture_b": 0.11532359887540462,
+    "recovered_kw_external_to_lines": 56.98140266467826,
+    "set_points": [
+     65.18086210864462,
+     1.2600000459506318,
+     83.06739158940098,
+     1.2600601945998255
+    ]
+   },
+   "wall_s": 1639.5502207000973
+  },
+  {
+   "kind": "joint",
+   "seed": 4,
+   "scenario": 17,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1155.4860007193058,
+   "detail": {
+    "solve_failed": false,
+    "value": 1155.4860007193058,
+    "co2_kg_per_h": 1155.4860007193058,
+    "co2_lines_kg_per_h": 161.80765184180595,
+    "kwh_sum_kw": 5720.02101802425,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.1371399565235199,
+    "moisture_b": 0.14403813439193713,
+    "recovered_kw_external_to_lines": 13.581470481768676,
+    "set_points": [
+     65.1782985848952,
+     1.2601202350624738,
+     77.56978575013372,
+     1.2602114837374339
+    ]
+   },
+   "wall_s": 1408.7058006000007
+  },
+  {
+   "kind": "joint",
+   "seed": 4,
+   "scenario": 17,
+   "allocation_index": 2,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1152.709974054429,
+   "detail": {
+    "solve_failed": false,
+    "value": 1152.709974054429,
+    "co2_kg_per_h": 1152.709974054429,
+    "co2_lines_kg_per_h": 159.03162517692903,
+    "kwh_sum_kw": 5706.537452618368,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13714424762117094,
+    "moisture_b": 0.11531591065877979,
+    "recovered_kw_external_to_lines": 56.990926606835814,
+    "set_points": [
+     65.1816542617168,
+     1.2600009847625075,
+     83.06748619698203,
+     1.260095621020307
+    ]
+   },
+   "wall_s": 1478.846434099949
+  },
+  {
+   "kind": "joint",
+   "seed": 4,
+   "scenario": 17,
+   "allocation_index": 3,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1152.709974054429,
+   "detail": {
+    "solve_failed": false,
+    "value": 1152.709974054429,
+    "co2_kg_per_h": 1152.709974054429,
+    "co2_lines_kg_per_h": 159.03162517692903,
+    "kwh_sum_kw": 5706.537452618368,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13714424762117094,
+    "moisture_b": 0.11531591065877979,
+    "recovered_kw_external_to_lines": 56.990926606835814,
+    "set_points": [
+     65.1816542617168,
+     1.2600009847625075,
+     83.06748619698203,
+     1.260095621020307
+    ]
+   },
+   "wall_s": 1442.730036700028
+  },
+  {
+   "kind": "joint",
+   "seed": 4,
+   "scenario": 17,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1158.2329171992606,
+   "detail": {
+    "solve_failed": false,
+    "value": 1158.2329171992606,
+    "co2_kg_per_h": 1158.2329171992606,
+    "co2_lines_kg_per_h": 164.5545683217606,
+    "kwh_sum_kw": 5725.243898902793,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.02131232438113924,
+    "moisture_b": 0.13089420429380155,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     118.17950607046365,
+     1.2628911344363087,
+     63.39436896805074,
+     1.7880026454218765
+    ]
+   },
+   "wall_s": 1658.8779627000913
+  },
+  {
+   "kind": "joint",
+   "seed": 0,
+   "scenario": 22,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1147.424736137688,
+   "detail": {
+    "solve_failed": false,
+    "value": 1147.424736137688,
+    "co2_kg_per_h": 1147.424736137688,
+    "co2_lines_kg_per_h": 153.7463872601881,
+    "kwh_sum_kw": 5681.490707087252,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.1027980636276518,
+    "moisture_b": 0.049914576175802,
+    "recovered_kw_external_to_lines": 167.67013984409252,
+    "set_points": [
+     73.95862669425578,
+     1.2600005252843471,
+     107.72547827148347,
+     1.2601115527974298
+    ]
+   },
+   "wall_s": 1494.8571795999305
+  },
+  {
+   "kind": "joint",
+   "seed": 0,
+   "scenario": 22,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1154.8055846358823,
+   "detail": {
+    "solve_failed": false,
+    "value": 1154.8055846358823,
+    "co2_kg_per_h": 1154.8055846358823,
+    "co2_lines_kg_per_h": 161.1272357583822,
+    "kwh_sum_kw": 5717.144188620887,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.10279800402907331,
+    "moisture_b": 0.12623198629448695,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     73.95860104275435,
+     1.260001768223315,
+     82.68345758235698,
+     1.269623611649151
+    ]
+   },
+   "wall_s": 1252.0710950999055
+  },
+  {
+   "kind": "joint",
+   "seed": 1,
+   "scenario": 22,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1149.6349605584576,
+   "detail": {
+    "solve_failed": false,
+    "value": 1149.6349605584576,
+    "co2_kg_per_h": 1149.6349605584576,
+    "co2_lines_kg_per_h": 155.95661168095776,
+    "kwh_sum_kw": 5692.2106375216,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.04964948169869113,
+    "moisture_b": 0.12694049419554226,
+    "recovered_kw_external_to_lines": 126.42255446858303,
+    "set_points": [
+     92.3421483499155,
+     1.2602787132306081,
+     82.9553537316039,
+     1.2601398559741952
+    ]
+   },
+   "wall_s": 1621.8325947999256
+  },
+  {
+   "kind": "joint",
+   "seed": 1,
+   "scenario": 22,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1154.605568480656,
+   "detail": {
+    "solve_failed": false,
+    "value": 1154.605568480656,
+    "co2_kg_per_h": 1154.605568480656,
+    "co2_lines_kg_per_h": 160.92721960315598,
+    "kwh_sum_kw": 5716.283897137341,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.1027623044805595,
+    "moisture_b": 0.12694567927187067,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     73.94917659631828,
+     1.2604906679550723,
+     82.95824897544355,
+     1.2600501687538288
+    ]
+   },
+   "wall_s": 1232.001326299971
+  },
+  {
+   "kind": "joint",
+   "seed": 2,
+   "scenario": 22,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1154.5932736393443,
+   "detail": {
+    "solve_failed": false,
+    "value": 1154.5932736393443,
+    "co2_kg_per_h": 1154.5932736393443,
+    "co2_lines_kg_per_h": 160.91492476184425,
+    "kwh_sum_kw": 5716.22961751131,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.10279329574137282,
+    "moisture_b": 0.12695020876383567,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     73.9576175726061,
+     1.2600590157415847,
+     82.95915801707712,
+     1.260009409712339
+    ]
+   },
+   "wall_s": 1213.8748708999483
+  },
+  {
+   "kind": "joint",
+   "seed": 2,
+   "scenario": 22,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1149.6481858336338,
+   "detail": {
+    "solve_failed": false,
+    "value": 1149.6481858336338,
+    "co2_kg_per_h": 1149.6481858336338,
+    "co2_lines_kg_per_h": 155.96983695613397,
+    "kwh_sum_kw": 5692.2678551567,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.04963023135783978,
+    "moisture_b": 0.12693215039455408,
+    "recovered_kw_external_to_lines": 126.47997009366054,
+    "set_points": [
+     92.33335988034423,
+     1.2607807063524439,
+     82.95266225910308,
+     1.2602389580356819
+    ]
+   },
+   "wall_s": 1500.8821443000343
+  },
+  {
+   "kind": "joint",
+   "seed": 3,
+   "scenario": 22,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1154.8191013693895,
+   "detail": {
+    "solve_failed": false,
+    "value": 1154.8191013693895,
+    "co2_kg_per_h": 1154.8191013693895,
+    "co2_lines_kg_per_h": 161.14075249188954,
+    "kwh_sum_kw": 5717.203806575521,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.10279716964897449,
+    "moisture_b": 0.12618728736062162,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     73.9585917359273,
+     1.260007345895063,
+     82.67006794142506,
+     1.2701363510046597
+    ]
+   },
+   "wall_s": 1166.3689096000744
+  },
+  {
+   "kind": "joint",
+   "seed": 3,
+   "scenario": 22,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1149.6313197306927,
+   "detail": {
+    "solve_failed": false,
+    "value": 1149.6313197306927,
+    "co2_kg_per_h": 1149.6313197306927,
+    "co2_lines_kg_per_h": 155.9529708531926,
+    "kwh_sum_kw": 5692.195864821487,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.04965264042335095,
+    "moisture_b": 0.1269505663553066,
+    "recovered_kw_external_to_lines": 126.4082322895641,
+    "set_points": [
+     92.34388035776469,
+     1.2601890707915768,
+     82.95947006457334,
+     1.2600004245748442
+    ]
+   },
+   "wall_s": 1548.636470700032
+  },
+  {
+   "kind": "joint",
+   "seed": 4,
+   "scenario": 22,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1147.4442005045544,
+   "detail": {
+    "solve_failed": false,
+    "value": 1147.4442005045544,
+    "co2_kg_per_h": 1147.4442005045544,
+    "co2_lines_kg_per_h": 153.76585162705456,
+    "kwh_sum_kw": 5681.576306585402,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.10279383212857919,
+    "moisture_b": 0.04988221414768347,
+    "recovered_kw_external_to_lines": 167.77312608223386,
+    "set_points": [
+     73.95810223956443,
+     1.2600416372284209,
+     107.70735749259615,
+     1.2608689839901905
+    ]
+   },
+   "wall_s": 1247.2959609999089
+  },
+  {
+   "kind": "joint",
+   "seed": 4,
+   "scenario": 22,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1154.850178766795,
+   "detail": {
+    "solve_failed": false,
+    "value": 1154.850178766795,
+    "co2_kg_per_h": 1154.850178766795,
+    "co2_lines_kg_per_h": 161.1718298892951,
+    "kwh_sum_kw": 5717.3332950755275,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.10214498240458954,
+    "moisture_b": 0.12688262397583128,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     73.71592951200304,
+     1.2710650185419676,
+     82.93783321182096,
+     1.260799131512028
+    ]
+   },
+   "wall_s": 1194.3439375000307
+  },
+  {
+   "kind": "joint",
+   "seed": 0,
+   "scenario": 23,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1154.1830676889463,
+   "detail": {
+    "solve_failed": false,
+    "value": 1154.1830676889463,
+    "co2_kg_per_h": 1154.1830676889463,
+    "co2_lines_kg_per_h": 160.50471881144622,
+    "kwh_sum_kw": 5713.87164474588,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.11517615199222737,
+    "moisture_b": 0.14150668477069528,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     73.77438500963942,
+     1.260017838185357,
+     82.55560216217461,
+     1.264180690416577
+    ]
+   },
+   "wall_s": 1274.450510900002
+  },
+  {
+   "kind": "joint",
+   "seed": 0,
+   "scenario": 23,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   "value": 1142.2435025255013,
+   "detail": {
+    "solve_failed": false,
+    "value": 1142.2435025255013,
+    "co2_kg_per_h": 1142.2435025255013,
+    "co2_lines_kg_per_h": 148.56515364800137,
+    "kwh_sum_kw": 5655.721349410137,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ],
+     [
+      "LB",
+      "SB"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.11517770155526806,
+    "moisture_b": 0.039682573023970324,
+    "recovered_kw_external_to_lines": 231.1182410202432,
+    "set_points": [
+     73.774568588275,
+     1.2600038838382872,
+     115.78775091153756,
+     1.2626014172871627
+    ]
+   },
+   "wall_s": 1388.4727560000028
+  },
+  {
+   "kind": "joint",
+   "seed": 1,
+   "scenario": 23,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1154.1361908533256,
+   "detail": {
+    "solve_failed": false,
+    "value": 1154.1361908533256,
+    "co2_kg_per_h": 1154.1361908533256,
+    "co2_lines_kg_per_h": 160.4578419758257,
+    "kwh_sum_kw": 5713.669932853155,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.11517203969031178,
+    "moisture_b": 0.14168250057723236,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     73.77416450682126,
+     1.2600451449913712,
+     82.61684098498023,
+     1.2620315976091026
+    ]
+   },
+   "wall_s": 1191.8195455999812
+  },
+  {
+   "kind": "joint",
+   "seed": 1,
+   "scenario": 23,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   "value": 1142.1905040269594,
+   "detail": {
+    "solve_failed": false,
+    "value": 1142.1905040269594,
+    "co2_kg_per_h": 1142.1905040269594,
+    "co2_lines_kg_per_h": 148.51215514945957,
+    "kwh_sum_kw": 5655.491768497166,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ],
+     [
+      "LB",
+      "SB"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.11517233768320422,
+    "moisture_b": 0.03979277079559308,
+    "recovered_kw_external_to_lines": 230.56107168784632,
+    "set_points": [
+     73.77269136331769,
+     1.2600883995152978,
+     115.8298243350764,
+     1.2600411543055965
+    ]
+   },
+   "wall_s": 1323.8870704999426
+  },
+  {
+   "kind": "joint",
+   "seed": 2,
+   "scenario": 23,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   "value": 1142.2691182165304,
+   "detail": {
+    "solve_failed": false,
+    "value": 1142.2691182165304,
+    "co2_kg_per_h": 1142.2691182165304,
+    "co2_lines_kg_per_h": 148.59076933903046,
+    "kwh_sum_kw": 5655.384528009389,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ],
+     [
+      "LB",
+      "SB"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.11313299352453078,
+    "moisture_b": 0.03972119290283001,
+    "recovered_kw_external_to_lines": 233.4706669639087,
+    "set_points": [
+     73.08308328145341,
+     1.2921265951070788,
+     115.81253304213953,
+     1.2615029328592833
+    ]
+   },
+   "wall_s": 1232.5713025999721
+  },
+  {
+   "kind": "joint",
+   "seed": 2,
+   "scenario": 23,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1154.160092546378,
+   "detail": {
+    "solve_failed": false,
+    "value": 1154.160092546378,
+    "co2_kg_per_h": 1154.160092546378,
+    "co2_lines_kg_per_h": 160.48174366887835,
+    "kwh_sum_kw": 5713.772389097093,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.11517770155526806,
+    "moisture_b": 0.14158910960474297,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     73.7744798848407,
+     1.2600071419249672,
+     82.58413783437695,
+     1.2631764951448963
+    ]
+   },
+   "wall_s": 1280.5486585000763
+  },
+  {
+   "kind": "joint",
+   "seed": 3,
+   "scenario": 23,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   "value": 1142.3316268034564,
+   "detail": {
+    "solve_failed": false,
+    "value": 1142.3316268034564,
+    "co2_kg_per_h": 1142.3316268034564,
+    "co2_lines_kg_per_h": 148.6532779259567,
+    "kwh_sum_kw": 5655.257587836367,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ],
+     [
+      "LB",
+      "SB"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.1114472477320216,
+    "moisture_b": 0.03967929510215354,
+    "recovered_kw_external_to_lines": 235.92162815907773,
+    "set_points": [
+     72.51393093289528,
+     1.319776882358598,
+     115.78629861013869,
+     1.2626814568227656
+    ]
+   },
+   "wall_s": 1375.1156455000164
+  },
+  {
+   "kind": "joint",
+   "seed": 3,
+   "scenario": 23,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1154.2184944862502,
+   "detail": {
+    "solve_failed": false,
+    "value": 1154.2184944862502,
+    "co2_kg_per_h": 1154.2184944862502,
+    "co2_lines_kg_per_h": 160.5401456087503,
+    "kwh_sum_kw": 5714.024470182895,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.11516685461398339,
+    "moisture_b": 0.14138838159239825,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     73.77142323447175,
+     1.2601548639048974,
+     82.51473629871285,
+     1.265622423699142
+    ]
+   },
+   "wall_s": 1180.804287099978
+  },
+  {
+   "kind": "joint",
+   "seed": 4,
+   "scenario": 23,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   "value": 1142.1989560042236,
+   "detail": {
+    "solve_failed": false,
+    "value": 1142.1989560042236,
+    "co2_kg_per_h": 1142.1989560042236,
+    "co2_lines_kg_per_h": 148.52060712672363,
+    "kwh_sum_kw": 5655.530472248062,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ],
+     [
+      "LB",
+      "SB"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.11505325972338688,
+    "moisture_b": 0.039761123950416394,
+    "recovered_kw_external_to_lines": 230.77663178649226,
+    "set_points": [
+     73.78047683071873,
+     1.2604580524131797,
+     115.85659706015304,
+     1.26
+    ]
+   },
+   "wall_s": 1261.3326709000394
+  },
+  {
+   "kind": "joint",
+   "seed": 4,
+   "scenario": 23,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1154.1054563357181,
+   "detail": {
+    "solve_failed": false,
+    "value": 1154.1054563357181,
+    "co2_kg_per_h": 1154.1054563357181,
+    "co2_lines_kg_per_h": 160.42710745821833,
+    "kwh_sum_kw": 5713.536867443824,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.11513937966930082,
+    "moisture_b": 0.14183531133247346,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     73.7625157984207,
+     1.2605648657527422,
+     82.66991009908048,
+     1.2601731403811898
+    ]
+   },
+   "wall_s": 1213.0124931000173
+  },
+  {
+   "kind": "joint",
+   "seed": 0,
+   "scenario": 24,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1138.9532117360718,
+   "detail": {
+    "solve_failed": false,
+    "value": 1138.9532117360718,
+    "co2_kg_per_h": 1138.9532117360718,
+    "co2_lines_kg_per_h": 145.2748628585718,
+    "kwh_sum_kw": 5633.598335473728,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.11074320972435282,
+    "moisture_b": 0.03600629430856869,
+    "recovered_kw_external_to_lines": 294.50484432022415,
+    "set_points": [
+     67.6453488353049,
+     1.6019965257847046,
+     120.0,
+     1.26
+    ]
+   },
+   "wall_s": 1059.4592292000307
+  },
+  {
+   "kind": "joint",
+   "seed": 0,
+   "scenario": 24,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   "value": 1138.9532117360718,
+   "detail": {
+    "solve_failed": false,
+    "value": 1138.9532117360718,
+    "co2_kg_per_h": 1138.9532117360718,
+    "co2_lines_kg_per_h": 145.2748628585718,
+    "kwh_sum_kw": 5633.598335473728,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ],
+     [
+      "LB",
+      "SB"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.11074320972435282,
+    "moisture_b": 0.03600629430856869,
+    "recovered_kw_external_to_lines": 294.50484432022415,
+    "set_points": [
+     67.6453488353049,
+     1.6019965257847046,
+     120.0,
+     1.26
+    ]
+   },
+   "wall_s": 1063.9316373999463
+  },
+  {
+   "kind": "joint",
+   "seed": 0,
+   "scenario": 24,
+   "allocation_index": 2,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1156.8332758892273,
+   "detail": {
+    "solve_failed": false,
+    "value": 1156.8332758892273,
+    "co2_kg_per_h": 1156.8332758892273,
+    "co2_lines_kg_per_h": 163.1549270117273,
+    "kwh_sum_kw": 5726.350102288697,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13077423235530689,
+    "moisture_b": 0.14403813439193713,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     73.54930056762223,
+     1.2601502263474638,
+     82.88865868866097,
+     1.298961016387881
+    ]
+   },
+   "wall_s": 1370.954945000005
+  },
+  {
+   "kind": "joint",
+   "seed": 1,
+   "scenario": 24,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1138.9503474813812,
+   "detail": {
+    "solve_failed": false,
+    "value": 1138.9503474813812,
+    "co2_kg_per_h": 1138.9503474813812,
+    "co2_lines_kg_per_h": 145.27199860388106,
+    "kwh_sum_kw": 5632.586908570574,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.10836635881570664,
+    "moisture_b": 0.03600629430856869,
+    "recovered_kw_external_to_lines": 299.2983032270426,
+    "set_points": [
+     66.95321213081797,
+     1.654132940993296,
+     119.99998173888699,
+     1.26
+    ]
+   },
+   "wall_s": 1073.3175259999698
+  },
+  {
+   "kind": "joint",
+   "seed": 1,
+   "scenario": 24,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   "value": 1138.9503474813812,
+   "detail": {
+    "solve_failed": false,
+    "value": 1138.9503474813812,
+    "co2_kg_per_h": 1138.9503474813812,
+    "co2_lines_kg_per_h": 145.27199860388106,
+    "kwh_sum_kw": 5632.586908570574,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ],
+     [
+      "LB",
+      "SB"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.10836635881570664,
+    "moisture_b": 0.03600629430856869,
+    "recovered_kw_external_to_lines": 299.2983032270426,
+    "set_points": [
+     66.95321213081797,
+     1.654132940993296,
+     119.99998173888699,
+     1.26
+    ]
+   },
+   "wall_s": 1091.064096200047
+  },
+  {
+   "kind": "joint",
+   "seed": 1,
+   "scenario": 24,
+   "allocation_index": 2,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1156.5414515533928,
+   "detail": {
+    "solve_failed": false,
+    "value": 1156.5414515533928,
+    "co2_kg_per_h": 1156.5414515533928,
+    "co2_lines_kg_per_h": 162.86310267589278,
+    "kwh_sum_kw": 5725.485749806156,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13078513889517013,
+    "moisture_b": 0.14403813439193713,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     73.55255063286448,
+     1.2600009818333027,
+     84.31487670767967,
+     1.2621043929436193
+    ]
+   },
+   "wall_s": 1250.2332496000454
+  },
+  {
+   "kind": "joint",
+   "seed": 2,
+   "scenario": 24,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1139.6727447062551,
+   "detail": {
+    "solve_failed": false,
+    "value": 1139.6727447062551,
+    "co2_kg_per_h": 1139.6727447062551,
+    "co2_lines_kg_per_h": 145.99439582875502,
+    "kwh_sum_kw": 5639.277577090685,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.03370471640455176,
+    "moisture_b": 0.14403116135825417,
+    "recovered_kw_external_to_lines": 260.4435038543602,
+    "set_points": [
+     106.62890850223735,
+     1.262388152387086,
+     77.30643224575712,
+     1.4661952689776427
+    ]
+   },
+   "wall_s": 1531.3039045000914
+  },
+  {
+   "kind": "joint",
+   "seed": 2,
+   "scenario": 24,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   "value": 1139.6636283467165,
+   "detail": {
+    "solve_failed": false,
+    "value": 1139.6636283467165,
+    "co2_kg_per_h": 1139.6636283467165,
+    "co2_lines_kg_per_h": 145.98527946921664,
+    "kwh_sum_kw": 5639.245013270791,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ],
+     [
+      "LB",
+      "SB"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.03373129737055704,
+    "moisture_b": 0.14403247252698087,
+    "recovered_kw_external_to_lines": 260.2177596711249,
+    "set_points": [
+     106.64014384646792,
+     1.261483055280334,
+     77.30668722484339,
+     1.4661816223678774
+    ]
+   },
+   "wall_s": 1436.9630366000347
+  },
+  {
+   "kind": "joint",
+   "seed": 2,
+   "scenario": 24,
+   "allocation_index": 2,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1156.5776545656643,
+   "detail": {
+    "solve_failed": false,
+    "value": 1156.5776545656643,
+    "co2_kg_per_h": 1156.5776545656643,
+    "co2_lines_kg_per_h": 162.89930568816442,
+    "kwh_sum_kw": 5725.68691430519,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.1305730275543343,
+    "moisture_b": 0.1440192416425567,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     73.5513124890377,
+     1.2609278567418871,
+     84.40134197813336,
+     1.26
+    ]
+   },
+   "wall_s": 1360.121756299981
+  },
+  {
+   "kind": "joint",
+   "seed": 3,
+   "scenario": 24,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1139.638728711604,
+   "detail": {
+    "solve_failed": false,
+    "value": 1139.638728711604,
+    "co2_kg_per_h": 1139.638728711604,
+    "co2_lines_kg_per_h": 145.96037983410406,
+    "kwh_sum_kw": 5639.139810816352,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.033785234084087915,
+    "moisture_b": 0.14403771720188774,
+    "recovered_kw_external_to_lines": 259.8640556345296,
+    "set_points": [
+     106.6400266281438,
+     1.2602211726248183,
+     77.30851051372125,
+     1.4660981012950667
+    ]
+   },
+   "wall_s": 1473.2630140000256
+  },
+  {
+   "kind": "joint",
+   "seed": 3,
+   "scenario": 24,
+   "allocation_index": 2,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1156.5898047825287,
+   "detail": {
+    "solve_failed": false,
+    "value": 1156.5898047825287,
+    "co2_kg_per_h": 1156.5898047825287,
+    "co2_lines_kg_per_h": 162.91145590502862,
+    "kwh_sum_kw": 5725.629108427693,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.1307850792965916,
+    "moisture_b": 0.14403807479335867,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     73.552506345299,
+     1.2600023904916262,
+     84.06990218865619,
+     1.2682879239381513
+    ]
+   },
+   "wall_s": 1275.924518899992
+  },
+  {
+   "kind": "joint",
+   "seed": 3,
+   "scenario": 24,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   "value": 1139.638728711604,
+   "detail": {
+    "solve_failed": false,
+    "value": 1139.638728711604,
+    "co2_kg_per_h": 1139.638728711604,
+    "co2_lines_kg_per_h": 145.96037983410406,
+    "kwh_sum_kw": 5639.139810816352,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ],
+     [
+      "LB",
+      "SB"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.033785234084087915,
+    "moisture_b": 0.14403771720188774,
+    "recovered_kw_external_to_lines": 259.8640556345296,
+    "set_points": [
+     106.6400266281438,
+     1.2602211726248183,
+     77.30851051372125,
+     1.4660981012950667
+    ]
+   },
+   "wall_s": 1480.4541900999611
+  },
+  {
+   "kind": "joint",
+   "seed": 4,
+   "scenario": 24,
+   "allocation_index": 0,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SB"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ]
+   ],
+   "value": 1138.9909327053438,
+   "detail": {
+    "solve_failed": false,
+    "value": 1138.9909327053438,
+    "co2_kg_per_h": 1138.9909327053438,
+    "co2_lines_kg_per_h": 145.31258382784375,
+    "kwh_sum_kw": 5631.132503590397,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SB"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.10487370332062389,
+    "moisture_b": 0.036026200233783404,
+    "recovered_kw_external_to_lines": 306.7395020061472,
+    "set_points": [
+     65.93914313762835,
+     1.7367505489781747,
+     119.98259841451983,
+     1.26
+    ]
+   },
+   "wall_s": 1053.507450700039
+  },
+  {
+   "kind": "joint",
+   "seed": 4,
+   "scenario": 24,
+   "allocation_index": 1,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "Q1",
+     "SA"
+    ],
+    [
+     "Q1",
+     "SB"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LA",
+     "SA"
+    ],
+    [
+     "LB",
+     "S1"
+    ],
+    [
+     "LB",
+     "SA"
+    ],
+    [
+     "LB",
+     "SB"
+    ]
+   ],
+   "value": 1138.9909327053438,
+   "detail": {
+    "solve_failed": false,
+    "value": 1138.9909327053438,
+    "co2_kg_per_h": 1138.9909327053438,
+    "co2_lines_kg_per_h": 145.31258382784375,
+    "kwh_sum_kw": 5631.132503590397,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LB",
+      "S1"
+     ],
+     [
+      "LB",
+      "SA"
+     ],
+     [
+      "LB",
+      "SB"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.10487370332062389,
+    "moisture_b": 0.036026200233783404,
+    "recovered_kw_external_to_lines": 306.7395020061472,
+    "set_points": [
+     65.93914313762835,
+     1.7367505489781747,
+     119.98259841451983,
+     1.26
+    ]
+   },
+   "wall_s": 1061.9256380000152
+  },
+  {
+   "kind": "joint",
+   "seed": 4,
+   "scenario": 24,
+   "allocation_index": 2,
+   "allocation": [
+    [
+     "Q1",
+     "S1"
+    ],
+    [
+     "LA",
+     "S1"
+    ],
+    [
+     "LB",
+     "S1"
+    ]
+   ],
+   "value": 1156.6091743234779,
+   "detail": {
+    "solve_failed": false,
+    "value": 1156.6091743234779,
+    "co2_kg_per_h": 1156.6077860673233,
+    "co2_lines_kg_per_h": 162.92943718982355,
+    "kwh_sum_kw": 5725.735238222624,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "feasible_a": true,
+    "feasible_b": true,
+    "moisture_a": 0.13065509479691112,
+    "moisture_b": 0.1440382535890941,
+    "recovered_kw_external_to_lines": 0.0,
+    "set_points": [
+     73.55442698185408,
+     1.2604844482523376,
+     84.12698499270778,
+     1.2668414453754995
+    ]
+   },
+   "wall_s": 1492.4841234999476
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 0,
+   "scenario": 16,
+   "set_points": [
+    65.35096829398427,
+    1.2600253352706947,
+    1.0017549282443772
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.2662265832113572,
+   "wall_s": 488.4760576999979
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 0,
+   "scenario": 16,
+   "set_points": [
+    75.67455420441276,
+    1.2626015308255143,
+    1.0059437873240467
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.3321794716587183,
+   "wall_s": 642.2071351000341
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 1,
+   "scenario": 16,
+   "set_points": [
+    65.35147064083124,
+    1.2600024795775022,
+    1.0
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.26622483113938933,
+   "wall_s": 487.0128602000186
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 1,
+   "scenario": 16,
+   "set_points": [
+    75.76546855207714,
+    1.2605011906809613,
+    1.0031738646954205
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.33216894849777295,
+   "wall_s": 592.2458458000328
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 2,
+   "scenario": 16,
+   "set_points": [
+    65.35149542493951,
+    1.2600011603232413,
+    1.0
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.26622470535633647,
+   "wall_s": 540.0779270000057
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 2,
+   "scenario": 16,
+   "set_points": [
+    75.70725973045899,
+    1.261845211632216,
+    1.0081661691232195
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.332175696905388,
+   "wall_s": 682.2273951999377
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 3,
+   "scenario": 16,
+   "set_points": [
+    65.35151187756786,
+    1.2600000316983044,
+    1.0016745656089103
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.26622457088740353,
+   "wall_s": 461.2420182999922
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 3,
+   "scenario": 16,
+   "set_points": [
+    73.4034928147245,
+    1.3173041604529758,
+    1.0010082519946293
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.3324270609749336,
+   "wall_s": 498.9768772999523
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 4,
+   "scenario": 16,
+   "set_points": [
+    65.35150526597543,
+    1.2600001381424848,
+    1.001693337034407
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.2662245532777445,
+   "wall_s": 584.228014399996
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 4,
+   "scenario": 16,
+   "set_points": [
+    75.05553670704032,
+    1.277080481480439,
+    1.0043148704955929
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.3322499173922807,
+   "wall_s": 561.5217517999699
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 0,
+   "scenario": 17,
+   "set_points": [
+    65.17750286831296,
+    1.2601581932997066,
+    1.0079208519266603
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.2655355191335207,
+   "wall_s": 485.82301990000997
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 0,
+   "scenario": 17,
+   "set_points": [
+    77.46669452966349,
+    1.2626325871000437,
+    1.004830071246056
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.3423915744300028,
+   "wall_s": 665.4875523999799
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 1,
+   "scenario": 17,
+   "set_points": [
+    65.17995395791792,
+    1.260041114009431,
+    1.0015573435148672
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.2655259017441344,
+   "wall_s": 667.1040275000269
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 1,
+   "scenario": 17,
+   "set_points": [
+    77.56454739183062,
+    1.2603345548944844,
+    1.011188573654832
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.3423498909349278,
+   "wall_s": 886.96648990002
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 2,
+   "scenario": 17,
+   "set_points": [
+    65.18082690433441,
+    1.2600000651528016,
+    1.0
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.26552261177400616,
+   "wall_s": 479.41612439998426
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 2,
+   "scenario": 17,
+   "set_points": [
+    77.55783856330785,
+    1.2604916096373766,
+    1.006422510717429
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.3423526766289048,
+   "wall_s": 840.3601125000278
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 3,
+   "scenario": 17,
+   "set_points": [
+    65.18082754960538,
+    1.26,
+    1.0002341237729053
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.2655226017140583,
+   "wall_s": 727.0919893999817
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 3,
+   "scenario": 17,
+   "set_points": [
+    77.57827814043321,
+    1.2600126551658453,
+    1.0053632917645405
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.3423440239043565,
+   "wall_s": 847.9055685000494
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 4,
+   "scenario": 17,
+   "set_points": [
+    65.17984667711656,
+    1.2600461844613853,
+    1.0015955090364907
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.2655263111602415,
+   "wall_s": 566.021306599956
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 4,
+   "scenario": 17,
+   "set_points": [
+    77.56629002364602,
+    1.2602938561213435,
+    1.000283958437029
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.3423491918206286,
+   "wall_s": 577.0076580999885
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 0,
+   "scenario": 22,
+   "set_points": [
+    73.9582008840237,
+    1.2600185419073637,
+    1.0009605705929001
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.2675276535693274,
+   "wall_s": 706.8373654000461
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 0,
+   "scenario": 22,
+   "set_points": [
+    82.95687475193951,
+    1.2600865946951136,
+    1.00639337571117
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.3245140969358019,
+   "wall_s": 550.8195504000178
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 1,
+   "scenario": 22,
+   "set_points": [
+    73.9584702228382,
+    1.260006634295218,
+    1.0064248037732382
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.267526744796428,
+   "wall_s": 547.6085688999156
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 1,
+   "scenario": 22,
+   "set_points": [
+    82.95860032182361,
+    1.2600272300915867,
+    1.0031314364202735
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.32450929805035356,
+   "wall_s": 615.4302394000115
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 2,
+   "scenario": 22,
+   "set_points": [
+    73.95585064034921,
+    1.2601239547694303,
+    1.006441074887013
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.267535913651173,
+   "wall_s": 546.8437198000029
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 2,
+   "scenario": 22,
+   "set_points": [
+    82.95799914830636,
+    1.2600480003245564,
+    1.006268034877718
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.3245109914381107,
+   "wall_s": 545.4809807999991
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 3,
+   "scenario": 22,
+   "set_points": [
+    73.95797457490653,
+    1.2600288876041297,
+    1.0002653257611662
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.2675284919142214,
+   "wall_s": 548.3983477000147
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 3,
+   "scenario": 22,
+   "set_points": [
+    82.95843774205639,
+    1.2600325922826936,
+    1.0055422927878215
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.32450969451410006,
+   "wall_s": 547.4910197999561
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 4,
+   "scenario": 22,
+   "set_points": [
+    73.95725055344556,
+    1.2600612758840113,
+    1.0075047237566876
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.2675310179994924,
+   "wall_s": 620.7403372999979
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 4,
+   "scenario": 22,
+   "set_points": [
+    82.94678036175961,
+    1.2604356086552078,
+    1.0093416615942532
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.32454257541048237,
+   "wall_s": 666.8018266999861
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 0,
+   "scenario": 23,
+   "set_points": [
+    73.77445631480684,
+    1.2600076682612558,
+    1.004513284793737
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.26686308193902003,
+   "wall_s": 676.2430434999987
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 0,
+   "scenario": 23,
+   "set_points": [
+    82.67468886676443,
+    1.260000798214806,
+    1.0084171795961598
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.3233218226168628,
+   "wall_s": 599.988309300039
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 1,
+   "scenario": 23,
+   "set_points": [
+    73.77462915342477,
+    1.2600011920351721,
+    1.0
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.26686273680747297,
+   "wall_s": 546.0069989999756
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 1,
+   "scenario": 23,
+   "set_points": [
+    82.67443955966085,
+    1.2600099009664112,
+    1.0050299852322504
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.32332263909525966,
+   "wall_s": 586.3485706000356
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 2,
+   "scenario": 23,
+   "set_points": [
+    73.77384841051897,
+    1.2600358880036246,
+    1.0085499951874954
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.26686540065614656,
+   "wall_s": 570.3028832999989
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 2,
+   "scenario": 23,
+   "set_points": [
+    82.66617296008178,
+    1.2602992299708864,
+    1.000480000214702
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.32334651526953245,
+   "wall_s": 558.4597559999675
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 3,
+   "scenario": 23,
+   "set_points": [
+    82.6728884652728,
+    1.260063848701018,
+    1.0021402725884991
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.32332703457663475,
+   "wall_s": 486.35518890002277
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 3,
+   "scenario": 23,
+   "set_points": [
+    73.77241635385532,
+    1.2601000500645854,
+    1.0039642665184896
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.2668703689438537,
+   "wall_s": 713.9281913999002
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 4,
+   "scenario": 23,
+   "set_points": [
+    73.77461945705745,
+    1.2600003118542833,
+    1.0
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.2668625059525154,
+   "wall_s": 671.495147199952
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 4,
+   "scenario": 23,
+   "set_points": [
+    82.6721500577642,
+    1.2600896796562888,
+    1.0008548743497387
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.32332916411282947,
+   "wall_s": 645.6497802000958
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 0,
+   "scenario": 24,
+   "set_points": [
+    73.55261558576984,
+    1.26,
+    1.0
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.26600944465376714,
+   "wall_s": 514.6906292000785
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 0,
+   "scenario": 24,
+   "set_points": [
+    84.35133800019958,
+    1.2611889852367093,
+    1.0025660841086017
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.33317283125395813,
+   "wall_s": 513.3843189999461
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 1,
+   "scenario": 24,
+   "set_points": [
+    73.5513306058958,
+    1.260062331589873,
+    1.0130841435368012
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.26601482200507487,
+   "wall_s": 553.0706016999902
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 1,
+   "scenario": 24,
+   "set_points": [
+    84.39782758219378,
+    1.260024097195931,
+    1.006888831982597
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.33313938895624673,
+   "wall_s": 460.1287330999039
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 2,
+   "scenario": 24,
+   "set_points": [
+    73.55192050742141,
+    1.2600292785489164,
+    1.0051626729401866
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.26601145295288936,
+   "wall_s": 547.5851033000508
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 2,
+   "scenario": 24,
+   "set_points": [
+    84.39158435608378,
+    1.2601804092278117,
+    1.0061283612637522
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.3331438761431103,
+   "wall_s": 501.1310828999849
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 3,
+   "scenario": 24,
+   "set_points": [
+    73.54838541745235,
+    1.2601914950791944,
+    1.0014170843436279
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.2660243795516042,
+   "wall_s": 500.29405679996125
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 3,
+   "scenario": 24,
+   "set_points": [
+    84.3893209742628,
+    1.2602370072108178,
+    1.0006805503914258
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.33314548041319103,
+   "wall_s": 510.7122918999521
+  },
+  {
+   "kind": "line",
+   "line": "A",
+   "seed": 4,
+   "scenario": 24,
+   "set_points": [
+    73.55069377102424,
+    1.2600854654435962,
+    1.0070387560794862
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.2660159164552037,
+   "wall_s": 461.70510949997697
+  },
+  {
+   "kind": "line",
+   "line": "B",
+   "seed": 4,
+   "scenario": 24,
+   "set_points": [
+    84.39851102345872,
+    1.260006887892368,
+    1.0042247398470774
+   ],
+   "feasible": true,
+   "solve_failed": false,
+   "objective": 0.33313886978747553,
+   "wall_s": 448.87759230006486
+  }
+ ]
+}
