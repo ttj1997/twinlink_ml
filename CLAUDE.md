@@ -23,6 +23,10 @@ lab book (`04_stand_ap1.md`), process setup, and synthesis documents.
 - If a finding changes existing results: report first, fix after confirmation.
 - No unilateral changes to defaults, penalty weights, tolerances or configs that underpin
   findings.
+- Only one session merges into master and pushes; other sessions deliver branches.
+- Push only the commit on which the full suite has run. Commits that change documentation
+  only (docs/, CLAUDE.md; no files under src/, tests/ or scripts/) may be pushed after ruff
+  and the denylist test. If master has moved in the meantime: check again, do not push.
 
 ## Provenance
 
