@@ -1,0 +1,106 @@
+{
+ "provenance": {
+  "git/commit": "e73b68ba1a9bd96a44eac16f7daa9886522f4a5b",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "scenarios": {
+  "0": {
+   "n_uncapped": 4,
+   "n_kept": 4,
+   "n_cut": 0
+  },
+  "1": {
+   "n_uncapped": 4,
+   "n_kept": 4,
+   "n_cut": 0
+  },
+  "2": {
+   "n_uncapped": 4,
+   "n_kept": 4,
+   "n_cut": 0
+  },
+  "3": {
+   "n_uncapped": 5,
+   "n_kept": 5,
+   "n_cut": 0
+  },
+  "4": {
+   "n_uncapped": 4,
+   "n_kept": 4,
+   "n_cut": 0
+  },
+  "5": {
+   "n_uncapped": 1,
+   "n_kept": 1,
+   "n_cut": 0
+  },
+  "6": {
+   "n_uncapped": 2,
+   "n_kept": 2,
+   "n_cut": 0
+  },
+  "7": {
+   "n_uncapped": 4,
+   "n_kept": 4,
+   "n_cut": 0
+  },
+  "8": {
+   "n_uncapped": 4,
+   "n_kept": 4,
+   "n_cut": 0
+  },
+  "9": {
+   "n_uncapped": 4,
+   "n_kept": 4,
+   "n_cut": 0
+  },
+  "10": {
+   "n_uncapped": 2,
+   "n_kept": 2,
+   "n_cut": 0
+  },
+  "11": {
+   "n_uncapped": 3,
+   "n_kept": 3,
+   "n_cut": 0
+  },
+  "12": {
+   "n_uncapped": 3,
+   "n_kept": 3,
+   "n_cut": 0
+  },
+  "13": {
+   "n_uncapped": 2,
+   "n_kept": 2,
+   "n_cut": 0
+  },
+  "14": {
+   "n_uncapped": 2,
+   "n_kept": 2,
+   "n_cut": 0
+  },
+  "15": {
+   "n_uncapped": 14,
+   "n_kept": 5,
+   "n_cut": 9,
+   "best_cut_minus_best_kept_polished": 0.13422824798362853,
+   "best_cut_minus_best_kept_table": -3.0206063505133898
+  },
+  "20": {
+   "n_uncapped": 15,
+   "n_kept": 5,
+   "n_cut": 10,
+   "best_cut_minus_best_kept_polished": 0.14220283870486128,
+   "best_cut_minus_best_kept_table": -0.004708680606881899
+  },
+  "21": {
+   "n_uncapped": 11,
+   "n_kept": 5,
+   "n_cut": 6,
+   "best_cut_minus_best_kept_polished": 0.11145195463382152,
+   "best_cut_minus_best_kept_table": 0.013817966088254252
+  }
+ }
+}
