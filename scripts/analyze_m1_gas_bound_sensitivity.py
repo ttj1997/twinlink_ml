@@ -43,6 +43,7 @@ optimiser path. Another job on the machine stretches this proportionally.
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -52,7 +53,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "verify"))
 
-from _common import RUNS_DIR, provenance, require_clean_tree, write_artifact
+from _common import NO_HEAT_NETWORK, RUNS_DIR, provenance, require_clean_tree, write_artifact
 
 ARTIFACTS = {
     "0.80": "m1_margin_cost_l015",
@@ -81,6 +82,13 @@ def _arm_counts(arm: list[dict[str, Any]]) -> dict[str, int]:
 def _bound(artifact: dict[str, Any]) -> float:
     """Lower gas-velocity bound of a run; the 0.80 artifact predates the field (config default)."""
     return float(artifact.get("gas_velocity_lower_bound_m_per_s", CONFIG_DEFAULT_BOUND))
+
+
+ARTIFACTS_K1 = {
+    "0.80": "m1_margin_cost_l015_umin080_k1",
+    "1.26": "m1_margin_cost_l015_umin126_k1",
+}
+"""Re-run after the corrections of Befund 79 (``--suffix _k1``); the rule is applied unchanged."""
 
 
 def _figures(artifact: dict[str, Any]) -> dict[str, Any]:
@@ -155,10 +163,14 @@ def _judge(a: float, b: float, kind: str) -> dict[str, Any]:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--suffix", choices=("", "_k1"), default="")
+    suffix = parser.parse_args().suffix
     require_clean_tree()
+    artifacts = ARTIFACTS_K1 if suffix == "_k1" else ARTIFACTS
     loaded = {
         bound: json.loads((RUNS_DIR / f"{name}.json").read_text("utf-8"))
-        for bound, name in ARTIFACTS.items()
+        for bound, name in artifacts.items()
     }
     assert _bound(loaded["0.80"]) == 0.8
     assert _bound(loaded["1.26"]) == 1.26
@@ -196,9 +208,9 @@ def main() -> int:
         }
     unstable = [s for s, v in verdicts.items() if not v["stable"]]
     payload = {
-        "_provenance": provenance(),
+        "_provenance": provenance(NO_HEAT_NETWORK),
         "test_set": "25 Befund-52 grid points; line A, gas heater, quality limit 0.15, margin m",
-        "source_artifacts": ARTIFACTS,
+        "source_artifacts": artifacts,
         "stability_rule": {
             "same_direction": True,
             "relative_change_below": STABLE_RELATIVE_CHANGE,
@@ -209,7 +221,7 @@ def main() -> int:
         "overall": "stable" if not unstable else "partly stable",
         "unstable_statements": unstable,
     }
-    write_artifact("m1_gas_bound_sensitivity", payload)
+    write_artifact(f"m1_gas_bound_sensitivity{suffix}", payload)
     print(json.dumps({k: figures[k] for k in figures}, indent=1)[:6000])
     print(json.dumps({s: v["stable"] for s, v in verdicts.items()}, indent=1), payload["overall"])
     return 0

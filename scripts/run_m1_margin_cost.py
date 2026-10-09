@@ -45,6 +45,16 @@ limit in S0.5, measured): anchor about 9 min (3 points in one wave); arms per li
     PYTHONPATH=<worktree>/src python scripts/run_m1_margin_cost.py --stage anchor
     PYTHONPATH=<worktree>/src python scripts/run_m1_margin_cost.py --stage arms --quality-limit 0.15
     PYTHONPATH=<worktree>/src python scripts/run_m1_margin_cost.py --stage arms --quality-limit 0.20
+
+Re-run after the corrections of Befund 79 (K1: fallback bracket of the steady-state solver), new
+artifacts under the suffix ``--artifact-suffix _k1`` (the artifacts of Befund 69 are kept unchanged;
+every setting above unchanged; the bound 0.80 m/s is then passed explicitly)::
+
+    PYTHONPATH=src python scripts/run_m1_margin_cost.py --stage anchor --artifact-suffix _k1
+    PYTHONPATH=src python scripts/run_m1_margin_cost.py --stage arms --gas-velocity-min 1.26 \
+        --artifact-suffix _k1
+    PYTHONPATH=src python scripts/run_m1_margin_cost.py --stage arms --gas-velocity-min 0.80 \
+        --artifact-suffix _k1
 """
 
 from __future__ import annotations
@@ -65,6 +75,7 @@ sys.path.insert(0, str(SCRIPTS))
 sys.path.insert(0, str(SCRIPTS / "verify"))
 
 from _common import (  # noqa: E402
+    NO_HEAT_NETWORK,
     REPO_ROOT,
     RUNS_DIR,
     provenance,
@@ -132,7 +143,7 @@ def _load_config() -> Any:
     return config
 
 
-def run_anchor() -> int:
+def run_anchor(suffix: str = "") -> int:
     config = _load_config()
     workers = cpu_count()
     budget = _budget(workers)
@@ -167,9 +178,9 @@ def run_anchor() -> int:
         )
     reproduced = all(c["reproduced"] for c in comparisons)
     write_artifact(
-        "m1_anchor_s05",
+        f"m1_anchor_s05{suffix}",
         {
-            "_provenance": provenance(),
+            "_provenance": provenance(NO_HEAT_NETWORK),
             "tolerance": ANCHOR_TOLERANCE,
             "limit_kg_per_kg": ANCHOR_LIMIT_KG_PER_KG,
             "indices": list(ANCHOR_INDICES),
@@ -270,7 +281,7 @@ def analyse(
     return {"per_point": rows, "summary": summary}
 
 
-def run_arms(quality_limit: float, gas_velocity_min: float | None) -> int:
+def run_arms(quality_limit: float, gas_velocity_min: float | None, suffix: str = "") -> int:
     config = _load_config()
     workers = cpu_count()
     budget = _budget(workers)
@@ -290,9 +301,9 @@ def run_arms(quality_limit: float, gas_velocity_min: float | None) -> int:
     fixed = find_fixed_point(config, grid, bounds, budget, spec_m0)
     analysis = analyse(fixed["per_grid_point"], m0, m)
     write_artifact(
-        f"m1_margin_cost_{tag}",
+        f"m1_margin_cost_{tag}{suffix}",
         {
-            "_provenance": provenance(),
+            "_provenance": provenance(NO_HEAT_NETWORK),
             "quality_limit_kg_per_kg": quality_limit,
             "gas_velocity_lower_bound_m_per_s": bounds[1][0],
             "gas_velocity_lower_bound_config_default_m_per_s": config_default_min,
@@ -325,14 +336,19 @@ def main() -> int:
         default=None,
         help="lower bound of the gas velocity for this run in m/s (default: the config value)",
     )
+    parser.add_argument(
+        "--artifact-suffix",
+        default="",
+        help="appended to the artifact names (re-runs never overwrite an artifact)",
+    )
     arguments = parser.parse_args()
     require_clean_tree()
     assert Path(twinlink_ml.__file__).resolve().is_relative_to(REPO_ROOT), (
         "twinlink_ml is imported from outside this checkout; set PYTHONPATH=<checkout>/src"
     )
     if arguments.stage == "anchor":
-        return run_anchor()
-    return run_arms(arguments.quality_limit, arguments.gas_velocity_min)
+        return run_anchor(arguments.artifact_suffix)
+    return run_arms(arguments.quality_limit, arguments.gas_velocity_min, arguments.artifact_suffix)
 
 
 if __name__ == "__main__":
