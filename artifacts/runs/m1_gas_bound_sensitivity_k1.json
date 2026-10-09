@@ -1,0 +1,240 @@
+{
+ "provenance": {
+  "git/commit": "c7e6b6a1295b5a2579a66cdf1457adce028073d7",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used"
+ },
+ "test_set": "25 Befund-52 grid points; line A, gas heater, quality limit 0.15, margin m",
+ "source_artifacts": {
+  "0.80": "m1_margin_cost_l015_umin080_k1",
+  "1.26": "m1_margin_cost_l015_umin126_k1"
+ },
+ "stability_rule": {
+  "same_direction": true,
+  "relative_change_below": 0.5,
+  "remaining_reference": 0.5
+ },
+ "figures": {
+  "0.80": {
+   "n_points_used": 25,
+   "n_points_masked": 0,
+   "CO2": {
+    "regret_rel_median": 0.09027899213807868,
+    "regret_rel_p95": 0.1906118083707285,
+    "regret_rel_max": 0.24338701663759915,
+    "regret_rel_pooled": 0.09349059578472052,
+    "regret_abs_median": 0.026883160836076392,
+    "cost_rel_median": 0.012950345931102216,
+    "cost_rel_max": 0.030436818543173753,
+    "remaining_median": 0.849404135637901,
+    "remaining_pooled": 0.8505576842433129
+   },
+   "kWh": {
+    "regret_rel_median": 0.09251456460059211,
+    "regret_rel_p95": 0.23108117696629238,
+    "regret_rel_max": 0.2737540334994014,
+    "regret_rel_pooled": 0.1010356439343296,
+    "regret_abs_median": 0.14020296254733844,
+    "cost_rel_median": 0.013966887385009284,
+    "cost_rel_max": 0.047352387899776416,
+    "remaining_median": 0.8477408960589677,
+    "remaining_pooled": 0.8487925419867576
+   },
+   "descriptive": {
+    "gas_velocity_lower_bound_m_per_s": 0.8,
+    "n_m0_binding_moisture": 25,
+    "n_m0_on_lower_gas_bound": 17,
+    "n_m_on_lower_gas_bound": 20,
+    "fixed_point": {
+     "inlet_temperature_celsius": 93.0145845339331,
+     "gas_velocity_m_per_s": 0.8001057439257955,
+     "nozzle_pressure_bar": 1.0079421391085879
+    },
+    "m0_gas_velocity_min_max": [
+     0.8000204706715046,
+     1.5035929902151008
+    ],
+    "distance_of_m_to_validity_boundary_at_binding_kg_per_kg": 0.05596186560806288,
+    "arm_counts": {
+     "F": {
+      "n_points": 25,
+      "n_solve_failed": 0,
+      "n_infeasible": 0,
+      "n_not_converged": 0
+     },
+     "M0": {
+      "n_points": 25,
+      "n_solve_failed": 0,
+      "n_infeasible": 0,
+      "n_not_converged": 0
+     },
+     "M": {
+      "n_points": 25,
+      "n_solve_failed": 0,
+      "n_infeasible": 0,
+      "n_not_converged": 0
+     }
+    },
+    "fixed_point_feasible_everywhere": true
+   }
+  },
+  "1.26": {
+   "n_points_used": 25,
+   "n_points_masked": 0,
+   "CO2": {
+    "regret_rel_median": 0.1651739500229584,
+    "regret_rel_p95": 0.25849369765632074,
+    "regret_rel_max": 0.27389920743151186,
+    "regret_rel_pooled": 0.1671085424498526,
+    "regret_abs_median": 0.058016903040226275,
+    "cost_rel_median": 0.014576536817215203,
+    "cost_rel_max": 0.020932409862411173,
+    "remaining_median": 0.9385604686042716,
+    "remaining_pooled": 0.9445470233973512
+   },
+   "kWh": {
+    "regret_rel_median": 0.17272148849538516,
+    "regret_rel_p95": 0.27578459105995234,
+    "regret_rel_max": 0.2888607587864327,
+    "regret_rel_pooled": 0.17543157677567978,
+    "regret_abs_median": 0.29292704098161293,
+    "cost_rel_median": 0.015406407196108666,
+    "cost_rel_max": 0.020659124055600213,
+    "remaining_median": 0.9384693473410566,
+    "remaining_pooled": 0.9455339865717822
+   },
+   "descriptive": {
+    "gas_velocity_lower_bound_m_per_s": 1.26,
+    "n_m0_binding_moisture": 13,
+    "n_m0_on_lower_gas_bound": 22,
+    "n_m_on_lower_gas_bound": 21,
+    "fixed_point": {
+     "inlet_temperature_celsius": 71.28029985963448,
+     "gas_velocity_m_per_s": 1.260055210861521,
+     "nozzle_pressure_bar": 1.0057942821982626
+    },
+    "m0_gas_velocity_min_max": [
+     1.26,
+     1.5041563772991964
+    ],
+    "distance_of_m_to_validity_boundary_at_binding_kg_per_kg": 0.05596186560806288,
+    "arm_counts": {
+     "F": {
+      "n_points": 25,
+      "n_solve_failed": 0,
+      "n_infeasible": 0,
+      "n_not_converged": 0
+     },
+     "M0": {
+      "n_points": 25,
+      "n_solve_failed": 0,
+      "n_infeasible": 0,
+      "n_not_converged": 0
+     },
+     "M": {
+      "n_points": 25,
+      "n_solve_failed": 0,
+      "n_infeasible": 0,
+      "n_not_converged": 0
+     }
+    },
+    "fixed_point_feasible_everywhere": true
+   }
+  }
+ },
+ "statements": {
+  "S1_adapting_the_operating_point_saves_energy": {
+   "figures": {
+    "CO2:regret_rel_median": {
+     "value_0.80": 0.09027899213807868,
+     "value_1.26": 0.1651739500229584,
+     "relative_change": 0.8295945281525785,
+     "same_direction": true,
+     "stable": false
+    },
+    "CO2:regret_rel_pooled": {
+     "value_0.80": 0.09349059578472052,
+     "value_1.26": 0.1671085424498526,
+     "relative_change": 0.7874369186249608,
+     "same_direction": true,
+     "stable": false
+    },
+    "kWh:regret_rel_median": {
+     "value_0.80": 0.09251456460059211,
+     "value_1.26": 0.17272148849538516,
+     "relative_change": 0.8669653717883865,
+     "same_direction": true,
+     "stable": false
+    },
+    "kWh:regret_rel_pooled": {
+     "value_0.80": 0.1010356439343296,
+     "value_1.26": 0.17543157677567978,
+     "relative_change": 0.7363335348236658,
+     "same_direction": true,
+     "stable": false
+    }
+   },
+   "stable": false
+  },
+  "S2_the_margin_costs_energy": {
+   "figures": {
+    "CO2:cost_rel_median": {
+     "value_0.80": 0.012950345931102216,
+     "value_1.26": 0.014576536817215203,
+     "relative_change": 0.12557123143772111,
+     "same_direction": true,
+     "stable": true
+    },
+    "kWh:cost_rel_median": {
+     "value_0.80": 0.013966887385009284,
+     "value_1.26": 0.015406407196108666,
+     "relative_change": 0.10306661544679058,
+     "same_direction": true,
+     "stable": true
+    }
+   },
+   "stable": true
+  },
+  "S3_most_of_the_control_benefit_survives_the_margin": {
+   "figures": {
+    "CO2:remaining_median": {
+     "value_0.80": 0.849404135637901,
+     "value_1.26": 0.9385604686042716,
+     "relative_change": 0.10496338459597251,
+     "same_direction": true,
+     "stable": true
+    },
+    "CO2:remaining_pooled": {
+     "value_0.80": 0.8505576842433129,
+     "value_1.26": 0.9445470233973512,
+     "relative_change": 0.11050319207644879,
+     "same_direction": true,
+     "stable": true
+    },
+    "kWh:remaining_median": {
+     "value_0.80": 0.8477408960589677,
+     "value_1.26": 0.9384693473410566,
+     "relative_change": 0.10702379902146172,
+     "same_direction": true,
+     "stable": true
+    },
+    "kWh:remaining_pooled": {
+     "value_0.80": 0.8487925419867576,
+     "value_1.26": 0.9455339865717822,
+     "relative_change": 0.11397537065839812,
+     "same_direction": true,
+     "stable": true
+    }
+   },
+   "stable": true
+  }
+ },
+ "overall": "partly stable",
+ "unstable_statements": [
+  "S1_adapting_the_operating_point_saves_energy"
+ ]
+}
