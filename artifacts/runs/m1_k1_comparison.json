@@ -1,0 +1,1203 @@
+{
+ "provenance": {
+  "git/commit": "bc681f34508b5181fea693c9c16e19334741e453",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used"
+ },
+ "test_set": "25 Befund-52 grid points; line A, gas heater, quality limit 0.15, margin m",
+ "note": "the two runs are kept apart; no figure of one is combined with a figure of the other",
+ "befund_69": {
+  "artifacts": {
+   "0.80": "m1_margin_cost_l015",
+   "1.26": "m1_margin_cost_l015_umin126",
+   "sensitivity": "m1_gas_bound_sensitivity"
+  },
+  "sensitivity_figures": {
+   "0.80": {
+    "n_points_used": 25,
+    "n_points_masked": 0,
+    "CO2": {
+     "regret_rel_median": 0.08335242237342302,
+     "regret_rel_p95": 0.1194423269743799,
+     "regret_rel_max": 0.15004568123466888,
+     "regret_rel_pooled": 0.08023693213340917,
+     "regret_abs_median": 0.025652391249209205,
+     "cost_rel_median": 0.012950345931102216,
+     "cost_rel_max": 0.018100666577009726,
+     "remaining_median": 0.8541719365025874,
+     "remaining_pooled": 0.8503505314778931
+    },
+    "kWh": {
+     "regret_rel_median": 0.08557569327816694,
+     "regret_rel_p95": 0.12955902255229126,
+     "regret_rel_max": 0.1587309083611721,
+     "regret_rel_pooled": 0.08315181957641715,
+     "regret_abs_median": 0.128474953185993,
+     "cost_rel_median": 0.013414713231161605,
+     "cost_rel_max": 0.017930341547018402,
+     "remaining_median": 0.8551477078069258,
+     "remaining_pooled": 0.8498339669480193
+    },
+    "descriptive": {
+     "gas_velocity_lower_bound_m_per_s": 0.8,
+     "n_m0_binding_moisture": 22,
+     "n_m0_on_lower_gas_bound": 21,
+     "n_m_on_lower_gas_bound": 22,
+     "fixed_point": {
+      "inlet_temperature_celsius": 93.01047504283311,
+      "gas_velocity_m_per_s": 0.8001611037424581,
+      "nozzle_pressure_bar": 1.0021526996458832
+     },
+     "m0_gas_velocity_min_max": [
+      0.800009787861589,
+      0.985557623930097
+     ],
+     "distance_of_m_to_validity_boundary_at_binding_kg_per_kg": 0.05596186560806288,
+     "arm_counts": {
+      "F": {
+       "n_points": 25,
+       "n_solve_failed": 0,
+       "n_infeasible": 0,
+       "n_not_converged": 0
+      },
+      "M0": {
+       "n_points": 25,
+       "n_solve_failed": 0,
+       "n_infeasible": 0,
+       "n_not_converged": 0
+      },
+      "M": {
+       "n_points": 25,
+       "n_solve_failed": 0,
+       "n_infeasible": 0,
+       "n_not_converged": 0
+      }
+     },
+     "fixed_point_feasible_everywhere": true
+    }
+   },
+   "1.26": {
+    "n_points_used": 25,
+    "n_points_masked": 0,
+    "CO2": {
+     "regret_rel_median": 0.19814721381248415,
+     "regret_rel_p95": 0.27346435985509887,
+     "regret_rel_max": 0.278631222379626,
+     "regret_rel_pooled": 0.1759673883119319,
+     "regret_abs_median": 0.0701361399823639,
+     "cost_rel_median": 0.0,
+     "cost_rel_max": 0.018164382086023605,
+     "remaining_median": 1.0,
+     "remaining_pooled": 0.9686364061728905
+    },
+    "kWh": {
+     "regret_rel_median": 0.20520383729620245,
+     "regret_rel_p95": 0.28607183802272756,
+     "regret_rel_max": 0.2912684986717097,
+     "regret_rel_pooled": 0.1834707663025802,
+     "regret_abs_median": 0.35154507426852777,
+     "cost_rel_median": 0.0,
+     "cost_rel_max": 0.019034517730814247,
+     "remaining_median": 1.0,
+     "remaining_pooled": 0.9685573176855629
+    },
+    "descriptive": {
+     "gas_velocity_lower_bound_m_per_s": 1.26,
+     "n_m0_binding_moisture": 7,
+     "n_m0_on_lower_gas_bound": 25,
+     "n_m_on_lower_gas_bound": 25,
+     "fixed_point": {
+      "inlet_temperature_celsius": 74.25413054134162,
+      "gas_velocity_m_per_s": 1.2600133806561442,
+      "nozzle_pressure_bar": 1.000038375688828
+     },
+     "m0_gas_velocity_min_max": [
+      1.26,
+      1.2602231747668204
+     ],
+     "distance_of_m_to_validity_boundary_at_binding_kg_per_kg": 0.05596186560806288,
+     "arm_counts": {
+      "F": {
+       "n_points": 25,
+       "n_solve_failed": 0,
+       "n_infeasible": 0,
+       "n_not_converged": 0
+      },
+      "M0": {
+       "n_points": 25,
+       "n_solve_failed": 0,
+       "n_infeasible": 0,
+       "n_not_converged": 0
+      },
+      "M": {
+       "n_points": 25,
+       "n_solve_failed": 0,
+       "n_infeasible": 0,
+       "n_not_converged": 0
+      }
+     },
+     "fixed_point_feasible_everywhere": true
+    }
+   }
+  },
+  "statements": {
+   "S1_adapting_the_operating_point_saves_energy": false,
+   "S2_the_margin_costs_energy": false,
+   "S3_most_of_the_control_benefit_survives_the_margin": true
+  },
+  "statement_figures": {
+   "S1_adapting_the_operating_point_saves_energy": {
+    "CO2:regret_rel_median": {
+     "value_0.80": 0.08335242237342302,
+     "value_1.26": 0.19814721381248415,
+     "relative_change": 1.3772220191127105,
+     "same_direction": true,
+     "stable": false
+    },
+    "CO2:regret_rel_pooled": {
+     "value_0.80": 0.08023693213340917,
+     "value_1.26": 0.1759673883119319,
+     "relative_change": 1.1930971640260701,
+     "same_direction": true,
+     "stable": false
+    },
+    "kWh:regret_rel_median": {
+     "value_0.80": 0.08557569327816694,
+     "value_1.26": 0.20520383729620245,
+     "relative_change": 1.3979219967190897,
+     "same_direction": true,
+     "stable": false
+    },
+    "kWh:regret_rel_pooled": {
+     "value_0.80": 0.08315181957641715,
+     "value_1.26": 0.1834707663025802,
+     "relative_change": 1.206455219346934,
+     "same_direction": true,
+     "stable": false
+    }
+   },
+   "S2_the_margin_costs_energy": {
+    "CO2:cost_rel_median": {
+     "value_0.80": 0.012950345931102216,
+     "value_1.26": 0.0,
+     "relative_change": 1.0,
+     "same_direction": false,
+     "stable": false
+    },
+    "kWh:cost_rel_median": {
+     "value_0.80": 0.013414713231161605,
+     "value_1.26": 0.0,
+     "relative_change": 1.0,
+     "same_direction": false,
+     "stable": false
+    }
+   },
+   "S3_most_of_the_control_benefit_survives_the_margin": {
+    "CO2:remaining_median": {
+     "value_0.80": 0.8541719365025874,
+     "value_1.26": 1.0,
+     "relative_change": 0.1707244844574344,
+     "same_direction": true,
+     "stable": true
+    },
+    "CO2:remaining_pooled": {
+     "value_0.80": 0.8503505314778931,
+     "value_1.26": 0.9686364061728905,
+     "relative_change": 0.13910248811089562,
+     "same_direction": true,
+     "stable": true
+    },
+    "kWh:remaining_median": {
+     "value_0.80": 0.8551477078069258,
+     "value_1.26": 1.0,
+     "relative_change": 0.1693886224223836,
+     "same_direction": true,
+     "stable": true
+    },
+    "kWh:remaining_pooled": {
+     "value_0.80": 0.8498339669480193,
+     "value_1.26": 0.9685573176855629,
+     "relative_change": 0.13970181865513195,
+     "same_direction": true,
+     "stable": true
+    }
+   }
+  },
+  "overall": "partly stable",
+  "0.80": {
+   "fixed_point": {
+    "inlet_temperature_celsius": 93.01047504283311,
+    "gas_velocity_m_per_s": 0.8001611037424581,
+    "nozzle_pressure_bar": 1.0021526996458832
+   },
+   "fixed_point_feasible_everywhere": true,
+   "bounds": {
+    "M0": {
+     "n": 25,
+     "n_on_old_solver_bound": 4,
+     "n_below_old_solver_bound": 0,
+     "n_binding_moisture": 22,
+     "n_on_inlet_box_minimum": 0,
+     "n_on_lower_gas_bound": 21
+    },
+    "M": {
+     "n": 25,
+     "n_on_old_solver_bound": 4,
+     "n_below_old_solver_bound": 0,
+     "n_binding_moisture": 22,
+     "n_on_inlet_box_minimum": 0,
+     "n_on_lower_gas_bound": 22
+    },
+    "F": {
+     "n": 25,
+     "n_on_old_solver_bound": 0,
+     "n_below_old_solver_bound": 0,
+     "n_binding_moisture": 1,
+     "n_on_inlet_box_minimum": 0,
+     "n_on_lower_gas_bound": 25
+    }
+   },
+   "m0_set_points": [
+    [
+     83.20398415640366,
+     0.8000874871768753,
+     1.0046391887538926
+    ],
+    [
+     83.70634322308617,
+     0.8001661808622613,
+     1.0092624577903804
+    ],
+    [
+     84.21574152385845,
+     0.8000451705058002,
+     1.0004647231694463
+    ],
+    [
+     84.70257328174289,
+     0.8000726597431571,
+     1.0108683427555147
+    ],
+    [
+     85.1794341063395,
+     0.8001079881960841,
+     1.0023336110687604
+    ],
+    [
+     82.82941731095315,
+     0.8001920104301816,
+     1.0114115259170773
+    ],
+    [
+     83.6640699558449,
+     0.8000221974246804,
+     1.0091469931921182
+    ],
+    [
+     84.45552589970433,
+     0.8000555455453509,
+     1.0006284588437449
+    ],
+    [
+     85.22053780048887,
+     0.8001155260260445,
+     1.0000429301526708
+    ],
+    [
+     85.97577837433197,
+     0.8000204706715046,
+     1.003871259314175
+    ],
+    [
+     71.81261890573634,
+     0.955525818301679,
+     1.004600927691676
+    ],
+    [
+     83.96179280589934,
+     0.8007331927057124,
+     1.0047198051515507
+    ],
+    [
+     85.18268582695862,
+     0.8005529478338488,
+     1.005901380519572
+    ],
+    [
+     86.3768851612694,
+     0.8000253953080457,
+     1.009756153246509
+    ],
+    [
+     87.47780195359853,
+     0.8000388565488632,
+     1.0093728578435677
+    ],
+    [
+     76.73528824463176,
+     0.885541913635604,
+     1.0042549837731485
+    ],
+    [
+     72.78035794845108,
+     0.985557623930097,
+     1.0066348471070758
+    ],
+    [
+     86.6286827344995,
+     0.800183523836598,
+     1.0003503052039755
+    ],
+    [
+     88.26696238213559,
+     0.8001122987889204,
+     1.0034377205696452
+    ],
+    [
+     89.77466763672533,
+     0.8004917380070279,
+     1.005873389011513
+    ],
+    [
+     90.41853357433519,
+     0.8000256187060513,
+     1.0036066242186052
+    ],
+    [
+     90.14773064581206,
+     0.8000194049473095,
+     1.0125210226327983
+    ],
+    [
+     89.83636265074963,
+     0.800009787861589,
+     1.0052643587954881
+    ],
+    [
+     90.74766276034416,
+     0.8032835975870221,
+     1.0065271652763477
+    ],
+    [
+     93.00804281524225,
+     0.8001940843868829,
+     1.0085462854642144
+    ]
+   ],
+   "m0_co2_kg_per_h": [
+    0.3319033105614405,
+    0.33364016614399683,
+    0.3353218580256139,
+    0.3369819859094972,
+    0.3386095175877527,
+    0.29952611420363007,
+    0.30235595181669817,
+    0.3051006326099834,
+    0.30775819728771897,
+    0.3103217355378107,
+    0.27022114635608396,
+    0.2726634938517641,
+    0.2768927589206716,
+    0.2808996757309476,
+    0.28474273857170096,
+    0.23695051218500052,
+    0.2444381682846628,
+    0.251155702261803,
+    0.2569346569407549,
+    0.2623674203554342,
+    0.23347361702773897,
+    0.23278287799122338,
+    0.23194959702194853,
+    0.2362199908901733,
+    0.24341139297275874
+   ]
+  },
+  "1.26": {
+   "fixed_point": {
+    "inlet_temperature_celsius": 74.25413054134162,
+    "gas_velocity_m_per_s": 1.2600133806561442,
+    "nozzle_pressure_bar": 1.000038375688828
+   },
+   "fixed_point_feasible_everywhere": true,
+   "bounds": {
+    "M0": {
+     "n": 25,
+     "n_on_old_solver_bound": 8,
+     "n_below_old_solver_bound": 0,
+     "n_binding_moisture": 7,
+     "n_on_inlet_box_minimum": 10,
+     "n_on_lower_gas_bound": 25
+    },
+    "M": {
+     "n": 25,
+     "n_on_old_solver_bound": 8,
+     "n_below_old_solver_bound": 0,
+     "n_binding_moisture": 11,
+     "n_on_inlet_box_minimum": 6,
+     "n_on_lower_gas_bound": 25
+    },
+    "F": {
+     "n": 25,
+     "n_on_old_solver_bound": 1,
+     "n_below_old_solver_bound": 0,
+     "n_binding_moisture": 0,
+     "n_on_inlet_box_minimum": 0,
+     "n_on_lower_gas_bound": 25
+    }
+   },
+   "m0_set_points": [
+    [
+     60.0,
+     1.26,
+     1.0089073937765887
+    ],
+    [
+     60.0,
+     1.26,
+     1.0089073937765887
+    ],
+    [
+     60.0,
+     1.26,
+     1.0
+    ],
+    [
+     60.0,
+     1.26,
+     1.0
+    ],
+    [
+     60.0,
+     1.26,
+     1.0089073937765887
+    ],
+    [
+     60.0,
+     1.26,
+     1.0052512480591556
+    ],
+    [
+     60.0,
+     1.26,
+     1.0052512480591556
+    ],
+    [
+     60.0,
+     1.26,
+     1.0052512480591556
+    ],
+    [
+     60.35633931870866,
+     1.260016186214413,
+     1.0046747284764357
+    ],
+    [
+     61.311964655046275,
+     1.2600014652032883,
+     1.0132103307395885
+    ],
+    [
+     60.0,
+     1.26,
+     1.0027489337246651
+    ],
+    [
+     60.0,
+     1.26,
+     1.0019811491771946
+    ],
+    [
+     60.96367122199025,
+     1.2600073060731367,
+     1.0129987340773174
+    ],
+    [
+     62.400893666392236,
+     1.2602231747668204,
+     1.009825396968936
+    ],
+    [
+     63.76616408441576,
+     1.2600344233253773,
+     1.001080966694037
+    ],
+    [
+     65.4967753726377,
+     1.260114942529074,
+     1.0071436863214076
+    ],
+    [
+     65.35096829398427,
+     1.2600253352706947,
+     1.0017549282443772
+    ],
+    [
+     65.17750286831296,
+     1.2601581932997066,
+     1.0079208519266603
+    ],
+    [
+     65.27359540116227,
+     1.2601328762503816,
+     1.0053554810058754
+    ],
+    [
+     67.0983263832266,
+     1.2600009889436226,
+     1.0046128252811097
+    ],
+    [
+     74.25056465182378,
+     1.2601703305914125,
+     1.0004694383770183
+    ],
+    [
+     74.11493020480822,
+     1.2600457897784745,
+     1.006335239587302
+    ],
+    [
+     73.9582008840237,
+     1.2600185419073637,
+     1.0009605705929001
+    ],
+    [
+     73.77445631480684,
+     1.2600076682612558,
+     1.004513284793737
+    ],
+    [
+     73.55261558576984,
+     1.26,
+     1.0
+    ]
+   ],
+   "m0_co2_kg_per_h": [
+    0.38269642179863667,
+    0.3827737379798102,
+    0.38285168610068065,
+    0.38293030303081727,
+    0.3830096153948729,
+    0.3332848864288244,
+    0.3334075835639975,
+    0.33353265115511355,
+    0.3356664327462762,
+    0.3411421857163266,
+    0.2840511316925146,
+    0.2842422831491337,
+    0.28995797395227024,
+    0.29838127869159153,
+    0.3062485674724129,
+    0.2668190964441499,
+    0.2662265832113572,
+    0.2655355191335207,
+    0.26636757394223826,
+    0.2769830074323836,
+    0.26850672127250813,
+    0.2680606125922894,
+    0.2675276535693274,
+    0.26686308193902003,
+    0.26600944465376714
+   ]
+  }
+ },
+ "rerun_k1": {
+  "artifacts": {
+   "0.80": "m1_margin_cost_l015_umin080_k1",
+   "1.26": "m1_margin_cost_l015_umin126_k1",
+   "sensitivity": "m1_gas_bound_sensitivity_k1"
+  },
+  "sensitivity_figures": {
+   "0.80": {
+    "n_points_used": 25,
+    "n_points_masked": 0,
+    "CO2": {
+     "regret_rel_median": 0.09027899213807868,
+     "regret_rel_p95": 0.1906118083707285,
+     "regret_rel_max": 0.24338701663759915,
+     "regret_rel_pooled": 0.09349059578472052,
+     "regret_abs_median": 0.026883160836076392,
+     "cost_rel_median": 0.012950345931102216,
+     "cost_rel_max": 0.030436818543173753,
+     "remaining_median": 0.849404135637901,
+     "remaining_pooled": 0.8505576842433129
+    },
+    "kWh": {
+     "regret_rel_median": 0.09251456460059211,
+     "regret_rel_p95": 0.23108117696629238,
+     "regret_rel_max": 0.2737540334994014,
+     "regret_rel_pooled": 0.1010356439343296,
+     "regret_abs_median": 0.14020296254733844,
+     "cost_rel_median": 0.013966887385009284,
+     "cost_rel_max": 0.047352387899776416,
+     "remaining_median": 0.8477408960589677,
+     "remaining_pooled": 0.8487925419867576
+    },
+    "descriptive": {
+     "gas_velocity_lower_bound_m_per_s": 0.8,
+     "n_m0_binding_moisture": 25,
+     "n_m0_on_lower_gas_bound": 17,
+     "n_m_on_lower_gas_bound": 20,
+     "fixed_point": {
+      "inlet_temperature_celsius": 93.0145845339331,
+      "gas_velocity_m_per_s": 0.8001057439257955,
+      "nozzle_pressure_bar": 1.0079421391085879
+     },
+     "m0_gas_velocity_min_max": [
+      0.8000204706715046,
+      1.5035929902151008
+     ],
+     "distance_of_m_to_validity_boundary_at_binding_kg_per_kg": 0.05596186560806288,
+     "arm_counts": {
+      "F": {
+       "n_points": 25,
+       "n_solve_failed": 0,
+       "n_infeasible": 0,
+       "n_not_converged": 0
+      },
+      "M0": {
+       "n_points": 25,
+       "n_solve_failed": 0,
+       "n_infeasible": 0,
+       "n_not_converged": 0
+      },
+      "M": {
+       "n_points": 25,
+       "n_solve_failed": 0,
+       "n_infeasible": 0,
+       "n_not_converged": 0
+      }
+     },
+     "fixed_point_feasible_everywhere": true
+    }
+   },
+   "1.26": {
+    "n_points_used": 25,
+    "n_points_masked": 0,
+    "CO2": {
+     "regret_rel_median": 0.1651739500229584,
+     "regret_rel_p95": 0.25849369765632074,
+     "regret_rel_max": 0.27389920743151186,
+     "regret_rel_pooled": 0.1671085424498526,
+     "regret_abs_median": 0.058016903040226275,
+     "cost_rel_median": 0.014576536817215203,
+     "cost_rel_max": 0.020932409862411173,
+     "remaining_median": 0.9385604686042716,
+     "remaining_pooled": 0.9445470233973512
+    },
+    "kWh": {
+     "regret_rel_median": 0.17272148849538516,
+     "regret_rel_p95": 0.27578459105995234,
+     "regret_rel_max": 0.2888607587864327,
+     "regret_rel_pooled": 0.17543157677567978,
+     "regret_abs_median": 0.29292704098161293,
+     "cost_rel_median": 0.015406407196108666,
+     "cost_rel_max": 0.020659124055600213,
+     "remaining_median": 0.9384693473410566,
+     "remaining_pooled": 0.9455339865717822
+    },
+    "descriptive": {
+     "gas_velocity_lower_bound_m_per_s": 1.26,
+     "n_m0_binding_moisture": 13,
+     "n_m0_on_lower_gas_bound": 22,
+     "n_m_on_lower_gas_bound": 21,
+     "fixed_point": {
+      "inlet_temperature_celsius": 71.28029985963448,
+      "gas_velocity_m_per_s": 1.260055210861521,
+      "nozzle_pressure_bar": 1.0057942821982626
+     },
+     "m0_gas_velocity_min_max": [
+      1.26,
+      1.5041563772991964
+     ],
+     "distance_of_m_to_validity_boundary_at_binding_kg_per_kg": 0.05596186560806288,
+     "arm_counts": {
+      "F": {
+       "n_points": 25,
+       "n_solve_failed": 0,
+       "n_infeasible": 0,
+       "n_not_converged": 0
+      },
+      "M0": {
+       "n_points": 25,
+       "n_solve_failed": 0,
+       "n_infeasible": 0,
+       "n_not_converged": 0
+      },
+      "M": {
+       "n_points": 25,
+       "n_solve_failed": 0,
+       "n_infeasible": 0,
+       "n_not_converged": 0
+      }
+     },
+     "fixed_point_feasible_everywhere": true
+    }
+   }
+  },
+  "statements": {
+   "S1_adapting_the_operating_point_saves_energy": false,
+   "S2_the_margin_costs_energy": true,
+   "S3_most_of_the_control_benefit_survives_the_margin": true
+  },
+  "statement_figures": {
+   "S1_adapting_the_operating_point_saves_energy": {
+    "CO2:regret_rel_median": {
+     "value_0.80": 0.09027899213807868,
+     "value_1.26": 0.1651739500229584,
+     "relative_change": 0.8295945281525785,
+     "same_direction": true,
+     "stable": false
+    },
+    "CO2:regret_rel_pooled": {
+     "value_0.80": 0.09349059578472052,
+     "value_1.26": 0.1671085424498526,
+     "relative_change": 0.7874369186249608,
+     "same_direction": true,
+     "stable": false
+    },
+    "kWh:regret_rel_median": {
+     "value_0.80": 0.09251456460059211,
+     "value_1.26": 0.17272148849538516,
+     "relative_change": 0.8669653717883865,
+     "same_direction": true,
+     "stable": false
+    },
+    "kWh:regret_rel_pooled": {
+     "value_0.80": 0.1010356439343296,
+     "value_1.26": 0.17543157677567978,
+     "relative_change": 0.7363335348236658,
+     "same_direction": true,
+     "stable": false
+    }
+   },
+   "S2_the_margin_costs_energy": {
+    "CO2:cost_rel_median": {
+     "value_0.80": 0.012950345931102216,
+     "value_1.26": 0.014576536817215203,
+     "relative_change": 0.12557123143772111,
+     "same_direction": true,
+     "stable": true
+    },
+    "kWh:cost_rel_median": {
+     "value_0.80": 0.013966887385009284,
+     "value_1.26": 0.015406407196108666,
+     "relative_change": 0.10306661544679058,
+     "same_direction": true,
+     "stable": true
+    }
+   },
+   "S3_most_of_the_control_benefit_survives_the_margin": {
+    "CO2:remaining_median": {
+     "value_0.80": 0.849404135637901,
+     "value_1.26": 0.9385604686042716,
+     "relative_change": 0.10496338459597251,
+     "same_direction": true,
+     "stable": true
+    },
+    "CO2:remaining_pooled": {
+     "value_0.80": 0.8505576842433129,
+     "value_1.26": 0.9445470233973512,
+     "relative_change": 0.11050319207644879,
+     "same_direction": true,
+     "stable": true
+    },
+    "kWh:remaining_median": {
+     "value_0.80": 0.8477408960589677,
+     "value_1.26": 0.9384693473410566,
+     "relative_change": 0.10702379902146172,
+     "same_direction": true,
+     "stable": true
+    },
+    "kWh:remaining_pooled": {
+     "value_0.80": 0.8487925419867576,
+     "value_1.26": 0.9455339865717822,
+     "relative_change": 0.11397537065839812,
+     "same_direction": true,
+     "stable": true
+    }
+   }
+  },
+  "overall": "partly stable",
+  "0.80": {
+   "fixed_point": {
+    "inlet_temperature_celsius": 93.0145845339331,
+    "gas_velocity_m_per_s": 0.8001057439257955,
+    "nozzle_pressure_bar": 1.0079421391085879
+   },
+   "fixed_point_feasible_everywhere": true,
+   "bounds": {
+    "M0": {
+     "n": 25,
+     "n_on_old_solver_bound": 0,
+     "n_below_old_solver_bound": 6,
+     "n_binding_moisture": 25,
+     "n_on_inlet_box_minimum": 1,
+     "n_on_lower_gas_bound": 17
+    },
+    "M": {
+     "n": 25,
+     "n_on_old_solver_bound": 0,
+     "n_below_old_solver_bound": 4,
+     "n_binding_moisture": 25,
+     "n_on_inlet_box_minimum": 0,
+     "n_on_lower_gas_bound": 20
+    },
+    "F": {
+     "n": 25,
+     "n_on_old_solver_bound": 0,
+     "n_below_old_solver_bound": 0,
+     "n_binding_moisture": 1,
+     "n_on_inlet_box_minimum": 0,
+     "n_on_lower_gas_bound": 25
+    }
+   },
+   "m0_set_points": [
+    [
+     83.20398415640366,
+     0.8000874871768753,
+     1.0046391887538926
+    ],
+    [
+     83.70634322308617,
+     0.8001661808622613,
+     1.0092624577903804
+    ],
+    [
+     84.21574152385845,
+     0.8000451705058002,
+     1.0004647231694463
+    ],
+    [
+     84.70257328174289,
+     0.8000726597431571,
+     1.0108683427555147
+    ],
+    [
+     85.1794341063395,
+     0.8001079881960841,
+     1.0023336110687604
+    ],
+    [
+     82.82941731095315,
+     0.8001920104301816,
+     1.0114115259170773
+    ],
+    [
+     83.6640699558449,
+     0.8000221974246804,
+     1.0091469931921182
+    ],
+    [
+     84.45552589970433,
+     0.8000555455453509,
+     1.0006284588437449
+    ],
+    [
+     85.22053780048887,
+     0.8001155260260445,
+     1.0000429301526708
+    ],
+    [
+     85.97577837433197,
+     0.8000204706715046,
+     1.003871259314175
+    ],
+    [
+     71.81261890573634,
+     0.955525818301679,
+     1.004600927691676
+    ],
+    [
+     83.96179280589934,
+     0.8007331927057124,
+     1.0047198051515507
+    ],
+    [
+     85.18268582695862,
+     0.8005529478338488,
+     1.005901380519572
+    ],
+    [
+     86.3768851612694,
+     0.8000253953080457,
+     1.009756153246509
+    ],
+    [
+     87.47780195359853,
+     0.8000388565488632,
+     1.0093728578435677
+    ],
+    [
+     60.004912832557,
+     1.2250930017938981,
+     1.0014799040843259
+    ],
+    [
+     60.07165282020588,
+     1.2927976884066577,
+     1.0019902683080697
+    ],
+    [
+     78.19462233039226,
+     0.9232745600160819,
+     1.0019612126255284
+    ],
+    [
+     88.26850736742671,
+     0.8000924360290655,
+     1.003026022288468
+    ],
+    [
+     89.76941915112513,
+     0.8005599728500525,
+     1.0008837524475171
+    ],
+    [
+     65.19439602711623,
+     1.1276173044557898,
+     1.0
+    ],
+    [
+     60.00094337043522,
+     1.3814106489354616,
+     1.0
+    ],
+    [
+     60.01413250197298,
+     1.5035929902151008,
+     1.0000257657842853
+    ],
+    [
+     83.83695750045875,
+     0.9082170365260099,
+     1.0101589085352267
+    ],
+    [
+     93.01998309309931,
+     0.8000328245143975,
+     1.0043704265766817
+    ]
+   ],
+   "m0_co2_kg_per_h": [
+    0.3319033105614405,
+    0.33364016614399683,
+    0.3353218580256139,
+    0.3369819859094972,
+    0.3386095175877527,
+    0.29952611420363007,
+    0.30235595181669817,
+    0.3051006326099834,
+    0.30775819728771897,
+    0.3103217355378107,
+    0.27022114635608396,
+    0.2726634938517641,
+    0.2768927589206716,
+    0.2808996757309476,
+    0.28474273857170096,
+    0.22878037762937406,
+    0.24162578218900801,
+    0.2525428542127091,
+    0.2569341678565414,
+    0.2623697989369949,
+    0.1949517342622287,
+    0.20414072226071744,
+    0.22262335344898135,
+    0.23713969169587518,
+    0.24340773840215252
+   ]
+  },
+  "1.26": {
+   "fixed_point": {
+    "inlet_temperature_celsius": 71.28029985963448,
+    "gas_velocity_m_per_s": 1.260055210861521,
+    "nozzle_pressure_bar": 1.0057942821982626
+   },
+   "fixed_point_feasible_everywhere": true,
+   "bounds": {
+    "M0": {
+     "n": 25,
+     "n_on_old_solver_bound": 0,
+     "n_below_old_solver_bound": 8,
+     "n_binding_moisture": 13,
+     "n_on_inlet_box_minimum": 12,
+     "n_on_lower_gas_bound": 22
+    },
+    "M": {
+     "n": 25,
+     "n_on_old_solver_bound": 0,
+     "n_below_old_solver_bound": 8,
+     "n_binding_moisture": 17,
+     "n_on_inlet_box_minimum": 8,
+     "n_on_lower_gas_bound": 21
+    },
+    "F": {
+     "n": 25,
+     "n_on_old_solver_bound": 0,
+     "n_below_old_solver_bound": 5,
+     "n_binding_moisture": 1,
+     "n_on_inlet_box_minimum": 0,
+     "n_on_lower_gas_bound": 25
+    }
+   },
+   "m0_set_points": [
+    [
+     60.0,
+     1.26,
+     1.0089073937765887
+    ],
+    [
+     60.0,
+     1.26,
+     1.0089073937765887
+    ],
+    [
+     60.0,
+     1.26,
+     1.0
+    ],
+    [
+     60.0,
+     1.26,
+     1.0
+    ],
+    [
+     60.0,
+     1.26,
+     1.0089073937765887
+    ],
+    [
+     60.0,
+     1.26,
+     1.0052512480591556
+    ],
+    [
+     60.0,
+     1.26,
+     1.0052512480591556
+    ],
+    [
+     60.0,
+     1.26,
+     1.0052512480591556
+    ],
+    [
+     60.35633931870866,
+     1.260016186214413,
+     1.0046747284764357
+    ],
+    [
+     61.311964655046275,
+     1.2600014652032883,
+     1.0132103307395885
+    ],
+    [
+     60.0,
+     1.26,
+     1.0027489337246651
+    ],
+    [
+     60.0,
+     1.26,
+     1.0019811491771946
+    ],
+    [
+     60.96367122199025,
+     1.2600073060731367,
+     1.0129987340773174
+    ],
+    [
+     62.400893666392236,
+     1.2602231747668204,
+     1.009825396968936
+    ],
+    [
+     63.76616408441576,
+     1.2600344233253773,
+     1.001080966694037
+    ],
+    [
+     60.0,
+     1.26,
+     1.006252641448742
+    ],
+    [
+     60.007408258998396,
+     1.2948063274171897,
+     1.0088328787422514
+    ],
+    [
+     63.302226605920694,
+     1.2600764803330662,
+     1.0058398876275279
+    ],
+    [
+     65.2737583478852,
+     1.2601281399438968,
+     1.0017133977386061
+    ],
+    [
+     67.09562586114035,
+     1.2600863357717484,
+     1.0089133848230332
+    ],
+    [
+     62.216972537702404,
+     1.2600438419946003,
+     1.0082494707347651
+    ],
+    [
+     60.00014950795491,
+     1.3814400979944832,
+     1.0064071869960618
+    ],
+    [
+     60.001644281590174,
+     1.5041563772991964,
+     1.0040316385969001
+    ],
+    [
+     68.96352590690037,
+     1.2603436663031875,
+     1.0083877129436893
+    ],
+    [
+     71.27674592929799,
+     1.2601732178286291,
+     1.0093765790217082
+    ]
+   ],
+   "m0_co2_kg_per_h": [
+    0.38269642179863667,
+    0.3827737379798102,
+    0.38285168610068065,
+    0.38293030303081727,
+    0.3830096153948729,
+    0.3332848864288244,
+    0.3334075835639975,
+    0.33353265115511355,
+    0.3356664327462762,
+    0.3411421857163266,
+    0.2840511316925146,
+    0.2842422831491337,
+    0.28995797395227024,
+    0.29838127869159153,
+    0.3062485674724129,
+    0.23500623112102867,
+    0.2416025321369139,
+    0.2547742670297903,
+    0.26636755177198296,
+    0.2769856706738004,
+    0.19933342148425923,
+    0.2041398478173888,
+    0.22261893296507826,
+    0.23977426982699704,
+    0.25327975436389305
+   ]
+  }
+ }
+}
