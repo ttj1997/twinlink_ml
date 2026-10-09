@@ -1,0 +1,224 @@
+{
+ "provenance": {
+  "git/commit": "75cc59503d92e1131473737299fa907a89266acc",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used"
+ },
+ "tolerance": 1e-09,
+ "limit_kg_per_kg": 0.15,
+ "indices": [
+  0,
+  12,
+  24
+ ],
+ "comparisons": [
+  {
+   "grid_index": 0,
+   "differences": {
+    "inlet_temperature_celsius": 0.0,
+    "gas_velocity_m_per_s": 0.0,
+    "nozzle_pressure_bar": 0.0,
+    "energy_target": 0.0
+   },
+   "reproduced": true
+  },
+  {
+   "grid_index": 12,
+   "differences": {
+    "inlet_temperature_celsius": 0.0,
+    "gas_velocity_m_per_s": 0.0,
+    "nozzle_pressure_bar": 0.0,
+    "energy_target": 0.0
+   },
+   "reproduced": true
+  },
+  {
+   "grid_index": 24,
+   "differences": {
+    "inlet_temperature_celsius": 0.0278741668275444,
+    "gas_velocity_m_per_s": 0.0003761659702228304,
+    "nozzle_pressure_bar": 0.005466604448834733,
+    "energy_target": 2.4482306235529272e-05
+   },
+   "reproduced": false
+  }
+ ],
+ "reproduced": false,
+ "results": [
+  {
+   "ambient_temperature_celsius": 5.0,
+   "ambient_relative_humidity": 0.25,
+   "inlet_temperature_celsius": 83.21116032329067,
+   "gas_velocity_m_per_s": 0.800004636409155,
+   "nozzle_pressure_bar": 1.0010419319338346,
+   "de_converged": false,
+   "de_nfev": 1530,
+   "de_elapsed_s": 301.171164499945,
+   "refine_converged": true,
+   "refine_nit": 80,
+   "refine_elapsed_s": 28.983851699973457,
+   "converged": true,
+   "solve_failed": false,
+   "objective": 1.3302460649635426,
+   "legacy_energy_target_kw": 1.3302460649635426,
+   "gas_heater": {
+    "electric_kw": 0.03637005492714828,
+    "gas_kw": 1.5849981122945827,
+    "kwh_sum_kw": 1.6213681672217308,
+    "co2_kg_per_h": 0.3318960606745474
+   },
+   "electric_heater": {
+    "electric_kw": 1.3302460649635424,
+    "gas_kw": 0.0,
+    "kwh_sum_kw": 1.3302460649635424,
+    "co2_kg_per_h": 0.4868700597766565
+   },
+   "bed_temperature_celsius": 37.090077004332194,
+   "outlet_temperature_celsius": 37.090077004332194,
+   "outlet_humidity_kg_per_kg": 0.01828925158327316,
+   "dew_point_celsius": 23.489884585142136,
+   "dry_air_mass_flow_kg_per_s": 0.016075923916913305,
+   "particle_moisture_kg_per_kg": 0.1499999589937427,
+   "distance_to_validity_boundary_kg_per_kg": 0.05000004100625732,
+   "residual_inf_norm": 4.284045802733152e-10,
+   "feasible": true,
+   "infeasibility_reasons": [],
+   "constraint_check": {
+    "moisture_kg_per_kg": 0.1499999589937427,
+    "moisture_violation_kg_per_kg": 0.0,
+    "gas_velocity_m_per_s": 0.800004636409155,
+    "minimum_fluidization_velocity_m_per_s": 0.22917930014587842,
+    "terminal_velocity_m_per_s": 3.4840559352809115,
+    "bed_temperature_celsius": 37.090077004332194,
+    "bed_temperature_violation_k": 0.0,
+    "solver_feasible": true,
+    "feasible": true,
+    "binding_moisture": true,
+    "binding_gas_lower": false,
+    "binding_gas_upper": false,
+    "binding_bed_temperature": false,
+    "normalized_violation": 0.0
+   },
+   "_grid_index": 0,
+   "_wall_elapsed_s": 330.3261080000084
+  },
+  {
+   "ambient_temperature_celsius": 20.0,
+   "ambient_relative_humidity": 0.55,
+   "inlet_temperature_celsius": 85.22593943221696,
+   "gas_velocity_m_per_s": 0.8000212827978561,
+   "nozzle_pressure_bar": 1.0060987462881434,
+   "de_converged": false,
+   "de_nfev": 1530,
+   "de_elapsed_s": 297.4622041999828,
+   "refine_converged": true,
+   "refine_nit": 76,
+   "refine_elapsed_s": 26.514408400049433,
+   "converged": true,
+   "solve_failed": false,
+   "objective": 1.1068032163947668,
+   "legacy_energy_target_kw": 1.1068032163947668,
+   "gas_heater": {
+    "electric_kw": 0.03632672723022075,
+    "gas_kw": 1.3113336992265683,
+    "kwh_sum_kw": 1.347660426456789,
+    "co2_kg_per_h": 0.276873655710801
+   },
+   "electric_heater": {
+    "electric_kw": 1.1068032163947665,
+    "gas_kw": 0.0,
+    "kwh_sum_kw": 1.1068032163947665,
+    "co2_kg_per_h": 0.40508997720048456
+   },
+   "bed_temperature_celsius": 40.0776062539312,
+   "outlet_temperature_celsius": 40.0776062539312,
+   "outlet_humidity_kg_per_kg": 0.02528858526956281,
+   "dew_point_celsius": 28.788303583860397,
+   "dry_air_mass_flow_kg_per_s": 0.015754733422114007,
+   "particle_moisture_kg_per_kg": 0.1499999589937427,
+   "distance_to_validity_boundary_kg_per_kg": 0.05000004100625732,
+   "residual_inf_norm": 6.49213241102723e-10,
+   "feasible": true,
+   "infeasibility_reasons": [],
+   "constraint_check": {
+    "moisture_kg_per_kg": 0.1499999589937427,
+    "moisture_violation_kg_per_kg": 0.0,
+    "gas_velocity_m_per_s": 0.8000212827978561,
+    "minimum_fluidization_velocity_m_per_s": 0.22826018384294486,
+    "terminal_velocity_m_per_s": 3.5006772149942984,
+    "bed_temperature_celsius": 40.0776062539312,
+    "bed_temperature_violation_k": 0.0,
+    "solver_feasible": true,
+    "feasible": true,
+    "binding_moisture": true,
+    "binding_gas_lower": false,
+    "binding_gas_upper": false,
+    "binding_bed_temperature": false,
+    "normalized_violation": 0.0
+   },
+   "_grid_index": 1,
+   "_wall_elapsed_s": 324.14465480006766
+  },
+  {
+   "ambient_temperature_celsius": 35.0,
+   "ambient_relative_humidity": 0.85,
+   "inlet_temperature_celsius": 92.98990016982033,
+   "gas_velocity_m_per_s": 0.8004388053453142,
+   "nozzle_pressure_bar": 1.0013219630960548,
+   "de_converged": false,
+   "de_nfev": 1530,
+   "de_elapsed_s": 293.0529677999439,
+   "refine_converged": true,
+   "refine_nit": 76,
+   "refine_elapsed_s": 26.550127599970438,
+   "converged": true,
+   "solve_failed": false,
+   "objective": 0.9709703472417042,
+   "legacy_energy_target_kw": 0.9709703472417042,
+   "gas_heater": {
+    "electric_kw": 0.03623165132023174,
+    "gas_kw": 1.1450549025038037,
+    "kwh_sum_kw": 1.1812865538240354,
+    "co2_kg_per_h": 0.2434168197864694
+   },
+   "electric_heater": {
+    "electric_kw": 0.9709703472417042,
+    "gas_kw": 0.0,
+    "kwh_sum_kw": 0.9709703472417042,
+    "co2_kg_per_h": 0.3553751470904637
+   },
+   "bed_temperature_celsius": 47.5831730501437,
+   "outlet_temperature_celsius": 47.5831730501437,
+   "outlet_humidity_kg_per_kg": 0.04915310082255313,
+   "dew_point_celsius": 40.09721979498863,
+   "dry_air_mass_flow_kg_per_s": 0.014856014160348522,
+   "particle_moisture_kg_per_kg": 0.14999989939516417,
+   "distance_to_validity_boundary_kg_per_kg": 0.05000010060483584,
+   "residual_inf_norm": 1.282274713423052e-10,
+   "feasible": true,
+   "infeasibility_reasons": [],
+   "constraint_check": {
+    "moisture_kg_per_kg": 0.14999989939516417,
+    "moisture_violation_kg_per_kg": 0.0,
+    "gas_velocity_m_per_s": 0.8004388053453142,
+    "minimum_fluidization_velocity_m_per_s": 0.22604101577850852,
+    "terminal_velocity_m_per_s": 3.5467588919643016,
+    "bed_temperature_celsius": 47.5831730501437,
+    "bed_temperature_violation_k": 0.0,
+    "solver_feasible": true,
+    "feasible": true,
+    "binding_moisture": true,
+    "binding_gas_lower": false,
+    "binding_gas_upper": false,
+    "binding_bed_temperature": false,
+    "normalized_violation": 0.0
+   },
+   "_grid_index": 2,
+   "_wall_elapsed_s": 319.77199939999264
+  }
+ ]
+}
