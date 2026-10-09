@@ -46,6 +46,11 @@ Befunde that do NOT use the stage check and are not computed here: 52 (text only
 review finding A2), 57 h (available heat per source, no stages), 61 (pinch only, suspended), 72 / 74
 (``partner_v4``, an own module), 75 (single-stream formula).
 
+Second run (artifact ``review_a1_inventory_2``): the first artifact ``review_a1_inventory`` (commit ``9e4d07a``)
+differs only in the relative figures of the summary of Befund 70, which it divided by F for every effect instead of
+by the starting arm of each effect as ``m2_site_network`` does; every other figure and every raw value is the same
+computation.
+
     PYTHONPATH=src python scripts/check_review_a1_inventory.py
 """
 
@@ -109,7 +114,7 @@ from twinlink_ml.simulation.thermo import (  # noqa: E402
     saturation_humidity_kg_per_kg,
 )
 
-ARTIFACT = "review_a1_inventory"
+ARTIFACT = "review_a1_inventory_2"
 SITE_MODES: tuple[tuple[str, str, float], ...] = (
     ("as_run_20K", "warm_end", 20.0),
     ("along_20K", "along", 20.0),
@@ -819,18 +824,32 @@ def summarise(results: list[dict[str, Any]]) -> dict[str, Any]:
                 "joint S -> M": [x["M"]["site"] - x["S"]["site"] for x in v],
                 "total F -> M": [x["M"]["site"] - x["F"]["site"] for x in v],
             }
+            # relative to the starting arm of each effect, as in ``m2_site_network`` (Befund 70)
+            starts = {
+                "routing F -> F best": "F",
+                "set points F best -> S": "F_best",
+                "joint S -> M": "S",
+                "total F -> M": "F",
+            }
+            ends = {
+                "routing F -> F best": "F_best",
+                "set points F best -> S": "S",
+                "joint S -> M": "M",
+                "total F -> M": "M",
+            }
             rel_site = {
-                key: [e / x["F"]["site"] for e, x in zip(vals, v, strict=True)]
-                for key, vals in effects.items()
+                key: [
+                    (x[ends[key]]["site"] - x[starts[key]]["site"]) / x[starts[key]]["site"]
+                    for x in v
+                ]
+                for key in effects
             }
             line_effects = {
-                "routing F -> F best": [
-                    (x["F_best"]["lines"] - x["F"]["lines"]) / x["F"]["lines"] for x in v
-                ],
-                "set points F best -> S": [
-                    (x["S"]["lines"] - x["F_best"]["lines"]) / x["F"]["lines"] for x in v
-                ],
-                "total F -> M": [(x["M"]["lines"] - x["F"]["lines"]) / x["F"]["lines"] for x in v],
+                key: [
+                    (x[ends[key]]["lines"] - x[starts[key]]["lines"]) / x[starts[key]]["lines"]
+                    for x in v
+                ]
+                for key in effects
             }
             s70[name][mode] = {
                 "site_abs_median_kg_per_h": {k_: _median(x) for k_, x in effects.items()},
