@@ -315,6 +315,29 @@ def test_k1_fallback_finds_the_drying_state_below_the_old_bound() -> None:
         )
 
 
+def test_default_solver_fails_where_no_drying_state_exists_above_ambient() -> None:
+    """Befund 79 (K1): the failure path of the outer bisection with the fallback interval.
+
+    Line A, inlet 60 degC, 0.8 m/s, ambient 35 degC / phi 0.5: the energy residual is negative at
+    ``T_amb + 10`` and in the whole fallback interval ``[T_amb + 0.5, T_amb + 10]`` (no drying state
+    above the ambient temperature), so the solver must fail loudly, with the default precision and
+    with the search precision, and name the fallback interval in the message.
+    """
+    config = _k1_line_configs()["A"]
+    for max_iterations, tolerance in ((100, 1e-13), (30, 1e-7)):
+        with pytest.raises(RuntimeError, match="Rückfallintervall.*kein Vorzeichenwechsel"):
+            evaluate_point(
+                60.0,
+                0.8,
+                1.0,
+                35.0,
+                0.5,
+                max_iterations=max_iterations,
+                tolerance=tolerance,
+                base_config=config,
+            )
+
+
 def test_k1_stored_solutions_reproduce_bit_for_bit() -> None:
     """Befund 78/79 (K1): überall, wo der alte Löser eine Lösung fand, ist das Ergebnis bitgleich.
 

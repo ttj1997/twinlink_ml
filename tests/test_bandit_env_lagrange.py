@@ -28,12 +28,6 @@ NOMINAL_POINT = {
     "ambient_temperature_celsius": 20.0,
     "ambient_relative_humidity": 0.5,
 }
-COLD_SLOW_POINT = {
-    "inlet_temperature_celsius": 60.0,
-    "gas_velocity_m_per_s": 0.8,
-    "ambient_temperature_celsius": 20.0,
-    "ambient_relative_humidity": 0.5,
-}
 FAILING_POINT = {
     "inlet_temperature_celsius": 60.0,
     "gas_velocity_m_per_s": 0.8,
@@ -42,8 +36,10 @@ FAILING_POINT = {
 }
 """A point where the steady-state solver fails (no drying state above ``T_amb + 0.5 K``).
 
-Until Befund 79 the test used ``COLD_SLOW_POINT``; with the fallback bracket of K1 that point
-solves (a wet, infeasible bed), so the failure path is exercised here."""
+Until Befund 79 the failure tests used 60 degC / 0.8 m/s at 20 degC / phi 0.5 (``COLD_SLOW_POINT``);
+with the fallback bracket of K1 that point solves (a wet, infeasible bed), so the failure path is
+exercised here. Here the solver fails also in the fallback interval (no sign change in
+``[T_amb + 0.5, T_in + 5]``)."""
 BINDING_POINT = {
     "inlet_temperature_celsius": 70.0,
     "gas_velocity_m_per_s": 1.0,
@@ -162,7 +158,7 @@ def test_failure_gets_bounded_value_not_the_sentinel(env: LagrangeBanditEnv) -> 
 def test_relabel_matches_the_environment(env: LagrangeBanditEnv) -> None:
     env.set_multipliers(np.linspace(0.1, 2.0, 25).reshape(5, 5))
     rewards, energies, rests, gs, failed, bins = [], [], [], [], [], []
-    for point in (NOMINAL_POINT, BINDING_POINT, COLD_SLOW_POINT):
+    for point in (NOMINAL_POINT, BINDING_POINT, FAILING_POINT):
         reward, info = env.evaluate_operating_point(**point)
         rewards.append(reward)
         failed.append(bool(info.get("solve_failed")))
@@ -180,6 +176,7 @@ def test_relabel_matches_the_environment(env: LagrangeBanditEnv) -> None:
         table=env.reference_table,
     )
     np.testing.assert_allclose(relabelled, rewards, rtol=0, atol=1e-12)
+    assert failed == [False, False, True]  # the failure branch of the relabelling is exercised
 
 
 def test_failure_bound_is_the_maximum_cost() -> None:
