@@ -1,0 +1,50 @@
+{
+ "provenance": {
+  "git/commit": "61ee59fffbc51e94638c2b84d58cab4baf33ced2",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "along_exchanger",
+  "heatnetwork/fingerprint": "376b15c7b3571c11"
+ },
+ "a_k1_bit_identity": {
+  "n_distinct_solutions": 1037,
+  "n_bed_temperature_identical": 1037,
+  "n_moisture_identical": 1037,
+  "n_fallback_used": 0,
+  "n_feasible": 1037,
+  "n_on_old_bound": 212,
+  "n_on_old_bound_feasible": 212
+ },
+ "b_a1_legacy_reproduction_m4c": {
+  "n_records": 400,
+  "n_co2_identical": 400
+ },
+ "c_a1_discretisation_400_vs_40000_nodes": {
+  "n_stages_with_duty": 375,
+  "max_abs_kw": 0.0004602027097462269,
+  "max_rel": 2.9152203011260537e-06,
+  "median_rel": 0.0
+ },
+ "d_check_script_grid_vs_corrected_cascade": {
+  "max_abs_co2_difference_kg_per_h_by_grid_step_k": {
+   "0.01": 0.016743890772659142,
+   "0.001": 0.0008295708269088209,
+   "0.0001": 5.064627839601599e-05
+  }
+ },
+ "e_order_variants_without_limit": {
+  "warm_end": {
+   "n_pairs": 5880,
+   "n_differing_by_more_than_1e-6": 1344,
+   "largest_difference_kg_per_h": 14.878513333065484
+  },
+  "along_exchanger": {
+   "n_pairs": 5880,
+   "n_differing_by_more_than_1e-6": 1512,
+   "largest_difference_kg_per_h": 14.878513333065484
+  }
+ },
+ "wall_s": 226.7821716000326
+}
