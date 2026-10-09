@@ -51,9 +51,13 @@ from twinlink_ml.evaluation.site_oracle import SiteOracleSpec  # noqa: E402
 from twinlink_ml.simulation import PlaceholderConfigWarning  # noqa: E402
 from twinlink_ml.simulation.oracle_search import evaluate_point  # noqa: E402
 
-ARTIFACT = "probe_cascade_runtime"
+ARTIFACT = "probe_cascade_runtime_2"
 ROUNDS = 5
 MODES = ("warm_end", "along_exchanger")
+TABLE_SET_POINTS = (90.0, 1.5, 95.0, 1.5)
+"""Set points of the table objective, inside cells with a value (asserted). The first run (artifact
+``probe_cascade_runtime``) timed it at the M4-C set points, which fall into cells without value of the
+old tables at 35 degC, so the call returned the failure value without a cascade; that figure is invalid."""
 SCENARIOS = {"2": 22, "3": 21}
 """M4-C scenario id -> grid index of the table artifact used for the table objective (nearest grid point)."""
 
@@ -106,6 +110,8 @@ def main() -> int:
         t_amb, phi = scenario["t_amb"], scenario["phi"]
         table_a = LineTable.from_dict(table_rows[grid_index]["A"])
         table_b = LineTable.from_dict(table_rows[grid_index]["B"])
+        assert table_a.state(*TABLE_SET_POINTS[:2], c.THRESHOLD) is not None
+        assert table_b.state(*TABLE_SET_POINTS[2:], c.THRESHOLD) is not None
         for label, record in (("S2", scenario["best_s2"]), ("M3'", scenario["per_seed_m3"]["0"])):
             x = record["set_points"]
             allocation = tuple(tuple(p) for p in record["allocation"])
@@ -161,9 +167,8 @@ def main() -> int:
                     "table_objective_s": _timed(
                         lambda spec=spec,
                         allocation=allocation,
-                        x=x,
                         ta=table_a,
-                        tb=table_b: js.table_objective(x, allocation, ta, tb, spec),
+                        tb=table_b: js.table_objective(TABLE_SET_POINTS, allocation, ta, tb, spec),
                         200,
                     ),
                     "polish_objective_s": _timed(
