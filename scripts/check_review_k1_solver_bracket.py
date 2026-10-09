@@ -14,7 +14,8 @@ that; it changes nothing in ``src/``, re-optimises nothing and is not a correcti
 (b) Every distinct solution on the bound (all of them, not a sample) is probed with wider brackets of the outer
     bisection, lower edge ``T_amb + 5, + 3, + 0, - 5 K`` (upper edge as the default,
     ``max(T_in, T_suspension) + 5``), at the stored set points and with the inlet temperature of that line
-    lowered by 1, 2 and 5 K (other set points held; a probe below the box minimum 60 degC is flagged). The
+    lowered by 1, 2 and 5 K (other set points held; a probe below the box minimum 60 degC is not evaluated:
+    the process config admits inlet temperatures only inside [60, 120] degC). The
     regime of each solution is checked: DRYING iff ``Y_in < Y_out < Y_s(T_bed)`` (exhaust humidity below
     saturation at the bed temperature, the air takes up water), with the residual, the product moisture, the
     solver's own feasibility flags and the CO2 of the line alone (gas heater, ``eta_gas`` 0.80, as in M1/M2).
@@ -349,10 +350,22 @@ def _probe_task(key: tuple[str, float, float, float, float, float]) -> dict[str,
     probes = []
     for d_in in INLET_PROBES_K:
         t_probe = t_in + d_in
+        if t_probe < BOX_INLET_MINIMUM_CELSIUS - 1e-9:
+            # the process config admits inlet temperatures only inside the box [60, 120] degC
+            probes.append(
+                {
+                    "inlet_change_k": d_in,
+                    "inlet_temperature_celsius": t_probe,
+                    "inside_box": False,
+                    "evaluated": False,
+                }
+            )
+            continue
         row: dict[str, Any] = {
             "inlet_change_k": d_in,
             "inlet_temperature_celsius": t_probe,
-            "inside_box": bool(t_probe >= BOX_INLET_MINIMUM_CELSIUS - 1e-9),
+            "inside_box": True,
+            "evaluated": True,
             "default_bracket": _solve(line, t_probe, u_gas, p_nozzle, t_amb, phi, None),
             "wider_brackets": {
                 f"T_amb{edge:+g}K": _solve(line, t_probe, u_gas, p_nozzle, t_amb, phi, edge)
