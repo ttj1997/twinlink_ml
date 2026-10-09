@@ -594,7 +594,9 @@ def test_condensing_mode_matches_ma1_formula_and_conserves_mass() -> None:
 
     Kondensat, Q_latent, Q_sensibel, Q_rec gegen die MA1-Formel; das Kondensat verlässt die
     Bilanz als Flüssigwasser, die Summe aus Restfeuchte und Kondensat ergibt wieder die
-    ursprüngliche Feuchtefracht.
+    ursprüngliche Feuchtefracht. Modus ``approach_check="warm_end"`` (Flash bei ``T_kalt``,
+    Stand vor Befund 79); das Profil mit Kondensation ab dem Taupunkt prüft
+    ``tests/test_heatnetwork_approach.py``.
     """
     source_temperature = 65.0
     source_humidity = 0.03
@@ -612,6 +614,7 @@ def test_condensing_mode_matches_ma1_formula_and_conserves_mass() -> None:
         sinks=(_sink("k", 250.0, intake=5.0, humidity=0.006, mass_flow=20.0),),
         minimum_pinch_k=1.0,
         recovery_mode="condensing",
+        approach_check="warm_end",
         cold_temperature_celsius=cold_temperature,
     )
     sources, sinks = _states(network)
@@ -647,7 +650,8 @@ def test_condensate_released_only_after_sensible_reserve_exhausted() -> None:
 
     Die latente Wärme einer Quelle darf erst anfallen, wenn ihre sensible Kühlreserve in
     einer Stufe bereits ausgeschöpft ist (Kondensation setzt erst bei Erreichen von
-    ``T_kalt`` ein, nicht graduell vorher).
+    ``T_kalt`` ein, nicht graduell vorher). Gilt nur im Modus ``approach_check="warm_end"``
+    (Stand vor Befund 79); im Default kondensiert die Quelle ab ihrem Taupunkt.
     """
     source_temperature = 80.0
     source_humidity = 0.03
@@ -667,6 +671,7 @@ def test_condensate_released_only_after_sensible_reserve_exhausted() -> None:
         ),
         minimum_pinch_k=1.0,
         recovery_mode="condensing",
+        approach_check="warm_end",
         cold_temperature_celsius=cold_temperature,
     )
     sources, sinks = _states(network)

@@ -37,11 +37,24 @@ from typing import Any
 
 import numpy as np
 
-from twinlink_ml.heatnetwork.balance import SharedCap, SinkState, SourceState, evaluate_cascade
-from twinlink_ml.heatnetwork.config import HeatNetworkConfig, HeatSinkConfig, HeatSourceConfig
+from twinlink_ml.heatnetwork.balance import (
+    SharedCap,
+    SinkState,
+    SourceState,
+    build_source_profiles,
+    evaluate_cascade,
+)
+from twinlink_ml.heatnetwork.config import (
+    DEFAULT_APPROACH_CHECK,
+    DEFAULT_APPROACH_PROFILE_NODES,
+    ApproachCheck,
+    HeatNetworkConfig,
+    HeatSinkConfig,
+    HeatSourceConfig,
+)
 from twinlink_ml.heatnetwork.routing import FixedRouting
 from twinlink_ml.simulation.backend import NumpyBackend
-from twinlink_ml.simulation.config import ProcessConfig
+from twinlink_ml.simulation.config import ProcessConfig, config_fingerprint
 from twinlink_ml.simulation.steady_state import SteadyStateSolution
 from twinlink_ml.simulation.thermo import absolute_humidity_kg_per_kg
 
@@ -90,6 +103,18 @@ class SiteSpec:
     """E1: duty limit of ONE exchanger that carries the heat of the external source into the inlet
     air of all lines (the sum of the stages ``Q1 -> SA``, ``Q1 -> SB``); ``None``: no limit, the
     results are bit-identical to those of M2. Synthetic: no duty figure exists in the repository."""
+    approach_check: ApproachCheck = DEFAULT_APPROACH_CHECK
+    """Check of ``dT_min`` (Befund 79, review finding A1): ``"along_exchanger"`` (default) or
+    ``"warm_end"`` (the cascade of Befunde 69 b-77, only to reproduce old artifacts)."""
+    approach_profile_nodes: int = DEFAULT_APPROACH_PROFILE_NODES
+
+    @property
+    def fingerprint(self) -> str:
+        """Stable hash of the network settings (Befund 79: in every new artifact).
+
+        The line states are not part of it; they are the run's results.
+        """
+        return config_fingerprint(dataclasses.asdict(self))
 
 
 @dataclass(frozen=True, slots=True)
@@ -279,6 +304,8 @@ def _network(
         cold_temperature_celsius=spec.t_kalt_celsius,
         fuel_lower_heating_value_j_per_kg=spec.fuel_lower_heating_value_j_per_kg,
         heater_efficiency=spec.heater_efficiency,
+        approach_check=spec.approach_check,
+        approach_profile_nodes=spec.approach_profile_nodes,
     )
     return (
         network,
@@ -294,6 +321,11 @@ def evaluate_site(
 ) -> tuple[list[SiteResult], int]:
     """Cascade for every allocation; returns the results and the number rejected by the cascade."""
     network, source_states, sink_states = _network(lines, spec)
+    profiles = (
+        build_source_profiles(network, source_states)
+        if spec.approach_check == "along_exchanger"
+        else None
+    )
     shared_caps = (
         (
             SharedCap(
@@ -311,7 +343,9 @@ def evaluate_site(
     for connections in allocations:
         try:
             stages = FixedRouting(connections).route(network)
-            cascade = evaluate_cascade(network, stages, source_states, sink_states, shared_caps)
+            cascade = evaluate_cascade(
+                network, stages, source_states, sink_states, shared_caps, profiles
+            )
         except (ValueError, RuntimeError):
             rejected += 1
             continue

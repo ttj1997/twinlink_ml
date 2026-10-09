@@ -59,6 +59,7 @@ alone) and ``G_alloc = G - G_set`` (the further gain from another allocation).
 
 from __future__ import annotations
 
+import dataclasses
 import math
 from typing import Any
 
@@ -364,14 +365,8 @@ def nested_search(
 
 
 def site_spec_with_cap(site: SiteSpec, cap_kw: float | None) -> SiteSpec:
-    """The site settings with the duty limit of the shared exchanger (``None``: no limit)."""
-    return SiteSpec(
-        scale_factor=site.scale_factor,
-        t_kalt_celsius=site.t_kalt_celsius,
-        dt_min_k=site.dt_min_k,
-        heater_efficiency=site.heater_efficiency,
-        fuel_lower_heating_value_j_per_kg=site.fuel_lower_heating_value_j_per_kg,
-        external_source=site.external_source,
-        external_sink=site.external_sink,
-        shared_cap_kw=cap_kw,
-    )
+    """The site settings with the duty limit of the shared exchanger (``None``: no limit).
+
+    Every other field is kept (``dataclasses.replace``), including ``approach_check``.
+    """
+    return dataclasses.replace(site, shared_cap_kw=cap_kw)

@@ -163,6 +163,13 @@ from ..simulation.thermo import (
     latent_heat_j_per_kg,
     saturation_humidity_kg_per_kg,
 )
+from .approach import (
+    SourceProfile,
+    build_source_profile,
+    max_duty_along,
+    profile_temperature,
+    stage_approach_diagnostics,
+)
 from .config import HeatNetworkConfig, HeatSinkConfig, HeatSourceConfig
 
 __all__ = [
@@ -176,6 +183,7 @@ __all__ = [
     "SinkState",
     "SourceState",
     "binding_label",
+    "build_source_profiles",
     "evaluate_cascade",
 ]
 
@@ -334,6 +342,10 @@ class HeatNetworkResult:
     :ivar sink_outlet_temperature_celsius: ``T_nach_WUET`` je Senke nach allen ihren Stufen,
         Form ``(n_sinks, n_steps)``.
     :ivar fuel_mass_flow_kg_per_s: ``m_gas`` je Senke, Form ``(n_sinks, n_steps)``.
+    :ivar stage_min_approach_k: Kleinste Grädigkeit über den Verlauf der Stufe (Modus
+        ``"along_exchanger"``; ``NaN`` im Modus ``"warm_end"``), Form ``(n_stages, n_steps)``.
+    :ivar stage_pinch_position: Lage dieser Engstelle, 0 = warmes Ende, 1 = kaltes Ende
+        (``NaN`` im Modus ``"warm_end"``), Form ``(n_stages, n_steps)``.
     """
 
     stage_source_names: tuple[str, ...]
@@ -351,6 +363,8 @@ class HeatNetworkResult:
     sink_names: tuple[str, ...]
     sink_outlet_temperature_celsius: FloatArray
     fuel_mass_flow_kg_per_s: FloatArray
+    stage_min_approach_k: FloatArray
+    stage_pinch_position: FloatArray
 
     def total_recovered_power_kw(self) -> FloatArray:
         """Summe der genutzten Leistung über alle Stufen, je Zeitschritt."""
@@ -414,6 +428,7 @@ def evaluate_cascade(
     sources: tuple[SourceState, ...],
     sinks: tuple[SinkState, ...],
     shared_caps: tuple[SharedCap, ...] = (),
+    profiles: dict[str, SourceProfile] | None = None,
 ) -> HeatNetworkResult:
     r"""Werte die Kaskade entlang ``stages`` aus -- der eigentliche Rechenkern (EA2/EA3).
 
@@ -450,6 +465,14 @@ def evaluate_cascade(
     ``shared_caps`` (E1, optional): Leistungsgrenzen geteilter Übertrager, siehe
     :class:`SharedCap`. Leer (Default) heißt: Rechenweg und Ergebnis bitgleich zum Stand vor E1.
 
+    **Grädigkeitsprüfung (Befund 79, Prüfbefund A1).** Der Text oben beschreibt den Modus
+    ``config.approach_check="warm_end"`` (Stand vor Befund 79, nur zur Reproduktion alter
+    Artefakte). Im Default ``"along_exchanger"`` gilt ``dT_min`` als Minimum über den ganzen
+    Gegenstrom-Übertrager, auf dem Quellprofil mit Kondensation ab dem Taupunkt, siehe
+    :mod:`~twinlink_ml.heatnetwork.approach`; ``profiles`` (optional) sind vorab gebaute
+    Profile je Quelle (:func:`build_source_profiles`), damit viele Verschaltungen derselben
+    Quellen sie nur einmal bauen.
+
     :raises ValueError: wenn ``stages`` eine Quelle/Senke referenziert, die nicht in
         ``sources``/``sinks`` vorkommt, oder wenn Quellen/Senken unterschiedliche Schrittzahlen
         mitbringen.
@@ -466,6 +489,17 @@ def evaluate_cascade(
             if pair in cap.stages:
                 cap_group_of_stage[stage_index] = group_index
     remaining_cap_w = [np.full(n_steps, cap.power_kw * 1000.0) for cap in shared_caps]
+    if config.approach_check == "along_exchanger":
+        return _evaluate_cascade_along(
+            config,
+            stages,
+            source_by_name,
+            sink_by_name,
+            cap_group_of_stage,
+            remaining_cap_w,
+            n_steps,
+            profiles,
+        )
 
     gas = config.gas
     backend = NumpyBackend()
@@ -666,4 +700,169 @@ def evaluate_cascade(
         sink_names=sink_names,
         sink_outlet_temperature_celsius=sink_outlet_temperature_celsius,
         fuel_mass_flow_kg_per_s=fuel_mass_flow_kg_per_s,
+        stage_min_approach_k=np.full((n_stages, n_steps), np.nan),
+        stage_pinch_position=np.full((n_stages, n_steps), np.nan),
+    )
+
+
+def build_source_profiles(
+    config: HeatNetworkConfig, sources: tuple[SourceState, ...]
+) -> dict[str, SourceProfile]:
+    """Profile je Quelle für den Modus ``"along_exchanger"`` (siehe :mod:`.approach`)."""
+    return {
+        state.name: build_source_profile(
+            config,
+            dry_air_mass_flow_kg_per_s=state.dry_air_mass_flow_kg_per_s,
+            outlet_temperature_celsius=state.outlet_temperature_celsius,
+            outlet_humidity_kg_per_kg=state.outlet_humidity_kg_per_kg,
+        )
+        for state in sources
+    }
+
+
+def _evaluate_cascade_along(
+    config: HeatNetworkConfig,
+    stages: tuple[tuple[str, str], ...],
+    source_by_name: dict[str, SourceState],
+    sink_by_name: dict[str, SinkState],
+    cap_group_of_stage: dict[int, int],
+    remaining_cap_w: list[FloatArray],
+    n_steps: int,
+    profiles: dict[str, SourceProfile] | None,
+) -> HeatNetworkResult:
+    """Kaskade mit ``dT_min`` als Minimum über den Verlauf jeder Stufe (Befund 79, A1).
+
+    Dieselbe Mechanik wie der Modus ``"warm_end"`` (Reihenfolge der Stufen, Sollwertgrenze der
+    Senke, Restwärme der Quelle bis zu ihrer Kühlgrenze, geteilte Übertrager, Brennstoff), aber
+    die Stufenleistung ist die größte, bei der die Grädigkeit an JEDER Stelle des
+    Gegenstrom-Übertragers mindestens ``dT_min`` beträgt, und die latente Wärme wird entlang
+    des Profils ab dem Taupunkt frei (kein Flash bei ``T_kalt``).
+    """
+    gas = config.gas
+    if profiles is None:
+        profiles = build_source_profiles(config, tuple(source_by_name.values()))
+    sink_capacity_rate_w_per_k = {
+        name: state.dry_air_mass_flow_kg_per_s
+        * (gas.cp_dry_air_j_per_kg_k + state.humidity_kg_per_kg * gas.cp_vapour_j_per_kg_k)
+        for name, state in sink_by_name.items()
+    }
+    current_sink_temperature_celsius = {
+        name: state.intake_temperature_celsius.copy() for name, state in sink_by_name.items()
+    }
+    released_w = {name: np.zeros(n_steps, dtype=np.float64) for name in source_by_name}
+
+    n_stages = len(stages)
+    stage_power_kw = np.zeros((n_stages, n_steps), dtype=np.float64)
+    stage_binding_code = np.zeros((n_stages, n_steps), dtype=np.int64)
+    stage_source_outlet_temperature_celsius = np.zeros((n_stages, n_steps), dtype=np.float64)
+    stage_sink_outlet_temperature_celsius = np.zeros((n_stages, n_steps), dtype=np.float64)
+    stage_min_approach_k = np.zeros((n_stages, n_steps), dtype=np.float64)
+    stage_pinch_position = np.zeros((n_stages, n_steps), dtype=np.float64)
+
+    for stage_index, (source_name, sink_name) in enumerate(stages):
+        profile = profiles[source_name]
+        capacity_sink = sink_capacity_rate_w_per_k[sink_name]
+        temperature_sink = current_sink_temperature_celsius[sink_name]
+        setpoint_temperature = sink_by_name[sink_name].setpoint_temperature_celsius
+        q_before = released_w[source_name]
+
+        power_for_setpoint_w = np.maximum(
+            capacity_sink * (setpoint_temperature - temperature_sink), 0.0
+        )
+        remaining_source_w = np.maximum(profile.total_w - q_before, 0.0)
+        upper_w = np.minimum(power_for_setpoint_w, remaining_source_w)
+        power_uncapped_w = max_duty_along(
+            profile, q_before, temperature_sink, capacity_sink, config.minimum_pinch_k, upper_w
+        )
+        power_actual_w = power_uncapped_w
+        group_index = cap_group_of_stage.get(stage_index)
+        if group_index is not None:
+            power_actual_w = np.minimum(power_actual_w, remaining_cap_w[group_index])
+            remaining_cap_w[group_index] = remaining_cap_w[group_index] - power_actual_w
+
+        pinch_binds = power_uncapped_w < upper_w - _POWER_TOLERANCE_W
+        dew_point_binds = (~pinch_binds) & (
+            remaining_source_w < power_for_setpoint_w - _POWER_TOLERANCE_W
+        )
+        binding_code = np.full(n_steps, BINDING_SINK_SATISFIED, dtype=np.int64)
+        binding_code = np.where(dew_point_binds, BINDING_DEW_POINT, binding_code)
+        binding_code = np.where(pinch_binds, BINDING_PINCH, binding_code)
+        if group_index is not None:
+            binding_code = np.where(
+                power_actual_w < power_uncapped_w - _POWER_TOLERANCE_W,
+                BINDING_EXCHANGER_CAP,
+                binding_code,
+            )
+
+        minimum, position = stage_approach_diagnostics(
+            profile, q_before, power_actual_w, temperature_sink, capacity_sink
+        )
+        stage_power_kw[stage_index] = power_actual_w / 1000.0
+        stage_binding_code[stage_index] = binding_code
+        stage_min_approach_k[stage_index] = minimum
+        stage_pinch_position[stage_index] = position
+
+        released_w[source_name] = q_before + power_actual_w
+        current_sink_temperature_celsius[sink_name] = (
+            temperature_sink + power_actual_w / capacity_sink
+        )
+        stage_source_outlet_temperature_celsius[stage_index] = profile_temperature(
+            profile, released_w[source_name]
+        )
+        stage_sink_outlet_temperature_celsius[stage_index] = current_sink_temperature_celsius[
+            sink_name
+        ]
+
+    source_names = tuple(source_by_name)
+    source_available_power_kw = np.stack([profiles[name].total_w / 1000.0 for name in source_names])
+    source_used_power_kw = np.stack([released_w[name] / 1000.0 for name in source_names])
+    source_condensate_kg_per_s = np.stack(
+        [
+            (
+                profiles[name].latent_released_w(released_w[name]) / profiles[name].latent_j_per_kg
+                if profiles[name].latent_j_per_kg > 0.0
+                else np.zeros(n_steps, dtype=np.float64)
+            )
+            for name in source_names
+        ]
+    )
+    source_outlet_temperature_celsius = np.stack(
+        [profile_temperature(profiles[name], released_w[name]) for name in source_names]
+    )
+    sink_names = tuple(sink_by_name)
+    sink_outlet_temperature_celsius = np.stack(
+        [current_sink_temperature_celsius[name] for name in sink_names]
+    )
+    fuel_mass_flow_kg_per_s = np.stack(
+        [
+            np.maximum(
+                sink_capacity_rate_w_per_k[name]
+                * (
+                    sink_by_name[name].setpoint_temperature_celsius
+                    - current_sink_temperature_celsius[name]
+                ),
+                0.0,
+            )
+            / (config.fuel_lower_heating_value_j_per_kg * config.heater_efficiency)
+            for name in sink_names
+        ]
+    )
+    return HeatNetworkResult(
+        stage_source_names=tuple(source_name for source_name, _ in stages),
+        stage_sink_names=tuple(sink_name for _, sink_name in stages),
+        stage_recovered_power_kw=stage_power_kw,
+        stage_binding_code=stage_binding_code,
+        stage_source_outlet_temperature_celsius=stage_source_outlet_temperature_celsius,
+        stage_sink_outlet_temperature_celsius=stage_sink_outlet_temperature_celsius,
+        source_names=source_names,
+        source_available_power_kw=source_available_power_kw,
+        source_used_power_kw=source_used_power_kw,
+        source_discarded_power_kw=source_available_power_kw - source_used_power_kw,
+        source_condensate_kg_per_s=source_condensate_kg_per_s,
+        source_outlet_temperature_celsius=source_outlet_temperature_celsius,
+        sink_names=sink_names,
+        sink_outlet_temperature_celsius=sink_outlet_temperature_celsius,
+        fuel_mass_flow_kg_per_s=fuel_mass_flow_kg_per_s,
+        stage_min_approach_k=stage_min_approach_k,
+        stage_pinch_position=stage_pinch_position,
     )

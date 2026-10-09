@@ -153,7 +153,7 @@ def test_fingerprint_changes_with_minimum_pinch_k() -> None:
     assert base.fingerprint != changed.fingerprint
 
 
-def test_section_fingerprints_cover_all_eleven_fields() -> None:
+def test_section_fingerprints_cover_all_thirteen_fields() -> None:
     network = HeatNetworkConfig(sources=(_source(),), sinks=(_sink(),))
     sections = network.section_fingerprints
     assert set(sections) == {
@@ -168,6 +168,8 @@ def test_section_fingerprints_cover_all_eleven_fields() -> None:
         "recovery_mode",
         "cold_temperature_celsius",
         "cascade_order",
+        "approach_check",
+        "approach_profile_nodes",
     }
     assert all(isinstance(value, str) and value for value in sections.values())
 

@@ -27,17 +27,37 @@ from ..simulation.config import (
 )
 
 __all__ = [
+    "DEFAULT_APPROACH_CHECK",
+    "DEFAULT_APPROACH_PROFILE_NODES",
     "DEFAULT_COLD_TEMPERATURE_CELSIUS",
     "DEFAULT_DEW_POINT_APPROACH_K",
     "DEFAULT_FUEL_LOWER_HEATING_VALUE_J_PER_KG",
     "DEFAULT_HEATER_EFFICIENCY",
     "DEFAULT_MINIMUM_PINCH_K",
     "DEFAULT_RECOVERY_MODE",
+    "ApproachCheck",
     "HeatNetworkConfig",
     "HeatSinkConfig",
     "HeatSourceConfig",
     "RecoveryMode",
 ]
+
+ApproachCheck = Literal["along_exchanger", "warm_end"]
+"""Prüfung der Mindestgrädigkeit je Stufe (Befund 78/79, Prüfbefund A1).
+
+``"along_exchanger"`` (Default seit Befund 79): ``dT_min`` als Minimum über den ganzen
+Gegenstrom-Übertrager, auf dem Quellprofil mit Kondensation ab dem Taupunkt
+(:mod:`~twinlink_ml.heatnetwork.approach`). ``"warm_end"``: nur am warmen Ende, Kondensation als
+Flash bei ``T_kalt`` -- der Stand vor Befund 79, NUR zur Reproduktion alter Artefakte.
+"""
+
+DEFAULT_APPROACH_CHECK: ApproachCheck = "along_exchanger"
+"""Default der Grädigkeitsprüfung (Befund 79). Alte Artefakte: ``approach_check="warm_end"``."""
+
+DEFAULT_APPROACH_PROFILE_NODES = 400
+"""Stützstellen des Quellprofils zwischen Taupunkt und Kühlgrenze (plus ``T_out`` und der
+Taupunkt als exakter Knoten); Diskretisierungsfehler der Stufenleistung siehe
+``tests/test_heatnetwork_approach.py``."""
 
 RecoveryMode = Literal["sensible", "condensing"]
 """Rückgewinnungsmodus je :class:`HeatNetworkConfig` (MA1).
@@ -237,6 +257,9 @@ class HeatNetworkConfig:
         :data:`DEFAULT_COLD_TEMPERATURE_CELSIUS`. Nur in ``recovery_mode="condensing"``
         wirksam; im Default-Modus mitgeführt (geht trotzdem in den Fingerprint ein), aber
         ohne Effekt auf das Ergebnis.
+    :param approach_check: Prüfung der Mindestgrädigkeit, siehe :data:`ApproachCheck`.
+    :param approach_profile_nodes: Stützstellen des Quellprofils, siehe
+        :data:`DEFAULT_APPROACH_PROFILE_NODES`.
     :param cascade_order: Explizite Bearbeitungsreihenfolge der Quellennamen
         (Niedertemperatur zuerst). Leeres Tupel (Default) bedeutet: automatisch
         aufsteigend nach ``outlet_temperature_celsius`` sortieren (siehe
@@ -256,6 +279,8 @@ class HeatNetworkConfig:
     recovery_mode: RecoveryMode = DEFAULT_RECOVERY_MODE
     cold_temperature_celsius: float = DEFAULT_COLD_TEMPERATURE_CELSIUS
     cascade_order: tuple[str, ...] = ()
+    approach_check: ApproachCheck = DEFAULT_APPROACH_CHECK
+    approach_profile_nodes: int = DEFAULT_APPROACH_PROFILE_NODES
 
     def __post_init__(self) -> None:
         if not self.sources:
@@ -291,6 +316,15 @@ class HeatNetworkConfig:
             raise ValueError(
                 "cold_temperature_celsius muss in [-40, 100] °C liegen (Gültigkeitsbereich "
                 f"von thermo.saturation_pressure_pa), ist {self.cold_temperature_celsius}"
+            )
+        if self.approach_check not in ("along_exchanger", "warm_end"):
+            raise ValueError(
+                "approach_check muss 'along_exchanger' oder 'warm_end' sein, ist "
+                f"{self.approach_check!r}"
+            )
+        if self.approach_profile_nodes < 1:
+            raise ValueError(
+                f"approach_profile_nodes muss >= 1 sein, ist {self.approach_profile_nodes}"
             )
         if self.cascade_order and set(self.cascade_order) != set(source_names):
             raise ValueError(

@@ -184,13 +184,19 @@ def test_a_violated_limit_is_not_worth_the_network_credit(config) -> None:
 
 
 def test_without_a_limit_the_m2_results_are_reproduced_bit_for_bit(config) -> None:
-    """E1 regression: the code with the cap argument gives the M2 numbers exactly (== on floats)."""
+    """E1 regression: the code with the cap argument gives the M2 numbers exactly (== on floats).
+
+    The M2 runs used the warm-end check of ``dT_min``; since Befund 79 it is reproduced in the
+    legacy mode ``approach_check="warm_end"``.
+    """
     import json
 
     artifact = json.loads(
         (REPO_ROOT / "artifacts" / "runs" / "m2_site_network_l015_umin126.json").read_text("utf-8")
     )
-    spec = so.SiteOracleSpec(0.15, sn.SiteSpec(artifact["scale_factor_k"]))
+    spec = so.SiteOracleSpec(
+        0.15, sn.SiteSpec(artifact["scale_factor_k"], approach_check="warm_end")
+    )
     for index in (0, 12, 24):
         stored = artifact["arm_F"][index]
         out = so.evaluate_site_point(
