@@ -66,7 +66,7 @@ from __future__ import annotations
 import math
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import TypeVar
+from typing import Final, TypeVar
 
 import numpy as np
 
@@ -82,12 +82,36 @@ from .sorption import isotherm_from_material, sorption_safety_grid
 from .thermo import (
     latent_heat_j_per_kg,
     relative_humidity_from_absolute_humidity,
+    saturation_humidity_kg_per_kg,
     saturation_pressure_pa,
 )
 
 _DEFAULT_MAX_ITERATIONS = 100
 _DEFAULT_TOLERANCE = 1e-13
 _DRY_AIR_GAS_CONSTANT_RATIO = 0.622
+
+BED_TEMPERATURE_SEARCH_MARGIN_K: Final = 10.0
+"""Untere Grenze der äußeren Bisektion im ersten Versuch: ``T_amb + 10 K`` (Stand vor Befund 78)."""
+
+BED_TEMPERATURE_FALLBACK_MARGIN_K: Final = 0.5
+"""Untere Grenze des Rückfallintervalls ``[T_amb + 0.5, T_amb + 10]`` (Befund 78, Prüfbefund K1).
+
+Das Rückfallintervall wird NUR durchsucht, wenn das Energiebilanz-Residuum an
+``T_amb + 10`` und am oberen Rand negativ ist (die Nullstelle liegt unterhalb von
+``T_amb + 10``; genau dann scheiterte der Löser vorher mit "kein Vorzeichenwechsel"). Überall,
+wo der Löser vorher eine Lösung fand, ist der Rechenweg unverändert und das Ergebnis bitgleich.
+Physikalische Begründung der neuen Grenze: die Zuluft trägt die absolute Feuchte der
+Umgebung, ``Y_in <= Y_s(T_amb) < Y_s(T_bed)`` für jedes ``T_bed > T_amb`` -- oberhalb der
+Umgebungstemperatur gibt es die Kondensationsbranche von ``evaporation_rate_kg_per_s``
+(``Y_in > Y_s(T_bed)``) nicht. 0.5 K hält Abstand zu gesättigter Zuluft (``phi -> 1``)."""
+
+BED_TEMPERATURE_BRACKET_RULE: Final = (
+    "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative"
+)
+"""Kennung der Suchgrenze für Provenienzblöcke (Befund 78: in jedes neue Artefakt)."""
+
+LOWER_SEARCH_BOUND_TOLERANCE_K: Final = 1.0e-6
+"""Abstand, unterhalb dessen eine Lösung als "auf der unteren Suchgrenze" gemeldet wird."""
 
 _T = TypeVar("_T")
 
@@ -137,6 +161,18 @@ class SteadyStateSolution:
     exhaust_latent_kw: float
     """Enthalpiestrom der Abluft oberhalb des Umgebungszustands (T_amb), latenter Anteil
     -- Verdampfungsenthalpie bei ``T_amb``, nicht bei ``T_bed`` (siehe Klassendocstring)."""
+
+    lower_search_bound_celsius: float = math.nan
+    """Unterste Betttemperatur, die die äußere Bisektion durchsuchen konnte (Voreinstellung:
+    ``T_amb + 0.5``, siehe :data:`BED_TEMPERATURE_FALLBACK_MARGIN_K`; sonst die untere Grenze
+    des übergebenen Brackets)."""
+
+    bed_temperature_fallback_used: bool = False
+    """``True``, wenn im Rückfallintervall ``[T_amb + 0.5, T_amb + 10]`` gesucht wurde."""
+
+    drying_regime: bool = True
+    """``Y_in < Y_out < Y_s(T_bed)`` am Lösungspunkt (die Luft nimmt Wasser auf und ist
+    ungesättigt); ``False`` ist ein Unzulässigkeitsgrund."""
 
     @property
     def solid_mass_kg(self) -> float:
@@ -287,19 +323,22 @@ def solve_steady_state(
         )
         return moisture, derivative_np, diagnostics_scalar
 
-    # Untere Grenze bewusst nicht symmetrisch zur oberen: bei Betttemperaturen nahe
-    # T_amb kippt das Modell für typische Zuluftfeuchten in die Kondensationsbranche
-    # von evaporation_rate_kg_per_s (Y_in > Y_s(T_bed)) -- dort existiert im
-    # Feuchtebracket [X_eq, moisture_high] kein Vorzeichenwechsel, weil die Bettmasse
-    # bei jeder Feuchte netto zunimmt. Das ist keine numerische Schwäche, sondern die
-    # Modellphysik (ein Bett, das kälter als die Zuluft ankommt, trocknet nicht,
-    # sondern befeuchtet sich). Der Margin von 10 K hält den Default im
-    # Trocknungsregime, für das der Beharrungszustand hier gesucht ist; Konfigurationen
-    # mit sehr geringem Wärmeeintrag brauchen ggf. ein explizites
-    # ``temperature_bracket_celsius``.
+    # Untere Grenze (Befund 78, Prüfbefund K1). Erster Versuch wie bisher ab ``T_amb + 10``.
+    # Liegt die Nullstelle darunter (Residuum an ``T_amb + 10`` und am oberen Rand negativ --
+    # der Fall, in dem der Löser vorher mit "kein Vorzeichenwechsel" scheiterte), wird das
+    # Rückfallintervall ``[T_amb + 0.5, T_amb + 10]`` durchsucht. Die frühere Begründung der
+    # 10-K-Marge (Kondensationsbranche nahe ``T_amb``) gilt nur UNTERHALB der Umgebungs-
+    # temperatur, siehe :data:`BED_TEMPERATURE_FALLBACK_MARGIN_K`. Ein übergebenes
+    # ``temperature_bracket_celsius`` wird unverändert verwendet, ohne Rückfall.
+    default_bracket = temperature_bracket_celsius is None
     temperature_low, temperature_high = temperature_bracket_celsius or (
-        ambient_temperature + 10.0,
+        ambient_temperature + BED_TEMPERATURE_SEARCH_MARGIN_K,
         max(inlet_temperature, operation.suspension_temperature_celsius) + 5.0,
+    )
+    lower_search_bound = (
+        ambient_temperature + BED_TEMPERATURE_FALLBACK_MARGIN_K
+        if default_bracket
+        else temperature_low
     )
 
     def temperature_residual(
@@ -312,13 +351,29 @@ def solve_steady_state(
             diagnostics_scalar,
         )
 
+    low_value = high_value = None
+    fallback_used = False
+    if default_bracket:
+        # Dieselben Auswertungen in derselben Reihenfolge wie in ``_bisect_with_payload`` --
+        # sie werden dorthin durchgereicht, der Rechenweg ohne Rückfall bleibt bitgleich.
+        low_value = temperature_residual(temperature_low)
+        high_value = temperature_residual(temperature_high)
+        if low_value[0] < 0.0 and high_value[0] < 0.0:
+            fallback_used = True
+            temperature_high, high_value = temperature_low, low_value
+            temperature_low, low_value = lower_search_bound, None
     temperature, (moisture, derivative_np, diagnostics_scalar) = _bisect_with_payload(
         temperature_residual,
         temperature_low,
         temperature_high,
         max_iterations=max_iterations,
         tolerance=tolerance,
-        description="Energiebilanz (dT_bed/dt fällt monoton in T_bed)",
+        description=(
+            "Energiebilanz (dT_bed/dt fällt monoton in T_bed)"
+            + (", Rückfallintervall ab T_amb + 0.5 K" if fallback_used else "")
+        ),
+        low_value=low_value,
+        high_value=high_value,
     )
 
     water_mass = moisture * solid_mass
@@ -376,6 +431,22 @@ def solve_steady_state(
     if not gas_velocity < u_terminal:
         reasons.append(f"u_gas ({gas_velocity:.4f} m/s) >= u_t(d50) ({u_terminal:.4f} m/s)")
     saturation_degree = diagnostics_scalar["saturation_degree"]
+    saturation_humidity_at_bed = float(
+        backend.to_numpy(
+            saturation_humidity_kg_per_kg(backend, gas, backend.asarray(np.array([temperature])))
+        )[0]
+    )
+    drying_regime = inlet_humidity < outlet_humidity < saturation_humidity_at_bed
+    if not drying_regime:
+        reasons.append(
+            f"kein Trocknungsregime: Y_in={inlet_humidity:.6f}, Y_out={outlet_humidity:.6f}, "
+            f"Y_s(T_bed)={saturation_humidity_at_bed:.6f} kg/kg"
+        )
+    if temperature - lower_search_bound <= LOWER_SEARCH_BOUND_TOLERANCE_K:
+        reasons.append(
+            f"Betttemperatur ({temperature:.6f} °C) auf der unteren Suchgrenze "
+            f"({lower_search_bound:.6f} °C)"
+        )
     if not saturation_degree <= 1.0 + 1e-9:
         reasons.append(f"Sättigungsgrad ({saturation_degree:.4f}) > 1")
     # Im Beharrungspunkt ist phi_Abluft fest -- anders als bei der Bracket-Grenze oben
@@ -413,6 +484,9 @@ def solve_steady_state(
         dew_point_celsius=dew_point_celsius,
         exhaust_sensible_kw=exhaust_sensible_kw,
         exhaust_latent_kw=exhaust_latent_kw,
+        lower_search_bound_celsius=lower_search_bound,
+        bed_temperature_fallback_used=fallback_used,
+        drying_regime=drying_regime,
     )
 
 
@@ -424,6 +498,8 @@ def _bisect_with_payload(
     max_iterations: int,
     tolerance: float,
     description: str,
+    low_value: tuple[float, _T] | None = None,
+    high_value: tuple[float, _T] | None = None,
 ) -> tuple[float, _T]:
     """Bisektion mit Nutzlast (z. B. abgeleitete Größen am jeweiligen Punkt).
 
@@ -432,8 +508,8 @@ def _bisect_with_payload(
     konvergiert eine Bisektion bei gleichem Vorzeichen still gegen einen der beiden
     Bracket-Ränder, ohne dass das als Fehler sichtbar würde.
     """
-    f_low, payload_low = residual_and_payload(low)
-    f_high, payload_high = residual_and_payload(high)
+    f_low, payload_low = low_value if low_value is not None else residual_and_payload(low)
+    f_high, payload_high = high_value if high_value is not None else residual_and_payload(high)
     if f_low == 0.0:
         return low, payload_low
     if f_high == 0.0:

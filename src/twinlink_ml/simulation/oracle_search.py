@@ -64,6 +64,14 @@ def evaluate_point(
     dort. Ein danach verbleibender Bracket-Fehlschlag ist damit ein echter Befund
     (der angenommene Beharrungszustand liegt außerhalb des dokumentierten Gültigkeits-
     bereichs des Lösers), keine Artefakt-Diagnose mehr.
+
+    **Nachtrag (Befund 78/79, Prüfbefund K1).** Die Begründung oben gilt nur für Grenzen
+    UNTERHALB der Umgebungstemperatur: oberhalb von ``T_amb`` ist ``Y_in < Y_s(T_bed)``, die
+    Kondensationsbranche existiert dort nicht. Die feste Grenze ``ambient+10`` schnitt bei
+    warmer Umgebung gültige Trocknungszustände ab, und mehrere berichtete Optima lagen genau
+    auf ihr. ``solve_steady_state`` durchsucht deshalb, nur wenn an ``ambient+10`` kein
+    Vorzeichenwechsel besteht, das Rückfallintervall ``[ambient+0.5, ambient+10]`` (überall
+    sonst bitgleich zum Stand davor). Diese Funktion übergibt weiterhin kein eigenes Bracket.
     """
     config = build_variant_config(
         base_config, t_in=t_in, u_gas=u_gas, p_nozzle=p_nozzle, t_amb=t_amb, phi_amb=phi_amb

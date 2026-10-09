@@ -86,6 +86,10 @@ def test_no_penalty_reward_differs_from_penalized_reward_when_infeasible() -> No
     assert reward_penalized < reward_no_penalty
 
 
+# Befund 79 (K1): the failure path is exercised at 60 degC / 0.8 m/s with 35 degC / phi 0.5. At
+# 20 degC / phi 0.5 the solver with the fallback bracket finds a (wet, infeasible) steady state.
+
+
 def test_default_solve_failure_penalty_still_uses_va2_sentinel() -> None:
     """``solve_failure_penalty_kw=None`` bleibt bitgleich zu VA2.
 
@@ -96,7 +100,7 @@ def test_default_solve_failure_penalty_still_uses_va2_sentinel() -> None:
     reward, info = env.evaluate_operating_point(
         inlet_temperature_celsius=60.0,
         gas_velocity_m_per_s=0.8,
-        ambient_temperature_celsius=20.0,
+        ambient_temperature_celsius=35.0,
         ambient_relative_humidity=0.5,
     )
     assert info["solve_failed"]
@@ -110,7 +114,7 @@ def test_bounded_solve_failure_penalty_overrides_sentinel() -> None:
     reward, info = env.evaluate_operating_point(
         inlet_temperature_celsius=60.0,
         gas_velocity_m_per_s=0.8,
-        ambient_temperature_celsius=20.0,
+        ambient_temperature_celsius=35.0,
         ambient_relative_humidity=0.5,
     )
     assert info["solve_failed"]
@@ -135,7 +139,7 @@ def test_fa1_bounded_solve_failure_penalty_with_penalty_mode() -> None:
     reward, info = env.evaluate_operating_point(
         inlet_temperature_celsius=60.0,
         gas_velocity_m_per_s=0.8,
-        ambient_temperature_celsius=20.0,
+        ambient_temperature_celsius=35.0,
         ambient_relative_humidity=0.5,
     )
     assert info["solve_failed"]

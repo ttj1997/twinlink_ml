@@ -34,6 +34,16 @@ COLD_SLOW_POINT = {
     "ambient_temperature_celsius": 20.0,
     "ambient_relative_humidity": 0.5,
 }
+FAILING_POINT = {
+    "inlet_temperature_celsius": 60.0,
+    "gas_velocity_m_per_s": 0.8,
+    "ambient_temperature_celsius": 35.0,
+    "ambient_relative_humidity": 0.5,
+}
+"""A point where the steady-state solver fails (no drying state above ``T_amb + 0.5 K``).
+
+Until Befund 79 the test used ``COLD_SLOW_POINT``; with the fallback bracket of K1 that point
+solves (a wet, infeasible bed), so the failure path is exercised here."""
 BINDING_POINT = {
     "inlet_temperature_celsius": 70.0,
     "gas_velocity_m_per_s": 1.0,
@@ -141,7 +151,7 @@ def test_feasibility_is_judged_against_the_true_limit(env: LagrangeBanditEnv) ->
 
 def test_failure_gets_bounded_value_not_the_sentinel(env: LagrangeBanditEnv) -> None:
     env.set_multipliers(np.full((5, 5), 0.5))
-    reward, info = env.evaluate_operating_point(**COLD_SLOW_POINT)
+    reward, info = env.evaluate_operating_point(**FAILING_POINT)
     assert info["solve_failed"] is True
     assert reward == -failure_bound_kw(env.reference_table, 0.5)
     assert abs(reward) < 1.0e3  # not the 1e6 sentinel of Befund 52

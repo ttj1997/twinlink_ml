@@ -25,12 +25,21 @@ from twinlink_ml.simulation import (
 )
 from twinlink_ml.simulation.config import nucleation_fraction_for_target_diameter
 from twinlink_ml.simulation.greybox import IDX_BED_TEMPERATURE, IDX_PARTICLE_COUNT, IDX_WATER_MASS
-from twinlink_ml.simulation.steady_state import solve_steady_state
+from twinlink_ml.simulation.oracle_search import build_variant_config, evaluate_point
+from twinlink_ml.simulation.steady_state import (
+    BED_TEMPERATURE_FALLBACK_MARGIN_K,
+    BED_TEMPERATURE_SEARCH_MARGIN_K,
+    solve_steady_state,
+)
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _GAB_CONFIG_PATH = _REPO_ROOT / "conf" / "process" / "greybox_gab_placeholder.yaml"
 _REGRET_SCRIPT_PATH = _REPO_ROOT / "scripts" / "study_operating_point_regret.py"
 _ANCHOR_ARTIFACT_PATH = _REPO_ROOT / "artifacts" / "runs" / "bb1_bb3_operating_point_regret.json"
+_K1_ARTIFACT_PATH = _REPO_ROOT / "artifacts" / "runs" / "review_k1_solver_bracket.json"
+_K1_SAMPLE_STRIDE = 26
+"""Jede 26. der 1037 verschiedenen gespeicherten Linienlösungen (40 Stück, alle 17 Artefakte
+der Befunde 69, 73, 76, 77 vertreten); die volle Prüfung aller 1037 steht in Befund 79."""
 _KNOWN_FAILING_GRID_INDEX = 15
 """Befund-52-Gitterpunkt, an dem Loeser-DEFAULTS (100/1e-13) an einem Bracket-
 Vorzeichenfehler scheitern, waehrend die SUCH-Praezision (30/1e-7) bitgleich zu Befund 52
@@ -222,20 +231,17 @@ def test_matches_transient_integration_at_multiple_operating_points(
     assert n_ratio <= envelope
 
 
-def test_solve_steady_state_defaults_do_not_reproduce_befund_52() -> None:
-    """WA2: die Loeser-DEFAULTS reproduzieren Befund 52 NICHT.
+def test_solve_steady_state_defaults_at_the_befund_52_trap_point_use_the_fallback() -> None:
+    """WA2, seit Befund 78/79 (K1) geändert: die Löser-DEFAULTS scheitern dort nicht mehr.
 
-    Falle fuer kuenftige Aufrufer, siehe
-    :func:`~twinlink_ml.simulation.steady_state.solve_steady_state`s
-    ``max_iterations``/``tolerance``-Docstring. Gitterpunkt
-    :data:`_KNOWN_FAILING_GRID_INDEX` scheitert mit den Loeser-Defaults (100
-    Bisektionsschritte/Toleranz 1e-13) an einem Bracket-Vorzeichenfehler in der aeusseren
-    Temperatur-Bisektion; mit Befund 52s eigener SUCH-Praezision
-    (``DEFAULT_SEARCH_MAX_ITERATIONS``/``DEFAULT_SEARCH_TOLERANCE``, 30/1e-7) loest
-    derselbe Punkt bitgleich zum dort berichteten ``energy_target``. Ein Regressionstest,
-    kein Rauchtest: schlaegt fehl, falls eine kuenftige Aenderung des Loesers oder seiner
-    Defaults diesen Bracket-Fehlschlag stillschweigend behebt oder verschaerft, ohne dass
-    das an dieser Stelle sichtbar wuerde.
+    Gitterpunkt :data:`_KNOWN_FAILING_GRID_INDEX` scheiterte mit den Löser-Defaults (100
+    Bisektionsschritte/Toleranz 1e-13) an einem Bracket-Vorzeichenfehler der äußeren
+    Bisektion an ``T_amb + 10`` -- die Nullstelle liegt dort im Rauschen knapp unter der
+    Grenze. Mit dem Rückfallintervall ``[T_amb + 0.5, T_amb + 10]`` finden die Defaults sie
+    (wenige 1e-6 K unter ``T_amb + 10``); ``energy_target`` stimmt auf 1e-6 relativ mit Befund
+    52 überein, ist aber NICHT bitgleich (anderer Rechenweg). Mit Befund 52s eigener
+    SUCH-Präzision (30/1e-7) läuft derselbe Punkt ohne Rückfall wie bisher. Schlägt fehl,
+    falls eine künftige Änderung das Verhalten an dieser Stelle verschiebt.
     """
     regret_module = _load_regret_module()
     with warnings.catch_warnings():
@@ -254,12 +260,87 @@ def test_solve_steady_state_defaults_do_not_reproduce_befund_52() -> None:
     )
     simulator = GreyBoxFluidBedGranulator(variant_config)
 
-    with pytest.raises(RuntimeError, match="kein Vorzeichenwechsel"):
-        solve_steady_state(simulator)
+    t_amb = point["ambient_temperature_celsius"]
+    defaults = solve_steady_state(simulator)
+    assert defaults.bed_temperature_fallback_used
+    assert 0.0 < t_amb + BED_TEMPERATURE_SEARCH_MARGIN_K - defaults.bed_temperature_celsius < 1e-4
+    assert defaults.feasible and defaults.drying_regime
+    assert defaults.diagnostics["energy_target"] == pytest.approx(point["energy_target"], rel=1e-6)
 
     solution = solve_steady_state(
         simulator,
         max_iterations=regret_module.DEFAULT_SEARCH_MAX_ITERATIONS,
         tolerance=regret_module.DEFAULT_SEARCH_TOLERANCE,
     )
+    assert not solution.bed_temperature_fallback_used
     assert solution.diagnostics["energy_target"] == pytest.approx(point["energy_target"], rel=1e-6)
+
+
+def _k1_line_configs() -> dict[str, ProcessConfig]:
+    from twinlink_ml.evaluation.site_network import with_spray_rate
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", PlaceholderConfigWarning)
+        base = load_process_config(_GAB_CONFIG_PATH)
+    return {"A": with_spray_rate(base, 1.5), "B": with_spray_rate(base, 2.0)}
+
+
+def test_k1_fallback_finds_the_drying_state_below_the_old_bound() -> None:
+    """Befund 78 (K1): Linie A, 35 degC / phi 0.25, Zuluft 1 K unter dem Festbetriebspunkt.
+
+    Mit der Grenze ``T_amb + 10`` allein gibt es keinen Vorzeichenwechsel (der alte Löser
+    scheiterte); mit dem Rückfallintervall liegt die Lösung 9.20 K über der Umgebung, im
+    Trocknungsregime, zulässig (Wert der Prüfung in ``review_k1_solver_bracket``).
+    """
+    config = _k1_line_configs()["A"]
+    t_amb, phi = 35.0, 0.25
+    args = (73.25413054134162, 1.2600133806561442, 1.000038375688828, t_amb, phi)
+    solution = evaluate_point(*args, max_iterations=30, tolerance=1e-7, base_config=config)
+    assert solution.bed_temperature_fallback_used
+    assert solution.bed_temperature_celsius - t_amb == pytest.approx(9.202, abs=1e-3)
+    assert solution.lower_search_bound_celsius == t_amb + BED_TEMPERATURE_FALLBACK_MARGIN_K
+    assert solution.drying_regime and solution.feasible
+
+    variant = build_variant_config(
+        config, t_in=args[0], u_gas=args[1], p_nozzle=args[2], t_amb=t_amb, phi_amb=phi
+    )
+    simulator = GreyBoxFluidBedGranulator(variant)
+    old_bracket = (
+        t_amb + BED_TEMPERATURE_SEARCH_MARGIN_K,
+        max(args[0], variant.operation.suspension_temperature_celsius) + 5.0,
+    )
+    with pytest.raises(RuntimeError, match="kein Vorzeichenwechsel"):
+        solve_steady_state(
+            simulator, temperature_bracket_celsius=old_bracket, max_iterations=30, tolerance=1e-7
+        )
+
+
+def test_k1_stored_solutions_reproduce_bit_for_bit() -> None:
+    """Befund 78/79 (K1): überall, wo der alte Löser eine Lösung fand, ist das Ergebnis bitgleich.
+
+    Stichprobe der in ``review_k1_solver_bracket`` gespeicherten Linienlösungen (mit dem alten
+    Löser gerechnet, gegen die Originalartefakte geprüft): Betttemperatur und Produktfeuchte
+    mit ``==``, ohne Rückfall, zulässig wie zuvor.
+    """
+    configs = _k1_line_configs()
+    stored = json.loads(_K1_ARTIFACT_PATH.read_text(encoding="utf-8"))["solutions"]
+    distinct: dict[tuple[object, ...], dict[str, object]] = {}
+    for entry in stored:
+        key = (entry["line"], *entry["set_point"], entry["t_amb"], entry["phi"])
+        distinct.setdefault(key, entry)
+    sample = list(distinct.values())[::_K1_SAMPLE_STRIDE]
+    assert len(sample) == 40
+    assert any(entry["on_bound"] for entry in sample)
+    for entry in sample:
+        solution = evaluate_point(
+            *entry["set_point"],
+            entry["t_amb"],
+            entry["phi"],
+            max_iterations=30,
+            tolerance=1e-7,
+            base_config=configs[entry["line"]],
+        )
+        assert solution.bed_temperature_celsius == entry["bed_temperature_celsius"]
+        assert solution.particle_moisture_kg_per_kg == entry["moisture_kg_per_kg"]
+        assert not solution.bed_temperature_fallback_used
+        assert solution.feasible and solution.drying_regime
