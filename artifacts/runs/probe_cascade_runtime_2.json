@@ -1,0 +1,101 @@
+{
+ "provenance": {
+  "git/commit": "e155ec61f20cc0b0ad1e6da438796dfe26ce7262",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "along_exchanger",
+  "heatnetwork/fingerprint": "376b15c7b3571c11"
+ },
+ "purpose": "run-time of the cascade with the check along the exchanger (Befund 79, step 4)",
+ "single_threaded": true,
+ "rounds": 5,
+ "cpu_load_percent_before_after": [
+  2.0,
+  4.0
+ ],
+ "median_over_states_s": {
+  "warm_end": {
+   "one_cascade_s": 0.0002071250055450946,
+   "site_441_s": 0.07184245000826195,
+   "table_objective_s": 0.00022717498359270394,
+   "polish_objective_s": 0.40788110002176836
+  },
+  "along_exchanger": {
+   "one_cascade_s": 0.0030335249612107873,
+   "site_441_s": 0.5512217500363477,
+   "table_objective_s": 0.003300449956441298,
+   "polish_objective_s": 0.35031165002146736
+  },
+  "steady_state_solve_s": 0.1753386499476619
+ },
+ "ratio_along_over_warm_end_median": {
+  "one_cascade_s": 14.62460064347242,
+  "site_441_s": 7.609395797532849,
+  "table_objective_s": 12.716176794849085,
+  "polish_objective_s": 0.8756251550647418
+ },
+ "per_state": {
+  "W (30.0; 0.82) S2": {
+   "steady_state_solve_s": 0.2685912000015378,
+   "warm_end": {
+    "one_cascade_s": 0.00029230001382529736,
+    "site_441_s": 0.10609949997160584,
+    "table_objective_s": 0.0003223000094294548,
+    "polish_objective_s": 0.5051131000509486
+   },
+   "along_exchanger": {
+    "one_cascade_s": 0.003976250009145588,
+    "site_441_s": 0.5818710000021383,
+    "table_objective_s": 0.0037655499181710184,
+    "polish_objective_s": 0.37320759997237474
+   }
+  },
+  "W (30.0; 0.82) M3'": {
+   "steady_state_solve_s": 0.17863769992254674,
+   "warm_end": {
+    "one_cascade_s": 0.0002162500168196857,
+    "site_441_s": 0.07275369996204972,
+    "table_objective_s": 0.0002361999941058457,
+    "polish_objective_s": 0.36555830005090684
+   },
+   "along_exchanger": {
+    "one_cascade_s": 0.0032669499632902443,
+    "site_441_s": 0.724405400105752,
+    "table_objective_s": 0.004574199963826686,
+    "polish_objective_s": 0.4352225000038743
+   }
+  },
+  "W (32.5; 0.6) S2": {
+   "steady_state_solve_s": 0.17203959997277707,
+   "warm_end": {
+    "one_cascade_s": 0.00014920003013685346,
+    "site_441_s": 0.07093120005447417,
+    "table_objective_s": 0.00016950001008808613,
+    "polish_objective_s": 0.4502038999926299
+   },
+   "along_exchanger": {
+    "one_cascade_s": 0.0027661999920383096,
+    "site_441_s": 0.520572500070557,
+    "table_objective_s": 0.0021077499841339886,
+    "polish_objective_s": 0.3272464999463409
+   }
+  },
+  "W (32.5; 0.6) M3'": {
+   "steady_state_solve_s": 0.1589438000228256,
+   "warm_end": {
+    "one_cascade_s": 0.00019799999427050352,
+    "site_441_s": 0.06416589999571443,
+    "table_objective_s": 0.0002181499730795622,
+    "polish_objective_s": 0.3234083999413997
+   },
+   "along_exchanger": {
+    "one_cascade_s": 0.0028000999591313303,
+    "site_441_s": 0.5056062999647111,
+    "table_objective_s": 0.002835349994711578,
+    "polish_objective_s": 0.32741570007056
+   }
+  }
+ }
+}
