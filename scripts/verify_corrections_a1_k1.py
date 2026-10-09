@@ -39,7 +39,6 @@ sys.path.insert(0, str(SCRIPTS / "verify"))
 
 import check_review_a1_cascade_approach as a1  # noqa: E402
 import run_m3_joint as m3  # noqa: E402
-import twinlink_ml  # noqa: E402
 from _common import (  # noqa: E402
     REPO_ROOT,
     RUNS_DIR,
@@ -47,6 +46,8 @@ from _common import (  # noqa: E402
     require_clean_tree,
     write_artifact,
 )
+
+import twinlink_ml  # noqa: E402
 from twinlink_ml.evaluation import site_network as sn  # noqa: E402
 from twinlink_ml.heatnetwork.balance import SinkState, SourceState, evaluate_cascade  # noqa: E402
 from twinlink_ml.heatnetwork.config import (  # noqa: E402
