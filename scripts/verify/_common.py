@@ -45,13 +45,36 @@ def working_tree_dirty() -> bool:
     return bool(git("status", "--porcelain"))
 
 
-def provenance() -> dict[str, Any]:
-    """Provenance block written into every verification artifact."""
+NO_HEAT_NETWORK = "not used"
+"""Value of ``heat_network`` in :func:`provenance` for a run without a heat network."""
+
+
+def provenance(heat_network: Any = None) -> dict[str, Any]:
+    """Provenance block written into every verification artifact.
+
+    Since Befund 79 every block also names the search bound of the steady-state solver and, for
+    the heat network, the check of ``dT_min`` and the fingerprint of the network settings:
+    pass the ``SiteSpec`` or ``HeatNetworkConfig`` of the run (anything with ``approach_check``
+    and ``fingerprint``), or :data:`NO_HEAT_NETWORK` for a run without one. ``None`` (the
+    default, scripts written before Befund 79) records both as ``None``, i.e. "not recorded".
+    """
+    from twinlink_ml.simulation.steady_state import BED_TEMPERATURE_BRACKET_RULE
+
+    if heat_network is None:
+        approach_check = fingerprint = None
+    elif heat_network == NO_HEAT_NETWORK:
+        approach_check = fingerprint = NO_HEAT_NETWORK
+    else:
+        approach_check = heat_network.approach_check
+        fingerprint = heat_network.fingerprint
     return {
         "git/commit": git("rev-parse", "HEAD"),
         "git/dirty": working_tree_dirty(),
         "python": sys.version.split()[0],
         "platform": platform.platform(),
+        "solver/bed_temperature_bracket": BED_TEMPERATURE_BRACKET_RULE,
+        "heatnetwork/approach_check": approach_check,
+        "heatnetwork/fingerprint": fingerprint,
     }
 
 
