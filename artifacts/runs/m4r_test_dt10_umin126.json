@@ -1,0 +1,4491 @@
+{
+ "provenance": {
+  "git/commit": "65dcb7ed9c8c6cc57fce342155f4ad0d88e34cc6",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "along_exchanger",
+  "heatnetwork/fingerprint": "2e42ff640cdd7b92"
+ },
+ "case_dt_min_k": 10.0,
+ "criterion": "none (sensitivity; the K_R count is reported without a verdict)",
+ "criterion_rule": "G = min over seeds >= 1.0 kg/h in at least 5 of 6 W",
+ "box_inlet_temperature_celsius": [
+  60.0,
+  100.0
+ ],
+ "gas_velocity_lower_bound_m_per_s": 1.26,
+ "unbinding_cap_kw": 1000000000000.0,
+ "scale_factor_k": 271.79706373319294,
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "scenarios": {
+  "0": {
+   "id": 0,
+   "group": "W",
+   "t_amb": 30.0,
+   "phi": 0.6,
+   "absolute_humidity_ambient_kg_per_kg": 0.01603881559769612,
+   "best_s2": {
+    "value": 1085.6881151813247,
+    "co2": 1085.6881151813247,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "set_points": [
+     65.70796501691008,
+     1.2627371674980634,
+     78.81623592767221,
+     1.263899414911762
+    ],
+    "feasible": true,
+    "pair": 34,
+    "diagnostics": {
+     "A": {
+      "inlet_celsius": 65.70796501691008,
+      "gas_velocity_m_per_s": 1.2627371674980634,
+      "on_inlet_box": false,
+      "on_gas_bound": false,
+      "bed_temperature_celsius": 38.238456428050995,
+      "fallback_used": true,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "B": {
+      "inlet_celsius": 78.81623592767221,
+      "gas_velocity_m_per_s": 1.263899414911762,
+      "on_inlet_box": false,
+      "on_gas_bound": false,
+      "bed_temperature_celsius": 41.62942092229942,
+      "fallback_used": false,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "stages": [
+      {
+       "source": "LA",
+       "sink": "S1",
+       "duty_kw": 86.55821252553007,
+       "min_approach_k": 13.574980444235454,
+       "pinch_position": 0.6799445002135234
+      },
+      {
+       "source": "LB",
+       "sink": "S1",
+       "duty_kw": 125.75784952867717,
+       "min_approach_k": 10.000000000000004,
+       "pinch_position": 0.5323595265018083
+      },
+      {
+       "source": "Q1",
+       "sink": "S1",
+       "duty_kw": 1823.015235945793,
+       "min_approach_k": 10.0,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SB",
+       "duty_kw": 33.53615241172002,
+       "min_approach_k": 9.999999999999979,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SA",
+       "duty_kw": 32.70536886922177,
+       "min_approach_k": 10.000000000000007,
+       "pinch_position": 0.0
+      }
+     ],
+     "condensate_kg_per_s_scaled": {
+      "Q1": 0.029237081061714493,
+      "LA": 0.008943297493898203,
+      "LB": 0.01935356104161963
+     }
+    }
+   },
+   "per_seed_m3": {
+    "0": {
+     "value": 1084.4843472094137,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.19284863011238,
+      1.4588520535198555,
+      66.93445010812582,
+      1.6277066648728766
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403700201894587,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 29,
+     "table_error_max_kg_per_h": 0.03318039289547414
+    },
+    "1": {
+     "value": 1084.4683074820098,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "set_points": [
+      60.00144733087191,
+      1.4667132113308048,
+      64.84180361719262,
+      1.7135165323456034
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403664442747494,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 29,
+     "table_error_max_kg_per_h": 0.026358079673855173
+    },
+    "2": {
+     "value": 1084.465057427942,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.00174051126332,
+      1.4666997024967676,
+      64.90894735708287,
+      1.7106328616113862
+     ],
+     "feasible": true,
+     "moisture_a": 0.1440368828217889,
+     "moisture_b": 0.14403753840615224,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 33,
+     "table_error_max_kg_per_h": 0.024927329236788864
+    },
+    "3": {
+     "value": 1084.4736639316066,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.00276752818172,
+      1.4666511631180947,
+      64.7448426497186,
+      1.7177033130789146
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403807479335867,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 29,
+     "table_error_max_kg_per_h": 0.021096973073781555
+    },
+    "4": {
+     "value": 1084.478820535927,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.0,
+      1.4667651320848254,
+      64.64571302789267,
+      1.7220193849065075
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.1440353928573267,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 29,
+     "table_error_max_kg_per_h": 0.028416476019174297
+    }
+   },
+   "gain_per_seed": {
+    "0": 1.2037679719110201,
+    "1": 1.2198076993149698,
+    "2": 1.2230577533828182,
+    "3": 1.214451249718195,
+    "4": 1.2092946453976765
+   },
+   "gain_min_over_seeds": 1.2037679719110201,
+   "gain_best_seed": 1.2230577533828182,
+   "gain_median_over_seeds": 1.214451249718195,
+   "best_m3_diagnostics": {
+    "A": {
+     "inlet_celsius": 60.00174051126332,
+     "gas_velocity_m_per_s": 1.4666997024967676,
+     "on_inlet_box": false,
+     "on_gas_bound": false,
+     "bed_temperature_celsius": 36.62642055749893,
+     "fallback_used": true,
+     "moisture_kg_per_kg": 0.1440368828217889,
+     "drying_regime": true
+    },
+    "B": {
+     "inlet_celsius": 64.90894735708287,
+     "gas_velocity_m_per_s": 1.7106328616113862,
+     "on_inlet_box": false,
+     "on_gas_bound": false,
+     "bed_temperature_celsius": 38.06210082769394,
+     "fallback_used": true,
+     "moisture_kg_per_kg": 0.14403753840615224,
+     "drying_regime": true
+    },
+    "stages": [
+     {
+      "source": "LA",
+      "sink": "S1",
+      "duty_kw": 62.144398419252646,
+      "min_approach_k": 14.100000000000001,
+      "pinch_position": 1.0
+     },
+     {
+      "source": "LA",
+      "sink": "SA",
+      "duty_kw": 0.0,
+      "min_approach_k": -0.8999999999999986,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LA",
+      "sink": "SB",
+      "duty_kw": 0.0,
+      "min_approach_k": -0.8999999999999986,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LB",
+      "sink": "S1",
+      "duty_kw": 111.60689754627346,
+      "min_approach_k": 10.167848689942623,
+      "pinch_position": 0.7089862284560147
+     },
+     {
+      "source": "LB",
+      "sink": "SA",
+      "duty_kw": 0.0,
+      "min_approach_k": -0.8999999999999986,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LB",
+      "sink": "SB",
+      "duty_kw": 0.0,
+      "min_approach_k": -0.8999999999999986,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "S1",
+      "duty_kw": 1861.5800020344739,
+      "min_approach_k": 10.0,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SA",
+      "duty_kw": 37.98079881550115,
+      "min_approach_k": 10.000000000000021,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SB",
+      "duty_kw": 42.287064384013185,
+      "min_approach_k": 10.000000000000007,
+      "pinch_position": 0.0
+     }
+    ],
+    "condensate_kg_per_s_scaled": {
+     "Q1": 0.04838087093754538,
+     "LA": 0.0,
+     "LB": 0.010478757608908233
+    }
+   },
+   "feasible_all": true
+  },
+  "1": {
+   "id": 1,
+   "group": "W",
+   "t_amb": 30.0,
+   "phi": 0.72,
+   "absolute_humidity_ambient_kg_per_kg": 0.019346351244598808,
+   "best_s2": {
+    "value": 1088.868126250684,
+    "co2": 1088.868126250684,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "set_points": [
+     67.43164430046924,
+     1.2606010291191763,
+     80.42835401852784,
+     1.2600434518914763
+    ],
+    "feasible": true,
+    "pair": 4,
+    "diagnostics": {
+     "A": {
+      "inlet_celsius": 67.43164430046924,
+      "gas_velocity_m_per_s": 1.2606010291191763,
+      "on_inlet_box": false,
+      "on_gas_bound": true,
+      "bed_temperature_celsius": 39.65463751554489,
+      "fallback_used": true,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "B": {
+      "inlet_celsius": 80.42835401852784,
+      "gas_velocity_m_per_s": 1.2600434518914763,
+      "on_inlet_box": false,
+      "on_gas_bound": true,
+      "bed_temperature_celsius": 42.85942990331785,
+      "fallback_used": false,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "stages": [
+      {
+       "source": "LA",
+       "sink": "S1",
+       "duty_kw": 151.39280610566487,
+       "min_approach_k": 12.164128284937775,
+       "pinch_position": 0.35944599353411094
+      },
+      {
+       "source": "LB",
+       "sink": "S1",
+       "duty_kw": 93.19498933597364,
+       "min_approach_k": 10.0,
+       "pinch_position": 0.6703327670831949
+      },
+      {
+       "source": "Q1",
+       "sink": "S1",
+       "duty_kw": 1790.7435025583618,
+       "min_approach_k": 10.0,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SA",
+       "duty_kw": 39.79870163698704,
+       "min_approach_k": 9.999999999999979,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SB",
+       "duty_kw": 33.072271580163154,
+       "min_approach_k": 9.999999999999979,
+       "pinch_position": 0.0
+      }
+     ],
+     "condensate_kg_per_s_scaled": {
+      "Q1": 0.019891378379469027,
+      "LA": 0.03163608438885,
+      "LB": 0.010337114723202931
+     }
+    }
+   },
+   "per_seed_m3": {
+    "0": {
+     "value": 1088.357354965852,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      62.44435694383563,
+      1.4380006022957388,
+      80.3447825923664,
+      1.2620626959164303
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403807479335867,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 13,
+     "table_error_max_kg_per_h": 1.0656353343281353
+    },
+    "1": {
+     "value": 1088.592312826027,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      63.22069016001302,
+      1.4072917624247365,
+      80.43014115841927,
+      1.2600004810388636
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403533325874823,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 14,
+     "table_error_max_kg_per_h": 0.0177166301800753
+    },
+    "2": {
+     "value": 1088.0985927860452,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.000030976136685,
+      1.5438150159547976,
+      80.20812412378532,
+      1.2653775119273272
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403771720188774,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 17,
+     "table_error_max_kg_per_h": 0.018791181844107996
+    },
+    "3": {
+     "value": 1088.106003651555,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.50057820755811,
+      1.5209362347535804,
+      80.42853081494914,
+      1.2600394262514663
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 16,
+     "table_error_max_kg_per_h": 1.8151943882041905
+    },
+    "4": {
+     "value": 1089.27770001443,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      62.75601307043667,
+      1.4255125241943443,
+      80.42994308933663,
+      1.2600689299398646
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14402097000133285,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 19,
+     "table_error_max_kg_per_h": 0.016406060816507306
+    }
+   },
+   "gain_per_seed": {
+    "0": 0.5107712848321171,
+    "1": 0.2758134246571444,
+    "2": 0.7695334646389256,
+    "3": 0.762122599129043,
+    "4": -0.40957376374581145
+   },
+   "gain_min_over_seeds": -0.40957376374581145,
+   "gain_best_seed": 0.7695334646389256,
+   "gain_median_over_seeds": 0.5107712848321171,
+   "best_m3_diagnostics": {
+    "A": {
+     "inlet_celsius": 60.000030976136685,
+     "gas_velocity_m_per_s": 1.5438150159547976,
+     "on_inlet_box": true,
+     "on_gas_bound": false,
+     "bed_temperature_celsius": 37.644738137722015,
+     "fallback_used": true,
+     "moisture_kg_per_kg": 0.14403771720188774,
+     "drying_regime": true
+    },
+    "B": {
+     "inlet_celsius": 80.20812412378532,
+     "gas_velocity_m_per_s": 1.2653775119273272,
+     "on_inlet_box": false,
+     "on_gas_bound": false,
+     "bed_temperature_celsius": 42.8095515998735,
+     "fallback_used": false,
+     "moisture_kg_per_kg": 0.14403813439193713,
+     "drying_regime": true
+    },
+    "stages": [
+     {
+      "source": "LA",
+      "sink": "S1",
+      "duty_kw": 126.85246736680432,
+      "min_approach_k": 12.43625906307619,
+      "pinch_position": 0.4717397658076517
+     },
+     {
+      "source": "LA",
+      "sink": "SB",
+      "duty_kw": 0.0,
+      "min_approach_k": -0.8999999999999986,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LB",
+      "sink": "S1",
+      "duty_kw": 117.21880299703545,
+      "min_approach_k": 10.000000000000004,
+      "pinch_position": 0.5341872610116455
+     },
+     {
+      "source": "LB",
+      "sink": "SB",
+      "duty_kw": 0.0,
+      "min_approach_k": 2.5085052334779547,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "S1",
+      "duty_kw": 1791.2600276361604,
+      "min_approach_k": 10.0,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SA",
+      "duty_kw": 48.85990065307496,
+      "min_approach_k": 10.000000000000021,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SB",
+      "duty_kw": 32.8891120438585,
+      "min_approach_k": 9.999999999999979,
+      "pinch_position": 0.0
+     }
+    ],
+    "condensate_kg_per_s_scaled": {
+     "Q1": 0.02331625796182668,
+     "LA": 0.021724317616471134,
+     "LB": 0.018308289847641067
+    }
+   },
+   "feasible_all": true
+  },
+  "2": {
+   "id": 2,
+   "group": "W",
+   "t_amb": 30.0,
+   "phi": 0.82,
+   "absolute_humidity_ambient_kg_per_kg": 0.02212893982908087,
+   "best_s2": {
+    "value": 1090.5595529841535,
+    "co2": 1090.5595529841535,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "SA"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "set_points": [
+     68.74664837864997,
+     1.2600002531887982,
+     81.57549783677229,
+     1.260046135109083
+    ],
+    "feasible": true,
+    "pair": 34,
+    "diagnostics": {
+     "A": {
+      "inlet_celsius": 68.74664837864997,
+      "gas_velocity_m_per_s": 1.2600002531887982,
+      "on_inlet_box": false,
+      "on_gas_bound": true,
+      "bed_temperature_celsius": 40.7541776949012,
+      "fallback_used": false,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "B": {
+      "inlet_celsius": 81.57549783677229,
+      "gas_velocity_m_per_s": 1.260046135109083,
+      "on_inlet_box": false,
+      "on_gas_bound": true,
+      "bed_temperature_celsius": 43.80234198605168,
+      "fallback_used": false,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "stages": [
+      {
+       "source": "LA",
+       "sink": "SA",
+       "duty_kw": 5.198041295925151,
+       "min_approach_k": 10.0,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "LB",
+       "sink": "S1",
+       "duty_kw": 269.3494359044745,
+       "min_approach_k": 10.0,
+       "pinch_position": 0.22013348812040948
+      },
+      {
+       "source": "Q1",
+       "sink": "S1",
+       "duty_kw": 1765.9818620955255,
+       "min_approach_k": 10.0,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SA",
+       "duty_kw": 42.04174579710024,
+       "min_approach_k": 10.000000000000043,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SB",
+       "duty_kw": 34.049821367817934,
+       "min_approach_k": 9.999999999999972,
+       "pinch_position": 0.0
+      }
+     ],
+     "condensate_kg_per_s_scaled": {
+      "Q1": 0.01203462942779921,
+      "LA": 1.3088058567139858e-17,
+      "LB": 0.06988417798829742
+     }
+    }
+   },
+   "per_seed_m3": {
+    "0": {
+     "value": 1090.008189860967,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.00001137072559,
+      1.611508195615223,
+      81.57781388365837,
+      1.2600012392225468
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.1440349756672773,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 16,
+     "table_error_max_kg_per_h": 0.01600661016664162
+    },
+    "1": {
+     "value": 1090.0227625433035,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      60.198940971056935,
+      1.6014136170952349,
+      81.57762225289781,
+      1.2600008945644576
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403807479335867,
+     "moisture_b": 0.14403634643458252,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 14,
+     "table_error_max_kg_per_h": 0.01695009453669627
+    },
+    "2": {
+     "value": 1090.076205370103,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.90604537835559,
+      1.5665067713091791,
+      81.57737905745928,
+      1.2600005793910238
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403801519478016,
+     "moisture_b": 0.14403807479335867,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 15,
+     "table_error_max_kg_per_h": 0.00812286276618579
+    },
+    "3": {
+     "value": 1090.0077554703664,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      60.0,
+      1.611508627536392,
+      81.57741597594081,
+      1.26
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403807479335867,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 18,
+     "table_error_max_kg_per_h": 0.022134878636506983
+    },
+    "4": {
+     "value": 1090.0124764362774,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.06217959141799,
+      1.6083433840404746,
+      81.57733752303079,
+      1.260001569928953
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403747880757378,
+     "moisture_b": 0.14403807479335867,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 12,
+     "table_error_max_kg_per_h": 0.023180170803243527
+    }
+   },
+   "gain_per_seed": {
+    "0": 0.5513631231865475,
+    "1": 0.5367904408499271,
+    "2": 0.48334761405044446,
+    "3": 0.5517975137870508,
+    "4": 0.5470765478760313
+   },
+   "gain_min_over_seeds": 0.48334761405044446,
+   "gain_best_seed": 0.5517975137870508,
+   "gain_median_over_seeds": 0.5470765478760313,
+   "best_m3_diagnostics": {
+    "A": {
+     "inlet_celsius": 60.0,
+     "gas_velocity_m_per_s": 1.611508627536392,
+     "on_inlet_box": true,
+     "on_gas_bound": false,
+     "bed_temperature_celsius": 38.46937757730484,
+     "fallback_used": true,
+     "moisture_kg_per_kg": 0.14403813439193713,
+     "drying_regime": true
+    },
+    "B": {
+     "inlet_celsius": 81.57741597594081,
+     "gas_velocity_m_per_s": 1.26,
+     "on_inlet_box": false,
+     "on_gas_bound": true,
+     "bed_temperature_celsius": 43.80276232145218,
+     "fallback_used": false,
+     "moisture_kg_per_kg": 0.14403807479335867,
+     "drying_regime": true
+    },
+    "stages": [
+     {
+      "source": "LA",
+      "sink": "SB",
+      "duty_kw": 0.0,
+      "min_approach_k": 8.46937757730484,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LB",
+      "sink": "S1",
+      "duty_kw": 269.35370804599995,
+      "min_approach_k": 10.0,
+      "pinch_position": 0.2201259220653567
+     },
+     {
+      "source": "LB",
+      "sink": "SA",
+      "duty_kw": 0.0,
+      "min_approach_k": -0.3736613897887153,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "S1",
+      "duty_kw": 1765.9775899540002,
+      "min_approach_k": 10.0,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SA",
+      "duty_kw": 60.86317278342345,
+      "min_approach_k": 10.000000000000007,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SB",
+      "duty_kw": 33.11921274202666,
+      "min_approach_k": 9.999999999999993,
+      "pinch_position": 0.0
+     }
+    ],
+    "condensate_kg_per_s_scaled": {
+     "Q1": 0.01855878475257082,
+     "LA": 0.0,
+     "LB": 0.06988602770903507
+    }
+   },
+   "feasible_all": true
+  },
+  "3": {
+   "id": 3,
+   "group": "W",
+   "t_amb": 32.5,
+   "phi": 0.6,
+   "absolute_humidity_ambient_kg_per_kg": 0.018562584214768647,
+   "best_s2": {
+    "value": 1086.9064722924131,
+    "co2": 1086.9064722924131,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "set_points": [
+     61.84291796497993,
+     1.4393101095906857,
+     79.89682904792684,
+     1.2600004778229668
+    ],
+    "feasible": true,
+    "pair": 12,
+    "diagnostics": {
+     "A": {
+      "inlet_celsius": 61.84291796497993,
+      "gas_velocity_m_per_s": 1.4393101095906857,
+      "on_inlet_box": false,
+      "on_gas_bound": false,
+      "bed_temperature_celsius": 37.97426551580429,
+      "fallback_used": true,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "B": {
+      "inlet_celsius": 79.89682904792684,
+      "gas_velocity_m_per_s": 1.2600004778229668,
+      "on_inlet_box": false,
+      "on_gas_bound": true,
+      "bed_temperature_celsius": 42.58473318078467,
+      "fallback_used": false,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "stages": [
+      {
+       "source": "LA",
+       "sink": "S1",
+       "duty_kw": 118.586470666796,
+       "min_approach_k": 12.729788730204646,
+       "pinch_position": 0.49795513849367035
+      },
+      {
+       "source": "LB",
+       "sink": "S1",
+       "duty_kw": 118.708730656451,
+       "min_approach_k": 10.0,
+       "pinch_position": 0.5344262334084964
+      },
+      {
+       "source": "Q1",
+       "sink": "S1",
+       "duty_kw": 1798.0360966767535,
+       "min_approach_k": 10.0,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SA",
+       "duty_kw": 23.266249939666828,
+       "min_approach_k": 9.999999999999986,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SB",
+       "duty_kw": 16.291811759421368,
+       "min_approach_k": 10.000000000000007,
+       "pinch_position": 0.0
+      }
+     ],
+     "condensate_kg_per_s_scaled": {
+      "Q1": 0.010400186193017668,
+      "LA": 0.01929328946567372,
+      "LB": 0.018461315626172575
+     }
+    }
+   },
+   "per_seed_m3": {
+    "0": {
+     "value": 1087.0866785971984,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      62.409486392700046,
+      1.4166950596322576,
+      79.89678551393072,
+      1.2600020874015645
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.1440379555962017,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 14,
+     "table_error_max_kg_per_h": 0.019597385942915935
+    },
+    "1": {
+     "value": 1086.9386379190935,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      61.48793912647076,
+      1.4538395010210583,
+      79.53050114391283,
+      1.2689090221645523
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403801519478016,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 14,
+     "table_error_max_kg_per_h": 0.019789076559845853
+    },
+    "2": {
+     "value": 1086.6534401903582,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.00041496288974,
+      1.5179324165194852,
+      79.89682828589557,
+      1.2600007214412865
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403807479335867,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 17,
+     "table_error_max_kg_per_h": 0.019288645162760076
+    },
+    "3": {
+     "value": 1086.6534172504325,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "set_points": [
+      60.00002641820544,
+      1.5179500323547486,
+      79.89683333284103,
+      1.2600011864551064
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403807479335867,
+     "moisture_b": 0.14403789599762318,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 16,
+     "table_error_max_kg_per_h": 0.01607433850426787
+    },
+    "4": {
+     "value": 1087.7452064470347,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.3375366235334,
+      1.5029331915290824,
+      75.02877384266222,
+      1.3892550832098691
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 38,
+     "table_error_max_kg_per_h": 0.020123486335933194
+    }
+   },
+   "gain_per_seed": {
+    "0": -0.1802063047853153,
+    "1": -0.03216562668035294,
+    "2": 0.2530321020549309,
+    "3": 0.2530550419805877,
+    "4": -0.8387341546215339
+   },
+   "gain_min_over_seeds": -0.8387341546215339,
+   "gain_best_seed": 0.2530550419805877,
+   "gain_median_over_seeds": -0.03216562668035294,
+   "best_m3_diagnostics": {
+    "A": {
+     "inlet_celsius": 60.00002641820544,
+     "gas_velocity_m_per_s": 1.5179500323547486,
+     "on_inlet_box": true,
+     "on_gas_bound": false,
+     "bed_temperature_celsius": 37.45332092046738,
+     "fallback_used": true,
+     "moisture_kg_per_kg": 0.14403807479335867,
+     "drying_regime": true
+    },
+    "B": {
+     "inlet_celsius": 79.89683333284103,
+     "gas_velocity_m_per_s": 1.2600011864551064,
+     "on_inlet_box": false,
+     "on_gas_bound": true,
+     "bed_temperature_celsius": 42.58475340573392,
+     "fallback_used": false,
+     "moisture_kg_per_kg": 0.14403789599762318,
+     "drying_regime": true
+    },
+    "stages": [
+     {
+      "source": "LA",
+      "sink": "S1",
+      "duty_kw": 110.57985515235583,
+      "min_approach_k": 12.886677783097802,
+      "pinch_position": 0.5473703393854646
+     },
+     {
+      "source": "LA",
+      "sink": "SA",
+      "duty_kw": 0.0,
+      "min_approach_k": -3.3999999999999986,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LB",
+      "sink": "S1",
+      "duty_kw": 126.71548359802769,
+      "min_approach_k": 10.0,
+      "pinch_position": 0.5006590369700953
+     },
+     {
+      "source": "Q1",
+      "sink": "S1",
+      "duty_kw": 1798.0359592496166,
+      "min_approach_k": 10.0,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SA",
+      "duty_kw": 24.578658889104844,
+      "min_approach_k": 10.000000000000014,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SB",
+      "duty_kw": 16.247142250983277,
+      "min_approach_k": 9.999999999999986,
+      "pinch_position": 0.0
+     }
+    ],
+    "condensate_kg_per_s_scaled": {
+     "Q1": 0.01086275102177306,
+     "LA": 0.01619330861544246,
+     "LB": 0.021112063764190187
+    }
+   },
+   "feasible_all": true
+  },
+  "4": {
+   "id": 4,
+   "group": "W",
+   "t_amb": 32.5,
+   "phi": 0.72,
+   "absolute_humidity_ambient_kg_per_kg": 0.022408852249697075,
+   "best_s2": {
+    "value": 1089.0242914270057,
+    "co2": 1089.0242914270057,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "set_points": [
+     68.66501055048128,
+     1.260329787499991,
+     81.48929356725655,
+     1.2600238161659971
+    ],
+    "feasible": true,
+    "pair": 21,
+    "diagnostics": {
+     "A": {
+      "inlet_celsius": 68.66501055048128,
+      "gas_velocity_m_per_s": 1.260329787499991,
+      "on_inlet_box": false,
+      "on_gas_bound": true,
+      "bed_temperature_celsius": 40.85801547765732,
+      "fallback_used": true,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "B": {
+      "inlet_celsius": 81.48929356725655,
+      "gas_velocity_m_per_s": 1.2600238161659971,
+      "on_inlet_box": false,
+      "on_gas_bound": true,
+      "bed_temperature_celsius": 43.89462251983743,
+      "fallback_used": false,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "stages": [
+      {
+       "source": "LA",
+       "sink": "S1",
+       "duty_kw": 209.51993685540768,
+       "min_approach_k": 10.798655100852553,
+       "pinch_position": 0.24334137320954177
+      },
+      {
+       "source": "LB",
+       "sink": "S1",
+       "duty_kw": 62.22996482016695,
+       "min_approach_k": 10.0,
+       "pinch_position": 0.9479927412326146
+      },
+      {
+       "source": "Q1",
+       "sink": "S1",
+       "duty_kw": 1763.5813963244252,
+       "min_approach_k": 10.0,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SA",
+       "duty_kw": 30.743061750514666,
+       "min_approach_k": 9.999999999999972,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SB",
+       "duty_kw": 21.129305557036773,
+       "min_approach_k": 10.000000000000014,
+       "pinch_position": 0.0
+      }
+     ],
+     "condensate_kg_per_s_scaled": {
+      "Q1": 0.0023182944467394764,
+      "LA": 0.052157812283111595,
+      "LB": 0.0011073544075702606
+     }
+    }
+   },
+   "per_seed_m3": {
+    "0": {
+     "value": 1088.9368088196948,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.7786159765909,
+      1.5715946771529634,
+      81.48876977136075,
+      1.2600365582989328
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403807479335867,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 10,
+     "table_error_max_kg_per_h": 0.01143516036222536
+    },
+    "1": {
+     "value": 1088.9367664799859,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.685674116196424,
+      1.576155035583806,
+      81.49023375217816,
+      1.2600008197063512
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403807479335867,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 11,
+     "table_error_max_kg_per_h": 0.015578843762568795
+    },
+    "2": {
+     "value": 1088.9363488911035,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.76205260839869,
+      1.5724053123601611,
+      81.49023315298876,
+      1.2600008544369674
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403807479335867,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 9,
+     "table_error_max_kg_per_h": 0.01551414869936707
+    },
+    "3": {
+     "value": 1088.9367738894473,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.699395210670204,
+      1.575482025423037,
+      81.49017179884501,
+      1.2600020682097102
+     ],
+     "feasible": true,
+     "moisture_a": 0.1440377768004662,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 10,
+     "table_error_max_kg_per_h": 0.05229244992324311
+    },
+    "4": {
+     "value": 1088.9363536168005,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "set_points": [
+      62.005299951145616,
+      1.5137284626135843,
+      81.48876238439959,
+      1.2600391884482884
+     ],
+     "feasible": true,
+     "moisture_a": 0.1440379555962017,
+     "moisture_b": 0.14403747880757378,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 9,
+     "table_error_max_kg_per_h": 0.01579027624529772
+    }
+   },
+   "gain_per_seed": {
+    "0": 0.0874826073109034,
+    "1": 0.0875249470198014,
+    "2": 0.08794253590212975,
+    "3": 0.08751753755836944,
+    "4": 0.08793781020517599
+   },
+   "gain_min_over_seeds": 0.0874826073109034,
+   "gain_best_seed": 0.08794253590212975,
+   "gain_median_over_seeds": 0.0875249470198014,
+   "best_m3_diagnostics": {
+    "A": {
+     "inlet_celsius": 60.76205260839869,
+     "gas_velocity_m_per_s": 1.5724053123601611,
+     "on_inlet_box": false,
+     "on_gas_bound": false,
+     "bed_temperature_celsius": 38.80153006315231,
+     "fallback_used": true,
+     "moisture_kg_per_kg": 0.14403813439193713,
+     "drying_regime": true
+    },
+    "B": {
+     "inlet_celsius": 81.49023315298876,
+     "gas_velocity_m_per_s": 1.2600008544369674,
+     "on_inlet_box": false,
+     "on_gas_bound": true,
+     "bed_temperature_celsius": 43.89483322769676,
+     "fallback_used": false,
+     "moisture_kg_per_kg": 0.14403807479335867,
+     "drying_regime": true
+    },
+    "stages": [
+     {
+      "source": "LA",
+      "sink": "S1",
+      "duty_kw": 198.42077331616292,
+      "min_approach_k": 10.406091652240079,
+      "pinch_position": 0.28328580261757513
+     },
+     {
+      "source": "LA",
+      "sink": "SB",
+      "duty_kw": 0.0,
+      "min_approach_k": -3.3999999999999986,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LB",
+      "sink": "S1",
+      "duty_kw": 73.33125441295279,
+      "min_approach_k": 9.999999999999996,
+      "pinch_position": 0.8044732503900082
+     },
+     {
+      "source": "LB",
+      "sink": "SA",
+      "duty_kw": 0.0,
+      "min_approach_k": 2.632231713423849,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LB",
+      "sink": "SB",
+      "duty_kw": 0.0,
+      "min_approach_k": 2.632231713423849,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "S1",
+      "duty_kw": 1763.5792702708845,
+      "min_approach_k": 10.0,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SA",
+      "duty_kw": 38.6091482016854,
+      "min_approach_k": 10.0,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SB",
+      "duty_kw": 18.746999242512974,
+      "min_approach_k": 9.999999999999993,
+      "pinch_position": 0.0
+     }
+    ],
+    "condensate_kg_per_s_scaled": {
+     "Q1": 0.0043197463790483545,
+     "LA": 0.046505189742075424,
+     "LB": 0.004899901605190859
+    }
+   },
+   "feasible_all": true
+  },
+  "5": {
+   "id": 5,
+   "group": "W",
+   "t_amb": 32.5,
+   "phi": 0.82,
+   "absolute_humidity_ambient_kg_per_kg": 0.025649537044538036,
+   "best_s2": {
+    "value": 1088.681273860911,
+    "co2": 1088.681273860911,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "set_points": [
+     70.07815251112416,
+     1.260048460712934,
+     82.73779766430732,
+     1.2601641143856008
+    ],
+    "feasible": true,
+    "pair": 20,
+    "diagnostics": {
+     "A": {
+      "inlet_celsius": 70.07815251112416,
+      "gas_velocity_m_per_s": 1.260048460712934,
+      "on_inlet_box": false,
+      "on_gas_bound": true,
+      "bed_temperature_celsius": 42.047350108623505,
+      "fallback_used": true,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "B": {
+      "inlet_celsius": 82.73779766430732,
+      "gas_velocity_m_per_s": 1.2601641143856008,
+      "on_inlet_box": false,
+      "on_gas_bound": true,
+      "bed_temperature_celsius": 44.92537615988029,
+      "fallback_used": false,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "stages": [
+      {
+       "source": "LA",
+       "sink": "S1",
+       "duty_kw": 255.33311254569801,
+       "min_approach_k": 9.999999999999996,
+       "pinch_position": 0.18746218807682888
+      },
+      {
+       "source": "LB",
+       "sink": "S1",
+       "duty_kw": 51.40123010610644,
+       "min_approach_k": 10.0,
+       "pinch_position": 1.0
+      },
+      {
+       "source": "Q1",
+       "sink": "S1",
+       "duty_kw": 1728.5969553481957,
+       "min_approach_k": 10.0,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SA",
+       "duty_kw": 41.308891309882284,
+       "min_approach_k": 10.0,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SB",
+       "duty_kw": 28.45679738260084,
+       "min_approach_k": 9.999999999999972,
+       "pinch_position": 0.0
+      }
+     ],
+     "condensate_kg_per_s_scaled": {
+      "Q1": 0.0,
+      "LA": 0.06895232019429981,
+      "LB": 5.983112487835364e-18
+     }
+    }
+   },
+   "per_seed_m3": {
+    "0": {
+     "value": 1088.684365651414,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      70.05973743763136,
+      1.2606407278277776,
+      82.7441934972993,
+      1.2600069381459242
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 9,
+     "table_error_max_kg_per_h": 0.029503316978889416
+    },
+    "1": {
+     "value": 1088.6829580009296,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      70.06723151391637,
+      1.2604033201155844,
+      82.74434598721655,
+      1.2600033372273038
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403724041325983,
+     "moisture_b": 0.14403801519478016,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 8,
+     "table_error_max_kg_per_h": 0.007074719392903717
+    },
+    "2": {
+     "value": 1088.6809449472178,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      70.07662520359983,
+      1.260098692053535,
+      82.74404633976249,
+      1.2600107013140565
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403783639904472,
+     "moisture_b": 0.1440379555962017,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 7,
+     "table_error_max_kg_per_h": 0.008891814432445244
+    },
+    "3": {
+     "value": 1088.6802671211508,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      70.07965985320055,
+      1.2600002532864156,
+      82.74444847733676,
+      1.2600014192329438
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403807479335867,
+     "moisture_b": 0.1440377768004662,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 6,
+     "table_error_max_kg_per_h": 0.013300046189669956
+    },
+    "4": {
+     "value": 1088.680536937753,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      70.07966344565673,
+      1.26,
+      82.74247562975737,
+      1.260051143506053
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403753840615224,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 8,
+     "table_error_max_kg_per_h": 0.01580849448259869
+    }
+   },
+   "gain_per_seed": {
+    "0": -0.0030917905030491966,
+    "1": -0.001684140018596736,
+    "2": 0.0003289136932380643,
+    "3": 0.0010067397602142591,
+    "4": 0.0007369231580014457
+   },
+   "gain_min_over_seeds": -0.0030917905030491966,
+   "gain_best_seed": 0.0010067397602142591,
+   "gain_median_over_seeds": 0.0003289136932380643,
+   "best_m3_diagnostics": {
+    "A": {
+     "inlet_celsius": 70.07965985320055,
+     "gas_velocity_m_per_s": 1.2600002532864156,
+     "on_inlet_box": false,
+     "on_gas_bound": true,
+     "bed_temperature_celsius": 42.04771023988724,
+     "fallback_used": true,
+     "moisture_kg_per_kg": 0.14403807479335867,
+     "drying_regime": true
+    },
+    "B": {
+     "inlet_celsius": 82.74444847733676,
+     "gas_velocity_m_per_s": 1.2600014192329438,
+     "on_inlet_box": false,
+     "on_gas_bound": true,
+     "bed_temperature_celsius": 44.926795267146886,
+     "fallback_used": false,
+     "moisture_kg_per_kg": 0.1440377768004662,
+     "drying_regime": true
+    },
+    "stages": [
+     {
+      "source": "LA",
+      "sink": "S1",
+      "duty_kw": 255.33653386810275,
+      "min_approach_k": 9.999999999999996,
+      "pinch_position": 0.18745665077908502
+     },
+     {
+      "source": "LA",
+      "sink": "SA",
+      "duty_kw": 0.0,
+      "min_approach_k": -2.957347914078589,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LA",
+      "sink": "SB",
+      "duty_kw": 0.0,
+      "min_approach_k": -2.957347914078589,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LB",
+      "sink": "S1",
+      "duty_kw": 51.40328919081912,
+      "min_approach_k": 10.0,
+      "pinch_position": 1.0
+     },
+     {
+      "source": "LB",
+      "sink": "SA",
+      "duty_kw": 0.0,
+      "min_approach_k": 5.074437795139502,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LB",
+      "sink": "SB",
+      "duty_kw": 0.0,
+      "min_approach_k": 5.074437795139502,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "S1",
+      "duty_kw": 1728.591474941078,
+      "min_approach_k": 10.0,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SB",
+      "duty_kw": 40.93506296843872,
+      "min_approach_k": 10.000000000000007,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SA",
+      "duty_kw": 28.82851079285238,
+      "min_approach_k": 9.999999999999993,
+      "pinch_position": 0.0
+     }
+    ],
+    "condensate_kg_per_s_scaled": {
+     "Q1": 9.572979980536582e-17,
+     "LA": 0.06895374157725287,
+     "LB": 0.0
+    }
+   },
+   "feasible_all": true
+  },
+  "6": {
+   "id": 6,
+   "group": "N",
+   "t_amb": 32.5,
+   "phi": 0.3,
+   "absolute_humidity_ambient_kg_per_kg": 0.009144835690475424,
+   "best_s2": {
+    "value": 1070.1929718965198,
+    "co2": 1070.1929718965198,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "set_points": [
+     60.000244945582565,
+     1.3110826705461964,
+     60.000678285292764,
+     1.7465616087826368
+    ],
+    "feasible": true,
+    "pair": 2,
+    "diagnostics": {
+     "A": {
+      "inlet_celsius": 60.000244945582565,
+      "gas_velocity_m_per_s": 1.3110826705461964,
+      "on_inlet_box": true,
+      "on_gas_bound": false,
+      "bed_temperature_celsius": 34.41384023427963,
+      "fallback_used": true,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "B": {
+      "inlet_celsius": 60.000678285292764,
+      "gas_velocity_m_per_s": 1.7465616087826368,
+      "on_inlet_box": true,
+      "on_gas_bound": false,
+      "bed_temperature_celsius": 34.42531460523605,
+      "fallback_used": true,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "stages": [
+      {
+       "source": "LA",
+       "sink": "S1",
+       "duty_kw": 39.51375620615776,
+       "min_approach_k": 14.100000000000001,
+       "pinch_position": 1.0
+      },
+      {
+       "source": "LB",
+       "sink": "S1",
+       "duty_kw": 52.75093677570889,
+       "min_approach_k": 12.154084693875813,
+       "pinch_position": 1.0
+      },
+      {
+       "source": "Q1",
+       "sink": "S1",
+       "duty_kw": 1943.0666050181333,
+       "min_approach_k": 10.0,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SA",
+       "duty_kw": 12.879611929284874,
+       "min_approach_k": 10.000000000000036,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SB",
+       "duty_kw": 16.514317658840447,
+       "min_approach_k": 9.999999999999964,
+       "pinch_position": 0.0
+      }
+     ],
+     "condensate_kg_per_s_scaled": {
+      "Q1": 0.05950925258580446,
+      "LA": 0.0,
+      "LB": 0.0
+     }
+    }
+   },
+   "per_seed_m3": {
+    "0": {
+     "value": 1070.1934678827563,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.000157231685016,
+      1.3110851710130038,
+      60.00135929523043,
+      1.7465332076411189
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403819399051562,
+     "moisture_b": 0.14403807479335867,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 48,
+     "table_error_max_kg_per_h": 0.032249117463607035
+    },
+    "1": {
+     "value": 1070.1928266930424,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.00003143315761,
+      1.3110897759997702,
+      60.0000647501969,
+      1.7465915207147837
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403807479335867,
+     "moisture_b": 0.14403759800473076,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 47,
+     "table_error_max_kg_per_h": 0.03233249813729344
+    },
+    "2": {
+     "value": 1070.1957122514068,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.00049381903327,
+      1.3111512604559379,
+      60.000079684153576,
+      1.746587463863968
+     ],
+     "feasible": true,
+     "moisture_a": 0.14402245996579505,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 44,
+     "table_error_max_kg_per_h": 0.031730926076761534
+    },
+    "3": {
+     "value": 1070.1932449503727,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.0,
+      1.3110908692596206,
+      60.00162012756424,
+      1.7465213737076821
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403807479335867,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 51,
+     "table_error_max_kg_per_h": 0.03648578225761412
+    },
+    "4": {
+     "value": 1070.197624253003,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.00503829096449,
+      1.3109311872304998,
+      60.000304262958295,
+      1.7466525972279916
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403771720188774,
+     "moisture_b": 0.1440265126691322,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 49,
+     "table_error_max_kg_per_h": 0.035558066696466994
+    }
+   },
+   "gain_per_seed": {
+    "0": -0.0004959862365012668,
+    "1": 0.00014520347735924588,
+    "2": -0.002740354887009744,
+    "3": -0.0002730538528794568,
+    "4": -0.004652356483120457
+   },
+   "gain_min_over_seeds": -0.004652356483120457,
+   "gain_best_seed": 0.00014520347735924588,
+   "gain_median_over_seeds": -0.0004959862365012668,
+   "best_m3_diagnostics": {
+    "A": {
+     "inlet_celsius": 60.00003143315761,
+     "gas_velocity_m_per_s": 1.3110897759997702,
+     "on_inlet_box": true,
+     "on_gas_bound": false,
+     "bed_temperature_celsius": 34.41377681493759,
+     "fallback_used": true,
+     "moisture_kg_per_kg": 0.14403807479335867,
+     "drying_regime": true
+    },
+    "B": {
+     "inlet_celsius": 60.0000647501969,
+     "gas_velocity_m_per_s": 1.7465915207147837,
+     "on_inlet_box": true,
+     "on_gas_bound": false,
+     "bed_temperature_celsius": 34.42515605688095,
+     "fallback_used": true,
+     "moisture_kg_per_kg": 0.14403759800473076,
+     "drying_regime": true
+    },
+    "stages": [
+     {
+      "source": "LA",
+      "sink": "S1",
+      "duty_kw": 39.51350278452946,
+      "min_approach_k": 14.100000000000001,
+      "pinch_position": 1.0
+     },
+     {
+      "source": "LA",
+      "sink": "SA",
+      "duty_kw": 0.0,
+      "min_approach_k": -3.3999999999999986,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LA",
+      "sink": "SB",
+      "duty_kw": 0.0,
+      "min_approach_k": -3.3999999999999986,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LB",
+      "sink": "S1",
+      "duty_kw": 52.750279756775974,
+      "min_approach_k": 12.154097174011156,
+      "pinch_position": 1.0
+     },
+     {
+      "source": "LB",
+      "sink": "SA",
+      "duty_kw": 0.0,
+      "min_approach_k": -3.3999999999999986,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LB",
+      "sink": "SB",
+      "duty_kw": 0.0,
+      "min_approach_k": -3.3999999999999986,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "S1",
+      "duty_kw": 1943.0675154586945,
+      "min_approach_k": 10.0,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SA",
+      "duty_kw": 12.879650312357814,
+      "min_approach_k": 10.000000000000043,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SB",
+      "duty_kw": 16.51456160350656,
+      "min_approach_k": 9.999999999999979,
+      "pinch_position": 0.0
+     }
+    ],
+    "condensate_kg_per_s_scaled": {
+     "Q1": 0.059509686006430834,
+     "LA": 0.0,
+     "LB": 0.0
+    }
+   },
+   "feasible_all": true
+  },
+  "7": {
+   "id": 7,
+   "group": "N",
+   "t_amb": 30.0,
+   "phi": 0.35,
+   "absolute_humidity_ambient_kg_per_kg": 0.009256522617322245,
+   "best_s2": {
+    "value": 1071.201982691721,
+    "co2": 1071.201982691721,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "set_points": [
+     60.000982464239705,
+     1.3193325206858861,
+     60.0011210862994,
+     1.7555854454068671
+    ],
+    "feasible": true,
+    "pair": 24,
+    "diagnostics": {
+     "A": {
+      "inlet_celsius": 60.000982464239705,
+      "gas_velocity_m_per_s": 1.3193325206858861,
+      "on_inlet_box": true,
+      "on_gas_bound": false,
+      "bed_temperature_celsius": 34.39391475915909,
+      "fallback_used": true,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "B": {
+      "inlet_celsius": 60.0011210862994,
+      "gas_velocity_m_per_s": 1.7555854454068671,
+      "on_inlet_box": false,
+      "on_gas_bound": false,
+      "bed_temperature_celsius": 34.419749081134796,
+      "fallback_used": true,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "stages": [
+      {
+       "source": "LA",
+       "sink": "S1",
+       "duty_kw": 39.61222754431216,
+       "min_approach_k": 14.100000000000001,
+       "pinch_position": 1.0
+      },
+      {
+       "source": "LB",
+       "sink": "S1",
+       "duty_kw": 52.965302729667,
+       "min_approach_k": 12.149235322352403,
+       "pinch_position": 1.0
+      },
+      {
+       "source": "Q1",
+       "sink": "S1",
+       "duty_kw": 1942.753767726021,
+       "min_approach_k": 10.0,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SA",
+       "duty_kw": 31.334831073211273,
+       "min_approach_k": 10.000000000000028,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SB",
+       "duty_kw": 40.11753460454056,
+       "min_approach_k": 10.0,
+       "pinch_position": 0.0
+      }
+     ],
+     "condensate_kg_per_s_scaled": {
+      "Q1": 0.07466656465296222,
+      "LA": 0.0,
+      "LB": 0.0
+     }
+    }
+   },
+   "per_seed_m3": {
+    "0": {
+     "value": 1071.2260830521025,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.06552044460787,
+      1.317253225090723,
+      60.004524999756185,
+      1.7554385348022574
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 29,
+     "table_error_max_kg_per_h": 0.0374723772690686
+    },
+    "1": {
+     "value": 1071.2047261162045,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ]
+     ],
+     "set_points": [
+      60.00005645057712,
+      1.3193637929116848,
+      60.00951046560232,
+      1.7552248986480348
+     ],
+     "feasible": true,
+     "moisture_a": 0.1440377768004662,
+     "moisture_b": 0.1440379555962017,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 29,
+     "table_error_max_kg_per_h": 0.0375431583909176
+    },
+    "2": {
+     "value": 1071.2013275890702,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.00021513728967,
+      1.3193571024307986,
+      60.0,
+      1.7556343580991147
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403807479335867,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 29,
+     "table_error_max_kg_per_h": 0.03736138128510902
+    },
+    "3": {
+     "value": 1071.2031455683118,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.0048978209024,
+      1.319205812801258,
+      60.00047764668625,
+      1.755613568356333
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 27,
+     "table_error_max_kg_per_h": 0.037543566026670305
+    },
+    "4": {
+     "value": 1071.2018320553518,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "set_points": [
+      60.0000003842264,
+      1.31936476884187,
+      60.000003535823936,
+      1.7556480801748087
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403801519478016,
+     "moisture_b": 0.1440358696459546,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 29,
+     "table_error_max_kg_per_h": 0.03754073278241776
+    }
+   },
+   "gain_per_seed": {
+    "0": -0.024100360381453356,
+    "1": -0.0027434244834694255,
+    "2": 0.0006551026508532232,
+    "3": -0.0011628765907971683,
+    "4": 0.00015063636919876444
+   },
+   "gain_min_over_seeds": -0.024100360381453356,
+   "gain_best_seed": 0.0006551026508532232,
+   "gain_median_over_seeds": -0.0011628765907971683,
+   "best_m3_diagnostics": {
+    "A": {
+     "inlet_celsius": 60.00021513728967,
+     "gas_velocity_m_per_s": 1.3193571024307986,
+     "on_inlet_box": true,
+     "on_gas_bound": false,
+     "bed_temperature_celsius": 34.39367467164993,
+     "fallback_used": true,
+     "moisture_kg_per_kg": 0.14403813439193713,
+     "drying_regime": true
+    },
+    "B": {
+     "inlet_celsius": 60.0,
+     "gas_velocity_m_per_s": 1.7556343580991147,
+     "on_inlet_box": true,
+     "on_gas_bound": false,
+     "bed_temperature_celsius": 34.41939800977707,
+     "fallback_used": true,
+     "moisture_kg_per_kg": 0.14403807479335867,
+     "drying_regime": true
+    },
+    "stages": [
+     {
+      "source": "LA",
+      "sink": "S1",
+      "duty_kw": 39.61118580776555,
+      "min_approach_k": 14.100000000000001,
+      "pinch_position": 1.0
+     },
+     {
+      "source": "LA",
+      "sink": "SA",
+      "duty_kw": 0.0,
+      "min_approach_k": -0.8999999999999986,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LA",
+      "sink": "SB",
+      "duty_kw": 0.0,
+      "min_approach_k": -0.8999999999999986,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LB",
+      "sink": "S1",
+      "duty_kw": 52.96331506139412,
+      "min_approach_k": 12.149286624260537,
+      "pinch_position": 1.0
+     },
+     {
+      "source": "LB",
+      "sink": "SA",
+      "duty_kw": 0.0,
+      "min_approach_k": -0.8999999999999986,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LB",
+      "sink": "SB",
+      "duty_kw": 0.0,
+      "min_approach_k": -0.8999999999999986,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "S1",
+      "duty_kw": 1942.7567971308406,
+      "min_approach_k": 10.0,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SA",
+      "duty_kw": 31.335325260820564,
+      "min_approach_k": 9.999999999999957,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SB",
+      "duty_kw": 40.11852016801294,
+      "min_approach_k": 10.000000000000007,
+      "pinch_position": 0.0
+     }
+    ],
+    "condensate_kg_per_s_scaled": {
+     "Q1": 0.07466820066728076,
+     "LA": 0.0,
+     "LB": 0.0
+    }
+   },
+   "feasible_all": true
+  },
+  "8": {
+   "id": 8,
+   "group": "H",
+   "t_amb": 20.0,
+   "phi": 0.82,
+   "absolute_humidity_ambient_kg_per_kg": 0.01199754734951328,
+   "best_s2": {
+    "value": 1083.596122080473,
+    "co2": 1083.596122080473,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "set_points": [
+     64.33802524529415,
+     1.2605339076108861,
+     77.82895716713708,
+     1.260418997768352
+    ],
+    "feasible": true,
+    "pair": 43,
+    "diagnostics": {
+     "A": {
+      "inlet_celsius": 64.33802524529415,
+      "gas_velocity_m_per_s": 1.2605339076108861,
+      "on_inlet_box": false,
+      "on_gas_bound": true,
+      "bed_temperature_celsius": 36.38316484352578,
+      "fallback_used": false,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "B": {
+      "inlet_celsius": 77.82895716713708,
+      "gas_velocity_m_per_s": 1.260418997768352,
+      "on_inlet_box": false,
+      "on_gas_bound": true,
+      "bed_temperature_celsius": 40.08671355718444,
+      "fallback_used": false,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "stages": [
+      {
+       "source": "LA",
+       "sink": "S1",
+       "duty_kw": 51.816990345187975,
+       "min_approach_k": 14.100000000000001,
+       "pinch_position": 1.0
+      },
+      {
+       "source": "LB",
+       "sink": "S1",
+       "duty_kw": 94.03858554515031,
+       "min_approach_k": 11.158612025752824,
+       "pinch_position": 0.7792702890893849
+      },
+      {
+       "source": "Q1",
+       "sink": "S1",
+       "duty_kw": 1889.475722109662,
+       "min_approach_k": 10.0,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SB",
+       "duty_kw": 100.21355593835888,
+       "min_approach_k": 10.000000000000014,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SA",
+       "duty_kw": 97.84248913516802,
+       "min_approach_k": 10.000000000000014,
+       "pinch_position": 0.0
+      }
+     ],
+     "condensate_kg_per_s_scaled": {
+      "Q1": 0.10123860501256506,
+      "LA": 0.0,
+      "LB": 0.006693465100268004
+     }
+    }
+   },
+   "per_seed_m3": {
+    "0": {
+     "value": 1079.9746124824594,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.0,
+      1.402630253115092,
+      60.0,
+      1.857367315414574
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 34,
+     "table_error_max_kg_per_h": 0.022912342624067605
+    },
+    "1": {
+     "value": 1079.97802527282,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.001770484581364,
+      1.4025657852255562,
+      60.01459701286102,
+      1.85666207195631
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 30,
+     "table_error_max_kg_per_h": 0.4229764969650205
+    },
+    "2": {
+     "value": 1079.9821272682286,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.00046648489714,
+      1.4026131012633316,
+      60.002499207220986,
+      1.8572462850331037
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 30,
+     "table_error_max_kg_per_h": 0.028016440114470242
+    },
+    "3": {
+     "value": 1079.9747179660244,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "set_points": [
+      60.000013618050815,
+      1.4026295665186572,
+      60.00042106369223,
+      1.8573475054617474
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 29,
+     "table_error_max_kg_per_h": 0.02298296346521056
+    },
+    "4": {
+     "value": 1079.9746239540366,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.000051240752555,
+      1.4026283575552059,
+      60.0,
+      1.857367314817725
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 30,
+     "table_error_max_kg_per_h": 0.026299828097535283
+    }
+   },
+   "gain_per_seed": {
+    "0": 3.6215095980135175,
+    "1": 3.618096807652819,
+    "2": 3.6139948122443,
+    "3": 3.6214041144485236,
+    "4": 3.621498126436336
+   },
+   "gain_min_over_seeds": 3.6139948122443,
+   "gain_best_seed": 3.6215095980135175,
+   "gain_median_over_seeds": 3.6214041144485236,
+   "best_m3_diagnostics": {
+    "A": {
+     "inlet_celsius": 60.0,
+     "gas_velocity_m_per_s": 1.402630253115092,
+     "on_inlet_box": true,
+     "on_gas_bound": false,
+     "bed_temperature_celsius": 35.10606959462166,
+     "fallback_used": false,
+     "moisture_kg_per_kg": 0.14403813439193713,
+     "drying_regime": true
+    },
+    "B": {
+     "inlet_celsius": 60.0,
+     "gas_velocity_m_per_s": 1.857367315414574,
+     "on_inlet_box": true,
+     "on_gas_bound": false,
+     "bed_temperature_celsius": 35.18658295273781,
+     "fallback_used": false,
+     "moisture_kg_per_kg": 0.14403813439193713,
+     "drying_regime": true
+    },
+    "stages": [
+     {
+      "source": "LA",
+      "sink": "S1",
+      "duty_kw": 47.647531574100626,
+      "min_approach_k": 14.100000000000001,
+      "pinch_position": 1.0
+     },
+     {
+      "source": "LA",
+      "sink": "SB",
+      "duty_kw": 0.0,
+      "min_approach_k": 9.100000000000001,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LB",
+      "sink": "S1",
+      "duty_kw": 63.93208708806837,
+      "min_approach_k": 11.753524496498542,
+      "pinch_position": 1.0
+     },
+     {
+      "source": "LB",
+      "sink": "SA",
+      "duty_kw": 0.0,
+      "min_approach_k": 9.100000000000001,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LB",
+      "sink": "SB",
+      "duty_kw": 0.0,
+      "min_approach_k": 9.100000000000001,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "S1",
+      "duty_kw": 1923.7516793378313,
+      "min_approach_k": 10.0,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SA",
+      "duty_kw": 111.96565264567896,
+      "min_approach_k": 10.000000000000021,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SB",
+      "duty_kw": 142.2514325475993,
+      "min_approach_k": 10.000000000000036,
+      "pinch_position": 0.0
+     }
+    ],
+    "condensate_kg_per_s_scaled": {
+     "Q1": 0.13391772874873317,
+     "LA": 0.0,
+     "LB": 0.0
+    }
+   },
+   "feasible_all": true
+  },
+  "9": {
+   "id": 9,
+   "group": "H",
+   "t_amb": 25.0,
+   "phi": 0.82,
+   "absolute_humidity_ambient_kg_per_kg": 0.016369189440759137,
+   "best_s2": {
+    "value": 1087.8227348019475,
+    "co2": 1087.8227348019475,
+    "allocation": [
+     [
+      "Q1",
+      "S1"
+     ],
+     [
+      "Q1",
+      "SB"
+     ],
+     [
+      "Q1",
+      "SA"
+     ],
+     [
+      "LA",
+      "S1"
+     ],
+     [
+      "LB",
+      "S1"
+     ]
+    ],
+    "set_points": [
+     66.35588342669003,
+     1.2601214421105649,
+     79.52009018010625,
+     1.260115454079512
+    ],
+    "feasible": true,
+    "pair": 33,
+    "diagnostics": {
+     "A": {
+      "inlet_celsius": 66.35588342669003,
+      "gas_velocity_m_per_s": 1.2601214421105649,
+      "on_inlet_box": false,
+      "on_gas_bound": true,
+      "bed_temperature_celsius": 38.406232846897076,
+      "fallback_used": false,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "B": {
+      "inlet_celsius": 79.52009018010625,
+      "gas_velocity_m_per_s": 1.260115454079512,
+      "on_inlet_box": false,
+      "on_gas_bound": true,
+      "bed_temperature_celsius": 41.789718497040795,
+      "fallback_used": false,
+      "moisture_kg_per_kg": 0.14403813439193713,
+      "drying_regime": true
+     },
+     "stages": [
+      {
+       "source": "LA",
+       "sink": "S1",
+       "duty_kw": 93.45782776137642,
+       "min_approach_k": 13.432004359213487,
+       "pinch_position": 0.62397403148702
+      },
+      {
+       "source": "LB",
+       "sink": "S1",
+       "duty_kw": 122.57048607436165,
+       "min_approach_k": 10.0,
+       "pinch_position": 0.5414300703279223
+      },
+      {
+       "source": "Q1",
+       "sink": "S1",
+       "duty_kw": 1819.3029841642622,
+       "min_approach_k": 10.0,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SB",
+       "duty_kw": 67.85471314796712,
+       "min_approach_k": 10.000000000000014,
+       "pinch_position": 0.0
+      },
+      {
+       "source": "Q1",
+       "sink": "SA",
+       "duty_kw": 66.23327898545423,
+       "min_approach_k": 9.99999999999995,
+       "pinch_position": 0.0
+      }
+     ],
+     "condensate_kg_per_s_scaled": {
+      "Q1": 0.052578306902019936,
+      "LA": 0.011358331364529977,
+      "LB": 0.018545694565752568
+     }
+    }
+   },
+   "per_seed_m3": {
+    "0": {
+     "value": 1086.8064992147747,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.00839692014762,
+      1.487879094111737,
+      64.57742103877212,
+      1.7450720522328238
+     ],
+     "feasible": true,
+     "moisture_a": 0.1440327705198733,
+     "moisture_b": 0.14402377113452175,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 34,
+     "table_error_max_kg_per_h": 0.02375971494757323
+    },
+    "1": {
+     "value": 1086.8213869582057,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LB",
+       "S1"
+      ]
+     ],
+     "set_points": [
+      60.00003414972622,
+      1.488203160212426,
+      69.64463008795917,
+      1.5450307878006173
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.14403813439193713,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 29,
+     "table_error_max_kg_per_h": 0.03228391628772442
+    },
+    "2": {
+     "value": 1086.837719929561,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.00056981503362,
+      1.4881809249880205,
+      77.6010521354552,
+      1.3072471431261232
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403813439193713,
+     "moisture_b": 0.1440332473085012,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 33,
+     "table_error_max_kg_per_h": 0.029329868787272062
+    },
+    "3": {
+     "value": 1086.8194001335942,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SA"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SA"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.001038617155345,
+      1.488161336405821,
+      69.26542970726584,
+      1.5584539149314565
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403807479335867,
+     "moisture_b": 0.14403789599762318,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 29,
+     "table_error_max_kg_per_h": 0.03584165887082236
+    },
+    "4": {
+     "value": 1086.8003108362602,
+     "allocation": [
+      [
+       "Q1",
+       "S1"
+      ],
+      [
+       "Q1",
+       "SA"
+      ],
+      [
+       "Q1",
+       "SB"
+      ],
+      [
+       "LA",
+       "S1"
+      ],
+      [
+       "LA",
+       "SB"
+      ],
+      [
+       "LB",
+       "S1"
+      ],
+      [
+       "LB",
+       "SB"
+      ]
+     ],
+     "set_points": [
+      60.000697394573876,
+      1.488178559980037,
+      64.9570688452655,
+      1.7283072216571784
+     ],
+     "feasible": true,
+     "moisture_a": 0.14403753840615224,
+     "moisture_b": 0.14403783639904472,
+     "window_final_kg_per_h": 5.0,
+     "n_polished": 31,
+     "table_error_max_kg_per_h": 0.02374141425275411
+    }
+   },
+   "gain_per_seed": {
+    "0": 1.0162355871727868,
+    "1": 1.0013478437417689,
+    "2": 0.9850148723865004,
+    "3": 1.0033346683533182,
+    "4": 1.022423965687267
+   },
+   "gain_min_over_seeds": 0.9850148723865004,
+   "gain_best_seed": 1.022423965687267,
+   "gain_median_over_seeds": 1.0033346683533182,
+   "best_m3_diagnostics": {
+    "A": {
+     "inlet_celsius": 60.000697394573876,
+     "gas_velocity_m_per_s": 1.488178559980037,
+     "on_inlet_box": true,
+     "on_gas_bound": false,
+     "bed_temperature_celsius": 36.6334013360853,
+     "fallback_used": false,
+     "moisture_kg_per_kg": 0.14403753840615224,
+     "drying_regime": true
+    },
+    "B": {
+     "inlet_celsius": 64.9570688452655,
+     "gas_velocity_m_per_s": 1.7283072216571784,
+     "on_inlet_box": false,
+     "on_gas_bound": false,
+     "bed_temperature_celsius": 38.095546423960386,
+     "fallback_used": false,
+     "moisture_kg_per_kg": 0.14403783639904472,
+     "drying_regime": true
+    },
+    "stages": [
+     {
+      "source": "LA",
+      "sink": "S1",
+      "duty_kw": 63.100991193854256,
+      "min_approach_k": 14.100000000000001,
+      "pinch_position": 1.0
+     },
+     {
+      "source": "LA",
+      "sink": "SB",
+      "duty_kw": 0.0,
+      "min_approach_k": 4.100000000000001,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "LB",
+      "sink": "S1",
+      "duty_kw": 116.65987339604055,
+      "min_approach_k": 10.0,
+      "pinch_position": 0.6763164869048794
+     },
+     {
+      "source": "LB",
+      "sink": "SB",
+      "duty_kw": 0.0,
+      "min_approach_k": 4.132339033609888,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "S1",
+      "duty_kw": 1855.5704334101054,
+      "min_approach_k": 10.0,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SA",
+      "duty_kw": 79.97774736420368,
+      "min_approach_k": 9.999999999999993,
+      "pinch_position": 0.0
+     },
+     {
+      "source": "Q1",
+      "sink": "SB",
+      "duty_kw": 88.5897345035954,
+      "min_approach_k": 10.000000000000007,
+      "pinch_position": 0.0
+     }
+    ],
+    "condensate_kg_per_s_scaled": {
+     "Q1": 0.07826956448429531,
+     "LA": 0.0,
+     "LB": 0.012194190540586444
+    }
+   },
+   "feasible_all": true
+  }
+ },
+ "n_scenarios_of_W_holding": 1,
+ "n_scenarios_of_W_holding_best_seed": 1,
+ "criterion_met": null,
+ "n_value_checks_without_limit": 60,
+ "n_allocations": 441,
+ "check_of_the_tables": [],
+ "wall_s_this_call": 39561.7733456
+}
