@@ -37,6 +37,17 @@ def load(path: Path) -> list[dict]:
     ]
 
 
+def pick(records: list[dict], label: str, test_set: str) -> dict:
+    return next(
+        r
+        for r in records
+        if r["params"]["model/label"] == label
+        and r["params"]["test_set"] == test_set
+        and int(r["params"]["n_train"]) == N_TRAIN
+        and int(r["params"]["master_seed"]) == SEED
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--records", required=True, help="merged file artifacts/runs/<name>.jsonl")
@@ -47,18 +58,8 @@ def main() -> int:
     cells = []
     for label in LABELS:
         for test_set in TEST_SETS:
-
-            def pick(records: list[dict]) -> dict:
-                return next(
-                    r
-                    for r in records
-                    if r["params"]["model/label"] == label
-                    and r["params"]["test_set"] == test_set
-                    and int(r["params"]["n_train"]) == N_TRAIN
-                    and int(r["params"]["master_seed"]) == SEED
-                )
-
-            o, n = pick(old), pick(new)
+            o = pick(old, label, test_set)
+            n = pick(new, label, test_set)
             worst, where, count = max_relative_deviation(n["metrics"], o["metrics"])
             epochs = {
                 k: (o["params"].get(k), n["params"].get(k))
