@@ -373,8 +373,9 @@ class MultisinePlan(PlannedExcitation):
     f_k^{-1}` (equal slope contribution per tone, so that the rate limit does not cap the
     low-frequency tones); the Schroeder phases :math:`\varphi_k = -\pi k (k-1) / K` keep the
     crest factor low; a random time shift per run and channel (a pure shift, which keeps the
-    relative phases) makes the runs differ. The overall scale is the largest one for which the peak stays inside
-    ``[0, 1]`` and the peak slope stays below 0.8 times the rate limit of the channel.
+    relative phases) makes the runs differ. The overall scale is the largest one for which the
+    peak stays inside ``[0, 1]`` and the peak slope stays below 0.8 times the rate limit of the
+    channel.
     """
 
     name = "b3"
