@@ -66,6 +66,7 @@ from ..utils.tracking import ExperimentLogger, RunRecord, environment_fingerprin
 from .evaluator import EvaluationResult, RolloutEvaluator
 
 __all__ = [
+    "NEW_STUDY_OPTIONS",
     "DataSpec",
     "GeneratedData",
     "ModelFactory",
@@ -94,6 +95,17 @@ class ValidationPolicy(str, Enum):
 
     FIXED_POOL = "fixed_pool"
     NONE = "none"
+
+
+NEW_STUDY_OPTIONS: dict[str, str] = {
+    "future_actions": "planned",
+    "solid_fraction_process": "independent",
+}
+"""The data-generation options of every NEW study (review D1 and E3, docs/12): the future inputs
+of a window are the planned set points, the solid fraction of the suspension has its own
+disturbance process. The defaults of :class:`DataSpec` stay at the behaviour up to Befund 81 so
+that existing scripts reproduce their data; new studies build their spec with
+:meth:`DataSpec.new_study`."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -177,6 +189,27 @@ class DataSpec:
     bounds. Only acts when the process config has ``numerics.enforce_gas_velocity_projection``
     on; otherwise both series are identical. Enters the data fingerprints only when not
     ``"realised"``."""
+
+    @classmethod
+    def new_study(cls, **overrides: Any) -> DataSpec:
+        """Named preset for new studies: :data:`NEW_STUDY_OPTIONS` plus any other field.
+
+        The two options are fixed by the preset; passing them here is an error (a new study
+        that wants the old behaviour is not a new study, build ``DataSpec(...)`` and name the
+        reason in the lab book).
+        """
+        clash = sorted(set(overrides) & set(NEW_STUDY_OPTIONS))
+        if clash:
+            raise ValueError(
+                f"{clash} are fixed by the new-study preset (NEW_STUDY_OPTIONS); "
+                "use DataSpec(...) explicitly for the legacy behaviour"
+            )
+        return cls(**{**NEW_STUDY_OPTIONS, **overrides})
+
+    @property
+    def is_new_study_preset(self) -> bool:
+        """Whether both options equal the new-study preset."""
+        return all(getattr(self, key) == value for key, value in NEW_STUDY_OPTIONS.items())
 
     @property
     def pool_size(self) -> int:

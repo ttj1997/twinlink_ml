@@ -9,6 +9,7 @@ from .evaluator import (
     pooled_nrmse,
 )
 from .experiments import (
+    NEW_STUDY_OPTIONS,
     DataSpec,
     GeneratedData,
     ModelFactory,
@@ -54,6 +55,7 @@ from .resolution import (
 )
 
 __all__ = [
+    "NEW_STUDY_OPTIONS",
     "DataPoolCache",
     "DataSpec",
     "EvaluationResult",

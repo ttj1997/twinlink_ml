@@ -51,6 +51,13 @@ lab book (`04_stand_ap1.md`), process setup, and synthesis documents.
 
 ## Methodology
 
+- New studies generate their data with `DataSpec.new_study(...)` (planned future set points,
+  own disturbance process for the solid fraction; review D1/E3) and no other data
+  configuration. The defaults of `DataSpec` stay at the behaviour up to Befund 81 and exist only
+  to reproduce old data. Paired resolution over seeds
+  (`evaluation/paired_resolution.py`) for every rank claim of a new study; the older
+  `resolution.py` only to reproduce old findings.
+
 - Run-level splits, never window-level.
 - Learning curves as primary result; 3-5 seeds, median and range.
 - Baselines before any architecture comparison.
