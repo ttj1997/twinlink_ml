@@ -20,6 +20,12 @@ from .experiments import (
     run_sample_time_study,
     summarise_curve,
 )
+from .paired_resolution import (
+    PairedComparison,
+    paired_comparison,
+    paired_values,
+    paired_verdicts,
+)
 from .protocol import (
     DataPoolCache,
     NoiseFloor,
@@ -56,6 +62,7 @@ __all__ = [
     "ModelFactory",
     "NoiseFloor",
     "ObservationMode",
+    "PairedComparison",
     "PointKey",
     "RolloutEvaluator",
     "SeedSpread",
@@ -71,6 +78,9 @@ __all__ = [
     "generate_data",
     "measurement_at_level",
     "nrmse",
+    "paired_comparison",
+    "paired_values",
+    "paired_verdicts",
     "per_run_nrmse",
     "pooled_nrmse",
     "primary_metric",
