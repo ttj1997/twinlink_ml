@@ -146,3 +146,13 @@ def test_end_to_end_child_process_started_from_a_foreign_worktree(tmp_path: Path
     assert result.returncode != 0
     assert "CodeLocationError" in result.stderr
     assert "different code tree" in result.stderr
+
+
+def test_interpreter_of_a_venv_outside_the_root_is_not_an_absolute_path(tmp_path: Path) -> None:
+    """Used from a worktree, the main checkout's .venv must not leak a network share."""
+    other = tmp_path / "elsewhere_root"
+    other.mkdir()
+    value = code_location_fields(other)["code/interpreter"]
+    if (Path(sys.executable).parent.parent / "pyvenv.cfg").exists():
+        assert not value.startswith(("//", "\\\\", "/")) and ":" not in value
+        assert value.endswith(Path(sys.executable).name)

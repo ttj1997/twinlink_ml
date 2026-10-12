@@ -15,7 +15,8 @@ What a run records and enforces
   worktree root** (``src/twinlink_ml`` when it is the expected one; no absolute paths, no
   user names or network shares in a committed artifact).
 * ``code/interpreter`` -- the Python executable, relative to the root if inside it (for
-  example ``.venv/Scripts/python.exe``), otherwise with the home directory shortened to ``~``.
+  example ``.venv/Scripts/python.exe``); a venv outside the root as ``<venv dir>/<path in it>``;
+  otherwise with the home directory shortened to ``~``.
 * ``code/root_checked`` -- whether a root was available to check against.
 
 If the loaded package does not lie under the root of the repository (or worktree) that the run
@@ -104,6 +105,11 @@ def _interpreter(root: Path | None) -> str:
         for parent in absolute.parents:
             if _same(parent, root):
                 return absolute.relative_to(parent).as_posix()
+    # a venv outside the root (the main checkout's .venv used from a worktree): name the venv
+    # directory and the path inside it, not the location of the checkout (network share)
+    for parent in absolute.parents:
+        if (parent / "pyvenv.cfg").exists():
+            return f"{parent.name}/{absolute.relative_to(parent).as_posix()}"
     home = Path.home()
     try:
         return "~/" + absolute.relative_to(home).as_posix()
