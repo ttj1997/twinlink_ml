@@ -1,9 +1,63 @@
 # A1 -- simulator pretraining under a structurally different plant: design of the main run (DRAFT)
 
-Status: draft for review, written and committed BEFORE any computation of the main run. The file name
+Status: draft for review, written and committed BEFORE any computation of the main run; updated after the second pilot (see the section below the title). The file name
 carries the placeholder `NN` (the number is assigned when the finding is entered into the lab
 book, `docs/04_stand_ap1.md`, entry "Befund NN"). Nothing below has been run except the pilot
 (artifact `artifacts/runs/a1_pilot_pp.json`, script commit `46998d6`, clean tree).
+
+## Update after the second pilot (decisions of the project lead and measured settings)
+
+**The main run is ON HOLD.** A cross-cutting decision on the excitation is open (the gas velocity is
+often limited at the discharge limit at the start of a run, see `a1_action_limits_pilot1.json`). If the
+excitation has to stay inside the safe window, the data of every study change and the pilots must be
+repeated. Nothing below is to be started before that decision.
+
+Decisions: (1) a second pilot on TWO pilot plants, PP and PP2 (PP2: summary deviation 0.301 process /
+0.305 measured against PP 0.130 / 0.134; both pilot-only), grid extended downward and, where needed, upward
+until the selection is no longer at the edge, selection = lowest mean criterion C over PP and PP2, and the
+step budget of "from scratch" and "hybrid" by the same rule; (2) pretraining data 256 + 32 P0 runs, same
+excitation as the plants, own seeds; (4) one LSTM over three targets for all methods; (5) constant-run
+holdout kept; (6) the simulator channel is not changed.
+
+Measured in `a1_pilot2_pp_pp2.json` (script `765c233`, clean tree; pilot seeds 11-13 for the plant pools, 201
+for the pretraining; 3 pools x N = 2, 16 x PP, PP2 = 12 cells per setting):
+
+* **Fine-tuning setting: all parameters trained, learning rate 3e-4, 320 epochs** (mean C 0.0771; PP 0.0738,
+  PP2 0.0805). After three upward extensions of the epochs the selection is INSIDE the grid (640 epochs: 0.0800;
+  160 epochs: 0.0774; lr 1e-4 at 320 / 640 epochs: 0.0775 / 0.0775): a flat optimum, not an edge. Best
+  head-only setting: 0.1031 (lr 1e-5, 640 epochs). The first pilot's setting (1e-4, 5 epochs) was the edge of
+  a grid too short in epochs; 320 epochs are 640 gradient steps at N = 2 and about 2900 at N = 16.
+* **Training budget of "from scratch" and "hybrid": 8000 gradient steps for both** (combined score 0.2657),
+  inside the grid (4000: 0.2724; 16000: 0.2761). Per method the best budget differs: from scratch 4000 (0.2503,
+  against 0.2735 at 8000), hybrid 8000 (0.2579). One shared budget costs "from scratch" about 9 % of C
+  against its own optimum -- a decision for the project lead (see below).
+* Pretraining on 256 runs stopped after 31 epochs, best epoch 10 (early stopping, patience 20); in-distribution
+  test (224 P0 runs) C 0.0535. The first pilot, 64 runs, reached 0.0517 on its 32 P0 test runs (different
+  runs, not strictly comparable): four times the data did not visibly improve the pretrained model.
+* References (mean over the 3 pools, val / test): persistence PP 0.490 / 0.455, PP2 0.474 / 0.441; simulator
+  alone PP 0.181 / 0.249, PP2 0.276 / 0.332; pretrained without adaptation PP 0.156 / 0.197, PP2 0.213 / 0.249.
+* Selected settings on the test runs (mean over pools): fine-tuning N = 2: PP 0.123, PP2 0.137; N = 16: PP 0.045,
+  PP2 0.047. From scratch N = 2: PP 0.593, PP2 0.765; N = 16: 0.047, 0.041. Hybrid N = 2: 0.585, 0.473; N = 16:
+  0.035, 0.033. (Pilot cells, selected on the validation runs; no rank statement is made from them.) The
+  re-run of every selected cell reproduces its validation criterion bit for bit (determinism).
+
+Measured times (8 workers x 1 thread, except pretraining: 8 threads): fine-tuning 0.078 s per epoch at
+N = 2 and 0.512 s at N = 16; from-scratch / hybrid training 0.045 s per step at N = 2 and 0.067 s at N = 16;
+pretraining on 256 runs 134 s (4.3 s per epoch, 31 epochs); P0 pool of 512 runs 14 s; first-use cost of torch
+about 23-26 s per process, measured apart. The pilot took 16 324 s of wall time (the upward extensions to 640
+epochs and 16 000 steps dominate).
+
+Cost of the main run with these settings -- EXTRAPOLATION from the measured times, not measured for the main
+run: per (plant, seed) fine-tuning 320 epochs over N = 2...64 about 22 min, from scratch and hybrid 8000 steps
+each about 48 min each, data, simulator channels and evaluation about 10 min: about 130 min; 25 (plant, seed)
+jobs = about 54 h of CPU = about 6.8 h of wall time on 8 workers, plus five pretrainings; with margin 8-9 h.
+This replaces the earlier 2.5 h estimate, which assumed 3000 steps and 5 epochs. Options to reduce: 3 seeds
+instead of 5 (about 4.1 h), or method-specific budgets (no saving), or dropping N = 64 for the neural
+methods (about 3 h saved).
+
+Open for the project lead: (a) one shared budget (8000) or method-specific budgets (from scratch 4000, hybrid
+8000); (b) whether to keep the pretraining at 256 runs given that it did not visibly improve on 64; (c) the
+cost options above; (d) the excitation decision, which comes first.
 
 ## Question
 
@@ -150,7 +204,7 @@ about 2.5 h, say 3-3.5 h with margin. Everything resumable per (plant, seed) (`-
 All numbers in this section are extrapolations (placeholders without a measured source for the main
 run) and are replaced by measured times in the report of the run.
 
-## Open decisions (before the main run)
+## Open decisions (before the main run) -- as they stood BEFORE the second pilot; see the update above
 
 1. **Fine-tuning setting at the edge of the pilot grid.** Selected lr 1e-4, 5 epochs = the smallest
    learning rate and the fewest epochs of the grid, so the true optimum may lie below. At N = 2 five epochs
