@@ -158,3 +158,37 @@ checkpoint per trained model (about 5 methods x 4 budgets x 5 seeds x arms), not
 4. Pilot first (about 1.4 core-hours at `n_train` 8 for one seed, scaled from the table above), then the full run.
 5. Wall time of about 1.5-2.5 days on 8 workers acceptable, or reduce (for instance Transformer only at
    `n_train` 8 and 64, which cuts about 4.1 core-hours per arm and seed (the 5610 s and 9304 s of the table))?
+
+## 10. Decisions of the project lead (2026-10-12) and the resulting scope
+
+1. Arms **A0, A1 and N**; no A2.
+2. Cross-evaluation on all pool/window variants (arm N: 4; A0/A1: the pool is the legacy pool, so the two
+   window variants only).
+3. The eight methods of Befunde 51/58, no others.
+4. **Budgets:** A0 and A1 at `n_train` 8 and 64 only (two points suffice to separate platform and D1); N at 8, 16,
+   32, 64 (basis of the synthesis, version 5).
+5. **Pilot now:** one seed (1), `n_train` 8, all three arms; at most **4 workers** (studies A and B run in
+   parallel); detached worktree on `C:\`, started with `tools/run_here.sh`, code-location check active. Gate as
+   planned (A0 reproduces fingerprints and baseline errors of the old records, `scripts/check_rerun_gate.py`);
+   if it fails: stop and report.
+6. **The full run is not started**; its time is decided by the project lead when cores are free.
+
+Compute for this scope (same timing records as section 6, one thread per process):
+
+| arm | budgets | core-hours per seed | five seeds |
+|---|---|---|---|
+| A0 | 8, 64 | 7.8 (Transformer 5.0, xLSTM 1.1, LSTM 0.5, GRU 0.6, Mamba 0.6) | 38.9 |
+| A1 | 8, 64 | 7.8 | 38.9 |
+| N | 8, 16, 32, 64 | 14.9 | 74.5 |
+| **total** | | **30.5** | **about 152** |
+
+Wall time (estimate, jobs of (arm, seed, method group), longest first): **4 workers about 38 h ideal, about 57-76 h
+if per-job cost is 1.5-2 times the committed timings; 8 workers about 19 h ideal, about 29-38 h.** The
+pilot (3 arms x one seed x `n_train` 8) is about 4.2 core-hours, about 1-1.5 h on 4 workers; it also gives the
+first measured per-job costs on this machine under the 4-worker load.
+
+Code for the run (committed with tests, `tests/test_rerun.py`): `scripts/run_arch_rerun_worker.py` (arm,
+cross-evaluation, checkpoints, records tagged `rerun/arm`, `eval/pool`, `eval/window`, `eval/primary`),
+`scripts/run_arch_rerun_sweep.py` (jobs, at most 8 workers, resume, provenance guard, merge),
+`scripts/check_rerun_gate.py`. The evaluation script of section 5 is written after the pilot and committed
+before the full run.
