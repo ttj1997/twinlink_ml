@@ -129,13 +129,21 @@ def family_report(name: str, cells: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def power_paired(effect_over_sd: float, n: int) -> float:
-    """Power of the two-sided paired t test (noncentral t)."""
+    """Power of the two-sided paired t test (noncentral t).
+
+    ``scipy.stats.nct`` returns nan for large noncentrality (about 8 and above); there the power is
+    above 0.9999 for every n >= 3 and is set to 1.0 (a first run without this rule skipped those
+    cases and gave wrong seed numbers; it was discarded, not committed).
+    """
     df = n - 1
     critical = stats.t.ppf(1.0 - ALPHA / 2.0, df)
     noncentrality = effect_over_sd * math.sqrt(n)
-    return float(
+    power = float(
         stats.nct.sf(critical, df, noncentrality) + stats.nct.cdf(-critical, df, noncentrality)
     )
+    if math.isnan(power):
+        return 1.0 if noncentrality > 8.0 and n >= 3 else 0.0
+    return power
 
 
 def seeds_needed(effect: float, sd: float) -> int | None:
