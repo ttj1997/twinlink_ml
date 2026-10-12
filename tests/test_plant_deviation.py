@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import dataclasses
 import warnings
 from pathlib import Path
 
@@ -17,6 +18,8 @@ from twinlink_ml.utils.seeding import SeedBundle
 CONFIG_PATH = (
     Path(__file__).resolve().parents[1] / "conf" / "process" / "greybox_gab_placeholder.yaml"
 )
+
+PILOT_TARGETS = ("energy_target", "product_moisture_kg_per_kg", "bed_temperature_celsius")
 
 
 @pytest.fixture(scope="module")
@@ -86,3 +89,16 @@ def test_reference_seed_is_not_a_study_seed() -> None:
         derived |= {bundle.data_seed, bundle.noise_seed, bundle.model_seed}
     assert REFERENCE_SEED not in derived
     assert REFERENCE_SEED not in range(1, 201)
+
+
+def test_pp2_deviates_about_as_much_as_the_main_variants(config) -> None:
+    """PP2 was set to a summary deviation of about 0.3 (the size of P1/P2a/P3), PP is milder."""
+    full = DataSpec.new_study(target_names=PILOT_TARGETS)
+    projected = dataclasses.replace(
+        config,
+        numerics=dataclasses.replace(config.numerics, enforce_gas_velocity_projection=True),
+    )
+    pp2 = plant_deviation(projected, PLANT_VARIANTS["PP2"], full)
+    assert 0.25 <= pp2.summary_outputs <= 0.35
+    assert 0.25 <= pp2.summary_measured <= 0.35
+    assert pp2.rmse_outputs["d50_um"] == 0.0

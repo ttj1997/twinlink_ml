@@ -13,7 +13,9 @@ P1      parameters only: heat loss UA x1.30, gas-solid transfer x0.75, critical 
 P2a     kinetics only: drying curve ``f(eta) = eta ** 2``
 P2b     measurement only: sensor lag and dead time, offset between bed and exhaust
 P3      P2a + P2b + fouling within a run (slow drift, restarts with every run)
-PP      pilot only: a mixture of P1 and P2 with its own values
+PP      pilot only: a mixture of P1 and P2 with its own values (mild: summary deviation 0.13)
+PP2     second pilot plant: its own mixture with a summary deviation of the size of the main
+        variants (about 0.3); pilot only, not part of the main run
 ======  =====================================================================================
 
 Separating P2a from P2b is what lets a later study tell whether a method helps under wrong
@@ -156,8 +158,23 @@ PLANT_VARIANTS: Final[dict[str, PlantVariantSpec]] = {
             time_constants_s=(None, None, 40.0, None), dead_times_s=(0.0, 0.0, 75.0, 0.0)
         ),
     ),
+    "PP2": PlantVariantSpec(
+        name="PP2",
+        heat_loss_factor=0.65,
+        saturation_degree_factor=1.15,
+        critical_moisture_factor=1.35,
+        drying_curve_exponent=1.45,
+        sensor=SensorSpec(
+            time_constants_s=(None, 20.0, 45.0, None),
+            dead_times_s=(0.0, 25.0, 50.0, 0.0),
+            temperature_offset_k=0.5,
+            temperature_offset_gain=0.04,
+        ),
+    ),
 }
-"""The plants of study A1. ``PP`` is for the pilot only and is not used in the main run."""
+"""The plants of study A1. ``PP`` and ``PP2`` are for the pilots only and are not used in the main
+run. The exponent of ``PP2`` was set (a priori, from the deviation measure alone, no model was
+trained) so that its summary deviation from P0 is about 0.3, the size of the main variants."""
 
 
 def shifted_config(base: ProcessConfig, spec: PlantVariantSpec) -> ProcessConfig:
