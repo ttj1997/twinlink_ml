@@ -9,9 +9,9 @@ residual head with zero start still begins as persistence).
 
 What the channel is
 -------------------
-* **Inputs only.** The simulator sees the actions and the disturbances of the run, never a
-  measurement of the plant. The channel is therefore as legitimately "known in advance" as the
-  planned set points.
+* **Inputs only.** The simulator sees the set points (planned actions) and the disturbances of
+  the run, never a measurement of the plant. The channel is therefore as legitimately "known in
+  advance" as the planned set points.
 * **Initial state.** The state of the plant at the start of a run is unknown. The simulator
   starts in the STEADY STATE at the set points and disturbances at the start of the run
   (:func:`stationary_initial_states`, the solver of ``simulation.steady_state`` -- inputs only,
@@ -164,13 +164,16 @@ def simulator_channels(
     import warnings
 
     started = time.perf_counter()
-    first_actions = (
+    # The simulator is driven with the SET POINTS (the requested actions where the plant
+    # recorded them, i.e. with an active safety projection): the simulator applies its own
+    # projection at its own state. Without a projection both series are identical.
+    set_points = (
         trajectory.requested_actions
         if trajectory.requested_actions is not None
         else trajectory.actions
-    )[:, 0, :]
+    )
     states, solved, feasible = stationary_initial_states(
-        base_config, first_actions, trajectory.disturbances[:, 0, :]
+        base_config, set_points[:, 0, :], trajectory.disturbances[:, 0, :]
     )
     quiet = dataclasses.replace(
         base_config,
@@ -184,7 +187,7 @@ def simulator_channels(
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
         simulator = GreyBoxFluidBedGranulator(quiet)
     result = simulator.rollout(
-        trajectory.actions,
+        set_points,
         trajectory.disturbances,
         run_id=trajectory.run_id,
         seed=0,
