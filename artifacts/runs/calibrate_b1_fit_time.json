@@ -1,0 +1,97 @@
+{
+ "provenance": {
+  "git/commit": "076078d5c3c7dee7a90a78861e68b047ae7c48c9",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "purpose": "fit time of the 3-target composite LSTM against N, serial and 8 concurrent",
+ "targets": [
+  "energy_target",
+  "product_moisture_kg_per_kg",
+  "bed_temperature_celsius"
+ ],
+ "serial": [
+  {
+   "n_train": 4,
+   "n_windows": 552,
+   "fit_s": 64.3308657000307,
+   "epochs_run": null
+  },
+  {
+   "n_train": 8,
+   "n_windows": 1104,
+   "fit_s": 95.5517925999593,
+   "epochs_run": null
+  },
+  {
+   "n_train": 16,
+   "n_windows": 2208,
+   "fit_s": 195.40201200009324,
+   "epochs_run": null
+  },
+  {
+   "n_train": 32,
+   "n_windows": 4416,
+   "fit_s": 508.49890600005165,
+   "epochs_run": null
+  }
+ ],
+ "contended_n32": [
+  {
+   "n_train": 32,
+   "n_windows": 4416,
+   "fit_s": 724.9813186000101,
+   "epochs_run": null
+  },
+  {
+   "n_train": 32,
+   "n_windows": 4416,
+   "fit_s": 725.3685317998752,
+   "epochs_run": null
+  },
+  {
+   "n_train": 32,
+   "n_windows": 4416,
+   "fit_s": 723.1668589001056,
+   "epochs_run": null
+  },
+  {
+   "n_train": 32,
+   "n_windows": 4416,
+   "fit_s": 731.6587669998407,
+   "epochs_run": null
+  },
+  {
+   "n_train": 32,
+   "n_windows": 4416,
+   "fit_s": 729.5136289000511,
+   "epochs_run": null
+  },
+  {
+   "n_train": 32,
+   "n_windows": 4416,
+   "fit_s": 727.4781160000712,
+   "epochs_run": null
+  },
+  {
+   "n_train": 32,
+   "n_windows": 4416,
+   "fit_s": 729.4704672999214,
+   "epochs_run": null
+  },
+  {
+   "n_train": 32,
+   "n_windows": 4416,
+   "fit_s": 725.2652123000007,
+   "epochs_run": null
+  }
+ ],
+ "contended_wall_s": 797.7144283999223
+}
