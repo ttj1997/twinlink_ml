@@ -22,6 +22,13 @@ from twinlink_ml.evaluation.growing_pool import GrowingPool, windows_for_test_se
 from twinlink_ml.simulation.excitation_plans import PLAN_NAMES
 
 SPEC = DataSpec.new_study(n_train_max=4, n_val=2, n_test=2)
+SPREAD = {
+    "spread": {
+        "inlet_temperature_celsius": {"range": 20.0},
+        "gas_velocity_m_per_s": {"range": 0.5},
+        "nozzle_pressure_bar": {"range": 1.0},
+    }
+}
 
 
 @pytest.fixture(scope="module")
@@ -114,6 +121,7 @@ def _anchors(config):
     )
     return {
         "u_gas_min": 1.26,
+        "quality_limit_kg_per_kg": 0.15,
         "anchors": [
             {"ambient_unit": [0.5, 0.5], "optimum": base, "limit": {**base, "spray": spray}}
         ],
@@ -124,7 +132,7 @@ def test_t3_profiles(data_and_config):
     _, config = data_and_config
     spec = dataclasses.replace(SPEC, run_duration_s=28_800.0)
     anchors = _anchors(config)
-    t3 = build_t3(config, spec, anchors, runs_per_cell=1)
+    t3 = build_t3(config, spec, anchors, SPREAD, runs_per_cell=1)
     assert t3.trajectory.n_runs == 2
     dt = spec.sample_time_s
     hold = round(3600.0 / dt)
@@ -146,6 +154,28 @@ def test_t3_profiles(data_and_config):
             steady.particle_moisture_kg_per_kg, abs=2e-3
         )
     assert t3.trajectory.outputs[1, 0, 2] > t3.trajectory.outputs[0, 0, 2]  # limit run is wetter
+
+
+def test_t3_family_two_alternates_over_and_inside_the_limit(data_and_config):
+    _, config = data_and_config
+    spec = dataclasses.replace(SPEC, run_duration_s=28_800.0)
+    t3 = build_t3(config, spec, _anchors(config), SPREAD, runs_per_cell=2)
+    assert t3.schedule.metadata["across_limit_requirement_failures"] == 0
+    assert all(k == ("t3-optimum",) * 4 for k in t3.schedule.signal_kinds[:2])
+    assert all(k == ("t3-across_limit",) * 4 for k in t3.schedule.signal_kinds[2:])
+    dt = spec.sample_time_s
+    n_steps = round(spec.run_duration_s / dt)
+    edges = np.linspace(round(3600.0 / dt), n_steps, 5).astype(int)
+    scale = t3.schedule.metadata["step_scale"]
+    assert scale[0] == 20.0 and scale[1] == 0.5 and scale[3] == 1.0
+    for run in (2, 3):
+        d0 = t3.schedule.disturbances[run, 0]
+        for change in range(4):
+            # end of the segment: the rate-limited transition has long settled
+            action = t3.schedule.actions[run, edges[change + 1] - 1]
+            moisture = steady_state_at(config, action, d0).particle_moisture_kg_per_kg
+            assert (moisture > 0.15) == (change % 2 == 0), (run, change, moisture)
+        assert t3.schedule.actions[run, :, 1].min() >= 1.26 - 1e-9
 
 
 def test_find_limit_spray_hits_the_target(data_and_config):
