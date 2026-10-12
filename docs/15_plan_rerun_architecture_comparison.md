@@ -192,3 +192,15 @@ cross-evaluation, checkpoints, records tagged `rerun/arm`, `eval/pool`, `eval/wi
 `scripts/run_arch_rerun_sweep.py` (jobs, at most 8 workers, resume, provenance guard, merge),
 `scripts/check_rerun_gate.py`. The evaluation script of section 5 is written after the pilot and committed
 before the full run.
+
+## 11. Decisions after the pilot (2026-10-12) and the resulting scope
+
+* **Arm A0 is not re-run.** The old records of Befunde 51/58 serve as A0 (the pilot reproduced them; confirmed for
+  GRU and LSTM at seed 1, `n_train` 64, maximum deviation 8.6e-5 < 1e-3, Befund 85 b).
+* The full run therefore consists of **A1** (`n_train` 8, 64) and **N** (`n_train` 8, 16, 32, 64), seeds 1-5,
+  `scripts/run_arch_rerun_sweep.py --arms A1 N`: 22.7 core-hours per seed, about 113 for five seeds (committed
+  timings; about 105 with the cost ratios of the pilot), about 28 h on four workers (ideal), 43-57 h with the
+  margin of section 6; on eight workers about 14 h, 21-28 h.
+* The evaluation script (`scripts/analyze_rerun.py`) is committed; the pilot analysis of limited actions
+  (Befund 85) is done; **the full run is not started**, its time and the question of a limited excitation
+  window are decisions of the project lead.
