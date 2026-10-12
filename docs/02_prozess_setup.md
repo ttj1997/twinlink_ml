@@ -48,6 +48,7 @@ erledigt und zwei neu.
 | 8 | Zyklon- und Rückführungsverhalten | Anwendungspartner | Im Standard-Anregungsdesign liegt `u_gas` in 13 % der Abtastschritte über `u_t` des mittleren Korns. |
 | 9 | Lower limit of the product moisture | Anwendungspartner | New (Befund 77, `09_entwurf_modellbasierte_optimierung.md`). The coupling gain of the two-line optimum requires one line to dry its product to 0.043-0.080 kg/kg against the upper limit 0.144 kg/kg. If a lower limit exists, the mechanism may fall away. |
 | 10 | Condensing heat recovery from the humid exhaust | Anwendungspartner | New (Befund 77). The gain requires a condensing recovery; the apparatus (condensate drain, exchanger material, fouling, pressure loss) is not modelled. Is it feasible in the plant, and at what cost? |
+| 11 | Achievable approach temperature (`dT_min`) of the heat exchangers at the site, including an intermediate circuit | Anwendungspartner | New (Befund 81). The coupling gain of the two lines depends on it: at `dT_min` 20 K none (0 of 6 warm, humid scenarios, the joint optimum equals the line optimum), at 10 K a small, scenario-dependent one (1 of 6 W scenarios above 1.0 kg CO2e/h; up to 3.6 kg CO2e/h at mild, humid air). 20 K is a placeholder of the network model. |
 
 **Erledigt gegenüber Fassung 2:** Zeitschrittweite der Anlagendaten (2 s, `LAB`),
 Rechenzeit pro Dyssol-Lauf (siehe unten, `LAB`), Frage nach der geregelten Größe bei
