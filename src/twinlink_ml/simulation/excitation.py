@@ -73,6 +73,7 @@ from .config import (
 FloatArray = NDArray[np.float64]
 SamplerName = Literal["sobol", "lhs"]
 SignalKind = Literal["step", "prbs", "ramp", "constant"]
+SolidFractionProcess = Literal["diurnal", "independent"]
 
 _SECONDS_PER_DAY: Final = 86_400.0
 _DEFAULT_RUN_DURATION_S: Final = 28_800.0
@@ -484,6 +485,14 @@ class DisturbanceDesign(ABC):
         rng: np.random.Generator,
     ) -> FloatArray: ...
 
+    def fingerprint_options(self) -> dict[str, object]:
+        """Options that enter the excitation fingerprint, **only when set**.
+
+        Empty for the behaviour that existed before an option was added, so that every
+        existing schedule keeps its fingerprint (``MixedExcitationDesign._fingerprint``).
+        """
+        return {}
+
 
 class PiecewiseConstantDisturbanceDesign(DisturbanceDesign):
     """Ein Störgrößen-Betriebspunkt pro Lauf, innerhalb des Laufs konstant.
@@ -524,6 +533,26 @@ class DiurnalDisturbanceDesign(DisturbanceDesign):
     Der Tag/Nacht-Indikator aus ``02_prozess_setup.md`` entsteht damit implizit. Als
     Feature für das Modell sollte er aus dem Zeitstempel als sin/cos-Paar gebildet werden,
     nicht als Binärgröße -- ein Sprung um Mitternacht existiert im Prozess nicht.
+
+    Feststoffanteil der Suspension (Review E3, 2026-10-09)
+    ------------------------------------------------------
+    ``solid_fraction_process="diurnal"`` (Voreinstellung, Verhalten bis Befund 81) legt auch
+    ``suspension_solid_fraction`` auf den Tagesgang in Phase mit ``T_amb``: innerhalb eines
+    Laufs Korrelation im Median 0.71 (max. 0.94, ``broadband_derived``, 64 Läufe). Das baut
+    eine Verwechslung von Heizleistung und Wasserlast in die Daten. Der Feststoffanteil ist
+    kein Wetterkanal, sondern eine Eigenschaft der angesetzten Suspension.
+    ``"independent"``: der Kanal bekommt **keinen** Tagesgang, sondern einen eigenen
+    Ornstein-Uhlenbeck-Prozess (Standardabweichung ``solid_fraction_std_fraction`` mal
+    Spanne, Korrelationszeit ``drift_correlation_time_s``), unabhängig von ``T_amb`` und
+    ``RH``. Die Zufallszahlen werden an derselben Stelle gezogen wie bisher: ``T_amb`` und
+    ``RH`` sind für denselben Seed in beiden Betriebsarten bitgleich. Der Standardwert
+    ``0.09`` ist PLATZHALTER ohne Quelle; er ist so gewählt, dass die mittlere
+    Standardabweichung des Kanals **innerhalb eines Laufs von 8 h** der bisherigen
+    entspricht (64 Läufe, ``broadband_derived``, Seeds 11/12/13: 0.0140-0.0146 gegen
+    0.0135-0.0145), damit sich nur die Korrelation mit ``T_amb`` ändert und nicht die
+    Variabilität. Gemessen bei Seed 11: Korrelation innerhalb des Laufs im Median 0.03
+    statt 0.59 (Mittel 0.03 statt 0.56; |Korrelation| im Median 0.24 statt 0.59), weil zwei
+    langsame unabhängige Prozesse über 8 h zufällig korrelieren können.
     """
 
     def __init__(
@@ -533,11 +562,30 @@ class DiurnalDisturbanceDesign(DisturbanceDesign):
         drift_amplitude_fraction: float = 0.10,
         drift_correlation_time_s: float = 3600.0,
         humidity_phase_shift_rad: float = float(np.pi),
+        solid_fraction_process: SolidFractionProcess = "diurnal",
+        solid_fraction_std_fraction: float = 0.09,
     ) -> None:
+        if solid_fraction_process not in ("diurnal", "independent"):
+            raise ValueError(
+                "solid_fraction_process muss 'diurnal' oder 'independent' sein, "
+                f"ist {solid_fraction_process!r}"
+            )
+        if solid_fraction_std_fraction < 0.0:
+            raise ValueError("solid_fraction_std_fraction muss >= 0 sein")
         self._diurnal = diurnal_amplitude_fraction
         self._drift = drift_amplitude_fraction
         self._correlation_time_s = drift_correlation_time_s
         self._phase_shift = humidity_phase_shift_rad
+        self._solid_fraction_process = solid_fraction_process
+        self._solid_fraction_std_fraction = solid_fraction_std_fraction
+
+    def fingerprint_options(self) -> dict[str, object]:
+        if self._solid_fraction_process == "diurnal":
+            return {}
+        return {
+            "solid_fraction_process": self._solid_fraction_process,
+            "solid_fraction_std_fraction": self._solid_fraction_std_fraction,
+        }
 
     def build(
         self,
@@ -560,6 +608,18 @@ class DiurnalDisturbanceDesign(DisturbanceDesign):
         names = space.names
         signal = np.empty((n_runs, n_steps, n_channels), dtype=np.float64)
         for channel, name in enumerate(names):
+            if self._solid_fraction_process == "independent" and "solid_fraction" in name:
+                # Own process, no diurnal term (review E3). Same draw pattern as the drift of
+                # the other channels, so T_amb and RH do not change.
+                process = self._ornstein_uhlenbeck(
+                    n_runs,
+                    n_steps,
+                    sample_time_s,
+                    self._solid_fraction_std_fraction * span[channel],
+                    rng,
+                )
+                signal[:, :, channel] = centre[:, channel, None] + process
+                continue
             phase = base_phase + (self._phase_shift if "humidity" in name else 0.0)
             diurnal = 0.5 * self._diurnal * span[channel] * np.sin(phase)
             drift = self._ornstein_uhlenbeck(
@@ -851,6 +911,10 @@ class MixedExcitationDesign(ExcitationDesign):
             "n_runs": n_runs,
             "seed": seed,
         }
+        options = self._disturbance_design.fingerprint_options()
+        if options:
+            # Only when set: schedules built before the option keep their fingerprint.
+            payload["disturbance_design_options"] = options
         digest = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
         return digest[:8]
 

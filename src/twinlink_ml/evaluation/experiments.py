@@ -53,7 +53,13 @@ from ..simulation.config import (
     PlaceholderConfigWarning,
     ProcessConfig,
 )
-from ..simulation.excitation import ExcitationConfig, ExcitationSchedule, MixedExcitationDesign
+from ..simulation.excitation import (
+    DiurnalDisturbanceDesign,
+    ExcitationConfig,
+    ExcitationSchedule,
+    MixedExcitationDesign,
+    SolidFractionProcess,
+)
 from ..simulation.greybox import GreyBoxFluidBedGranulator
 from ..utils.seeding import SeedBundle, VarianceSource
 from ..utils.tracking import ExperimentLogger, RunRecord, environment_fingerprint
@@ -156,6 +162,13 @@ class DataSpec:
     observed_target_names: tuple[str, ...] | None = None
     """Inline gemessene Zielgrößen; ``None`` heißt alle. Siehe ``WindowConfig``."""
     constant_run_fraction: float = 0.10
+    solid_fraction_process: SolidFractionProcess = "diurnal"
+    """Disturbance process of ``suspension_solid_fraction``, see
+    ``DiurnalDisturbanceDesign`` (review E3). ``"diurnal"`` is the behaviour up to Befund 81
+    (solid fraction in phase with the ambient temperature) and stays the default so that
+    existing scripts reproduce their data; **new data sets are to be generated with
+    ``"independent"``** (own Ornstein-Uhlenbeck process). Changes the excitation
+    fingerprint only when not ``"diurnal"``."""
     future_actions: FutureActions = "realised"
     """Which action series enters ``future_exogenous``, see ``WindowConfig.future_actions``
     (review D1). ``"realised"`` is the behaviour up to Befund 81 and stays the default so that
@@ -310,6 +323,11 @@ def generate_data(
         geometry=config.geometry,
         material=config.material,
         operation=config.operation,
+        disturbance_design=(
+            None
+            if spec.solid_fraction_process == "diurnal"
+            else DiurnalDisturbanceDesign(solid_fraction_process=spec.solid_fraction_process)
+        ),
     )
     schedule = design.build(spec.pool_size, seed=seeds.data_seed)
 
