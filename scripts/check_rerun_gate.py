@@ -1,10 +1,12 @@
 r"""Gate of the re-run (docs/15, section 4): arm A0 must reproduce the old records before any arm counts.
 
 Compares the records of the pilot (or of the full run) with the records of Befunde 51/58
-(``arch_learning_curve_projected.jsonl``) for the same ``master_seed``, ``n_train`` and test set:
+(``arch_learning_curve_projected.jsonl`` and ``..._extended.jsonl``) for the same ``master_seed``, ``n_train`` and test set:
 
-1. Fingerprints of the data: ``process/fingerprint``, ``excitation/fingerprint``, ``split/digest``,
-   ``measurement/digest`` and ``seed/*`` of arm A0 must equal the old ones.
+1. Fingerprints of the data: ``process/fingerprint`` (equal or equivalent in the fingerprint history:
+   the old records carry ``2d2679eeed716577``, the same configuration after the pseudonymisation cut of
+   2026-09-25 is ``bddca37f716f5cfc``), ``excitation/fingerprint``, ``split/digest``, ``seed/*`` of arm A0
+   must equal the old ones; ``measurement/digest`` only if the old record has one (it has not).
 2. The baselines that do not depend on future inputs or on training randomness: persistence and the two
    fitted linear baselines (static, ARX): every common metric of the PRIMARY variant of arm A0 within
    ``--tolerance`` (relative, with an absolute floor of 1e-12; proposal of the plan: 1e-6).
@@ -29,6 +31,8 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parent / "verify"))
 
 from _common import RUNS_DIR, provenance, require_clean_tree, write_artifact
+
+from twinlink_ml.utils.fingerprint_history import fingerprints_equivalent
 
 FINGERPRINTS = (
     "process/fingerprint",
@@ -94,10 +98,15 @@ def run_checks(
             failures.append(f"no old record for {key}")
             continue
         for name in FINGERPRINTS:
-            if record["params"].get(name) != old_record["params"].get(name):
-                failures.append(
-                    f"{key}: {name} {record['params'].get(name)!r} != old {old_record['params'].get(name)!r}"
-                )
+            new_value, old_value = record["params"].get(name), old_record["params"].get(name)
+            if old_value is None and name == "measurement/digest":
+                continue  # not recorded before Befund 51 (the noise seed and the errors cover it)
+            if name == "process/fingerprint":
+                same = fingerprints_equivalent(str(new_value), str(old_value))
+            else:
+                same = new_value == old_value
+            if not same:
+                failures.append(f"{key}: {name} {new_value!r} != old {old_value!r}")
         if label in GATED_MODELS:
             worst, where, count = max_relative_deviation(record["metrics"], old_record["metrics"])
             comparisons.append(
@@ -154,7 +163,9 @@ def main() -> int:
     parser.add_argument("--artifact", default=None, help="artifact name (default <prefix>_gate)")
     arguments = parser.parse_args()
     require_clean_tree()
-    old = load(RUNS_DIR / "arch_learning_curve_projected.jsonl")
+    old = load(RUNS_DIR / "arch_learning_curve_projected.jsonl") + load(
+        RUNS_DIR / "arch_learning_curve_projected_extended.jsonl"
+    )
     arms = {
         arm: load(RUNS_DIR / f"{arguments.prefix}_{arm}.jsonl")
         for arm in ("A0", "A1", "N")

@@ -195,3 +195,16 @@ def test_smoke_with_a_trained_network_saves_a_checkpoint(tmp_path: Path) -> None
     assert (tmp_path / "ckpt" / "gru_N_seed1_n4.pt").exists()
     records = [json.loads(line) for line in out.read_text(encoding="utf-8").splitlines()]
     assert all(r["params"]["checkpoint/path"].endswith("gru_N_seed1_n4.pt") for r in records)
+
+
+def test_gate_accepts_the_documented_fingerprint_history(smoke: dict[str, list[dict]]) -> None:
+    arms = {arm: smoke[arm] for arm in worker.ARMS}
+    old = copy.deepcopy(smoke["A0"])
+    for r in old:
+        r["params"]["process/fingerprint"] = "2d2679eeed716577"  # same configuration before the cut
+        r["params"].pop("measurement/digest", None)  # not recorded in the old records
+    for r in arms["A0"]:
+        r["params"]["process/fingerprint"] = "bddca37f716f5cfc"
+    report = gate.run_checks(old, arms, 1e-6)
+    process_failures = [f for f in report["failures"] if "process/fingerprint" in f]
+    assert not process_failures and not [f for f in report["failures"] if "measurement" in f]
