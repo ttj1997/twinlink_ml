@@ -1,0 +1,363 @@
+{
+ "provenance": {
+  "git/commit": "2807a89421b217d38ce1e5af9efd0c8f8b1d0eba",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "design": {
+  "data": "identical to scripts/run_a1_pilot_pp.py (pilot 1)",
+  "p0_pool_split_digest_equals_pilot_artifact": true,
+  "action_names": [
+   "inlet_temperature_celsius",
+   "gas_velocity_m_per_s",
+   "spray_rate_kg_per_h",
+   "nozzle_pressure_bar"
+  ],
+  "box_lower": [
+   60.0,
+   0.8,
+   0.4,
+   1.0
+  ],
+  "box_upper": [
+   120.0,
+   2.5,
+   3.0,
+   4.0
+  ],
+  "epsilon": 1e-12
+ },
+ "results": {
+  "P0_pretraining_pool_seed101": {
+   "n_runs": 128,
+   "n_samples": 147456,
+   "projection_active": true,
+   "gas_projection": {
+    "lower_limit_u_mf_samples_pct": 0.0,
+    "upper_limit_u_terminal_samples_pct": 7.951524522569445,
+    "any_samples_pct": 7.951524522569445,
+    "runs_affected_pct": 28.90625,
+    "runs_lower_pct": 0.0,
+    "runs_upper_pct": 28.90625,
+    "share_of_projected_samples_in_first_quarter_pct": 45.67164179104478
+   },
+   "other_channels_changed_by_projection_samples_pct": {
+    "inlet_temperature_celsius": 0.0,
+    "spray_rate_kg_per_h": 0.0,
+    "nozzle_pressure_bar": 0.0
+   },
+   "box_limits": {
+    "inlet_temperature_celsius": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "gas_velocity_m_per_s": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "spray_rate_kg_per_h": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "nozzle_pressure_bar": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    }
+   }
+  },
+  "PP_plant_pool_seed1": {
+   "n_runs": 32,
+   "n_samples": 36864,
+   "projection_active": true,
+   "gas_projection": {
+    "lower_limit_u_mf_samples_pct": 0.0,
+    "upper_limit_u_terminal_samples_pct": 6.138780381944445,
+    "any_samples_pct": 6.138780381944445,
+    "runs_affected_pct": 31.25,
+    "runs_lower_pct": 0.0,
+    "runs_upper_pct": 31.25,
+    "share_of_projected_samples_in_first_quarter_pct": 70.26071586389749
+   },
+   "other_channels_changed_by_projection_samples_pct": {
+    "inlet_temperature_celsius": 0.0,
+    "spray_rate_kg_per_h": 0.0,
+    "nozzle_pressure_bar": 0.0
+   },
+   "box_limits": {
+    "inlet_temperature_celsius": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "gas_velocity_m_per_s": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "spray_rate_kg_per_h": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "nozzle_pressure_bar": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    }
+   }
+  },
+  "P0_simulator_in_hybrid_channel_pool1": {
+   "n_runs": 32,
+   "n_samples": 36864,
+   "projection_active": true,
+   "gas_projection": {
+    "lower_limit_u_mf_samples_pct": 0.0,
+    "upper_limit_u_terminal_samples_pct": 0.0,
+    "any_samples_pct": 0.0,
+    "runs_affected_pct": 0.0,
+    "runs_lower_pct": 0.0,
+    "runs_upper_pct": 0.0,
+    "share_of_projected_samples_in_first_quarter_pct": 0.0
+   },
+   "other_channels_changed_by_projection_samples_pct": {
+    "inlet_temperature_celsius": 0.0,
+    "spray_rate_kg_per_h": 0.0,
+    "nozzle_pressure_bar": 0.0
+   },
+   "box_limits": {
+    "inlet_temperature_celsius": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "gas_velocity_m_per_s": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "spray_rate_kg_per_h": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "nozzle_pressure_bar": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    }
+   },
+   "plant_vs_simulator_projection_disagree_samples_pct": 6.138780381944445,
+   "gas_velocity_realised_mean_abs_difference_plant_vs_simulator_m_per_s": 0.01920853777784931,
+   "steady_state_start_solved_runs": 32
+  },
+  "PP_plant_pool_seed2": {
+   "n_runs": 32,
+   "n_samples": 36864,
+   "projection_active": true,
+   "gas_projection": {
+    "lower_limit_u_mf_samples_pct": 0.0,
+    "upper_limit_u_terminal_samples_pct": 4.258897569444445,
+    "any_samples_pct": 4.258897569444445,
+    "runs_affected_pct": 25.0,
+    "runs_lower_pct": 0.0,
+    "runs_upper_pct": 25.0,
+    "share_of_projected_samples_in_first_quarter_pct": 54.01273885350319
+   },
+   "other_channels_changed_by_projection_samples_pct": {
+    "inlet_temperature_celsius": 0.0,
+    "spray_rate_kg_per_h": 0.0,
+    "nozzle_pressure_bar": 0.0
+   },
+   "box_limits": {
+    "inlet_temperature_celsius": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "gas_velocity_m_per_s": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "spray_rate_kg_per_h": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "nozzle_pressure_bar": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    }
+   }
+  },
+  "P0_simulator_in_hybrid_channel_pool2": {
+   "n_runs": 32,
+   "n_samples": 36864,
+   "projection_active": true,
+   "gas_projection": {
+    "lower_limit_u_mf_samples_pct": 0.0,
+    "upper_limit_u_terminal_samples_pct": 0.0,
+    "any_samples_pct": 0.0,
+    "runs_affected_pct": 0.0,
+    "runs_lower_pct": 0.0,
+    "runs_upper_pct": 0.0,
+    "share_of_projected_samples_in_first_quarter_pct": 0.0
+   },
+   "other_channels_changed_by_projection_samples_pct": {
+    "inlet_temperature_celsius": 0.0,
+    "spray_rate_kg_per_h": 0.0,
+    "nozzle_pressure_bar": 0.0
+   },
+   "box_limits": {
+    "inlet_temperature_celsius": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "gas_velocity_m_per_s": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "spray_rate_kg_per_h": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "nozzle_pressure_bar": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    }
+   },
+   "plant_vs_simulator_projection_disagree_samples_pct": 4.258897569444445,
+   "gas_velocity_realised_mean_abs_difference_plant_vs_simulator_m_per_s": 0.014617081057203971,
+   "steady_state_start_solved_runs": 29
+  },
+  "PP_plant_pool_seed3": {
+   "n_runs": 32,
+   "n_samples": 36864,
+   "projection_active": true,
+   "gas_projection": {
+    "lower_limit_u_mf_samples_pct": 0.0,
+    "upper_limit_u_terminal_samples_pct": 3.9659288194444446,
+    "any_samples_pct": 3.9659288194444446,
+    "runs_affected_pct": 31.25,
+    "runs_lower_pct": 0.0,
+    "runs_upper_pct": 31.25,
+    "share_of_projected_samples_in_first_quarter_pct": 70.65663474692202
+   },
+   "other_channels_changed_by_projection_samples_pct": {
+    "inlet_temperature_celsius": 0.0,
+    "spray_rate_kg_per_h": 0.0,
+    "nozzle_pressure_bar": 0.0
+   },
+   "box_limits": {
+    "inlet_temperature_celsius": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "gas_velocity_m_per_s": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "spray_rate_kg_per_h": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "nozzle_pressure_bar": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    }
+   }
+  },
+  "P0_simulator_in_hybrid_channel_pool3": {
+   "n_runs": 32,
+   "n_samples": 36864,
+   "projection_active": true,
+   "gas_projection": {
+    "lower_limit_u_mf_samples_pct": 0.0,
+    "upper_limit_u_terminal_samples_pct": 0.0,
+    "any_samples_pct": 0.0,
+    "runs_affected_pct": 0.0,
+    "runs_lower_pct": 0.0,
+    "runs_upper_pct": 0.0,
+    "share_of_projected_samples_in_first_quarter_pct": 0.0
+   },
+   "other_channels_changed_by_projection_samples_pct": {
+    "inlet_temperature_celsius": 0.0,
+    "spray_rate_kg_per_h": 0.0,
+    "nozzle_pressure_bar": 0.0
+   },
+   "box_limits": {
+    "inlet_temperature_celsius": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "gas_velocity_m_per_s": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "spray_rate_kg_per_h": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    },
+    "nozzle_pressure_bar": {
+     "requested_below_min_pct": 0.0,
+     "requested_above_max_pct": 0.0,
+     "realised_below_min_pct": 0.0,
+     "realised_above_max_pct": 0.0
+    }
+   },
+   "plant_vs_simulator_projection_disagree_samples_pct": 3.9659288194444446,
+   "gas_velocity_realised_mean_abs_difference_plant_vs_simulator_m_per_s": 0.007735156847693441,
+   "steady_state_start_solved_runs": 31
+  }
+ }
+}
