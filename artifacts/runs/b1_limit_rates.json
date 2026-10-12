@@ -1,0 +1,268 @@
+{
+ "provenance": {
+  "git/commit": "cdef0d0495aad0821c9049cc0d2762e3163c5f70",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "purpose": "limit rates of the plans B0-B4 (report only)",
+ "channels": [
+  "inlet_temperature_celsius",
+  "gas_velocity_m_per_s",
+  "spray_rate_kg_per_h",
+  "nozzle_pressure_bar"
+ ],
+ "master_seeds": [
+  1,
+  2,
+  3,
+  4,
+  5
+ ],
+ "n_runs_per_plan_and_seed": 4,
+ "enforce_action_bounds": true,
+ "enforce_gas_velocity_projection": false,
+ "rates": {
+  "b0": {
+   "sim_clip_lower": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "sim_clip_upper": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "at_lower": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "at_upper": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "req_outside": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ratelim_changed": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ratelim_binding": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fluidisation_window_violation_any": 0.03550347222222223,
+   "fluidisation_below_u_mf": 0.0,
+   "fluidisation_above_u_t": 0.03550347222222223
+  },
+  "b1": {
+   "sim_clip_lower": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "sim_clip_upper": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "at_lower": [
+    0.031163194444444445,
+    0.0,
+    0.026779513888888887,
+    0.018967013888888887
+   ],
+   "at_upper": [
+    0.029600694444444443,
+    0.0,
+    0.02621527777777778,
+    0.020703125
+   ],
+   "req_outside": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ratelim_changed": [
+    0.08033854166666667,
+    0.00030381944444444445,
+    0.10030381944444444,
+    0.019227430555555557
+   ],
+   "ratelim_binding": [
+    0.08033854166666667,
+    0.00030381944444444445,
+    0.10364583333333334,
+    0.019270833333333334
+   ],
+   "fluidisation_window_violation_any": 0.069140625,
+   "fluidisation_below_u_mf": 0.0,
+   "fluidisation_above_u_t": 0.069140625
+  },
+  "b2": {
+   "sim_clip_lower": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "sim_clip_upper": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "at_lower": [
+    0.19526909722222222,
+    0.24479166666666666,
+    0.1547309027777778,
+    0.25972222222222224
+   ],
+   "at_upper": [
+    0.21875,
+    0.24778645833333332,
+    0.16202256944444443,
+    0.2456597222222222
+   ],
+   "req_outside": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ratelim_changed": [
+    0.18116319444444445,
+    0.002864583333333333,
+    0.3548611111111111,
+    0.013368055555555555
+   ],
+   "ratelim_binding": [
+    0.18116319444444445,
+    0.002864583333333333,
+    0.3548611111111111,
+    0.013368055555555555
+   ],
+   "fluidisation_window_violation_any": 0.07378472222222222,
+   "fluidisation_below_u_mf": 0.0,
+   "fluidisation_above_u_t": 0.07378472222222222
+  },
+  "b3": {
+   "sim_clip_lower": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "sim_clip_upper": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "at_lower": [
+    4.340277777777778e-05,
+    0.0,
+    8.680555555555556e-05,
+    4.340277777777778e-05
+   ],
+   "at_upper": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "req_outside": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ratelim_changed": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ratelim_binding": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fluidisation_window_violation_any": 0.019965277777777776,
+   "fluidisation_below_u_mf": 0.0,
+   "fluidisation_above_u_t": 0.019965277777777776
+  },
+  "b4": {
+   "sim_clip_lower": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "sim_clip_upper": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "at_lower": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "at_upper": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "req_outside": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ratelim_changed": [
+    0.01115451388888889,
+    0.0007378472222222222,
+    0.013802083333333333,
+    0.0037760416666666667
+   ],
+   "ratelim_binding": [
+    0.01115451388888889,
+    0.0007378472222222222,
+    0.013802083333333333,
+    0.0037760416666666667
+   ],
+   "fluidisation_window_violation_any": 0.04743923611111111,
+   "fluidisation_below_u_mf": 0.0,
+   "fluidisation_above_u_t": 0.04743923611111111
+  }
+ }
+}
