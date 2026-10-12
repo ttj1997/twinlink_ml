@@ -34,6 +34,7 @@ from twinlink_ml.partner_v4_1 import cascade as k
 from twinlink_ml.partner_v4_1 import deviations as dev
 from twinlink_ml.partner_v4_1 import layout as lay
 from twinlink_ml.partner_v4_1.inputs import load_excel_inputs_v41
+from twinlink_ml.utils.code_location import require_code_location
 
 ROOT = Path(__file__).resolve().parents[1]
 LOCAL = Path(os.environ.get("TWINLINK_LOCAL_DIR", ROOT / "local"))
@@ -147,6 +148,7 @@ def main() -> int:
             "git/commit": _git("rev-parse", "HEAD").strip(),
             "git/dirty": bool(_git("status", "--porcelain").strip()),
             "python": sys.version.split()[0],
+            **require_code_location(ROOT),
         },
         "note": "document = values following the partner's equation document (typos corrected); "
         "as_built = the sheet's formulas as they are; excel = the value stored in the workbook",

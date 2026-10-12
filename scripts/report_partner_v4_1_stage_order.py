@@ -27,6 +27,7 @@ from twinlink_ml.partner_v4.inputs import ExcelDryerInputs, ExcelInputs, ExcelMa
 from twinlink_ml.partner_v4_1 import cascade as k
 from twinlink_ml.partner_v4_1 import deviations as dev
 from twinlink_ml.partner_v4_1.inputs import ExcelInputsV41, load_excel_inputs_v41
+from twinlink_ml.utils.code_location import require_code_location
 
 ROOT = Path(__file__).resolve().parents[1]
 LOCAL = Path(os.environ.get("TWINLINK_LOCAL_DIR", ROOT / "local"))
@@ -71,6 +72,7 @@ def main() -> int:
             "git/commit": _git("rev-parse", "HEAD").strip(),
             "git/dirty": bool(_git("status", "--porcelain").strip()),
             "python": sys.version.split()[0],
+            **require_code_location(ROOT),
         },
         "note": "intermediate = inputs set directly (the file is not available); rules are "
         "proposals, not part of the workbook",

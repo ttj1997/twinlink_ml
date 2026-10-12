@@ -34,6 +34,20 @@ lab book (`04_stand_ap1.md`), process setup, and synthesis documents.
   artifacts (`git/dirty` is logged).
 - Never overwrite existing artifacts; use a new name.
 - The config-fingerprint regression tests must stay green.
+- Environment: one `.venv` in the main checkout with every extra of `pyproject.toml`
+  (`pip install -e ".[torch,sklearn,plant-data,train,rl,dev]"`, includes gymnasium). Use it, not
+  the system interpreter (its editable install points at an old, unrelated checkout).
+  Check: `python -c "import twinlink_ml; print(twinlink_ml.__file__)"` shows this repo's `src/`.
+- Code location: every new artifact records `code/package_dir`, `code/interpreter` and
+  `code/root_checked` (`twinlink_ml.utils.code_location`, via `environment_fingerprint()` and
+  `scripts/verify/_common.provenance()`). If the loaded `twinlink_ml` is not
+  `<root>/src/twinlink_ml` of the repository or worktree the run belongs to, the run aborts.
+  Artifact scripts that write their own provenance call `require_code_location(ROOT)`.
+- Worktrees: an editable install points at one directory only, so a worktree must load its own
+  code. Start every run there with `tools/run_here.sh <python args>` (changes into the worktree
+  root, sets `PYTHONPATH=<worktree>/src`, uses the main checkout's `.venv`); detached drivers do
+  the same (`cd <worktree>; PYTHONPATH=<worktree>/src <venv python> ...`). Never re-run
+  `pip install -e .` from a worktree (it would redirect every other run on the machine).
 
 ## Methodology
 

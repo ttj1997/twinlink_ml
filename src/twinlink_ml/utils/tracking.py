@@ -40,6 +40,8 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any
 
+from .code_location import code_location_fields, find_repo_root, require_code_location
+
 __all__ = [
     "DIFF_DIGEST_UNAVAILABLE",
     "DiffDigestUnavailableWarning",
@@ -375,7 +377,7 @@ def _torch_num_threads() -> int | None:
     return torch.get_num_threads()
 
 
-def environment_fingerprint() -> dict[str, Any]:
+def environment_fingerprint(*, check_code_location: bool = True) -> dict[str, Any]:
     """Umgebung, so weit sie das Ergebnis beeinflussen kann.
 
     ``git/commit`` ist ``None`` (nicht mehr die Zeichenkette ``"unknown"``), wenn kein
@@ -403,7 +405,20 @@ def environment_fingerprint() -> dict[str, Any]:
     war (Threading/Prozess-Ueberzeichnung, nicht Konvergenz -- siehe Analyse dazu). Die beiden
     Env-Var-Felder sind ``None``, wenn die Variable nicht gesetzt ist -- das ist selbst die
     Information (kein Pinning aktiv), nicht mit einem leeren String zu verwechseln.
+
+    ``code/package_dir``, ``code/interpreter``, ``code/root_checked`` (siehe
+    :mod:`twinlink_ml.utils.code_location`): wo ``twinlink_ml`` tatsächlich geladen wurde und
+    mit welchem Interpreter. Liegt das geladene Paket nicht unter der Wurzel des Repositorys
+    bzw. Worktrees, aus dem der Lauf gestartet wurde (Arbeitsverzeichnis), bricht die Funktion
+    mit :class:`~twinlink_ml.utils.code_location.CodeLocationError` ab, bevor irgendein
+    Record entsteht. ``check_code_location=False`` nur für Aufrufer, die ausdrücklich keinen
+    Artefakt-Lauf protokollieren (die Felder werden trotzdem geschrieben).
     """
+    location = (
+        require_code_location(find_repo_root())
+        if check_code_location
+        else code_location_fields(find_repo_root())
+    )
     commit = _git_commit()
     dirty = _git_dirty()
     if dirty:
@@ -441,6 +456,7 @@ def environment_fingerprint() -> dict[str, Any]:
         "torch/num_threads": _torch_num_threads(),
         "env/mkl_num_threads": os.environ.get("MKL_NUM_THREADS"),
         "env/omp_num_threads": os.environ.get("OMP_NUM_THREADS"),
+        **location,
     }
     for name in ("numpy", "scipy", "torch"):
         try:

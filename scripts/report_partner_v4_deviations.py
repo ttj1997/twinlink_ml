@@ -24,6 +24,7 @@ from twinlink_ml.partner_v4.cascade import CASE_COLUMNS, evaluate_case, proposed
 from twinlink_ml.partner_v4.deviations import CELLS_TO_READ, build_deviations
 from twinlink_ml.partner_v4.inputs import load_excel_inputs
 from twinlink_ml.partner_v4.workbook import read_cells
+from twinlink_ml.utils.code_location import require_code_location
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -68,6 +69,7 @@ def main() -> int:
             "git/commit": _git("rev-parse", "HEAD").strip(),
             "git/dirty": bool(_git("status", "--porcelain").strip()),
             "python": sys.version.split()[0],
+            **require_code_location(ROOT),
         },
         "note": "proposal = OUR RECONSTRUCTION (assumptions A1-A5), not the partner's numbers; "
         "T_cold = ambient 15 degC is a placeholder; case 0 = no recovery",

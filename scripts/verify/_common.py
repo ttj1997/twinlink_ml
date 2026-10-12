@@ -59,6 +59,11 @@ def provenance(heat_network: Any = None) -> dict[str, Any]:
     default, scripts written before Befund 79) records both as ``None``, i.e. "not recorded".
     """
     from twinlink_ml.simulation.steady_state import BED_TEMPERATURE_BRACKET_RULE
+    from twinlink_ml.utils.code_location import require_code_location
+
+    # Abort if twinlink_ml is not loaded from this repository/worktree (the one whose commit
+    # is recorded below); fields: code/package_dir, code/interpreter, code/root_checked.
+    location = require_code_location(REPO_ROOT)
 
     if heat_network is None:
         approach_check = fingerprint = None
@@ -72,6 +77,7 @@ def provenance(heat_network: Any = None) -> dict[str, Any]:
         "git/dirty": working_tree_dirty(),
         "python": sys.version.split()[0],
         "platform": platform.platform(),
+        **location,
         "solver/bed_temperature_bracket": BED_TEMPERATURE_BRACKET_RULE,
         "heatnetwork/approach_check": approach_check,
         "heatnetwork/fingerprint": fingerprint,
