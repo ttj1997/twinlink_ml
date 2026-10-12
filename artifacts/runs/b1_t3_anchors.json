@@ -1,0 +1,136 @@
+{
+ "provenance": {
+  "git/commit": "4eccb3e6f87d8aafef1313b6b0d670d169970f66",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "purpose": "anchors of B1 test set T3",
+ "quality_limit_kg_per_kg": 0.15,
+ "u_gas_min": 1.26,
+ "margin_m1_kg_per_kg": 0.005961819615175404,
+ "limit_target_kg_per_kg": 0.1470190901924123,
+ "objective": "legacy_power_kw (energy_target, Befund 52)",
+ "budget": {
+  "seed": 0,
+  "popsize": 10,
+  "maxiter": 50,
+  "de_tol": 0.0001,
+  "search_max_iterations": 30,
+  "search_tolerance": 1e-07
+ },
+ "oracle_elapsed_s": 364.0845084001776,
+ "workers": 4,
+ "anchors": [
+  {
+   "ambient_unit": [
+    0.25,
+    0.25
+   ],
+   "ambient": [
+    12.5,
+    0.4
+   ],
+   "optimum": {
+    "t_in": 60.0,
+    "u_gas": 1.26,
+    "spray": 1.5,
+    "p_nozzle": 1.0022237114530541
+   },
+   "optimum_moisture_kg_per_kg": 0.14035392906559668,
+   "optimum_binds_gas_lower": true,
+   "optimum_energy_target_kw": 1.3226924735603343,
+   "limit": {
+    "t_in": 60.0,
+    "u_gas": 1.26,
+    "spray": 1.5397848822441116,
+    "p_nozzle": 1.0022237114530541
+   },
+   "limit_moisture_kg_per_kg": 0.14701907649212917
+  },
+  {
+   "ambient_unit": [
+    0.25,
+    0.75
+   ],
+   "ambient": [
+    12.5,
+    0.7
+   ],
+   "optimum": {
+    "t_in": 60.35687291901908,
+    "u_gas": 1.260000886030972,
+    "spray": 1.5,
+    "p_nozzle": 1.0094381587613337
+   },
+   "optimum_moisture_kg_per_kg": 0.1499999589937427,
+   "optimum_binds_gas_lower": true,
+   "optimum_energy_target_kw": 1.3316705922869485,
+   "limit": {
+    "t_in": 60.35687291901908,
+    "u_gas": 1.260000886030972,
+    "spray": 1.4835474071755927,
+    "p_nozzle": 1.0094381587613337
+   },
+   "limit_moisture_kg_per_kg": 0.14701907649212917
+  },
+  {
+   "ambient_unit": [
+    0.75,
+    0.25
+   ],
+   "ambient": [
+    27.5,
+    0.4
+   ],
+   "optimum": {
+    "t_in": 60.00057851309488,
+    "u_gas": 1.2950204131724494,
+    "spray": 1.5,
+    "p_nozzle": 1.001193256548926
+   },
+   "optimum_moisture_kg_per_kg": 0.1499999589937427,
+   "optimum_binds_gas_lower": false,
+   "optimum_energy_target_kw": 0.9484416334020611,
+   "limit": {
+    "t_in": 60.00057851309488,
+    "u_gas": 1.2950204131724494,
+    "spray": 1.4839983091652356,
+    "p_nozzle": 1.001193256548926
+   },
+   "limit_moisture_kg_per_kg": 0.14701907649212917
+  },
+  {
+   "ambient_unit": [
+    0.75,
+    0.75
+   ],
+   "ambient": [
+    27.5,
+    0.7
+   ],
+   "optimum": {
+    "t_in": 65.2716345791103,
+    "u_gas": 1.2601940296118603,
+    "spray": 1.5,
+    "p_nozzle": 1.000392750751625
+   },
+   "optimum_moisture_kg_per_kg": 0.1499999589937427,
+   "optimum_binds_gas_lower": true,
+   "optimum_energy_target_kw": 1.0503671634696574,
+   "limit": {
+    "t_in": 65.2716345791103,
+    "u_gas": 1.2601940296118603,
+    "spray": 1.4853189728412874,
+    "p_nozzle": 1.000392750751625
+   },
+   "limit_moisture_kg_per_kg": 0.14701907649212917
+  }
+ ]
+}
