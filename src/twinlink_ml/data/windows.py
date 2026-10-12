@@ -71,6 +71,7 @@ from ..simulation.base import Trajectory
 from .splits import RunSplit, SplitName
 
 __all__ = [
+    "FutureActions",
     "SequenceDataset",
     "Standardizer",
     "TargetSource",
@@ -80,6 +81,10 @@ __all__ = [
 ]
 
 TargetSource = Literal["measurement", "truth"]
+FutureActions = Literal["realised", "planned"]
+"""Which action series enters ``future_exogenous``: the ``realised`` one (after the safety
+projection of the simulator) or the ``planned`` one (the set points as requested, before any
+projection). See :attr:`WindowConfig.future_actions`."""
 
 _SCALE_FLOOR: Final[float] = 1e-12
 
@@ -160,6 +165,18 @@ class WindowConfig:
         beobachtete Zielgrößen werden in der Historie durch den standardisierten
         Trainingsmittelwert (also 0) ersetzt -- siehe Modul-Docstring, Abschnitt
         "Beobachtbarkeit".
+    future_actions
+        Welche Stellgrößenreihe in ``future_exogenous`` steht. ``"realised"`` (Voreinstellung,
+        Verhalten bis Befund 81): die vom Simulator realisierte Aktion, bei aktiver
+        Gasgeschwindigkeits-Projektion also die auf ``[u_mf(d50), u_t(d50)]`` begrenzte.
+        Dieses Clipping hängt am wahren Kornzustand und trägt damit Information über den
+        Zustand in die "bekannten" künftigen Eingänge (Review D1, 2026-10-09, 30.6 % der
+        Testfenster betroffen). ``"planned"``: die **geplanten Sollwerte**
+        (``Trajectory.requested_actions``), wie ein Regler sie vorgibt, bevor die Anlage sie
+        begrenzt -- ohne Zustandsinformation. Die Historie (``history_inputs``) enthält in
+        beiden Fällen die realisierte Aktion: sie ist vergangen und an der Anlage
+        beobachtbar. Ohne aktive Projektion (``requested_actions is None``) sind beide
+        Reihen identisch und die Option wirkungslos.
     """
 
     history_length: int
@@ -168,6 +185,7 @@ class WindowConfig:
     stride: int = 1
     target_source: TargetSource = "measurement"
     observed_target_names: tuple[str, ...] | None = None
+    future_actions: FutureActions = "realised"
 
     @property
     def observed_targets(self) -> tuple[str, ...]:
@@ -203,6 +221,17 @@ class WindowConfig:
                     f"observed_target_names enthält Namen, die keine Zielgrößen sind: "
                     f"{sorted(unknown)}"
                 )
+
+
+def future_actions_of(trajectory: Trajectory, config: WindowConfig) -> FloatArray:
+    """Action series for ``future_exogenous`` according to ``config.future_actions``.
+
+    ``"planned"`` returns ``trajectory.requested_actions`` if the simulation recorded it
+    (projection active), otherwise the realised actions, which are then identical.
+    """
+    if config.future_actions == "planned" and trajectory.requested_actions is not None:
+        return trajectory.requested_actions
+    return trajectory.actions
 
 
 @dataclass(frozen=True, slots=True)
@@ -385,6 +414,9 @@ class TrajectoryWindowDataset(SequenceDataset):
         exogenous = np.concatenate(
             [trajectory.actions[rows], trajectory.disturbances[rows]], axis=-1
         )
+        future_exogenous = np.concatenate(
+            [future_actions_of(trajectory, config)[rows], trajectory.disturbances[rows]], axis=-1
+        )
         observed = (
             trajectory.measurements[rows][..., target_cols]
             if config.target_source == "measurement"
@@ -438,7 +470,7 @@ class TrajectoryWindowDataset(SequenceDataset):
             _exogenous_names=exogenous_names,
             _target_names=config.target_names,
             _inputs=standardised,
-            _exogenous=input_scaler.select(range(len(exogenous_names))).transform(exogenous),
+            _exogenous=input_scaler.select(range(len(exogenous_names))).transform(future_exogenous),
             _targets=target_scaler.transform(observed),
             _targets_truth=target_scaler.transform(truth),
             _index=index,

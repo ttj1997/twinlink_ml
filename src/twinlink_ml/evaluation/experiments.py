@@ -45,7 +45,7 @@ from ..data.splits import (
     SplitName,
     split_schedule,
 )
-from ..data.windows import TrajectoryWindowDataset, WindowConfig
+from ..data.windows import FutureActions, TrajectoryWindowDataset, WindowConfig
 from ..models.base import SequenceModel
 from ..simulation.base import Trajectory
 from ..simulation.config import (
@@ -156,6 +156,14 @@ class DataSpec:
     observed_target_names: tuple[str, ...] | None = None
     """Inline gemessene Zielgrößen; ``None`` heißt alle. Siehe ``WindowConfig``."""
     constant_run_fraction: float = 0.10
+    future_actions: FutureActions = "realised"
+    """Which action series enters ``future_exogenous``, see ``WindowConfig.future_actions``
+    (review D1). ``"realised"`` is the behaviour up to Befund 81 and stays the default so that
+    existing scripts reproduce their data; **new data sets are to be generated with
+    ``"planned"``** -- the planned set points, not the ones limited by the fluidisation
+    bounds. Only acts when the process config has ``numerics.enforce_gas_velocity_projection``
+    on; otherwise both series are identical. Enters the data fingerprints only when not
+    ``"realised"``."""
 
     @property
     def pool_size(self) -> int:
@@ -171,6 +179,7 @@ class DataSpec:
             stride=self.stride,
             target_names=self.target_names,
             observed_target_names=self.observed_target_names,
+            future_actions=self.future_actions,
         )
 
     def as_parameters(self) -> dict[str, Any]:
@@ -198,12 +207,17 @@ class GeneratedData:
         Prozess-Fingerprint. Ohne diesen Eintrag wären die Läufe im Log nicht
         unterscheidbar.
         """
-        return {
+        fingerprints = {
             "process/fingerprint": self.process_config.fingerprint,
             "excitation/fingerprint": str(self.schedule.metadata.get("fingerprint", "unknown")),
             "split/digest": self.split.digest,
             "measurement/digest": _measurement_digest(self.process_config.measurement),
         }
+        if self.spec.future_actions != "realised":
+            # Only when set (review D1): records of data sets built before the option keep
+            # exactly their keys and values.
+            fingerprints["window/future_actions"] = self.spec.future_actions
+        return fingerprints
 
     @property
     def relative_noise_std(self) -> float:

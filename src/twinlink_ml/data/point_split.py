@@ -36,7 +36,7 @@ import numpy as np
 
 from ..simulation.base import Trajectory
 from .splits import SplitDegenerateError, SplitName, SplitRatios, stable_unit_hash
-from .windows import Standardizer, TrajectoryWindowDataset, WindowConfig
+from .windows import Standardizer, TrajectoryWindowDataset, WindowConfig, future_actions_of
 
 __all__ = ["PointSplitter", "windowed_point_split"]
 
@@ -80,7 +80,15 @@ class PointSplitter:
 
 def _assemble_raw(
     trajectory: Trajectory, run_ids: Sequence[str], config: WindowConfig
-) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, tuple[str, ...], tuple[str, ...]]:
+) -> tuple[
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+    tuple[str, ...],
+    tuple[str, ...],
+]:
     """Rohe (unstandardisierte) Kanal-Arrays über den gegebenen Lauf-Pool.
 
     Spiegelt den entsprechenden Abschnitt von
@@ -91,8 +99,10 @@ def _assemble_raw(
     Returns
     -------
     tuple
-        ``(rows, exogenous, observed, truth, exogenous_names, target_names)``. ``rows``
-        sind die Trajektorie-Zeilen in der Reihenfolge von ``run_ids``.
+        ``(rows, exogenous, future_exogenous, observed, truth, exogenous_names,
+        target_names)``. ``rows`` sind die Trajektorie-Zeilen in der Reihenfolge von
+        ``run_ids``; ``future_exogenous`` folgt ``config.future_actions`` (siehe
+        :class:`WindowConfig`), ``exogenous`` ist die realisierte Reihe der Historie.
     """
     output_names = tuple(trajectory.metadata.get("output_names", ()))
     if not output_names:
@@ -114,6 +124,9 @@ def _assemble_raw(
         [output_names.index(name) for name in config.target_names], dtype=np.intp
     )
     exogenous = np.concatenate([trajectory.actions[rows], trajectory.disturbances[rows]], axis=-1)
+    future_exogenous = np.concatenate(
+        [future_actions_of(trajectory, config)[rows], trajectory.disturbances[rows]], axis=-1
+    )
     observed = (
         trajectory.measurements[rows][..., target_cols]
         if config.target_source == "measurement"
@@ -124,7 +137,7 @@ def _assemble_raw(
     exogenous_names = tuple(trajectory.metadata.get("action_names", ())) + tuple(
         trajectory.metadata.get("disturbance_names", ())
     )
-    return rows, exogenous, observed, truth, exogenous_names, config.target_names
+    return rows, exogenous, future_exogenous, observed, truth, exogenous_names, config.target_names
 
 
 def _window_index(n_runs: int, n_steps: int, config: WindowConfig) -> np.ndarray:
@@ -177,7 +190,7 @@ def windowed_point_split(
         identischen (gemeinsam standardisierten) Trägerarrays, aber disjunkten
         Fenster-Indizes. ``val`` ist ``None``, wenn ``splitter.ratios.val == 0``.
     """
-    rows, exogenous, observed, truth, exogenous_names, target_names = _assemble_raw(
+    _, exogenous, future_exogenous, observed, truth, exogenous_names, target_names = _assemble_raw(
         trajectory, run_ids, config
     )
     inputs_raw = np.concatenate([exogenous, observed], axis=-1)
@@ -210,7 +223,9 @@ def windowed_point_split(
     target_scaler = Standardizer.fit(train_future_target_raw)
 
     standardised_inputs = input_scaler.transform(inputs_raw)
-    standardised_exogenous = input_scaler.select(range(len(exogenous_names))).transform(exogenous)
+    standardised_exogenous = input_scaler.select(range(len(exogenous_names))).transform(
+        future_exogenous
+    )
     standardised_targets = target_scaler.transform(observed)
     standardised_targets_truth = target_scaler.transform(truth)
 

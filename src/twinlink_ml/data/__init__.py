@@ -24,6 +24,7 @@ from .splits import (
     stratum_coverage,
 )
 from .windows import (
+    FutureActions,
     SequenceDataset,
     Standardizer,
     TrajectoryWindowDataset,
@@ -33,6 +34,7 @@ from .windows import (
 
 __all__ = [
     "DEFAULT_LEARNING_CURVE_SIZES",
+    "FutureActions",
     "HashRunSplitter",
     "IndexBlockSplitter",
     "LearningCurvePoint",
