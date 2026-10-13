@@ -1,10 +1,10 @@
 # Draft: main run of study B1 -- information per run and active learning (NOT released, NOT computed)
 
-Status: draft of 2026-10-12, second version after the decisions O1-O6 of the project lead. Committed
-BEFORE any computation of the main run. On release the hypotheses, criteria and scripts are committed
-again unchanged (or with the changes decided) before the first main-run job starts. Placeholders without
-a source are marked PLACEHOLDER. **Renumber this file when the branch is merged: `docs/15` is taken in
-master.** The branch is not rebased (provenance of the pilot artifacts); master is merged in when needed.
+Status: third version of 2026-10-13 (after the decisions O1-O9 of the project lead and the merge of master,
+preset version 2). The main run is released by the project lead; this file is committed BEFORE any
+computation of the main run. Placeholders without a source are marked PLACEHOLDER. The file is numbered
+16 because `docs/15` is taken in master. The branch was not rebased (provenance of the pilot artifacts);
+master was merged in (`5405d85`).
 
 ## 1. Question
 
@@ -23,9 +23,21 @@ curve); the model-free measures of `simulation/excitation_information.py` are di
 | targets | `energy_target` [kW], `product_moisture_kg_per_kg`, `bed_temperature_celsius` [degC] |
 | test set | T1 neutral mix (8 runs of each of B0-B4), T2 constant operation (32 runs), T3 deployment profiles (32 runs) |
 
-* Data only with `DataSpec.new_study()`. Plans B0-B4 share run duration, amplitude limits, rate limits,
-  disturbance process and initial conditions (bit-identical disturbances and initial states per seed;
-  `check_equal_cost`, tests). **How often the plans are limited is not equal, see Section 7.**
+* Data only with `DataSpec.new_study()` = **preset version 2** (Befund 86, decision of the project lead
+  2026-10-13, valid for all studies): planned future set points, own solid-fraction process, **every run
+  requests at most `u_t` at its initial diameter** (a priori worst case over bed temperature and humidity),
+  gas-velocity projection **on as a counted guard** (`guarded_config`; a spec with the cap and a config
+  without the projection is an error). Until now study B ran without the projection and without the cap,
+  i.e. in 2-7 % of the steps above the terminal velocity (pilot, artifact `b1_limit_rates`); the pilot and
+  calibration artifacts are from that state and are used for run times only. Plans B0-B4 and the
+  candidate pool of B5 keep the cap (`excitation_plans`: a minimum with a constant per run after the rate
+  limiter, as `MixedExcitationDesign`; B1 is `MixedExcitationDesign` with the cap). Plans B0-B4 share run
+  duration, amplitude limits, per-run caps, rate limits, disturbance process and initial conditions
+  (bit-identical disturbances, initial states and caps per seed; `check_equal_cost`, tests, and the
+  artifact `b1_pool_limits` for all ten seeds: no violation). Every record carries
+  `data/new_study_version` and `data/gas_velocity_cap`; every pool's projection counts are in the records
+  (`information` records, `projection`) and the test sets' in the header. How often the plans are shaped by
+  the rate limiter and sit on a bound differs (accepted as a property of the plans, decision O7, Section 7).
 * Time constants are the measured ones (Befund 3, M1 addendum): fast mode 30.2-38.8 s, slow coupled mode
   133-1195 s, solids loop 600 s. B2 clocks 75 s / 900 s, B3 band 1.3e-4-5.3e-3 Hz, B4 hold 2400 s.
   The task text assumed 15-80 s and about 600 s.
@@ -135,14 +147,13 @@ concurrent jobs.
 | LSTM fits of one learning curve | (64 for N = 2, upper bound from N = 4, + 64 + 96 + 195 + 508) s x 1.43 | 1 330 s |
 | 7 arms x 10 seeds | 70 curves | 92 800 s |
 | ensemble members of B5 (4 extra members at N = 2, 4, 8, 16) | 4 x (64 + 64 + 96 + 195) s x 1.43 x 10 seeds | 24 000 s |
-| data generation | about 2.1 s per run (pilot: 7.7-8.7 s for four runs), 70 pools of 32 runs | 4 700 s |
+| data generation | about 0.3 s per run (artifact `b1_pool_limits`: 2880 runs in 832 core-seconds), 70 pools of 32 runs | 700 s |
 | ARX, persistence, evaluation of about 350 fits on T1-T3, candidate scoring, information measures | assumption, about 5 s per fit (not measured for three targets) | 1 800 s |
-| **total CPU** | | **about 123 000 s** |
-| **wall time with 8 workers** | / 8 | **about 15 400 s = 4.3 h** |
+| **total CPU** | | **about 119 000 s** |
+| **wall time with 8 workers** | / 8 | **about 14 900 s = 4.1 h** |
 
-Plausible range 4-6 h (the contention factor is measured for N = 32 only; the evaluation and scoring items
-are assumptions). Levers: ensemble of 3 instead of 5 saves about 0.4 h; five instead of ten seeds halves
-the time. Sweeps run resumably (`--resume`, one job = arm x seed, the records of a job are written when it
+Plausible range 4-6 h (decision O8: ten seeds, ensemble of five, as planned) (the contention factor is measured for N = 32 only; the evaluation and scoring items
+are assumptions). Sweeps run resumably (`--resume`, one job = arm x seed, the records of a job are written when it
 is done), on a local machine in a worktree on C:\ (decision of the project lead), at most 8 workers.
 Smoke run of the driver (not an artifact, two jobs, N = 2 and 4): the B5 job needed 222 s against 114 s for
 B2, as expected from the four extra members.
@@ -154,45 +165,44 @@ measures (spectral coverage at 1, 10 and 25 % thresholds, decision O4, diagnosis
 information), growing pool (full pool bit-identical to `generate_data`), test sets T1-T3 with family 2,
 B5 acquisition, learning-curve driver `scripts/run_b1_main.py` (resumable, header with provenance and test-set
 digests), analysis `scripts/analyze_b1_main.py`, calibration. Pilot and calibration are artifacts; the
-error figures of the pilot are no result. Full suite on the commit before this document: **783 passed, 15 skipped in 1883 s (0:31:23), exit code 0** (the 15 skips include `test_denylist.py`, which needs `local/denylist.txt` of the main checkout; the log ends with the summary line and the exit code).
+error figures of the pilot are no result. Full suite before the merge of master and the cap (`076078d`): **783 passed, 15 skipped in 1883 s, exit code 0**; full suite on the commit of the main run: SUITE_PLACEHOLDER (run in a separate worktree while the main run runs) (the 15 skips include `test_denylist.py`, which needs `local/denylist.txt` of the main checkout; the log ends with the summary line and the exit code).
 Not run: the main run, and the analysis (it needs the main run).
 
-## 7. Finding to decide on: the plans are not limited equally often (report only, nothing changed)
+## 7. Limiting of the requested actions with preset version 2 (artifact `b1_pool_limits`, ten seeds)
 
-Artifact `b1_limit_rates` (script committed before the run; plans B0-B4, pilot master seeds 1-5, four runs
-each, `DataSpec.new_study()`; shares of steps; channels in the order inlet temperature, gas velocity, spray
-rate, nozzle pressure).
+Script `report_b1_pool_limits.py` committed (`d1910f7`) before it ran (clean tree, 8 workers, 104 s); it
+builds the pools of the main run for master seeds 1-10 (B0-B4: 32 runs; B5: the candidate pool of 128 runs,
+simulated for counting only, the acquisition never sees these outputs) with the preset and the guarded config.
 
-*Simulator side.* The realised action equals the requested one in **all** steps of all plans and channels
-(share 0.0 at every channel and both bounds): the box clip (`enforce_action_bounds`) never acts because
-every plan is inside the box by construction, and the gas-velocity projection is **off** in the study
-config. The requested actions are never limited by the simulator.
+* **Projection guard: 0 projected steps in every pool.** B0-B4: 0 of 368 640 steps each (320 runs each);
+  B5 candidate pool: 0 of 1 474 560 steps (1280 runs); no run with projection. (Pilot state without the cap,
+  artifact `b1_limit_rates`: the gas velocity above `u_t` in 2.0-7.4 % of the steps depending on the plan.)
+* **Equal cost: no violation** of `check_equal_cost` in any of the ten seeds (duration, bounds, per-run caps,
+  rate limits, disturbances, initial states).
+* **Not equal, accepted (decision O7) and reported per plan** (mean over ten seeds, shares of steps; channels
+  inlet temperature / gas velocity / spray rate / nozzle pressure):
 
-*Design side* (differs between plans, and so does what the model sees):
-| plan | rate limiter changed the signal (T_in / u_gas / spray / p), % of steps | requested action on lower / upper box bound (same order), % of steps |
-|---|---|---|
-| B0 | 0.0 / 0.0 / 0.0 / 0.0 | 0.0 / 0.0 / 0.0 / 0.0 ; 0.0 / 0.0 / 0.0 / 0.0 |
-| B1 | 8.0 / 0.0 / 10.0 / 1.9 | 3.1 / 0.0 / 2.7 / 1.9 ; 3.0 / 0.0 / 2.6 / 2.1 |
-| B2 | 18.1 / 0.3 / 35.5 / 1.3 | 19.5 / 24.5 / 15.5 / 26.0 ; 21.9 / 24.8 / 16.2 / 24.6 |
-| B3 | 0.0 / 0.0 / 0.0 / 0.0 | 0.0 / 0.0 / 0.0 / 0.0 ; 0.0 / 0.0 / 0.0 / 0.0 |
-| B4 | 1.1 / 0.1 / 1.4 / 0.4 | 0.0 / 0.0 / 0.0 / 0.0 ; 0.0 / 0.0 / 0.0 / 0.0 |
+| plan | rate limiter changed the signal (T_in / u_gas / spray / p), % of steps | on a box bound, lower ; upper (same order), % | gas velocity on its per-run cap, % |
+|---|---|---|---|
+| B0 | 0.0 / 0.0 / 0.0 / 0.0 | 0.0 / 0.0 / 0.0 / 0.0 ; 0.0 / 0.0 / 0.0 / 0.0 | 21.2 |
+| B1 | 7.3 / 0.9 / 6.7 / 2.0 | 2.6 / 3.9 / 1.7 / 1.9 ; 2.6 / 1.4 / 1.7 / 1.9 | 21.7 |
+| B2 | 18.3 / 0.3 / 35.2 / 1.3 | 19.9 / 24.5 / 15.4 / 24.2 ; 20.3 / 11.2 / 16.2 / 24.8 | 24.0 |
+| B3 | 0.0 / 0.0 / 0.0 / 0.0 | 0.0 / 0.0 / 0.0 / 0.0 ; 0.0 / 0.0 / 0.0 / 0.0 | 19.6 |
+| B4 | 1.2 / 0.1 / 1.4 / 0.4 | 0.0 / 0.0 / 0.0 / 0.0 ; 0.0 / 0.0 / 0.0 / 0.0 | 21.7 |
 
-*Where the projection would act if it were on.* The share of steps with the realised gas velocity **above
-the terminal velocity** of the current particle size (never below the minimum fluidisation velocity):
-B0 3.6 %, B1 6.9 %, B2 7.4 %, B3 2.0 %, B4 4.7 %.
+  The rate limiter shapes B2 strongly (18 % of the inlet-temperature and 35 % of the spray-rate steps) and
+  B3 and B0 not at all; B2 spends 11-25 % of the steps on a box bound per channel and bound. The per-run cap
+  binds in about a fifth of all steps of every plan (the gas velocity sits on the cap, 20-24 %): the cap
+  compresses the effective gas-velocity range of the runs with small initial particles (median cap 2.37 m/s
+  against the box maximum 2.5 m/s, minimum 1.22 m/s, Befund 86), so set points of B4 and B0 above the cap
+  collapse onto it. These are properties of the plans (and of the preset); they are part of what a comparison
+  of the plans measures and are reported with the result.
 
-Consequence: "equal cost" holds for run duration, bounds, rate limits, disturbances and initial states, but
-not for how often the rate limiter shapes the signal (B2 changes 35 % of the spray-rate steps, B3 none) nor for
-how long the signal sits on a box bound (B2 15-26 % of the steps per channel and bound, B1 2-3 %, B3 and B4
-about 0). These are properties of the plans; they are part of what a comparison of the plans measures. If the
-safety projection were turned on in a later study the plans would be limited by different amounts. Open
-decision O7.
+## 8. Decisions (project lead, 2026-10-13) and what is left open
 
-## 8. Open decisions for the project lead
-
-* **O7** Accept the unequal limiting as a property of the plans (reported with the result), or equalise (for
-  example a common amplitude cap or slew shaping for all plans)? Nothing is changed before the decision.
-* **O8** Fit times and the 4.3 h estimate: reduce the ensemble to 3 members or the seeds to 5, or run as
-  planned?
-* **O9** Family 2 of T3 uses steady-state crossing of the limit; the transient moisture crosses it only if the
-  hold between changes is long enough (6300 s per change). Keep?
+* Preset version 2 for all studies, the cap for B0-B4 and the B5 candidate pool, projection on as a counted
+  guard, master merged (not rebased): done, Section 7.
+* O7 accept the unequal shaping and report it per plan: done, Section 7. O8 ten seeds, ensemble of five.
+  O9 keep the long hold in T3 family 2. T3 anchors stay (steady-state oracle, untouched by the excitation).
+* Open: none. The run starts after this commit; a count of projected steps above 0 in any record or in the
+  header stops the run and is reported.
