@@ -38,6 +38,7 @@ import run_arch_learning_curve_worker as old_worker
 from twinlink_ml.data.splits import SplitName
 from twinlink_ml.data.windows import TrajectoryWindowDataset
 from twinlink_ml.evaluation import (
+    NEW_STUDY_OPTIONS,
     DataSpec,
     ValidationPolicy,
     build_datasets,
@@ -89,11 +90,13 @@ def arm_spec(arm: str, *, smoke: bool = False) -> DataSpec:
     if arm == "A1":
         return dataclasses.replace(legacy, future_actions="planned")
     if arm == "N":
-        # DataSpec.new_study fixes the two options; every other field comes from the legacy spec
+        # DataSpec.new_study fixes the preset options (NEW_STUDY_OPTIONS, version 2: planned future
+        # inputs, own solid-fraction process, per-run gas-velocity cap); every other field comes from
+        # the legacy spec
         fields = {
             f.name: getattr(legacy, f.name)
             for f in dataclasses.fields(legacy)
-            if f.name not in ("future_actions", "solid_fraction_process")
+            if f.name not in NEW_STUDY_OPTIONS
         }
         return DataSpec.new_study(**fields)
     raise ValueError(f"unknown arm {arm!r}, expected one of {ARMS}")
@@ -258,6 +261,9 @@ def run(arguments: argparse.Namespace) -> int:
                     "master_seed": seed,
                     "holdout/seed": HOLDOUT_SEED,
                     "holdout/n_runs": len(own_holdout.split.test),
+                    # guard of the new-study preset: how often the projection acted (expected 0)
+                    **{f"pool/{k}": v for k, v in own.projection_guard.items()},
+                    **{f"holdout_pool/{k}": v for k, v in own_holdout.projection_guard.items()},
                 }
                 if checkpoint_uid is not None:
                     params["checkpoint/path"] = str(checkpoint_path(checkpoint_dir, checkpoint_uid))

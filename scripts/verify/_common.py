@@ -58,6 +58,7 @@ def provenance(heat_network: Any = None) -> dict[str, Any]:
     and ``fingerprint``), or :data:`NO_HEAT_NETWORK` for a run without one. ``None`` (the
     default, scripts written before Befund 79) records both as ``None``, i.e. "not recorded".
     """
+    from twinlink_ml.evaluation.experiments import NEW_STUDY_PRESET_VERSION
     from twinlink_ml.simulation.steady_state import BED_TEMPERATURE_BRACKET_RULE
     from twinlink_ml.utils.code_location import require_code_location
 
@@ -78,6 +79,7 @@ def provenance(heat_network: Any = None) -> dict[str, Any]:
         "python": sys.version.split()[0],
         "platform": platform.platform(),
         **location,
+        "preset/new_study_version": NEW_STUDY_PRESET_VERSION,
         "solver/bed_temperature_bracket": BED_TEMPERATURE_BRACKET_RULE,
         "heatnetwork/approach_check": approach_check,
         "heatnetwork/fingerprint": fingerprint,
