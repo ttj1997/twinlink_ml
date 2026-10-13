@@ -9,11 +9,18 @@ What is computed
 * Plants P0, P1, P2a, P2b, P3 x seeds 1-5 (master seed = plant pool, noise and model seed; the same seeds for
   every method and plant) x N = 2, 4, 8, 16, 32, 64 plant runs (nested prefixes of the pool of 64 train runs).
 * Methods, one LSTM (hidden 64, one layer, three targets) for every neural method:
-  from scratch (4000 gradient steps), hybrid (open P0 simulation as three more input channels, 8000 steps),
+  from scratch (4000 gradient steps), hybrid (open P0 simulation as three more input channels, 16000 steps:
+  the edge of the tested range, chosen by the pre-registered rule of the confirmation; the choice is driven by
+  the strongly scattering N = 2 cells), plus a SENSITIVITY without a hypothesis of its own: the hybrid with
+  8000 steps at N = 2 and 4 (method ``hybrid_steps8000``),
   pretraining + fine-tuning (one pretrained model per seed on P0 data, 256 train + 32 validation runs, master
   seed 100 + seed; then ``fine_tune``, all parameters, learning rate 3e-4, 320 epochs, pretraining scalers
   kept), the simulator alone, and the baselines persistence and ARX. The settings are those of pilot 2
-  (``a1_pilot2_pp_pp2.json``) as confirmed on the new data (``a1_confirm_preset2.json``).
+  (``a1_pilot2_pp_pp2.json``) as confirmed on the new data (``a1_confirm_preset2.json``; the hybrid budget
+  16000 is the neighbour that beat 8000 by 13 %).
+* Every time measured in this run (training, inference) carries ``timing_context``: taken under parallel load,
+  NOT a result. The inference time per method is measured once after the run on an idle machine (one thread,
+  warm-up excluded).
 * Data only with ``DataSpec.new_study`` (preset version 2: planned future set points, own solid-fraction
   process, per-run cap of the gas velocity at ``u_t`` of the initial diameter, projection kept as a counted
   guard). Per plant and seed one pool of 128 runs: 64 train, 32 reserved validation runs (in no fit), 32 test
@@ -89,7 +96,15 @@ HOLDOUT_SEED = 999
 PRETRAIN_SEED_OFFSET = 100
 FINETUNE_LEARNING_RATE = 3e-4
 FINETUNE_EPOCHS = 320
-STEPS = {"from_scratch": 4000, "hybrid": 8000}
+STEPS = {"from_scratch": 4000, "hybrid": 16000}
+SENSITIVITY_METHOD = "hybrid_steps8000"
+SENSITIVITY_STEPS = 8000
+SENSITIVITY_SIZES = (2, 4)
+TIMING_CONTEXT = {
+    "parallel_load": True,
+    "use": "NOT a result: measured while other jobs ran on the machine; the inference time is "
+    "measured separately after the run",
+}
 SCRATCH_LEARNING_RATE = 1e-3
 BATCH_SIZE = 256
 MAX_WORKERS = 8
@@ -109,6 +124,8 @@ class Plan:
     sizes: tuple[int, ...]
     finetune_epochs: int
     steps: dict[str, int]
+    sensitivity_sizes: tuple[int, ...]
+    sensitivity_steps: int
     pretrain_epochs: int
 
 
@@ -129,6 +146,8 @@ def make_plan(smoke: bool) -> Plan:
             sizes=(2, 4),
             finetune_epochs=2,
             steps={"from_scratch": 4, "hybrid": 6},
+            sensitivity_sizes=(2, 4),
+            sensitivity_steps=3,
             pretrain_epochs=2,
         )
     window = {"history_length": 32, "horizon": 36, "stride": 8}
@@ -145,6 +164,8 @@ def make_plan(smoke: bool) -> Plan:
         sizes=SIZES,
         finetune_epochs=FINETUNE_EPOCHS,
         steps=dict(STEPS),
+        sensitivity_sizes=SENSITIVITY_SIZES,
+        sensitivity_steps=SENSITIVITY_STEPS,
         pretrain_epochs=200,
     )
 
@@ -271,6 +292,7 @@ def result_records(
                 "test_set": test_set,
                 "metrics": evaluate(model, dataset, std),
                 "fit": fit,
+                "timing_context": TIMING_CONTEXT,
                 "params": params,
                 "projection_guard": guards,
             }
@@ -356,6 +378,7 @@ def run_pretrain(unit: dict[str, Any], plan: Plan, workdir: Path) -> dict[str, A
             "seed": seed,
             "master_seed": master,
             "fit_s": fit_s,
+            "timing_context": TIMING_CONTEXT,
             "training": {k: v for k, v in diagnostics.items() if not k.startswith("loss_history")},
             "p0_test_in_distribution": evaluate(model, test, channel_std(data, SplitName.TEST)),
             "params": {
@@ -395,10 +418,17 @@ def run_neural(unit: dict[str, Any], plan: Plan, workdir: Path) -> dict[str, Any
             time.sleep(30)
             waited += 30
 
-    for n in plan.sizes:
+    jobs = [(method, n, plan.steps.get(method)) for n in plan.sizes]
+    if kind == "hybrid":
+        jobs += [
+            (SENSITIVITY_METHOD, n, plan.sensitivity_steps)
+            for n in plan.sensitivity_sizes
+            if n in plan.sizes
+        ]
+    for job_method, n, job_steps in jobs:
         if stop_requested(workdir):
             raise GuardViolationError("STOP file present")
-        if (method, n) in already:
+        if (job_method, n) in already:
             continue
         if kind == "finetune":
             model = load_pretrained(pretrained_path)
@@ -418,7 +448,7 @@ def run_neural(unit: dict[str, Any], plan: Plan, workdir: Path) -> dict[str, Any
         else:
             train, _, test = build_datasets(source, n)
             steps_per_epoch = math.ceil(train.n_windows / BATCH_SIZE)
-            epochs = max(1, round(plan.steps[method] / steps_per_epoch))
+            epochs = max(1, round(job_steps / steps_per_epoch))
             model = TransferSequenceModel(
                 TorchSequenceConfig(
                     core="lstm",
@@ -439,9 +469,11 @@ def run_neural(unit: dict[str, Any], plan: Plan, workdir: Path) -> dict[str, Any
             "final_train_loss": float(model.training_history[-1]["train_loss"]),
         }
         sets = test_sets(test, std_ex, holdout_test(hold_source, train.scalers, window), std_hold)
-        for record in result_records(unit, method, n, model, sets, excited, holdout, guards, fit):
+        for record in result_records(
+            unit, job_method, n, model, sets, excited, holdout, guards, fit
+        ):
             append(out, record)
-        log(f"{unit_name(unit)} N={n} done (fit {fit_s:.0f} s)")
+        log(f"{unit_name(unit)} {job_method} N={n} done (fit {fit_s:.0f} s)")
     return {"unit": unit_name(unit), "wall_s": time.perf_counter() - started_unit}
 
 
@@ -563,6 +595,8 @@ def unit_finished(unit: dict[str, Any], plan: Plan, workdir: Path) -> bool:
             unit["kind"]
         ]
         need = {(method, n) for n in plan.sizes}
+        if unit["kind"] == "hybrid":
+            need |= {(SENSITIVITY_METHOD, n) for n in plan.sensitivity_sizes if n in plan.sizes}
     return need <= keys
 
 

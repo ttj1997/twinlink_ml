@@ -14,7 +14,8 @@ Decisions of the project lead (2026-10-13):
    MERGED into this branch (no rebase: the provenance of the pilot artifacts stays). The pilots and the action-limit
    analysis ran on data of preset version 1; their numbers below are version-1 numbers, they are NOT the numbers of
    the main run.
-2. **Training budget per method, not shared:** "from scratch" 4000 gradient steps, hybrid 8000 (the shared 8000 would
+2. **Training budget per method, not shared:** "from scratch" 4000 gradient steps, hybrid 8000 at the time of this
+   decision, changed to 16000 after the confirmation (see "Result of the confirmation"; the shared 8000 would
    have cost "from scratch" about 9 % of C against its own optimum and shifted the comparison towards the hypotheses
    under test). Fine-tuning: all parameters, learning rate 3e-4, 320 epochs.
 3. Pretraining on 256 + 32 P0 runs stays (same excitation as the plants, own seeds 101-105).
@@ -28,6 +29,34 @@ Decisions of the project lead (2026-10-13):
    pool there too.
 6. The main run starts only after the confirmation, with at most 8 workers, in a worktree on `C:\`, detached with a log
    file and `--resume` (`scripts/run_a1_main.py`).
+
+**Result of the confirmation (`a1_confirm_preset2.json`, script `f382272`, clean tree) and the decision on the hybrid.**
+By the rule fixed in advance (a chosen setting stays if its mean C over the 12 cells is at most 3 % above the best
+tested setting of its part): fine-tuning (3e-4, 320 epochs; C 0.0510 against 0.0499 for 1e-4 / 640 epochs, +2.1 %)
+stays; "from scratch" (4000 steps; C 0.2471 against 0.2841 for 8000) stays; the hybrid (8000 steps; C 0.2527 against
+0.2235 for 16000, +13.0 %) does NOT stay. Decision of the project lead: the hybrid gets **16000 steps** (the rule:
+each method at its best tested budget). To be stated in the finding: **16000 is the EDGE of the tested range**
+(8000 and 16000 were tested; whether more steps would help is not known), and **the selection is driven by the
+strongly scattering N = 2 cells**: at N = 2 the C of one setting ranges from 0.13 to 1.05 across the three pools; at
+N = 16 the two hybrid budgets differ by less than the scatter (PP 0.0264 against 0.0270, PP2 0.0261 against 0.0253). As a
+SENSITIVITY without a hypothesis of its own the main run also trains the hybrid with 8000 steps at N = 2 and 4
+(method `hybrid_steps8000`); the evaluation reports whether any conclusion depends on the hybrid budget.
+
+Pretraining on data of preset version 2: on the 224 P0 test runs the pretrained model reaches C = 0.017 (0.0169; 132
+epochs, best epoch 111), on data of version 1 it reached C = 0.054 (0.0535; 31 epochs, best epoch 10; pilot 2); the
+data and the test runs differ, so the comparison is of the pretraining on the two excitations, not of one model on one
+test set. The same guard check found 0 projected steps in all seven pools of the confirmation and the preset version 2 in
+all; the simulator's own projection in the hybrid channel acted at 223 of 36 864 samples in pool 11 and never in
+pools 12 and 13.
+
+**Timing and the machine.** The main run starts in parallel to Study B (both with 8 workers on 8 physical cores).
+Every time measured in the run (training time, inference time) is marked `timing_context` = "parallel load, not a
+result" and is not used as one. The inference time per method is measured ONCE after the run, separately: a machine
+without other runs, one thread, warm-up excluded. Cost with the budgets above, extrapolated from the times measured
+in pilot 2 for a machine of one job (EXTRAPOLATION): per (plant, seed) fine-tuning about 22 min, from scratch about
+24 min, hybrid 16000 steps about 95 min plus the sensitivity about 13 min, data and evaluation about 10 min: about
+164 min; 25 jobs = about 68 h of CPU = about 8.5 h of wall time on 8 workers alone; under the parallel load of Study B
+1.5-2 times that.
 
 **Guard in the main run.** Before any training of a unit, every pool it generates is checked: `data/new_study_version`
 must be 2 and the number of projected steps must be 0. Otherwise the unit writes a `STOP` file and the run halts
@@ -152,7 +181,7 @@ the channel standard deviation, on the 8 PP validation runs, which are in no fit
    training, no plant data; one value per plant and seed pool.
 3. **pretraining + fine-tuning** -- LSTM pretrained on P0 data, then `fine_tune` on the N plant runs
    with the pretraining scalers kept; setting fixed by the pilot (see Open decisions, 1).
-4. **hybrid** (8000 gradient steps) -- LSTM with the open P0 simulation (set points and disturbances of the run only, steady
+4. **hybrid** (16000 gradient steps; plus a sensitivity with 8000 steps at N = 2 and 4) -- LSTM with the open P0 simulation (set points and disturbances of the run only, steady
    state at the set points as initial state, noise-free P0 measurement) as three more exogenous
    channels, trained on the N plant runs from scratch.
 5. Baselines before any comparison: **persistence** and **ARX** (`LinearARXModel`, N plant runs).
