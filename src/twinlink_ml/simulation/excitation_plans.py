@@ -62,10 +62,12 @@ from .excitation import (
     ExcitationConfig,
     ExcitationDesign,
     ExcitationSchedule,
+    GasVelocityCap,
     InitialConditionDesign,
     MixedExcitationDesign,
     PrbsGenerator,
     apply_rate_limit,
+    gas_velocity_cap_from_initial_diameter,
     quasi_random_points,
 )
 
@@ -168,7 +170,11 @@ class PlannedExcitation(ExcitationDesign):
         timings: PlanTimings,
         disturbance_design: DisturbanceDesign | None = None,
         initial_condition_design: InitialConditionDesign | None = None,
+        gas_velocity_cap: GasVelocityCap = "none",
     ) -> None:
+        if gas_velocity_cap not in ("none", "initial_diameter"):
+            raise ValueError(f"unknown gas_velocity_cap {gas_velocity_cap!r}")
+        self._gas_velocity_cap = gas_velocity_cap
         self._actions = action_space
         self._disturbances = disturbance_space
         self._process = process_config
@@ -225,6 +231,12 @@ class PlannedExcitation(ExcitationDesign):
             actions[:, :, channel] = apply_rate_limit(
                 actions[:, :, channel], bound.max_rate_per_s, self._dt
             )
+        caps = self._gas_velocity_caps(initial_states)
+        if caps is not None:
+            # the per-run cap of preset version 2 (Befund 86), applied as in MixedExcitationDesign:
+            # a minimum with a constant per run keeps the rate limit of the signal
+            gas_index = self._actions.names.index("gas_velocity_m_per_s")
+            actions[:, :, gas_index] = np.minimum(actions[:, :, gas_index], caps[:, None])
         fingerprint = self._fingerprint(n_runs, seed)
         return ExcitationSchedule(
             run_id=tuple(f"{self.name}-{fingerprint}-{index:05d}" for index in range(n_runs)),
@@ -250,7 +262,21 @@ class PlannedExcitation(ExcitationDesign):
                     "bed_temperature_celsius",
                 ),
                 "plan_timings": asdict(self._timings),
+                "gas_velocity_cap": self._gas_velocity_cap,
+                "gas_velocity_cap_m_per_s": None if caps is None else caps.tolist(),
             },
+        )
+
+    def _gas_velocity_caps(self, initial_states: FloatArray) -> FloatArray | None:
+        """Per-run cap ``u_t(d_0)`` of the requested gas velocity, or ``None`` without a cap."""
+        if self._gas_velocity_cap == "none":
+            return None
+        return gas_velocity_cap_from_initial_diameter(
+            initial_states[:, 2],
+            gas=self._process.gas,
+            material=self._process.material,
+            actions=self._actions,
+            disturbances=self._disturbances,
         )
 
     def _fingerprint(self, n_runs: int, seed: int) -> str:
@@ -264,6 +290,9 @@ class PlannedExcitation(ExcitationDesign):
             "n_runs": n_runs,
             "seed": seed,
         }
+        if self._gas_velocity_cap != "none":
+            # only when set: fingerprints of plans built before the option stay as they were
+            payload["gas_velocity_cap"] = self._gas_velocity_cap
         return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()[:8]
 
     def _operating_points(self, n_points: int, n_channels: int, seed: int) -> FloatArray:
@@ -313,6 +342,8 @@ class RandomStepPlan(PlannedExcitation):
             disturbance_design=self._disturbance_design,
             initial_condition_design=self._initial_design,
             name=self.name,
+            gas=self._process.gas,
+            gas_velocity_cap=self._gas_velocity_cap,
         )
         return design.build(n_runs, seed=seed)
 
@@ -471,6 +502,7 @@ def make_plan(
     run_duration_s: float,
     solid_fraction_process: str = "independent",
     time_constants: MeasuredTimeConstants | None = None,
+    gas_velocity_cap: GasVelocityCap = "none",
 ) -> PlannedExcitation:
     """Plan ``name`` (``"b0"`` .. ``"b4"``) for a process config.
 
@@ -500,6 +532,7 @@ def make_plan(
         run_duration_s=run_duration_s,
         timings=timings,
         disturbance_design=disturbance_design,
+        gas_velocity_cap=gas_velocity_cap,
     )
 
 
@@ -540,6 +573,14 @@ def check_equal_cost(
                 violations.append(
                     f"{name}: channel {channel} rate {rate:.4g} > {bound.max_rate_per_s}"
                 )
+        caps = schedule.metadata.get("gas_velocity_cap_m_per_s")
+        if caps != ref.metadata.get("gas_velocity_cap_m_per_s"):
+            violations.append(f"{name}: gas-velocity caps differ from {reference}")
+        if caps is not None:
+            gas_index = process_config.actions.names.index("gas_velocity_m_per_s")
+            over = schedule.actions[:, :, gas_index] - np.asarray(caps)[:, None]
+            if over.max() > tolerance:
+                violations.append(f"{name}: gas velocity above the per-run cap")
         if not np.array_equal(schedule.disturbances, ref.disturbances):
             violations.append(f"{name}: disturbances differ from {reference}")
         if (schedule.initial_states is None) != (ref.initial_states is None) or (

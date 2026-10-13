@@ -129,6 +129,7 @@ def build_t1(
             sample_time_s=spec.sample_time_s,
             run_duration_s=spec.run_duration_s,
             solid_fraction_process=spec.solid_fraction_process,
+            gas_velocity_cap=spec.gas_velocity_cap,
         )
         schedule = plan.build(runs_per_plan, seed=holdout_seed("t1", replicate, name))
         schedules.append(schedule)
@@ -163,6 +164,8 @@ def build_t2(
         geometry=config.geometry,
         material=config.material,
         operation=config.operation,
+        gas=config.gas,
+        gas_velocity_cap=spec.gas_velocity_cap,
         disturbance_design=(
             None
             if spec.solid_fraction_process == "diurnal"

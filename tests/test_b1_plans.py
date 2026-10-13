@@ -169,3 +169,57 @@ def test_b4_holds_and_nested_operating_points(cfg):
 def test_unknown_plan_raises(cfg):
     with pytest.raises(KeyError):
         _plan("b9", cfg)
+
+
+def _capped(name, cfg):
+    return _plan(name, cfg, gas_velocity_cap="initial_diameter")
+
+
+def test_capped_plans_keep_the_cap_and_stay_equal_cost(cfg):
+    schedules = {name: _capped(name, cfg).build(8, seed=5) for name in PLAN_NAMES}
+    assert check_equal_cost(schedules, cfg, reference="b1") == []
+    caps = {tuple(s.metadata["gas_velocity_cap_m_per_s"]) for s in schedules.values()}
+    assert len(caps) == 1  # the same per-run caps in every plan (same initial states)
+    cap = np.asarray(next(iter(caps)))
+    gas = cfg.actions.names.index("gas_velocity_m_per_s")
+    box_max = cfg.actions.bounds[gas].maximum
+    assert np.any(cap < box_max)  # the cap is binding for some runs
+    for schedule in schedules.values():
+        assert np.all(schedule.actions[:, :, gas] <= cap[:, None] + 1e-12)
+
+
+def test_cap_changes_only_the_gas_channel(cfg):
+    gas = cfg.actions.names.index("gas_velocity_m_per_s")
+    for name in PLAN_NAMES:
+        free = _plan(name, cfg).build(8, seed=5)
+        capped = _capped(name, cfg).build(8, seed=5)
+        assert np.array_equal(free.disturbances, capped.disturbances)
+        assert np.array_equal(free.initial_states, capped.initial_states)
+        other = [c for c in range(4) if c != gas]
+        assert np.array_equal(free.actions[:, :, other], capped.actions[:, :, other])
+        assert np.all(capped.actions[:, :, gas] <= free.actions[:, :, gas] + 1e-12)
+        assert free.metadata["fingerprint"] != capped.metadata["fingerprint"]
+        assert free.metadata["gas_velocity_cap_m_per_s"] is None
+
+
+def test_capped_b1_equals_the_mixed_design_with_the_cap(cfg):
+    capped = _capped("b1", cfg).build(8, seed=4)
+    reference = MixedExcitationDesign(
+        ExcitationConfig(run_duration_s=DURATION, constant_run_fraction=0.0),
+        cfg.actions,
+        cfg.disturbances,
+        sample_time_s=DT,
+        geometry=cfg.geometry,
+        material=cfg.material,
+        operation=cfg.operation,
+        disturbance_design=DiurnalDisturbanceDesign(solid_fraction_process="independent"),
+        name="b1",
+        gas=cfg.gas,
+        gas_velocity_cap="initial_diameter",
+    ).build(8, seed=4)
+    assert np.array_equal(capped.actions, reference.actions)
+
+
+def test_unknown_cap_raises(cfg):
+    with pytest.raises(ValueError):
+        _plan("b2", cfg, gas_velocity_cap="everything")

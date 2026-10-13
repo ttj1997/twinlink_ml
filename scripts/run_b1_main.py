@@ -41,6 +41,7 @@ from twinlink_ml.evaluation.b1_testsets import (
     build_t3,
 )
 from twinlink_ml.evaluation.experiments import DataSpec
+from twinlink_ml.evaluation.growing_pool import guarded_config, projection_counts
 from twinlink_ml.simulation import PlaceholderConfigWarning, load_process_config
 
 TARGETS = ("energy_target", "product_moisture_kg_per_kg", "bed_temperature_celsius")
@@ -100,7 +101,7 @@ def main() -> None:
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
-        config = load_process_config(CONFIG_PATH)
+        config = guarded_config(load_process_config(CONFIG_PATH))
     spec = DataSpec.new_study(
         n_train_max=max(arguments.sizes), n_val=0, n_test=0, target_names=TARGETS
     )
@@ -142,9 +143,14 @@ def main() -> None:
                 "anchors": str(arguments.anchors.name),
                 "step_spread": str(arguments.step_spread.name),
                 "test_sets": {
-                    h.name: {"n_runs": h.trajectory.n_runs, "digest": _holdout_digest(h)}
+                    h.name: {
+                        "n_runs": h.trajectory.n_runs,
+                        "digest": _holdout_digest(h),
+                        "projection": projection_counts(h.trajectory),
+                    }
                     for h in holdouts
                 },
+                "gas_velocity_projection": bool(config.numerics.enforce_gas_velocity_projection),
             }
             log.write(json.dumps(header) + "\n")
             log.flush()

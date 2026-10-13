@@ -50,7 +50,12 @@ from .active_learning import ensemble_scores, select_top_k, train_ensemble
 from .b1_testsets import HoldoutSet, assert_disjoint
 from .evaluator import RolloutEvaluator
 from .experiments import DataSpec
-from .growing_pool import GrowingPool, prepare_process_config, window_dataset
+from .growing_pool import (
+    GrowingPool,
+    prepare_process_config,
+    projection_counts,
+    window_dataset,
+)
 
 __all__ = [
     "ARMS",
@@ -106,6 +111,7 @@ def candidate_pool(
             sample_time_s=spec.sample_time_s,
             run_duration_s=spec.run_duration_s,
             solid_fraction_process=spec.solid_fraction_process,
+            gas_velocity_cap=spec.gas_velocity_cap,
         )
         parts.append(plan.build(per_plan, seed=_derive(data_seed, "pool", name)))
     return ExcitationSchedule(
@@ -166,6 +172,7 @@ def _plan_timings(prepared: ProcessConfig, spec: DataSpec) -> dict[str, float]:
         sample_time_s=spec.sample_time_s,
         run_duration_s=spec.run_duration_s,
         solid_fraction_process=spec.solid_fraction_process,
+        gas_velocity_cap=spec.gas_velocity_cap,
     )
     return {
         "band_low_hz": plan.timings.band_low_hz,
@@ -213,6 +220,7 @@ def run_arm(
             sample_time_s=spec.sample_time_s,
             run_duration_s=spec.run_duration_s,
             solid_fraction_process=spec.solid_fraction_process,
+            gas_velocity_cap=spec.gas_velocity_cap,
         )
         candidates = plan.build(max_n, seed=seeds.data_seed)
         start = list(range(curve.sizes[0]))
@@ -220,7 +228,13 @@ def run_arm(
     pool.add(start)
 
     for position, n_train in enumerate(curve.sizes):
-        base = {"arm": arm, "master_seed": master_seed, "n_train": n_train}
+        base = {
+            "arm": arm,
+            "master_seed": master_seed,
+            "n_train": n_train,
+            "data/new_study_version": spec.new_study_version,
+            "data/gas_velocity_cap": spec.gas_velocity_cap,
+        }
         if len(pool.selected) != n_train:
             raise RuntimeError("pool size does not match the learning-curve point")
         trajectory = pool.trajectory()
@@ -241,6 +255,7 @@ def run_arm(
                 "type": "information",
                 "n_train_windows": train.n_windows,
                 "selected": list(pool.selected),
+                "projection": projection_counts(trajectory),
                 "information": _information(pool, prepared, spec, columns, plan_timings),
             }
         )

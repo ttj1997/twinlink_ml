@@ -12,6 +12,7 @@ import pytest
 from twinlink_ml.evaluation.b1_learning_curve import CurveConfig, candidate_pool, run_arm
 from twinlink_ml.evaluation.b1_testsets import build_t1, build_t2, build_t3
 from twinlink_ml.evaluation.experiments import DataSpec
+from twinlink_ml.evaluation.growing_pool import guarded_config
 from twinlink_ml.simulation import PlaceholderConfigWarning, load_process_config
 
 TARGETS = ("energy_target", "product_moisture_kg_per_kg", "bed_temperature_celsius")
@@ -47,7 +48,7 @@ def world():
     path = Path(__file__).resolve().parents[1] / "conf" / "process" / "greybox_gab_placeholder.yaml"
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
-        config = load_process_config(path)
+        config = guarded_config(load_process_config(path))
     spec = DataSpec.new_study(
         n_train_max=4, n_val=0, n_test=0, target_names=TARGETS, run_duration_s=6000.0
     )
@@ -151,7 +152,10 @@ def test_test_sets_are_disjoint_from_training(world):
     records = run_arm("b1", 2, config, spec, holdouts, CURVE)
     assert records  # the real holdouts pass
     from twinlink_ml.evaluation.b1_testsets import HoldoutSet
-    from twinlink_ml.evaluation.growing_pool import GrowingPool, prepare_process_config
+    from twinlink_ml.evaluation.growing_pool import (
+        GrowingPool,
+        prepare_process_config,
+    )
     from twinlink_ml.simulation.excitation_plans import make_plan
     from twinlink_ml.utils.seeding import SeedBundle
 

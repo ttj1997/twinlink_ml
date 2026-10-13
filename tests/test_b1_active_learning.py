@@ -21,7 +21,12 @@ from twinlink_ml.evaluation.active_learning import (
     train_ensemble,
 )
 from twinlink_ml.evaluation.experiments import DataSpec, generate_data
-from twinlink_ml.evaluation.growing_pool import GrowingPool, prepare_process_config, window_dataset
+from twinlink_ml.evaluation.growing_pool import (
+    GrowingPool,
+    guarded_config,
+    prepare_process_config,
+    window_dataset,
+)
 from twinlink_ml.models.base import SequenceModel
 from twinlink_ml.models.narx import RandomFeatureNARX
 from twinlink_ml.simulation import PlaceholderConfigWarning, load_process_config
@@ -35,7 +40,7 @@ def setup():
     path = Path(__file__).resolve().parents[1] / "conf" / "process" / "greybox_gab_placeholder.yaml"
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
-        config = load_process_config(path)
+        config = guarded_config(load_process_config(path))
     spec = dataclasses.replace(SPEC, run_duration_s=6000.0)
     data = generate_data(
         config, dataclasses.replace(spec, n_train_max=4, n_val=2, n_test=2), master_seed=2

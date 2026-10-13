@@ -49,7 +49,9 @@ from .experiments import DataSpec
 __all__ = [
     "GrowingPool",
     "concatenate_trajectories",
+    "guarded_config",
     "prepare_process_config",
+    "projection_counts",
     "simulate_schedule",
     "window_dataset",
     "windows_for_test_set",
@@ -58,8 +60,44 @@ __all__ = [
 _UNUSED_ID = "__unused__"
 
 
+def guarded_config(process_config: ProcessConfig) -> ProcessConfig:
+    """The config with the gas-velocity projection switched on (the guard of preset version 2)."""
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", PlaceholderConfigWarning)
+        return dataclasses.replace(
+            process_config,
+            numerics=dataclasses.replace(
+                process_config.numerics, enforce_gas_velocity_projection=True
+            ),
+        )
+
+
+def projection_counts(trajectory: Trajectory) -> dict[str, int]:
+    """How often the gas-velocity projection acted in a pool (the counted guard of Befund 86)."""
+    steps = np.asarray(trajectory.n_projected_steps) if trajectory.projection_active else None
+    n_runs, n_steps = trajectory.actions.shape[:2]
+    return {
+        "total_steps": int(n_runs * n_steps),
+        "projected_steps": 0 if steps is None else int(steps.sum()),
+        "runs_with_projection": 0 if steps is None else int((steps > 0).sum()),
+        "projection_active": int(trajectory.projection_active),
+    }
+
+
 def prepare_process_config(process_config: ProcessConfig, spec: DataSpec) -> ProcessConfig:
-    """The config as ``generate_data`` runs it: the sample time of the spec."""
+    """The config as ``generate_data`` runs it: the sample time of the spec.
+
+    A spec with a gas-velocity cap (preset version 2) needs the projection on as the guard
+    (:func:`guarded_config`); a config without it is an error, not a silent unguarded run.
+    """
+    if (
+        spec.gas_velocity_cap != "none"
+        and not process_config.numerics.enforce_gas_velocity_projection
+    ):
+        raise ValueError(
+            "gas_velocity_cap is set but enforce_gas_velocity_projection is off: "
+            "pass guarded_config(config) (the projection is the counted guard of Befund 86)"
+        )
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
         return dataclasses.replace(

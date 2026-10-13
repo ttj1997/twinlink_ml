@@ -18,7 +18,7 @@ from twinlink_ml.evaluation.b1_testsets import (
     steady_state_at,
 )
 from twinlink_ml.evaluation.experiments import DataSpec, generate_data
-from twinlink_ml.evaluation.growing_pool import GrowingPool, windows_for_test_set
+from twinlink_ml.evaluation.growing_pool import GrowingPool, guarded_config, windows_for_test_set
 from twinlink_ml.simulation.excitation_plans import PLAN_NAMES
 
 SPEC = DataSpec.new_study(n_train_max=4, n_val=2, n_test=2)
@@ -41,7 +41,7 @@ def data_and_config():
     path = Path(__file__).resolve().parents[1] / "conf" / "process" / "greybox_gab_placeholder.yaml"
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
-        config = load_process_config(path)
+        config = guarded_config(load_process_config(path))
     return generate_data(config, SPEC, master_seed=1), config
 
 
@@ -197,3 +197,46 @@ def test_windows_for_test_set_uses_training_scalers(data_and_config):
     t2 = build_t2(config, dataclasses.replace(SPEC, run_duration_s=6000.0), n_runs=2)
     test = windows_for_test_set(t2.trajectory, SPEC.window, train.scalers)
     assert test.n_windows > 0
+
+
+def test_a_capped_spec_needs_the_guard(data_and_config):
+    from twinlink_ml.evaluation.growing_pool import prepare_process_config
+
+    _, config = data_and_config
+    unguarded = dataclasses.replace(
+        config,
+        numerics=dataclasses.replace(config.numerics, enforce_gas_velocity_projection=False),
+    )
+    with pytest.raises(ValueError, match="projection"):
+        prepare_process_config(unguarded, SPEC)
+    assert SPEC.gas_velocity_cap == "initial_diameter" and SPEC.new_study_version == 2
+    prepare_process_config(config, SPEC)  # guarded: fine
+    legacy = dataclasses.replace(SPEC, gas_velocity_cap="none", new_study_version=None)
+    prepare_process_config(unguarded, legacy)  # no cap, no guard needed
+
+
+def test_projection_counts_zero_with_the_cap_and_positive_without(data_and_config):
+    from twinlink_ml.evaluation.growing_pool import projection_counts
+    from twinlink_ml.simulation.excitation_plans import make_plan
+
+    _, config = data_and_config
+    counts = {}
+    for cap in ("initial_diameter", "none"):
+        spec = dataclasses.replace(SPEC, gas_velocity_cap=cap)
+        plan = make_plan(
+            "b2",
+            config,
+            sample_time_s=spec.sample_time_s,
+            run_duration_s=spec.run_duration_s,
+            solid_fraction_process="independent",
+            gas_velocity_cap=cap,
+        )
+        schedule = plan.build(8, seed=1)
+        pool = GrowingPool(config, spec, schedule, noise_seed=1)
+        pool.add(list(range(8)))
+        counts[cap] = projection_counts(pool.trajectory())
+    assert counts["initial_diameter"]["projected_steps"] == 0
+    assert counts["initial_diameter"]["projection_active"] == 1
+    assert counts["initial_diameter"]["total_steps"] == 8 * 1152
+    # the guard is meaningful: without the cap the same plan is projected
+    assert counts["none"]["projected_steps"] > 0 and counts["none"]["runs_with_projection"] > 0
