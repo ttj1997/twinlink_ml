@@ -106,8 +106,9 @@ def generate_plant_data(
     every option of ``generate_data`` (planned set points, solid-fraction process, per-run cap of
     the gas velocity of the new-study preset); a test pins it to ``generate_data`` for P0. The
     excitation is designed on the BASE config (the action and disturbance ranges, geometry and
-    material of the design are the simulator's, not the plant's): every plant is excited with the same schedule for the same
-    seeds, so differences between plants are differences of the plant.
+    material of the design are the simulator's, not the plant's): every plant is excited with
+    the same schedule for the same seeds, so differences between plants are differences of the
+    plant.
     """
     if (master_seed is None) == (seeds is None):
         raise ValueError("exactly one of master_seed and seeds")

@@ -76,6 +76,11 @@ class SimulatorChannelInfo:
     solver_max_iterations: int
     solver_tolerance: float
     seconds: float
+    simulator_total_steps: int = 0
+    """Samples (runs x steps) the simulator was driven for."""
+    simulator_projected_steps: int = 0
+    """Samples at which the simulator's OWN gas-velocity projection acted (at its own state)."""
+    simulator_runs_with_projection: int = 0
 
     def as_dict(self) -> dict[str, Any]:
         return dataclasses.asdict(self)
@@ -204,6 +209,13 @@ def simulator_channels(
         solver_max_iterations=DEFAULT_SEARCH_MAX_ITERATIONS,
         solver_tolerance=DEFAULT_SEARCH_TOLERANCE,
         seconds=time.perf_counter() - started,
+        simulator_total_steps=int(set_points.shape[0] * set_points.shape[1]),
+        simulator_projected_steps=(
+            0 if result.n_projected_steps is None else int(result.n_projected_steps.sum())
+        ),
+        simulator_runs_with_projection=(
+            0 if result.n_projected_steps is None else int((result.n_projected_steps > 0).sum())
+        ),
     )
     return channels, info
 

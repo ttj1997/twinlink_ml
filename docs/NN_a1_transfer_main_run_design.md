@@ -5,12 +5,45 @@ carries the placeholder `NN` (the number is assigned when the finding is entered
 book, `docs/04_stand_ap1.md`, entry "Befund NN"). Nothing below has been run except the pilot
 (artifact `artifacts/runs/a1_pilot_pp.json`, script commit `46998d6`, clean tree).
 
-## Update after the second pilot (decisions of the project lead and measured settings)
+## Decisions after the second pilot, the confirmation on the new data, and how the main run is operated
 
-**The main run is ON HOLD.** A cross-cutting decision on the excitation is open (the gas velocity is
-often limited at the discharge limit at the start of a run, see `a1_action_limits_pilot1.json`). If the
-excitation has to stay inside the safe window, the data of every study change and the pilots must be
-repeated. Nothing below is to be started before that decision.
+Decisions of the project lead (2026-10-13):
+
+1. **The excitation of all studies is changed** (Befund 86; `DataSpec.new_study` preset version 2): per-run cap
+   of the gas velocity at `u_t` of the initial diameter, the projection stays on as a counted guard. `master` was
+   MERGED into this branch (no rebase: the provenance of the pilot artifacts stays). The pilots and the action-limit
+   analysis ran on data of preset version 1; their numbers below are version-1 numbers, they are NOT the numbers of
+   the main run.
+2. **Training budget per method, not shared:** "from scratch" 4000 gradient steps, hybrid 8000 (the shared 8000 would
+   have cost "from scratch" about 9 % of C against its own optimum and shifted the comparison towards the hypotheses
+   under test). Fine-tuning: all parameters, learning rate 3e-4, 320 epochs.
+3. Pretraining on 256 + 32 P0 runs stays (same excitation as the plants, own seeds 101-105).
+4. Five seeds, all N (2, 4, 8, 16, 32, 64); constant-run holdout kept; one LSTM over three targets for all methods.
+5. **Small confirmation on the new data instead of a full pilot** (`scripts/run_a1_confirm.py`, rule fixed in its
+   docstring and committed before the run): on PP and PP2 (pilot seeds, N = 2 and 16, the 12 cells of pilot 2), the
+   chosen fine-tuning setting and its direct neighbours (learning rate 1e-4 / 3e-4 / 1e-3 x epochs 160 / 320 / 640),
+   the two step budgets and one neighbour each (the neighbour with the lower pilot-2 score: from scratch 8000, hybrid
+   16000). A chosen setting stays if its mean criterion C is at most 3 % above the best tested setting of its part;
+   otherwise it is reported and the main run is not started on the old setting. The projection guard is recorded per
+   pool there too.
+6. The main run starts only after the confirmation, with at most 8 workers, in a worktree on `C:\`, detached with a log
+   file and `--resume` (`scripts/run_a1_main.py`).
+
+**Guard in the main run.** Before any training of a unit, every pool it generates is checked: `data/new_study_version`
+must be 2 and the number of projected steps must be 0. Otherwise the unit writes a `STOP` file and the run halts
+(running units end at their next record) and is reported. Every result record carries `data/new_study_version` and the
+projection guard of both pools (steps, runs with projection, per pool); the simulator's own projection inside the
+hybrid channel is recorded per pool as well (not a stop criterion).
+
+Cost with the per-method budgets -- EXTRAPOLATION from the times measured in pilot 2 (see below), not measured for
+the main run: per (plant, seed) fine-tuning about 22 min, from scratch (4000 steps) about 24 min, hybrid (8000 steps)
+about 48 min, data, simulator channels and evaluation about 10 min: about 104 min; 25 jobs = about 43 h of CPU = about
+5.4 h of wall time on 8 workers, plus five pretrainings (one thread each, in parallel with the first units); with
+margin 6-7 h. The confirmation costs about 1.3 h (extrapolated the same way).
+
+## Update after the second pilot (decisions of the project lead and measured settings; data of preset version 1)
+
+Status before the decisions above: the main run was on hold until the cross-cutting decision on the excitation. That decision is made (see above), so the pilots are CONFIRMED on new data instead of repeated.
 
 Decisions: (1) a second pilot on TWO pilot plants, PP and PP2 (PP2: summary deviation 0.301 process /
 0.305 measured against PP 0.130 / 0.134; both pilot-only), grid extended downward and, where needed, upward
@@ -47,8 +80,7 @@ pretraining on 256 runs 134 s (4.3 s per epoch, 31 epochs); P0 pool of 512 runs 
 about 23-26 s per process, measured apart. The pilot took 16 324 s of wall time (the upward extensions to 640
 epochs and 16 000 steps dominate).
 
-Cost of the main run with these settings -- EXTRAPOLATION from the measured times, not measured for the main
-run: per (plant, seed) fine-tuning 320 epochs over N = 2...64 about 22 min, from scratch and hybrid 8000 steps
+Cost of the main run with the shared budget of the pilot -- superseded by the per-method budgets above; EXTRAPOLATION from the measured times: per (plant, seed) fine-tuning 320 epochs over N = 2...64 about 22 min, from scratch and hybrid 8000 steps
 each about 48 min each, data, simulator channels and evaluation about 10 min: about 130 min; 25 (plant, seed)
 jobs = about 54 h of CPU = about 6.8 h of wall time on 8 workers, plus five pretrainings; with margin 8-9 h.
 This replaces the earlier 2.5 h estimate, which assumed 3000 steps and 5 epochs. Options to reduce: 3 seeds
@@ -115,12 +147,12 @@ the channel standard deviation, on the 8 PP validation runs, which are in no fit
 
 ## Methods
 
-1. **from scratch** -- a new LSTM on the N plant runs (`TransferSequenceModel.fit`).
+1. **from scratch** -- a new LSTM on the N plant runs (`TransferSequenceModel.fit`, 4000 gradient steps).
 2. **simulator only** -- the noise-free P0 measurement as prediction (`SimulatorOnlyModel`); no
    training, no plant data; one value per plant and seed pool.
 3. **pretraining + fine-tuning** -- LSTM pretrained on P0 data, then `fine_tune` on the N plant runs
    with the pretraining scalers kept; setting fixed by the pilot (see Open decisions, 1).
-4. **hybrid** -- LSTM with the open P0 simulation (set points and disturbances of the run only, steady
+4. **hybrid** (8000 gradient steps) -- LSTM with the open P0 simulation (set points and disturbances of the run only, steady
    state at the set points as initial state, noise-free P0 measurement) as three more exogenous
    channels, trained on the N plant runs from scratch.
 5. Baselines before any comparison: **persistence** and **ARX** (`LinearARXModel`, N plant runs).
@@ -231,8 +263,12 @@ run) and are replaced by measured times in the report of the run.
 5. **Constant-run holdout** as a secondary test set (16 runs per plant): keep, or drop to save evaluation
    time (small).
 
-## Files the main run will add (not yet written)
+## Files of the main run
 
-New scripts under `scripts/` (pretraining job per seed; plant-and-seed job; analysis with the paired
-resolution); no change to shared modules is planned beyond those already listed in the commit messages
-`39a1390` (config schema field `drying_curve_exponent`, `thermo.py` two lines).
+New scripts under `scripts/`: `run_a1_confirm.py` (confirmation on the new data), `run_a1_main.py` (the main run:
+units, guard, resume, collection of the records into `artifacts/runs/a1_main_records.json`). The analysis with the
+paired resolution (HA1-HA3, learning curves, crossover N*) is a separate script written after the run and committed
+before it is applied. New modules: `models/transfer.py`, `models/hybrid.py`, `evaluation/plant_data.py`,
+`evaluation/plant_deviation.py`, `simulation/plant_variants.py`. Shared files changed: `thermo.py` (two lines) and the
+config schema (field `drying_curve_exponent`, only in the fingerprint when set); no change to `greybox.py`,
+`torch_sequence.py`, `experiments.py`.

@@ -66,6 +66,10 @@ def test_channels_are_appended_with_names_and_shape(data, hybrid_data) -> None:
     info = hybrid_data.trajectory.metadata["simulator_channels"]
     assert info["n_runs"] == data.trajectory.n_runs
     assert info["n_stationary"] + info["n_nominal_fallback"] == info["n_runs"]
+    # the simulator's own projection is counted (here: the plain config, projection off -> 0 steps)
+    assert info["simulator_total_steps"] == data.trajectory.n_runs * data.trajectory.n_steps
+    assert info["simulator_projected_steps"] == 0
+    assert info["simulator_runs_with_projection"] == 0
 
 
 def test_applying_twice_is_an_error(hybrid_data) -> None:
