@@ -208,3 +208,42 @@ def test_gate_accepts_the_documented_fingerprint_history(smoke: dict[str, list[d
     report = gate.run_checks(old, arms, 1e-6)
     process_failures = [f for f in report["failures"] if "process/fingerprint" in f]
     assert not process_failures and not [f for f in report["failures"] if "measurement" in f]
+
+
+def test_gate_checks_the_preset_version_and_the_projection_guard(
+    smoke: dict[str, list[dict]],
+) -> None:
+    old = copy.deepcopy(smoke["A0"])
+    arms = {arm: copy.deepcopy(smoke[arm]) for arm in worker.ARMS}
+    prim = [r for r in arms["N"] if r["params"]["eval/primary"]]
+    assert all(r["params"]["data/new_study_version"] == 2 for r in prim)
+    assert all(r["params"]["pool/projected_steps"] == 0 for r in prim)
+    assert all(r["params"]["holdout_pool/projected_steps"] == 0 for r in prim)
+    assert gate.run_checks(old, arms, 1e-6)["passed"]
+
+    def failures(mutate) -> list[str]:
+        changed = {arm: copy.deepcopy(smoke[arm]) for arm in worker.ARMS}
+        for r in changed["N"]:
+            mutate(r["params"])
+        return gate.run_checks(old, changed, 1e-6)["failures"]
+
+    assert any(
+        "preset version" in f for f in failures(lambda p: p.update({"data/new_study_version": 1}))
+    )
+    assert any("preset version" in f for f in failures(lambda p: p.pop("data/new_study_version")))
+    assert any(
+        "gas-velocity cap" in f
+        for f in failures(lambda p: p.update({"data/gas_velocity_cap": "none"}))
+    )
+    assert any(
+        "pool/projected_steps is 3" in f
+        for f in failures(lambda p: p.update({"pool/projected_steps": 3}))
+    )
+    assert any(
+        "holdout_pool/projected_steps is 1" in f
+        for f in failures(lambda p: p.update({"holdout_pool/projected_steps": 1}))
+    )
+    assert any(
+        "pool/projected_steps is None" in f
+        for f in failures(lambda p: p.pop("pool/projected_steps"))
+    )

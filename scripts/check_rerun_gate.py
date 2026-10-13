@@ -10,7 +10,10 @@ Compares the records of the pilot (or of the full run) with the records of Befun
 2. The baselines that do not depend on future inputs or on training randomness: persistence and the two
    fitted linear baselines (static, ARX): every common metric of the PRIMARY variant of arm A0 within
    ``--tolerance`` (relative, with an absolute floor of 1e-12; proposal of the plan: 1e-6).
-3. Arm A1 has the same trajectories as A0: identical fingerprints (except ``window/future_actions``) and an
+3. Arm N must carry preset version 2 (``data/new_study_version``) with ``data/gas_velocity_cap``
+   ``initial_diameter``, and the guard counts ``pool/projected_steps`` and
+   ``holdout_pool/projected_steps`` must be 0 (the projection stays on as a guard and must never act).
+4. Arm A1 has the same trajectories as A0: identical fingerprints (except ``window/future_actions``) and an
    identical persistence record (persistence reads the history, not the future inputs). Arm N must carry the
    new-study options and a different ``excitation/fingerprint``.
 
@@ -44,6 +47,8 @@ FINGERPRINTS = (
     "seed/model",
 )
 GATED_MODELS = ("persistence", "static", "arx")
+PRESET_VERSION = 2
+"""Version of the new-study preset that arm N must carry (Befund 86)."""
 TIMING_KEYS = ("inference_us", "elapsed", "_time", "seconds")
 """Metric names that measure speed, not error: never compared."""
 
@@ -147,6 +152,17 @@ def run_checks(
                 or p.get("data/solid_fraction_process") != "independent"
             ):
                 failures.append(f"{key}: arm N lacks the new-study options")
+            if p.get("data/new_study_version") != PRESET_VERSION:
+                failures.append(
+                    f"{key}: arm N has preset version {p.get('data/new_study_version')!r}, "
+                    f"expected {PRESET_VERSION}"
+                )
+            if p.get("data/gas_velocity_cap") != "initial_diameter":
+                failures.append(f"{key}: arm N lacks the per-run gas-velocity cap")
+            for guard in ("pool/projected_steps", "holdout_pool/projected_steps"):
+                # the projection stays on as a guard; with the cap it must never act (Befund 86)
+                if p.get(guard) != 0:
+                    failures.append(f"{key}: {guard} is {p.get(guard)!r}, expected 0 -- report")
             if twin is not None and p.get("excitation/fingerprint") == twin["params"].get(
                 "excitation/fingerprint"
             ):
