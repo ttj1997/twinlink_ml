@@ -37,6 +37,8 @@ TEST_SETS = ("T1", "T2", "T3")
 MODELS = ("lstm", "arx")
 PLAN_ARMS = ("b0", "b1", "b2", "b3", "b4")
 ALL_ARMS = (*PLAN_ARMS, "b5", "b5r")
+EXCITED_ARMS = ("b1", "b2", "b3", "b4", "b5", "b5r")  # without the constant operation B0
+ARM_SETS = (("b0-b4", PLAN_ARMS), ("all", ALL_ARMS), ("excited", EXCITED_ARMS))
 PAIRS = (("b2", "b1"), ("b3", "b1"), ("b4", "b1"), ("b5", "b1"), ("b5", "b5r"))
 EQUIVALENT_ARMS = ("b0", "b2", "b3", "b4", "b5", "b5r")
 PRIMARY = ("product_moisture_kg_per_kg", 24)
@@ -68,7 +70,7 @@ def main() -> None:
         for model in MODELS:
             for test_set in TEST_SETS:
                 for n in SIZES:
-                    for label, arms in (("b0-b4", PLAN_ARMS), ("all", ALL_ARMS)):
+                    for label, arms in ARM_SETS:
                         correlations[_key(combo, model, test_set, f"N{n}", label)] = (
                             rank_correlations(
                                 table,

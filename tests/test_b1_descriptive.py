@@ -118,3 +118,20 @@ def test_rank_correlations_have_the_expected_sign_and_log_the_condition():
     assert result["fir_condition"]["arm_spearman"] == pytest.approx(1.0)
     assert math.isnan(result["spectral_coverage_1pct"]["arm_spearman"])  # constant measure
     assert result["fir_logdet_per_parameter"]["n_arms"] == 5
+
+
+def test_censoring_flags_and_finite_or_infinite_bootstrap_bounds_without_nan():
+    def error(arm, n, seed):
+        runs = 2 * n if arm == "b2" else n
+        return (2.0 if arm == "b0" else 1.0) * 4.0 / math.sqrt(runs) * _noise(arm, n, seed)
+
+    table = RecordTable(_records(error))
+    assert (
+        run_equivalent(table, "b2", "b1", 32, "lstm", "T3")["censored"]
+        == "reference_more_than_range"
+    )
+    assert run_equivalent(table, "b0", "b1", 2, "lstm", "T3")["censored"] == "reference_at_most"
+    assert run_equivalent(table, "b2", "b1", 4, "lstm", "T3")["censored"] == ""
+    boot = bootstrap_run_equivalent(table, "b2", "b1", 32, "lstm", "T3", n_boot=100)
+    assert not any(math.isnan(v) for v in boot.values())
+    assert math.isinf(boot["extra_high"])

@@ -211,17 +211,31 @@ def run_equivalent(
     target: str = PRIMARY_TARGET,
     horizon: int = PRIMARY_HORIZON,
     seeds: Sequence[int] | None = None,
-) -> dict[str, float]:
-    """Runs the reference needs for the median error of ``arm`` at ``n_train``."""
+) -> dict[str, Any]:
+    """Runs the reference needs for the median error of ``arm`` at ``n_train``.
+
+    ``censored`` is ``"reference_at_most"`` when the error is not below the reference's error at its
+    smallest N (the reference needs at most that many runs; the value is a bound) and
+    ``"reference_more_than_range"`` when the reference does not get that low within its range.
+    """
     own = _curve(table, arm, sizes, model, test_set, seeds, target, horizon)
     ref = _curve(table, reference, sizes, model, test_set, seeds, target, horizon)
     if n_train not in own or len(ref) < 2:
         return {"error": math.nan, "reference_runs": math.nan, "extra_runs": math.nan}
     needed = runs_needed(ref, own[n_train])
+    first = min(ref)
+    censored = (
+        "reference_at_most"
+        if own[n_train] >= ref[first]
+        else "reference_more_than_range"
+        if math.isinf(needed)
+        else ""
+    )
     return {
         "error": own[n_train],
         "reference_runs": needed,
         "extra_runs": needed - n_train if math.isfinite(needed) else math.inf,
+        "censored": censored,
     }
 
 
@@ -257,11 +271,20 @@ def bootstrap_run_equivalent(
         )
         extra.append(result[0])
         ratio.append(result[1])
+    # infinity (the reference never reaches the error) is replaced by a large finite value for the
+    # percentiles (interpolating between two infinities gives NaN) and mapped back afterwards
+    big = 1.0e9
+
+    def percentile(values: list[float], q: float) -> float:
+        finite = np.where(np.isinf(values), big, values)
+        result = float(np.percentile(finite, q))
+        return math.inf if result >= 0.5 * big else result
+
     return {
-        "extra_low": float(np.percentile(extra, 2.5)),
-        "extra_high": float(np.percentile(extra, 97.5)),
-        "ratio_low": float(np.percentile(ratio, 2.5)),
-        "ratio_high": float(np.percentile(ratio, 97.5)),
+        "extra_low": percentile(extra, 2.5),
+        "extra_high": percentile(extra, 97.5),
+        "ratio_low": percentile(ratio, 2.5),
+        "ratio_high": percentile(ratio, 97.5),
         "share_beyond_range": float(np.mean(np.isinf(extra))),
     }
 
