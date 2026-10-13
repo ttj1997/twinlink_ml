@@ -204,3 +204,23 @@ before the full run.
 * The evaluation script (`scripts/analyze_rerun.py`) is committed; the pilot analysis of limited actions
   (Befund 85) is done; **the full run is not started**, its time and the question of a limited excitation
   window are decisions of the project lead.
+
+## 12. Redefinition of arm N (decision of 2026-10-13, Befund 86) -- before any computation
+
+* **Arm N = `DataSpec.new_study()` preset version 2:** planned future inputs, own solid-fraction process **and the
+  per-run cap of the gas velocity at `u_t` of the run's initial diameter**; the projection stays on as a guard and
+  its count per pool is logged in every record (`pool/projected_steps`, `holdout_pool/projected_steps`; expected 0;
+  a count above 0 is reported, the run is not silently accepted). N is the basis of the synthesis, version 5.
+  The pilot arm N of Befund 84 (preset version 1, without the cap) was a pilot only; it is not part of the full run.
+* **Arm A1 unchanged:** legacy trajectories (no cap, projection acting), planned future inputs; `n_train` 8 and 64.
+  It measures how much the old findings profited from the information leak.
+* **A0 = the old records** (Befund 85 b). Comparisons as in section 5; N against A0 now contains three changes
+  together (D1, E3, the cap); A1 against A0 isolates D1; the share of D1 in the N effect is reported as before
+  (only where resolved), the remainder is E3 and the cap together and is not split further (no arm for the cap
+  alone, no A2).
+* **Gate additions:** every record of N carries `data/new_study_version` 2 and `data/gas_velocity_cap`
+  `initial_diameter`; `pool/projected_steps` and `holdout_pool/projected_steps` are 0 (else report).
+* **Schedule:** the full run starts when the main runs of studies A and B have finished, then with **all 16
+  workers** (jobs of (arm, seed, method group), longest first). Estimate: about 113 core-hours of committed
+  timings (about 105 with the pilot ratios): about 7 h ideal on 16 workers, about 11-14 h with the margin of
+  section 6. The start is announced to the project lead; nothing is started before.
