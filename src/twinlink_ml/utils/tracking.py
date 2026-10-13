@@ -419,6 +419,8 @@ def environment_fingerprint(*, check_code_location: bool = True) -> dict[str, An
         if check_code_location
         else code_location_fields(find_repo_root())
     )
+    from ..evaluation.experiments import NEW_STUDY_PRESET_VERSION
+
     commit = _git_commit()
     dirty = _git_dirty()
     if dirty:
@@ -457,6 +459,7 @@ def environment_fingerprint(*, check_code_location: bool = True) -> dict[str, An
         "env/mkl_num_threads": os.environ.get("MKL_NUM_THREADS"),
         "env/omp_num_threads": os.environ.get("OMP_NUM_THREADS"),
         **location,
+        "preset/new_study_version": NEW_STUDY_PRESET_VERSION,
     }
     for name in ("numpy", "scipy", "torch"):
         try:

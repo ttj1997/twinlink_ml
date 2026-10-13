@@ -1,0 +1,3000 @@
+{
+ "provenance": {
+  "git/commit": "fd0f5661dadc0149f9d2e4874c786115bd0eb976",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "seed": 1,
+ "n_train": 8,
+ "a_limited_actions": {
+  "legacy": {
+   "box_requests": {
+    "inlet_temperature_celsius": {
+     "below_box_minimum": 0,
+     "above_box_maximum": 0,
+     "on_box_minimum": 5847,
+     "on_box_maximum": 5929
+    },
+    "gas_velocity_m_per_s": {
+     "below_box_minimum": 0,
+     "above_box_maximum": 0,
+     "on_box_minimum": 2525,
+     "on_box_maximum": 2647
+    },
+    "spray_rate_kg_per_h": {
+     "below_box_minimum": 0,
+     "above_box_maximum": 0,
+     "on_box_minimum": 2155,
+     "on_box_maximum": 2127
+    },
+    "nozzle_pressure_bar": {
+     "below_box_minimum": 0,
+     "above_box_maximum": 0,
+     "on_box_minimum": 4115,
+     "on_box_maximum": 4179
+    }
+   },
+   "channels_limited_steps": {
+    "gas_velocity_lower_u_mf": 0,
+    "gas_velocity_upper_u_t": 8867,
+    "inlet_temperature_celsius_changed": 0,
+    "spray_rate_kg_per_h_changed": 0,
+    "nozzle_pressure_bar_changed": 0
+   },
+   "splits": {
+    "train64": {
+     "runs": 64,
+     "steps": 73728,
+     "limited_steps": 4374,
+     "limited_share_of_steps": 0.059326171875,
+     "lower_u_mf_steps": 0,
+     "upper_u_t_steps": 4374,
+     "other_channels_steps": 0,
+     "runs_with_limited_step": 18,
+     "windows": {
+      "future_horizon_limited": 769,
+      "history_only_limited": 126,
+      "neither": 7809
+     }
+    },
+    "train8": {
+     "runs": 8,
+     "steps": 9216,
+     "limited_steps": 595,
+     "limited_share_of_steps": 0.06456163194444445,
+     "lower_u_mf_steps": 0,
+     "upper_u_t_steps": 595,
+     "other_channels_steps": 0,
+     "runs_with_limited_step": 1,
+     "windows": {
+      "future_horizon_limited": 94,
+      "history_only_limited": 13,
+      "neither": 981
+     }
+    },
+    "val": {
+     "runs": 32,
+     "steps": 36864,
+     "limited_steps": 1817,
+     "limited_share_of_steps": 0.04928927951388889,
+     "lower_u_mf_steps": 0,
+     "upper_u_t_steps": 1817,
+     "other_channels_steps": 0,
+     "runs_with_limited_step": 6,
+     "windows": {
+      "future_horizon_limited": 270,
+      "history_only_limited": 54,
+      "neither": 4028
+     }
+    },
+    "test": {
+     "runs": 32,
+     "steps": 36864,
+     "limited_steps": 2676,
+     "limited_share_of_steps": 0.07259114583333333,
+     "lower_u_mf_steps": 0,
+     "upper_u_t_steps": 2676,
+     "other_channels_steps": 0,
+     "runs_with_limited_step": 10,
+     "windows": {
+      "future_horizon_limited": 424,
+      "history_only_limited": 72,
+      "neither": 3856
+     }
+    },
+    "constant_holdout": {
+     "runs": 32,
+     "steps": 36864,
+     "limited_steps": 3960,
+     "limited_share_of_steps": 0.107421875,
+     "lower_u_mf_steps": 0,
+     "upper_u_t_steps": 3960,
+     "other_channels_steps": 0,
+     "runs_with_limited_step": 9,
+     "windows": {
+      "future_horizon_limited": 460,
+      "history_only_limited": 31,
+      "neither": 3861
+     }
+    }
+   }
+  },
+  "N": {
+   "box_requests": {
+    "inlet_temperature_celsius": {
+     "below_box_minimum": 0,
+     "above_box_maximum": 0,
+     "on_box_minimum": 5847,
+     "on_box_maximum": 5929
+    },
+    "gas_velocity_m_per_s": {
+     "below_box_minimum": 0,
+     "above_box_maximum": 0,
+     "on_box_minimum": 2525,
+     "on_box_maximum": 2647
+    },
+    "spray_rate_kg_per_h": {
+     "below_box_minimum": 0,
+     "above_box_maximum": 0,
+     "on_box_minimum": 2155,
+     "on_box_maximum": 2127
+    },
+    "nozzle_pressure_bar": {
+     "below_box_minimum": 0,
+     "above_box_maximum": 0,
+     "on_box_minimum": 4115,
+     "on_box_maximum": 4179
+    }
+   },
+   "channels_limited_steps": {
+    "gas_velocity_lower_u_mf": 0,
+    "gas_velocity_upper_u_t": 8945,
+    "inlet_temperature_celsius_changed": 0,
+    "spray_rate_kg_per_h_changed": 0,
+    "nozzle_pressure_bar_changed": 0
+   },
+   "splits": {
+    "train64": {
+     "runs": 64,
+     "steps": 73728,
+     "limited_steps": 4263,
+     "limited_share_of_steps": 0.057820638020833336,
+     "lower_u_mf_steps": 0,
+     "upper_u_t_steps": 4263,
+     "other_channels_steps": 0,
+     "runs_with_limited_step": 17,
+     "windows": {
+      "future_horizon_limited": 752,
+      "history_only_limited": 116,
+      "neither": 7836
+     }
+    },
+    "train8": {
+     "runs": 8,
+     "steps": 9216,
+     "limited_steps": 616,
+     "limited_share_of_steps": 0.06684027777777778,
+     "lower_u_mf_steps": 0,
+     "upper_u_t_steps": 616,
+     "other_channels_steps": 0,
+     "runs_with_limited_step": 1,
+     "windows": {
+      "future_horizon_limited": 96,
+      "history_only_limited": 13,
+      "neither": 979
+     }
+    },
+    "val": {
+     "runs": 32,
+     "steps": 36864,
+     "limited_steps": 1902,
+     "limited_share_of_steps": 0.051595052083333336,
+     "lower_u_mf_steps": 0,
+     "upper_u_t_steps": 1902,
+     "other_channels_steps": 0,
+     "runs_with_limited_step": 6,
+     "windows": {
+      "future_horizon_limited": 281,
+      "history_only_limited": 53,
+      "neither": 4018
+     }
+    },
+    "test": {
+     "runs": 32,
+     "steps": 36864,
+     "limited_steps": 2780,
+     "limited_share_of_steps": 0.0754123263888889,
+     "lower_u_mf_steps": 0,
+     "upper_u_t_steps": 2780,
+     "other_channels_steps": 0,
+     "runs_with_limited_step": 10,
+     "windows": {
+      "future_horizon_limited": 444,
+      "history_only_limited": 76,
+      "neither": 3832
+     }
+    },
+    "constant_holdout": {
+     "runs": 32,
+     "steps": 36864,
+     "limited_steps": 3850,
+     "limited_share_of_steps": 0.10443793402777778,
+     "lower_u_mf_steps": 0,
+     "upper_u_t_steps": 3850,
+     "other_channels_steps": 0,
+     "runs_with_limited_step": 9,
+     "windows": {
+      "future_horizon_limited": 446,
+      "history_only_limited": 30,
+      "neither": 3876
+     }
+    }
+   }
+  }
+ },
+ "b_errors_by_window_group": {
+  "persistence": {
+   "groups": {
+    "A0_model_on_realised_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.6926719683277667,
+      "rmse_F": 0.4897941342054936,
+      "rmse_U": 0.71111852791862
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.018040305524057595,
+      "rmse_F": 0.008841723337796797,
+      "rmse_U": 0.01876551064286091
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 7.81087051445417,
+      "rmse_F": 6.814278881411933,
+      "rmse_U": 7.910941763129684
+     }
+    },
+    "A0_model_on_realised_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.030557388472287797,
+      "rmse_F": 0.04323267994385353,
+      "rmse_U": 0.0286916109910612
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.004351294380226406,
+      "rmse_F": 0.002620023820406434,
+      "rmse_U": 0.004512232267407332
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 0.7103596903342666,
+      "rmse_F": 0.7946304999337929,
+      "rmse_U": 0.6997292974790603
+     }
+    },
+    "A0_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.6926719683277667,
+      "rmse_F": 0.4897941342054936,
+      "rmse_U": 0.71111852791862
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.018040305524057595,
+      "rmse_F": 0.008841723337796797,
+      "rmse_U": 0.01876551064286091
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 7.81087051445417,
+      "rmse_F": 6.814278881411933,
+      "rmse_U": 7.910941763129684
+     }
+    },
+    "A0_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.030557388472287797,
+      "rmse_F": 0.04323267994385353,
+      "rmse_U": 0.0286916109910612
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.004351294380226406,
+      "rmse_F": 0.002620023820406434,
+      "rmse_U": 0.004512232267407332
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 0.7103596903342666,
+      "rmse_F": 0.7946304999337929,
+      "rmse_U": 0.6997292974790603
+     }
+    },
+    "A1_model_on_realised_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.6926719683277667,
+      "rmse_F": 0.4897941342054936,
+      "rmse_U": 0.71111852791862
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.018040305524057595,
+      "rmse_F": 0.008841723337796797,
+      "rmse_U": 0.01876551064286091
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 7.81087051445417,
+      "rmse_F": 6.814278881411933,
+      "rmse_U": 7.910941763129684
+     }
+    },
+    "A1_model_on_realised_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.030557388472287797,
+      "rmse_F": 0.04323267994385353,
+      "rmse_U": 0.0286916109910612
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.004351294380226406,
+      "rmse_F": 0.002620023820406434,
+      "rmse_U": 0.004512232267407332
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 0.7103596903342666,
+      "rmse_F": 0.7946304999337929,
+      "rmse_U": 0.6997292974790603
+     }
+    },
+    "A1_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.6926719683277667,
+      "rmse_F": 0.4897941342054936,
+      "rmse_U": 0.71111852791862
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.018040305524057595,
+      "rmse_F": 0.008841723337796797,
+      "rmse_U": 0.01876551064286091
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 7.81087051445417,
+      "rmse_F": 6.814278881411933,
+      "rmse_U": 7.910941763129684
+     }
+    },
+    "A1_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.030557388472287797,
+      "rmse_F": 0.04323267994385353,
+      "rmse_U": 0.0286916109910612
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.004351294380226406,
+      "rmse_F": 0.002620023820406434,
+      "rmse_U": 0.004512232267407332
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 0.7103596903342666,
+      "rmse_F": 0.7946304999337929,
+      "rmse_U": 0.6997292974790603
+     }
+    },
+    "N_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 444,
+     "energy_target": {
+      "rmse_all": 0.6922089245542123,
+      "rmse_F": 0.4856833279076882,
+      "rmse_U": 0.7118927412131288
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.01803397788922259,
+      "rmse_F": 0.00923794929804083,
+      "rmse_U": 0.01877440805197391
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 7.783781511419178,
+      "rmse_F": 6.8643166476845785,
+      "rmse_U": 7.881461959996094
+     }
+    },
+    "N_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 446,
+     "energy_target": {
+      "rmse_all": 0.03063055311570567,
+      "rmse_F": 0.04457217654337555,
+      "rmse_U": 0.028609710027073357
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.004118316708445465,
+      "rmse_F": 0.0027804794094415126,
+      "rmse_U": 0.004244335466814332
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 0.720110389814419,
+      "rmse_F": 0.8077135304607028,
+      "rmse_U": 0.7094197850381287
+     }
+    }
+   },
+   "increase": {
+    "A1_primary_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A0_model_planned_windows_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_model_realised_windows_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_primary_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A0_model_planned_windows_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_model_realised_windows_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     }
+    }
+   }
+  },
+  "static": {
+   "groups": {
+    "A0_model_on_realised_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.18782922124809312,
+      "rmse_F": 0.14019695846594094,
+      "rmse_U": 0.19226644348352478
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.23863775352501715,
+      "rmse_F": 0.1578385544903498,
+      "rmse_U": 0.24577617281478834
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 8.294697782559266,
+      "rmse_F": 8.109492032830866,
+      "rmse_U": 8.31444275213441
+     }
+    },
+    "A0_model_on_realised_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.1862119318900189,
+      "rmse_F": 0.18352358547408462,
+      "rmse_U": 0.18652711034131764
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.24359646169073787,
+      "rmse_F": 0.09671243182145595,
+      "rmse_U": 0.25543518286806804
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 7.953858975420646,
+      "rmse_F": 6.752132740213848,
+      "rmse_U": 8.084096417627936
+     }
+    },
+    "A0_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.24437691454985397,
+      "rmse_F": 0.520109320243418,
+      "rmse_U": 0.19226644348352478
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.23921317279506174,
+      "rmse_F": 0.16653914783759113,
+      "rmse_U": 0.24577617281478834
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 8.216720259702798,
+      "rmse_F": 7.24903902376154,
+      "rmse_U": 8.31444275213441
+     }
+    },
+    "A0_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.21751901678866856,
+      "rmse_F": 0.3914880370765193,
+      "rmse_U": 0.18652711034131764
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.24384336079810026,
+      "rmse_F": 0.10242995422966136,
+      "rmse_U": 0.25543518286806804
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 7.915227941482149,
+      "rmse_F": 6.3080434604014695,
+      "rmse_U": 8.084096417627936
+     }
+    },
+    "A1_model_on_realised_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.18782922124809312,
+      "rmse_F": 0.14019695846594094,
+      "rmse_U": 0.19226644348352478
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.23863775352501715,
+      "rmse_F": 0.1578385544903498,
+      "rmse_U": 0.24577617281478834
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 8.294697782559266,
+      "rmse_F": 8.109492032830866,
+      "rmse_U": 8.31444275213441
+     }
+    },
+    "A1_model_on_realised_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.1862119318900189,
+      "rmse_F": 0.18352358547408462,
+      "rmse_U": 0.18652711034131764
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.24359646169073787,
+      "rmse_F": 0.09671243182145595,
+      "rmse_U": 0.25543518286806804
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 7.953858975420646,
+      "rmse_F": 6.752132740213848,
+      "rmse_U": 8.084096417627936
+     }
+    },
+    "A1_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.24437691454985397,
+      "rmse_F": 0.520109320243418,
+      "rmse_U": 0.19226644348352478
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.23921317279506174,
+      "rmse_F": 0.16653914783759113,
+      "rmse_U": 0.24577617281478834
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 8.216720259702798,
+      "rmse_F": 7.24903902376154,
+      "rmse_U": 8.31444275213441
+     }
+    },
+    "A1_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.21751901678866856,
+      "rmse_F": 0.3914880370765193,
+      "rmse_U": 0.18652711034131764
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.24384336079810026,
+      "rmse_F": 0.10242995422966136,
+      "rmse_U": 0.25543518286806804
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 7.915227941482149,
+      "rmse_F": 6.3080434604014695,
+      "rmse_U": 8.084096417627936
+     }
+    },
+    "N_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 444,
+     "energy_target": {
+      "rmse_all": 0.2281911494524965,
+      "rmse_F": 0.3144549927568918,
+      "rmse_U": 0.2162241594713544
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.2412378008740966,
+      "rmse_F": 0.221893401216592,
+      "rmse_U": 0.24333831548884655
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 8.266084725272496,
+      "rmse_F": 6.592768698513918,
+      "rmse_U": 8.435222733952877
+     }
+    },
+    "N_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 446,
+     "energy_target": {
+      "rmse_all": 0.26972989955879473,
+      "rmse_F": 0.3048266557368617,
+      "rmse_U": 0.2654273990580022
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.24218913150554391,
+      "rmse_F": 0.1704428546850753,
+      "rmse_U": 0.24907017164295087
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 7.979746037457355,
+      "rmse_F": 6.790239409413421,
+      "rmse_U": 8.104469930338077
+     }
+    }
+   },
+   "increase": {
+    "A1_primary_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 106.36401156457109,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 13.762967646113964,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 1.196646075039995,
+      "share_of_increase_in_F": 1.0000000000000002,
+      "mse_ratio_F": 1.113285330035398,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": -5603.284767312569,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.7990492946210818,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A0_model_planned_windows_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 106.36401156457109,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 13.762967646113964,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 1.196646075039995,
+      "share_of_increase_in_F": 1.0000000000000002,
+      "mse_ratio_F": 1.113285330035398,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": -5603.284767312569,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.7990492946210818,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_model_realised_windows_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_primary_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 55.00770930443077,
+      "share_of_increase_in_F": 0.9999999999999999,
+      "mse_ratio_F": 4.550438198986994,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.523756485148549,
+      "share_of_increase_in_F": 1.0000000000000004,
+      "mse_ratio_F": 1.1217326214272854,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": -2667.9467518508527,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.8727852751921912,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A0_model_planned_windows_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 55.00770930443077,
+      "share_of_increase_in_F": 0.9999999999999999,
+      "mse_ratio_F": 4.550438198986994,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.523756485148549,
+      "share_of_increase_in_F": 1.0000000000000004,
+      "mse_ratio_F": 1.1217326214272854,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": -2667.9467518508527,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.8727852751921912,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_model_realised_windows_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     }
+    }
+   }
+  },
+  "arx": {
+   "groups": {
+    "A0_model_on_realised_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.17140823763681085,
+      "rmse_F": 0.12121394366813848,
+      "rmse_U": 0.17597228877375332
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.008960480494809575,
+      "rmse_F": 0.00607234878973252,
+      "rmse_U": 0.009218283365443603
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.7784439607460896,
+      "rmse_F": 2.1401159595450663,
+      "rmse_U": 2.8387769352352543
+     }
+    },
+    "A0_model_on_realised_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.12876745268010548,
+      "rmse_F": 0.15683340459120407,
+      "rmse_U": 0.12503470203921774
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.01033289383241088,
+      "rmse_F": 0.010084954002381491,
+      "rmse_U": 0.010361806098255969
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.186557066979929,
+      "rmse_F": 1.1495952832512568,
+      "rmse_U": 2.2781373305280814
+     }
+    },
+    "A0_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.23126295390287877,
+      "rmse_F": 0.511934590140431,
+      "rmse_U": 0.17597228877375332
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.009579584056166756,
+      "rmse_F": 0.0124373470795179,
+      "rmse_U": 0.009218283365443603
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.8716146460846574,
+      "rmse_F": 3.1596437998164624,
+      "rmse_U": 2.8387769352352543
+     }
+    },
+    "A0_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.1695891629706353,
+      "rmse_F": 0.3739313976103663,
+      "rmse_U": 0.12503470203921774
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.010865945924280262,
+      "rmse_F": 0.014443508430883708,
+      "rmse_U": 0.010361806098255969
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.2677856240279834,
+      "rmse_F": 2.178233120495545,
+      "rmse_U": 2.2781373305280814
+     }
+    },
+    "A1_model_on_realised_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.17140823763681085,
+      "rmse_F": 0.12121394366813848,
+      "rmse_U": 0.17597228877375332
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.008960480494809575,
+      "rmse_F": 0.00607234878973252,
+      "rmse_U": 0.009218283365443603
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.7784439607460896,
+      "rmse_F": 2.1401159595450663,
+      "rmse_U": 2.8387769352352543
+     }
+    },
+    "A1_model_on_realised_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.12876745268010548,
+      "rmse_F": 0.15683340459120407,
+      "rmse_U": 0.12503470203921774
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.01033289383241088,
+      "rmse_F": 0.010084954002381491,
+      "rmse_U": 0.010361806098255969
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.186557066979929,
+      "rmse_F": 1.1495952832512568,
+      "rmse_U": 2.2781373305280814
+     }
+    },
+    "A1_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.23126295390287877,
+      "rmse_F": 0.511934590140431,
+      "rmse_U": 0.17597228877375332
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.009579584056166756,
+      "rmse_F": 0.0124373470795179,
+      "rmse_U": 0.009218283365443603
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.8716146460846574,
+      "rmse_F": 3.1596437998164624,
+      "rmse_U": 2.8387769352352543
+     }
+    },
+    "A1_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.1695891629706353,
+      "rmse_F": 0.3739313976103663,
+      "rmse_U": 0.12503470203921774
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.010865945924280262,
+      "rmse_F": 0.014443508430883708,
+      "rmse_U": 0.010361806098255969
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.2677856240279834,
+      "rmse_F": 2.178233120495545,
+      "rmse_U": 2.2781373305280814
+     }
+    },
+    "N_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 444,
+     "energy_target": {
+      "rmse_all": 0.30434461241751776,
+      "rmse_F": 0.29943688860379797,
+      "rmse_U": 0.30489719683394007
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.009922859894845804,
+      "rmse_F": 0.013936567216538982,
+      "rmse_U": 0.009358579882601581
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 3.535622462562559,
+      "rmse_F": 3.6063244080026817,
+      "rmse_U": 3.5275001509215684
+     }
+    },
+    "N_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 446,
+     "energy_target": {
+      "rmse_all": 0.3293527499061659,
+      "rmse_F": 0.373366647597582,
+      "rmse_U": 0.3239469253240354
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.011606019982131422,
+      "rmse_F": 0.016599841942965876,
+      "rmse_U": 0.010891115828828636
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 3.9152100030919117,
+      "rmse_F": 3.607153679522508,
+      "rmse_U": 3.9488565032592553
+     }
+    }
+   },
+   "increase": {
+    "A1_primary_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 104.89090268369138,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 17.8370811112165,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.04995321340214402,
+      "share_of_increase_in_F": 0.9999999999999997,
+      "mse_ratio_F": 4.195097799825275,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 2290.979111481704,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 2.1797246703025204,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A0_model_planned_windows_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 104.89090268369138,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 17.8370811112165,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.04995321340214402,
+      "share_of_increase_in_F": 0.9999999999999997,
+      "mse_ratio_F": 4.195097799825275,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 2290.979111481704,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 2.1797246703025204,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_model_realised_windows_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_primary_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 53.00486772865983,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 5.6846891916674895,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.04917797373891482,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 2.051150631518278,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 1574.639897497102,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 3.59020103780308,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A0_model_planned_windows_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 53.00486772865983,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 5.6846891916674895,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.04917797373891482,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 2.051150631518278,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 1574.639897497102,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 3.59020103780308,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_model_realised_windows_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 0.0,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.0,
+      "mse_ratio_U": 1.0
+     }
+    }
+   }
+  },
+  "gru": {
+   "groups": {
+    "A0_model_on_realised_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.06212461684470036,
+      "rmse_F": 0.035318980960581454,
+      "rmse_U": 0.06435385865522317
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.008124330432842422,
+      "rmse_F": 0.0062637670697258865,
+      "rmse_U": 0.008300263539765318
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.3835567585670356,
+      "rmse_F": 0.854563623427972,
+      "rmse_U": 1.42899559900372
+     }
+    },
+    "A0_model_on_realised_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.020716195573468925,
+      "rmse_F": 0.02729129129783208,
+      "rmse_U": 0.019795283965353447
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.006846484818061499,
+      "rmse_F": 0.008451523626969066,
+      "rmse_U": 0.006631161341103932
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.140563265658618,
+      "rmse_F": 0.8532595667349011,
+      "rmse_U": 1.1698667967170504
+     }
+    },
+    "A0_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.15800386042418654,
+      "rmse_F": 0.466776235039443,
+      "rmse_U": 0.06435385865522317
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.008494849967943386,
+      "rmse_F": 0.010121198462341326,
+      "rmse_U": 0.008300263539765318
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.5852926417337263,
+      "rmse_F": 2.622540703198492,
+      "rmse_U": 1.42899559900372
+     }
+    },
+    "A0_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.10088518404428946,
+      "rmse_F": 0.3049190244930562,
+      "rmse_U": 0.019795283965353447
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.007383342330336068,
+      "rmse_F": 0.011987640310292232,
+      "rmse_U": 0.006631161341103932
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.2005124716345694,
+      "rmse_F": 1.4338213287065522,
+      "rmse_U": 1.1698667967170504
+     }
+    },
+    "A1_model_on_realised_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.17190913474323444,
+      "rmse_F": 0.15869367599347475,
+      "rmse_U": 0.17327538999774852
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.00788661955011401,
+      "rmse_F": 0.004854456855094747,
+      "rmse_U": 0.008146712871644273
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.7384922687351392,
+      "rmse_F": 1.5399232642876732,
+      "rmse_U": 1.758586179069037
+     }
+    },
+    "A1_model_on_realised_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.2025461202342915,
+      "rmse_F": 0.12662018324776897,
+      "rmse_U": 0.20971121824598066
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.006068396658117126,
+      "rmse_F": 0.0050342411076920775,
+      "rmse_U": 0.006179198306784536
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.8626858558048733,
+      "rmse_F": 1.1908556589545523,
+      "rmse_U": 1.9266715346419372
+     }
+    },
+    "A1_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.20615278045397145,
+      "rmse_F": 0.3975746739669795,
+      "rmse_U": 0.17327538999774852
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.007979567058589817,
+      "rmse_F": 0.0062211354143987315,
+      "rmse_U": 0.008146712871644273
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.8820948384393315,
+      "rmse_F": 2.776321059458788,
+      "rmse_U": 1.758586179069037
+     }
+    },
+    "A1_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.21789920497459211,
+      "rmse_F": 0.2776757810270187,
+      "rmse_U": 0.20971121824598066
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.006329723757487161,
+      "rmse_F": 0.007483078800390655,
+      "rmse_U": 0.006179198306784536
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.8969133664386595,
+      "rmse_F": 1.623446393054519,
+      "rmse_U": 1.9266715346419372
+     }
+    },
+    "N_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 444,
+     "energy_target": {
+      "rmse_all": 0.2559573027487956,
+      "rmse_F": 0.3735784866353169,
+      "rmse_U": 0.23895911889906
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.007984243640155729,
+      "rmse_F": 0.006821876324012168,
+      "rmse_U": 0.008105766158281368
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.9070424389264302,
+      "rmse_F": 2.8401285499989837,
+      "rmse_U": 1.7701862718080597
+     }
+    },
+    "N_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 446,
+     "energy_target": {
+      "rmse_all": 0.22141911469581363,
+      "rmse_F": 0.30217860222615184,
+      "rmse_U": 0.21023350827476459
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.007237755919171724,
+      "rmse_F": 0.010078167830501366,
+      "rmse_U": 0.006838792165309185
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.160478917139066,
+      "rmse_F": 1.9437075032346116,
+      "rmse_U": 2.1838623235631864
+     }
+    }
+   },
+   "increase": {
+    "A1_primary_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 168.15910778973262,
+      "share_of_increase_in_F": 0.39540476779774375,
+      "mse_ratio_F": 126.71297680467153,
+      "mse_ratio_U": 7.249775953901402
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": -0.010145619755807397,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.9864341768213492,
+      "mse_ratio_U": 0.9633432450357393
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 7085.280897013415,
+      "share_of_increase_in_F": 0.41756088570310346,
+      "mse_ratio_F": 10.554813664131762,
+      "mse_ratio_U": 1.5144869267911882
+     }
+    },
+    "A0_model_planned_windows_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 91.85223222895743,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 174.66309205434175,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.026798445293974828,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 2.610914698314753,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 2606.514879461315,
+      "share_of_increase_in_F": 1.0000000000000002,
+      "mse_ratio_F": 9.417934607463126,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_model_realised_windows_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 111.8171658319703,
+      "share_of_increase_in_F": 0.09076398006871082,
+      "mse_ratio_F": 20.188446966989734,
+      "mse_ratio_U": 7.249775953901402
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": -0.01656361213800271,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.6006342489249703,
+      "mse_ratio_U": 0.9633432450357393
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 4822.56463172623,
+      "share_of_increase_in_F": 0.14428420449721352,
+      "mse_ratio_F": 3.247202375771419,
+      "mse_ratio_U": 1.5144869267911882
+     }
+    },
+    "A1_primary_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 204.76552885295575,
+      "share_of_increase_in_F": 0.17153840101584733,
+      "mse_ratio_F": 103.520851184434,
+      "mse_ratio_U": 112.23281450407055
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": -0.029632557005679752,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.7839540667037578,
+      "mse_ratio_U": 0.8683305417084589
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 9998.266333610125,
+      "share_of_increase_in_F": 0.0877614248365231,
+      "mse_ratio_F": 3.620041694485042,
+      "mse_ratio_U": 2.7123300283677496
+     }
+    },
+    "A0_model_planned_windows_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 42.42616658186317,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 124.83054696650207,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.03324662355219437,
+      "share_of_increase_in_F": 0.9999999999999998,
+      "mse_ratio_F": 2.011858290736971,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 610.7841886374282,
+      "share_of_increase_in_F": 0.9999999999999998,
+      "mse_ratio_F": 2.8237597290861207,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_model_realised_windows_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 176.6727913138533,
+      "share_of_increase_in_F": 0.039804736265275094,
+      "mse_ratio_F": 21.525720925821997,
+      "mse_ratio_U": 112.23281450407055
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": -0.04373288401482022,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.35481175804488246,
+      "mse_ratio_U": 0.8683305417084589
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 9438.243477907607,
+      "share_of_increase_in_F": 0.03363329674352935,
+      "mse_ratio_F": 1.9478518267732767,
+      "mse_ratio_U": 2.7123300283677496
+     }
+    }
+   }
+  },
+  "lstm": {
+   "groups": {
+    "A0_model_on_realised_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.09370752234829523,
+      "rmse_F": 0.04590084632694611,
+      "rmse_U": 0.09747581258640874
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.011765820086714786,
+      "rmse_F": 0.0037499031472977566,
+      "rmse_U": 0.012323136233636869
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.4030742716828655,
+      "rmse_F": 0.7895456526259046,
+      "rmse_U": 1.4539003012118694
+     }
+    },
+    "A0_model_on_realised_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.03647741800513617,
+      "rmse_F": 0.040035532307428186,
+      "rmse_U": 0.03603367101910051
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.0071004431251673805,
+      "rmse_F": 0.004119235820266321,
+      "rmse_U": 0.007373572597928458
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.3415931280564346,
+      "rmse_F": 1.7941428189124937,
+      "rmse_U": 1.2775561989005282
+     }
+    },
+    "A0_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.17591644325396819,
+      "rmse_F": 0.4791835523081522,
+      "rmse_U": 0.09747581258640874
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.011776980544189599,
+      "rmse_F": 0.004093734616620707,
+      "rmse_U": 0.012323136233636869
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.6210191683902984,
+      "rmse_F": 2.718149697843119,
+      "rmse_U": 1.4539003012118694
+     }
+    },
+    "A0_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.10266778984758833,
+      "rmse_F": 0.2978894822566487,
+      "rmse_U": 0.03603367101910051
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.007268595780817771,
+      "rmse_F": 0.006310893881514991,
+      "rmse_U": 0.007373572597928458
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.3594810092507619,
+      "rmse_F": 1.917306573108807,
+      "rmse_U": 1.2775561989005282
+     }
+    },
+    "A1_model_on_realised_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.17411666896438627,
+      "rmse_F": 0.18411400872876713,
+      "rmse_U": 0.17300298388455193
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.010577607723723846,
+      "rmse_F": 0.005396807388994112,
+      "rmse_U": 0.010991777526353162
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.8251213965725368,
+      "rmse_F": 1.1792631227055397,
+      "rmse_U": 1.881627319752234
+     }
+    },
+    "A1_model_on_realised_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.22617762233790883,
+      "rmse_F": 0.07206744190537538,
+      "rmse_U": 0.23788377413736503
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.006614337963665576,
+      "rmse_F": 0.003794142175666839,
+      "rmse_U": 0.006871596929168522
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.1864959050470185,
+      "rmse_F": 2.6786299494430077,
+      "rmse_U": 2.1207970074527944
+     }
+    },
+    "A1_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.21639882158297621,
+      "rmse_F": 0.4509744348252968,
+      "rmse_U": 0.17300298388455193
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.010615243738691419,
+      "rmse_F": 0.006108384840393418,
+      "rmse_U": 0.010991777526353162
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.9373788158604601,
+      "rmse_F": 2.3928886740450306,
+      "rmse_U": 1.881627319752234
+     }
+    },
+    "A1_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.23876969329691142,
+      "rmse_F": 0.24613775068075272,
+      "rmse_U": 0.23788377413736503
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.006707084675860276,
+      "rmse_F": 0.005107307600551953,
+      "rmse_U": 0.006871596929168522
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.1927798995905157,
+      "rmse_F": 2.726795801318054,
+      "rmse_U": 2.1207970074527944
+     }
+    },
+    "N_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 444,
+     "energy_target": {
+      "rmse_all": 0.21532194536348395,
+      "rmse_F": 0.3960502784475745,
+      "rmse_U": 0.1838754176647177
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.009141666460531547,
+      "rmse_F": 0.00597990070414714,
+      "rmse_U": 0.009434087395712285
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.0265524413151947,
+      "rmse_F": 2.9512000835115373,
+      "rmse_U": 1.8931432882225099
+     }
+    },
+    "N_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 446,
+     "energy_target": {
+      "rmse_all": 0.24950111714844644,
+      "rmse_F": 0.2811921657387877,
+      "rmse_U": 0.24562256963335552
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.007261059584602102,
+      "rmse_F": 0.0056475239555709555,
+      "rmse_U": 0.007423021533547762
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.0320586337865882,
+      "rmse_F": 3.20267152005678,
+      "rmse_U": 1.8519084633861427
+     }
+    }
+   },
+   "increase": {
+    "A1_primary_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 165.58206823509937,
+      "share_of_increase_in_F": 0.5153874900509052,
+      "mse_ratio_F": 96.53003408323696,
+      "mse_ratio_U": 3.150021071219506
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": -0.11206888590820725,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 2.6534608209662958,
+      "mse_ratio_U": 0.7955974088173025
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 7767.53343817474,
+      "share_of_increase_in_F": 0.27852784639912853,
+      "mse_ratio_F": 9.185239717565608,
+      "mse_ratio_U": 1.674935035628009
+     }
+    },
+    "A0_model_planned_windows_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 96.464235382271,
+      "share_of_increase_in_F": 0.9999999999999999,
+      "mse_ratio_F": 108.98391855806744,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.0011434811468149456,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 1.1917887153650537,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 2868.3411075369704,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 11.852016546636534,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_model_realised_windows_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 93.72255982903195,
+      "share_of_increase_in_F": 0.1438225563156536,
+      "mse_ratio_F": 16.08911965942674,
+      "mse_ratio_U": 3.150021071219506
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": -0.11554010410273265,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 2.0712557884354306,
+      "mse_ratio_U": 0.7955974088173025
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 5929.385448003639,
+      "share_of_increase_in_F": 0.05486679404633108,
+      "mse_ratio_F": 2.230832394082252,
+      "mse_ratio_U": 1.674935035628009
+     }
+    },
+    "A1_primary_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 242.3209459244173,
+      "share_of_increase_in_F": 0.1119640573764578,
+      "mse_ratio_F": 37.797688413824474,
+      "mse_ratio_U": 43.582548481062204
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": -0.023637051217358977,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 1.5372720088106622,
+      "mse_ratio_U": 0.8684792223992458
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 13092.607138713354,
+      "share_of_increase_in_F": 0.148142745571501,
+      "mse_ratio_F": 2.309889532817033,
+      "mse_ratio_U": 2.755739597476405
+     }
+    },
+    "A0_model_planned_windows_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 40.08223790431774,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 55.36293744242186,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.010515267806757976,
+      "share_of_increase_in_F": 1.0000000000000002,
+      "mse_ratio_F": 2.347191070201672,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 210.27337869024547,
+      "share_of_increase_in_F": 1.0000000000000002,
+      "mse_ratio_F": 1.1420078783709267,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_model_realised_windows_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 216.84151090581526,
+      "share_of_increase_in_F": 0.007617551028384049,
+      "mse_ratio_F": 3.2403132669815493,
+      "mse_ratio_U": 43.582548481062204
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": -0.02901402621300063,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.8483867771696157,
+      "mse_ratio_U": 0.8684792223992458
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 12972.842948138303,
+      "share_of_increase_in_F": 0.1402784713357017,
+      "mse_ratio_F": 2.22900692792282,
+      "mse_ratio_U": 2.755739597476405
+     }
+    }
+   }
+  },
+  "transformer": {
+   "groups": {
+    "A0_model_on_realised_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.08754495570685768,
+      "rmse_F": 0.05159102274372259,
+      "rmse_U": 0.09057650051154767
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.009681552513937515,
+      "rmse_F": 0.009204836536107519,
+      "rmse_U": 0.009731614333461362
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.1493602977942645,
+      "rmse_F": 1.2149627358279005,
+      "rmse_U": 2.2268993839830373
+     }
+    },
+    "A0_model_on_realised_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.04868672597769077,
+      "rmse_F": 0.05646478730961737,
+      "rmse_U": 0.047683662819118074
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.007124213822764742,
+      "rmse_F": 0.006971003385888524,
+      "rmse_U": 0.007142104764674819
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.2234691936887152,
+      "rmse_F": 1.2509418702456068,
+      "rmse_U": 1.2201812926840234
+     }
+    },
+    "A0_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.16693974748981116,
+      "rmse_F": 0.4583081280876179,
+      "rmse_U": 0.09057650051154767
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.009804307997715799,
+      "rmse_F": 0.01045374698649713,
+      "rmse_U": 0.009731614333461362
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.3505054623187798,
+      "rmse_F": 3.2812325101775164,
+      "rmse_U": 2.2268993839830373
+     }
+    },
+    "A0_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.10462991640773867,
+      "rmse_F": 0.290403787425866,
+      "rmse_U": 0.047683662819118074
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.007512538135607498,
+      "rmse_F": 0.010117738953065421,
+      "rmse_U": 0.007142104764674819
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.4138422991370105,
+      "rmse_F": 2.512947357332597,
+      "rmse_U": 1.2201812926840234
+     }
+    },
+    "A1_model_on_realised_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.1260712547035608,
+      "rmse_F": 0.08380261867673038,
+      "rmse_U": 0.12981345181231507
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.007753804448561898,
+      "rmse_F": 0.005580767530960487,
+      "rmse_U": 0.007952942528057536
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.5507885522162868,
+      "rmse_F": 1.7271175417929168,
+      "rmse_U": 2.624284420890238
+     }
+    },
+    "A1_model_on_realised_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.1600914343342284,
+      "rmse_F": 0.09428294293081214,
+      "rmse_U": 0.1661559107629271
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.005978659395612552,
+      "rmse_F": 0.004001304261173309,
+      "rmse_U": 0.006170635668605488
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.3937294545412007,
+      "rmse_F": 1.0490068951269038,
+      "rmse_U": 1.4289879598918993
+     }
+    },
+    "A1_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.17389609617970445,
+      "rmse_F": 0.3927738147837196,
+      "rmse_U": 0.12981345181231507
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.00778327300260931,
+      "rmse_F": 0.005987024401610039,
+      "rmse_U": 0.007952942528057536
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.6504711744904057,
+      "rmse_F": 2.8817777161918503,
+      "rmse_U": 2.624284420890238
+     }
+    },
+    "A1_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.1797479002758426,
+      "rmse_F": 0.2684925759807627,
+      "rmse_U": 0.1661559107629271
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.006205461876914014,
+      "rmse_F": 0.006492649542538704,
+      "rmse_U": 0.006170635668605488
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.5074638048121682,
+      "rmse_F": 2.0547930352307056,
+      "rmse_U": 1.4289879598918993
+     }
+    },
+    "N_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 444,
+     "energy_target": {
+      "rmse_all": 0.17095505148703324,
+      "rmse_F": 0.39267760654709166,
+      "rmse_U": 0.12258626373165492
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.009570943350208415,
+      "rmse_F": 0.006653780397401832,
+      "rmse_U": 0.009847856783174064
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.2892236915819497,
+      "rmse_F": 2.548312786951103,
+      "rmse_U": 2.25790783567097
+     }
+    },
+    "N_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 446,
+     "energy_target": {
+      "rmse_all": 0.13990561866190268,
+      "rmse_F": 0.2365936962416715,
+      "rmse_U": 0.12416508267773511
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.005852296072467176,
+      "rmse_F": 0.006568668842869402,
+      "rmse_U": 0.00576483838114152
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 1.4616360401361732,
+      "rmse_F": 1.7870313562727704,
+      "rmse_U": 1.419745261446489
+     }
+    }
+   },
+   "increase": {
+    "A1_primary_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 98.24959000218394,
+      "share_of_increase_in_F": 0.6542773933430596,
+      "mse_ratio_F": 57.96112130975607,
+      "mse_ratio_U": 2.05403728007639
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": -0.1442823801852694,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.4230482427744482,
+      "mse_ratio_U": 0.6678607322317383
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 10467.638238769958,
+      "share_of_increase_in_F": 0.27659415399534965,
+      "mse_ratio_F": 5.625939296133788,
+      "mse_ratio_U": 1.38873894322051
+     }
+    },
+    "A0_model_planned_windows_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 87.93111561681562,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 78.91632344954503,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.010409967610124898,
+      "share_of_increase_in_F": 1.0000000000000002,
+      "mse_ratio_F": 1.289768625435059,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 3939.109390631661,
+      "share_of_increase_in_F": 1.0000000000000002,
+      "mse_ratio_F": 7.293703354633002,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_model_realised_windows_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 35.81627235272839,
+      "share_of_increase_in_F": 0.05162926995826317,
+      "mse_ratio_F": 2.6385595762974754,
+      "mse_ratio_U": 2.05403728007639
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": -0.14627496604443035,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.36758324162412565,
+      "mse_ratio_U": 0.6678607322317383
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 8211.234130564608,
+      "share_of_increase_in_F": 0.07780601851291599,
+      "mse_ratio_F": 2.020774601039486,
+      "mse_ratio_U": 1.38873894322051
+     }
+    },
+    "A1_primary_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 130.2941379178259,
+      "share_of_increase_in_F": 0.24324959231386797,
+      "mse_ratio_F": 22.610448136430882,
+      "mse_ratio_U": 12.14205998153228
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": -0.05329748819785299,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.8674677448267727,
+      "mse_ratio_U": 0.7464614389536198
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 3375.2817493833945,
+      "share_of_increase_in_F": 0.3621524850412454,
+      "mse_ratio_F": 2.69812404299927,
+      "mse_ratio_U": 1.3715397998633103
+     }
+    },
+    "A0_model_planned_windows_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 37.32720027086893,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 26.45143021185156,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.02473592652550172,
+      "share_of_increase_in_F": 0.9999999999999999,
+      "mse_ratio_F": 2.1065722198655457,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 2185.022474676001,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 4.035455137912956,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_model_realised_windows_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 101.22260250444411,
+      "share_of_increase_in_F": 0.02590785507516576,
+      "mse_ratio_F": 2.7881161812934985,
+      "mse_ratio_U": 12.14205998153228
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": -0.0653237568520554,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.3294674888969917,
+      "mse_ratio_U": 0.7464614389536198
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 1939.272631643333,
+      "share_of_increase_in_F": -0.11016627626279828,
+      "mse_ratio_F": 0.7032057732545743,
+      "mse_ratio_U": 1.3715397998633103
+     }
+    }
+   }
+  },
+  "xlstm": {
+   "groups": {
+    "A0_model_on_realised_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.653621381105831,
+      "rmse_F": 0.6269369996829275,
+      "rmse_U": 0.6564369118849568
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.021163636342194356,
+      "rmse_F": 0.017321962362964755,
+      "rmse_U": 0.02153738092728841
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 4.331435467376144,
+      "rmse_F": 2.25976727223613,
+      "rmse_U": 4.498363181510215
+     }
+    },
+    "A0_model_on_realised_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.41075378475596824,
+      "rmse_F": 0.546815862269573,
+      "rmse_U": 0.3915605616657391
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.02137610082834528,
+      "rmse_F": 0.01582723338075652,
+      "rmse_U": 0.021939385610268237
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.5838422561532988,
+      "rmse_F": 1.0673459684621875,
+      "rmse_U": 2.7075204242060065
+     }
+    },
+    "A0_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.6503306166121596,
+      "rmse_F": 0.5907677553819874,
+      "rmse_U": 0.6564369118849568
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.02117812204938112,
+      "rmse_F": 0.017502739794281623,
+      "rmse_U": 0.02153738092728841
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 4.410022564944186,
+      "rmse_F": 3.486784900963035,
+      "rmse_U": 4.498363181510215
+     }
+    },
+    "A0_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.41574865623981383,
+      "rmse_F": 0.5814332671040932,
+      "rmse_U": 0.3915605616657391
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.02126129640811297,
+      "rmse_F": 0.01428953192385366,
+      "rmse_U": 0.021939385610268237
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 2.6500640594854676,
+      "rmse_F": 2.1019877848306088,
+      "rmse_U": 2.7075204242060065
+     }
+    },
+    "A1_model_on_realised_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.6441157090563974,
+      "rmse_F": 0.547824460171284,
+      "rmse_U": 0.6536620147593466
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.021324380675048868,
+      "rmse_F": 0.020392553521779818,
+      "rmse_U": 0.021422541291024007
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 4.966575522350779,
+      "rmse_F": 3.3540768557869467,
+      "rmse_U": 5.110298201282741
+     }
+    },
+    "A1_model_on_realised_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.34432519619190377,
+      "rmse_F": 0.33917813904306676,
+      "rmse_U": 0.3449284576111529
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.019935299556336005,
+      "rmse_F": 0.028986837608175386,
+      "rmse_U": 0.01857629373837748
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 3.6933462477867267,
+      "rmse_F": 3.9511543890236522,
+      "rmse_U": 3.661676344447074
+     }
+    },
+    "A1_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.6416774254038938,
+      "rmse_F": 0.5176216844763053,
+      "rmse_U": 0.6536620147593466
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.02125731526564771,
+      "rmse_F": 0.0196607298701273,
+      "rmse_U": 0.021422541291024007
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 4.9720978192245315,
+      "rmse_F": 3.4370295812853167,
+      "rmse_U": 5.110298201282741
+     }
+    },
+    "A1_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.3426813648944687,
+      "rmse_F": 0.32304401167184826,
+      "rmse_U": 0.3449284576111529
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.019299422766434947,
+      "rmse_F": 0.02458053559219852,
+      "rmse_U": 0.01857629373837748
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 3.7475107305575905,
+      "rmse_F": 4.407338978496171,
+      "rmse_U": 3.661676344447074
+     }
+    },
+    "N_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 444,
+     "energy_target": {
+      "rmse_all": 0.6646937415492952,
+      "rmse_F": 0.5997334952539671,
+      "rmse_U": 0.6716767576015977
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.018625111664841265,
+      "rmse_F": 0.016523406107318665,
+      "rmse_U": 0.018849074057340154
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 4.803864481832016,
+      "rmse_F": 3.443747149260545,
+      "rmse_U": 4.934733413839914
+     }
+    },
+    "N_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 446,
+     "energy_target": {
+      "rmse_all": 0.39284409363907075,
+      "rmse_F": 0.4455408418757558,
+      "rmse_U": 0.3863700882790668
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.017601969582197684,
+      "rmse_F": 0.01582717893365162,
+      "rmse_U": 0.01779336390772222
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 3.5986087569522707,
+      "rmse_F": 2.813136046020228,
+      "rmse_U": 3.6776406478219785
+     }
+    }
+   },
+   "increase": {
+    "A1_primary_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": -67.32975529403225,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.6816746143464778,
+      "mse_ratio_U": 0.9915634479472695
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.01729462638958626,
+      "share_of_increase_in_F": 2.1205096193967674,
+      "mse_ratio_F": 1.288264653729744,
+      "mse_ratio_U": 0.9893642158261993
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 25939.76314116786,
+      "share_of_increase_in_F": 0.10962354023589414,
+      "mse_ratio_F": 2.31333810124326,
+      "mse_ratio_U": 1.290575614351028
+     }
+    },
+    "A0_model_planned_windows_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": -18.674427367480316,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.8879443821491628,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.002669300565801466,
+      "share_of_increase_in_F": 0.9999999999999993,
+      "mse_ratio_F": 1.0209815438333405,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 2989.6752280676556,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 2.380799837536165,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_model_realised_windows_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": -53.68567658315897,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.7635457014682592,
+      "mse_ratio_U": 0.9915634479472695
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.029722888997302563,
+      "share_of_increase_in_F": 1.6519822226958938,
+      "mse_ratio_F": 1.3859547153200074,
+      "mse_ratio_U": 0.9893642158261993
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 25700.906647011478,
+      "share_of_increase_in_F": 0.10134864929217903,
+      "mse_ratio_F": 2.2030207646880258,
+      "mse_ratio_U": 1.290575614351028
+     }
+    },
+    "A1_primary_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": -223.20604553525155,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.3490126603272516,
+      "mse_ratio_U": 0.7759972232608835
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": -0.36761329858609554,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 2.4119742701074016,
+      "mse_ratio_U": 0.7169175576766335
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 32063.777230421896,
+      "share_of_increase_in_F": 0.26232992728348464,
+      "mse_ratio_F": 17.05071050070263,
+      "mse_ratio_U": 1.829011456995787
+     }
+    },
+    "A0_model_planned_windows_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 17.96624615823263,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 1.1306222936601609,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": -0.021302873187606257,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.815128341298971,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 1508.3976063449177,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 3.8783763311880164,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_model_realised_windows_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": -218.29123233252028,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.3847454543565612,
+      "mse_ratio_U": 0.7759972232608835
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": -0.259037647305335,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 3.3542209130859026,
+      "mse_ratio_U": 0.7169175576766335
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 30309.789932305328,
+      "share_of_increase_in_F": 0.21964193965192255,
+      "mse_ratio_F": 13.703691450243658,
+      "mse_ratio_U": 1.829011456995787
+     }
+    }
+   }
+  },
+  "mamba": {
+   "groups": {
+    "A0_model_on_realised_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.2031139511058832,
+      "rmse_F": 0.20889696710244596,
+      "rmse_U": 0.2024798387740192
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.018727099375030677,
+      "rmse_F": 0.010585085633953648,
+      "rmse_U": 0.019402730325101876
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 4.497037458089766,
+      "rmse_F": 3.0270125305428417,
+      "rmse_U": 4.627877870907252
+     }
+    },
+    "A0_model_on_realised_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.2876653506927584,
+      "rmse_F": 0.05264407830220171,
+      "rmse_U": 0.30365157295318
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.007370950628599852,
+      "rmse_F": 0.006612313788339807,
+      "rmse_U": 0.0074555154721776965
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 3.968288964048436,
+      "rmse_F": 2.4642135798616156,
+      "rmse_U": 4.109843438997283
+     }
+    },
+    "A0_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.24005774177653755,
+      "rmse_F": 0.4600947309647321,
+      "rmse_U": 0.2024798387740192
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.018719042930071306,
+      "rmse_F": 0.010437792881725624,
+      "rmse_U": 0.019402730325101876
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 4.516819624406152,
+      "rmse_F": 3.3155757826622527,
+      "rmse_U": 4.627877870907252
+     }
+    },
+    "A0_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.3003382513229548,
+      "rmse_F": 0.27068628863795036,
+      "rmse_U": 0.30365157295318
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.00740396695757379,
+      "rmse_F": 0.006952541542893298,
+      "rmse_U": 0.0074555154721776965
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 3.9704262176077076,
+      "rmse_F": 2.496571967394252,
+      "rmse_U": 4.109843438997283
+     }
+    },
+    "A1_model_on_realised_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.3086648396745394,
+      "rmse_F": 0.362601538725519,
+      "rmse_U": 0.3022677811829083
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.018745958013251397,
+      "rmse_F": 0.010601888783059817,
+      "rmse_U": 0.01942190744135264
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 5.190508257091268,
+      "rmse_F": 4.117219523116917,
+      "rmse_U": 5.293365021493785
+     }
+    },
+    "A1_model_on_realised_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.34430474303929515,
+      "rmse_F": 0.11798692163626508,
+      "rmse_U": 0.3618169256815107
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.007445315023950656,
+      "rmse_F": 0.006594764896409016,
+      "rmse_U": 0.007539504628520431
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 4.767889476376918,
+      "rmse_F": 3.2536612587356855,
+      "rmse_U": 4.916134059620696
+     }
+    },
+    "A1_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 424,
+     "energy_target": {
+      "rmse_all": 0.32798146425579716,
+      "rmse_F": 0.5076484443246362,
+      "rmse_U": 0.3022677811829083
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.018736030895195696,
+      "rmse_F": 0.010420214827417841,
+      "rmse_U": 0.01942190744135264
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 5.211993939230747,
+      "rmse_F": 4.386978935037367,
+      "rmse_U": 5.293365021493785
+     }
+    },
+    "A1_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 460,
+     "energy_target": {
+      "rmse_all": 0.35090582758347727,
+      "rmse_F": 0.2394539708115829,
+      "rmse_U": 0.3618169256815107
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.007474655335879828,
+      "rmse_F": 0.006901628937039668,
+      "rmse_U": 0.007539504628520431
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 4.794002264079314,
+      "rmse_F": 3.5984126870500264,
+      "rmse_U": 4.916134059620696
+     }
+    },
+    "N_model_on_planned_windows/excited": {
+     "windows": 4352,
+     "windows_F": 444,
+     "energy_target": {
+      "rmse_all": 0.357860696222728,
+      "rmse_F": 0.43003864450853685,
+      "rmse_U": 0.34871653133741276
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.018525265194789274,
+      "rmse_F": 0.010158747742017523,
+      "rmse_U": 0.01924710170802527
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 5.203664631707477,
+      "rmse_F": 4.148730471722574,
+      "rmse_U": 5.310277841783117
+     }
+    },
+    "N_model_on_planned_windows/constant_holdout": {
+     "windows": 4352,
+     "windows_F": 446,
+     "energy_target": {
+      "rmse_all": 0.4087789361335205,
+      "rmse_F": 0.2193908063585384,
+      "rmse_U": 0.42506983676821386
+     },
+     "product_moisture_kg_per_kg": {
+      "rmse_all": 0.0062167995221210515,
+      "rmse_F": 0.00580604242028314,
+      "rmse_U": 0.006261987454214538
+     },
+     "bed_temperature_celsius": {
+      "rmse_all": 4.376574350881268,
+      "rmse_F": 2.9137502119414136,
+      "rmse_U": 4.5135470176908115
+     }
+    }
+   },
+   "increase": {
+    "A1_primary_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 288.60968549019435,
+      "share_of_increase_in_F": 0.31449137236660013,
+      "mse_ratio_F": 5.905570384581031,
+      "mse_ratio_U": 2.2285385109134843
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.001456190965428442,
+      "share_of_increase_in_F": -1.0083706232111562,
+      "mse_ratio_F": 0.9690910744187919,
+      "mse_ratio_U": 1.0019777209693779
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 30209.559985398984,
+      "share_of_increase_in_F": 0.14151475335023422,
+      "mse_ratio_F": 2.1004031484228807,
+      "mse_ratio_U": 1.3082776059779213
+     }
+    },
+    "A0_model_planned_windows_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 71.25286868508933,
+      "share_of_increase_in_F": 0.9999999999999998,
+      "mse_ratio_F": 4.850988556411358,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": -0.0013129234778038218,
+      "share_of_increase_in_F": null,
+      "mse_ratio_F": 0.9723633876913844,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 776.0208740575246,
+      "share_of_increase_in_F": 1.0000000000000002,
+      "mse_ratio_F": 1.1997464682992682,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_model_realised_windows_vs_A0_primary/excited": {
+     "share_of_windows_F": 0.0974264705882353,
+     "energy_target": {
+      "total_increase_of_summed_mse": 235.08940902321206,
+      "share_of_increase_in_F": 0.15842899837926905,
+      "mse_ratio_F": 3.012971447670418,
+      "mse_ratio_U": 2.2285385109134843
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.0030755185022127577,
+      "share_of_increase_in_F": 0.04908029177915195,
+      "mse_ratio_F": 1.0031773925411802,
+      "mse_ratio_U": 1.0019777209693779
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 29236.866853630152,
+      "share_of_increase_in_F": 0.11295346094767918,
+      "mse_ratio_F": 1.8500335716434593,
+      "mse_ratio_U": 1.3082776059779213
+     }
+    },
+    "A1_primary_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 175.74919150811547,
+      "share_of_increase_in_F": 0.14282131346890503,
+      "mse_ratio_F": 20.689263633729393,
+      "mse_ratio_U": 1.4197984181896142
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.0067001617295318686,
+      "share_of_increase_in_F": 0.26842675045671793,
+      "mse_ratio_F": 1.089422403425366,
+      "mse_ratio_U": 1.0226576529038645
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 31487.331046080693,
+      "share_of_increase_in_F": 0.10045512060006377,
+      "mse_ratio_F": 2.1323831665921404,
+      "mse_ratio_U": 1.43085912791729
+     }
+    },
+    "A0_model_planned_windows_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 32.42984722309774,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 26.438296101618835,
+      "mse_ratio_U": 1.0
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.0021229645242866555,
+      "share_of_increase_in_F": 0.9999999999999998,
+      "mse_ratio_F": 1.10555480201349,
+      "mse_ratio_U": 1.0
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 73.84058975402769,
+      "share_of_increase_in_F": 1.0,
+      "mse_ratio_F": 1.0264350801718063,
+      "mse_ratio_U": 1.0
+     }
+    },
+    "A1_model_realised_windows_vs_A0_primary/constant_holdout": {
+     "share_of_windows_F": 0.1056985294117647,
+     "energy_target": {
+      "total_increase_of_summed_mse": 155.77723789640862,
+      "share_of_increase_in_F": 0.03292378803115622,
+      "mse_ratio_F": 5.023063722046177,
+      "mse_ratio_U": 1.4197984181896142
+     },
+     "product_moisture_kg_per_kg": {
+      "total_increase_of_summed_mse": 0.004795045074521512,
+      "share_of_increase_in_F": -0.022234204842859054,
+      "mse_ratio_F": 0.9946991006891647,
+      "mse_ratio_U": 1.0226576529038645
+     },
+     "bed_temperature_celsius": {
+      "total_increase_of_summed_mse": 30400.690397407147,
+      "share_of_increase_in_F": 0.06830183662906933,
+      "mse_ratio_F": 1.7433636210912602,
+      "mse_ratio_U": 1.43085912791729
+     }
+    }
+   }
+  }
+ },
+ "c_excitation_window": {
+  "recomputation_check_max_abs_difference": 0.0,
+  "requested_outside_window": {
+   "steps": 8867,
+   "share_of_all_steps": 0.06013319227430555,
+   "runs_with_a_step": 34
+  },
+  "below_u_mf_steps": 0,
+  "above_u_t_steps": 8867,
+  "by_signal_kind_of_gas_velocity": {
+   "constant": {
+    "steps": 1160,
+    "share_of_all_steps": 0.07745726495726496,
+    "runs_with_a_step": 4,
+    "below_u_mf": 0,
+    "above_u_t": 1160,
+    "runs": 13
+   },
+   "prbs": {
+    "steps": 2426,
+    "share_of_all_steps": 0.07521081349206349,
+    "runs_with_a_step": 11,
+    "below_u_mf": 0,
+    "above_u_t": 2426,
+    "runs": 28
+   },
+   "ramp": {
+    "steps": 721,
+    "share_of_all_steps": 0.018965698653198654,
+    "runs_with_a_step": 3,
+    "below_u_mf": 0,
+    "above_u_t": 721,
+    "runs": 33
+   },
+   "step": {
+    "steps": 4560,
+    "share_of_all_steps": 0.07330246913580248,
+    "runs_with_a_step": 16,
+    "below_u_mf": 0,
+    "above_u_t": 4560,
+    "runs": 54
+   }
+  },
+  "constant_runs": {
+   "steps": 1160,
+   "share_of_all_steps": 0.07745726495726496,
+   "runs_with_a_step": 4,
+   "runs": 13
+  },
+  "non_constant_runs": {
+   "steps": 7707,
+   "share_of_all_steps": 0.05817481884057971,
+   "runs_with_a_step": 30,
+   "runs": 115
+  },
+  "by_initial_diameter": {
+   "initial_diameter_tercile_0": {
+    "steps": 8501,
+    "share_of_all_steps": 0.1716125645994832,
+    "runs_with_a_step": 29,
+    "d0_um_range": [
+     250.6396812733725,
+     383.18610244895996
+    ]
+   },
+   "initial_diameter_tercile_1": {
+    "steps": 366,
+    "share_of_all_steps": 0.007564484126984127,
+    "runs_with_a_step": 5,
+    "d0_um_range": [
+     386.29942258216005,
+     583.2709722755739
+    ]
+   },
+   "initial_diameter_tercile_2": {
+    "steps": 0,
+    "share_of_all_steps": 0.0,
+    "runs_with_a_step": 0,
+    "d0_um_range": [
+     588.193315622277,
+     896.1686775934004
+    ]
+   }
+  },
+  "by_run_time": {
+   "time_tercile_0": {
+    "steps": 6384,
+    "share_of_all_steps": 0.1298828125,
+    "runs_with_a_step": 33
+   },
+   "time_tercile_1": {
+    "steps": 2173,
+    "share_of_all_steps": 0.044209798177083336,
+    "runs_with_a_step": 18
+   },
+   "time_tercile_2": {
+    "steps": 310,
+    "share_of_all_steps": 0.006306966145833333,
+    "runs_with_a_step": 5
+   }
+  },
+  "margins_over_the_pool": {
+   "u_mf_min": 0.02772578886168405,
+   "u_mf_max": 0.3012919953364695,
+   "u_t_min": 1.2568659631372874,
+   "u_t_max": 4.079627551191559,
+   "box": [
+    0.8,
+    2.5
+   ],
+   "d50_min_um": 251.00511373149655,
+   "d50_max_um": 895.609910753737
+  },
+  "conservative_window": {
+   "upper_bound_smallest_u_t": 1.2568659631372874,
+   "lower_bound_largest_u_mf": 0.3012919953364695,
+   "non_empty": true,
+   "width_m_per_s": 0.9555739678008179,
+   "share_of_box_width": 0.2687446841984043,
+   "requested_samples_a_clip_into_the_window_would_change": 0.7659505208333334,
+   "requested_samples_a_clip_to_the_upper_bound_only_would_change": 0.7659505208333334
+  },
+  "a_priori_caps": {
+   "bed_temperature_range_degC": [
+    29.64359319922811,
+    105.86532829731128
+   ],
+   "inlet_absolute_humidity_range": [
+    0.0014398242818421509,
+    0.030542427329732297
+   ],
+   "smallest_initial_diameter_um": 250.6396812733725,
+   "global_cap_u_t_at_smallest_initial_diameter": 1.2299239816388616,
+   "run_specific_cap_u_t_at_initial_diameter": {
+    "min": 1.2299239816388616,
+    "median": 2.413867750613958,
+    "max": 3.9070997108029504,
+    "runs_with_cap_below_box_minimum": 0,
+    "runs_whose_requests_a_run_cap_would_change": 44,
+    "share_of_requested_samples_changed": 0.19438340928819445
+   }
+  },
+  "resimulation_upper_bound_only": {
+   "clip": [
+    -Infinity,
+    1.2568659631372874
+   ],
+   "limited_steps": 0,
+   "lower_u_mf_steps": 0,
+   "upper_u_t_steps": 0,
+   "runs_with_limited_step": 0,
+   "seconds": 10.22631090017967
+  },
+  "resimulation_global_analytic_cap": {
+   "clip": [
+    -Infinity,
+    1.2299239816388616
+   ],
+   "limited_steps": 0,
+   "lower_u_mf_steps": 0,
+   "upper_u_t_steps": 0,
+   "runs_with_limited_step": 0,
+   "seconds": 10.798114999895915
+  },
+  "resimulation_run_specific_caps": {
+   "limited_steps": 0,
+   "runs_with_limited_step": 0
+  },
+  "resimulation_both_bounds": {
+   "clip": [
+    0.8,
+    1.2568659631372874
+   ],
+   "limited_steps": 0,
+   "lower_u_mf_steps": 0,
+   "upper_u_t_steps": 0,
+   "runs_with_limited_step": 0,
+   "seconds": 10.455015600193292
+  }
+ }
+}
