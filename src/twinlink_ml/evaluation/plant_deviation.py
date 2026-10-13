@@ -80,6 +80,8 @@ def _reference_schedule(base_config: ProcessConfig, spec: DataSpec) -> Any:
         geometry=base_config.geometry,
         material=base_config.material,
         operation=base_config.operation,
+        gas=base_config.gas,
+        gas_velocity_cap=spec.gas_velocity_cap,
         disturbance_design=DiurnalDisturbanceDesign(
             solid_fraction_process=spec.solid_fraction_process
         ),

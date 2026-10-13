@@ -102,9 +102,11 @@ def generate_plant_data(
 ) -> PlantData:
     """Excitation, simulation on the plant, split -- like ``generate_data``.
 
-    Exactly one of ``master_seed`` and ``seeds``, as there. The excitation is designed on the
-    BASE config (the action and disturbance ranges, geometry and material of the design are the
-    simulator's, not the plant's): every plant is excited with the same schedule for the same
+    Exactly one of ``master_seed`` and ``seeds``, as there. The excitation follows ``spec`` in
+    every option of ``generate_data`` (planned set points, solid-fraction process, per-run cap of
+    the gas velocity of the new-study preset); a test pins it to ``generate_data`` for P0. The
+    excitation is designed on the BASE config (the action and disturbance ranges, geometry and
+    material of the design are the simulator's, not the plant's): every plant is excited with the same schedule for the same
     seeds, so differences between plants are differences of the plant.
     """
     if (master_seed is None) == (seeds is None):
@@ -129,6 +131,8 @@ def generate_plant_data(
         geometry=base.geometry,
         material=base.material,
         operation=base.operation,
+        gas=base.gas,
+        gas_velocity_cap=spec.gas_velocity_cap,
         disturbance_design=(
             None
             if spec.solid_fraction_process == "diurnal"
