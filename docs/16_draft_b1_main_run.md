@@ -165,7 +165,7 @@ measures (spectral coverage at 1, 10 and 25 % thresholds, decision O4, diagnosis
 information), growing pool (full pool bit-identical to `generate_data`), test sets T1-T3 with family 2,
 B5 acquisition, learning-curve driver `scripts/run_b1_main.py` (resumable, header with provenance and test-set
 digests), analysis `scripts/analyze_b1_main.py`, calibration. Pilot and calibration are artifacts; the
-error figures of the pilot are no result. Full suite before the merge of master and the cap (`076078d`): **783 passed, 15 skipped in 1883 s, exit code 0**; full suite on the commit of the main run: SUITE_PLACEHOLDER (run in a separate worktree while the main run runs) (the 15 skips include `test_denylist.py`, which needs `local/denylist.txt` of the main checkout; the log ends with the summary line and the exit code).
+error figures of the pilot are no result. Full suite before the merge of master and the cap (`076078d`): **783 passed, 15 skipped in 1883 s, exit code 0**; full suite on the commit of the main run (`ada28ea`, separate worktree, concurrent with the main run): **813 passed, 15 skipped in 1523 s, exit code 0** (the 15 skips include `test_denylist.py`, which needs `local/denylist.txt` of the main checkout; the log ends with the summary line and the exit code).
 Not run: the main run, and the analysis (it needs the main run).
 
 ## 7. Limiting of the requested actions with preset version 2 (artifact `b1_pool_limits`, ten seeds)
