@@ -1,0 +1,90 @@
+{
+ "provenance": {
+  "git/commit": "74ee8a12e8c82efafc3d11b0489321ccde684f36",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "prefix": "rerun_pilot",
+ "tolerance": 1e-06,
+ "a0_vs_old": {
+  "cells": 16,
+  "baseline_comparisons": [
+   {
+    "key": [
+     "arx",
+     1,
+     8,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 6.71170494790531e-12,
+    "at": "nrmse_truth_run_min/product_moisture_kg_per_kg/h1",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     1,
+     8,
+     "excited"
+    ],
+    "max_relative_deviation": 4.603788386778464e-12,
+    "at": "exhaust_nrmse_run_median/Y_gas_out_kg_per_kg/h1",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     1,
+     8,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 3.855033061436656e-14,
+    "at": "nrmse_truth_run_max/product_moisture_kg_per_kg/h1",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     1,
+     8,
+     "excited"
+    ],
+    "max_relative_deviation": 1.1854557852517608e-14,
+    "at": "nrmse_truth_run_median/product_moisture_kg_per_kg/h1",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     1,
+     8,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 5.811023369031679e-14,
+    "at": "exhaust_rmse_run_median_physical/Y_gas_out_kg_per_kg/h1",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     1,
+     8,
+     "excited"
+    ],
+    "max_relative_deviation": 2.483288319691674e-14,
+    "at": "exhaust_nrmse_run_median/Y_gas_out_kg_per_kg/h36",
+    "metrics": 88
+   }
+  ],
+  "worst": 6.71170494790531e-12
+ },
+ "failures": [],
+ "passed": true
+}

@@ -57,6 +57,7 @@ from ..simulation.excitation import (
     DiurnalDisturbanceDesign,
     ExcitationConfig,
     ExcitationSchedule,
+    GasVelocityCap,
     MixedExcitationDesign,
     SolidFractionProcess,
 )
@@ -97,15 +98,26 @@ class ValidationPolicy(str, Enum):
     NONE = "none"
 
 
-NEW_STUDY_OPTIONS: dict[str, str] = {
+NEW_STUDY_PRESET_VERSION = 2
+"""Version of the new-study preset. Goes into the data fingerprints (``preset/new_study_version``,
+only for a spec that carries it), into every record (``data/new_study_version``) and into the
+provenance block of every artifact. Version 1: planned future inputs + own solid-fraction process
+(the pilot arm N of Befund 84). Version 2 (Befund 86): + per-run cap of the gas velocity at the
+terminal velocity of the run's initial diameter. Change the preset only together with a new version
+number."""
+
+NEW_STUDY_OPTIONS: dict[str, str | int] = {
     "future_actions": "planned",
     "solid_fraction_process": "independent",
+    "gas_velocity_cap": "initial_diameter",
+    "new_study_version": NEW_STUDY_PRESET_VERSION,
 }
-"""The data-generation options of every NEW study (review D1 and E3, docs/12): the future inputs
-of a window are the planned set points, the solid fraction of the suspension has its own
-disturbance process. The defaults of :class:`DataSpec` stay at the behaviour up to Befund 81 so
-that existing scripts reproduce their data; new studies build their spec with
-:meth:`DataSpec.new_study`."""
+"""The data-generation options of every NEW study (review D1 and E3, docs/12; Befund 86): the
+future inputs of a window are the planned set points, the solid fraction of the suspension has its
+own disturbance process, every run requests at most the terminal velocity at its initial diameter
+(the projection stays on as a guard and is counted per pool). The defaults of :class:`DataSpec` stay
+at the behaviour up to Befund 81 so that existing scripts reproduce their data; new studies build
+their spec with :meth:`DataSpec.new_study`."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -181,6 +193,14 @@ class DataSpec:
     existing scripts reproduce their data; **new data sets are to be generated with
     ``"independent"``** (own Ornstein-Uhlenbeck process). Changes the excitation
     fingerprint only when not ``"diurnal"``."""
+    gas_velocity_cap: GasVelocityCap = "none"
+    """Per-run cap of the requested gas velocity: ``"none"`` (default, behaviour up to Befund 81)
+    or ``"initial_diameter"`` (at most ``u_t`` at the run's initial diameter, worst case over the
+    a-priori ranges of bed temperature and humidity; see
+    ``gas_velocity_cap_from_initial_diameter``). New studies use ``"initial_diameter"`` through the
+    preset. Enters the excitation fingerprint only when set."""
+    new_study_version: int | None = None
+    """Version of the new-study preset of this spec (``None`` for a plain ``DataSpec``)."""
     future_actions: FutureActions = "realised"
     """Which action series enters ``future_exogenous``, see ``WindowConfig.future_actions``
     (review D1). ``"realised"`` is the behaviour up to Befund 81 and stays the default so that
@@ -259,11 +279,29 @@ class GeneratedData:
             "split/digest": self.split.digest,
             "measurement/digest": _measurement_digest(self.process_config.measurement),
         }
+        if self.spec.new_study_version is not None:
+            fingerprints["preset/new_study_version"] = str(self.spec.new_study_version)
         if self.spec.future_actions != "realised":
             # Only when set (review D1): records of data sets built before the option keep
             # exactly their keys and values.
             fingerprints["window/future_actions"] = self.spec.future_actions
         return fingerprints
+
+    @property
+    def projection_guard(self) -> dict[str, int]:
+        """How often the gas-velocity projection acted in this pool (guard of the new-study preset).
+
+        Expected 0 with ``gas_velocity_cap="initial_diameter"``; counted, never assumed.
+        """
+        trajectory = self.trajectory
+        steps = np.asarray(trajectory.n_projected_steps) if trajectory.projection_active else None
+        n_runs, n_steps = trajectory.actions.shape[:2]
+        return {
+            "total_steps": int(n_runs * n_steps),
+            "projected_steps": 0 if steps is None else int(steps.sum()),
+            "runs_with_projection": 0 if steps is None else int((steps > 0).sum()),
+            "projection_active": int(trajectory.projection_active),
+        }
 
     @property
     def relative_noise_std(self) -> float:
@@ -356,6 +394,8 @@ def generate_data(
         geometry=config.geometry,
         material=config.material,
         operation=config.operation,
+        gas=config.gas,
+        gas_velocity_cap=spec.gas_velocity_cap,
         disturbance_design=(
             None
             if spec.solid_fraction_process == "diurnal"

@@ -1,0 +1,111 @@
+{
+ "provenance": {
+  "git/commit": "26f1cff15f14644dfdc4f273126d6df1c40456cc",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "threshold": 0.001,
+ "cells": [
+  {
+   "model": "gru",
+   "test_set": "excited",
+   "metrics_compared": 88,
+   "max_relative_deviation": 8.562636602825257e-05,
+   "at": "nrmse_truth_run_max/product_moisture_kg_per_kg/h36",
+   "epochs_run_old_new": {
+    "training/epochs_run/energy_target": [
+     197,
+     197
+    ],
+    "training/epochs_run/product_moisture_kg_per_kg": [
+     76,
+     76
+    ],
+    "training/epochs_run/bed_temperature_celsius": [
+     113,
+     113
+    ]
+   },
+   "platform_old": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+   "torch_old": "2.13.0+cu130"
+  },
+  {
+   "model": "gru",
+   "test_set": "constant_holdout",
+   "metrics_compared": 88,
+   "max_relative_deviation": 7.708434890780054e-05,
+   "at": "nrmse_truth_run_min/energy_target/h36",
+   "epochs_run_old_new": {
+    "training/epochs_run/energy_target": [
+     197,
+     197
+    ],
+    "training/epochs_run/product_moisture_kg_per_kg": [
+     76,
+     76
+    ],
+    "training/epochs_run/bed_temperature_celsius": [
+     113,
+     113
+    ]
+   },
+   "platform_old": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+   "torch_old": "2.13.0+cu130"
+  },
+  {
+   "model": "lstm",
+   "test_set": "excited",
+   "metrics_compared": 88,
+   "max_relative_deviation": 2.4152754941659295e-05,
+   "at": "nrmse_truth_run_max/product_moisture_kg_per_kg/h36",
+   "epochs_run_old_new": {
+    "training/epochs_run/energy_target": [
+     186,
+     186
+    ],
+    "training/epochs_run/product_moisture_kg_per_kg": [
+     80,
+     80
+    ],
+    "training/epochs_run/bed_temperature_celsius": [
+     164,
+     164
+    ]
+   },
+   "platform_old": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+   "torch_old": "2.13.0+cu130"
+  },
+  {
+   "model": "lstm",
+   "test_set": "constant_holdout",
+   "metrics_compared": 88,
+   "max_relative_deviation": 3.2223573401868074e-05,
+   "at": "nrmse_truth_run_median/energy_target/h36",
+   "epochs_run_old_new": {
+    "training/epochs_run/energy_target": [
+     186,
+     186
+    ],
+    "training/epochs_run/product_moisture_kg_per_kg": [
+     80,
+     80
+    ],
+    "training/epochs_run/bed_temperature_celsius": [
+     164,
+     164
+    ]
+   },
+   "platform_old": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+   "torch_old": "2.13.0+cu130"
+  }
+ ],
+ "worst": 8.562636602825257e-05,
+ "old_records_count_as_A0": true
+}

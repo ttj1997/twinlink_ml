@@ -26,7 +26,11 @@ def test_preset_sets_both_options_and_the_default_stays_legacy() -> None:
     assert NEW_STUDY_OPTIONS == {
         "future_actions": "planned",
         "solid_fraction_process": "independent",
+        "gas_velocity_cap": "initial_diameter",
+        "new_study_version": 2,
     }
+    assert (spec.gas_velocity_cap, spec.new_study_version) == ("initial_diameter", 2)
+    assert (legacy.gas_velocity_cap, legacy.new_study_version) == ("none", None)
 
 
 def test_other_fields_pass_through_and_the_options_cannot_be_overridden() -> None:
@@ -37,6 +41,10 @@ def test_other_fields_pass_through_and_the_options_cannot_be_overridden() -> Non
         DataSpec.new_study(future_actions="realised")
     with pytest.raises(ValueError, match="fixed by the new-study preset"):
         DataSpec.new_study(solid_fraction_process="diurnal")
+    with pytest.raises(ValueError, match="fixed by the new-study preset"):
+        DataSpec.new_study(gas_velocity_cap="none")
+    with pytest.raises(ValueError, match="fixed by the new-study preset"):
+        DataSpec.new_study(new_study_version=1)
 
 
 def test_preset_data_carries_both_options_in_its_fingerprints() -> None:

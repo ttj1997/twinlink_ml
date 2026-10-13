@@ -62,18 +62,23 @@ import yaml
 from numpy.typing import NDArray
 from scipy.stats import qmc
 
+from .backend import NumpyBackend
 from .config import (
     ActionSpaceConfig,
     DisturbanceSpaceConfig,
+    GasConfig,
     GeometryConfig,
     MaterialConfig,
     OperationConfig,
 )
+from .fluidization import terminal_velocity_m_per_s
+from .thermo import absolute_humidity_kg_per_kg
 
 FloatArray = NDArray[np.float64]
 SamplerName = Literal["sobol", "lhs"]
 SignalKind = Literal["step", "prbs", "ramp", "constant"]
 SolidFractionProcess = Literal["diurnal", "independent"]
+GasVelocityCap = Literal["none", "initial_diameter"]
 
 _SECONDS_PER_DAY: Final = 86_400.0
 _DEFAULT_RUN_DURATION_S: Final = 28_800.0
@@ -472,6 +477,57 @@ def quasi_random_points(
 # --------------------------------------------------------------- Störgrößen-Designs
 
 
+# ----------------------------------------------------------- Gasgeschwindigkeits-Grenze
+
+
+def gas_velocity_cap_from_initial_diameter(
+    initial_diameters_m: FloatArray,
+    *,
+    gas: GasConfig,
+    material: MaterialConfig,
+    actions: ActionSpaceConfig,
+    disturbances: DisturbanceSpaceConfig,
+    grid_points: int = 9,
+) -> FloatArray:
+    r"""Per-run upper limit of the gas velocity: ``u_t`` at the run's INITIAL diameter.
+
+    Rationale (Befund 86): the operator knows the starting material of a run, and the particles
+    only grow during the run, so ``u_t`` only rises -- a request of at most ``u_t(d_0)`` never
+    leaves the fluidisation window at the upper side. ``u_t`` also depends on the bed temperature
+    and the inlet humidity; the cap takes the minimum over the whole a-priori range of both:
+    bed temperature between the smallest ambient temperature and the largest inlet temperature of
+    the action space, absolute humidity between the corners of the ambient temperature/relative
+    humidity ranges, on a ``grid_points`` x ``grid_points`` grid. The lower side needs no cap
+    (``u_mf`` stays far below the box minimum for every particle size of the design, Befund 85).
+    The result is not smaller than the box minimum of the gas velocity.
+    """
+    backend = NumpyBackend()
+    ambient_t, ambient_rh = (
+        disturbances.ambient_temperature_celsius,
+        disturbances.ambient_relative_humidity,
+    )
+    humidity_corners = [
+        float(absolute_humidity_kg_per_kg(backend, gas, np.float64(t), np.float64(rh)))
+        for t in (ambient_t.minimum, ambient_t.maximum)
+        for rh in (ambient_rh.minimum, ambient_rh.maximum)
+    ]
+    bed_low, bed_high = ambient_t.minimum, actions.inlet_temperature_celsius.maximum
+    diameters = np.asarray(initial_diameters_m, dtype=np.float64)
+    worst = np.full_like(diameters, np.inf)
+    for temperature in np.linspace(bed_low, bed_high, grid_points):
+        for humidity in np.linspace(min(humidity_corners), max(humidity_corners), grid_points):
+            values = terminal_velocity_m_per_s(
+                backend,
+                gas,
+                material,
+                diameters,
+                np.full_like(diameters, temperature),
+                np.full_like(diameters, humidity),
+            )
+            worst = np.minimum(worst, np.asarray(values))
+    return np.maximum(worst, actions.gas_velocity_m_per_s.minimum)
+
+
 class DisturbanceDesign(ABC):
     """Erzeugt Störgrößen-Verläufe, Form ``(runs, steps, channels)``."""
 
@@ -763,7 +819,15 @@ class MixedExcitationDesign(ExcitationDesign):
         disturbance_design: DisturbanceDesign | None = None,
         initial_condition_design: InitialConditionDesign | None = None,
         name: str = "mixed",
+        gas: GasConfig | None = None,
+        gas_velocity_cap: GasVelocityCap = "none",
     ) -> None:
+        if gas_velocity_cap not in ("none", "initial_diameter"):
+            raise ValueError(f"unknown gas_velocity_cap {gas_velocity_cap!r}")
+        if gas_velocity_cap != "none" and gas is None:
+            raise ValueError("gas_velocity_cap needs the GasConfig (gas=...)")
+        self._gas = gas
+        self._gas_velocity_cap = gas_velocity_cap
         self._config = config
         self._actions = action_space
         self._disturbances = disturbance_space
@@ -827,6 +891,24 @@ class MixedExcitationDesign(ExcitationDesign):
             )
 
         actions, kinds = self._build_actions(n_runs, n_steps, rng)
+        caps: FloatArray | None = None
+        if self._gas_velocity_cap == "initial_diameter":
+            assert self._gas is not None
+            diameters = (
+                initial_states[:, 2]
+                if initial_states is not None
+                else np.full(n_runs, self._material.initial_diameter_m)
+            )
+            caps = gas_velocity_cap_from_initial_diameter(
+                diameters,
+                gas=self._gas,
+                material=self._material,
+                actions=self._actions,
+                disturbances=self._disturbances,
+            )
+            gas_index = self._actions.names.index("gas_velocity_m_per_s")
+            # min with a constant keeps the rate limit of the signal
+            actions[:, :, gas_index] = np.minimum(actions[:, :, gas_index], caps[:, None])
         fingerprint = self._fingerprint(n_runs, seed)
         return ExcitationSchedule(
             run_id=tuple(f"{self._name}-{fingerprint}-{index:05d}" for index in range(n_runs)),
@@ -844,6 +926,8 @@ class MixedExcitationDesign(ExcitationDesign):
                 "run_duration_s": config.run_duration_s,
                 "prbs_period_s": config.prbs_period_s,
                 "rate_limited": config.apply_rate_limits,
+                "gas_velocity_cap": self._gas_velocity_cap,
+                "gas_velocity_cap_m_per_s": None if caps is None else caps.tolist(),
                 "action_names": self._actions.names,
                 "disturbance_names": self._disturbances.names,
                 "initial_condition_columns": (
@@ -911,6 +995,9 @@ class MixedExcitationDesign(ExcitationDesign):
             "n_runs": n_runs,
             "seed": seed,
         }
+        if self._gas_velocity_cap != "none":
+            # Only when set: schedules built before the option keep their fingerprint.
+            payload["gas_velocity_cap"] = self._gas_velocity_cap
         options = self._disturbance_design.fingerprint_options()
         if options:
             # Only when set: schedules built before the option keep their fingerprint.
