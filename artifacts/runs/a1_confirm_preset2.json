@@ -1,0 +1,6945 @@
+{
+ "provenance": {
+  "git/commit": "f3822723645700e190d5eb23a52d84042b2b2778",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "design": {
+  "rule": "chosen setting stays if its score <= 1.03 x the best tested score",
+  "preset_version_expected": 2,
+  "chosen_finetune": {
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 320
+  },
+  "chosen_steps": {
+   "from_scratch": 4000,
+   "hybrid": 8000
+  },
+  "tested_finetune_lrs": [
+   0.0001,
+   0.0003,
+   0.001
+  ],
+  "tested_finetune_epochs": [
+   160,
+   320,
+   640
+  ],
+  "tested_steps": {
+   "from_scratch": [
+    4000,
+    8000
+   ],
+   "hybrid": [
+    8000,
+    16000
+   ]
+  },
+  "pool_seeds": [
+   11,
+   12,
+   13
+  ],
+  "pretrain_seed": 201,
+  "pretrain_spec": {
+   "data/sample_time_s": 25.0,
+   "data/run_duration_s": 28800.0,
+   "data/n_train_max": 256,
+   "data/n_val": 32,
+   "data/n_test": 224,
+   "data/history_length": 32,
+   "data/horizon": 36,
+   "data/stride": 8,
+   "data/target_names": [
+    "energy_target",
+    "product_moisture_kg_per_kg",
+    "bed_temperature_celsius"
+   ],
+   "data/observed_target_names": null,
+   "data/constant_run_fraction": 0.1,
+   "data/solid_fraction_process": "independent",
+   "data/gas_velocity_cap": "initial_diameter",
+   "data/new_study_version": 2,
+   "data/future_actions": "planned"
+  },
+  "pool_spec": {
+   "data/sample_time_s": 25.0,
+   "data/run_duration_s": 28800.0,
+   "data/n_train_max": 16,
+   "data/n_val": 8,
+   "data/n_test": 8,
+   "data/history_length": 32,
+   "data/horizon": 36,
+   "data/stride": 8,
+   "data/target_names": [
+    "energy_target",
+    "product_moisture_kg_per_kg",
+    "bed_temperature_celsius"
+   ],
+   "data/observed_target_names": null,
+   "data/constant_run_fraction": 0.1,
+   "data/solid_fraction_process": "independent",
+   "data/gas_velocity_cap": "initial_diameter",
+   "data/new_study_version": 2,
+   "data/future_actions": "planned"
+  },
+  "torch": "2.14.0+cpu",
+  "numpy": "2.5.3",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "verdicts": {
+  "finetune": {
+   "chosen": "(0.0003, 320)",
+   "chosen_score": 0.05095022474153383,
+   "best_tested": "(0.0001, 640)",
+   "best_score": 0.04990457370212844,
+   "excess_over_best_pct": 2.09530101518689,
+   "stays": true,
+   "all_scores": {
+    "(0.0001, 160)": 0.05603151693408032,
+    "(0.0001, 320)": 0.05200839466471863,
+    "(0.0001, 640)": 0.04990457370212844,
+    "(0.0003, 160)": 0.05136791513370942,
+    "(0.0003, 320)": 0.05095022474153383,
+    "(0.0003, 640)": 0.05260348530770076,
+    "(0.001, 160)": 0.05264049406420912,
+    "(0.001, 320)": 0.051604163371020174,
+    "(0.001, 640)": 0.053924140855877885
+   }
+  },
+  "from_scratch": {
+   "chosen": "4000",
+   "chosen_score": 0.24714423594409315,
+   "best_tested": "4000",
+   "best_score": 0.24714423594409315,
+   "excess_over_best_pct": 0.0,
+   "stays": true,
+   "all_scores": {
+    "4000": 0.24714423594409315,
+    "8000": 0.284078319352903
+   }
+  },
+  "hybrid": {
+   "chosen": "8000",
+   "chosen_score": 0.2526968770442738,
+   "best_tested": "16000",
+   "best_score": 0.2235445738446319,
+   "excess_over_best_pct": 13.040935281168299,
+   "stays": false,
+   "all_scores": {
+    "8000": 0.2526968770442738,
+    "16000": 0.2235445738446319
+   }
+  }
+ },
+ "all_settings_stay": false,
+ "per_plant_scores": {
+  "finetune": {
+   "PP": {
+    "0.0001/160": 0.04894219196659261,
+    "0.0001/320": 0.0467666732301683,
+    "0.0001/640": 0.044646936345799214,
+    "0.0003/160": 0.04583922783493206,
+    "0.0003/320": 0.0451510722522849,
+    "0.0003/640": 0.04756655809531943,
+    "0.001/160": 0.04651487947531496,
+    "0.001/320": 0.04764754658320878,
+    "0.001/640": 0.05028517025503631
+   },
+   "PP2": {
+    "0.0001/160": 0.06312084190156801,
+    "0.0001/320": 0.057250116099268965,
+    "0.0001/640": 0.05516221105845767,
+    "0.0003/160": 0.05689660243248679,
+    "0.0003/320": 0.05674937723078277,
+    "0.0003/640": 0.05764041252008212,
+    "0.001/160": 0.058766108653103284,
+    "0.001/320": 0.05556078015883156,
+    "0.001/640": 0.05756311145671947
+   }
+  }
+ },
+ "projection_guard_per_pool": {
+  "P0_pretraining_pool": {
+   "preset_version": 2,
+   "total_steps": 589824,
+   "projected_steps": 0,
+   "runs_with_projection": 0,
+   "projection_active": 1
+  },
+  "PP_pool11": {
+   "preset_version": 2,
+   "total_steps": 36864,
+   "projected_steps": 0,
+   "runs_with_projection": 0,
+   "projection_active": 1,
+   "simulator_in_hybrid_channel": {
+    "n_stationary": 31,
+    "n_nominal_fallback": 1,
+    "simulator_total_steps": 36864,
+    "simulator_projected_steps": 223,
+    "simulator_runs_with_projection": 1
+   }
+  },
+  "PP_pool12": {
+   "preset_version": 2,
+   "total_steps": 36864,
+   "projected_steps": 0,
+   "runs_with_projection": 0,
+   "projection_active": 1,
+   "simulator_in_hybrid_channel": {
+    "n_stationary": 31,
+    "n_nominal_fallback": 1,
+    "simulator_total_steps": 36864,
+    "simulator_projected_steps": 0,
+    "simulator_runs_with_projection": 0
+   }
+  },
+  "PP_pool13": {
+   "preset_version": 2,
+   "total_steps": 36864,
+   "projected_steps": 0,
+   "runs_with_projection": 0,
+   "projection_active": 1,
+   "simulator_in_hybrid_channel": {
+    "n_stationary": 32,
+    "n_nominal_fallback": 0,
+    "simulator_total_steps": 36864,
+    "simulator_projected_steps": 0,
+    "simulator_runs_with_projection": 0
+   }
+  },
+  "PP2_pool11": {
+   "preset_version": 2,
+   "total_steps": 36864,
+   "projected_steps": 0,
+   "runs_with_projection": 0,
+   "projection_active": 1,
+   "simulator_in_hybrid_channel": {
+    "n_stationary": 31,
+    "n_nominal_fallback": 1,
+    "simulator_total_steps": 36864,
+    "simulator_projected_steps": 223,
+    "simulator_runs_with_projection": 1
+   }
+  },
+  "PP2_pool12": {
+   "preset_version": 2,
+   "total_steps": 36864,
+   "projected_steps": 0,
+   "runs_with_projection": 0,
+   "projection_active": 1,
+   "simulator_in_hybrid_channel": {
+    "n_stationary": 31,
+    "n_nominal_fallback": 1,
+    "simulator_total_steps": 36864,
+    "simulator_projected_steps": 0,
+    "simulator_runs_with_projection": 0
+   }
+  },
+  "PP2_pool13": {
+   "preset_version": 2,
+   "total_steps": 36864,
+   "projected_steps": 0,
+   "runs_with_projection": 0,
+   "projection_active": 1,
+   "simulator_in_hybrid_channel": {
+    "n_stationary": 32,
+    "n_nominal_fallback": 0,
+    "simulator_total_steps": 36864,
+    "simulator_projected_steps": 0,
+    "simulator_runs_with_projection": 0
+   }
+  }
+ },
+ "projection_guard_violations": {},
+ "pretraining": {
+  "model": {
+   "model": "lstm_h64_l1",
+   "n_parameters": 19651,
+   "net_core": "lstm",
+   "net_hidden_size": 64,
+   "net_num_layers": 1,
+   "net_num_heads": 2,
+   "net_state_size": 16,
+   "net_dropout": 0.0,
+   "net_learning_rate": 0.001,
+   "net_weight_decay": 0.0001,
+   "net_max_epochs": 200,
+   "net_batch_size": 256,
+   "net_patience": 20,
+   "net_teacher_forcing": 0.0,
+   "net_horizon_weight_decay": 1.0,
+   "net_gradient_clip": 1.0,
+   "net_device": null,
+   "net_actual_device": "cpu"
+  },
+  "training": {
+   "epochs_run": 132,
+   "gradient_steps": 17952,
+   "train_loss_ratio_last10": 0.993417140395536,
+   "best_epoch": 111
+  },
+  "loss_history_train": [
+   0.1111983,
+   0.01300766,
+   0.005255604,
+   0.002423116,
+   0.001657676,
+   0.001317114,
+   0.001093981,
+   0.0009664419,
+   0.0008877492,
+   0.0007996065,
+   0.0007417105,
+   0.0007109165,
+   0.0006797914,
+   0.0006278865,
+   0.0006234466,
+   0.0005747409,
+   0.0005687369,
+   0.0005506001,
+   0.0005591559,
+   0.0005552015,
+   0.0004973736,
+   0.0005151364,
+   0.0004835363,
+   0.0004878451,
+   0.0004720511,
+   0.0004754267,
+   0.0004668232,
+   0.0004544216,
+   0.0004562534,
+   0.0004460319,
+   0.0004468788,
+   0.0004416818,
+   0.0004318297,
+   0.0004432055,
+   0.0004210324,
+   0.0004272629,
+   0.0004359011,
+   0.00040735,
+   0.000405962,
+   0.0004228558,
+   0.0004059996,
+   0.0004210221,
+   0.0003999212,
+   0.0004059983,
+   0.0004082588,
+   0.0003952173,
+   0.0003944655,
+   0.0003944332,
+   0.0003936975,
+   0.0003852678,
+   0.0004012229,
+   0.0004002838,
+   0.0003817823,
+   0.000380394,
+   0.0003852311,
+   0.0003789847,
+   0.0003893449,
+   0.0003822969,
+   0.0003708114,
+   0.0003774724,
+   0.000387299,
+   0.0003684356,
+   0.0003658524,
+   0.0003791098,
+   0.0003718419,
+   0.0003707626,
+   0.0003652741,
+   0.0003839257,
+   0.0003583834,
+   0.0003677741,
+   0.000375794,
+   0.0003690902,
+   0.000362122,
+   0.0003735304,
+   0.0003611017,
+   0.0003555302,
+   0.000364337,
+   0.0003584154,
+   0.0003594736,
+   0.0003725225,
+   0.0003570073,
+   0.0003522084,
+   0.0003595508,
+   0.0003543503,
+   0.0003706446,
+   0.0003486238,
+   0.0003532314,
+   0.0003576443,
+   0.0003521112,
+   0.0003536069,
+   0.0003503167,
+   0.0003509491,
+   0.0003512624,
+   0.0003505869,
+   0.0003560601,
+   0.0003563744,
+   0.0003508997,
+   0.000342845,
+   0.0003647556,
+   0.0003473237,
+   0.0003495564,
+   0.0003447759,
+   0.0003533339,
+   0.0003437716,
+   0.0003520808,
+   0.0003458656,
+   0.0003449139,
+   0.0003464178,
+   0.0003439952,
+   0.0003458461,
+   0.0003477113,
+   0.0003413904,
+   0.000349358,
+   0.0003460409,
+   0.0003417505,
+   0.0003406643,
+   0.0003415073,
+   0.0003398831,
+   0.000348925,
+   0.000340573,
+   0.0003421717,
+   0.0003435994,
+   0.000342567,
+   0.0003434988,
+   0.000337336,
+   0.0003441845,
+   0.0003417004,
+   0.0003379314,
+   0.0003363992,
+   0.000341229,
+   0.0003376228,
+   0.0003448523
+  ],
+  "loss_history_val": [
+   0.02208597,
+   0.005933653,
+   0.002581623,
+   0.001488204,
+   0.001241887,
+   0.0009907646,
+   0.0009263681,
+   0.0009199802,
+   0.0007764683,
+   0.0006642129,
+   0.0009878458,
+   0.0007698357,
+   0.0005820132,
+   0.0006063744,
+   0.0006418573,
+   0.0007104217,
+   0.0006969678,
+   0.0004838207,
+   0.0004829502,
+   0.0005178887,
+   0.0004576538,
+   0.0004703828,
+   0.0004471848,
+   0.0004523053,
+   0.0004347553,
+   0.000508408,
+   0.0004827694,
+   0.0004354777,
+   0.0004796752,
+   0.0004910283,
+   0.000437154,
+   0.0004223395,
+   0.0004106705,
+   0.0005831043,
+   0.0005163967,
+   0.0004022469,
+   0.0004227817,
+   0.0003956981,
+   0.0008467265,
+   0.0004228434,
+   0.0003919966,
+   0.0003985645,
+   0.000401626,
+   0.0004916712,
+   0.0004158684,
+   0.0004056726,
+   0.0004021576,
+   0.0003763131,
+   0.0003998412,
+   0.0004375261,
+   0.0003816642,
+   0.0003705087,
+   0.0004001644,
+   0.0003877259,
+   0.0003923809,
+   0.000440809,
+   0.0003996399,
+   0.0004111147,
+   0.0003705308,
+   0.0003750715,
+   0.0003737837,
+   0.0003613239,
+   0.0003881076,
+   0.0003674998,
+   0.0003969224,
+   0.000367873,
+   0.000379141,
+   0.0003639371,
+   0.0003577564,
+   0.0003686985,
+   0.0003639746,
+   0.0003668369,
+   0.0003671427,
+   0.0003660997,
+   0.0003573867,
+   0.0004001893,
+   0.0003561552,
+   0.0003753719,
+   0.0003748653,
+   0.0003586305,
+   0.0003625706,
+   0.0003624289,
+   0.0003573359,
+   0.0003963211,
+   0.000367784,
+   0.0003492177,
+   0.0003731246,
+   0.0003557863,
+   0.0003536591,
+   0.0003489231,
+   0.000352997,
+   0.0003495084,
+   0.0003520724,
+   0.0003501436,
+   0.000357317,
+   0.0003828883,
+   0.0003470666,
+   0.0003535089,
+   0.0003525772,
+   0.000355494,
+   0.0003542338,
+   0.0003577918,
+   0.0003641224,
+   0.0003550122,
+   0.0003521792,
+   0.0003544077,
+   0.0003691448,
+   0.0003579782,
+   0.0003513174,
+   0.0003643212,
+   0.0003539554,
+   0.0003430088,
+   0.0003641725,
+   0.0003579831,
+   0.0003458824,
+   0.0003428126,
+   0.0003459326,
+   0.0003503187,
+   0.0003549708,
+   0.0003459671,
+   0.0003536597,
+   0.0003429262,
+   0.0003654371,
+   0.000348176,
+   0.0003525806,
+   0.0003793323,
+   0.0003428101,
+   0.0003459937,
+   0.0003434435,
+   0.0003438032,
+   0.0003453838,
+   0.0003467473
+  ],
+  "p0_test_in_distribution": {
+   "horizon": 36,
+   "rmse_run_median_physical": {
+    "energy_target": {
+     "h1": 0.011852158730848345,
+     "h36": 0.011562532060724235
+    },
+    "product_moisture_kg_per_kg": {
+     "h1": 0.0003749976489822609,
+     "h36": 0.0003938420221452546
+    },
+    "bed_temperature_celsius": {
+     "h1": 0.4411743996802929,
+     "h36": 0.371537992930503
+    }
+   },
+   "nrmse_run_median": {
+    "energy_target": 0.02587546431836546,
+    "product_moisture_kg_per_kg": 0.021456475364662067,
+    "bed_temperature_celsius": 0.0486866445422297
+   },
+   "criterion_C": 0.016926125874365823,
+   "inference_us_per_window": 8.44690126510965,
+   "n_windows": 30464,
+   "n_runs": 224
+  },
+  "seed_bundle": {
+   "seed/data": 271630022,
+   "seed/noise": 4220593634,
+   "seed/model": 996409458
+  },
+  "split_digest": "0cf850580ca02768"
+ },
+ "cells": [
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 11,
+   "n": 2,
+   "method": "hybrid",
+   "steps": 16000,
+   "worker_warmup_s": 42.84692190005444,
+   "epochs": 8000,
+   "realised_steps": 16000,
+   "fit_s": 1150.2323380999733,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0004586048307828605,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.24269195681380173,
+      "h36": 0.7350772555007135
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0011255953560417088,
+      "h36": 0.007839449415753066
+     },
+     "bed_temperature_celsius": {
+      "h1": 3.7909197943962027,
+      "h36": 13.791152532870983
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 1.4702857375686147,
+     "product_moisture_kg_per_kg": 0.6243476917788109,
+     "bed_temperature_celsius": 2.1932394675172584
+    },
+    "criterion_C": 0.718224635791113,
+    "inference_us_per_window": 42.96102933414445,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 11,
+   "n": 16,
+   "method": "hybrid",
+   "steps": 16000,
+   "worker_warmup_s": 42.915008099982515,
+   "epochs": 1778,
+   "realised_steps": 16002,
+   "fit_s": 1767.6917341998778,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00024090650036027108,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01696759799999952,
+      "h36": 0.01647303163367819
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0004748366151048596,
+      "h36": 0.0010055313778954361
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5142495374239574,
+      "h36": 0.5599092078484184
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03504126087329563,
+     "product_moisture_kg_per_kg": 0.08929345457218604,
+     "bed_temperature_celsius": 0.06317166292478574
+    },
+    "criterion_C": 0.029351311463654477,
+    "inference_us_per_window": 50.11553302585312,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 12,
+   "n": 2,
+   "method": "hybrid",
+   "steps": 16000,
+   "worker_warmup_s": 42.97857280005701,
+   "epochs": 8000,
+   "realised_steps": 16000,
+   "fit_s": 1135.312514099991,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0005232397644944928,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.18406941655617715,
+      "h36": 0.5599110056755652
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0011164559945737917,
+      "h36": 0.009648128465538013
+     },
+     "bed_temperature_celsius": {
+      "h1": 3.7864703797489,
+      "h36": 8.04153264873631
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 1.1663297764003964,
+     "product_moisture_kg_per_kg": 1.472356954461264,
+     "bed_temperature_celsius": 1.6046990630819025
+    },
+    "criterion_C": 0.44591194779443827,
+    "inference_us_per_window": 46.363786703509774,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 12,
+   "n": 16,
+   "method": "hybrid",
+   "steps": 16000,
+   "worker_warmup_s": 42.97963669989258,
+   "epochs": 1778,
+   "realised_steps": 16002,
+   "fit_s": 1778.9404915999621,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003148308571647195,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.018991730684917482,
+      "h36": 0.018889370299507772
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0003211500874368883,
+      "h36": 0.0009930096763335304
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5341200950301346,
+      "h36": 0.5619287485123805
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.04314581377312143,
+     "product_moisture_kg_per_kg": 0.09751690276090719,
+     "bed_temperature_celsius": 0.08038188065511355
+    },
+    "criterion_C": 0.02649537829260352,
+    "inference_us_per_window": 52.960202190340226,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 13,
+   "n": 2,
+   "method": "hybrid",
+   "steps": 16000,
+   "worker_warmup_s": 42.8951655998826,
+   "epochs": 8000,
+   "realised_steps": 16000,
+   "fit_s": 1131.3733434001915,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0005471960757859051,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.06622616989562158,
+      "h36": 0.11862448314573518
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.000851869239311286,
+      "h36": 0.0035734138760253184
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.0611110486076496,
+      "h36": 1.8790389673111112
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.3216309157797474,
+     "product_moisture_kg_per_kg": 0.3966780875344843,
+     "bed_temperature_celsius": 0.38751707936372326
+    },
+    "criterion_C": 0.1435334260265285,
+    "inference_us_per_window": 46.088694730047685,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 13,
+   "n": 16,
+   "method": "hybrid",
+   "steps": 16000,
+   "worker_warmup_s": 42.9218890001066,
+   "epochs": 1778,
+   "realised_steps": 16002,
+   "fit_s": 1779.0836493000388,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0004634597845485105,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.0136167238823168,
+      "h36": 0.01286441155819704
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00045551550999499446,
+      "h36": 0.0006700304567932113
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4524382541274037,
+      "h36": 0.39890876037644696
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03216785435583554,
+     "product_moisture_kg_per_kg": 0.05610778706398485,
+     "bed_temperature_celsius": 0.07948297316901877
+    },
+    "criterion_C": 0.02503993555719061,
+    "inference_us_per_window": 53.3900734701413,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 2,
+   "method": "hybrid",
+   "steps": 16000,
+   "worker_warmup_s": 42.835743400035426,
+   "epochs": 8000,
+   "realised_steps": 16000,
+   "fit_s": 1134.9082977999933,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0005200212780276642,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.23118749104986072,
+      "h36": 0.6884617994625017
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.001384403212112285,
+      "h36": 0.01206861646156739
+     },
+     "bed_temperature_celsius": {
+      "h1": 2.4162876282566805,
+      "h36": 6.194779671597516
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 1.9419521837696574,
+     "product_moisture_kg_per_kg": 0.7858712110512807,
+     "bed_temperature_celsius": 1.7592085894205716
+    },
+    "criterion_C": 0.5577431645779255,
+    "inference_us_per_window": 44.57104788504212,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 16,
+   "method": "hybrid",
+   "steps": 16000,
+   "worker_warmup_s": 42.83362150005996,
+   "epochs": 1778,
+   "realised_steps": 16002,
+   "fit_s": 1775.1716954999138,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0002505043624242877,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01695566774039041,
+      "h36": 0.0180043129855076
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00048702114774770017,
+      "h36": 0.0006377239579546403
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.49944862682695657,
+      "h36": 0.49960147543708694
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.0402160164871454,
+     "product_moisture_kg_per_kg": 0.059953461819352794,
+     "bed_temperature_celsius": 0.07663743752062496
+    },
+    "criterion_C": 0.024525587583081196,
+    "inference_us_per_window": 51.39825353741317,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 2,
+   "method": "hybrid",
+   "steps": 16000,
+   "worker_warmup_s": 42.8951655998826,
+   "epochs": 8000,
+   "realised_steps": 16000,
+   "fit_s": 1238.6823352999054,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0005328613847001072,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.2557278606394049,
+      "h36": 0.7162685835950736
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.001718883871042797,
+      "h36": 0.014994025408883619
+     },
+     "bed_temperature_celsius": {
+      "h1": 3.264653547903078,
+      "h36": 8.174822549915465
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 1.3020237765917928,
+     "product_moisture_kg_per_kg": 2.1632050993160474,
+     "bed_temperature_celsius": 1.3275210544607479
+    },
+    "criterion_C": 0.5332692454090897,
+    "inference_us_per_window": 52.30818030266913,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 16,
+   "method": "hybrid",
+   "steps": 16000,
+   "worker_warmup_s": 42.835743400035426,
+   "epochs": 1778,
+   "realised_steps": 16002,
+   "fit_s": 1862.8653526001144,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00032606784268008433,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.02167692671642561,
+      "h36": 0.02297145325955927
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0003323529247912754,
+      "h36": 0.0010280305276067167
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5237226799370602,
+      "h36": 0.570332727578099
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.04816011859490939,
+     "product_moisture_kg_per_kg": 0.09986257881918581,
+     "bed_temperature_celsius": 0.11559726835651965
+    },
+    "criterion_C": 0.02708165110351445,
+    "inference_us_per_window": 61.1061582543805,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 2,
+   "method": "hybrid",
+   "steps": 16000,
+   "worker_warmup_s": 42.97857280005701,
+   "epochs": 8000,
+   "realised_steps": 16000,
+   "fit_s": 1219.0674691998865,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0006525807651033735,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.06999565298324156,
+      "h36": 0.10727899762641202
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0008044263986192563,
+      "h36": 0.0031608476318101494
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.8664573044470538,
+      "h36": 1.7613613038701712
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.29008226263250136,
+     "product_moisture_kg_per_kg": 0.4200341110943018,
+     "bed_temperature_celsius": 0.3310595674255892
+    },
+    "criterion_C": 0.12697392094789503,
+    "inference_us_per_window": 51.510018452330876,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 16,
+   "method": "hybrid",
+   "steps": 16000,
+   "worker_warmup_s": 42.84692190005444,
+   "epochs": 1778,
+   "realised_steps": 16002,
+   "fit_s": 1894.44771629991,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0005121616910293917,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.013206774591903187,
+      "h36": 0.013068966917226539
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005551197021099259,
+      "h36": 0.0006754809382394733
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.44687189927100235,
+      "h36": 0.4008741406781251
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03498024229091576,
+     "product_moisture_kg_per_kg": 0.06181303486064303,
+     "bed_temperature_celsius": 0.08332320566542561
+    },
+    "criterion_C": 0.0243846815885481,
+    "inference_us_per_window": 75.09108464171946,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 11,
+   "n": 2,
+   "method": "from_scratch",
+   "steps": 8000,
+   "worker_warmup_s": 42.915008099982515,
+   "epochs": 4000,
+   "realised_steps": 8000,
+   "fit_s": 612.266636100132,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0008960378369973862,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.328826996252537,
+      "h36": 1.3945709813018907
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0016167969551883275,
+      "h36": 0.01273671811571788
+     },
+     "bed_temperature_celsius": {
+      "h1": 2.444949490958804,
+      "h36": 12.728142509781183
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 2.634807333729616,
+     "product_moisture_kg_per_kg": 0.8969027210644417,
+     "bed_temperature_celsius": 1.2422578124990402
+    },
+    "criterion_C": 1.0524842528848135,
+    "inference_us_per_window": 51.56222430420765,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 11,
+   "n": 16,
+   "method": "from_scratch",
+   "steps": 8000,
+   "worker_warmup_s": 42.83362150005996,
+   "epochs": 889,
+   "realised_steps": 8001,
+   "fit_s": 922.7219746001065,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003269501441322705,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.015735136811288738,
+      "h36": 0.014792897625679622
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005058705205936575,
+      "h36": 0.0010816160115538827
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.481961678181235,
+      "h36": 0.583912937025985
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03633669648340156,
+     "product_moisture_kg_per_kg": 0.09629008999903095,
+     "bed_temperature_celsius": 0.0810986288412715
+    },
+    "criterion_C": 0.02979627288995887,
+    "inference_us_per_window": 64.3847426331109,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 12,
+   "n": 2,
+   "method": "from_scratch",
+   "steps": 8000,
+   "worker_warmup_s": 42.97963669989258,
+   "epochs": 4000,
+   "realised_steps": 8000,
+   "fit_s": 583.7353507999796,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0009100853451801574,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.19888071377922772,
+      "h36": 0.49662387173349176
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0012793646401915945,
+      "h36": 0.01332815750532986
+     },
+     "bed_temperature_celsius": {
+      "h1": 2.7967725500131015,
+      "h36": 8.957646137074466
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 1.0114149254044253,
+     "product_moisture_kg_per_kg": 2.2861652036479394,
+     "bed_temperature_celsius": 1.6870949771580481
+    },
+    "criterion_C": 0.4724901547740444,
+    "inference_us_per_window": 57.44972419479917,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 12,
+   "n": 16,
+   "method": "from_scratch",
+   "steps": 8000,
+   "worker_warmup_s": 42.9218890001066,
+   "epochs": 889,
+   "realised_steps": 8001,
+   "fit_s": 951.964655000018,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003660667862277478,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.018868268733628554,
+      "h36": 0.019075550822150615
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0003301355946075077,
+      "h36": 0.0009252033869535322
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5606782622556981,
+      "h36": 0.5186634059631908
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.04884925468991584,
+     "product_moisture_kg_per_kg": 0.11089642907185743,
+     "bed_temperature_celsius": 0.09162879798133183
+    },
+    "criterion_C": 0.025135486674330052,
+    "inference_us_per_window": 57.08143383826074,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 13,
+   "n": 2,
+   "method": "from_scratch",
+   "steps": 8000,
+   "worker_warmup_s": 42.97963669989258,
+   "epochs": 4000,
+   "realised_steps": 8000,
+   "fit_s": 594.9067154000513,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0009535584865850123,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.10060519781786265,
+      "h36": 0.1373914495375414
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006547293520663687,
+      "h36": 0.004106567592291366
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5918774698637728,
+      "h36": 1.7711264003077087
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.28484316040117075,
+     "product_moisture_kg_per_kg": 0.44646354607188954,
+     "bed_temperature_celsius": 0.34438431860085705
+    },
+    "criterion_C": 0.15267795895390357,
+    "inference_us_per_window": 72.6613969377735,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 13,
+   "n": 16,
+   "method": "from_scratch",
+   "steps": 8000,
+   "worker_warmup_s": 42.915008099982515,
+   "epochs": 889,
+   "realised_steps": 8001,
+   "fit_s": 950.7789105002303,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0005543772507842411,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.013562327236389244,
+      "h36": 0.013520278534495228
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0004706006277665262,
+      "h36": 0.0008953058552534337
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.47813710151024147,
+      "h36": 0.40759917697160136
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.038389420735289476,
+     "product_moisture_kg_per_kg": 0.04832940207384026,
+     "bed_temperature_celsius": 0.07214747903768842
+    },
+    "criterion_C": 0.02804288590884346,
+    "inference_us_per_window": 48.49613983156707,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 2,
+   "method": "from_scratch",
+   "steps": 8000,
+   "worker_warmup_s": 42.97857280005701,
+   "epochs": 4000,
+   "realised_steps": 8000,
+   "fit_s": 584.5452364999801,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0008996761171147227,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.39532441501171744,
+      "h36": 1.505786255763382
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0015482658065564025,
+      "h36": 0.015219632265320651
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.65561206802765,
+      "h36": 5.725288726516384
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 3.2204300546691957,
+     "product_moisture_kg_per_kg": 0.9413164900607531,
+     "bed_temperature_celsius": 1.225896721463228
+    },
+    "criterion_C": 0.9599291514093621,
+    "inference_us_per_window": 49.307812493198604,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 16,
+   "method": "from_scratch",
+   "steps": 8000,
+   "worker_warmup_s": 42.8951655998826,
+   "epochs": 889,
+   "realised_steps": 8001,
+   "fit_s": 956.8271719999611,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00029414079857387524,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01481423525350558,
+      "h36": 0.014095895131438002
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005772091680818467,
+      "h36": 0.0008698780725074357
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4748803567988052,
+      "h36": 0.44808116311383306
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.034885967180335334,
+     "product_moisture_kg_per_kg": 0.08423642645842441,
+     "bed_temperature_celsius": 0.06461856917758776
+    },
+    "criterion_C": 0.023400070013706354,
+    "inference_us_per_window": 73.9117649038021,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 2,
+   "method": "from_scratch",
+   "steps": 8000,
+   "worker_warmup_s": 42.83362150005996,
+   "epochs": 4000,
+   "realised_steps": 8000,
+   "fit_s": 612.1560116000473,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0008679440840804839,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.20022814818427837,
+      "h36": 0.5136951806132093
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0012197616062576996,
+      "h36": 0.014108341454668268
+     },
+     "bed_temperature_celsius": {
+      "h1": 2.818470256076153,
+      "h36": 8.665097353682448
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.9029288117164833,
+     "product_moisture_kg_per_kg": 1.6162243182423608,
+     "bed_temperature_celsius": 1.5784025962233108
+    },
+    "criterion_C": 0.4619420649754194,
+    "inference_us_per_window": 77.8077204920598,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 16,
+   "method": "from_scratch",
+   "steps": 8000,
+   "worker_warmup_s": 42.9218890001066,
+   "epochs": 889,
+   "realised_steps": 8001,
+   "fit_s": 960.6860835000407,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0004577253044665079,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.018997255392758757,
+      "h36": 0.01856232441127864
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00034990639884973436,
+      "h36": 0.000905284602805283
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5528320344566485,
+      "h36": 0.5169463454705603
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.05739605130031341,
+     "product_moisture_kg_per_kg": 0.10250430193122838,
+     "bed_temperature_celsius": 0.1096787508414075
+    },
+    "criterion_C": 0.023526105283756735,
+    "inference_us_per_window": 48.73667293235057,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 2,
+   "method": "from_scratch",
+   "steps": 8000,
+   "worker_warmup_s": 42.97963669989258,
+   "epochs": 4000,
+   "realised_steps": 8000,
+   "fit_s": 619.0213649000507,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0011541494510739164,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.10231997781198292,
+      "h36": 0.1188496414717816
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.000733836272170456,
+      "h36": 0.005611751503321216
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.6871085506330554,
+      "h36": 1.792215875413199
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.30055744428041126,
+     "product_moisture_kg_per_kg": 0.4403232027066046,
+     "bed_temperature_celsius": 0.3014663553261966
+    },
+    "criterion_C": 0.15384679785959313,
+    "inference_us_per_window": 44.31341906584909,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 16,
+   "method": "from_scratch",
+   "steps": 8000,
+   "worker_warmup_s": 42.97857280005701,
+   "epochs": 889,
+   "realised_steps": 8001,
+   "fit_s": 949.4056020998396,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.000563089722110068,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.013877745695978355,
+      "h36": 0.013263168879914723
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005673103792899713,
+      "h36": 0.0007791963166461182
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.47096985491474175,
+      "h36": 0.40963145341054086
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.0446518181179979,
+     "product_moisture_kg_per_kg": 0.04067852395018701,
+     "bed_temperature_celsius": 0.08335590529802317
+    },
+    "criterion_C": 0.025668630607104354,
+    "inference_us_per_window": 52.13841915760628,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 11,
+   "n": 2,
+   "method": "hybrid",
+   "steps": 8000,
+   "worker_warmup_s": 42.835743400035426,
+   "epochs": 4000,
+   "realised_steps": 8000,
+   "fit_s": 646.4906719999854,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0009327022844980307,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.25201321502726715,
+      "h36": 0.7570227544854532
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0014890780678936746,
+      "h36": 0.017727986922176257
+     },
+     "bed_temperature_celsius": {
+      "h1": 3.019350414734263,
+      "h36": 16.488414733133652
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 1.891054001192058,
+     "product_moisture_kg_per_kg": 1.2248161361779468,
+     "bed_temperature_celsius": 2.01805505239653
+    },
+    "criterion_C": 0.8802309049627884,
+    "inference_us_per_window": 63.6022059017491,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 11,
+   "n": 16,
+   "method": "hybrid",
+   "steps": 8000,
+   "worker_warmup_s": 42.84692190005444,
+   "epochs": 889,
+   "realised_steps": 8001,
+   "fit_s": 965.2145847999491,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00029342668130993843,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.018454388252891078,
+      "h36": 0.018719870893451174
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0004982958667244962,
+      "h36": 0.0011989537910703533
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.49848082144653555,
+      "h36": 0.5322041510677773
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.041700577468642995,
+     "product_moisture_kg_per_kg": 0.11873720136653523,
+     "bed_temperature_celsius": 0.05932776064991729
+    },
+    "criterion_C": 0.03164081268913516,
+    "inference_us_per_window": 67.02095582595041,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 12,
+   "n": 2,
+   "method": "hybrid",
+   "steps": 8000,
+   "worker_warmup_s": 42.83362150005996,
+   "epochs": 4000,
+   "realised_steps": 8000,
+   "fit_s": 611.9176298000384,
+   "n_train_windows": 272,
+   "final_train_loss": 0.000824689878808225,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.17890102876750363,
+      "h36": 0.45657011008787984
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0009877322285730063,
+      "h36": 0.010389230850786715
+     },
+     "bed_temperature_celsius": {
+      "h1": 2.196241562528316,
+      "h36": 6.031601663168321
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.8722449835485695,
+     "product_moisture_kg_per_kg": 1.3367752351256832,
+     "bed_temperature_celsius": 1.0667622486139348
+    },
+    "criterion_C": 0.37554199314586517,
+    "inference_us_per_window": 43.721783132401896,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 12,
+   "n": 16,
+   "method": "hybrid",
+   "steps": 8000,
+   "worker_warmup_s": 42.915008099982515,
+   "epochs": 889,
+   "realised_steps": 8001,
+   "fit_s": 960.3646658000071,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00036249677684870274,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.019235548800145476,
+      "h36": 0.01792955524346416
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0003051807964438646,
+      "h36": 0.0008687707775412697
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5118987305863909,
+      "h36": 0.5317589668393444
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.04268655487394959,
+     "product_moisture_kg_per_kg": 0.08937320239778569,
+     "bed_temperature_celsius": 0.07818852771525628
+    },
+    "criterion_C": 0.024472005630680162,
+    "inference_us_per_window": 64.31360302753198,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 13,
+   "n": 2,
+   "method": "hybrid",
+   "steps": 8000,
+   "worker_warmup_s": 42.8951655998826,
+   "epochs": 4000,
+   "realised_steps": 8000,
+   "fit_s": 632.7940159998834,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0008240709019660511,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.06306667132009124,
+      "h36": 0.09814143209874282
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0007930885030299949,
+      "h36": 0.004828230389157056
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.6852934823746695,
+      "h36": 1.1062598717578394
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.2665434744259768,
+     "product_moisture_kg_per_kg": 0.5531370829898322,
+     "bed_temperature_celsius": 0.2372350001880222
+    },
+    "criterion_C": 0.12476157132092967,
+    "inference_us_per_window": 52.703768340185945,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 13,
+   "n": 16,
+   "method": "hybrid",
+   "steps": 8000,
+   "worker_warmup_s": 42.97963669989258,
+   "epochs": 889,
+   "realised_steps": 8001,
+   "fit_s": 946.4648843000177,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0005269027657478171,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.014200023271269149,
+      "h36": 0.01308679582107938
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0004654108683419941,
+      "h36": 0.00047561997331850504
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.46885784474381387,
+      "h36": 0.39915988104613664
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.034900436223411366,
+     "product_moisture_kg_per_kg": 0.04347939975195103,
+     "bed_temperature_celsius": 0.07078655786451359
+    },
+    "criterion_C": 0.0229862138689606,
+    "inference_us_per_window": 60.911764782812334,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 2,
+   "method": "hybrid",
+   "steps": 8000,
+   "worker_warmup_s": 42.9218890001066,
+   "epochs": 4000,
+   "realised_steps": 8000,
+   "fit_s": 625.2949026001152,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0009139139232609202,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.30503796699743485,
+      "h36": 1.0012659268392743
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0019131695084600008,
+      "h36": 0.021957320456683936
+     },
+     "bed_temperature_celsius": {
+      "h1": 2.223352184928717,
+      "h36": 13.45425539958039
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 2.1731754817096105,
+     "product_moisture_kg_per_kg": 1.287097374664157,
+     "bed_temperature_celsius": 2.887487740005896
+    },
+    "criterion_C": 0.9433337505523841,
+    "inference_us_per_window": 55.070036871577884,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 16,
+   "method": "hybrid",
+   "steps": 8000,
+   "worker_warmup_s": 42.835743400035426,
+   "epochs": 889,
+   "realised_steps": 8001,
+   "fit_s": 937.9806818000507,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0002825868723448366,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.019225958549512402,
+      "h36": 0.019762569001113284
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005073350802302333,
+      "h36": 0.0008182547701162067
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5382030073692667,
+      "h36": 0.6154969542844069
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.04409686381221707,
+     "product_moisture_kg_per_kg": 0.08178002201069032,
+     "bed_temperature_celsius": 0.07721892847585142
+    },
+    "criterion_C": 0.029328902380716837,
+    "inference_us_per_window": 45.39724250207655,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 2,
+   "method": "hybrid",
+   "steps": 8000,
+   "worker_warmup_s": 42.97857280005701,
+   "epochs": 4000,
+   "realised_steps": 8000,
+   "fit_s": 626.7244817998726,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0008366257089244969,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.1963783358471507,
+      "h36": 0.5252303484807619
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0010226542028814027,
+      "h36": 0.012251701464654555
+     },
+     "bed_temperature_celsius": {
+      "h1": 2.2296579361492355,
+      "h36": 6.356754153379713
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 1.106793019243284,
+     "product_moisture_kg_per_kg": 1.7068848222673245,
+     "bed_temperature_celsius": 1.343276247606022
+    },
+    "criterion_C": 0.4070316425101203,
+    "inference_us_per_window": 57.12738964254694,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 16,
+   "method": "hybrid",
+   "steps": 8000,
+   "worker_warmup_s": 42.83362150005996,
+   "epochs": 889,
+   "realised_steps": 8001,
+   "fit_s": 918.3360662001651,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003707338062881985,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.019434074765553415,
+      "h36": 0.018537672962495116
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00031718308560274,
+      "h36": 0.000848025865241949
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5430971520024827,
+      "h36": 0.537395071291185
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.041991024146233666,
+     "product_moisture_kg_per_kg": 0.07051227462307647,
+     "bed_temperature_celsius": 0.08256079166915184
+    },
+    "criterion_C": 0.023529371330049075,
+    "inference_us_per_window": 53.45744477167233,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 2,
+   "method": "hybrid",
+   "steps": 8000,
+   "worker_warmup_s": 42.8951655998826,
+   "epochs": 4000,
+   "realised_steps": 8000,
+   "fit_s": 624.8661273999605,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0009948242839206668,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.08175005598727322,
+      "h36": 0.16127801947764908
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006377816328609718,
+      "h36": 0.0030473372684912364
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.6845730541026986,
+      "h36": 1.7181533181769364
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.29307535794796524,
+     "product_moisture_kg_per_kg": 0.22499977821146078,
+     "bed_temperature_celsius": 0.3605086263973689
+    },
+    "criterion_C": 0.14413675408449098,
+    "inference_us_per_window": 44.46691181168289,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 16,
+   "method": "hybrid",
+   "steps": 8000,
+   "worker_warmup_s": 42.84692190005444,
+   "epochs": 889,
+   "realised_steps": 8001,
+   "fit_s": 928.5243529998697,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0005660257302224636,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.014062396121815753,
+      "h36": 0.013165301022259737
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005653915780476523,
+      "h36": 0.0007620012594278229
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4693968808228426,
+      "h36": 0.406324640222662
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.035477416234080225,
+     "product_moisture_kg_per_kg": 0.05175956124192206,
+     "bed_temperature_celsius": 0.08391914664239628
+    },
+    "criterion_C": 0.025368602055164988,
+    "inference_us_per_window": 52.89788618135978,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 11,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 640,
+   "worker_warmup_s": 42.915008099982515,
+   "realised_steps": 1280,
+   "fit_s": 99.17274159984663,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0005746925119584536,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.018924720568620088,
+      "h36": 0.02256193835851278
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.001096085377550345,
+      "h36": 0.006151760659923483
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.7501601307980077,
+      "h36": 1.3081143918601983
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03688531370437063,
+     "product_moisture_kg_per_kg": 0.46611564101058156,
+     "bed_temperature_celsius": 0.1367612614396254
+    },
+    "criterion_C": 0.09700471396903916,
+    "inference_us_per_window": 63.90643380548093,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 11,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 640,
+   "worker_warmup_s": 42.9218890001066,
+   "realised_steps": 1280,
+   "fit_s": 90.35861220001243,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0005654144504874506,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.022597126903314505,
+      "h36": 0.025738707647210354
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0011193615193440015,
+      "h36": 0.006655285700759709
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.676288487597458,
+      "h36": 1.14551782334579
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.04455481008637398,
+     "product_moisture_kg_per_kg": 0.45284434491549047,
+     "bed_temperature_celsius": 0.11368929604583683
+    },
+    "criterion_C": 0.09975275731762222,
+    "inference_us_per_window": 52.92931981624433,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 11,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 640,
+   "worker_warmup_s": 42.915008099982515,
+   "realised_steps": 1280,
+   "fit_s": 96.08645539986901,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0005761381505769404,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.023310608904326895,
+      "h36": 0.025083138073874498
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.001224500344940707,
+      "h36": 0.006861009204108797
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5642967381100615,
+      "h36": 1.041363219867194
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.04077843269850439,
+     "product_moisture_kg_per_kg": 0.4055820176700148,
+     "bed_temperature_celsius": 0.13030379964128497
+    },
+    "criterion_C": 0.099140567452146,
+    "inference_us_per_window": 45.91452200068435,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 11,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 640,
+   "worker_warmup_s": 42.9218890001066,
+   "realised_steps": 5760,
+   "fit_s": 635.6330734000076,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00031718316398944487,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012443098605709729,
+      "h36": 0.012540293279319019
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00048481442171822975,
+      "h36": 0.0006994708939343652
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.45415337656633853,
+      "h36": 0.4690693218636798
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.02645106377745519,
+     "product_moisture_kg_per_kg": 0.07021665790507009,
+     "bed_temperature_celsius": 0.0483723952030346
+    },
+    "criterion_C": 0.022644468886401013,
+    "inference_us_per_window": 56.12435651367859,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 11,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 640,
+   "worker_warmup_s": 42.915008099982515,
+   "realised_steps": 5760,
+   "fit_s": 641.0592372999527,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00030983211678069304,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012829020532744276,
+      "h36": 0.012757739590090217
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00046531489236074214,
+      "h36": 0.0005997949684607488
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4541972492393672,
+      "h36": 0.4687303248685296
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.02680997956737165,
+     "product_moisture_kg_per_kg": 0.054328683403527825,
+     "bed_temperature_celsius": 0.04934421927169957
+    },
+    "criterion_C": 0.021797610981134447,
+    "inference_us_per_window": 50.54136037121198,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 11,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 640,
+   "worker_warmup_s": 42.97963669989258,
+   "realised_steps": 5760,
+   "fit_s": 642.4772038999945,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00030847158974639196,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012970530825923442,
+      "h36": 0.012903322567948662
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0004594394365361721,
+      "h36": 0.0005633409447596306
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4525760497597863,
+      "h36": 0.45314151372720224
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.027339571727479937,
+     "product_moisture_kg_per_kg": 0.05505800292793038,
+     "bed_temperature_celsius": 0.05359099341345078
+    },
+    "criterion_C": 0.021185333795966026,
+    "inference_us_per_window": 57.1501837197609,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 12,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 640,
+   "worker_warmup_s": 42.97857280005701,
+   "realised_steps": 1280,
+   "fit_s": 87.4759344002232,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0003291638259885504,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01853825252325103,
+      "h36": 0.018561797154006753
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0008881554077507317,
+      "h36": 0.0031067701697646277
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.6910483652842951,
+      "h36": 1.223000063449212
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03468611452135367,
+     "product_moisture_kg_per_kg": 0.3685366199816077,
+     "bed_temperature_celsius": 0.16840333462966467
+    },
+    "criterion_C": 0.05763535044099686,
+    "inference_us_per_window": 44.334466913235644,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 12,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 640,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 1280,
+   "fit_s": 99.31504730018787,
+   "n_train_windows": 272,
+   "final_train_loss": 0.00028935925151659726,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.022333152175448998,
+      "h36": 0.020870131192291006
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0009621588925722875,
+      "h36": 0.0039001523989374036
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.7060005452466526,
+      "h36": 1.2266063265877771
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.041028212241487325,
+     "product_moisture_kg_per_kg": 0.4499462944791455,
+     "bed_temperature_celsius": 0.16730983133337718
+    },
+    "criterion_C": 0.06550052726688434,
+    "inference_us_per_window": 69.60064338807784,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 12,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 640,
+   "worker_warmup_s": 42.8951655998826,
+   "realised_steps": 1280,
+   "fit_s": 92.59068240015768,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0002848096243242788,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.04418303345071989,
+      "h36": 0.04344582968241773
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0009318897299367642,
+      "h36": 0.0030182616406852422
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.8499568634924562,
+      "h36": 1.882824173278908
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.08978272529119191,
+     "product_moisture_kg_per_kg": 0.3680444425597013,
+     "bed_temperature_celsius": 0.2542220081057759
+    },
+    "criterion_C": 0.07876079655087097,
+    "inference_us_per_window": 64.44862126098836,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 12,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 640,
+   "worker_warmup_s": 42.97857280005701,
+   "realised_steps": 5760,
+   "fit_s": 638.5255985998083,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00030616123523727497,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.017931921873160804,
+      "h36": 0.01779588738060708
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00032486764868377386,
+      "h36": 0.0007646403545924451
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5017487728794912,
+      "h36": 0.4879852847327871
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03016637487977898,
+     "product_moisture_kg_per_kg": 0.09595001570222617,
+     "bed_temperature_celsius": 0.07473769994065532
+    },
+    "criterion_C": 0.022666493778443028,
+    "inference_us_per_window": 48.827389785882964,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 12,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 640,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 5760,
+   "fit_s": 639.9366473001428,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0002991673947476289,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01805196812138196,
+      "h36": 0.01809370573471001
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00032307397827351434,
+      "h36": 0.000737966387606841
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5083698142161158,
+      "h36": 0.49489762628274847
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.02988817623960219,
+     "product_moisture_kg_per_kg": 0.08659766858633745,
+     "bed_temperature_celsius": 0.07326924242689309
+    },
+    "criterion_C": 0.022676099774748864,
+    "inference_us_per_window": 73.97454036810599,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 12,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 640,
+   "worker_warmup_s": 42.8951655998826,
+   "realised_steps": 5760,
+   "fit_s": 661.2594262999482,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003018205119159949,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.018262853399459822,
+      "h36": 0.017877321553542394
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0003639283078170028,
+      "h36": 0.0008812452488189998
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.519405257573334,
+      "h36": 0.49218803841919045
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03145100403762703,
+     "product_moisture_kg_per_kg": 0.09269562576972357,
+     "bed_temperature_celsius": 0.07932466927684577
+    },
+    "criterion_C": 0.023798344698042068,
+    "inference_us_per_window": 64.01360309717026,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 13,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 640,
+   "worker_warmup_s": 42.83362150005996,
+   "realised_steps": 1280,
+   "fit_s": 98.25075820018537,
+   "n_train_windows": 272,
+   "final_train_loss": 0.00033762703841442573,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01567879646355794,
+      "h36": 0.014106981289820181
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006343236039157297,
+      "h36": 0.0019608381251440205
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4674011894901121,
+      "h36": 0.5514779198007931
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03359638326501738,
+     "product_moisture_kg_per_kg": 0.11145844170028882,
+     "bed_temperature_celsius": 0.09528115442685592
+    },
+    "criterion_C": 0.044687131672435744,
+    "inference_us_per_window": 45.63685669221313,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 13,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 640,
+   "worker_warmup_s": 42.84692190005444,
+   "realised_steps": 1280,
+   "fit_s": 106.37842800002545,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0002822548387270859,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.015864315664865125,
+      "h36": 0.013810430693603009
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006366372293170155,
+      "h36": 0.0024199955549656284
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.45794759160835097,
+      "h36": 0.641411922625007
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03511822893322587,
+     "product_moisture_kg_per_kg": 0.160976960863074,
+     "bed_temperature_celsius": 0.10205434153936041
+    },
+    "criterion_C": 0.05257137439532006,
+    "inference_us_per_window": 126.0201287924942,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 13,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 640,
+   "worker_warmup_s": 42.83362150005996,
+   "realised_steps": 1280,
+   "fit_s": 107.41234519984573,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0002729155154049616,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01764316585070106,
+      "h36": 0.01656908691855963
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006276524038375267,
+      "h36": 0.0026029169085821846
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.45742961680566596,
+      "h36": 0.6312182158566986
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.0380179436516087,
+     "product_moisture_kg_per_kg": 0.18507505989204792,
+     "bed_temperature_celsius": 0.1373604042179297
+    },
+    "criterion_C": 0.05525248508801414,
+    "inference_us_per_window": 72.93952191556694,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 13,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 640,
+   "worker_warmup_s": 42.84692190005444,
+   "realised_steps": 5760,
+   "fit_s": 632.4172191000544,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00031248549588353317,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012189962383032224,
+      "h36": 0.011914805206787893
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0004659442158662996,
+      "h36": 0.0005456363488932782
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4549492398848266,
+      "h36": 0.39638515863421575
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.025473464304096492,
+     "product_moisture_kg_per_kg": 0.0385026539024165,
+     "bed_temperature_celsius": 0.06835040017921483
+    },
+    "criterion_C": 0.023243459327479492,
+    "inference_us_per_window": 60.650459465036604,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 13,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 640,
+   "worker_warmup_s": 42.9218890001066,
+   "realised_steps": 5760,
+   "fit_s": 650.6055218998808,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003058608391952208,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012337690509764835,
+      "h36": 0.011961057492250314
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00046393517524072824,
+      "h36": 0.0005308919452670412
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4525908723844285,
+      "h36": 0.3964854747308283
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.02664140138796127,
+     "product_moisture_kg_per_kg": 0.03606178843850819,
+     "bed_temperature_celsius": 0.06782389302825564
+    },
+    "criterion_C": 0.023100978836206668,
+    "inference_us_per_window": 56.93593758384368,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 13,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 640,
+   "worker_warmup_s": 42.83362150005996,
+   "realised_steps": 5760,
+   "fit_s": 650.7417488999199,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00030345464919638983,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012314828091284858,
+      "h36": 0.012016923979449163
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0004641393974102713,
+      "h36": 0.0005552656111163482
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.45301968328833087,
+      "h36": 0.40212131205345436
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.028599042310468017,
+     "product_moisture_kg_per_kg": 0.039010698869128335,
+     "bed_temperature_celsius": 0.07025888154474244
+    },
+    "criterion_C": 0.023573493945178672,
+    "inference_us_per_window": 44.02610284159891,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 640,
+   "worker_warmup_s": 42.915008099982515,
+   "realised_steps": 1280,
+   "fit_s": 95.21433119988069,
+   "n_train_windows": 272,
+   "final_train_loss": 0.000578660363851882,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.017434481124355413,
+      "h36": 0.020508541304278195
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0013163244970461588,
+      "h36": 0.007490942023968338
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.365594212437284,
+      "h36": 2.8987504043874797
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03691068104023407,
+     "product_moisture_kg_per_kg": 0.3691733476319033,
+     "bed_temperature_celsius": 0.29291839474634945
+    },
+    "criterion_C": 0.1327483542446478,
+    "inference_us_per_window": 67.38924618248882,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 640,
+   "worker_warmup_s": 42.97963669989258,
+   "realised_steps": 1280,
+   "fit_s": 102.4220040999353,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0005798161865266807,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.020998641104501982,
+      "h36": 0.023152568769834254
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.001406729600066718,
+      "h36": 0.008455352361295857
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.323555435435757,
+      "h36": 2.600474737449729
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.04098510737298431,
+     "product_moisture_kg_per_kg": 0.43306863787417155,
+     "bed_temperature_celsius": 0.26178840121451324
+    },
+    "criterion_C": 0.13518011464149174,
+    "inference_us_per_window": 45.20707721787724,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 640,
+   "worker_warmup_s": 42.915008099982515,
+   "realised_steps": 1280,
+   "fit_s": 97.51436399994418,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0005709197310566463,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.023057328298777595,
+      "h36": 0.02446725241072789
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0014181193301454086,
+      "h36": 0.009234191010629021
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.1210130498192785,
+      "h36": 1.7870948988970823
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.043979953440988526,
+     "product_moisture_kg_per_kg": 0.5122217807504179,
+     "bed_temperature_celsius": 0.2514110691558161
+    },
+    "criterion_C": 0.12425553599123856,
+    "inference_us_per_window": 55.46571692855864,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 640,
+   "worker_warmup_s": 42.97857280005701,
+   "realised_steps": 5760,
+   "fit_s": 634.9740458999295,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00032508150701794555,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012223305319083014,
+      "h36": 0.012536797995095399
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0004901741902184221,
+      "h36": 0.0008115837977777777
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4584605451775059,
+      "h36": 0.43062582686684525
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.026534623490768974,
+     "product_moisture_kg_per_kg": 0.05218143789142017,
+     "bed_temperature_celsius": 0.054989186895006446
+    },
+    "criterion_C": 0.0218152505795433,
+    "inference_us_per_window": 54.767647003138656,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 640,
+   "worker_warmup_s": 42.97963669989258,
+   "realised_steps": 5760,
+   "fit_s": 621.8175238999538,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003179536879007869,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012404655724897958,
+      "h36": 0.01255324461603809
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0004837713203216065,
+      "h36": 0.0007253299052599961
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.45539505299779903,
+      "h36": 0.43695499344388733
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.02674639150531205,
+     "product_moisture_kg_per_kg": 0.04714195734795286,
+     "bed_temperature_celsius": 0.05213313087772126
+    },
+    "criterion_C": 0.021273354504584174,
+    "inference_us_per_window": 46.335018423098305,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 640,
+   "worker_warmup_s": 42.915008099982515,
+   "realised_steps": 5760,
+   "fit_s": 630.2036818999331,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003108140064047321,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01284720684078611,
+      "h36": 0.012786153337681367
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.000506136741479998,
+      "h36": 0.0006512729877516752
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4564745410964334,
+      "h36": 0.4393699103306772
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.030180075235099798,
+     "product_moisture_kg_per_kg": 0.05852506751038693,
+     "bed_temperature_celsius": 0.05803379776923162
+    },
+    "criterion_C": 0.02084584362067245,
+    "inference_us_per_window": 46.598437406560954,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 640,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 1280,
+   "fit_s": 95.35683750011958,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0003490431699901819,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.033720730520250264,
+      "h36": 0.03173887469990561
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0011744613151727275,
+      "h36": 0.004656286814773489
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.2549335717035952,
+      "h36": 2.2006417911797076
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.05873196418401325,
+     "product_moisture_kg_per_kg": 0.5192358257252793,
+     "bed_temperature_celsius": 0.2830562656728356
+    },
+    "criterion_C": 0.08821693798779823,
+    "inference_us_per_window": 60.08492645752781,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 640,
+   "worker_warmup_s": 42.8951655998826,
+   "realised_steps": 1280,
+   "fit_s": 90.85517759993672,
+   "n_train_windows": 272,
+   "final_train_loss": 0.000298608756993952,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.03754903553310836,
+      "h36": 0.028213308503425946
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0013309241791830205,
+      "h36": 0.006347352131257984
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.4489096774659052,
+      "h36": 2.36215563864042
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.06480752257312117,
+     "product_moisture_kg_per_kg": 0.6882809833866019,
+     "bed_temperature_celsius": 0.3041251094269116
+    },
+    "criterion_C": 0.10189434419750742,
+    "inference_us_per_window": 48.20027585511151,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 640,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 1280,
+   "fit_s": 83.93454889999703,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0002857146319001913,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.04151749454023972,
+      "h36": 0.03678974567150278
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0012655970315599008,
+      "h36": 0.006238602161543445
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.4698115041945257,
+      "h36": 2.4371421238461726
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.07266756262924155,
+     "product_moisture_kg_per_kg": 0.617449191343014,
+     "bed_temperature_celsius": 0.3655671613262862
+    },
+    "criterion_C": 0.10581837114771285,
+    "inference_us_per_window": 43.46599256250021,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 640,
+   "worker_warmup_s": 42.8951655998826,
+   "realised_steps": 5760,
+   "fit_s": 621.126519799931,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003128490626455887,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.017520087490388178,
+      "h36": 0.017900246551687732
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0003733937296394014,
+      "h36": 0.0009193225758087196
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5353641624435612,
+      "h36": 0.4695435202242321
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.030955003388554857,
+     "product_moisture_kg_per_kg": 0.07510175494002812,
+     "bed_temperature_celsius": 0.08376413928756819
+    },
+    "criterion_C": 0.022427910906074915,
+    "inference_us_per_window": 46.902941154685855,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 640,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 5760,
+   "fit_s": 621.3723877999,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003020912665627239,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01721380000943284,
+      "h36": 0.018280500360455032
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00035125726708057673,
+      "h36": 0.000918921279780128
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5287140464979094,
+      "h36": 0.4683696064733851
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.029830642640748386,
+     "product_moisture_kg_per_kg": 0.0761911411098718,
+     "bed_temperature_celsius": 0.0836648622656986
+    },
+    "criterion_C": 0.0225423819633746,
+    "inference_us_per_window": 55.56654415319345,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 640,
+   "worker_warmup_s": 42.84692190005444,
+   "realised_steps": 5760,
+   "fit_s": 609.3696433999576,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003264978089753319,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.017642110276599295,
+      "h36": 0.019355751007655082
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00036725991358268063,
+      "h36": 0.0008383917353818194
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5311193599743576,
+      "h36": 0.4809869762955008
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.032951792122752316,
+     "product_moisture_kg_per_kg": 0.08783766874665985,
+     "bed_temperature_celsius": 0.0879397179465668
+    },
+    "criterion_C": 0.02263426414250642,
+    "inference_us_per_window": 50.787867675192985,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 640,
+   "worker_warmup_s": 42.9218890001066,
+   "realised_steps": 1280,
+   "fit_s": 92.30488410010003,
+   "n_train_windows": 272,
+   "final_train_loss": 0.000431714704438277,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.016816950572696374,
+      "h36": 0.01631910072481358
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006097658321543197,
+      "h36": 0.0018501627604460085
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5072951906259946,
+      "h36": 0.5774217604596129
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.05130930472068058,
+     "product_moisture_kg_per_kg": 0.11931296075900402,
+     "bed_temperature_celsius": 0.11143554692948654
+    },
+    "criterion_C": 0.04194790881987411,
+    "inference_us_per_window": 63.36985290331273,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 640,
+   "worker_warmup_s": 42.83362150005996,
+   "realised_steps": 1280,
+   "fit_s": 90.14999549998902,
+   "n_train_windows": 272,
+   "final_train_loss": 0.00031333050505696414,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.015237809698651517,
+      "h36": 0.015178992547936778
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006429220656801978,
+      "h36": 0.002060801185375074
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4967442841566371,
+      "h36": 0.5229818085298561
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.04783208073845721,
+     "product_moisture_kg_per_kg": 0.13804200111074838,
+     "bed_temperature_celsius": 0.12977363506404097
+    },
+    "criterion_C": 0.04153356242008426,
+    "inference_us_per_window": 51.06985297649825,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 640,
+   "worker_warmup_s": 42.9218890001066,
+   "realised_steps": 1280,
+   "fit_s": 87.4354491000995,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0003059871412594529,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.017465023692473183,
+      "h36": 0.017185298751837788
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0007548862463369386,
+      "h36": 0.0024797047843995628
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.47073338481536053,
+      "h36": 0.5549709175041775
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.044573982016450894,
+     "product_moisture_kg_per_kg": 0.12501145727029456,
+     "bed_temperature_celsius": 0.1031302936154684
+    },
+    "criterion_C": 0.0470484214822836,
+    "inference_us_per_window": 59.05073532416924,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 640,
+   "worker_warmup_s": 42.83362150005996,
+   "realised_steps": 5760,
+   "fit_s": 614.5354873000178,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003246162223684437,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012203430368360298,
+      "h36": 0.011945632674708643
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005632763555871832,
+      "h36": 0.0006723569873480393
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4707805647670823,
+      "h36": 0.3970133109434831
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.0252478937305978,
+     "product_moisture_kg_per_kg": 0.04090737100615277,
+     "bed_temperature_celsius": 0.07376892412568484
+    },
+    "criterion_C": 0.0238169038128077,
+    "inference_us_per_window": 76.74999998177073,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 640,
+   "worker_warmup_s": 42.97857280005701,
+   "realised_steps": 5760,
+   "fit_s": 647.6475331000984,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.000311493464430575,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01232464612237513,
+      "h36": 0.012059423331171586
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005621531126523577,
+      "h36": 0.0006587910551931463
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.45936692634091403,
+      "h36": 0.38763468623884617
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.025836446824632993,
+     "product_moisture_kg_per_kg": 0.03734221492254275,
+     "bed_temperature_celsius": 0.07478306128922776
+    },
+    "criterion_C": 0.023418717393450455,
+    "inference_us_per_window": 57.242463192190314,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 640,
+   "worker_warmup_s": 42.9218890001066,
+   "realised_steps": 5760,
+   "fit_s": 621.2232631999068,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003018256581580157,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012756390142734431,
+      "h36": 0.012646700454563904
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005606834891196754,
+      "h36": 0.0006855926107291672
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4654489474298628,
+      "h36": 0.4142396242880457
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.029083977193052668,
+     "product_moisture_kg_per_kg": 0.03854240003518388,
+     "bed_temperature_celsius": 0.0761680510991921
+    },
+    "criterion_C": 0.024776232355902917,
+    "inference_us_per_window": 68.40395230135661,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 11,
+   "n": 2,
+   "method": "from_scratch",
+   "steps": 4000,
+   "worker_warmup_s": 42.97963669989258,
+   "epochs": 2000,
+   "realised_steps": 4000,
+   "fit_s": 286.7723096997943,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0010656373684897141,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.2198454063167808,
+      "h36": 0.7642010938452584
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0016420750294051682,
+      "h36": 0.017213404866122002
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.561747550796361,
+      "h36": 10.236681976037971
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 1.6327808925535527,
+     "product_moisture_kg_per_kg": 1.1159898092196974,
+     "bed_temperature_celsius": 1.2174957721284625
+    },
+    "criterion_C": 0.7438510842155037,
+    "inference_us_per_window": 48.14264706082587,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 11,
+   "n": 16,
+   "method": "from_scratch",
+   "steps": 4000,
+   "worker_warmup_s": 42.915008099982515,
+   "epochs": 444,
+   "realised_steps": 3996,
+   "fit_s": 455.6606753000524,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00035172397346126247,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.018272093901757554,
+      "h36": 0.01727189538262532
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0004874204623641434,
+      "h36": 0.0009763543283596496
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4872427637507278,
+      "h36": 0.6336123330775425
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.04214710796077443,
+     "product_moisture_kg_per_kg": 0.08617368814869551,
+     "bed_temperature_celsius": 0.07035779444100855
+    },
+    "criterion_C": 0.031042544789016992,
+    "inference_us_per_window": 50.14136032139718,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 12,
+   "n": 2,
+   "method": "from_scratch",
+   "steps": 4000,
+   "worker_warmup_s": 42.8951655998826,
+   "epochs": 2000,
+   "realised_steps": 4000,
+   "fit_s": 286.29025260009803,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0010319769670091132,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.19315073146750256,
+      "h36": 0.5857155381319916
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0011006814806178704,
+      "h36": 0.010847584875322808
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.9945650511595376,
+      "h36": 7.712238592876082
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 1.1991792308916795,
+     "product_moisture_kg_per_kg": 2.097332085227528,
+     "bed_temperature_celsius": 1.5141652759210178
+    },
+    "criterion_C": 0.4595637631273734,
+    "inference_us_per_window": 64.23226103138671,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 12,
+   "n": 16,
+   "method": "from_scratch",
+   "steps": 4000,
+   "worker_warmup_s": 42.835743400035426,
+   "epochs": 444,
+   "realised_steps": 3996,
+   "fit_s": 427.03716050018556,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0005166724218082998,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.022088683315941354,
+      "h36": 0.02318748026992227
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0003604460398268504,
+      "h36": 0.001196556570994529
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5586258708749086,
+      "h36": 0.537310474348488
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.06290016044980459,
+     "product_moisture_kg_per_kg": 0.15087739143019813,
+     "bed_temperature_celsius": 0.09174740807428086
+    },
+    "criterion_C": 0.02938556808248256,
+    "inference_us_per_window": 53.114705866284886,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 13,
+   "n": 2,
+   "method": "from_scratch",
+   "steps": 4000,
+   "worker_warmup_s": 42.97963669989258,
+   "epochs": 2000,
+   "realised_steps": 4000,
+   "fit_s": 305.46035959990695,
+   "n_train_windows": 272,
+   "final_train_loss": 0.001185281209045035,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.08209636002718237,
+      "h36": 0.1385157642704752
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0007313427625045614,
+      "h36": 0.005083898919698066
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.543207371443614,
+      "h36": 1.4393826724310115
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.29683133523996613,
+     "product_moisture_kg_per_kg": 0.49074782860485766,
+     "bed_temperature_celsius": 0.28209564643996937
+    },
+    "criterion_C": 0.1530399729520441,
+    "inference_us_per_window": 58.2119485924897,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP",
+   "pool": 13,
+   "n": 16,
+   "method": "from_scratch",
+   "steps": 4000,
+   "worker_warmup_s": 42.84692190005444,
+   "epochs": 444,
+   "realised_steps": 3996,
+   "fit_s": 444.0105345000047,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0006403640076956328,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.015526191602058176,
+      "h36": 0.014826524198055956
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00047976453690014255,
+      "h36": 0.0008249089004441412
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.48535412246544074,
+      "h36": 0.4494037304960188
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.04861907626223069,
+     "product_moisture_kg_per_kg": 0.06968648845949411,
+     "bed_temperature_celsius": 0.07861788870183753
+    },
+    "criterion_C": 0.029102326214623553,
+    "inference_us_per_window": 48.68097419282147,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 2,
+   "method": "from_scratch",
+   "steps": 4000,
+   "worker_warmup_s": 42.8951655998826,
+   "epochs": 2000,
+   "realised_steps": 4000,
+   "fit_s": 284.4252786000725,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0011626449961434392,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.2956716977142,
+      "h36": 1.246112747123525
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0013977985595172474,
+      "h36": 0.01310170319422014
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.996017686742538,
+      "h36": 8.113316738687661
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 2.4595410401817803,
+     "product_moisture_kg_per_kg": 0.8433861097896089,
+     "bed_temperature_celsius": 1.003742365606652
+    },
+    "criterion_C": 0.8721253350742765,
+    "inference_us_per_window": 45.345772163915065,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 16,
+   "method": "from_scratch",
+   "steps": 4000,
+   "worker_warmup_s": 42.915008099982515,
+   "epochs": 444,
+   "realised_steps": 3996,
+   "fit_s": 443.65369079983793,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003158041799906641,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.016689353540588203,
+      "h36": 0.016804078420229927
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005795257132659333,
+      "h36": 0.0009075971935267087
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.48760531260360224,
+      "h36": 0.5040943022086504
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.04337872099210474,
+     "product_moisture_kg_per_kg": 0.09096649788059297,
+     "bed_temperature_celsius": 0.06999654757343153
+    },
+    "criterion_C": 0.026207168757088273,
+    "inference_us_per_window": 71.1840993437149,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 2,
+   "method": "from_scratch",
+   "steps": 4000,
+   "worker_warmup_s": 42.83362150005996,
+   "epochs": 2000,
+   "realised_steps": 4000,
+   "fit_s": 299.72104909992777,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0010111825266743407,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.17814967547964877,
+      "h36": 0.532820839171294
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0011279660609994633,
+      "h36": 0.011271324019239845
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.9623366740919794,
+      "h36": 7.328882926062887
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 1.170027481139741,
+     "product_moisture_kg_per_kg": 1.8396991071013553,
+     "bed_temperature_celsius": 1.4951019931251
+    },
+    "criterion_C": 0.4225270942123383,
+    "inference_us_per_window": 43.77601105849916,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 16,
+   "method": "from_scratch",
+   "steps": 4000,
+   "worker_warmup_s": 42.97963669989258,
+   "epochs": 444,
+   "realised_steps": 3996,
+   "fit_s": 472.25851720012724,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0004380005531643024,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.02013512598849415,
+      "h36": 0.023561281879596722
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0003733701600812686,
+      "h36": 0.0012489513612615538
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5818040867377763,
+      "h36": 0.6266830761429796
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.06712712492997852,
+     "product_moisture_kg_per_kg": 0.14668480855784877,
+     "bed_temperature_celsius": 0.10422527407459937
+    },
+    "criterion_C": 0.02996425288815699,
+    "inference_us_per_window": 64.66829055331318,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 2,
+   "method": "from_scratch",
+   "steps": 4000,
+   "worker_warmup_s": 42.9218890001066,
+   "epochs": 2000,
+   "realised_steps": 4000,
+   "fit_s": 275.0296540998388,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0013615773264866542,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.08070275104716512,
+      "h36": 0.1343755583434717
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006655489016237959,
+      "h36": 0.0037803773402709136
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5484268609292651,
+      "h36": 1.7669381561152164
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.2968987205401047,
+     "product_moisture_kg_per_kg": 0.3466088078397542,
+     "bed_temperature_celsius": 0.2906769479868432
+    },
+    "criterion_C": 0.1424814545434092,
+    "inference_us_per_window": 52.684926391949,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "budget",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 16,
+   "method": "from_scratch",
+   "steps": 4000,
+   "worker_warmup_s": 42.97857280005701,
+   "epochs": 444,
+   "realised_steps": 3996,
+   "fit_s": 473.9730990999378,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0006290631957680863,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.014707660449870586,
+      "h36": 0.014402778378837971
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005707013728201639,
+      "h36": 0.0007709357400626929
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4858535182844383,
+      "h36": 0.42223736702039244
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.05423378340091408,
+     "product_moisture_kg_per_kg": 0.05435061520293794,
+     "bed_temperature_celsius": 0.08136795702288088
+    },
+    "criterion_C": 0.02644026647280386,
+    "inference_us_per_window": 53.65137878791703,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 11,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 320,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 640,
+   "fit_s": 50.39673579996452,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0005843257600003306,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.016830112767742707,
+      "h36": 0.019586658977775034
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.001106880563003437,
+      "h36": 0.0061423043988458855
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.7653203828191737,
+      "h36": 1.4228505096560526
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.032940819761238964,
+     "product_moisture_kg_per_kg": 0.4493225658493756,
+     "bed_temperature_celsius": 0.1503116478098494
+    },
+    "criterion_C": 0.09798846098051185,
+    "inference_us_per_window": 72.61663588852731,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 11,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 320,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 640,
+   "fit_s": 47.77842450002208,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0005790391656131867,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.019408407476760724,
+      "h36": 0.02326185007366786
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0010984845581755523,
+      "h36": 0.006250603173443989
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.7357317933073189,
+      "h36": 1.249507940286501
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03666530373069216,
+     "product_moisture_kg_per_kg": 0.46471172995616894,
+     "bed_temperature_celsius": 0.1337803151611236
+    },
+    "criterion_C": 0.09700424396008393,
+    "inference_us_per_window": 53.236580938306254,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 11,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 320,
+   "worker_warmup_s": 42.8951655998826,
+   "realised_steps": 640,
+   "fit_s": 47.58508600015193,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0005910049384350286,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.02384293576110425,
+      "h36": 0.02552167868241931
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00110817170746997,
+      "h36": 0.006295921186232198
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5984919148490786,
+      "h36": 1.131461481565061
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.036231349828531365,
+     "product_moisture_kg_per_kg": 0.429492236757783,
+     "bed_temperature_celsius": 0.12138190750252015
+    },
+    "criterion_C": 0.09595070948120858,
+    "inference_us_per_window": 46.25220604151871,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 11,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 320,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 2880,
+   "fit_s": 328.7395749001298,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00032890493543270757,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012371832443590997,
+      "h36": 0.012736630908814993
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0004923714251310896,
+      "h36": 0.0007619920905417323
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4547209492668858,
+      "h36": 0.46454773882398004
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.026646274409130595,
+     "product_moisture_kg_per_kg": 0.08362232678762826,
+     "bed_temperature_celsius": 0.048498460572926505
+    },
+    "criterion_C": 0.02323036296584274,
+    "inference_us_per_window": 78.89237124746775,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 11,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 320,
+   "worker_warmup_s": 42.8951655998826,
+   "realised_steps": 2880,
+   "fit_s": 323.87371170008555,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003225174321628669,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012522095156532439,
+      "h36": 0.012568162017612277
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00048267093891769754,
+      "h36": 0.000586162306491088
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.45373971087485265,
+      "h36": 0.46846003959116345
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.026602833618975783,
+     "product_moisture_kg_per_kg": 0.0691211605561659,
+     "bed_temperature_celsius": 0.04859693760959806
+    },
+    "criterion_C": 0.02157355923019123,
+    "inference_us_per_window": 53.148161789388666,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 11,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 320,
+   "worker_warmup_s": 42.84692190005444,
+   "realised_steps": 2880,
+   "fit_s": 328.321924299933,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003212388084434411,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.013265398951833342,
+      "h36": 0.013223898831740098
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00045984883301738316,
+      "h36": 0.0006239760992879725
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.45467223549002955,
+      "h36": 0.4526613558682031
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.02705814131556368,
+     "product_moisture_kg_per_kg": 0.05314189645766482,
+     "bed_temperature_celsius": 0.050705966333695646
+    },
+    "criterion_C": 0.02189918002667569,
+    "inference_us_per_window": 67.20441160723567,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 12,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 320,
+   "worker_warmup_s": 42.83362150005996,
+   "realised_steps": 640,
+   "fit_s": 46.11656340002082,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0003451592894955812,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01944655905694777,
+      "h36": 0.018926413610490495
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0009014199773211646,
+      "h36": 0.00373746012048463
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.6898474667312453,
+      "h36": 1.163502377942372
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03624758049840808,
+     "product_moisture_kg_per_kg": 0.44872590787687805,
+     "bed_temperature_celsius": 0.1395043005569942
+    },
+    "criterion_C": 0.06214252063546283,
+    "inference_us_per_window": 44.89154397400425,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 12,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 320,
+   "worker_warmup_s": 42.9218890001066,
+   "realised_steps": 640,
+   "fit_s": 55.28600890003145,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0003294520669014138,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01942259022099476,
+      "h36": 0.019744693283390752
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0008972684296962663,
+      "h36": 0.002926829106124765
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.7231739698971302,
+      "h36": 1.3910546602203078
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03302955492872983,
+     "product_moisture_kg_per_kg": 0.35494475660146835,
+     "bed_temperature_celsius": 0.2133846215774139
+    },
+    "criterion_C": 0.059738970720911756,
+    "inference_us_per_window": 50.776654568514516,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 12,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 320,
+   "worker_warmup_s": 42.83362150005996,
+   "realised_steps": 640,
+   "fit_s": 52.590433300007135,
+   "n_train_windows": 272,
+   "final_train_loss": 0.00032278112827471513,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.022459111378814796,
+      "h36": 0.01992265589996048
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0009669697540742263,
+      "h36": 0.0027410352462531665
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.765885217894098,
+      "h36": 1.6473487748316686
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.04196430807423032,
+     "product_moisture_kg_per_kg": 0.40356979218118516,
+     "bed_temperature_celsius": 0.26731459367881405
+    },
+    "criterion_C": 0.06312393549832322,
+    "inference_us_per_window": 61.57601113527027,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 12,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 320,
+   "worker_warmup_s": 42.83362150005996,
+   "realised_steps": 2880,
+   "fit_s": 344.9179871000815,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00031833599068169645,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.018307276246621602,
+      "h36": 0.018594698137436458
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0003477054828892604,
+      "h36": 0.0007467362756626563
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5014977327388818,
+      "h36": 0.48709474591405333
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03042434197717068,
+     "product_moisture_kg_per_kg": 0.11241636416323803,
+     "bed_temperature_celsius": 0.0708707903214062
+    },
+    "criterion_C": 0.022786861115091234,
+    "inference_us_per_window": 49.33851104236537,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 12,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 320,
+   "worker_warmup_s": 42.9218890001066,
+   "realised_steps": 2880,
+   "fit_s": 335.17835980001837,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00030712903004742284,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01793124706021085,
+      "h36": 0.017761273148726175
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0003310586181647674,
+      "h36": 0.0007038003210787728
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5019758874179184,
+      "h36": 0.49876900022602766
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.030253092209227707,
+     "product_moisture_kg_per_kg": 0.09941661244071291,
+     "bed_temperature_celsius": 0.07274702649768137
+    },
+    "criterion_C": 0.022329252345787504,
+    "inference_us_per_window": 67.41295959834721,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 12,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 320,
+   "worker_warmup_s": 42.915008099982515,
+   "realised_steps": 2880,
+   "fit_s": 342.43006930011325,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00030768876347471685,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01813487711881593,
+      "h36": 0.018125480162690742
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00034066694626898114,
+      "h36": 0.0007515445366384371
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5110638037491171,
+      "h36": 0.5040273481198497
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.029834843726582183,
+     "product_moisture_kg_per_kg": 0.07882281369599306,
+     "bed_temperature_celsius": 0.074528066388409
+    },
+    "criterion_C": 0.022982847740012483,
+    "inference_us_per_window": 89.81737119029276,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 13,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 320,
+   "worker_warmup_s": 42.97963669989258,
+   "realised_steps": 640,
+   "fit_s": 45.649169199867174,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0005604269818457611,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.014349035636740655,
+      "h36": 0.013477869708280136
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006225735374401329,
+      "h36": 0.002464862642358949
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4704036228860268,
+      "h36": 0.5770461045690655
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.030730357092378792,
+     "product_moisture_kg_per_kg": 0.1464643296435948,
+     "bed_temperature_celsius": 0.10899706436424556
+    },
+    "criterion_C": 0.050847272975469114,
+    "inference_us_per_window": 48.15716901622877,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 13,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 320,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 640,
+   "fit_s": 48.845085999928415,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0003173521733568872,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.015560947468326525,
+      "h36": 0.014094126504344908
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006344120945035072,
+      "h36": 0.0021029691977432477
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4626954372694548,
+      "h36": 0.571301592314734
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.033620943858415124,
+     "product_moisture_kg_per_kg": 0.11838706725811712,
+     "bed_temperature_celsius": 0.09525940638578895
+    },
+    "criterion_C": 0.04689494447986159,
+    "inference_us_per_window": 43.47371320952387,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 13,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 320,
+   "worker_warmup_s": 42.97857280005701,
+   "realised_steps": 640,
+   "fit_s": 52.13867360004224,
+   "n_train_windows": 272,
+   "final_train_loss": 0.00027830541469430663,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.016398097127792364,
+      "h36": 0.014404421661442224
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006097491557370206,
+      "h36": 0.0027282721869859184
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4602167359302465,
+      "h36": 0.7066163158591249
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03528734121341915,
+     "product_moisture_kg_per_kg": 0.17842997286317047,
+     "bed_temperature_celsius": 0.11437848693483893
+    },
+    "criterion_C": 0.05830887858096961,
+    "inference_us_per_window": 46.70183818020365,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 13,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 320,
+   "worker_warmup_s": 42.97963669989258,
+   "realised_steps": 2880,
+   "fit_s": 352.0257924001198,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00032700011712115477,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012189356779816696,
+      "h36": 0.01197072431750917
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.000467717561696426,
+      "h36": 0.0005749777641371566
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4566958593966999,
+      "h36": 0.3969233966119976
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.02550304670534948,
+     "product_moisture_kg_per_kg": 0.046255006756989174,
+     "bed_temperature_celsius": 0.06916739559249785
+    },
+    "criterion_C": 0.023604560708632014,
+    "inference_us_per_window": 48.80707723821294,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 13,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 320,
+   "worker_warmup_s": 42.8951655998826,
+   "realised_steps": 2880,
+   "fit_s": 339.295295199845,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003137314154574757,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012220251457302031,
+      "h36": 0.011929856077446132
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0004665243074366386,
+      "h36": 0.0005520238860767566
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4551586106385969,
+      "h36": 0.3978015244031201
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.025815429433356497,
+     "product_moisture_kg_per_kg": 0.03926609146803271,
+     "bed_temperature_celsius": 0.06868433357360208
+    },
+    "criterion_C": 0.023365462776873385,
+    "inference_us_per_window": 48.666268412489444,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 13,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 320,
+   "worker_warmup_s": 42.84692190005444,
+   "realised_steps": 2880,
+   "fit_s": 340.9417018999811,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00031897952259682557,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012307037125090502,
+      "h36": 0.011955654311991866
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0004659804543247659,
+      "h36": 0.0005698820263402725
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.456718143645681,
+      "h36": 0.3992784175755242
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.028336140528776158,
+     "product_moisture_kg_per_kg": 0.04040534922429767,
+     "bed_temperature_celsius": 0.06960385106277023
+    },
+    "criterion_C": 0.023619728172063103,
+    "inference_us_per_window": 71.20027593747876,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 320,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 640,
+   "fit_s": 47.63882499979809,
+   "n_train_windows": 272,
+   "final_train_loss": 0.000592277104528073,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01553111075387676,
+      "h36": 0.017973642624408162
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0013721995965146195,
+      "h36": 0.007391777194050058
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.3800819495787704,
+      "h36": 2.9438335662174056
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.034569608743740696,
+     "product_moisture_kg_per_kg": 0.3717928257397954,
+     "bed_temperature_celsius": 0.3057208104517457
+    },
+    "criterion_C": 0.13174061263784728,
+    "inference_us_per_window": 49.7151655401788,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 320,
+   "worker_warmup_s": 42.97857280005701,
+   "realised_steps": 640,
+   "fit_s": 48.673231300199404,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0005825430647853543,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.017519466194557992,
+      "h36": 0.02093205848995427
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0013569587097274857,
+      "h36": 0.007762884503301496
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.3467768787739554,
+      "h36": 2.791484982422099
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.037549787661682446,
+     "product_moisture_kg_per_kg": 0.3915304343557047,
+     "bed_temperature_celsius": 0.28855617309557935
+    },
+    "criterion_C": 0.13277582847888578,
+    "inference_us_per_window": 50.04659931942382,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 320,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 640,
+   "fit_s": 51.76994839985855,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0005742143360240495,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.02060214495293075,
+      "h36": 0.021831300665898154
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0014139156694082551,
+      "h36": 0.008439378473728347
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.1581821005018345,
+      "h36": 2.0873582354005737
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03536074607922189,
+     "product_moisture_kg_per_kg": 0.4494313309949182,
+     "bed_temperature_celsius": 0.2464034198342811
+    },
+    "criterion_C": 0.123223546246041,
+    "inference_us_per_window": 53.14613971516819,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 320,
+   "worker_warmup_s": 42.97857280005701,
+   "realised_steps": 2880,
+   "fit_s": 347.97440279996954,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003521827542606522,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012719684466954699,
+      "h36": 0.012942645933172231
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005199598411919411,
+      "h36": 0.0008180176752564526
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4716443676901124,
+      "h36": 0.4522724693742215
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.026708314993802357,
+     "product_moisture_kg_per_kg": 0.07066229898128187,
+     "bed_temperature_celsius": 0.05976364687040321
+    },
+    "criterion_C": 0.0225315000889481,
+    "inference_us_per_window": 72.65027563656022,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 320,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 2880,
+   "fit_s": 348.57991159986705,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003283573965103749,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012294351306605153,
+      "h36": 0.012573356612200772
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0004931188092118064,
+      "h36": 0.0006954157089949376
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.46019806312968564,
+      "h36": 0.4345284628206044
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.026642502741500547,
+     "product_moisture_kg_per_kg": 0.04860588706930413,
+     "bed_temperature_celsius": 0.05388645791040983
+    },
+    "criterion_C": 0.020991339279361615,
+    "inference_us_per_window": 41.78042282172314,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 320,
+   "worker_warmup_s": 42.9218890001066,
+   "realised_steps": 2880,
+   "fit_s": 338.0355079998262,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00031991194940500837,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012883792117560904,
+      "h36": 0.0129385621018915
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005023147350540478,
+      "h36": 0.0006771952706278215
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.45921394767214363,
+      "h36": 0.4516262006363132
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.027158019113603174,
+     "product_moisture_kg_per_kg": 0.05546233231917727,
+     "bed_temperature_celsius": 0.053817588870345934
+    },
+    "criterion_C": 0.02139239281418086,
+    "inference_us_per_window": 60.50174616736031,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 320,
+   "worker_warmup_s": 42.915008099982515,
+   "realised_steps": 640,
+   "fit_s": 49.58232249994762,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0004049956538330983,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.031082567979933924,
+      "h36": 0.026272872132348357
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0011341194169642646,
+      "h36": 0.004818947605469501
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.2939804680002014,
+      "h36": 2.2700157368356457
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.04237051267249309,
+     "product_moisture_kg_per_kg": 0.4658753047367633,
+     "bed_temperature_celsius": 0.2841828440061998
+    },
+    "criterion_C": 0.08871377910186691,
+    "inference_us_per_window": 65.50459575544879,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 320,
+   "worker_warmup_s": 42.83362150005996,
+   "realised_steps": 640,
+   "fit_s": 55.09149690018967,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0003425861821811208,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.03342284013229904,
+      "h36": 0.03262901938546121
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.001215416218328497,
+      "h36": 0.005312716476779838
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.3217794036272386,
+      "h36": 2.3262121385143395
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.056109685525384034,
+     "product_moisture_kg_per_kg": 0.5541643746344536,
+     "bed_temperature_celsius": 0.2962011813329954
+    },
+    "criterion_C": 0.09562327881320494,
+    "inference_us_per_window": 46.774448599214395,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 320,
+   "worker_warmup_s": 42.83362150005996,
+   "realised_steps": 640,
+   "fit_s": 52.11083799996413,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0003037804306265624,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.03412622571951747,
+      "h36": 0.024973354859037927
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0013488122216299297,
+      "h36": 0.0059240864447639395
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.5076665232924484,
+      "h36": 2.4676042996956014
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.05889944040112573,
+     "product_moisture_kg_per_kg": 0.6524424623562344,
+     "bed_temperature_celsius": 0.3383546992945644
+    },
+    "criterion_C": 0.09986967219873484,
+    "inference_us_per_window": 61.492463239975386,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 320,
+   "worker_warmup_s": 42.915008099982515,
+   "realised_steps": 2880,
+   "fit_s": 338.22064180020243,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00034381724852959025,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01748613014793302,
+      "h36": 0.017610200723377396
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00041932395271871326,
+      "h36": 0.0011508305054773076
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.559357574237223,
+      "h36": 0.5228142609634346
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.032149237707354957,
+     "product_moisture_kg_per_kg": 0.1007546187876937,
+     "bed_temperature_celsius": 0.08604302294667879
+    },
+    "criterion_C": 0.024996491087888793,
+    "inference_us_per_window": 53.4311580208048,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 320,
+   "worker_warmup_s": 42.83362150005996,
+   "realised_steps": 2880,
+   "fit_s": 315.6406678999774,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003119847353766946,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.017575132333052294,
+      "h36": 0.01796199904997256
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00039427643532749117,
+      "h36": 0.0008818965635806909
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5329372381034835,
+      "h36": 0.4701444189770433
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.030678156733326856,
+     "product_moisture_kg_per_kg": 0.07207385599199193,
+     "bed_temperature_celsius": 0.08231022671446876
+    },
+    "criterion_C": 0.022202909575509678,
+    "inference_us_per_window": 72.23639691159512,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 320,
+   "worker_warmup_s": 42.97963669989258,
+   "realised_steps": 2880,
+   "fit_s": 331.53883159998804,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00030737807666061115,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.017136358008517323,
+      "h36": 0.01836044609874023
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0003556311863770717,
+      "h36": 0.0009044338997929891
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5266777965493179,
+      "h36": 0.4925115074311653
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.02991840587013444,
+     "product_moisture_kg_per_kg": 0.07717523437122926,
+     "bed_temperature_celsius": 0.08371941981192023
+    },
+    "criterion_C": 0.022955472507204425,
+    "inference_us_per_window": 46.0613052436041,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 320,
+   "worker_warmup_s": 42.8951655998826,
+   "realised_steps": 640,
+   "fit_s": 49.66059360001236,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0007111691246630953,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01655502203604808,
+      "h36": 0.016959371664647234
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006374711524238603,
+      "h36": 0.0023736910511204584
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5232102064967306,
+      "h36": 0.6906950140558434
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.045934169029688963,
+     "product_moisture_kg_per_kg": 0.12369419849148099,
+     "bed_temperature_celsius": 0.12806017432717742
+    },
+    "criterion_C": 0.05066150439766041,
+    "inference_us_per_window": 43.4988052053514,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 320,
+   "worker_warmup_s": 42.84692190005444,
+   "realised_steps": 640,
+   "fit_s": 49.265814300160855,
+   "n_train_windows": 272,
+   "final_train_loss": 0.00039967061157393106,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.0160057546020501,
+      "h36": 0.01584896105569108
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006070620530617996,
+      "h36": 0.0021391130696309683
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5027209319192067,
+      "h36": 0.589994768533452
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.049046848506681145,
+     "product_moisture_kg_per_kg": 0.13434712194862186,
+     "bed_temperature_celsius": 0.14235368891011274
+    },
+    "criterion_C": 0.04475385372223619,
+    "inference_us_per_window": 68.19586397956728,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 320,
+   "worker_warmup_s": 42.8951655998826,
+   "realised_steps": 640,
+   "fit_s": 47.06670520012267,
+   "n_train_windows": 272,
+   "final_train_loss": 0.00033253900063059786,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01467715295559729,
+      "h36": 0.013944959218718871
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006801042190350523,
+      "h36": 0.0020782737051648573
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.48813436002881366,
+      "h36": 0.5422961782405129
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.043172408226199735,
+     "product_moisture_kg_per_kg": 0.13314412054089003,
+     "bed_temperature_celsius": 0.10364418334244865
+    },
+    "criterion_C": 0.04189774779943855,
+    "inference_us_per_window": 52.17775747844237,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 320,
+   "worker_warmup_s": 42.84692190005444,
+   "realised_steps": 2880,
+   "fit_s": 343.91143029998057,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003640437156290692,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012114878647690713,
+      "h36": 0.011994535068537471
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005649916222103884,
+      "h36": 0.000737295569151109
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4848960465042716,
+      "h36": 0.4101892431417927
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.025758246215213262,
+     "product_moisture_kg_per_kg": 0.05708642433905128,
+     "bed_temperature_celsius": 0.08070224444206996
+    },
+    "criterion_C": 0.024856809281402225,
+    "inference_us_per_window": 59.35955885112943,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 320,
+   "worker_warmup_s": 42.8951655998826,
+   "realised_steps": 2880,
+   "fit_s": 360.97552149998955,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00033534292357645054,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012198741077974997,
+      "h36": 0.01195152759174025
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005626962219006616,
+      "h36": 0.0006934818620359218
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4698359709379466,
+      "h36": 0.40122635620480196
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.025839234980645144,
+     "product_moisture_kg_per_kg": 0.041320784814588,
+     "bed_temperature_celsius": 0.07553442059557988
+    },
+    "criterion_C": 0.024149053515498464,
+    "inference_us_per_window": 46.38602930593633,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 320,
+   "worker_warmup_s": 42.97857280005701,
+   "realised_steps": 2880,
+   "fit_s": 338.18805540003814,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003181376258212635,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012547029837730801,
+      "h36": 0.012341676576111177
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005602087838882398,
+      "h36": 0.0006866356773292275
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.464064449376125,
+      "h36": 0.39522533744078364
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.027960080343024392,
+     "product_moisture_kg_per_kg": 0.048001619731044824,
+     "bed_temperature_celsius": 0.07296316380356252
+    },
+    "criterion_C": 0.024025849387389733,
+    "inference_us_per_window": 57.1151656057576,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 11,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 160,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 320,
+   "fit_s": 25.496020700084046,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0006054438760175425,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.015480875365273747,
+      "h36": 0.016787837749277685
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0011460056723858296,
+      "h36": 0.006603741347359849
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.7820522620675918,
+      "h36": 1.3532281733025109
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.030012977139024365,
+     "product_moisture_kg_per_kg": 0.45023417148500344,
+     "bed_temperature_celsius": 0.1523064705964195
+    },
+    "criterion_C": 0.09952779184238159,
+    "inference_us_per_window": 64.83740799012594,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 11,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 160,
+   "worker_warmup_s": 42.9218890001066,
+   "realised_steps": 320,
+   "fit_s": 24.277910700067878,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0005927673876559472,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.017602838960631802,
+      "h36": 0.02086836097663284
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0010891188747716033,
+      "h36": 0.005971959748309922
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.7701281913322036,
+      "h36": 1.447230603117516
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03374455474162543,
+     "product_moisture_kg_per_kg": 0.44357034077918,
+     "bed_temperature_celsius": 0.1498629743961557
+    },
+    "criterion_C": 0.0975088244850511,
+    "inference_us_per_window": 48.721231638303244,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 11,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 160,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 320,
+   "fit_s": 24.965015099849552,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0005876332836444763,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.020109985179352172,
+      "h36": 0.023213014860402628
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.001089178764605785,
+      "h36": 0.006152473020622454
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.6641654022988186,
+      "h36": 1.2083692211902788
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03439212918215127,
+     "product_moisture_kg_per_kg": 0.4342405883085021,
+     "bed_temperature_celsius": 0.13299927759250701
+    },
+    "criterion_C": 0.09516607857842589,
+    "inference_us_per_window": 86.57224252066739,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 11,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 160,
+   "worker_warmup_s": 42.9218890001066,
+   "realised_steps": 1440,
+   "fit_s": 173.25124950008467,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.000355361113393241,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012505913641380878,
+      "h36": 0.012956753789276932
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005343186130235938,
+      "h36": 0.0009423303662588526
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4527575981300934,
+      "h36": 0.46769908076483135
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.02706602791984246,
+     "product_moisture_kg_per_kg": 0.1125098846361467,
+     "bed_temperature_celsius": 0.05317777187061885
+    },
+    "criterion_C": 0.025106549170111046,
+    "inference_us_per_window": 44.014797715456496,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 11,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 160,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 1440,
+   "fit_s": 168.23568870010786,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003301434198339634,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012436554014947691,
+      "h36": 0.012811565783234436
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00048822539315382873,
+      "h36": 0.0007026379657275316
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.45392448124643314,
+      "h36": 0.47225724555942994
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.02662177166803345,
+     "product_moisture_kg_per_kg": 0.08115354655588952,
+     "bed_temperature_celsius": 0.04814185342041311
+    },
+    "criterion_C": 0.02287107981456218,
+    "inference_us_per_window": 47.34090073136887,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 11,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 160,
+   "worker_warmup_s": 42.915008099982515,
+   "realised_steps": 1440,
+   "fit_s": 162.15348759992048,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00032901255454977643,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012616472711345349,
+      "h36": 0.01284787791453225
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.000482102349667658,
+      "h36": 0.0006792983772517863
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4537303891690961,
+      "h36": 0.4648650212116649
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.026831518364345816,
+     "product_moisture_kg_per_kg": 0.06353292762015667,
+     "bed_temperature_celsius": 0.04812183542214256
+    },
+    "criterion_C": 0.0225081017374643,
+    "inference_us_per_window": 49.94034936637892,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 12,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 160,
+   "worker_warmup_s": 42.83362150005996,
+   "realised_steps": 320,
+   "fit_s": 25.564460600027815,
+   "n_train_windows": 272,
+   "final_train_loss": 0.00036142544601770006,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.019348907428326532,
+      "h36": 0.018194215690051516
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0009724168494982519,
+      "h36": 0.004323667921477088
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.6984820974485362,
+      "h36": 1.064100670688644
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.037804707551471514,
+     "product_moisture_kg_per_kg": 0.5326202124016337,
+     "bed_temperature_celsius": 0.12715670535236703
+    },
+    "criterion_C": 0.0650861842263075,
+    "inference_us_per_window": 61.328492687179654,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 12,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 160,
+   "worker_warmup_s": 42.83362150005996,
+   "realised_steps": 320,
+   "fit_s": 24.473694699816406,
+   "n_train_windows": 272,
+   "final_train_loss": 0.00034988336333566727,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01991544602357745,
+      "h36": 0.018788461505782558
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0009193705130189559,
+      "h36": 0.003601181952387982
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.7259291355368721,
+      "h36": 1.2015043354335313
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.034718117822405956,
+     "product_moisture_kg_per_kg": 0.46953223293028,
+     "bed_temperature_celsius": 0.16312727298446916
+    },
+    "criterion_C": 0.06163207407783711,
+    "inference_us_per_window": 57.190441165242675,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 12,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 160,
+   "worker_warmup_s": 42.83362150005996,
+   "realised_steps": 320,
+   "fit_s": 26.466626800131053,
+   "n_train_windows": 272,
+   "final_train_loss": 0.000361583918086527,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.019683210204670593,
+      "h36": 0.02098694873021931
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0008855332318948536,
+      "h36": 0.0028322183536155614
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.7414452558822119,
+      "h36": 1.634299009569598
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.034503499740952265,
+     "product_moisture_kg_per_kg": 0.4013653531996556,
+     "bed_temperature_celsius": 0.27962127015293137
+    },
+    "criterion_C": 0.06406240337505269,
+    "inference_us_per_window": 45.21443021504263,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 12,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 160,
+   "worker_warmup_s": 42.83362150005996,
+   "realised_steps": 1440,
+   "fit_s": 163.0150259998627,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00034263970583732077,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.019112429834594137,
+      "h36": 0.018542622024979902
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00038977708087889755,
+      "h36": 0.000801112140399971
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5050630677195778,
+      "h36": 0.48592181922116884
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03111803417098723,
+     "product_moisture_kg_per_kg": 0.1306343353960487,
+     "bed_temperature_celsius": 0.0713061153218972
+    },
+    "criterion_C": 0.023221042770364703,
+    "inference_us_per_window": 50.58933824971866,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 12,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 160,
+   "worker_warmup_s": 42.97963669989258,
+   "realised_steps": 1440,
+   "fit_s": 173.58381190011278,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00031853560015887897,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.018292445156164346,
+      "h36": 0.018333234488082578
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0003539821168239393,
+      "h36": 0.0007422145543900585
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5008955863453655,
+      "h36": 0.4724484849283472
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.030610498813497304,
+     "product_moisture_kg_per_kg": 0.11847527911868541,
+     "bed_temperature_celsius": 0.07503959378274455
+    },
+    "criterion_C": 0.022368319223634938,
+    "inference_us_per_window": 72.08658087834277,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 12,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 160,
+   "worker_warmup_s": 42.9218890001066,
+   "realised_steps": 1440,
+   "fit_s": 170.6839318999555,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00032309585196130415,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.017915484272814433,
+      "h36": 0.017841960865196717
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00035161231684436884,
+      "h36": 0.0008371450011465254
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5027826639649691,
+      "h36": 0.49877573360522204
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.030337036993732566,
+     "product_moisture_kg_per_kg": 0.09533826370153771,
+     "bed_temperature_celsius": 0.07260846746857254
+    },
+    "criterion_C": 0.023526394219114354,
+    "inference_us_per_window": 54.34126839699114,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 13,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 160,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 320,
+   "fit_s": 24.427680399967358,
+   "n_train_windows": 272,
+   "final_train_loss": 0.000962288464720854,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.013187048130852863,
+      "h36": 0.014073109273398887
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005789317540009121,
+      "h36": 0.0026109130886239834
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.48356610228956753,
+      "h36": 0.6442665151354559
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.028972650107254503,
+     "product_moisture_kg_per_kg": 0.16627276285564097,
+     "bed_temperature_celsius": 0.11944891915619009
+    },
+    "criterion_C": 0.05486327345632741,
+    "inference_us_per_window": 47.108915596789515,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 13,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 160,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 320,
+   "fit_s": 27.54776780004613,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0005278194028719821,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.014860271420819405,
+      "h36": 0.01370264045674639
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006291719798238006,
+      "h36": 0.002136455117797075
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4715340630855225,
+      "h36": 0.5651303549236734
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03190771474484562,
+     "product_moisture_kg_per_kg": 0.1272751353078584,
+     "bed_temperature_celsius": 0.10225424830187349
+    },
+    "criterion_C": 0.046921189220053415,
+    "inference_us_per_window": 55.63630517880323,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 13,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 160,
+   "worker_warmup_s": 42.915008099982515,
+   "realised_steps": 320,
+   "fit_s": 22.064164199866354,
+   "n_train_windows": 272,
+   "final_train_loss": 0.00035891250488074384,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.016917909824579802,
+      "h36": 0.014935583605117129
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006260176944581834,
+      "h36": 0.0021531574318329606
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.46617836862231843,
+      "h36": 0.6085704003815091
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03468640328504685,
+     "product_moisture_kg_per_kg": 0.12025395107013964,
+     "bed_temperature_celsius": 0.1113452141385851
+    },
+    "criterion_C": 0.04896723732685554,
+    "inference_us_per_window": 51.48492645650335,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 13,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 160,
+   "worker_warmup_s": 42.915008099982515,
+   "realised_steps": 1440,
+   "fit_s": 164.81316139991395,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.000361286398187718,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01217133975751684,
+      "h36": 0.012288624440267806
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00047845414480839705,
+      "h36": 0.0007585363270353445
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4593470675672735,
+      "h36": 0.40017593645243765
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.0261849750279656,
+     "product_moisture_kg_per_kg": 0.08149031859391317,
+     "bed_temperature_celsius": 0.07330669356712959
+    },
+    "criterion_C": 0.025848310334063457,
+    "inference_us_per_window": 50.453584502546995,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 13,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 160,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 1440,
+   "fit_s": 161.05411539995112,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003261458529296386,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012256450619957674,
+      "h36": 0.011965533722361118
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0004675741503278189,
+      "h36": 0.0005810742967619704
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4576226957657013,
+      "h36": 0.3988871214780807
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.025518373214923597,
+     "product_moisture_kg_per_kg": 0.04591748325445353,
+     "bed_temperature_celsius": 0.0700036087008592
+    },
+    "criterion_C": 0.023733880188453627,
+    "inference_us_per_window": 62.31213239302366,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP",
+   "pool": 13,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 160,
+   "worker_warmup_s": 42.84692190005444,
+   "realised_steps": 1440,
+   "fit_s": 168.70691830012947,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00032741618205738417,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012186981761350971,
+      "h36": 0.012055876827980348
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00046936928189706274,
+      "h36": 0.0006642861952626334
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.45933036914270425,
+      "h36": 0.4042720658628922
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.027645552543335485,
+     "product_moisture_kg_per_kg": 0.04647242669033571,
+     "bed_temperature_celsius": 0.07195538857084292
+    },
+    "criterion_C": 0.02485906161497703,
+    "inference_us_per_window": 65.6639704710174,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 160,
+   "worker_warmup_s": 42.97857280005701,
+   "realised_steps": 320,
+   "fit_s": 23.294768099905923,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0006321142667301876,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.015878677184407112,
+      "h36": 0.017536648071395138
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0014330774896464864,
+      "h36": 0.007832386080277176
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.4108847844885362,
+      "h36": 2.9654850890045044
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.0350527691696967,
+     "product_moisture_kg_per_kg": 0.40569686056066645,
+     "bed_temperature_celsius": 0.3143371008875607
+    },
+    "criterion_C": 0.13552012471358857,
+    "inference_us_per_window": 52.583547906525546,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 160,
+   "worker_warmup_s": 42.8951655998826,
+   "realised_steps": 320,
+   "fit_s": 24.996677299961448,
+   "n_train_windows": 272,
+   "final_train_loss": 0.000594600908430841,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.016364603442597485,
+      "h36": 0.019459664831166307
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0013842675897921142,
+      "h36": 0.007674877274446296
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.3706101473308467,
+      "h36": 2.8882428132932922
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03709462603920028,
+     "product_moisture_kg_per_kg": 0.3896519010406071,
+     "bed_temperature_celsius": 0.3005665434880806
+    },
+    "criterion_C": 0.1334887926849305,
+    "inference_us_per_window": 40.27233465903384,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 160,
+   "worker_warmup_s": 42.97857280005701,
+   "realised_steps": 320,
+   "fit_s": 25.272826500004157,
+   "n_train_windows": 272,
+   "final_train_loss": 0.000587781035231755,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01799711782165256,
+      "h36": 0.02132578793774289
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.001367381929518159,
+      "h36": 0.007921258861809178
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.2676641125846566,
+      "h36": 2.5602887716099865
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03768629095171465,
+     "product_moisture_kg_per_kg": 0.40932180193676426,
+     "bed_temperature_celsius": 0.2663124224502853
+    },
+    "criterion_C": 0.12917765159239505,
+    "inference_us_per_window": 57.762316239806005,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 160,
+   "worker_warmup_s": 42.83362150005996,
+   "realised_steps": 1440,
+   "fit_s": 166.58099589985795,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0004296631651574417,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.013458176500710975,
+      "h36": 0.01357857492429101
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005549897692254359,
+      "h36": 0.0013531804745327885
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5001621618221621,
+      "h36": 0.4895834283106898
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.027359583506902013,
+     "product_moisture_kg_per_kg": 0.09039514965336304,
+     "bed_temperature_celsius": 0.06935241309819576
+    },
+    "criterion_C": 0.027915408439731157,
+    "inference_us_per_window": 44.49384184280301,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 160,
+   "worker_warmup_s": 42.8951655998826,
+   "realised_steps": 1440,
+   "fit_s": 166.28076779982075,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003491198089357246,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01272465766001089,
+      "h36": 0.012908858485006735
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005159154670643272,
+      "h36": 0.000843369418123958
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4692760826102652,
+      "h36": 0.44621772976679797
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.026704559133898832,
+     "product_moisture_kg_per_kg": 0.06608284405139357,
+     "bed_temperature_celsius": 0.057442885229232174
+    },
+    "criterion_C": 0.022585474489707217,
+    "inference_us_per_window": 85.83593743798487,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 11,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 160,
+   "worker_warmup_s": 42.97857280005701,
+   "realised_steps": 1440,
+   "fit_s": 163.9709516998846,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00034456495161387413,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012312979470016788,
+      "h36": 0.012504903822425773
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.000508189923256494,
+      "h36": 0.0006927294746499596
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4608526295875785,
+      "h36": 0.435582798002791
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.02703416811245024,
+     "product_moisture_kg_per_kg": 0.050532026586082496,
+     "bed_temperature_celsius": 0.053364810122963485
+    },
+    "criterion_C": 0.020960498337169602,
+    "inference_us_per_window": 53.862499900038955,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 160,
+   "worker_warmup_s": 42.97963669989258,
+   "realised_steps": 320,
+   "fit_s": 26.3057210999541,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0004898036097395508,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.026624290933401067,
+      "h36": 0.021365622518387944
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.001151387769065529,
+      "h36": 0.005399095243125153
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.4205608280627313,
+      "h36": 2.523273233177262
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.038957321599895414,
+     "product_moisture_kg_per_kg": 0.5531843700602312,
+     "bed_temperature_celsius": 0.3229282216698871
+    },
+    "criterion_C": 0.09600416067303619,
+    "inference_us_per_window": 53.28795947100255,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 160,
+   "worker_warmup_s": 42.9218890001066,
+   "realised_steps": 320,
+   "fit_s": 23.43606059998274,
+   "n_train_windows": 272,
+   "final_train_loss": 0.00039266964749378315,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.03184465134034928,
+      "h36": 0.02775596075096157
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0012291622438234413,
+      "h36": 0.005055669314572955
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.297042035800708,
+      "h36": 2.244215861594334
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.04245979670098257,
+     "product_moisture_kg_per_kg": 0.5482913129330198,
+     "bed_temperature_celsius": 0.28761868181436145
+    },
+    "criterion_C": 0.0903895634902309,
+    "inference_us_per_window": 42.260386073715324,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 160,
+   "worker_warmup_s": 42.97963669989258,
+   "realised_steps": 320,
+   "fit_s": 27.54372339998372,
+   "n_train_windows": 272,
+   "final_train_loss": 0.00037471572217969774,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.03134373693260429,
+      "h36": 0.029848231401179457
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0013489549060231247,
+      "h36": 0.006119954209417251
+     },
+     "bed_temperature_celsius": {
+      "h1": 1.3945864320047257,
+      "h36": 2.368643407895958
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.04738653337357082,
+     "product_moisture_kg_per_kg": 0.5817532459514092,
+     "bed_temperature_celsius": 0.307480336518311
+    },
+    "criterion_C": 0.10105057432907727,
+    "inference_us_per_window": 81.71286775477176,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 160,
+   "worker_warmup_s": 42.9218890001066,
+   "realised_steps": 1440,
+   "fit_s": 163.6795006999746,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0004273703688180403,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.017607329152743108,
+      "h36": 0.01753788666775591
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005198568165367349,
+      "h36": 0.00131460434443092
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.633931039113147,
+      "h36": 0.6490877623823779
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03323044909049161,
+     "product_moisture_kg_per_kg": 0.13915134066386114,
+     "bed_temperature_celsius": 0.10007244354673184
+    },
+    "criterion_C": 0.02863916545722535,
+    "inference_us_per_window": 59.342003677396434,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 160,
+   "worker_warmup_s": 42.97963669989258,
+   "realised_steps": 1440,
+   "fit_s": 166.84320940007456,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003390334450694568,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.017541137774421373,
+      "h36": 0.017560693117461147
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0004148817629385505,
+      "h36": 0.0011126964165902667
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5501278914358634,
+      "h36": 0.496898578414284
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03188914476033565,
+     "product_moisture_kg_per_kg": 0.09434498471913841,
+     "bed_temperature_celsius": 0.08742264377337616
+    },
+    "criterion_C": 0.024193657205348506,
+    "inference_us_per_window": 54.35284936752663,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 12,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 160,
+   "worker_warmup_s": 42.835743400035426,
+   "realised_steps": 1440,
+   "fit_s": 159.81282900017686,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.00031609364840037683,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01739537523073111,
+      "h36": 0.017803506765965958
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.00038686263558144893,
+      "h36": 0.0008748828398432462
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.5283051197436214,
+      "h36": 0.5021939275779864
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.03157993879031523,
+     "product_moisture_kg_per_kg": 0.07719487664797167,
+     "bed_temperature_celsius": 0.08396082880199357
+    },
+    "criterion_C": 0.02273818175690628,
+    "inference_us_per_window": 44.84669111929286,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 160,
+   "worker_warmup_s": 42.915008099982515,
+   "realised_steps": 320,
+   "fit_s": 24.003358099842444,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0012490812702761853,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.015485952734202607,
+      "h36": 0.016050276565321993
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006704553028414124,
+      "h36": 0.0030980062956210553
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.564067248221976,
+      "h36": 0.8679251432701225
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.040250699231926826,
+     "product_moisture_kg_per_kg": 0.2120111894677555,
+     "bed_temperature_celsius": 0.17100317151001815
+    },
+    "criterion_C": 0.0627640350115712,
+    "inference_us_per_window": 60.30018373755464,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 160,
+   "worker_warmup_s": 42.84692190005444,
+   "realised_steps": 320,
+   "fit_s": 24.428607400041074,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0006560400395435007,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.017027919869196842,
+      "h36": 0.015936129695172812
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006296273972259804,
+      "h36": 0.0019288504455381224
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.513167425006823,
+      "h36": 0.6451926082559252
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.04500437811403344,
+     "product_moisture_kg_per_kg": 0.12072654662545182,
+     "bed_temperature_celsius": 0.12554637684444686
+    },
+    "criterion_C": 0.04481444689791241,
+    "inference_us_per_window": 51.40974270248347,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 2,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 160,
+   "worker_warmup_s": 42.84692190005444,
+   "realised_steps": 320,
+   "fit_s": 25.032993300119415,
+   "n_train_windows": 272,
+   "final_train_loss": 0.0003671167856630157,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.01569254773052849,
+      "h36": 0.015922029270168215
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006488247489686306,
+      "h36": 0.0019562306126339204
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.49536702754550027,
+      "h36": 0.5453088065947695
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.04733228979435557,
+     "product_moisture_kg_per_kg": 0.12709329290547766,
+     "bed_temperature_celsius": 0.13020570961640412
+    },
+    "criterion_C": 0.04164332671061323,
+    "inference_us_per_window": 45.821783072931474,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0001,
+   "epochs": 160,
+   "worker_warmup_s": 42.915008099982515,
+   "realised_steps": 1440,
+   "fit_s": 153.29489809996448,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0004767262400812743,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012116822391967697,
+      "h36": 0.012069356547349384
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0006323917040218208,
+      "h36": 0.0009965769995096724
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4965169552522959,
+      "h36": 0.4310533300034218
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.02601063751701419,
+     "product_moisture_kg_per_kg": 0.07524325606679758,
+     "bed_temperature_celsius": 0.09264848838517581
+    },
+    "criterion_C": 0.02788215711425568,
+    "inference_us_per_window": 30.786213114077007,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.0003,
+   "epochs": 160,
+   "worker_warmup_s": 42.84692190005444,
+   "realised_steps": 1440,
+   "fit_s": 144.22942979983054,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0003577627683304908,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012194180270166317,
+      "h36": 0.012027329785159562
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005667287025573153,
+      "h36": 0.0008247478640295685
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.4836578679707212,
+      "h36": 0.4180387330280441
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.025985141505574905,
+     "product_moisture_kg_per_kg": 0.050448940013153434,
+     "bed_temperature_celsius": 0.08070686143422462
+    },
+    "criterion_C": 0.025907679826791218,
+    "inference_us_per_window": 37.98198518137831,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  },
+  {
+   "kind": "finetune",
+   "plant": "PP2",
+   "pool": 13,
+   "n": 16,
+   "freeze": "full",
+   "lr": 0.001,
+   "epochs": 160,
+   "worker_warmup_s": 42.83362150005996,
+   "realised_steps": 1440,
+   "fit_s": 138.14525640010834,
+   "n_train_windows": 2176,
+   "final_train_loss": 0.0004558077883249258,
+   "val": {
+    "horizon": 36,
+    "rmse_run_median_physical": {
+     "energy_target": {
+      "h1": 0.012325740755002373,
+      "h36": 0.012184145115644494
+     },
+     "product_moisture_kg_per_kg": {
+      "h1": 0.0005842070458128184,
+      "h36": 0.0018186534858255726
+     },
+     "bed_temperature_celsius": {
+      "h1": 0.47206411184294483,
+      "h36": 0.4853809021016431
+     }
+    },
+    "nrmse_run_median": {
+     "energy_target": 0.0275374656435117,
+     "product_moisture_kg_per_kg": 0.11707483244531416,
+     "bed_temperature_celsius": 0.09960149321938114
+    },
+    "criterion_C": 0.037026419192458304,
+    "inference_us_per_window": 27.388878687120535,
+    "n_windows": 1088,
+    "n_runs": 8
+   }
+  }
+ ],
+ "deviation_of_pilot_plants": {
+  "PP": {
+   "plant": "PP",
+   "channels": [
+    "energy_target",
+    "bed_temperature_celsius",
+    "product_moisture_kg_per_kg",
+    "d50_um"
+   ],
+   "units": {
+    "energy_target": "power_kw",
+    "bed_temperature_celsius": "degC",
+    "product_moisture_kg_per_kg": "kg/kg",
+    "d50_um": "um"
+   },
+   "summary_channels": [
+    "energy_target",
+    "product_moisture_kg_per_kg",
+    "bed_temperature_celsius"
+   ],
+   "rmse_outputs": {
+    "energy_target": 0.007825896325836483,
+    "bed_temperature_celsius": 0.8807676428321617,
+    "product_moisture_kg_per_kg": 0.013144880031012164,
+    "d50_um": 0.0
+   },
+   "rmse_measured": {
+    "energy_target": 0.007821426717278637,
+    "bed_temperature_celsius": 0.8806311991940322,
+    "product_moisture_kg_per_kg": 0.013580633031189318,
+    "d50_um": 0.0
+   },
+   "reference_std_outputs": {
+    "energy_target": 0.8512890661022243,
+    "bed_temperature_celsius": 14.707095362675801,
+    "product_moisture_kg_per_kg": 0.04835372955146166,
+    "d50_um": 143.42080000505544
+   },
+   "reference_std_measured": {
+    "energy_target": 0.8481475835627906,
+    "bed_temperature_celsius": 14.705922997302252,
+    "product_moisture_kg_per_kg": 0.04835358470882318,
+    "d50_um": 143.42708377429383
+   },
+   "summary_outputs": 0.11364285760714611,
+   "summary_measured": 0.1166551556897818,
+   "reference_seed": 20261012,
+   "n_runs": 8
+  },
+  "PP2": {
+   "plant": "PP2",
+   "channels": [
+    "energy_target",
+    "bed_temperature_celsius",
+    "product_moisture_kg_per_kg",
+    "d50_um"
+   ],
+   "units": {
+    "energy_target": "power_kw",
+    "bed_temperature_celsius": "degC",
+    "product_moisture_kg_per_kg": "kg/kg",
+    "d50_um": "um"
+   },
+   "summary_channels": [
+    "energy_target",
+    "product_moisture_kg_per_kg",
+    "bed_temperature_celsius"
+   ],
+   "rmse_outputs": {
+    "energy_target": 0.010139294766383597,
+    "bed_temperature_celsius": 1.4994691250702135,
+    "product_moisture_kg_per_kg": 0.033752943113106844,
+    "d50_um": 0.0
+   },
+   "rmse_measured": {
+    "energy_target": 0.010136848826721032,
+    "bed_temperature_celsius": 1.5384170526078285,
+    "product_moisture_kg_per_kg": 0.03394921172564791,
+    "d50_um": 0.0
+   },
+   "reference_std_outputs": {
+    "energy_target": 0.8512890661022243,
+    "bed_temperature_celsius": 14.707095362675801,
+    "product_moisture_kg_per_kg": 0.04835372955146166,
+    "d50_um": 143.42080000505544
+   },
+   "reference_std_measured": {
+    "energy_target": 0.8481475835627906,
+    "bed_temperature_celsius": 14.705922997302252,
+    "product_moisture_kg_per_kg": 0.04835358470882318,
+    "d50_um": 143.42708377429383
+   },
+   "summary_outputs": 0.27063606555991926,
+   "summary_measured": 0.27288904282861387,
+   "reference_seed": 20261012,
+   "n_runs": 8
+  }
+ },
+ "timings": {
+  "warmup_main_s": 13.984384199837223,
+  "generate_p0_pretrain_pool_s": 11.038819100009277,
+  "pretrain_pool_runs": 512,
+  "pretrain_fit_s": 470.85493050003424,
+  "pretrain_epochs_run": 132,
+  "pretrain_train_windows": 34816,
+  "pretrain_s_per_epoch": 3.567082806818441,
+  "confirm_grid_wall_s": 8385.785183400149,
+  "confirm_cells": 156,
+  "wall_total_s": 9024.330455699936
+ }
+}
