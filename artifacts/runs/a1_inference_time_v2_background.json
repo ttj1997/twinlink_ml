@@ -1,0 +1,266 @@
+{
+ "provenance": {
+  "git/commit": "4589faa3f6e1a4525af7ffe914b582a2ad0b6c9b",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "design": {
+  "threads": 1,
+  "require_idle": false,
+  "idle_criterion": "machine load <= 5.0 % and no other python process > 5 % of one core",
+  "load_at_start": {
+   "machine_load_pct": 23.0,
+   "other_python_processes_cpu_pct_of_one_core": {
+    "24956": 125,
+    "43676": 125
+   }
+  },
+  "plant": "P0",
+  "seed": 1,
+  "models_trained_epochs": 2,
+  "note": "weights do not change the cost of predict; accuracy of these models unused",
+  "warmup_s": 20.646655899938196,
+  "torch": "2.14.0+cpu"
+ },
+ "results": [
+  {
+   "method": "persistence",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 0.18761490055647514,
+   "throughput_us_per_window_min": 0.1829503697295235,
+   "latency_batch1_us_median": 3.0999071896076202,
+   "latency_batch1_us_min": 2.8999056667089462,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 7.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125,
+     "42132": 125
+    }
+   },
+   "load_after": {
+    "machine_load_pct": 7.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125,
+     "42132": 125
+    }
+   },
+   "n_parameters": 0
+  },
+  {
+   "method": "arx",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 3.9567784744362786,
+   "throughput_us_per_window_min": 3.63869484692045,
+   "latency_batch1_us_median": 262.10001669824123,
+   "latency_batch1_us_min": 260.8001232147217,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 9.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125,
+     "42132": 124
+    }
+   },
+   "load_after": {
+    "machine_load_pct": 6.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 126,
+     "42132": 125
+    }
+   },
+   "n_parameters": 102
+  },
+  {
+   "method": "simulator_only",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 0.6515854907133068,
+   "throughput_us_per_window_min": 0.5790670911665075,
+   "latency_batch1_us_median": 7.2999391704797745,
+   "latency_batch1_us_min": 6.9998204708099365,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 9.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125,
+     "42132": 125
+    }
+   },
+   "load_after": {
+    "machine_load_pct": 7.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125,
+     "42132": 125
+    }
+   },
+   "n_parameters": 0
+  },
+  {
+   "method": "from_scratch",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 20.797725162136725,
+   "throughput_us_per_window_min": 18.122288565791678,
+   "latency_batch1_us_median": 2220.3000262379646,
+   "latency_batch1_us_min": 2071.7999432235956,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 6.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125,
+     "42132": 124
+    }
+   },
+   "load_after": {
+    "machine_load_pct": 6.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125,
+     "42132": 125
+    }
+   },
+   "n_parameters": 19651
+  },
+  {
+   "method": "hybrid_network_only",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 21.428125043766,
+   "throughput_us_per_window_min": 18.34910386498771,
+   "latency_batch1_us_median": 2866.750117391348,
+   "latency_batch1_us_min": 2081.699902191758,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 2.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125,
+     "42132": 125
+    }
+   },
+   "load_after": {
+    "machine_load_pct": 11.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125,
+     "42132": 124
+    }
+   },
+   "n_parameters": 20419
+  },
+  {
+   "method": "pretrain_finetune",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 20.382031246245948,
+   "throughput_us_per_window_min": 18.78559284223764,
+   "latency_batch1_us_median": 3498.299978673458,
+   "latency_batch1_us_min": 2092.1998657286167,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 14.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125,
+     "42132": 126
+    }
+   },
+   "load_after": {
+    "machine_load_pct": 9.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125,
+     "42132": 64
+    }
+   },
+   "n_parameters": 19651
+  }
+ ],
+ "simulator_channel_costs": {
+  "horizon_batch1": {
+   "us_per_prediction_median": 228992.94993840158,
+   "us_per_prediction_min": 207932.20004998147,
+   "steps": 36,
+   "repeats": 20
+  },
+  "horizon_batched": {
+   "n_windows": 4352,
+   "us_per_window_median": 232.11192552373498,
+   "us_per_window_min": 215.03892463335754,
+   "repeats": 5
+  },
+  "one_step_batch1": {
+   "us_median": 7284.000050276518,
+   "us_min": 4882.999928668141,
+   "repeats": 300,
+   "note": "rollout of a single step, includes the rollout bookkeeping"
+  },
+  "full_run_batch1": {
+   "steps": 1152,
+   "s_median": 8.870483999839053,
+   "s_min": 8.061754600144923,
+   "us_per_prediction_if_one_prediction_per_sample_median": 7700.072916526955,
+   "repeats": 3
+  },
+  "steady_state_start": {
+   "s_median_per_run": 0.2761107999831438,
+   "s_all": [
+    0.2761107999831438,
+    0.24641070002689958,
+    0.26856709993444383,
+    0.2866697001736611,
+    0.2836120999418199
+   ],
+   "note": "once per run, includes the construction of the solver simulator"
+  },
+  "load_before": {
+   "machine_load_pct": 15.0,
+   "other_python_processes_cpu_pct_of_one_core": {
+    "24956": 125,
+    "42132": 37
+   }
+  },
+  "load_after": {
+   "machine_load_pct": 38.0,
+   "other_python_processes_cpu_pct_of_one_core": {
+    "24956": 125,
+    "42132": 987
+   }
+  }
+ },
+ "hybrid_total": {
+  "realtime_batch1_us_per_prediction": 231859.70005579293,
+  "network_part_us": 2866.750117391348,
+  "simulation_part_us": 228992.94993840158,
+  "simulation_share": 0.987635841344134,
+  "batched_us_per_window": 253.54005056750097,
+  "network_batched_part_us": 21.428125043766,
+  "simulation_batched_part_us": 232.11192552373498,
+  "channel_precomputed_per_run_us_per_prediction": 10566.823033918303,
+  "note": "total of the hybrid = network + simulator channel; the 'hybrid' figure of the first measurement (network only) does not contain the simulator"
+ }
+}

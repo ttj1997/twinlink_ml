@@ -180,7 +180,7 @@ def status_is_dirty(
     """Whether ``git status --porcelain`` shows changes other than exempted UNTRACKED files.
 
     ``ignore_paths`` (absolute, or relative to ``repo_root``) exempt exactly those files **if they
-    are untracked** (status ``??``): the output file a run is about to write into (Befund NN,
+    are untracked** (status ``??``): the output file a run is about to write into (Befund 87,
     Addendum 3: a driver's own log made ``git/dirty`` true). A modified, staged or deleted tracked
     file is never exempt, and neither is any other untracked file. The caller records the exempted
     paths next to the flag (``git/dirty_ignored_paths``) so that the exemption is visible.

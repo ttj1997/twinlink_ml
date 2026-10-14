@@ -1,0 +1,3985 @@
+{
+ "provenance": {
+  "git/commit": "93ef6aa3f803c97ed8576845b77da1af2e0cda94",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "design": {
+  "status": "POST HOC, descriptive; the pre-registered 'clean' set was empty",
+  "source_records": "a1_main_records.json",
+  "source_fallback_runs": "a1_main_analysis.json (fallback_analysis)",
+  "seeds_without_nominal_start_in_training_prefix_by_n": {
+   "2": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "4": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "8": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "16": [
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  "test_side_contamination": "2-3 of the 32 excited test runs per seed and 1 of the 16 constant-run test runs started from the nominal state; not removed",
+  "n_paired_tests": 468
+ },
+ "n_cells_compared": 180,
+ "n_cells_low_power_not_compared": 0,
+ "cells_with_changed_verdict": [
+  {
+   "plant": "P0",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.01851913922334342,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.008533829146381917
+  },
+  {
+   "plant": "P0",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.01820873845634308,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.008477289611711921
+  },
+  {
+   "plant": "P0",
+   "n": 4,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.00551845400396256,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.002686982925757753
+  },
+  {
+   "plant": "P0",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.08930190545127678,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.056277452107638765
+  },
+  {
+   "plant": "P0",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.2708086027457239,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.14356585573079778
+  },
+  {
+   "plant": "P0",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.3078544944305845,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.18947409840793794
+  },
+  {
+   "plant": "P1",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.008677793306708667,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.005003346276203982
+  },
+  {
+   "plant": "P1",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.02099653214290705,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.012946418370570414
+  },
+  {
+   "plant": "P1",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -2.3789482457164093,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -2.508784303231818
+  },
+  {
+   "plant": "P1",
+   "n": 4,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.2576361362930017,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.48513127653994864
+  },
+  {
+   "plant": "P1",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.08607144535736941,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.09770997906009474
+  },
+  {
+   "plant": "P1",
+   "n": 16,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0005609861898345971,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.0008567224105000709
+  },
+  {
+   "plant": "P1",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0003780331327952323,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.0002269890585241042
+  },
+  {
+   "plant": "P2a",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -2.3672875836114216,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -2.2751300104360594
+  },
+  {
+   "plant": "P2a",
+   "n": 8,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0013840431933816503,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.0005128248632562362
+  },
+  {
+   "plant": "P2a",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.14467750481888847,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.1295427183019682
+  },
+  {
+   "plant": "P2a",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.3074442334917631,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.4300393580368756
+  },
+  {
+   "plant": "P2b",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.20164101691420808,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.19924044230891422
+  },
+  {
+   "plant": "P2b",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.18993049135671503,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.18945968104936517
+  },
+  {
+   "plant": "P2b",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -2.022466208675916,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -2.62185677899322
+  },
+  {
+   "plant": "P2b",
+   "n": 8,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.0032899163324674628,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.0031417149629507455
+  },
+  {
+   "plant": "P2b",
+   "n": 8,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.00018033822738834155,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.000439659706499387
+  },
+  {
+   "plant": "P2b",
+   "n": 16,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0011610682314165625,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.001784641855999212
+  },
+  {
+   "plant": "P2b",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.0004869560743443529,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.0002695171406498537
+  },
+  {
+   "plant": "P2b",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 2.3646805219726136e-05,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.00024198600881228887
+  },
+  {
+   "plant": "P3",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.21796563503637048,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.21108624590774455
+  },
+  {
+   "plant": "P3",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.20429926440961915,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.20006819522576588
+  },
+  {
+   "plant": "P3",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.014536106163495374,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.02319495589585129
+  },
+  {
+   "plant": "P3",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.7266454686733143,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -1.0156278378921575
+  },
+  {
+   "plant": "P3",
+   "n": 16,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0015241267046673384,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.002387132619722343
+  },
+  {
+   "plant": "P3",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.0001985927034038191,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.000569468319538396
+  }
+ ],
+ "cells_with_direction_flip": [],
+ "ha3_on_subset": {
+  "plants": {
+   "P2a": {
+    "by_n": {
+     "2": {
+      "channels_better": {
+       "from_scratch": 0,
+       "simulator_only": 1,
+       "pretrain_finetune": 0
+      },
+      "ok": false,
+      "low_power": false
+     },
+     "4": {
+      "channels_better": {
+       "from_scratch": 0,
+       "simulator_only": 1,
+       "pretrain_finetune": 0
+      },
+      "ok": false,
+      "low_power": false
+     },
+     "8": {
+      "channels_better": {
+       "from_scratch": 0,
+       "simulator_only": 2,
+       "pretrain_finetune": 0
+      },
+      "ok": false,
+      "low_power": false
+     },
+     "16": {
+      "channels_better": {
+       "from_scratch": 1,
+       "simulator_only": 2,
+       "pretrain_finetune": 0
+      },
+      "ok": false,
+      "low_power": false
+     }
+    },
+    "n_small_n_ok": 0,
+    "plant_ok": false
+   },
+   "P2b": {
+    "by_n": {
+     "2": {
+      "channels_better": {
+       "from_scratch": 0,
+       "simulator_only": 0,
+       "pretrain_finetune": 0
+      },
+      "ok": false,
+      "low_power": false
+     },
+     "4": {
+      "channels_better": {
+       "from_scratch": 0,
+       "simulator_only": 1,
+       "pretrain_finetune": 0
+      },
+      "ok": false,
+      "low_power": false
+     },
+     "8": {
+      "channels_better": {
+       "from_scratch": 1,
+       "simulator_only": 2,
+       "pretrain_finetune": 0
+      },
+      "ok": false,
+      "low_power": false
+     },
+     "16": {
+      "channels_better": {
+       "from_scratch": 3,
+       "simulator_only": 2,
+       "pretrain_finetune": 1
+      },
+      "ok": false,
+      "low_power": false
+     }
+    },
+    "n_small_n_ok": 0,
+    "plant_ok": false
+   },
+   "P3": {
+    "by_n": {
+     "2": {
+      "channels_better": {
+       "from_scratch": 0,
+       "simulator_only": 1,
+       "pretrain_finetune": 0
+      },
+      "ok": false,
+      "low_power": false
+     },
+     "4": {
+      "channels_better": {
+       "from_scratch": 0,
+       "simulator_only": 2,
+       "pretrain_finetune": 0
+      },
+      "ok": false,
+      "low_power": false
+     },
+     "8": {
+      "channels_better": {
+       "from_scratch": 0,
+       "simulator_only": 2,
+       "pretrain_finetune": 0
+      },
+      "ok": false,
+      "low_power": false
+     },
+     "16": {
+      "channels_better": {
+       "from_scratch": 2,
+       "simulator_only": 2,
+       "pretrain_finetune": 1
+      },
+      "ok": false,
+      "low_power": false
+     }
+    },
+    "n_small_n_ok": 0,
+    "plant_ok": false
+   }
+  },
+  "supported": false
+ },
+ "ha3_on_all_seeds_for_comparison": false,
+ "cells": [
+  {
+   "plant": "P0",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.21974923357504803,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.19719511255150807
+  },
+  {
+   "plant": "P0",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.18842863349867447,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.16903824457876954
+  },
+  {
+   "plant": "P0",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.18581298956616696,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.16729829356046227
+  },
+  {
+   "plant": "P0",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.00614136885745203,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.0012682028673195631
+  },
+  {
+   "plant": "P0",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.01851913922334342,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.008533829146381917
+  },
+  {
+   "plant": "P0",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.01820873845634308,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.008477289611711921
+  },
+  {
+   "plant": "P0",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.6919349649695554,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.5231921009447111
+  },
+  {
+   "plant": "P0",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -2.7415965030598475,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -2.8578562700813093
+  },
+  {
+   "plant": "P0",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -2.726608510536498,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -2.8700841424166263
+  },
+  {
+   "plant": "P0",
+   "n": 4,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.0020316331366160402,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.0031142739283427576
+  },
+  {
+   "plant": "P0",
+   "n": 4,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.050936775964116644,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.04503437189650686
+  },
+  {
+   "plant": "P0",
+   "n": 4,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.04889421430723342,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.04362915605401292
+  },
+  {
+   "plant": "P0",
+   "n": 4,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.00036685853038699747,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.0004922177965631179
+  },
+  {
+   "plant": "P0",
+   "n": 4,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.005448814935807501,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.0025602642503180007
+  },
+  {
+   "plant": "P0",
+   "n": 4,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.00551845400396256,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.002686982925757753
+  },
+  {
+   "plant": "P0",
+   "n": 4,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.0047694011861041385,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.09194072361597866
+  },
+  {
+   "plant": "P0",
+   "n": 4,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.9936703588649687,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.8790789507056448
+  },
+  {
+   "plant": "P0",
+   "n": 4,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -1.0056538377845867,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.9084000037476638
+  },
+  {
+   "plant": "P0",
+   "n": 8,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0005498018663126436,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.0008237102136091131
+  },
+  {
+   "plant": "P0",
+   "n": 8,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.012413626308738306,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.010946182923560373
+  },
+  {
+   "plant": "P0",
+   "n": 8,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.011351212985100046,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.010106589698905403
+  },
+  {
+   "plant": "P0",
+   "n": 8,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.0002705394499266375,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.0002882009076573358
+  },
+  {
+   "plant": "P0",
+   "n": 8,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0008273514419353276,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.0001419356167481143
+  },
+  {
+   "plant": "P0",
+   "n": 8,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0011228576988195987,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.00041186694209303096
+  },
+  {
+   "plant": "P0",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.08930190545127678,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.056277452107638765
+  },
+  {
+   "plant": "P0",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.2708086027457239,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.14356585573079778
+  },
+  {
+   "plant": "P0",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.3078544944305845,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.18947409840793794
+  },
+  {
+   "plant": "P0",
+   "n": 16,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.0030058992317946362,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.0026772302977335783
+  },
+  {
+   "plant": "P0",
+   "n": 16,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.0029864704476446242,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.0029081231795247487
+  },
+  {
+   "plant": "P0",
+   "n": 16,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.0021524480493083746,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.0022168174382950186
+  },
+  {
+   "plant": "P0",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.0002690455478125672,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.00014090376791017336
+  },
+  {
+   "plant": "P0",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 3.297642444944509e-05,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.0001693591526819739
+  },
+  {
+   "plant": "P0",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0002992037794827729,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.00013338506464631117
+  },
+  {
+   "plant": "P0",
+   "n": 16,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.03442218207064936,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.02654300057873267
+  },
+  {
+   "plant": "P0",
+   "n": 16,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.007345442602190699,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.01985535110494825
+  },
+  {
+   "plant": "P0",
+   "n": 16,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.035024188917328905,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.03326576333912158
+  },
+  {
+   "plant": "P1",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.19145578537843772,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.1537933076513588
+  },
+  {
+   "plant": "P1",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.2186186027637632,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.2037275023852001
+  },
+  {
+   "plant": "P1",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.21800568253104458,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.2050276203440104
+  },
+  {
+   "plant": "P1",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.008677793306708667,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.005003346276203982
+  },
+  {
+   "plant": "P1",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.004410927285105409,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.002785798716491846
+  },
+  {
+   "plant": "P1",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.02099653214290705,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.012946418370570414
+  },
+  {
+   "plant": "P1",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.07681980351565838,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.4636401562741812
+  },
+  {
+   "plant": "P1",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -2.3789482457164093,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -2.508784303231818
+  },
+  {
+   "plant": "P1",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -3.2789205039279126,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -3.412189877412286
+  },
+  {
+   "plant": "P1",
+   "n": 4,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.001150922625790174,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.003720241409668326
+  },
+  {
+   "plant": "P1",
+   "n": 4,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.04769145892399157,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.046257354190266164
+  },
+  {
+   "plant": "P1",
+   "n": 4,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.04906110706845092,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.04826134344891542
+  },
+  {
+   "plant": "P1",
+   "n": 4,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0001619938039082184,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.00018497964456848988
+  },
+  {
+   "plant": "P1",
+   "n": 4,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.010812507287514015,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.012094245034370303
+  },
+  {
+   "plant": "P1",
+   "n": 4,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.006341227044044785,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.0041874752797123604
+  },
+  {
+   "plant": "P1",
+   "n": 4,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.2576361362930017,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.48513127653994864
+  },
+  {
+   "plant": "P1",
+   "n": 4,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.3319827228886481,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.3189961280407563
+  },
+  {
+   "plant": "P1",
+   "n": 4,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -1.3057108867312126,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -1.3064574825402093
+  },
+  {
+   "plant": "P1",
+   "n": 8,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0011090007795318227,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.0017416032468611387
+  },
+  {
+   "plant": "P1",
+   "n": 8,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.011371466081854778,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.01036822202294873
+  },
+  {
+   "plant": "P1",
+   "n": 8,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.013371937757663955,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.012639406029307068
+  },
+  {
+   "plant": "P1",
+   "n": 8,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.00010128285655028805,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.00015490124971589714
+  },
+  {
+   "plant": "P1",
+   "n": 8,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.01559902523164194,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.015662667102115536
+  },
+  {
+   "plant": "P1",
+   "n": 8,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0017902192037092678,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.0008361308379310103
+  },
+  {
+   "plant": "P1",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.08607144535736941,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.09770997906009474
+  },
+  {
+   "plant": "P1",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.689923469649532,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.7478333251284861
+  },
+  {
+   "plant": "P1",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.326644027884923,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.26355437302258977
+  },
+  {
+   "plant": "P1",
+   "n": 16,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.00263876684139618,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.0020619151658042836
+  },
+  {
+   "plant": "P1",
+   "n": 16,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0005609861898345971,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.0008567224105000709
+  },
+  {
+   "plant": "P1",
+   "n": 16,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.002756220906111132,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.0031444287564955965
+  },
+  {
+   "plant": "P1",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.0003886179308471077,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.00020932591756476145
+  },
+  {
+   "plant": "P1",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.017089994586554753,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.016340493485260187
+  },
+  {
+   "plant": "P1",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0003780331327952323,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.0002269890585241042
+  },
+  {
+   "plant": "P1",
+   "n": 16,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.02435972171801164,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.009715433710529103
+  },
+  {
+   "plant": "P1",
+   "n": 16,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.9614355322916459,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.9550505271723454
+  },
+  {
+   "plant": "P1",
+   "n": 16,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.05862395250035207,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.06006296620776659
+  },
+  {
+   "plant": "P2a",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.191938538642384,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.16544776664357405
+  },
+  {
+   "plant": "P2a",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.20962491520911222,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.1995203823589513
+  },
+  {
+   "plant": "P2a",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.20641106392140224,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.19716760552320983
+  },
+  {
+   "plant": "P2a",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.004339979328140908,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.0020496186657583647
+  },
+  {
+   "plant": "P2a",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.01984247819234835,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.026350903570863886
+  },
+  {
+   "plant": "P2a",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.012327213295541598,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.005643322123365853
+  },
+  {
+   "plant": "P2a",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.11882064399854939,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.07535106094412997
+  },
+  {
+   "plant": "P2a",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -2.320928091846672,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -2.208841727348047
+  },
+  {
+   "plant": "P2a",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -2.3672875836114216,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -2.2751300104360594
+  },
+  {
+   "plant": "P2a",
+   "n": 4,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.004562988338926205,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.004136244170646529
+  },
+  {
+   "plant": "P2a",
+   "n": 4,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.04424188379067943,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.040830850884989695
+  },
+  {
+   "plant": "P2a",
+   "n": 4,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.04315627443937546,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.04006156927816992
+  },
+  {
+   "plant": "P2a",
+   "n": 4,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0010941809948744848,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.0006729452815024929
+  },
+  {
+   "plant": "P2a",
+   "n": 4,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.02879675410901115,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.0312229444495232
+  },
+  {
+   "plant": "P2a",
+   "n": 4,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0055045274945680735,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.0029839886261385745
+  },
+  {
+   "plant": "P2a",
+   "n": 4,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.14422080290568468,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.23785643210845892
+  },
+  {
+   "plant": "P2a",
+   "n": 4,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.43972732026227523,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.2739950366232024
+  },
+  {
+   "plant": "P2a",
+   "n": 4,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.936792408037306,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.8010318883232872
+  },
+  {
+   "plant": "P2a",
+   "n": 8,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.000892311095459418,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.0010073801924176387
+  },
+  {
+   "plant": "P2a",
+   "n": 8,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.010849180007692546,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.009483574615033404
+  },
+  {
+   "plant": "P2a",
+   "n": 8,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.011161202066307274,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.010001522847597491
+  },
+  {
+   "plant": "P2a",
+   "n": 8,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0002814914327925571,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -5.561449816265902e-05
+  },
+  {
+   "plant": "P2a",
+   "n": 8,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.033877326209180054,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.03455983382791537
+  },
+  {
+   "plant": "P2a",
+   "n": 8,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0013840431933816503,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.0005128248632562362
+  },
+  {
+   "plant": "P2a",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.14467750481888847,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.1295427183019682
+  },
+  {
+   "plant": "P2a",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.3074442334917631,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.4300393580368756
+  },
+  {
+   "plant": "P2a",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.3602267342560377,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.2764771054260476
+  },
+  {
+   "plant": "P2a",
+   "n": 16,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.002295047159734482,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.001840631661987222
+  },
+  {
+   "plant": "P2a",
+   "n": 16,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.0018969993687876757,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.0020693474049249213
+  },
+  {
+   "plant": "P2a",
+   "n": 16,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.00251942293331449,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.0027540758322516664
+  },
+  {
+   "plant": "P2a",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.00031489976492525996,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.0001379255235001909
+  },
+  {
+   "plant": "P2a",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.035018965983824,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.03506601890887144
+  },
+  {
+   "plant": "P2a",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.00030113185522056906,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -9.563848798379944e-05
+  },
+  {
+   "plant": "P2a",
+   "n": 16,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.0081059816365199,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.001189352977297331
+  },
+  {
+   "plant": "P2a",
+   "n": 16,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.6239302502733639,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.6726849771244798
+  },
+  {
+   "plant": "P2a",
+   "n": 16,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.05752436254873683,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.04736679007327485
+  },
+  {
+   "plant": "P2b",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.18584003521796752,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.1315865242962958
+  },
+  {
+   "plant": "P2b",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.20164101691420808,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.19924044230891422
+  },
+  {
+   "plant": "P2b",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.18993049135671503,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.18945968104936517
+  },
+  {
+   "plant": "P2b",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.004047608365875771,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.002343353250665739
+  },
+  {
+   "plant": "P2b",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.013130170166124786,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.002934972134731296
+  },
+  {
+   "plant": "P2b",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.012443302154603495,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.0019937701901933274
+  },
+  {
+   "plant": "P2b",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.4562609301690189,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.1298480553126316
+  },
+  {
+   "plant": "P2b",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 1.240225757022896,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.9390188739858223
+  },
+  {
+   "plant": "P2b",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -2.022466208675916,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -2.62185677899322
+  },
+  {
+   "plant": "P2b",
+   "n": 4,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.001826502136840874,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.001686500038090736
+  },
+  {
+   "plant": "P2b",
+   "n": 4,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.045290764325355316,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.04196927729227981
+  },
+  {
+   "plant": "P2b",
+   "n": 4,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.03848630845831867,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.03650222530511156
+  },
+  {
+   "plant": "P2b",
+   "n": 4,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 4.17884375860985e-06,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.00015437619044268475
+  },
+  {
+   "plant": "P2b",
+   "n": 4,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.001192576021075006,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.0010720568008255695
+  },
+  {
+   "plant": "P2b",
+   "n": 4,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0030424779503436363,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.0007057083358822374
+  },
+  {
+   "plant": "P2b",
+   "n": 4,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.06754414867473575,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.05590130747039365
+  },
+  {
+   "plant": "P2b",
+   "n": 4,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 3.426456941196443,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 3.6206841948717603
+  },
+  {
+   "plant": "P2b",
+   "n": 4,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.5962210338141521,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.4849459489062642
+  },
+  {
+   "plant": "P2b",
+   "n": 8,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.0032899163324674628,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.0031417149629507455
+  },
+  {
+   "plant": "P2b",
+   "n": 8,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.009678731793570289,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.008556103300473177
+  },
+  {
+   "plant": "P2b",
+   "n": 8,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.00678739058537596,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.00620033923112766
+  },
+  {
+   "plant": "P2b",
+   "n": 8,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.00018033822738834155,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.000439659706499387
+  },
+  {
+   "plant": "P2b",
+   "n": 8,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.0030618511328417706,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.0037226320557195605
+  },
+  {
+   "plant": "P2b",
+   "n": 8,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0006143611919560037,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.00018418987661679548
+  },
+  {
+   "plant": "P2b",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.033738420218037725,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.01072909829881269
+  },
+  {
+   "plant": "P2b",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 4.145099811864234,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 4.286495030520909
+  },
+  {
+   "plant": "P2b",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.1520322593774369,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.09770503141595185
+  },
+  {
+   "plant": "P2b",
+   "n": 16,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.0037457846497060006,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.0038817500951403654
+  },
+  {
+   "plant": "P2b",
+   "n": 16,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.0026892158008755994,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.0029099105869463443
+  },
+  {
+   "plant": "P2b",
+   "n": 16,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0011610682314165625,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.001784641855999212
+  },
+  {
+   "plant": "P2b",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.0004869560743443529,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.0002695171406498537
+  },
+  {
+   "plant": "P2b",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.004124442862390464,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.004211087040198735
+  },
+  {
+   "plant": "P2b",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 2.3646805219726136e-05,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.00024198600881228887
+  },
+  {
+   "plant": "P2b",
+   "n": 16,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.051792543378231505,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.049758681009973105
+  },
+  {
+   "plant": "P2b",
+   "n": 16,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 4.402451797839199,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 4.45327943233307
+  },
+  {
+   "plant": "P2b",
+   "n": 16,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.007521627551176047,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.006822762548966674
+  },
+  {
+   "plant": "P3",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.21093358349521116,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.18655830468131154
+  },
+  {
+   "plant": "P3",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.21796563503637048,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.21108624590774455
+  },
+  {
+   "plant": "P3",
+   "n": 2,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.20429926440961915,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.20006819522576588
+  },
+  {
+   "plant": "P3",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.008505801276599306,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.0028059954745018184
+  },
+  {
+   "plant": "P3",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.014536106163495374,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.02319495589585129
+  },
+  {
+   "plant": "P3",
+   "n": 2,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.017484877393494632,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.009180331121588774
+  },
+  {
+   "plant": "P3",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.7266454686733143,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -1.0156278378921575
+  },
+  {
+   "plant": "P3",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 1.4421683255640911,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 1.2186835793289388
+  },
+  {
+   "plant": "P3",
+   "n": 2,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -2.3014313593066165,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -2.652758453530302
+  },
+  {
+   "plant": "P3",
+   "n": 4,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.005105300236642513,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.007752451009217405
+  },
+  {
+   "plant": "P3",
+   "n": 4,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.04975739538122424,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.04523960563714916
+  },
+  {
+   "plant": "P3",
+   "n": 4,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.04457224109660356,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.04112978487526876
+  },
+  {
+   "plant": "P3",
+   "n": 4,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0008148393243629669,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.0005828842369155155
+  },
+  {
+   "plant": "P3",
+   "n": 4,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.029553939099691194,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.032304341531895056
+  },
+  {
+   "plant": "P3",
+   "n": 4,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.00413712665537636,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.001065321899552809
+  },
+  {
+   "plant": "P3",
+   "n": 4,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.00610805152820384,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.05531397229841367
+  },
+  {
+   "plant": "P3",
+   "n": 4,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 3.6093323974964706,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 3.8263920517984507
+  },
+  {
+   "plant": "P3",
+   "n": 4,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.509248846629486,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.4776577720146792
+  },
+  {
+   "plant": "P3",
+   "n": 8,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.005198694419283769,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.005233757783374831
+  },
+  {
+   "plant": "P3",
+   "n": 8,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.011831471630642274,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.01181351545159097
+  },
+  {
+   "plant": "P3",
+   "n": 8,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.009140387392044685,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.010010278653237335
+  },
+  {
+   "plant": "P3",
+   "n": 8,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.0006371840431914447,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.00028686235962988173
+  },
+  {
+   "plant": "P3",
+   "n": 8,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.03463062583398744,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.035029822849857166
+  },
+  {
+   "plant": "P3",
+   "n": 8,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.00034777194724571115,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.0004907102643678944
+  },
+  {
+   "plant": "P3",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.09320320630892294,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.0864405398946621
+  },
+  {
+   "plant": "P3",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 4.613318454531729,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 4.668281979206754
+  },
+  {
+   "plant": "P3",
+   "n": 8,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0022217630626562455,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": -0.049199972504338496
+  },
+  {
+   "plant": "P3",
+   "n": 16,
+   "channel": "energy_target",
+   "against": "from_scratch",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.005789841385033907,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.005830464692642468
+  },
+  {
+   "plant": "P3",
+   "n": 16,
+   "channel": "energy_target",
+   "against": "simulator_only",
+   "verdict_all_seeds": "worse",
+   "mean_difference_all_seeds": -0.0025733690206253346,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.0027549055804825685
+  },
+  {
+   "plant": "P3",
+   "n": 16,
+   "channel": "energy_target",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": -0.0015241267046673384,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "worse",
+   "mean_difference_subset": -0.002387132619722343
+  },
+  {
+   "plant": "P3",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "from_scratch",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.00047461410017480415,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.00045648342530253124
+  },
+  {
+   "plant": "P3",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 0.035805731646185515,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.035779902199629475
+  },
+  {
+   "plant": "P3",
+   "n": 16,
+   "channel": "product_moisture_kg_per_kg",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.0001985927034038191,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 0.000569468319538396
+  },
+  {
+   "plant": "P3",
+   "n": 16,
+   "channel": "bed_temperature_celsius",
+   "against": "from_scratch",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.026462307978365573,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.016368864979989073
+  },
+  {
+   "plant": "P3",
+   "n": 16,
+   "channel": "bed_temperature_celsius",
+   "against": "simulator_only",
+   "verdict_all_seeds": "better",
+   "mean_difference_all_seeds": 4.9374756675375115,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "better",
+   "mean_difference_subset": 5.007172040214512
+  },
+  {
+   "plant": "P3",
+   "n": 16,
+   "channel": "bed_temperature_celsius",
+   "against": "pretrain_finetune",
+   "verdict_all_seeds": "unresolved",
+   "mean_difference_all_seeds": 0.03565738986574831,
+   "seeds_without_nominal_start_in_training": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "n_seeds": 4,
+   "low_power": false,
+   "verdict_subset": "unresolved",
+   "mean_difference_subset": 0.0631656387666793
+  }
+ ]
+}

@@ -1,4 +1,4 @@
-"""The run's own output file must not make ``git/dirty`` true (Befund NN, Addendum 3 of study B).
+"""The run's own output file must not make ``git/dirty`` true (Befund 87, Addendum 3 of study B).
 
 ``ignore_paths`` exempts exactly the named UNTRACKED files; a modified tracked file or any other
 untracked file still counts; the exemption is recorded next to the flag.

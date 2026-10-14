@@ -125,6 +125,13 @@ class MaterialConfig:
     # ``quality_moisture_limit_kg_per_kg``). Enters the fingerprint ONLY when set
     # (``without_unset_optional_fields``), so every existing config keeps its fingerprint.
     product_moisture_limit_kg_per_kg: float | None = None
+    # Shape of the drying curve in the falling-rate period: f(eta) = eta ** q with the
+    # normalised moisture eta. ``None`` (default): linear, f(eta) = eta, exactly the behaviour
+    # of every existing config. Set: the exponent q > 0 (q = 1.0 is numerically the linear
+    # curve but a different config). Read in ``thermo.evaporation_rate_kg_per_s``, so every
+    # consumer of the kinetics (rollout, steady-state solver, exhaust reconstruction) sees it.
+    # Enters the fingerprint ONLY when set (``without_unset_optional_fields``).
+    drying_curve_exponent: float | None = None
 
     @property
     def quality_moisture_limit_kg_per_kg(self) -> float:
@@ -157,6 +164,8 @@ class MaterialConfig:
             raise ValueError(
                 "product_moisture_limit_kg_per_kg muss über equilibrium_moisture_kg_per_kg liegen"
             )
+        if self.drying_curve_exponent is not None and self.drying_curve_exponent <= 0.0:
+            raise ValueError("drying_curve_exponent must be positive when set")
         self._validate_gab_fields()
 
     def _validate_gab_fields(self) -> None:
@@ -577,7 +586,7 @@ def without_documentary_provenance(payload: dict[str, Any]) -> dict[str, Any]:
 
 
 _OPTIONAL_UNSET_OMITTED_FIELDS: dict[str, tuple[str, ...]] = {
-    "material": ("product_moisture_limit_kg_per_kg",),
+    "material": ("product_moisture_limit_kg_per_kg", "drying_curve_exponent"),
 }
 """Optional fields that are left OUT of the fingerprint payload while they are ``None``.
 

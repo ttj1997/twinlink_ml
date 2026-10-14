@@ -329,6 +329,10 @@ def evaporation_rate_kg_per_s(
             relative_humidity,
             bed_temperature_celsius,
         )
+        if material.drying_curve_exponent is not None:
+            # Optional curve shape f(eta) = eta ** q; unset leaves the linear curve (and the
+            # arithmetic) exactly as before.
+            eta = eta**material.drying_curve_exponent
         saturation_degree = material.max_saturation_degree * eta
         drying = (
             saturation_degree

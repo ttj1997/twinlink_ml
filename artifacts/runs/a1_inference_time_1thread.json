@@ -1,0 +1,185 @@
+{
+ "provenance": {
+  "git/commit": "130b4645b6550f715c986594e81862d4f3e49a80",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "design": {
+  "threads": 1,
+  "plant": "P0",
+  "seed": 1,
+  "test_set": "excited test runs of the plant's own pool (data of the main run)",
+  "split": "test",
+  "n_train_runs_for_the_models": 64,
+  "models_trained_epochs": 2,
+  "note": "weights do not change the cost of predict; accuracy of these models unused",
+  "warmup_s": 20.424649599939585,
+  "torch": "2.14.0+cpu"
+ },
+ "results": [
+  {
+   "method": "persistence",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 0.13281249480582225,
+   "throughput_us_per_window_min": 0.1293198746519492,
+   "latency_batch1_us_median": 2.09989957511425,
+   "latency_batch1_us_min": 1.9997823983430862,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 0.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125
+    }
+   },
+   "load_after": {
+    "machine_load_pct": 15.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125
+    }
+   },
+   "n_parameters": 0
+  },
+  {
+   "method": "arx",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 2.8603170743307977,
+   "throughput_us_per_window_min": 2.8397058914004663,
+   "latency_batch1_us_median": 158.69992785155773,
+   "latency_batch1_us_min": 156.699912622571,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 2.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125
+    }
+   },
+   "load_after": {
+    "machine_load_pct": 4.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125
+    }
+   },
+   "n_parameters": 102
+  },
+  {
+   "method": "simulator_only",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 0.5684053522760651,
+   "throughput_us_per_window_min": 0.5490579389836913,
+   "latency_batch1_us_median": 4.600035026669502,
+   "latency_batch1_us_min": 4.499917849898338,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 8.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 124
+    }
+   },
+   "load_after": {
+    "machine_load_pct": 5.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 124
+    }
+   },
+   "n_parameters": 0
+  },
+  {
+   "method": "from_scratch",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 17.95602020138176,
+   "throughput_us_per_window_min": 16.904940232908462,
+   "latency_batch1_us_median": 2129.550091922283,
+   "latency_batch1_us_min": 2072.500064969063,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 9.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125
+    }
+   },
+   "load_after": {
+    "machine_load_pct": 12.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125
+    }
+   },
+   "n_parameters": 19651
+  },
+  {
+   "method": "hybrid",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 17.481250003637637,
+   "throughput_us_per_window_min": 17.136534926762312,
+   "latency_batch1_us_median": 2108.450047671795,
+   "latency_batch1_us_min": 2064.7000055760145,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 8.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125
+    }
+   },
+   "load_after": {
+    "machine_load_pct": 7.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 125
+    }
+   },
+   "n_parameters": 20419
+  },
+  {
+   "method": "pretrain_finetune",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 17.018497226886478,
+   "throughput_us_per_window_min": 16.35829502286951,
+   "latency_batch1_us_median": 2109.7999997437,
+   "latency_batch1_us_min": 2061.6999827325344,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 5.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 124
+    }
+   },
+   "load_after": {
+    "machine_load_pct": 11.0,
+    "other_python_processes_cpu_pct_of_one_core": {
+     "24956": 124
+    }
+   },
+   "n_parameters": 19651
+  }
+ ]
+}
