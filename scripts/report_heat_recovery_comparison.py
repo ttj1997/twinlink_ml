@@ -974,11 +974,21 @@ def consistency_check(
                         "value_w": [res_ex1, res_ex2],
                     }
                 )
-            if st.q_w < -1e-9 or t_h > t_c or min(s1, s2) < -1e-12:
+            if min(s1, s2) < -1e-12 or (st.q_w > 1e-9 and t_h > t_c):
                 violations.append(
                     {
                         **where,
                         "check": "second law: heat transferred against the temperature gradient",
+                        "recovered_kw": st.q_w / 1e3,
+                        "entropy_w_per_k": [s1, s2],
+                    }
+                )
+            if st.q_w < -1e-9:
+                violations.append(
+                    {
+                        **where,
+                        "check": "stage cools the process gas (it enters warmer than the exhaust; "
+                        "the entropy production is positive, so not a second-law violation)",
                         "recovered_kw": st.q_w / 1e3,
                         "entropy_w_per_k": [s1, s2],
                     }

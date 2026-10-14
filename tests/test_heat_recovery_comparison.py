@@ -228,7 +228,7 @@ def test_consistency_check_finds_the_known_negative_recovery_of_the_intermediate
     found = [
         v
         for v in report["violations"]
-        if v["case"] == 6 and v["check"].startswith("second law") and v["recovered_kw"] < 0.0
+        if v["case"] == 6 and v["check"].startswith("stage cools") and v["recovered_kw"] < 0.0
     ]
     assert len(found) == 1
     assert found[0]["recovered_kw"] == pytest.approx(-0.0563, abs=5e-5)
