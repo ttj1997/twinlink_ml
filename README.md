@@ -1,209 +1,137 @@
 # twinlink-ml
 
-ML-Teil des BMWK-Verbundprojekts **TwinLink**, Teilvorhaben **TUHH-B** (TU Hamburg, SPE).
+Machine-learning and control part of **TwinLink AP1**, a BMWE-funded research project on a
+digital twin for fluidized-bed spray granulation (subproject TUHH-B, TU Hamburg).
 
-Stand: Schritte 1 und 2 des Arbeitsplans TUHH-B-AP 1 — **reduziertes Grey-Box-Prozessmodell
-der Wirbelschichtsprühgranulation** und **Anregungsdesign**. Vertikaler Durchstich
-(Schritt 3), Baselines (Schritt 4) und Evaluationsprotokoll (Schritt 5) sind noch offen.
+The project compares **reinforcement learning** and **recurrent / attention-based sequence
+models** (GRU, LSTM, xLSTM, Mamba, Transformer) for controlling a fluidized-bed spray
+granulation process. At the core is a **grey-box simulator** of that process. It generates
+training data and is used to evaluate control strategies before anything touches a real plant.
+
+> Status (October 2026): research code under active development. Results live in the lab book
+> ([`docs/04_stand_ap1.md`](docs/04_stand_ap1.md), numbered *Befunde*) and are summarised
+> below. Absolute numbers rest on placeholder parameters (see [Caveats](#caveats)); the
+> comparisons between methods are the point.
+
+## What is in here
+
+| Area | Where | What |
+|---|---|---|
+| Process simulator | `src/twinlink_ml/simulation/` | Grey-box model of the bed (solids, water, particle count, bed temperature), steady-state solver, excitation design, plant variants for transfer studies |
+| Data and evaluation | `src/twinlink_ml/data/`, `evaluation/` | Run-level splits, learning curves, paired resolution over seeds, test-set handling |
+| Models | `src/twinlink_ml/models/` | Persistence, static regression, ARX, GRU/LSTM, xLSTM, Mamba, Transformer, hybrid (simulator in the loop), transfer (pretrain + fine-tune) |
+| Control | `src/twinlink_ml/rl/` | Bandit/RL environment on the steady-state model, Lagrangian and shield variants |
+| Heat recovery | `src/twinlink_ml/heatnetwork/` | Cascaded exhaust-to-process-air heat recovery with minimum approach checked along the exchanger, pinch target |
+| Partner model | `src/twinlink_ml/partner_v4/`, `partner_v4_1/` | One-to-one rebuilds of an application partner's Excel balance model, used to check and give feedback |
+| Real plant data | `src/twinlink_ml/plant_data/` | Reader for plant exports. **Raw plant data is never in this repository.** |
+| Documentation | `docs/` | Lab book, process set-up, work plan, syntheses, design drafts (mostly English; early lab-book entries are German) |
+
+## Main results so far
+
+Every number below is stated in a lab-book entry and backed by an artifact in
+`artifacts/runs/`; follow the *Befund* number for the test set, the seeds and the caveats.
+
+**Architecture comparison (Befunde 51, 55, 58, 83).**
+- On the learning-curve study, GRU/LSTM stay ahead at small training budgets; the Transformer
+  is resolvably worse on moisture against the LSTM (Befund 83, paired resolution, 5 of 5 seeds).
+- Plant operating data without excitation do not suffice in the tested budget range (Befund 55):
+  an excited experiment is needed.
+- A full re-run with the corrected excitation preset (preset version 2) is in progress
+  (Befund 89); older rank statements are provisional until it finishes.
+
+**Value of a simulator for a data-poor model (Befund 88).** Pretraining an LSTM on simulator
+data and fine-tuning on plant runs beats training from scratch at small N on every tested plant
+variant. The ratio of RMSEs falls from about 12.7 (identical plant) and 10.3 (changed
+parameters) at N = 2 runs to about 1.3 at N = 64. Pretraining + fine-tuning was never worse than
+from scratch. The simulator-in-the-loop hybrid was never better than pretraining + fine-tuning.
+
+**Model-based energy optimisation (Befunde 52, 64, 69, 80).** The energy-optimal operating point
+shifts with ambient conditions. After the solver correction (Befund 79/80), at a gas-velocity
+lower bound of 1.26 m/s the regret of a fixed operating point is 16.5 % (median); a safety margin
+at the moisture limit costs about 1.5 % and keeps 94 % of the control benefit (85 % at 0.80 m/s).
+
+**Coupling of two dryer lines through shared heat recovery (Befunde 73-81).** A large coupling
+gain reported earlier does not survive the corrected cascade (minimum approach checked along the
+whole exchanger): 0 of 6 test scenarios at `dT_min` = 20 K (Befund 81).
+
+**Partner model checks (Befunde 72, 74, 75).** One-to-one rebuilds of the application partner's
+balance model reproduce all finished cells; the gas rows of v4.1 are 108.91 times too high, and
+`cp_gas` = 1.2 instead of about 1.0 kJ/(kg K) raises the heating power by 19.1 % (Befund 75).
+Feedback goes to the partner through `docs/11_partner_model_v4.md`.
 
 ## Installation
 
-```bash
-uv venv && source .venv/bin/activate
-uv pip install -e ".[dev]"          # PyTorch wird für Schritt 1 nicht gebraucht
-pytest                              # 35 Tests
-ruff check . && mypy
-```
-
-## Erster Blick
+One virtual environment with every extra of `pyproject.toml`:
 
 ```bash
-# Prozessmodell: Beharrungszustand, Zeitkonstanten, statischer Varianzanteil
-python scripts/report_operating_point.py conf/process/greybox_placeholder.yaml \
-    --figure artifacts/operating_point.png
-
-# Anregungsdesign: Abdeckung, Kollinearität, realisierte Bandbreite, Constraint-Verletzungen
-python scripts/report_excitation.py conf/process/greybox_placeholder.yaml \
-    --runs 16 --figure artifacts/excitation.png
+python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
+pip install -e ".[torch,sklearn,plant-data,train,rl,dev]"
+python -c "import twinlink_ml; print(twinlink_ml.__file__)"   # must point to this repo's src/
 ```
 
-Beide Skripte sind nach jedem Ersetzen von Platzhalterwerten zu wiederholen. Die
-Verweilzeiten und Taktzeiten der Anregung werden aus den Zeitkonstanten des Prozessmodells
-abgeleitet, nicht geraten — sie verschieben sich also mit jeder Änderung der Prozess-Config.
+The grey-box simulator, the heat network and the partner-model rebuilds need only NumPy and
+SciPy; PyTorch is needed for the sequence models, `gymnasium` / `stable-baselines3` for RL.
+
+```bash
+pytest                      # full suite takes a long time (tens of minutes)
+ruff check . && ruff format --check .
+```
+
+In a git worktree, start every run with `tools/run_here.sh <python args>` so that the worktree
+loads its own code; never run `pip install -e .` from a worktree.
+
+## A first look
 
 ```python
 from twinlink_ml.simulation import GreyBoxFluidBedGranulator, load_process_config
 
-config = load_process_config("conf/process/greybox_placeholder.yaml")
+config = load_process_config("conf/process/greybox_gab_placeholder.yaml")
 simulator = GreyBoxFluidBedGranulator(config)
 trajectory = simulator.rollout(actions, disturbances, seed=0)   # (batch, time, channel)
 ```
 
-```python
-from twinlink_ml.simulation import ExcitationConfig, MixedExcitationDesign
+New studies generate their data with `DataSpec.new_study(...)` (preset version 2: planned
+future set points, own disturbance process for the solid fraction, per-run cap of the gas
+velocity). The plain `DataSpec` defaults reproduce old data only.
 
-excitation = ExcitationConfig.from_time_constants(
-    tau_fast_s=9.5, tau_slow_s=16_000.0, sample_time_s=5.0, run_duration_s=28_800.0
-)
-design = MixedExcitationDesign(
-    excitation, config.actions, config.disturbances,
-    sample_time_s=config.numerics.sample_time_s,
-    geometry=config.geometry, material=config.material, operation=config.operation,
-)
-schedule = design.build(64, seed=0)         # Sobol -> schedule.subset(8) bleibt gültig
-initial = simulator.state_from_physical(*schedule.initial_states.T)
-trajectory = simulator.rollout(
-    schedule.actions, schedule.disturbances,
-    run_id=schedule.run_id, seed=0, initial_state=initial,
-)
-```
+The scripts in `scripts/` are the entry points of the studies (`report_*`, `analyze_*`,
+`probe_*`, `run_*`). Each artifact records the git commit, the dirty flag, the config
+fingerprint and where the code was loaded from. Long runs (hours) belong on a local machine and
+are resumable with `--resume`.
 
-## Modell in einem Absatz
+## Working rules (short version, details in `CLAUDE.md`)
 
-Vier Zustände — Feststoffmasse, Wassermasse, Partikelanzahl, Betttemperatur — für ein
-ideal durchmischtes Bett mit quasistationärer Gasphase. Enthalpie-, Wasser- und
-Feststoffbilanz plus reduzierte Populationsbilanz (zwei Momente). Der mittlere Durchmesser
-folgt algebraisch aus Masse und Anzahl, wodurch die Bilanzen linear und im Integrator
-exakt erhalten bleiben. Trocknung über die normierte Trocknungskurve mit Sättigungsgrad
-der Abluft; Fluidisierungsfenster nach Wen & Yu bzw. Haider & Levenspiel.
-Details und Herleitungen in den Docstrings von `simulation/greybox.py`.
+- **Run-level splits, never window-level.** Learning curves are the primary result, 3-5 seeds,
+  median and range. Baselines come before any architecture comparison.
+- **Always name the test set** (excited vs. constant-run holdout). Rank claims only after
+  checking against the resolution limit (paired resolution over seeds).
+- Commit scripts before running them; clean working tree before any run that writes artifacts;
+  never overwrite an artifact.
+- Lab-book entries are append-only; corrections are dated addenda.
+- If a finding changes existing results, report first, fix after confirmation.
 
-## Bekannte Grenzen
+## Confidentiality
 
-| Nicht enthalten | Konsequenz |
-|---|---|
-| Partikelgrößen*verteilung* (nur zwei Momente) | Projektziel 10 % PSD-Genauigkeit ist mit diesem Modell nicht adressierbar → Dyssol / AP 2 |
-| Agglomeration, Abrieb, Bruch | Nukleationsterm ist ein Platzhalter für Überspray |
-| Elutriation / Zyklonrückführung | `u_t` wird als Diagnose geführt, der Austrag nicht bilanziert. Im Standarddesign liegt `u_gas` in 13 % der Abtastschritte über `u_t` — dort fehlt Modellphysik, nicht Betriebsfähigkeit |
-| Tropfengrößenverteilung | `p_nozzle` hat reine Kostenwirkung ohne Prozessnutzen → im RL fixieren oder mit Qualitätsstrafe versehen |
-| Heizer- und Aktordynamik | Momentanleistung ist fast algebraisch in den Stellgrößen, siehe unten |
-| Räumliche Gradienten (Sprüh-/Trocknungszone) | mittlere Größen only |
+Partner companies, their customers' products and third-party persons are never named in the
+repository; established pseudonyms are used (application partner, consortium coordinator,
+software integration partner, associated partner). `tests/test_denylist.py` checks tracked files
+against a local denylist before a commit is trusted. Workbooks and raw plant data stay in the
+git-ignored `local/` directory (see `local.example`).
 
-## Anregungsdesign (Schritt 2)
+## Caveats
 
-Sprungfolgen mit zufälligen Amplituden und Verweilzeiten, PRBS als echte m-Sequenz
-(Schieberegister, nicht Bernoulli-Münze), stückweise lineare Rampen, Konstantläufe als
-Referenz. Störgrößen mit Tagesgang plus Ornstein-Uhlenbeck-Drift, Betriebspunkte und
-Anfangszustände über eine Folge niedriger Diskrepanz.
+- Most process parameters are placeholders (`provenance.status: placeholder`; the loader warns).
+  Treat absolute energy and CO2 numbers as relative.
+- The simulator is a laboratory-scale model; statements about the partner's plant scale are
+  extrapolations and are labelled as such.
+- Results marked *suspended*, *withdrawn* or *provisional* in the lab book are not to be cited
+  until the entry that supersedes them says so.
 
-Drei Abweichungen vom Arbeitsplan, jeweils begründet und durch Tests abgesichert:
+## Further reading
 
-| Abweichung | Grund |
-|---|---|
-| **Sobol statt Latin-Hypercube** | Sobol-Teilmengen sind selbst Folgen niedriger Diskrepanz. Bei LHS ist ein 5er-Design kein Teil des 100er-Designs, und die Lernkurve vermischt Datenmenge mit Abdeckungsqualität. `schedule.subset(n)` ist damit für die Stützstellen zulässig. |
-| **Ratenbegrenzung ist Pflichtbestandteil** | Ein PRBS springt über die halbe Stellgrößenspanne in einem Abtastschritt; keine reale Zuluftregelung tut das. Weil im Grey-Box-Modell die Heizerdynamik fehlt, ist die Ratenbegrenzung derzeit der einzige Ort, an dem Aktordynamik überhaupt vorkommt. |
-| **Anfangszustände werden mitgestreut** | Startet jeder Lauf bei $d_{50}=400\,\mu m$ und wächst monoton, ist $d_{50}$ innerhalb eines Laufs eine Funktion des Zeitindex. Modelle mit Positionsinformation können die langsame Mode dann aus der Schrittzahl ableiten, ohne Physik zu lernen — kein Fenster-Leakage, aber dieselbe Wirkung. |
-
-## Zwei Befunde, die den weiteren Plan betreffen
-
-**1. Der Prozess ist mehrskalig, nicht durch *eine* Zeitkonstante beschreibbar.**
-Mit den Platzhalterwerten: Feuchte ≈ 10 s, Temperatur ≈ 84 s, Massenregelung ≈ 600 s,
-Partikelgröße ≈ 16 000 s. Steifigkeitsverhältnis ≈ 1700. Bei Δt = 5 s bräuchte die
-langsamste Mode ca. 9600 Abtastschritte — für einen Transformer mit voller Attention
-außerhalb des Sinnvollen. Die Wahl der Sequenzlänge ist damit eine Entscheidung
-*darüber, welche Mode* modelliert wird, keine Hyperparameterfrage.
-
-**2. Die Momentanleistung ist zu ≈ 96 % durch eine statische Abbildung der aktuellen
-Stell- und Störgrößen erklärt.** Die Qualitätsgrößen sind dynamisch (R² 0.41 … 0.69), der
-Energieverbrauch praktisch nicht. Für einen aussagekräftigen Architekturvergleich gehört
-deshalb eine **statische Regression** in die Pflicht-Baselines — Persistenz allein ist für
-diese Zielgröße die falsche Referenz, weil sie jeden Stellgrößensprung verliert.
-
-## Was das Anregungsdesign über die Terminlage verrät
-
-Mit den Platzhalter-Änderungsraten ist die Ratenbegrenzung auf **allen vier Kanälen
-dauerhaft aktiv** (`Rate 1.00`). Das Signaldesign wird damit weitgehend durch die
-Aktordynamik ersetzt: Sprünge und PRBS werden zu Rampen. Realisierte Bandbreite (90 % der
-Signalenergie) gegen die Eckfrequenz der schnellsten Prozessmode:
-
-| Kanal | f90 / f_fast | t_switch/τ_fast (volle / kleinste Amplitude) |
-|---|---|---|
-| `T_in` | 0.16 | 12.7 / 1.9 |
-| `u_gas` | 1.00 | 3.6 / 0.5 |
-| `m_spray` | 0.23 | 13.7 / 2.1 |
-| `p_nozzle` | 0.53 | 6.3 / 1.0 |
-
-Folge: die schnellste Prozessmode (Feuchte, ≈ 10 s) ist über `T_in` und `m_spray` mit
-**keiner** Amplitude anregbar. Die effektiv schnellste beobachtbare Zeitskala wird von den
-Aktoren gesetzt, nicht vom Prozess — und damit ist Δt = 5 s zu fein:
-
-| Δt | Schritte pro 8-h-Lauf | Persistenz-NRMSE `T_bed` | Persistenz-NRMSE `X_prod` |
-|---|---|---|---|
-| 5 s | 5760 | 0.016 | 0.017 |
-| 25 s | 1152 | 0.137 | 0.130 |
-| 60 s | 480 | 0.234 | 0.045 |
-
-Bei Δt = 5 s ist die Ein-Schritt-Vorhersage praktisch trivial — Persistenz liegt bereits
-bei 1.6 % Fehler, und Architekturunterschiede verschwinden in der Seed-Varianz. **Die
-Abtastzeit ist damit ein Versuchsparameter erster Ordnung, kein Implementierungsdetail.**
-Vorschlag: Δt ≈ 25 s als Standard, Δt als Faktor in einer Vorstudie mitführen, und den
-Mehrschritt-Rollout-Fehler als primäre Metrik behandeln statt den Ein-Schritt-Fehler.
-
-Vorbehalt: die Änderungsraten in `conf/process/greybox_placeholder.yaml` sind selbst
-Platzhalter. Sie bestimmen jetzt aber die Versuchsplanung mit — sie sind damit von einem
-Nebenparameter zu einer der wichtigsten offenen Zahlen aufgestiegen.
-
-## Struktur
-
-```
-conf/process/            Zahlenwerte des Prozessmodells, versioniert, mit TODO-Markierungen
-conf/excitation/         aufgelöster Anregungsstand, gehört zu jedem Datensatz
-src/twinlink_ml/
-  simulation/
-    backend.py           Array-Backend (NumPy | PyTorch) per Dependency Injection
-    config.py            Frozen Dataclasses, Validierung, YAML-Roundtrip, Fingerprint
-    thermo.py            Psychrometrie, Trocknungskinetik
-    fluidization.py      u_mf, u_t, Bettdruckverlust
-    energy.py            Leistungsaufnahme der Aggregate, Zielgröße dE
-    base.py              ABC ProcessSimulator, Trajectory  ← Schnittstelle zu TUHH-A
-    greybox.py           das Modell
-    diagnostics.py       Betriebspunkt, Zeitkonstanten, statischer Varianzanteil
-    excitation.py        Signalgeneratoren, QMC-Sampler, Ratenbegrenzung, Anfangszustände
-    excitation_diagnostics.py  Abdeckung, Kollinearität, Bandbreite, Constraint-Verletzungen
-  utils/seeding.py       getrennte Seeds für Daten / Rauschen / Modell
-scripts/                 importieren die Module, enthalten keine Fachlogik
-tests/                   75 Tests, davon 12 auf physikalische Bilanzen und Constraints
-```
-
-## Status der Zahlenwerte
-
-`conf/process/greybox_placeholder.yaml` ist mit `provenance.status: placeholder` markiert
-und löst beim Laden eine `PlaceholderConfigWarning` aus. **Keine** Absolutaussage über
-Energieverbrauch ist mit diesem Stand belastbar; für den relativen Architekturvergleich
-in AP 1 genügt er. Acht offene Punkte sind in `provenance.open_todos` gelistet.
-
-## Schritt 5 — Evaluationsprotokoll
-
-```bash
-python scripts/study_variance_sources.py  --log artifacts/runs/variance.jsonl
-python scripts/study_noise_level.py       --log artifacts/runs/noise.jsonl
-python scripts/study_validation_policy.py --log artifacts/runs/policy.jsonl
-jupyter lab notebooks/05_lernkurven_und_aufloesung.ipynb
-```
-
-Drei Regeln, die aus Schritt 5 folgen und im Code erzwungen werden:
-
-1. **Seeds werden je Quelle variiert** (`SeedPlan`), nicht gemeinsam. Wer den Rausch-Seed
-   über einen neuen Master-Seed zieht, variiert in Wahrheit den Datensatz.
-2. **Jede Kurve trägt ihre Auflösungsschwelle.** Unterschiede darunter sind keine
-   Ergebnisse. Mit drei Seeds liegt sie bei 10–15 % relativ.
-3. **Jede Kurve trägt ihre Rauschgrenze.** Eine Kurve, die bei 0.07 abflacht, kann die
-   Rauschgrenze erreicht haben statt der Modellgrenze — bei `d50_um` ist genau das der Fall.
-
-## Schritt 6 — Architekturvergleich
-
-```bash
-python scripts/study_architectures.py --mode both --log artifacts/runs/architectures.jsonl
-python scripts/study_history_length.py --log artifacts/runs/history.jsonl
-```
-
-Drei Regeln, die aus Schritt 6 folgen:
-
-1. **Zwei Beobachtbarkeits-Betriebsarten.** `INLINE` (Zielgröße wird gemessen) und
-   `SOFT_SENSOR` (nicht). Sie haben verschiedene parameterfreie Baselines und verschiedene
-   Primärmetriken — `evaluation.protocol.primary_metric` entscheidet, nicht der Aufrufer.
-2. **Der Residual-Kopf gehört an einen Anker.** Ohne Inline-Messung ist die Vorhersage
-   direkt zu parametrisieren, sonst ist sie ein Integrator ohne Rückführung.
-3. **Ein Modul ohne ausgeführten Tensor-Vorgang liefert keine berichtbare Zahl.**
-   `torch_sequence.py` ist vollständig und nie ausgeführt; sechs Tests warten auf eine
-   Maschine mit PyTorch.
+[`docs/01_projektsteckbrief.md`](docs/01_projektsteckbrief.md) (project outline),
+[`docs/02_prozess_setup.md`](docs/02_prozess_setup.md) (process set-up and open questions to the
+partner), [`docs/04_stand_ap1.md`](docs/04_stand_ap1.md) (lab book),
+[`docs/08_synthese_m2.md`](docs/08_synthese_m2.md) (synthesis),
+[`docs/11_partner_model_v4.md`](docs/11_partner_model_v4.md) (partner model and heat recovery),
+[`CONTRIBUTING.md`](CONTRIBUTING.md).
