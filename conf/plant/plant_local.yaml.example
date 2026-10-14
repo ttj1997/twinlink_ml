@@ -1,0 +1,19 @@
+# Copy to conf/plant/plant_local.yaml (git-ignored) and replace the placeholder tags by the
+# channel names of the plant export. Code and documentation only ever use the ROLES (keys).
+# Several tags under one role are averaged (redundant sensors of the same quantity).
+# Paths of the raw exports are NOT configured here: they come from the environment variables
+# named in the study script, set at the call site.
+roles:
+  storage_temperature: [TAG_STORAGE_T]                    # only one sensor exported
+  storage_loop_flow: [TAG_STORAGE_LOOP_FLOW]              # m3/h, loop through the storage and exchanger A1
+  preheater_loop_flow: [TAG_PREHEATER_LOOP_FLOW]          # m3/h, loop exchanger A1 -> preheater A1
+  preheater_supply_temperature: [TAG_PREHEATER_SUPPLY_T]  # water side, towards preheater A1
+  preheater_return_temperature: [TAG_PREHEATER_RETURN_T]  # water side, from preheater A1
+  supply_air_temperature: [TAG_SUPPLY_AIR_T_1, TAG_SUPPLY_AIR_T_2, TAG_SUPPLY_AIR_T_3]
+  ambient_temperature: [TAG_AMBIENT_T]                    # intake air
+  process_air_flow: [TAG_PROCESS_AIR_FLOW]                # Nm3/h
+  steam_valve_position: [TAG_STEAM_VALVE]                 # %, proxy only (split-range, two valves)
+  process_fan_power: [TAG_PROCESS_FAN_POWER]              # kW electric
+# Exported but NOT used by the storage model (open question, see docs/18):
+unused_roles:
+  auxiliary_air_heater_outlet_temperature: [TAG_AUX_HEATER_OUTLET_T]
