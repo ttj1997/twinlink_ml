@@ -1,0 +1,249 @@
+{
+ "provenance": {
+  "git/commit": "eb3e3ee236619751451ece930cf98997e77506ec",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "purpose": "step sizes of T3 family 2 (spread of oracle set points over 25 scenarios)",
+ "quality_limit_kg_per_kg": 0.15,
+ "u_gas_min": 1.26,
+ "n_grid_points": 25,
+ "n_feasible": 25,
+ "oracle_elapsed_s": 1731.5687295000535,
+ "workers": 8,
+ "spread": {
+  "inlet_temperature_celsius": {
+   "range": 11.276917412418413,
+   "std": 2.7733614279307903,
+   "iqr": 2.2158480745651588,
+   "p10_p90": 4.668145204506487,
+   "min": 60.0,
+   "max": 71.27691741241841
+  },
+  "gas_velocity_m_per_s": {
+   "range": 0.24384847624342387,
+   "std": 0.07136017241938175,
+   "iqr": 0.00019402961186032464,
+   "p10_p90": 0.1162672722502398,
+   "min": 1.26,
+   "max": 1.5038484762434239
+  },
+  "nozzle_pressure_bar": {
+   "range": 0.013229654561091486,
+   "std": 0.003635402064501657,
+   "iqr": 0.003367443682272153,
+   "p10_p90": 0.008468343101389664,
+   "min": 1.0,
+   "max": 1.0132296545610915
+  }
+ },
+ "scenarios": [
+  {
+   "ambient_temperature_celsius": 5.0,
+   "ambient_relative_humidity": 0.25,
+   "inlet_temperature_celsius": 60.0,
+   "gas_velocity_m_per_s": 1.26,
+   "nozzle_pressure_bar": 1.0054761250063922,
+   "particle_moisture_kg_per_kg": 0.1343937136254104
+  },
+  {
+   "ambient_temperature_celsius": 5.0,
+   "ambient_relative_humidity": 0.4,
+   "inlet_temperature_celsius": 60.0,
+   "gas_velocity_m_per_s": 1.26,
+   "nozzle_pressure_bar": 1.0012888992825077,
+   "particle_moisture_kg_per_kg": 0.13760148791532445
+  },
+  {
+   "ambient_temperature_celsius": 5.0,
+   "ambient_relative_humidity": 0.55,
+   "inlet_temperature_celsius": 60.0,
+   "gas_velocity_m_per_s": 1.26,
+   "nozzle_pressure_bar": 1.0054761250063922,
+   "particle_moisture_kg_per_kg": 0.14093739914898595
+  },
+  {
+   "ambient_temperature_celsius": 5.0,
+   "ambient_relative_humidity": 0.7,
+   "inlet_temperature_celsius": 60.0,
+   "gas_velocity_m_per_s": 1.26,
+   "nozzle_pressure_bar": 1.0054761250063922,
+   "particle_moisture_kg_per_kg": 0.1444097315288046
+  },
+  {
+   "ambient_temperature_celsius": 5.0,
+   "ambient_relative_humidity": 0.85,
+   "inlet_temperature_celsius": 60.0,
+   "gas_velocity_m_per_s": 1.26,
+   "nozzle_pressure_bar": 1.0012888992825077,
+   "particle_moisture_kg_per_kg": 0.1480270076515039
+  },
+  {
+   "ambient_temperature_celsius": 12.5,
+   "ambient_relative_humidity": 0.25,
+   "inlet_temperature_celsius": 60.0,
+   "gas_velocity_m_per_s": 1.26,
+   "nozzle_pressure_bar": 1.0022237114530541,
+   "particle_moisture_kg_per_kg": 0.1349585889523116
+  },
+  {
+   "ambient_temperature_celsius": 12.5,
+   "ambient_relative_humidity": 0.4,
+   "inlet_temperature_celsius": 60.0,
+   "gas_velocity_m_per_s": 1.26,
+   "nozzle_pressure_bar": 1.0022237114530541,
+   "particle_moisture_kg_per_kg": 0.14035392906559668
+  },
+  {
+   "ambient_temperature_celsius": 12.5,
+   "ambient_relative_humidity": 0.55,
+   "inlet_temperature_celsius": 60.0,
+   "gas_velocity_m_per_s": 1.26,
+   "nozzle_pressure_bar": 1.0022237114530541,
+   "particle_moisture_kg_per_kg": 0.14611794598540334
+  },
+  {
+   "ambient_temperature_celsius": 12.5,
+   "ambient_relative_humidity": 0.7,
+   "inlet_temperature_celsius": 60.35687291901908,
+   "gas_velocity_m_per_s": 1.260000886030972,
+   "nozzle_pressure_bar": 1.0094381587613337,
+   "particle_moisture_kg_per_kg": 0.1499999589937427
+  },
+  {
+   "ambient_temperature_celsius": 12.5,
+   "ambient_relative_humidity": 0.85,
+   "inlet_temperature_celsius": 61.266997957277894,
+   "gas_velocity_m_per_s": 1.2612881045874476,
+   "nozzle_pressure_bar": 1.0132296545610915,
+   "particle_moisture_kg_per_kg": 0.1499999589937427
+  },
+  {
+   "ambient_temperature_celsius": 20.0,
+   "ambient_relative_humidity": 0.25,
+   "inlet_temperature_celsius": 60.0,
+   "gas_velocity_m_per_s": 1.26,
+   "nozzle_pressure_bar": 1.0037894548936288,
+   "particle_moisture_kg_per_kg": 0.13732578489124286
+  },
+  {
+   "ambient_temperature_celsius": 20.0,
+   "ambient_relative_humidity": 0.4,
+   "inlet_temperature_celsius": 60.0,
+   "gas_velocity_m_per_s": 1.26,
+   "nozzle_pressure_bar": 1.0037894548936288,
+   "particle_moisture_kg_per_kg": 0.14640836985837125
+  },
+  {
+   "ambient_temperature_celsius": 20.0,
+   "ambient_relative_humidity": 0.55,
+   "inlet_temperature_celsius": 60.959942381734884,
+   "gas_velocity_m_per_s": 1.260117876488123,
+   "nozzle_pressure_bar": 1.0132113700393315,
+   "particle_moisture_kg_per_kg": 0.14999948220511478
+  },
+  {
+   "ambient_temperature_celsius": 20.0,
+   "ambient_relative_humidity": 0.7,
+   "inlet_temperature_celsius": 62.4036965156766,
+   "gas_velocity_m_per_s": 1.260140173663107,
+   "nozzle_pressure_bar": 1.004661302566737,
+   "particle_moisture_kg_per_kg": 0.1499999589937427
+  },
+  {
+   "ambient_temperature_celsius": 20.0,
+   "ambient_relative_humidity": 0.85,
+   "inlet_temperature_celsius": 63.76291114260078,
+   "gas_velocity_m_per_s": 1.2601322072878727,
+   "nozzle_pressure_bar": 1.0055911551353263,
+   "particle_moisture_kg_per_kg": 0.1499999589937427
+  },
+  {
+   "ambient_temperature_celsius": 27.5,
+   "ambient_relative_humidity": 0.25,
+   "inlet_temperature_celsius": 60.0,
+   "gas_velocity_m_per_s": 1.26,
+   "nozzle_pressure_bar": 1.0,
+   "particle_moisture_kg_per_kg": 0.14247003619336163
+  },
+  {
+   "ambient_temperature_celsius": 27.5,
+   "ambient_relative_humidity": 0.4,
+   "inlet_temperature_celsius": 60.00057851309488,
+   "gas_velocity_m_per_s": 1.2950204131724494,
+   "nozzle_pressure_bar": 1.001193256548926,
+   "particle_moisture_kg_per_kg": 0.1499999589937427
+  },
+  {
+   "ambient_temperature_celsius": 27.5,
+   "ambient_relative_humidity": 0.55,
+   "inlet_temperature_celsius": 60.0032380246146,
+   "gas_velocity_m_per_s": 1.3688258079513906,
+   "nozzle_pressure_bar": 1.0098743220653585,
+   "particle_moisture_kg_per_kg": 0.1499999589937427
+  },
+  {
+   "ambient_temperature_celsius": 27.5,
+   "ambient_relative_humidity": 0.7,
+   "inlet_temperature_celsius": 65.2716345791103,
+   "gas_velocity_m_per_s": 1.2601940296118603,
+   "nozzle_pressure_bar": 1.000392750751625,
+   "particle_moisture_kg_per_kg": 0.1499999589937427
+  },
+  {
+   "ambient_temperature_celsius": 27.5,
+   "ambient_relative_humidity": 0.85,
+   "inlet_temperature_celsius": 67.09836322743239,
+   "gas_velocity_m_per_s": 1.2600000000004297,
+   "nozzle_pressure_bar": 1.0071916503740188,
+   "particle_moisture_kg_per_kg": 0.1499999589937427
+  },
+  {
+   "ambient_temperature_celsius": 35.0,
+   "ambient_relative_humidity": 0.25,
+   "inlet_temperature_celsius": 62.21584807456516,
+   "gas_velocity_m_per_s": 1.260099498891221,
+   "nozzle_pressure_bar": 1.0019323858909503,
+   "particle_moisture_kg_per_kg": 0.1377896406276084
+  },
+  {
+   "ambient_temperature_celsius": 35.0,
+   "ambient_relative_humidity": 0.4,
+   "inlet_temperature_celsius": 60.005848682184734,
+   "gas_velocity_m_per_s": 1.3812282484494727,
+   "nozzle_pressure_bar": 1.00421371819876,
+   "particle_moisture_kg_per_kg": 0.1499999589937427
+  },
+  {
+   "ambient_temperature_celsius": 35.0,
+   "ambient_relative_humidity": 0.55,
+   "inlet_temperature_celsius": 60.0084714728154,
+   "gas_velocity_m_per_s": 1.5038484762434239,
+   "nozzle_pressure_bar": 1.0043490383455884,
+   "particle_moisture_kg_per_kg": 0.1499999589937427
+  },
+  {
+   "ambient_temperature_celsius": 35.0,
+   "ambient_relative_humidity": 0.7,
+   "inlet_temperature_celsius": 62.78211658175118,
+   "gas_velocity_m_per_s": 1.4998780107892502,
+   "nozzle_pressure_bar": 1.007408941019533,
+   "particle_moisture_kg_per_kg": 0.1499999589937427
+  },
+  {
+   "ambient_temperature_celsius": 35.0,
+   "ambient_relative_humidity": 0.85,
+   "inlet_temperature_celsius": 71.27691741241841,
+   "gas_velocity_m_per_s": 1.2601676488395674,
+   "nozzle_pressure_bar": 1.0031405290278104,
+   "particle_moisture_kg_per_kg": 0.1499999589937427
+  }
+ ]
+}
