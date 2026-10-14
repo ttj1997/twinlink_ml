@@ -15,6 +15,7 @@ import json
 import platform
 import subprocess
 import sys
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
@@ -26,11 +27,11 @@ CONFIG_PATH = REPO_ROOT / "conf" / "process" / "greybox_gab_placeholder.yaml"
 TARGETS = ("energy_target", "product_moisture_kg_per_kg", "bed_temperature_celsius")
 
 
-def git(*args: str, cwd: Path = REPO_ROOT) -> str:
-    """Run a git command and return stripped stdout ('' on failure)."""
+def git(*args: str, cwd: Path | None = None) -> str:
+    """Run a git command (in ``REPO_ROOT`` by default) and return stripped stdout ('' on failure)."""
     result = subprocess.run(
         ["git", *args],
-        cwd=cwd,
+        cwd=cwd if cwd is not None else REPO_ROOT,
         capture_output=True,
         text=True,
         encoding="utf-8",
@@ -40,16 +41,27 @@ def git(*args: str, cwd: Path = REPO_ROOT) -> str:
     return result.stdout.strip() if result.returncode == 0 else ""
 
 
-def working_tree_dirty() -> bool:
-    """True if there are uncommitted changes (tracked or untracked, not ignored)."""
-    return bool(git("status", "--porcelain"))
+def working_tree_dirty(ignore_paths: Sequence[Path | str] = ()) -> bool:
+    """True if there are uncommitted changes (tracked or untracked, not ignored).
+
+    ``ignore_paths``: UNTRACKED files that do not count, typically the output file a driver is about
+    to write into (``twinlink_ml.utils.tracking.status_is_dirty``); a modified tracked file always
+    counts.
+    """
+    from twinlink_ml.utils.tracking import status_is_dirty
+
+    if not ignore_paths:
+        return bool(git("status", "--porcelain"))
+    return status_is_dirty(
+        git("status", "--porcelain", "--untracked-files=all"), ignore_paths, REPO_ROOT
+    )
 
 
 NO_HEAT_NETWORK = "not used"
 """Value of ``heat_network`` in :func:`provenance` for a run without a heat network."""
 
 
-def provenance(heat_network: Any = None) -> dict[str, Any]:
+def provenance(heat_network: Any = None, ignore_paths: Sequence[Path | str] = ()) -> dict[str, Any]:
     """Provenance block written into every verification artifact.
 
     Since Befund 79 every block also names the search bound of the steady-state solver and, for
@@ -73,9 +85,9 @@ def provenance(heat_network: Any = None) -> dict[str, Any]:
     else:
         approach_check = heat_network.approach_check
         fingerprint = heat_network.fingerprint
-    return {
+    block = {
         "git/commit": git("rev-parse", "HEAD"),
-        "git/dirty": working_tree_dirty(),
+        "git/dirty": working_tree_dirty(ignore_paths),
         "python": sys.version.split()[0],
         "platform": platform.platform(),
         **location,
@@ -84,11 +96,15 @@ def provenance(heat_network: Any = None) -> dict[str, Any]:
         "heatnetwork/approach_check": approach_check,
         "heatnetwork/fingerprint": fingerprint,
     }
+    if ignore_paths:
+        # only when an exemption was used: the record says which untracked files did not count
+        block["git/dirty_ignored_paths"] = sorted(str(p) for p in ignore_paths)
+    return block
 
 
-def require_clean_tree() -> None:
+def require_clean_tree(ignore_paths: Sequence[Path | str] = ()) -> None:
     """Abort if the working tree is dirty (CLAUDE.md: clean tree before artifact runs)."""
-    if working_tree_dirty():
+    if working_tree_dirty(ignore_paths):
         raise SystemExit("working tree is dirty -- commit the script first, then run it")
 
 

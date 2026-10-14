@@ -55,6 +55,7 @@ __all__ = [
     "TrainingCurves",
     "environment_fingerprint",
     "read_jsonl",
+    "status_is_dirty",
     "training_curves",
 ]
 
@@ -173,8 +174,41 @@ def _git_repo_root() -> Path | None:
     return Path(completed.stdout.strip())
 
 
-def _git_dirty() -> bool:
+def status_is_dirty(
+    porcelain: str, ignore_paths: Iterable[Path | str] = (), repo_root: Path | None = None
+) -> bool:
+    """Whether ``git status --porcelain`` shows changes other than exempted UNTRACKED files.
+
+    ``ignore_paths`` (absolute, or relative to ``repo_root``) exempt exactly those files **if they
+    are untracked** (status ``??``): the output file a run is about to write into (Befund NN,
+    Addendum 3: a driver's own log made ``git/dirty`` true). A modified, staged or deleted tracked
+    file is never exempt, and neither is any other untracked file. The caller records the exempted
+    paths next to the flag (``git/dirty_ignored_paths``) so that the exemption is visible.
+    """
+    ignored = set()
+    for raw in ignore_paths:
+        path = Path(raw)
+        if path.is_absolute() and repo_root is not None:
+            try:
+                path = path.resolve().relative_to(repo_root.resolve())
+            except ValueError:
+                continue
+        ignored.add(path.as_posix())
+    for line in porcelain.splitlines():
+        if not line.strip():
+            continue
+        if line.startswith("??") and line[3:].strip().strip('"') in ignored:
+            continue
+        return True
+    return False
+
+
+def _git_dirty(ignore_paths: Iterable[Path | str] = ()) -> bool:
     """``True``, wenn der Arbeitsbaum uncommittete Änderungen hat.
+
+    ``ignore_paths``: untracked files that do not count (see :func:`status_is_dirty`); with
+    them ``git status`` lists untracked files one by one (``--untracked-files=all``) so that a file
+    inside a new directory can be matched.
 
     ``False`` außerhalb eines Repositories oder wenn ``git`` selbst nicht auf dem PATH
     liegt (Befund 33 dokumentiert genau diese Umgebung) -- ``git/dirty`` beantwortet dann
@@ -185,9 +219,11 @@ def _git_dirty() -> bool:
     --porcelain`` quotet untypische Dateinamen zwar normalerweise, verlässt sich aber nicht
     darauf.
     """
+    ignore = list(ignore_paths)
+    command = ["git", "status", "--porcelain"] + (["--untracked-files=all"] if ignore else [])
     try:
         result = subprocess.run(
-            ["git", "status", "--porcelain"],
+            command,
             capture_output=True,
             text=True,
             encoding="utf-8",
@@ -197,7 +233,9 @@ def _git_dirty() -> bool:
         )
     except OSError:
         return False
-    return bool(result.stdout.strip())
+    if not ignore:
+        return bool(result.stdout.strip())
+    return status_is_dirty(result.stdout, ignore, _git_repo_root())
 
 
 _UNTRACKED_FILE_UNREADABLE = "<unreadable>"
@@ -377,7 +415,9 @@ def _torch_num_threads() -> int | None:
     return torch.get_num_threads()
 
 
-def environment_fingerprint(*, check_code_location: bool = True) -> dict[str, Any]:
+def environment_fingerprint(
+    *, check_code_location: bool = True, ignore_paths: Iterable[Path | str] = ()
+) -> dict[str, Any]:
     """Umgebung, so weit sie das Ergebnis beeinflussen kann.
 
     ``git/commit`` ist ``None`` (nicht mehr die Zeichenkette ``"unknown"``), wenn kein
@@ -421,8 +461,9 @@ def environment_fingerprint(*, check_code_location: bool = True) -> dict[str, An
     )
     from ..evaluation.experiments import NEW_STUDY_PRESET_VERSION
 
+    ignored = [str(p) for p in ignore_paths]
     commit = _git_commit()
-    dirty = _git_dirty()
+    dirty = _git_dirty(ignored)
     if dirty:
         warnings.warn(
             "Arbeitsbaum ist dirty (git status --porcelain nicht leer) -- der geloggte "
@@ -461,6 +502,9 @@ def environment_fingerprint(*, check_code_location: bool = True) -> dict[str, An
         **location,
         "preset/new_study_version": NEW_STUDY_PRESET_VERSION,
     }
+    if ignored:
+        # only when an exemption was used: the record says which untracked files did not count
+        versions["git/dirty_ignored_paths"] = sorted(ignored)
     for name in ("numpy", "scipy", "torch"):
         try:
             module = __import__(name)

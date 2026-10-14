@@ -107,10 +107,11 @@ def job_complete(path: Path, job: Job) -> bool:
     return len(read_records(path)) == job.expected_records
 
 
-def check_provenance(existing_commits: set[str]) -> str:
+def check_provenance(existing_commits: set[str], ignore_paths: list[Path] | None = None) -> str:
     from twinlink_ml.utils.tracking import environment_fingerprint
 
-    fingerprint = environment_fingerprint()
+    # ignore_paths: untracked files of the driver itself (its log, the preflight artifact)
+    fingerprint = environment_fingerprint(ignore_paths=ignore_paths or [])
     if fingerprint["git/dirty"]:
         raise SystemExit(
             "working tree is dirty -- commit first (CLAUDE.md: clean tree before a run)"
@@ -168,11 +169,32 @@ def main() -> None:
     parser.add_argument("--sizes-n", type=int, nargs="+", default=[8, 16, 32, 64], help="N")
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--no-merge", action="store_true")
+    parser.add_argument(
+        "--require-preflight",
+        default=None,
+        help="name of the preflight artifact (artifacts/runs/<name>.json) that must exist with "
+        "passed = true before anything is trained",
+    )
+    parser.add_argument(
+        "--ignore-untracked",
+        type=Path,
+        nargs="*",
+        default=[],
+        help="untracked files of the driver that do not make the tree dirty (log, preflight artifact)",
+    )
     arguments = parser.parse_args()
     if not 1 <= arguments.workers <= MAX_WORKERS:
         raise SystemExit(f"--workers must be 1..{MAX_WORKERS}")
 
     runs_dir = REPO_ROOT / "artifacts" / "runs"
+    if arguments.require_preflight:
+        gate_path = runs_dir / f"{arguments.require_preflight}.json"
+        if not gate_path.exists() or not json.loads(gate_path.read_text(encoding="utf-8")).get(
+            "passed"
+        ):
+            raise SystemExit(
+                f"preflight artifact {gate_path.name} missing or not passed: nothing is trained"
+            )
     work_dir = runs_dir / f"_rerun_{arguments.run_name}"  # underscore: git-ignored scratch
     work_dir.mkdir(parents=True, exist_ok=True)
     jobs = build_jobs(arguments.arms, arguments.seeds, arguments.sizes_a, arguments.sizes_n)
@@ -183,7 +205,7 @@ def main() -> None:
         for r in read_records(work_dir / f"{job.name}.jsonl")
         if job_complete(work_dir / f"{job.name}.jsonl", job)
     }
-    commit = check_provenance({c for c in existing_commits if c})
+    commit = check_provenance({c for c in existing_commits if c}, arguments.ignore_untracked)
     todo = [job for job in jobs if not job_complete(work_dir / f"{job.name}.jsonl", job)]
     total_core_h = sum(job.cost_s for job in todo) / 3600.0
     print(
