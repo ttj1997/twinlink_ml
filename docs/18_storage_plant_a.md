@@ -182,3 +182,88 @@ varied on a grid, every number labelled); it must not be read as a statement abo
 artifact `study_storage_a1.json` with config fingerprint, hashes of the raw files, provenance).
 The call needs the two environment variables of the plant-validation scripts and the git-ignored
 role file; paths are in `local/` only.
+
+
+## 9. S2: shifting potential of storage A1 (SCENARIO BAND, not a plant statement)
+
+Pre-registered in the docstring of `scripts/gate_storage_shift.py` (commit `191a227`, before the
+run); artifact `gate_storage_shift.json`; post-hoc analysis `gate_storage_shift_posthoc.json`
+(`scripts/analyze_gate_storage_shift.py`, declared post-hoc). Question: how much steam / CO2 could
+better operation of the storage save at all? Policies on one discrete model (5 min steps): R0 replay
+of the logged preheater-loop flow, R1 rule (maximum flow while `T_S > T_S,min`, takes all discarded
+compressor heat that fits below `T_S,max`), R* perfect-foresight optimum over the day (backward
+dynamic programming on a 0.25 K grid; chosen over an LP because the duty is non-linear in state and
+flow). Decisions: preheater-loop flow and the share of the discarded compressor heat `Q_dump(t)`
+taken into the storage loop. Constraints: `T_S` in [40, 90] degC (placeholders), supply-air set point
+kept (`Q_out <= Q_air`), exchanger approach floors, terminal `T_S >= T_S(end of R0)`; all steam
+energies corrected to the same stored energy (credit factor 1, optimistic). Grid (all placeholders):
+`Q_dump` none / 100 / 300 kW / day profile (500 kW 06-18 h, 100 kW otherwise) / 800 kW; volume
+5 / 10 / 20 / 30 / 50 m3 (10 = reference V0, 5 and 30 = ends of the S1 band, 20 = 2 x V0, 50 = 5 x V0);
+weather: both measured days, ambient temperature -5 / 0 / +5 K. `Q_in_base(t)` (the compressor
+heat the storage loop takes today) is reconstructed once for V0.
+
+**R0 check.** Product 1: steam energy of R0 deviates by -0.2 % from the air-balance reconstruction of
+the measured day, storage temperature RMSE 1.8 K (max 3.2 K) -- reproduced. Product 2: steam
+deviates by -1.0 %, but the storage-temperature RMSE is 7.8 K (max 11.0 K) -- NOT reproduced by the
+pre-registered criterion (<= 2 K): one preheater conductance does not describe that day (section 4).
+Savings on product 2 are read relative to the model's R0 and carry that misfit.
+
+**Table (weather 0 K, volume 10 m3; every row is a scenario; steam and CO2 per day).**
+
+| product | `Q_dump` scenario | steam kWh/d R0 / R1 / R* | CO2 kg/d R0 / R1 / R* | saving R* | gap R1 - R* | extra heat taken by R* (kWh/d) |
+|---|---|---|---|---|---|---|
+| 1 | none | 13763 / 13763 / 13763 | 3074 / 3074 / 3074 | 0.0 % | 0.0 % | 0 |
+| 1 | const_100 | 13763 / 11371 / 11379 | 3074 / 2539 / 2541 | 17.3 % | -0.1 % | 2392 |
+| 1 | const_300 | 13763 / 7848 / 7793 | 3074 / 1753 / 1740 | 43.4 % | 0.4 % | 5988 |
+| 1 | day_profile | 13763 / 9811 / 9768 | 3074 / 2191 / 2182 | 29.0 % | 0.3 % | 4007 |
+| 1 | const_800 | 13763 / 7608 / 7533 | 3074 / 1699 / 1682 | 45.3 % | 0.5 % | 6249 |
+| 2 | none | 7359 / 7359 / 7359 | 1643 / 1644 / 1643 | 0.0 % | 0.0 % | 0 |
+| 2 | const_100 | 7359 / 4966 / 4973 | 1643 / 1109 / 1111 | 32.4 % | -0.1 % | 2392 |
+| 2 | const_300 | 7359 / 3116 / 2770 | 1643 / 696 / 619 | 62.4 % | 4.7 % | 4600 |
+| 2 | day_profile | 7359 / 4107 / 3910 | 1643 / 917 / 873 | 46.9 % | 2.7 % | 3458 |
+| 2 | const_800 | 7359 / 3077 / 2728 | 1643 / 687 / 609 | 62.9 % | 4.7 % | 4643 |
+
+Volumes 5-50 m3 and weather shifts are in the artifact; they move the saving moderately (product 2,
+300 kW: 60.5 % at 5 m3, 62.4 % at 10, 66.1 % at 20, 76.2 % at 50; weather -5 / +5 K: 63.1 / 61.0 %).
+Without discarded heat there is nothing to save in any scenario: R0, R1 and R* agree within 1 kWh/d.
+
+**Gate (pre-registered).** Realistic scenario = `Q_dump > 0` and volume <= 20 m3 (72 scenarios).
+All 72 reach a saving of at least 5 %; the gap R1 - R* of at least 2 % occurs in 29 scenarios, all
+on product 2 (none on product 1). By the letter: **L1** over both days (product 1: L2, product 2:
+L1; the conservative subset `Q_dump <= 300 kW` also L1). **This reading must not be quoted alone.**
+(i) The decomposition puts the whole saving on "extra heat used": exchanger use 0 kWh/d, timing and
+temperature level 0 to 1 kWh/d, extra heat 100 % -- the saving divided by the extra heat taken is
+0.997-0.998 in every scenario. Pure shifting of heat in time, with the heat flow the storage loop
+has today, saves nothing in this model: the duty is nearly flat above 15 m3/h of preheater-loop
+flow (peak at 15-18.5 m3/h, which is where the logged flow already is), so there is nothing for flow
+decisions to gain. (ii) The gap of R1 on product 2 comes from the max-flow rule: at high storage
+temperature a flow near 30 m3/h gives a slightly LOWER duty than 15 m3/h. Post-hoc (not
+pre-registered): the plainest rule R1b = logged flow plus all discarded heat leaves a gap of at most
+0.9 % on the whole grid (product 1: below 0.1 %) and the gate rule with R1b gives **L2 on both days**.
+(iii) The product-2 day fails the R0 check. Substantive reading, post-hoc: no shifting potential in
+the sense of memory-dependent decisions (L3 for pure shifting); the whole saving is energy that is
+only added, and a fixed rule that takes it captures it. Whether that heat exists and whether the
+storage loop can take it up to `T_S,max` is not a control question but a process-integration
+question for the partner. The saving is the added heat: it is not a result about an RL set-up.
+
+**Sensitivity (reference: 300 kW constant, 10 m3, no shift; change of the R* saving in kWh/d,
+product 1 / product 2).**
+
+| rank | placeholder | effect |
+|---|---|---|
+| 1 | `T_S,max` (75 / 100 instead of 90 degC) | -2112 / -2696 and +858 / +1461 kWh/d |
+| 2 | exchanger conductances (other day's fit; x0.8; x1.25) | +1187 / -2367; -1572 / -1567; +986 / +1283 kWh/d |
+| 3 | topology A instead of B | +73 / +167 kWh/d |
+| 4 | intake humidity, reference volume of `Q_in_base`, `UA_S` | each below 50 kWh/d |
+| 5 | maximum preheater-loop flow, `T_S,min` | below 10 kWh/d |
+| -- | fan heat fraction | no change in kWh, changes the percentage (-3.3 / -8.0 points at 0.5) |
+| -- | boiler efficiency | no change in kWh; CO2 saving +167 / +128 kg/d at 0.8, -133 / -102 at 1.0 |
+
+Not on this list because they are scenario axes: the availability of discarded heat (decides
+everything: 0 kW saves nothing) and the volume (moderate).
+
+**Questions for the partner (from the ranking).** (1) Is there discarded compressor heat at all, how
+much and when, and can the storage loop absorb it? (2) Maximum admissible storage temperature and
+the cooling-water temperature the compressors need (decides `T_S,max`). (3) Design data or
+measurements of the two exchangers (conductance, fouling), and the air flow through the preheater.
+(4) Order in the storage loop. (5) Storage volume. (6) Boiler efficiency (CO2 only).
