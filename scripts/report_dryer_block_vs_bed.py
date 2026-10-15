@@ -504,7 +504,7 @@ def violation_report(
     }
 
 
-def sanjay_inputs(config: ProcessConfig) -> dict[str, Any]:
+def partner_inputs(config: ProcessConfig) -> dict[str, Any]:
     """VG4: the partner's fluidised-bed inputs in the bed model, only if the solver converges."""
     gas = config.gas
     t_in, spray, air_kg_h, y_in, xs, t_s, t_amb = 300.0, 12.0, 100.0, 0.006, 0.4, 15.0, 15.0
@@ -595,7 +595,7 @@ def sanjay_inputs(config: ProcessConfig) -> dict[str, Any]:
         result["status"] = (
             "outside the range: the solver finds no steady state at any gas velocity tried"
         )
-        result["block"] = _block_for_sanjay(config, t_in, spray, air_kg_h, y_in, xs, t_s, t_amb)
+        result["block"] = _block_for_partner(config, t_in, spray, air_kg_h, y_in, xs, t_s, t_amb)
         return result
 
     def air_gap(u: float) -> float:
@@ -614,7 +614,7 @@ def sanjay_inputs(config: ProcessConfig) -> dict[str, Any]:
             "outside the range: the solver converges at some gas velocities, but none gives the "
             "100 kg/h of dry air (no bracket)"
         )
-        result["block"] = _block_for_sanjay(config, t_in, spray, air_kg_h, y_in, xs, t_s, t_amb)
+        result["block"] = _block_for_partner(config, t_in, spray, air_kg_h, y_in, xs, t_s, t_amb)
         return result
     u_star = brentq(air_gap, *brackets[0], xtol=1e-6)
     variant, solution, error = _solve(variant_for(u_star), t_in, u_star, NOZZLE_BAR, t_amb, phi)
@@ -634,11 +634,11 @@ def sanjay_inputs(config: ProcessConfig) -> dict[str, Any]:
         "saturation_degree": solution.diagnostics["saturation_degree"],
     }
     result["record"] = record
-    result["block"] = _block_for_sanjay(config, t_in, spray, air_kg_h, y_in, xs, t_s, t_amb)
+    result["block"] = _block_for_partner(config, t_in, spray, air_kg_h, y_in, xs, t_s, t_amb)
     return result
 
 
-def _block_for_sanjay(
+def _block_for_partner(
     config: ProcessConfig,
     t_in: float,
     spray: float,
@@ -771,7 +771,7 @@ def main() -> int:
             "max_abs_difference_to_stored": max(diffs) if diffs else None,
         }
     record["reproduction_of_m1_steady_states"] = reproduction
-    record["vg4"] = sanjay_inputs(config)
+    record["vg4"] = partner_inputs(config)
 
     args.output.write_text(json.dumps(_clean(record), indent=1), encoding="utf-8")
     print(f"written {args.output}")
