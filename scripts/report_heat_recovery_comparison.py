@@ -60,6 +60,7 @@ from typing import Any, Literal
 
 import numpy as np
 
+from twinlink_ml.flowsheet import Flowsheet, FlowsheetConfig, Switches
 from twinlink_ml.flowsheet.bed_state import SOLID_FRACTION, bed_state_at_partner_inputs
 from twinlink_ml.flowsheet.exchanger import approach_diagnostics, solve_stage  # noqa: F401
 from twinlink_ml.flowsheet.loop import LoopInputs, StageKind, StageModel, StageOut  # noqa: F401
@@ -139,6 +140,16 @@ class Plant:
     heating_value_j_per_kg: float
     ambient_celsius: float
     partner: Props
+    exhausts_repository: dict[int, c.Stream] | None = None
+    """Exhausts computed with the repository's gas properties (consistent property set,
+    ``consistent_properties=True``); ``None``: every model uses ``exhausts`` (the partner's), the
+    mixed set of the first run of this comparison (docs/04, Befund 90, addendum)."""
+
+    def exhausts_for(self, props: Props) -> dict[int, c.Stream]:
+        """The exhausts that belong to the property set of a model."""
+        if props.name == REPO.name and self.exhausts_repository is not None:
+            return self.exhausts_repository
+        return self.exhausts
 
     def with_htm_flows_kg_per_h(self, flows: tuple[float, float]) -> Plant:
         return dataclasses.replace(
@@ -147,16 +158,32 @@ class Plant:
 
 
 def plant_from_inputs(
-    inputs: SiInputsV41, exhaust_override: dict[int, tuple[float, float]] | None = None
+    inputs: SiInputsV41,
+    exhaust_override: dict[int, tuple[float, float]] | None = None,
+    consistent_properties: bool = False,
 ) -> Plant:
-    """Plant of the partner workbook; ``exhaust_override[i] = (T degC, Y kg/kg)`` replaces source i."""
+    """Plant of the partner workbook; ``exhaust_override[i] = (T degC, Y kg/kg)`` replaces source i.
+
+    ``consistent_properties``: the models with the repository's gas properties (b, c, d) get the
+    exhausts of the dryer block computed with the same properties (``cp_gas`` switch of
+    ``twinlink_ml.flowsheet``, no heat loss, equilibrium moisture); the partner model (a) keeps
+    its own. The override (laboratory-model exhaust of dryer 2) applies to both property sets.
+    Default ``False``: the first run (Befund 90), whose exchangers used the repository's
+    properties behind exhausts computed with the partner's.
+    """
     p = inputs.plant
     m = p.material
     dryers = {1: p.dryer_1, 2: p.dryer_2}
     exhausts = {i: c.exhaust_stream(d, c.dryer_balance(d, m)) for i, d in dryers.items()}
+    repository = None
+    if consistent_properties:
+        repository = Flowsheet(FlowsheetConfig(inputs, Switches(cp_gas="physical"))).exhausts()
     for i, (t, y) in (exhaust_override or {}).items():
         exhausts[i] = c.Stream(exhausts[i].dry_air_kg_per_s, y, t)
+        if repository is not None:
+            repository = {**repository, i: c.Stream(repository[i].dry_air_kg_per_s, y, t)}
     return Plant(
+        exhausts_repository=repository,
         exhausts=exhausts,
         sink_air={
             i: c.Stream(
@@ -183,7 +210,7 @@ def run_stage(
         LoopInputs(
             source,
             sink,
-            plant.exhausts[source],
+            plant.exhausts_for(model.props)[source],
             gas,
             htm_kg_per_s,
             plant.htm_cp_j_per_kg_k,
@@ -258,7 +285,7 @@ def pinch_bound(
     gas = GasConfig(cp_dry_air_j_per_kg_k=props.cp_air, cp_vapour_j_per_kg_k=props.cp_vapour)
     sources = [
         HeatSourceConfig(f"S{i}", e.dry_air_kg_per_s, e.temperature_celsius, e.humidity_kg_per_kg)
-        for i, e in plant.exhausts.items()
+        for i, e in plant.exhausts_for(props).items()
     ]
     used = USED_SINKS[case]
     sinks = [
@@ -322,7 +349,7 @@ def module_direct(
             HeatSourceConfig(
                 f"S{i}", e.dry_air_kg_per_s, e.temperature_celsius, e.humidity_kg_per_kg
             )
-            for i, e in plant.exhausts.items()
+            for i, e in plant.exhausts_for(REPO).items()
         ),
         sinks=tuple(
             HeatSinkConfig(
@@ -927,6 +954,17 @@ def evaluate_source_variant(plant: Plant) -> dict[str, Any]:
             }
             for i, e in plant.exhausts.items()
         },
+        "exhausts_repository_properties": None
+        if plant.exhausts_repository is None
+        else {
+            str(i): {
+                "dry_air_kg_per_h": e.dry_air_kg_per_s * 3600.0,
+                "temperature_celsius": e.temperature_celsius,
+                "humidity_g_per_kg": e.humidity_kg_per_kg * 1e3,
+                "dew_point_celsius": dew_point(e.humidity_kg_per_kg),
+            }
+            for i, e in plant.exhausts_repository.items()
+        },
         "no_recovery": {
             "partner_properties": scenario_dict(
                 run_scenario(plant, Model("a", partner, "equal_outlet"), 0)
@@ -992,6 +1030,12 @@ def main() -> int:
     parser.add_argument("--workbook", type=Path, default=None)
     parser.add_argument("--name", default="heat_recovery_comparison")
     parser.add_argument("--solid-fraction", type=float, default=SOLID_FRACTION)
+    parser.add_argument(
+        "--consistent-properties",
+        action="store_true",
+        help="b, c, d with exhausts computed with the repository's gas properties "
+        "(docs/04, Befund 90, addendum); default: the first run's mixed set",
+    )
     args = parser.parse_args()
     target = ROOT / "artifacts" / "runs" / f"{args.name}.json"
     if target.exists():
@@ -1000,10 +1044,12 @@ def main() -> int:
     workbook = args.workbook or _find("Model v4.1.xlsx", "Model_v4_1.xlsx")
     inputs = load_excel_inputs_v41(workbook)
     si = inputs.to_si()
-    plant_i = plant_from_inputs(si)
+    plant_i = plant_from_inputs(si, consistent_properties=args.consistent_properties)
     bed = bed_exhaust_at_partner_inputs(args.solid_fraction)
     plant_ii = plant_from_inputs(
-        si, {2: (bed["exhaust_temperature_celsius"], bed["exhaust_humidity_kg_per_kg"])}
+        si,
+        {2: (bed["exhaust_temperature_celsius"], bed["exhaust_humidity_kg_per_kg"])},
+        consistent_properties=args.consistent_properties,
     )
     partner = plant_i.partner
     intermediate = plant_from_inputs(intermediate_inputs().to_si())
@@ -1034,6 +1080,14 @@ def main() -> int:
             "heating_value_j_per_kg": plant_i.heating_value_j_per_kg,
             "htm_cp_j_per_kg_k": plant_i.htm_cp_j_per_kg_k,
             "workbook": workbook.name,
+            "consistent_properties": args.consistent_properties,
+            "property_set_note": "b, c, d: exhausts of the dryers computed with the repository's "
+            "gas properties (cp_gas physical, no heat loss, equilibrium moisture); dryer 2 of "
+            "variant (ii) from the laboratory model for both property sets; a: the partner's "
+            "own"
+            if args.consistent_properties
+            else "first run: all models use the partner's "
+            "exhausts (exchangers of b, c, d with the repository's properties behind them)",
         },
         "inputs_sheet_units": {
             "plant": dataclasses.asdict(inputs.plant),
