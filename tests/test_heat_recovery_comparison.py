@@ -245,3 +245,36 @@ def test_consistency_check_v41_has_no_energy_or_second_law_violation(plant: hr.P
 def test_profile_of_a_source_below_its_floor_is_empty() -> None:
     cold = c.Stream(0.0278, 0.04, 30.0)
     assert hr.exhaust_profile(cold, hr.REPO, "sensible").total_w == 0.0
+
+
+# --- consistent property set (Befund 90, addendum) ---------------------------------------------
+
+
+def test_consistent_properties_recompute_the_exhausts_for_the_repository_models_only() -> None:
+    """b, c, d get dryer exhausts with the repository's gas properties; a keeps the partner's."""
+    si = v41_inputs().to_si()
+    mixed = hr.plant_from_inputs(si)
+    consistent = hr.plant_from_inputs(si, consistent_properties=True)
+    assert mixed.exhausts_for(hr.REPO) is mixed.exhausts
+    assert consistent.exhausts == mixed.exhausts
+    assert consistent.exhausts_for(consistent.partner) is consistent.exhausts
+    repo = consistent.exhausts_for(hr.REPO)
+    assert repo[1].temperature_celsius < mixed.exhausts[1].temperature_celsius - 10.0
+    assert repo[2].temperature_celsius < mixed.exhausts[2].temperature_celsius - 20.0
+    a = hr.Model("a", consistent.partner, "equal_outlet")
+    assert hr.run_scenario(consistent, a, 1).gas_kg_per_h == pytest.approx(
+        hr.run_scenario(mixed, a, 1).gas_kg_per_h, rel=1e-14
+    )
+    c_model = hr.Model("c", hr.REPO, "counter_current", "condensing", 10.0)
+    assert (
+        hr.run_scenario(consistent, c_model, 1).recovered_kw
+        < hr.run_scenario(mixed, c_model, 1).recovered_kw
+    )
+
+
+def test_consistent_properties_keep_the_laboratory_exhaust_of_dryer_2_for_both_sets() -> None:
+    si = v41_inputs().to_si()
+    plant = hr.plant_from_inputs(si, {2: (103.485, 0.0752)}, consistent_properties=True)
+    for exhausts in (plant.exhausts, plant.exhausts_for(hr.REPO)):
+        assert exhausts[2].temperature_celsius == 103.485
+        assert exhausts[2].humidity_kg_per_kg == 0.0752
