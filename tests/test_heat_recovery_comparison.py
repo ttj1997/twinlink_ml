@@ -266,9 +266,10 @@ def test_consistent_properties_recompute_the_exhausts_for_the_repository_models_
         hr.run_scenario(mixed, a, 1).gas_kg_per_h, rel=1e-14
     )
     c_model = hr.Model("c", hr.REPO, "counter_current", "condensing", 10.0)
-    assert hr.run_scenario(consistent, c_model, 1).recovered_kw < hr.run_scenario(
-        mixed, c_model, 1
-    ).recovered_kw
+    assert (
+        hr.run_scenario(consistent, c_model, 1).recovered_kw
+        < hr.run_scenario(mixed, c_model, 1).recovered_kw
+    )
 
 
 def test_consistent_properties_keep_the_laboratory_exhaust_of_dryer_2_for_both_sets() -> None:
