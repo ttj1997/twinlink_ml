@@ -579,7 +579,7 @@ Block with the same inputs (the partner's, equal to the document model): 134.66 
 
 ## 10. Heat recovery of the pre-heating stages: partner model v4.1 against an independent calculation (feedback to the partner)
 
-Branch `waermerueckgewinnung-vergleich` (not merged). Lab book: Befund 90. **Question:** how much heat do the pre-heating stages of the partner model recover, compared with an independent calculation with a realistic exchanger model, and which assumption makes the difference?
+Branch `waermerueckgewinnung-vergleich` (merged 2026-10-15). Lab book: Befund 90. **Question:** how much heat do the pre-heating stages of the partner model recover, compared with an independent calculation with a realistic exchanger model, and which assumption makes the difference?
 
 Code: `scripts/report_heat_recovery_comparison.py` (commit `d3cba2c`), tests `tests/test_heat_recovery_comparison.py` (39), artifact `artifacts/runs/heat_recovery_comparison_r2.json` (run on a clean tree, `git/dirty=False`). The first run (`heat_recovery_comparison.json`, script commit `d38f63b`) has identical numbers; it labelled a stage that cools the gas as a second-law violation, which the entropy production contradicts, and was repeated after the label was corrected. No plant data: the partner model is the equation document of section 7 (circuit flows 20 kg/h each unless stated), the independent calculation is a model, not a measurement. The gas flow is always computed with the corrected formula `m_gas = C (T_target - T_in) / (eta H_u)`, `eta` 0.8, `H_u` 45 MJ/kg of the workbook (the sheet's own gas rows are 108.91 times too high, section 7.3).
 

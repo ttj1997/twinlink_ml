@@ -1,0 +1,4336 @@
+{
+ "provenance": {
+  "git/commit": "191a227abd7acae78d69c57f61aaab5e7f49e8ae",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "config/fingerprint": "2430e403b8ea9ab6",
+ "config/section_fingerprints": {
+  "provenance": "902694ef76013110",
+  "topology": "60636e5447e2058a",
+  "water": "36fc90b2b280e8f1",
+  "air": "1241708f2c79fa43",
+  "storage": "432459014b489223",
+  "storage_exchanger": "5896d224a5215a86",
+  "preheater": "5896d224a5215a86",
+  "steam": "28fccfbb30890d00",
+  "compressor": "adf4f9bef5213400"
+ },
+ "placeholders": {
+  "storage.volume_m3": "placeholder, no source; only bounded from the data (identifiability)",
+  "storage.ua_kw_per_k": "placeholder, no source; not identifiable (Q_in unmeasured)",
+  "storage.room_temperature_celsius": "placeholder, location of the storage unknown",
+  "storage.max_temperature_celsius": "placeholder, no source; unused (no control in S1)",
+  "storage_exchanger.ua_kw_per_k": "to be calibrated per day (identifiable for topology B)",
+  "storage_exchanger.minimum_approach_k": "placeholder, physical sanity bound",
+  "preheater.ua_kw_per_k": "to be calibrated per day (identifiable)",
+  "preheater.minimum_approach_k": "placeholder, physical sanity bound",
+  "steam.boiler_efficiency": "placeholder, no source",
+  "steam.fan_heat_fraction": "placeholder, no source (fan power is measured)",
+  "air.relative_humidity": "placeholder, intake humidity not measured",
+  "air.normal_density_kg_per_nm3": "textbook value, moist-air correction neglected",
+  "water.*": "assumption: plain water in both loops (medium not confirmed)",
+  "compressor.total_waste_heat_max_kw": "partner statement (order of magnitude), no measurement",
+  "compressor.used_max_kw": "partner statement (order of magnitude), no measurement",
+  "compressor.rejected_fraction": "unknown (None); share discarded over the cooler, no data"
+ },
+ "data": {
+  "product_1": {
+   "sha256_of_export": "e1ec8c7b72e35fa6a11b4fe74a2263907f8a245c449c5e4b6f659ce8b24998b6",
+   "samples": 1441,
+   "step_s": 60.0,
+   "role_map_sha256": "626dda7792069f5f9cf53bb53f4169969819269ac7d3b6fa9401867bcc518251"
+  },
+  "product_2": {
+   "sha256_of_export": "40a66b790032dcbf9d10d2155dc281d4e43825404bcd7892fb73f5b849938bdd",
+   "samples": 1441,
+   "step_s": 60.0,
+   "role_map_sha256": "626dda7792069f5f9cf53bb53f4169969819269ac7d3b6fa9401867bcc518251"
+  }
+ },
+ "glitches_repaired_per_role": {
+  "product_1": {
+   "storage_loop_flow": 0,
+   "preheater_loop_flow": 0,
+   "process_air_flow": 0
+  },
+  "product_2": {
+   "storage_loop_flow": 0,
+   "preheater_loop_flow": 1,
+   "process_air_flow": 0
+  }
+ },
+ "external_snapshot_note": "three height sensors of the storage, two control-system snapshots on other days (stated by the project lead, not in the exports): spread 0.1 K on both",
+ "identifiability": {
+  "volume_bounds": {
+   "product_1": [
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 29.34205294975062,
+     "upper_from_nonnegative_m3": 29.34205294975062,
+     "upper_from_q_max_m3": 466.1200579140787,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 30.08041935575285,
+     "upper_from_nonnegative_m3": 30.08041935575285,
+     "upper_from_q_max_m3": 467.2673914392076,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 169.12610610432554,
+     "upper_from_nonnegative_m3": 169.12610610432554,
+     "upper_from_q_max_m3": 470.36425181095376,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 30.131529746555373,
+     "upper_from_nonnegative_m3": 30.131529746555373,
+     "upper_from_q_max_m3": 466.1114244224219,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 30.672221560165934,
+     "upper_from_nonnegative_m3": 30.672221560165934,
+     "upper_from_q_max_m3": 467.24325135604613,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 66.89831109586449,
+     "upper_from_nonnegative_m3": 66.89831109586449,
+     "upper_from_q_max_m3": 470.349896320666,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 31.546872410354364,
+     "upper_from_nonnegative_m3": 31.546872410354364,
+     "upper_from_q_max_m3": 466.11574112821216,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 34.66879739049923,
+     "upper_from_nonnegative_m3": 34.66879739049923,
+     "upper_from_q_max_m3": 467.52992185768346,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 60.44230448595978,
+     "upper_from_nonnegative_m3": 60.44230448595978,
+     "upper_from_q_max_m3": 470.3457016134759,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 51.580521951953116,
+     "upper_from_nonnegative_m3": 51.580521951953116,
+     "upper_from_q_max_m3": 467.4681955047411,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 52.91651349269318,
+     "upper_from_nonnegative_m3": 52.91651349269318,
+     "upper_from_q_max_m3": 468.9957560974341,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 57.74648945546869,
+     "upper_from_nonnegative_m3": 57.74648945546869,
+     "upper_from_q_max_m3": 473.64141720930843,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 74.54539605000767,
+     "upper_from_nonnegative_m3": 74.54539605000767,
+     "upper_from_q_max_m3": 518.8292476317336,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 75.58676135341042,
+     "upper_from_nonnegative_m3": 75.58676135341042,
+     "upper_from_q_max_m3": 525.2053485220233,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 81.94581088877304,
+     "upper_from_nonnegative_m3": 81.94581088877304,
+     "upper_from_q_max_m3": 555.3905355025627,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 29.34205294975062,
+     "upper_from_nonnegative_m3": 29.34205294975062,
+     "upper_from_q_max_m3": 202.11776956660677,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 30.08041935575285,
+     "upper_from_nonnegative_m3": 30.08041935575285,
+     "upper_from_q_max_m3": 203.26510309173568,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 169.12610610432554,
+     "upper_from_nonnegative_m3": 169.12610610432554,
+     "upper_from_q_max_m3": 206.36196346348183,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 30.131529746555373,
+     "upper_from_nonnegative_m3": 30.131529746555373,
+     "upper_from_q_max_m3": 202.11402593436523,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 30.672221560165934,
+     "upper_from_nonnegative_m3": 30.672221560165934,
+     "upper_from_q_max_m3": 203.24585286802366,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 66.89831109586449,
+     "upper_from_nonnegative_m3": 66.89831109586449,
+     "upper_from_q_max_m3": 206.3500529255786,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 31.546872410354364,
+     "upper_from_nonnegative_m3": 31.546872410354364,
+     "upper_from_q_max_m3": 202.11589773312477,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 34.66879739049923,
+     "upper_from_nonnegative_m3": 34.66879739049923,
+     "upper_from_q_max_m3": 203.5313009217611,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 60.44230448595978,
+     "upper_from_nonnegative_m3": 60.44230448595978,
+     "upper_from_q_max_m3": 206.34701955455697,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 51.580521951953116,
+     "upper_from_nonnegative_m3": 51.580521951953116,
+     "upper_from_q_max_m3": 203.46804649303525,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 52.91651349269318,
+     "upper_from_nonnegative_m3": 52.91651349269318,
+     "upper_from_q_max_m3": 204.92807866839055,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 57.74648945546869,
+     "upper_from_nonnegative_m3": 57.74648945546869,
+     "upper_from_q_max_m3": 208.0156502889756,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 74.54539605000767,
+     "upper_from_nonnegative_m3": 74.54539605000767,
+     "upper_from_q_max_m3": 228.15433418361124,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 75.58676135341042,
+     "upper_from_nonnegative_m3": 75.58676135341042,
+     "upper_from_q_max_m3": 230.55163829030323,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 81.94581088877304,
+     "upper_from_nonnegative_m3": 81.94581088877304,
+     "upper_from_q_max_m3": 243.59062816096926,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 29.40468869048721,
+     "upper_from_nonnegative_m3": 29.40468869048721,
+     "upper_from_q_max_m3": 465.7621490659082,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 30.144937770016334,
+     "upper_from_nonnegative_m3": 30.144937770016334,
+     "upper_from_q_max_m3": 466.90912891474153,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 169.47999536576347,
+     "upper_from_nonnegative_m3": 169.47999536576347,
+     "upper_from_q_max_m3": 470.01485407976975,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 30.196193728322665,
+     "upper_from_nonnegative_m3": 30.196193728322665,
+     "upper_from_q_max_m3": 465.7535222034514,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 30.738741554260123,
+     "upper_from_nonnegative_m3": 30.738741554260123,
+     "upper_from_q_max_m3": 466.88485627895636,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 67.04044849502606,
+     "upper_from_nonnegative_m3": 67.04044849502606,
+     "upper_from_q_max_m3": 470.00119777965045,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 31.615019737554157,
+     "upper_from_nonnegative_m3": 31.615019737554157,
+     "upper_from_q_max_m3": 465.75783559467243,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 34.74360332843867,
+     "upper_from_nonnegative_m3": 34.74360332843867,
+     "upper_from_q_max_m3": 467.1761299577465,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 60.57193704491167,
+     "upper_from_nonnegative_m3": 60.57193704491167,
+     "upper_from_q_max_m3": 469.9972945872858,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 51.6905340127208,
+     "upper_from_nonnegative_m3": 51.6905340127208,
+     "upper_from_q_max_m3": 467.11463933960437,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 53.02955631429471,
+     "upper_from_nonnegative_m3": 53.02955631429471,
+     "upper_from_q_max_m3": 468.6438463120233,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 57.872837229278744,
+     "upper_from_nonnegative_m3": 57.872837229278744,
+     "upper_from_q_max_m3": 473.28444967508847,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 74.71653497520762,
+     "upper_from_nonnegative_m3": 74.71653497520762,
+     "upper_from_q_max_m3": 518.4489077838444,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 75.7575248895159,
+     "upper_from_nonnegative_m3": 75.7575248895159,
+     "upper_from_q_max_m3": 524.817302979649,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 82.12827427542845,
+     "upper_from_nonnegative_m3": 82.12827427542845,
+     "upper_from_q_max_m3": 554.9801234609636,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 29.40468869048721,
+     "upper_from_nonnegative_m3": 29.40468869048721,
+     "upper_from_q_max_m3": 201.7598607184363,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 30.144937770016334,
+     "upper_from_nonnegative_m3": 30.144937770016334,
+     "upper_from_q_max_m3": 202.9068405672696,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 169.47999536576347,
+     "upper_from_nonnegative_m3": 169.47999536576347,
+     "upper_from_q_max_m3": 206.0125657322978,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 30.196193728322665,
+     "upper_from_nonnegative_m3": 30.196193728322665,
+     "upper_from_q_max_m3": 201.7561237153947,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 30.738741554260123,
+     "upper_from_nonnegative_m3": 30.738741554260123,
+     "upper_from_q_max_m3": 202.88745779093387,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 67.04044849502606,
+     "upper_from_nonnegative_m3": 67.04044849502606,
+     "upper_from_q_max_m3": 206.00135438456306,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 31.615019737554157,
+     "upper_from_nonnegative_m3": 31.615019737554157,
+     "upper_from_q_max_m3": 201.757992199585,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 34.74360332843867,
+     "upper_from_nonnegative_m3": 34.74360332843867,
+     "upper_from_q_max_m3": 203.1775090218242,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 60.57193704491167,
+     "upper_from_nonnegative_m3": 60.57193704491167,
+     "upper_from_q_max_m3": 205.99861252836692,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 51.6905340127208,
+     "upper_from_nonnegative_m3": 51.6905340127208,
+     "upper_from_q_max_m3": 203.11449032789855,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 53.02955631429471,
+     "upper_from_nonnegative_m3": 53.02955631429471,
+     "upper_from_q_max_m3": 204.5753996160005,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 57.872837229278744,
+     "upper_from_nonnegative_m3": 57.872837229278744,
+     "upper_from_q_max_m3": 207.67085150800895,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 74.71653497520762,
+     "upper_from_nonnegative_m3": 74.71653497520762,
+     "upper_from_q_max_m3": 227.77399433572222,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 75.7575248895159,
+     "upper_from_nonnegative_m3": 75.7575248895159,
+     "upper_from_q_max_m3": 230.1682747570884,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 82.12827427542845,
+     "upper_from_nonnegative_m3": 82.12827427542845,
+     "upper_from_q_max_m3": 243.1872365055367,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 29.968410357116493,
+     "upper_from_nonnegative_m3": 29.968410357116493,
+     "upper_from_q_max_m3": 462.5409694323739,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 30.72560349838768,
+     "upper_from_nonnegative_m3": 30.72560349838768,
+     "upper_from_q_max_m3": 463.6857244719504,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 172.6656986952373,
+     "upper_from_nonnegative_m3": 172.6656986952373,
+     "upper_from_q_max_m3": 466.87240350498365,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 30.77816956422827,
+     "upper_from_nonnegative_m3": 30.77816956422827,
+     "upper_from_q_max_m3": 462.53240223271644,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 31.337421501107833,
+     "upper_from_nonnegative_m3": 31.337421501107833,
+     "upper_from_q_max_m3": 463.6638523720045,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 68.31968508748012,
+     "upper_from_nonnegative_m3": 68.31968508748012,
+     "upper_from_q_max_m3": 466.8609754685534,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 32.22834568235223,
+     "upper_from_nonnegative_m3": 32.22834568235223,
+     "upper_from_q_max_m3": 462.53668579281447,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 35.41685676989357,
+     "upper_from_nonnegative_m3": 35.41685676989357,
+     "upper_from_q_max_m3": 463.99200285831415,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 61.73863007547865,
+     "upper_from_nonnegative_m3": 61.73863007547865,
+     "upper_from_q_max_m3": 466.8600932004169,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 52.68064255962998,
+     "upper_from_nonnegative_m3": 52.68064255962998,
+     "upper_from_q_max_m3": 463.93263385337417,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 54.046941708708474,
+     "upper_from_nonnegative_m3": 54.046941708708474,
+     "upper_from_q_max_m3": 465.47665824332626,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 59.00996719356923,
+     "upper_from_nonnegative_m3": 59.00996719356923,
+     "upper_from_q_max_m3": 470.0717418671087,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 76.25678530200719,
+     "upper_from_nonnegative_m3": 76.25678530200719,
+     "upper_from_q_max_m3": 515.0258491528434,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 77.29439671446511,
+     "upper_from_nonnegative_m3": 77.29439671446511,
+     "upper_from_q_max_m3": 521.3248930982796,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 83.77044475532716,
+     "upper_from_nonnegative_m3": 83.77044475532716,
+     "upper_from_q_max_m3": 551.286415086572,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 29.968410357116493,
+     "upper_from_nonnegative_m3": 29.968410357116493,
+     "upper_from_q_max_m3": 198.53868108490204,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 30.72560349838768,
+     "upper_from_nonnegative_m3": 30.72560349838768,
+     "upper_from_q_max_m3": 199.68343612447848,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 172.6656986952373,
+     "upper_from_nonnegative_m3": 172.6656986952373,
+     "upper_from_q_max_m3": 202.87011515751175,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 30.77816956422827,
+     "upper_from_nonnegative_m3": 30.77816956422827,
+     "upper_from_q_max_m3": 198.53500374465978,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 31.337421501107833,
+     "upper_from_nonnegative_m3": 31.337421501107833,
+     "upper_from_q_max_m3": 199.66559816649738,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 68.31968508748012,
+     "upper_from_nonnegative_m3": 68.31968508748012,
+     "upper_from_q_max_m3": 202.86113207346602,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 32.22834568235223,
+     "upper_from_nonnegative_m3": 32.22834568235223,
+     "upper_from_q_max_m3": 198.5368423977271,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 35.41685676989357,
+     "upper_from_nonnegative_m3": 35.41685676989357,
+     "upper_from_q_max_m3": 199.99338192239182,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 61.73863007547865,
+     "upper_from_nonnegative_m3": 61.73863007547865,
+     "upper_from_q_max_m3": 202.8603109282857,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 52.68064255962998,
+     "upper_from_nonnegative_m3": 52.68064255962998,
+     "upper_from_q_max_m3": 199.93248484166833,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 54.046941708708474,
+     "upper_from_nonnegative_m3": 54.046941708708474,
+     "upper_from_q_max_m3": 201.40128814448994,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 59.00996719356923,
+     "upper_from_nonnegative_m3": 59.00996719356923,
+     "upper_from_q_max_m3": 204.56766247930892,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 76.25678530200719,
+     "upper_from_nonnegative_m3": 76.25678530200719,
+     "upper_from_q_max_m3": 224.35093570472114,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 77.29439671446511,
+     "upper_from_nonnegative_m3": 77.29439671446511,
+     "upper_from_q_max_m3": 226.71800295815504,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 83.77044475532716,
+     "upper_from_nonnegative_m3": 83.77044475532716,
+     "upper_from_q_max_m3": 239.55671160664357,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 35.60562702340935,
+     "upper_from_nonnegative_m3": 35.60562702340935,
+     "upper_from_q_max_m3": 430.3291730970311,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 36.532260782101176,
+     "upper_from_nonnegative_m3": 36.532260782101176,
+     "upper_from_q_max_m3": 431.52172945202824,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 204.55488706359125,
+     "upper_from_nonnegative_m3": 204.55488706359125,
+     "upper_from_q_max_m3": 435.49409296053256,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 36.59792792328433,
+     "upper_from_nonnegative_m3": 36.59792792328433,
+     "upper_from_q_max_m3": 430.3212025253672,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 37.3242209695849,
+     "upper_from_nonnegative_m3": 37.3242209695849,
+     "upper_from_q_max_m3": 431.5138823141044,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 81.11205101202094,
+     "upper_from_nonnegative_m3": 81.11205101202094,
+     "upper_from_q_max_m3": 435.42348166148463,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 38.36160513033301,
+     "upper_from_nonnegative_m3": 38.36160513033301,
+     "upper_from_q_max_m3": 430.32518777423536,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 42.14939118444263,
+     "upper_from_nonnegative_m3": 42.14939118444263,
+     "upper_from_q_max_m3": 432.0391096280061,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 73.46585734815902,
+     "upper_from_nonnegative_m3": 73.46585734815902,
+     "upper_from_q_max_m3": 435.408854542913,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 62.58172802872173,
+     "upper_from_nonnegative_m3": 62.58172802872173,
+     "upper_from_q_max_m3": 432.1125789910718,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 64.2207956528461,
+     "upper_from_nonnegative_m3": 64.2207956528461,
+     "upper_from_q_max_m3": 433.6593016846753,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 70.36559083362769,
+     "upper_from_nonnegative_m3": 70.36559083362769,
+     "upper_from_q_max_m3": 438.2099340916235,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 91.65928857000286,
+     "upper_from_nonnegative_m3": 91.65928857000286,
+     "upper_from_q_max_m3": 480.79526284283236,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 92.6830919637735,
+     "upper_from_nonnegative_m3": 92.6830919637735,
+     "upper_from_q_max_m3": 486.4007942845863,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 99.9426924794394,
+     "upper_from_nonnegative_m3": 99.9426924794394,
+     "upper_from_q_max_m3": 514.5016080311538,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 35.60562702340935,
+     "upper_from_nonnegative_m3": 35.60562702340935,
+     "upper_from_q_max_m3": 166.3268847495592,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 36.532260782101176,
+     "upper_from_nonnegative_m3": 36.532260782101176,
+     "upper_from_q_max_m3": 167.51944110455628,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 171.49180461306065,
+     "upper_from_nonnegative_m3": 204.55488706359125,
+     "upper_from_q_max_m3": 171.49180461306065,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 36.59792792328433,
+     "upper_from_nonnegative_m3": 36.59792792328433,
+     "upper_from_q_max_m3": 166.3238040373105,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 37.3242209695849,
+     "upper_from_nonnegative_m3": 37.3242209695849,
+     "upper_from_q_max_m3": 167.51403891899483,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 81.11205101202094,
+     "upper_from_nonnegative_m3": 81.11205101202094,
+     "upper_from_q_max_m3": 171.4236382663631,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 38.36160513033301,
+     "upper_from_nonnegative_m3": 38.36160513033301,
+     "upper_from_q_max_m3": 166.32534437914794,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 42.14939118444263,
+     "upper_from_nonnegative_m3": 42.14939118444263,
+     "upper_from_q_max_m3": 168.00249665240645,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 73.46585734815902,
+     "upper_from_nonnegative_m3": 73.46585734815902,
+     "upper_from_q_max_m3": 171.41023360702027,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 62.58172802872173,
+     "upper_from_nonnegative_m3": 62.58172802872173,
+     "upper_from_q_max_m3": 168.11242997936597,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 64.2207956528461,
+     "upper_from_nonnegative_m3": 64.2207956528461,
+     "upper_from_q_max_m3": 169.66017342938466,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 70.36559083362769,
+     "upper_from_nonnegative_m3": 70.36559083362769,
+     "upper_from_q_max_m3": 173.30420710826107,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 91.65928857000286,
+     "upper_from_nonnegative_m3": 91.65928857000286,
+     "upper_from_q_max_m3": 190.1203493947101,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 92.6830919637735,
+     "upper_from_nonnegative_m3": 92.6830919637735,
+     "upper_from_q_max_m3": 192.2152849688215,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 99.9426924794394,
+     "upper_from_nonnegative_m3": 99.9426924794394,
+     "upper_from_q_max_m3": 203.46043935708482,
+     "infeasible_samples": 0
+    }
+   ],
+   "product_2": [
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 57.09563909122851,
+     "upper_from_nonnegative_m3": 57.09563909122851,
+     "upper_from_q_max_m3": 727.7620226026978,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 57.79171319137046,
+     "upper_from_nonnegative_m3": 57.79171319137046,
+     "upper_from_q_max_m3": 728.3639207278923,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 157.16765953443013,
+     "upper_from_nonnegative_m3": 157.16765953443013,
+     "upper_from_q_max_m3": 730.9278577202809,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 57.55533414440403,
+     "upper_from_nonnegative_m3": 57.55533414440403,
+     "upper_from_q_max_m3": 727.8550628234576,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 58.00661603562322,
+     "upper_from_nonnegative_m3": 58.00661603562322,
+     "upper_from_q_max_m3": 729.0180696748135,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 157.40200588109184,
+     "upper_from_nonnegative_m3": 157.40200588109184,
+     "upper_from_q_max_m3": 731.9674386611669,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 57.79360686675035,
+     "upper_from_nonnegative_m3": 57.79360686675035,
+     "upper_from_q_max_m3": 727.9317620819878,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 63.02036629909524,
+     "upper_from_nonnegative_m3": 63.02036629909524,
+     "upper_from_q_max_m3": 729.8706418082227,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 157.39091004828978,
+     "upper_from_nonnegative_m3": 157.39091004828978,
+     "upper_from_q_max_m3": 778.4113872421669,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 97.10171692604364,
+     "upper_from_nonnegative_m3": 97.10171692604364,
+     "upper_from_q_max_m3": 779.0485246144333,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 101.09440625108081,
+     "upper_from_nonnegative_m3": 101.09440625108081,
+     "upper_from_q_max_m3": 780.9557426319465,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 136.90878400953295,
+     "upper_from_nonnegative_m3": 136.90878400953295,
+     "upper_from_q_max_m3": 795.8051011546114,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 168.20911960994547,
+     "upper_from_nonnegative_m3": 168.20911960994547,
+     "upper_from_q_max_m3": 847.0837924711929,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 175.19931065309825,
+     "upper_from_nonnegative_m3": 175.19931065309825,
+     "upper_from_q_max_m3": 853.7629939505164,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 214.77589937485448,
+     "upper_from_nonnegative_m3": 214.77589937485448,
+     "upper_from_q_max_m3": 889.9367276311968,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 57.09563909122851,
+     "upper_from_nonnegative_m3": 57.09563909122851,
+     "upper_from_q_max_m3": 297.10059884389,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 57.79171319137046,
+     "upper_from_nonnegative_m3": 57.79171319137046,
+     "upper_from_q_max_m3": 299.3849481394065,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 157.16765953443013,
+     "upper_from_nonnegative_m3": 157.16765953443013,
+     "upper_from_q_max_m3": 300.97713392760545,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 57.55533414440403,
+     "upper_from_nonnegative_m3": 57.55533414440403,
+     "upper_from_q_max_m3": 298.9888682059132,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 58.00661603562322,
+     "upper_from_nonnegative_m3": 58.00661603562322,
+     "upper_from_q_max_m3": 299.8399181729678,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 157.40200588109184,
+     "upper_from_nonnegative_m3": 157.40200588109184,
+     "upper_from_q_max_m3": 301.8398075979721,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 57.79360686675035,
+     "upper_from_nonnegative_m3": 57.79360686675035,
+     "upper_from_q_max_m3": 299.0591152437508,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 63.02036629909524,
+     "upper_from_nonnegative_m3": 63.02036629909524,
+     "upper_from_q_max_m3": 300.8111679231885,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 157.39091004828978,
+     "upper_from_nonnegative_m3": 157.39091004828978,
+     "upper_from_q_max_m3": 303.5009295082691,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 97.10171692604364,
+     "upper_from_nonnegative_m3": 97.10171692604364,
+     "upper_from_q_max_m3": 303.46980930967163,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 101.09440625108081,
+     "upper_from_nonnegative_m3": 101.09440625108081,
+     "upper_from_q_max_m3": 305.32330163639926,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 136.90878400953295,
+     "upper_from_nonnegative_m3": 136.90878400953295,
+     "upper_from_q_max_m3": 320.11272096765157,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 168.20911960994547,
+     "upper_from_nonnegative_m3": 168.20911960994547,
+     "upper_from_q_max_m3": 331.88478898714664,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 175.19931065309825,
+     "upper_from_nonnegative_m3": 175.19931065309825,
+     "upper_from_q_max_m3": 335.6606468961154,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.0,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 214.77589937485448,
+     "upper_from_nonnegative_m3": 214.77589937485448,
+     "upper_from_q_max_m3": 343.82018658795204,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 57.240111205265336,
+     "upper_from_nonnegative_m3": 57.240111205265336,
+     "upper_from_q_max_m3": 726.9727743866838,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 57.9390799869207,
+     "upper_from_nonnegative_m3": 57.9390799869207,
+     "upper_from_q_max_m3": 727.5742842020702,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 157.47829308395572,
+     "upper_from_nonnegative_m3": 157.47829308395572,
+     "upper_from_q_max_m3": 730.146908204863,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 57.70183274382916,
+     "upper_from_nonnegative_m3": 57.70183274382916,
+     "upper_from_q_max_m3": 727.0746733270175,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 58.15555078378276,
+     "upper_from_nonnegative_m3": 58.15555078378276,
+     "upper_from_q_max_m3": 728.2344780790096,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 157.7129342548334,
+     "upper_from_nonnegative_m3": 157.7129342548334,
+     "upper_from_q_max_m3": 731.187559525152,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 57.94213533763229,
+     "upper_from_nonnegative_m3": 57.94213533763229,
+     "upper_from_q_max_m3": 727.1473011609528,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 63.18292558557409,
+     "upper_from_nonnegative_m3": 63.18292558557409,
+     "upper_from_q_max_m3": 729.0848567696817,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 157.70182490865636,
+     "upper_from_nonnegative_m3": 157.70182490865636,
+     "upper_from_q_max_m3": 777.5541133233301,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 97.34695203693829,
+     "upper_from_nonnegative_m3": 97.34695203693829,
+     "upper_from_q_max_m3": 778.1929071567995,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 101.35032009949927,
+     "upper_from_nonnegative_m3": 101.35032009949927,
+     "upper_from_q_max_m3": 780.1013996545364,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 137.25621318286912,
+     "upper_from_nonnegative_m3": 137.25621318286912,
+     "upper_from_q_max_m3": 794.9571925204364,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 168.6427076430203,
+     "upper_from_nonnegative_m3": 168.6427076430203,
+     "upper_from_q_max_m3": 846.1819827836385,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 175.6510030267046,
+     "upper_from_nonnegative_m3": 175.6510030267046,
+     "upper_from_q_max_m3": 852.8539407392813,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 215.31818739823498,
+     "upper_from_nonnegative_m3": 215.31818739823498,
+     "upper_from_q_max_m3": 888.9911154303012,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 57.240111205265336,
+     "upper_from_nonnegative_m3": 57.240111205265336,
+     "upper_from_q_max_m3": 296.23707444257826,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 57.9390799869207,
+     "upper_from_nonnegative_m3": 57.9390799869207,
+     "upper_from_q_max_m3": 298.5458734446782,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 157.47829308395572,
+     "upper_from_nonnegative_m3": 157.47829308395572,
+     "upper_from_q_max_m3": 300.19047673098174,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 57.70183274382916,
+     "upper_from_nonnegative_m3": 57.70183274382916,
+     "upper_from_q_max_m3": 298.2084787094731,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 58.15555078378276,
+     "upper_from_nonnegative_m3": 58.15555078378276,
+     "upper_from_q_max_m3": 299.00501515446535,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 157.7129342548334,
+     "upper_from_nonnegative_m3": 157.7129342548334,
+     "upper_from_q_max_m3": 300.99379837375494,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 57.94213533763229,
+     "upper_from_nonnegative_m3": 57.94213533763229,
+     "upper_from_q_max_m3": 298.2746543227157,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 63.18292558557409,
+     "upper_from_nonnegative_m3": 63.18292558557409,
+     "upper_from_q_max_m3": 299.95812514548965,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 157.70182490865636,
+     "upper_from_nonnegative_m3": 157.70182490865636,
+     "upper_from_q_max_m3": 302.64467052346123,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 97.34695203693829,
+     "upper_from_nonnegative_m3": 97.34695203693829,
+     "upper_from_q_max_m3": 302.61419185203783,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 101.35032009949927,
+     "upper_from_nonnegative_m3": 101.35032009949927,
+     "upper_from_q_max_m3": 304.46890255498073,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 137.25621318286912,
+     "upper_from_nonnegative_m3": 137.25621318286912,
+     "upper_from_q_max_m3": 319.26536505936247,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 168.6427076430203,
+     "upper_from_nonnegative_m3": 168.6427076430203,
+     "upper_from_q_max_m3": 330.87689583939357,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 175.6510030267046,
+     "upper_from_nonnegative_m3": 175.6510030267046,
+     "upper_from_q_max_m3": 334.6202207653167,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.02,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 215.31818739823498,
+     "upper_from_nonnegative_m3": 215.31818739823498,
+     "upper_from_q_max_m3": 342.7957716141154,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 58.54036023159676,
+     "upper_from_nonnegative_m3": 58.54036023159676,
+     "upper_from_q_max_m3": 719.869540442558,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 59.26538114687296,
+     "upper_from_nonnegative_m3": 59.26538114687296,
+     "upper_from_q_max_m3": 720.4697699075207,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 160.2730236836315,
+     "upper_from_nonnegative_m3": 160.2730236836315,
+     "upper_from_q_max_m3": 723.1183625661018,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 59.020320138655386,
+     "upper_from_nonnegative_m3": 59.020320138655386,
+     "upper_from_q_max_m3": 720.0511678590567,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 59.49262304022145,
+     "upper_from_nonnegative_m3": 59.49262304022145,
+     "upper_from_q_max_m3": 721.1821537167741,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 160.51128961850748,
+     "upper_from_nonnegative_m3": 160.51128961850748,
+     "upper_from_q_max_m3": 724.1686473010191,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 59.27889157556973,
+     "upper_from_nonnegative_m3": 59.27889157556973,
+     "upper_from_q_max_m3": 720.0871528716375,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 64.64595916388377,
+     "upper_from_nonnegative_m3": 64.64595916388377,
+     "upper_from_q_max_m3": 722.012791422813,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 160.50005865195524,
+     "upper_from_nonnegative_m3": 160.50005865195524,
+     "upper_from_q_max_m3": 769.8386480537973,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 99.5540680349903,
+     "upper_from_nonnegative_m3": 99.5540680349903,
+     "upper_from_q_max_m3": 770.4923500380955,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 103.6535447352655,
+     "upper_from_nonnegative_m3": 103.6535447352655,
+     "upper_from_q_max_m3": 772.4123128578454,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 140.38307574289436,
+     "upper_from_nonnegative_m3": 140.38307574289436,
+     "upper_from_q_max_m3": 787.324937381499,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 172.5449999406936,
+     "upper_from_nonnegative_m3": 172.5449999406936,
+     "upper_from_q_max_m3": 838.0656955956504,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 179.7162343891613,
+     "upper_from_nonnegative_m3": 179.7162343891613,
+     "upper_from_q_max_m3": 844.6724618381654,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 220.1987796086595,
+     "upper_from_nonnegative_m3": 220.1987796086595,
+     "upper_from_q_max_m3": 880.48060562224,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 58.54036023159676,
+     "upper_from_nonnegative_m3": 58.54036023159676,
+     "upper_from_q_max_m3": 288.4653548307728,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 59.26538114687296,
+     "upper_from_nonnegative_m3": 59.26538114687296,
+     "upper_from_q_max_m3": 291.16086545645203,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 160.2730236836315,
+     "upper_from_nonnegative_m3": 160.2730236836315,
+     "upper_from_q_max_m3": 293.03617915219183,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 59.020320138655386,
+     "upper_from_nonnegative_m3": 59.020320138655386,
+     "upper_from_q_max_m3": 290.9628008030171,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 59.49262304022145,
+     "upper_from_nonnegative_m3": 59.49262304022145,
+     "upper_from_q_max_m3": 291.8955591324187,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 160.51128961850748,
+     "upper_from_nonnegative_m3": 160.51128961850748,
+     "upper_from_q_max_m3": 293.4992203060999,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 59.27889157556973,
+     "upper_from_nonnegative_m3": 59.27889157556973,
+     "upper_from_q_max_m3": 291.2145060334005,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 64.64595916388377,
+     "upper_from_nonnegative_m3": 64.64595916388377,
+     "upper_from_q_max_m3": 292.5698753744575,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 160.50005865195524,
+     "upper_from_nonnegative_m3": 160.50005865195524,
+     "upper_from_q_max_m3": 294.93833966019065,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 99.5540680349903,
+     "upper_from_nonnegative_m3": 99.5540680349903,
+     "upper_from_q_max_m3": 294.913634733334,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 103.6535447352655,
+     "upper_from_nonnegative_m3": 103.6535447352655,
+     "upper_from_q_max_m3": 296.7823399577478,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 140.38307574289436,
+     "upper_from_nonnegative_m3": 140.38307574289436,
+     "upper_from_q_max_m3": 311.6391618847607,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 172.5449999406936,
+     "upper_from_nonnegative_m3": 172.5449999406936,
+     "upper_from_q_max_m3": 321.8058575096158,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 179.7162343891613,
+     "upper_from_nonnegative_m3": 179.7162343891613,
+     "upper_from_q_max_m3": 325.25638558812847,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 0.2,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 220.1987796086595,
+     "upper_from_nonnegative_m3": 220.1987796086595,
+     "upper_from_q_max_m3": 334.1198357135721,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 71.54285049491092,
+     "upper_from_nonnegative_m3": 71.54285049491092,
+     "upper_from_q_max_m3": 648.8372010013004,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 72.50995269446184,
+     "upper_from_nonnegative_m3": 72.50995269446184,
+     "upper_from_q_max_m3": 649.9399367647744,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 1,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 188.1008520140623,
+     "upper_from_nonnegative_m3": 188.1008520140623,
+     "upper_from_q_max_m3": 652.6870121294527,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 72.20519408691759,
+     "upper_from_nonnegative_m3": 72.20519408691759,
+     "upper_from_q_max_m3": 649.485669978212,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 72.90009085157742,
+     "upper_from_nonnegative_m3": 72.90009085157742,
+     "upper_from_q_max_m3": 650.65891009442,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 15,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 188.50619016494548,
+     "upper_from_nonnegative_m3": 188.50619016494548,
+     "upper_from_q_max_m3": 653.9910549838505,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 72.64645395494412,
+     "upper_from_nonnegative_m3": 72.64645395494412,
+     "upper_from_q_max_m3": 649.4856699784849,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 79.27629494698063,
+     "upper_from_nonnegative_m3": 79.27629494698063,
+     "upper_from_q_max_m3": 651.3369239808651,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 30,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 188.49539895376907,
+     "upper_from_nonnegative_m3": 188.49539895376907,
+     "upper_from_q_max_m3": 692.6839953584713,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 121.62522801551037,
+     "upper_from_nonnegative_m3": 121.62522801551037,
+     "upper_from_q_max_m3": 693.4867788510568,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 126.68579109292767,
+     "upper_from_nonnegative_m3": 126.68579109292767,
+     "upper_from_q_max_m3": 695.55370754426,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 60,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 171.65170134314704,
+     "upper_from_nonnegative_m3": 171.65170134314704,
+     "upper_from_q_max_m3": 711.0899566475603,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 211.56792291742667,
+     "upper_from_nonnegative_m3": 211.56792291742667,
+     "upper_from_q_max_m3": 756.9028237157686,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 220.36854801372866,
+     "upper_from_nonnegative_m3": 220.36854801372866,
+     "upper_from_q_max_m3": 762.8576728270061,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 1200.0,
+     "window_min": 120,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 269.0047017129047,
+     "upper_from_nonnegative_m3": 269.0047017129047,
+     "upper_from_q_max_m3": 795.3755075416277,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 71.54285049491092,
+     "upper_from_nonnegative_m3": 71.54285049491092,
+     "upper_from_q_max_m3": 210.74815871271866,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 72.50995269446184,
+     "upper_from_nonnegative_m3": 72.50995269446184,
+     "upper_from_q_max_m3": 213.80027457960148,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 1,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 188.1008520140623,
+     "upper_from_nonnegative_m3": 188.1008520140623,
+     "upper_from_q_max_m3": 218.0473359710635,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 72.20519408691759,
+     "upper_from_nonnegative_m3": 72.20519408691759,
+     "upper_from_q_max_m3": 213.43235543096318,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 72.90009085157742,
+     "upper_from_nonnegative_m3": 72.90009085157742,
+     "upper_from_q_max_m3": 215.65205949572425,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 15,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 188.50619016494548,
+     "upper_from_nonnegative_m3": 188.50619016494548,
+     "upper_from_q_max_m3": 219.97999293667226,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 72.64645395494412,
+     "upper_from_nonnegative_m3": 72.64645395494412,
+     "upper_from_q_max_m3": 213.94124063554415,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 79.27629494698063,
+     "upper_from_nonnegative_m3": 79.27629494698063,
+     "upper_from_q_max_m3": 216.16745980325894,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 30,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 188.49539895376907,
+     "upper_from_nonnegative_m3": 188.49539895376907,
+     "upper_from_q_max_m3": 220.85830145091708,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 121.62522801551037,
+     "upper_from_nonnegative_m3": 121.62522801551037,
+     "upper_from_q_max_m3": 217.90806354629515,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 126.68579109292767,
+     "upper_from_nonnegative_m3": 126.68579109292767,
+     "upper_from_q_max_m3": 219.9617288780981,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 60,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 171.65170134314704,
+     "upper_from_nonnegative_m3": 171.65170134314704,
+     "upper_from_q_max_m3": 235.24391087475828,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.0,
+     "lower_m3": 0.0,
+     "upper_m3": 211.56792291742667,
+     "upper_from_nonnegative_m3": 211.56792291742667,
+     "upper_from_q_max_m3": 229.69671147999327,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.01,
+     "lower_m3": 0.0,
+     "upper_m3": 220.36854801372866,
+     "upper_from_nonnegative_m3": 220.36854801372866,
+     "upper_from_q_max_m3": 231.70276665909657,
+     "infeasible_samples": 0
+    },
+    {
+     "ua_storage_kw_per_k": 2.0,
+     "q_max_kw": 700.0,
+     "window_min": 120,
+     "tolerance": 0.05,
+     "lower_m3": 0.0,
+     "upper_m3": 242.3369759959107,
+     "upper_from_nonnegative_m3": 269.0047017129047,
+     "upper_from_q_max_m3": 242.3369759959107,
+     "infeasible_samples": 0
+    }
+   ]
+  },
+  "q_in_band": {
+   "product_1": {
+    "0_of_upper_bound": {
+     "volume_m3": 0.0,
+     "q_in_min_kw": 236.08284030300612,
+     "q_in_mean_kw": 277.99578041449763,
+     "q_in_max_kw": 321.8796274286662
+    },
+    "0.25_of_upper_bound": {
+     "volume_m3": 7.549048432080666,
+     "q_in_min_kw": 211.38492542277675,
+     "q_in_mean_kw": 276.28816292566535,
+     "q_in_max_kw": 332.1799449624122
+    },
+    "0.5_of_upper_bound": {
+     "volume_m3": 15.098096864161333,
+     "q_in_min_kw": 140.98078740267283,
+     "q_in_mean_kw": 274.5805454368331,
+     "q_in_max_kw": 346.47752606608015
+    },
+    "1_of_upper_bound": {
+     "volume_m3": 30.196193728322665,
+     "q_in_min_kw": 0.0,
+     "q_in_mean_kw": 271.1653104591685,
+     "q_in_max_kw": 375.072688273416
+    }
+   },
+   "product_2": {
+    "0_of_upper_bound": {
+     "volume_m3": 0.0,
+     "q_in_min_kw": 320.57727010556584,
+     "q_in_mean_kw": 388.1974752159659,
+     "q_in_max_kw": 459.8163818449685
+    },
+    "0.25_of_upper_bound": {
+     "volume_m3": 14.42545818595729,
+     "q_in_min_kw": 259.0944998646318,
+     "q_in_mean_kw": 384.8680663811944,
+     "q_in_max_kw": 452.8474480186923
+    },
+    "0.5_of_upper_bound": {
+     "volume_m3": 28.85091637191458,
+     "q_in_min_kw": 172.7296665764212,
+     "q_in_mean_kw": 381.5386575464229,
+     "q_in_max_kw": 446.181577642905
+    },
+    "1_of_upper_bound": {
+     "volume_m3": 57.70183274382916,
+     "q_in_min_kw": 0.0,
+     "q_in_mean_kw": 374.87983987688,
+     "q_in_max_kw": 466.03521002197044
+    }
+   }
+  },
+  "implied_conductances": {
+   "product_1": {
+    "storage_then_exchanger": {
+     "1.0": {
+      "ua_exchanger_median": 19.510928243847665,
+      "ua_exchanger_cv": 0.07977937795169447,
+      "ua_preheater_median": 17.327019426858104,
+      "ua_preheater_cv": 0.10816712356794922,
+      "invalid_fraction_exchanger": 0.0
+     }
+    },
+    "exchanger_then_storage": {
+     "5.0": {
+      "ua_exchanger_median": 13.335200961629345,
+      "ua_exchanger_cv": 0.05199588402708646,
+      "ua_preheater_median": 17.327019426858104,
+      "ua_preheater_cv": 0.10816712356794922,
+      "invalid_fraction_exchanger": 0.0
+     },
+     "10.0": {
+      "ua_exchanger_median": 13.344896386198952,
+      "ua_exchanger_cv": 0.050677667349343876,
+      "ua_preheater_median": 17.327019426858104,
+      "ua_preheater_cv": 0.10816712356794922,
+      "invalid_fraction_exchanger": 0.0
+     },
+     "20.0": {
+      "ua_exchanger_median": 13.3314447213448,
+      "ua_exchanger_cv": 0.05628708810534033,
+      "ua_preheater_median": 17.327019426858104,
+      "ua_preheater_cv": 0.10816712356794922,
+      "invalid_fraction_exchanger": 0.0
+     },
+     "30.0": {
+      "ua_exchanger_median": 13.371356945301688,
+      "ua_exchanger_cv": 0.07411296079386925,
+      "ua_preheater_median": 17.327019426858104,
+      "ua_preheater_cv": 0.10816712356794922,
+      "invalid_fraction_exchanger": 0.0
+     }
+    }
+   },
+   "product_2": {
+    "storage_then_exchanger": {
+     "1.0": {
+      "ua_exchanger_median": 25.19617013185899,
+      "ua_exchanger_cv": 0.09740202979817991,
+      "ua_preheater_median": 18.9422847482422,
+      "ua_preheater_cv": 0.3624966583556618,
+      "invalid_fraction_exchanger": 0.0
+     }
+    },
+    "exchanger_then_storage": {
+     "5.0": {
+      "ua_exchanger_median": 15.746339116910613,
+      "ua_exchanger_cv": 0.06546136738222143,
+      "ua_preheater_median": 18.9422847482422,
+      "ua_preheater_cv": 0.3624966583556618,
+      "invalid_fraction_exchanger": 0.0
+     },
+     "10.0": {
+      "ua_exchanger_median": 15.740393359409051,
+      "ua_exchanger_cv": 0.06594499447402888,
+      "ua_preheater_median": 18.9422847482422,
+      "ua_preheater_cv": 0.3624966583556618,
+      "invalid_fraction_exchanger": 0.0
+     },
+     "20.0": {
+      "ua_exchanger_median": 15.71988706465788,
+      "ua_exchanger_cv": 0.06842978589034339,
+      "ua_preheater_median": 18.9422847482422,
+      "ua_preheater_cv": 0.3624966583556618,
+      "invalid_fraction_exchanger": 0.0
+     },
+     "30.0": {
+      "ua_exchanger_median": 15.64197647019404,
+      "ua_exchanger_cv": 0.073383757356159,
+      "ua_preheater_median": 18.9422847482422,
+      "ua_preheater_cv": 0.3624966583556618,
+      "invalid_fraction_exchanger": 0.0
+     }
+    }
+   }
+  }
+ },
+ "calibration": {
+  "storage_then_exchanger|cal=product_1|val=product_2|volume_m3=10": {
+   "ua_exchanger_kw_per_k": 19.842562292950582,
+   "ua_preheater_kw_per_k": 17.544719294031072,
+   "fit_rmse_supply_k": 0.5245641920078788,
+   "fit_rmse_return_k": 0.5302436555837042,
+   "fit_success": true,
+   "extraction": {
+    "in_sample": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.5245641920078788,
+       "max_abs": 2.01268890174444
+      },
+      "return_temperature_k": {
+       "rmse": 0.5302436555837042,
+       "max_abs": 1.0934776311662127
+      },
+      "q_out_kw": {
+       "rmse": 15.680450254422771,
+       "max_abs": 31.357082723373992
+      },
+      "steam_share": {
+       "rmse": 0.018389552942249424,
+       "max_abs": 0.03726326898321031
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 10.224107858876138,
+      "min_approach_preheater_k": 10.549172000943173
+     }
+    },
+    "validation": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.8634387011175063,
+       "max_abs": 3.0703160207100595
+      },
+      "return_temperature_k": {
+       "rmse": 4.532984417293466,
+       "max_abs": 7.349380103572109
+      },
+      "q_out_kw": {
+       "rmse": 96.10226733453955,
+       "max_abs": 152.60617889857878
+      },
+      "steam_share": {
+       "rmse": 0.14152845528542962,
+       "max_abs": 0.2257435411967073
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 11.80723867507023,
+      "min_approach_preheater_k": 10.214305072452127
+     },
+     "persistence": {
+      "supply_temperature_k": {
+       "rmse": 3.2855688385875887,
+       "max_abs": 4.746681213378906
+      },
+      "q_out_kw": {
+       "rmse": 79.68027208702478,
+       "max_abs": 130.4304882194669
+      },
+      "steam_share": {
+       "rmse": 0.11131001580510144,
+       "max_abs": 0.1850117888323357
+      }
+     },
+     "arx": {
+      "supply_temperature_k": {
+       "rmse": 23.18571993149029,
+       "max_abs": 32.325137689322275
+      },
+      "q_out_kw": {
+       "rmse": 69.14216802327978,
+       "max_abs": 133.53765690328322
+      },
+      "steam_share": {
+       "rmse": 0.09714883561391502,
+       "max_abs": 0.19266015994440178
+      }
+     }
+    }
+   },
+   "storage_rollout": {
+    "persistence": {
+     "rmse": 4.1977476041619575,
+     "max_abs": 5.796478271484375
+    },
+    "arx": {
+     "rmse": 4.185182543502986,
+     "max_abs": 6.903050058094422
+    },
+    "by_volume_m3": {
+     "5.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 276.8647653573048,
+       "rmse": 5.754820336217754,
+       "max_abs": 9.298103574640116
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 15.553311283753509,
+       "max_abs": 24.45256900071955
+      }
+     },
+     "10.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 275.7337503001119,
+       "rmse": 5.461636404387635,
+       "max_abs": 8.669710562191625
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 14.982362031927076,
+       "max_abs": 22.649010413794045
+      }
+     },
+     "20.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 273.47172018572616,
+       "rmse": 4.9705965260167835,
+       "max_abs": 8.366806662701372
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 13.787020692412776,
+       "max_abs": 20.547475859489495
+      }
+     },
+     "30.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 271.20969007134045,
+       "rmse": 4.525489399349637,
+       "max_abs": 8.005127494914454
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 12.678031586625218,
+       "max_abs": 18.918606904052695
+      }
+     }
+    }
+   }
+  },
+  "storage_then_exchanger|cal=product_2|val=product_1|volume_m3=10": {
+   "ua_exchanger_kw_per_k": 23.07973789061611,
+   "ua_preheater_kw_per_k": 30.11043250003881,
+   "fit_rmse_supply_k": 0.8455690499054582,
+   "fit_rmse_return_k": 3.3905121753324488,
+   "fit_success": true,
+   "extraction": {
+    "in_sample": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.8455690499054582,
+       "max_abs": 3.105914059277012
+      },
+      "return_temperature_k": {
+       "rmse": 3.3905121753324488,
+       "max_abs": 4.535312433518953
+      },
+      "q_out_kw": {
+       "rmse": 62.343308530648514,
+       "max_abs": 89.40925185878496
+      },
+      "steam_share": {
+       "rmse": 0.09015229572156265,
+       "max_abs": 0.13225913443363446
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 11.793414316783988,
+      "min_approach_preheater_k": 4.9057066534690605
+     }
+    },
+    "validation": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.5477118881832717,
+       "max_abs": 2.1227689671902183
+      },
+      "return_temperature_k": {
+       "rmse": 2.9844395503806003,
+       "max_abs": 3.8199519902795736
+      },
+      "q_out_kw": {
+       "rmse": 63.042397470919866,
+       "max_abs": 88.72149444759611
+      },
+      "steam_share": {
+       "rmse": 0.07343404473247245,
+       "max_abs": 0.09848113861812757
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 10.235102322972637,
+      "min_approach_preheater_k": 5.639670486428027
+     },
+     "persistence": {
+      "supply_temperature_k": {
+       "rmse": 3.2076723764992856,
+       "max_abs": 5.685718536376953
+      },
+      "q_out_kw": {
+       "rmse": 24.37614872777216,
+       "max_abs": 42.93474141191581
+      },
+      "steam_share": {
+       "rmse": 0.028604869179253967,
+       "max_abs": 0.051585428720971715
+      }
+     },
+     "arx": {
+      "supply_temperature_k": {
+       "rmse": 102.65001935771765,
+       "max_abs": 261.3951558633889
+      },
+      "q_out_kw": {
+       "rmse": 2805.3267989795627,
+       "max_abs": 6209.855397641441
+      },
+      "steam_share": {
+       "rmse": 3.258509614536594,
+       "max_abs": 6.906898822569331
+      }
+     }
+    }
+   },
+   "storage_rollout": {
+    "persistence": {
+     "rmse": 3.4942724220846393,
+     "max_abs": 6.6412200927734375
+    },
+    "arx": {
+     "rmse": 2.4782302431630496,
+     "max_abs": 4.815889223329641
+    },
+    "by_volume_m3": {
+     "5.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 387.04347068042443,
+       "rmse": 6.586856975535923,
+       "max_abs": 9.13368024611055
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 8.114606310949968,
+       "max_abs": 10.990267059844342
+      }
+     },
+     "10.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 385.8894661448831,
+       "rmse": 6.342317910276957,
+       "max_abs": 9.648701586964442
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 7.78282222058931,
+       "max_abs": 10.486378393631483
+      }
+     },
+     "20.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 383.58145707380027,
+       "rmse": 5.811479920946828,
+       "max_abs": 10.355626656856607
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 7.21369920909609,
+       "max_abs": 9.686284398113088
+      }
+     },
+     "30.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 381.27344800271754,
+       "rmse": 5.284824115361938,
+       "max_abs": 10.599695709110321
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 6.725696162916314,
+       "max_abs": 9.117098817936203
+      }
+     }
+    }
+   }
+  },
+  "exchanger_then_storage|cal=product_1|val=product_2|volume_m3=5": {
+   "ua_exchanger_kw_per_k": 13.441005913067116,
+   "ua_preheater_kw_per_k": 17.54296828829951,
+   "fit_rmse_supply_k": 0.5008856502642778,
+   "fit_rmse_return_k": 0.5047654361200464,
+   "fit_success": true,
+   "extraction": {
+    "in_sample": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.5008856502642778,
+       "max_abs": 1.9265782412748393
+      },
+      "return_temperature_k": {
+       "rmse": 0.5047654361200464,
+       "max_abs": 1.0077470162862667
+      },
+      "q_out_kw": {
+       "rmse": 15.764487033199101,
+       "max_abs": 30.669352574204936
+      },
+      "steam_share": {
+       "rmse": 0.018480503151004857,
+       "max_abs": 0.035746107372290004
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 16.493407214947595,
+      "min_approach_preheater_k": 10.583796694112433
+     }
+    },
+    "validation": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.870324150925539,
+       "max_abs": 3.0924620412106663
+      },
+      "return_temperature_k": {
+       "rmse": 4.473135866223714,
+       "max_abs": 7.2049544163381185
+      },
+      "q_out_kw": {
+       "rmse": 96.8880419098487,
+       "max_abs": 155.17570940056754
+      },
+      "steam_share": {
+       "rmse": 0.14268619366563348,
+       "max_abs": 0.2295445335216471
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 18.663841793076614,
+      "min_approach_preheater_k": 10.211235330834228
+     },
+     "persistence": {
+      "supply_temperature_k": {
+       "rmse": 3.2855688385875887,
+       "max_abs": 4.746681213378906
+      },
+      "q_out_kw": {
+       "rmse": 79.68027208702478,
+       "max_abs": 130.4304882194669
+      },
+      "steam_share": {
+       "rmse": 0.11131001580510144,
+       "max_abs": 0.1850117888323357
+      }
+     },
+     "arx": {
+      "supply_temperature_k": {
+       "rmse": 23.18571993149029,
+       "max_abs": 32.325137689322275
+      },
+      "q_out_kw": {
+       "rmse": 69.14216802327978,
+       "max_abs": 133.53765690328322
+      },
+      "steam_share": {
+       "rmse": 0.09714883561391502,
+       "max_abs": 0.19266015994440178
+      }
+     }
+    }
+   },
+   "storage_rollout": {
+    "persistence": {
+     "rmse": 4.1977476041619575,
+     "max_abs": 5.796478271484375
+    },
+    "arx": {
+     "rmse": 4.185182543502986,
+     "max_abs": 6.903050058094422
+    },
+    "by_volume_m3": {
+     "5.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 276.8647653573048,
+       "rmse": 5.603758918721866,
+       "max_abs": 9.080031267331854
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 15.642908999799616,
+       "max_abs": 24.686570312772275
+      }
+     },
+     "10.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 275.7337503001119,
+       "rmse": 5.260751617334592,
+       "max_abs": 8.432547347945075
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 15.00239223252167,
+       "max_abs": 22.517569045522734
+      }
+     },
+     "20.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 273.47172018572616,
+       "rmse": 4.682963898189558,
+       "max_abs": 8.099758213173907
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 13.691910833908379,
+       "max_abs": 20.289780883855883
+      }
+     },
+     "30.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 271.20969007134045,
+       "rmse": 4.167079647071394,
+       "max_abs": 7.600464289109617
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 12.506385987718911,
+       "max_abs": 18.349029859246954
+      }
+     }
+    }
+   }
+  },
+  "exchanger_then_storage|cal=product_1|val=product_2|volume_m3=10": {
+   "ua_exchanger_kw_per_k": 13.459858046980239,
+   "ua_preheater_kw_per_k": 17.547579846721938,
+   "fit_rmse_supply_k": 0.49027185331580503,
+   "fit_rmse_return_k": 0.528175804023078,
+   "fit_success": true,
+   "extraction": {
+    "in_sample": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.49027185331580503,
+       "max_abs": 1.9289527147532937
+      },
+      "return_temperature_k": {
+       "rmse": 0.528175804023078,
+       "max_abs": 1.1712097072931762
+      },
+      "q_out_kw": {
+       "rmse": 15.482913686000442,
+       "max_abs": 29.988645256185066
+      },
+      "steam_share": {
+       "rmse": 0.018143891581458082,
+       "max_abs": 0.03481486435326209
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 16.365437451219314,
+      "min_approach_preheater_k": 10.577972627347354
+     }
+    },
+    "validation": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.8683681976826417,
+       "max_abs": 2.977379475317946
+      },
+      "return_temperature_k": {
+       "rmse": 4.468700289954569,
+       "max_abs": 7.167439953868069
+      },
+      "q_out_kw": {
+       "rmse": 96.89867276208255,
+       "max_abs": 156.93403494672123
+      },
+      "steam_share": {
+       "rmse": 0.14270566749658983,
+       "max_abs": 0.23214554639170376
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 18.671645689681554,
+      "min_approach_preheater_k": 10.232390530161972
+     },
+     "persistence": {
+      "supply_temperature_k": {
+       "rmse": 3.2855688385875887,
+       "max_abs": 4.746681213378906
+      },
+      "q_out_kw": {
+       "rmse": 79.68027208702478,
+       "max_abs": 130.4304882194669
+      },
+      "steam_share": {
+       "rmse": 0.11131001580510144,
+       "max_abs": 0.1850117888323357
+      }
+     },
+     "arx": {
+      "supply_temperature_k": {
+       "rmse": 23.18571993149029,
+       "max_abs": 32.325137689322275
+      },
+      "q_out_kw": {
+       "rmse": 69.14216802327978,
+       "max_abs": 133.53765690328322
+      },
+      "steam_share": {
+       "rmse": 0.09714883561391502,
+       "max_abs": 0.19266015994440178
+      }
+     }
+    }
+   },
+   "storage_rollout": {
+    "persistence": {
+     "rmse": 4.1977476041619575,
+     "max_abs": 5.796478271484375
+    },
+    "arx": {
+     "rmse": 4.185182543502986,
+     "max_abs": 6.903050058094422
+    },
+    "by_volume_m3": {
+     "5.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 276.8647653573048,
+       "rmse": 5.633435295872197,
+       "max_abs": 9.113069516974917
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 15.604784190289536,
+       "max_abs": 24.635648732475445
+      }
+     },
+     "10.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 275.7337503001119,
+       "rmse": 5.289445559030059,
+       "max_abs": 8.465086976688383
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 14.965478349130628,
+       "max_abs": 22.47236600151446
+      }
+     },
+     "20.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 273.47172018572616,
+       "rmse": 4.709344875324245,
+       "max_abs": 8.132564509460856
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 13.657467122543082,
+       "max_abs": 20.245502282323272
+      }
+     },
+     "30.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 271.20969007134045,
+       "rmse": 4.190973079440333,
+       "max_abs": 7.632958618255422
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 12.474775798906604,
+       "max_abs": 18.311037656382467
+      }
+     }
+    }
+   }
+  },
+  "exchanger_then_storage|cal=product_1|val=product_2|volume_m3=20": {
+   "ua_exchanger_kw_per_k": 13.494458128461174,
+   "ua_preheater_kw_per_k": 17.556729135892507,
+   "fit_rmse_supply_k": 0.5902253906462238,
+   "fit_rmse_return_k": 0.6128595223600968,
+   "fit_success": true,
+   "extraction": {
+    "in_sample": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.5902253906462238,
+       "max_abs": 3.6088672688334924
+      },
+      "return_temperature_k": {
+       "rmse": 0.6128595223600968,
+       "max_abs": 2.156297535121027
+      },
+      "q_out_kw": {
+       "rmse": 15.178775518491513,
+       "max_abs": 33.03965764037409
+      },
+      "steam_share": {
+       "rmse": 0.01777726254059425,
+       "max_abs": 0.038805656268611766
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 15.55012520236314,
+      "min_approach_preheater_k": 10.538247154350188
+     }
+    },
+    "validation": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.9008789430340105,
+       "max_abs": 3.269626152827371
+      },
+      "return_temperature_k": {
+       "rmse": 4.460755629641154,
+       "max_abs": 7.139414896192889
+      },
+      "q_out_kw": {
+       "rmse": 96.96539047608312,
+       "max_abs": 160.49023013582422
+      },
+      "steam_share": {
+       "rmse": 0.1428097499558257,
+       "max_abs": 0.23740606795753322
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 18.39692364105651,
+      "min_approach_preheater_k": 10.273723018808916
+     },
+     "persistence": {
+      "supply_temperature_k": {
+       "rmse": 3.2855688385875887,
+       "max_abs": 4.746681213378906
+      },
+      "q_out_kw": {
+       "rmse": 79.68027208702478,
+       "max_abs": 130.4304882194669
+      },
+      "steam_share": {
+       "rmse": 0.11131001580510144,
+       "max_abs": 0.1850117888323357
+      }
+     },
+     "arx": {
+      "supply_temperature_k": {
+       "rmse": 23.18571993149029,
+       "max_abs": 32.325137689322275
+      },
+      "q_out_kw": {
+       "rmse": 69.14216802327978,
+       "max_abs": 133.53765690328322
+      },
+      "steam_share": {
+       "rmse": 0.09714883561391502,
+       "max_abs": 0.19266015994440178
+      }
+     }
+    }
+   },
+   "storage_rollout": {
+    "persistence": {
+     "rmse": 4.1977476041619575,
+     "max_abs": 5.796478271484375
+    },
+    "arx": {
+     "rmse": 4.185182543502986,
+     "max_abs": 6.903050058094422
+    },
+    "by_volume_m3": {
+     "5.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 276.8647653573048,
+       "rmse": 5.688297661955042,
+       "max_abs": 9.174085627292598
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 15.534456271838653,
+       "max_abs": 24.541600954668752
+      }
+     },
+     "10.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 275.7337503001119,
+       "rmse": 5.342497784991898,
+       "max_abs": 8.525183012404234
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 14.897373846578812,
+       "max_abs": 22.388855964053008
+      }
+     },
+     "20.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 273.47172018572616,
+       "rmse": 4.758139293808279,
+       "max_abs": 8.193154709464423
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 13.593895247338606,
+       "max_abs": 20.163718402743285
+      }
+     },
+     "30.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 271.20969007134045,
+       "rmse": 4.2351896168747505,
+       "max_abs": 7.692979856877599
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 12.416411800495409,
+       "max_abs": 18.240831342600586
+      }
+     }
+    }
+   }
+  },
+  "exchanger_then_storage|cal=product_1|val=product_2|volume_m3=30": {
+   "ua_exchanger_kw_per_k": 13.524854215163726,
+   "ua_preheater_kw_per_k": 17.565774478423545,
+   "fit_rmse_supply_k": 0.7933358196242357,
+   "fit_rmse_return_k": 0.7326991737545017,
+   "fit_success": true,
+   "extraction": {
+    "in_sample": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.7933358196242357,
+       "max_abs": 5.305065857259152
+      },
+      "return_temperature_k": {
+       "rmse": 0.7326991737545017,
+       "max_abs": 3.1776220696991864
+      },
+      "q_out_kw": {
+       "rmse": 15.236881003180505,
+       "max_abs": 46.500308708523704
+      },
+      "steam_share": {
+       "rmse": 0.017839680819395635,
+       "max_abs": 0.05461542658124463
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 14.69095092333557,
+      "min_approach_preheater_k": 9.974759312451386
+     }
+    },
+    "validation": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.9773693263610115,
+       "max_abs": 4.341690774935564
+      },
+      "return_temperature_k": {
+       "rmse": 4.454062553379774,
+       "max_abs": 7.107797839740165
+      },
+      "q_out_kw": {
+       "rmse": 97.09286366369757,
+       "max_abs": 164.0981723560696
+      },
+      "steam_share": {
+       "rmse": 0.14300088955474888,
+       "max_abs": 0.2427431366077653
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 18.12627225276777,
+      "min_approach_preheater_k": 10.313733710130187
+     },
+     "persistence": {
+      "supply_temperature_k": {
+       "rmse": 3.2855688385875887,
+       "max_abs": 4.746681213378906
+      },
+      "q_out_kw": {
+       "rmse": 79.68027208702478,
+       "max_abs": 130.4304882194669
+      },
+      "steam_share": {
+       "rmse": 0.11131001580510144,
+       "max_abs": 0.1850117888323357
+      }
+     },
+     "arx": {
+      "supply_temperature_k": {
+       "rmse": 23.18571993149029,
+       "max_abs": 32.325137689322275
+      },
+      "q_out_kw": {
+       "rmse": 69.14216802327978,
+       "max_abs": 133.53765690328322
+      },
+      "steam_share": {
+       "rmse": 0.09714883561391502,
+       "max_abs": 0.19266015994440178
+      }
+     }
+    }
+   },
+   "storage_rollout": {
+    "persistence": {
+     "rmse": 4.1977476041619575,
+     "max_abs": 5.796478271484375
+    },
+    "arx": {
+     "rmse": 4.185182543502986,
+     "max_abs": 6.903050058094422
+    },
+    "by_volume_m3": {
+     "5.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 276.8647653573048,
+       "rmse": 5.73713234081986,
+       "max_abs": 9.228333216883449
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 15.472022387659244,
+       "max_abs": 24.457984346595808
+      }
+     },
+     "10.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 275.7337503001119,
+       "rmse": 5.389727659449199,
+       "max_abs": 8.578614123098603
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 14.836902404822984,
+       "max_abs": 22.314582234015404
+      }
+     },
+     "20.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 273.47172018572616,
+       "rmse": 4.801598521238735,
+       "max_abs": 8.24702675500113
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 13.537421184917617,
+       "max_abs": 20.090981327511628
+      }
+     },
+     "30.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 271.20969007134045,
+       "rmse": 4.274596185496082,
+       "max_abs": 7.746353618419342
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 12.364540085986322,
+       "max_abs": 18.17837038433275
+      }
+     }
+    }
+   }
+  },
+  "exchanger_then_storage|cal=product_2|val=product_1|volume_m3=5": {
+   "ua_exchanger_kw_per_k": 14.940505607280429,
+   "ua_preheater_kw_per_k": 30.166609939896517,
+   "fit_rmse_supply_k": 0.8239082151040632,
+   "fit_rmse_return_k": 3.3674879529505306,
+   "fit_success": true,
+   "extraction": {
+    "in_sample": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.8239082151040632,
+       "max_abs": 3.0219875325548458
+      },
+      "return_temperature_k": {
+       "rmse": 3.3674879529505306,
+       "max_abs": 4.452401019987711
+      },
+      "q_out_kw": {
+       "rmse": 62.71031689733289,
+       "max_abs": 91.32588991525887
+      },
+      "steam_share": {
+       "rmse": 0.09066556799548534,
+       "max_abs": 0.13509433196746662
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 19.950025900298414,
+      "min_approach_preheater_k": 4.900738666027202
+     }
+    },
+    "validation": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.5267341503633332,
+       "max_abs": 1.921621078809892
+      },
+      "return_temperature_k": {
+       "rmse": 2.9257915440466586,
+       "max_abs": 3.7067444139279857
+      },
+      "q_out_kw": {
+       "rmse": 64.4139512794378,
+       "max_abs": 90.53876681366924
+      },
+      "steam_share": {
+       "rmse": 0.07503578862876166,
+       "max_abs": 0.10072755383956422
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 17.801145094224538,
+      "min_approach_preheater_k": 5.66276172722047
+     },
+     "persistence": {
+      "supply_temperature_k": {
+       "rmse": 3.2076723764992856,
+       "max_abs": 5.685718536376953
+      },
+      "q_out_kw": {
+       "rmse": 24.37614872777216,
+       "max_abs": 42.93474141191581
+      },
+      "steam_share": {
+       "rmse": 0.028604869179253967,
+       "max_abs": 0.051585428720971715
+      }
+     },
+     "arx": {
+      "supply_temperature_k": {
+       "rmse": 102.65001935771765,
+       "max_abs": 261.3951558633889
+      },
+      "q_out_kw": {
+       "rmse": 2805.3267989795627,
+       "max_abs": 6209.855397641441
+      },
+      "steam_share": {
+       "rmse": 3.258509614536594,
+       "max_abs": 6.906898822569331
+      }
+     }
+    }
+   },
+   "storage_rollout": {
+    "persistence": {
+     "rmse": 3.4942724220846393,
+     "max_abs": 6.6412200927734375
+    },
+    "arx": {
+     "rmse": 2.4782302431630496,
+     "max_abs": 4.815889223329641
+    },
+    "by_volume_m3": {
+     "5.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 387.04347068042443,
+       "rmse": 6.3156768041531395,
+       "max_abs": 8.81513704007721
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 8.185980928051972,
+       "max_abs": 11.017595795809328
+      }
+     },
+     "10.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 385.8894661448831,
+       "rmse": 6.06811752364034,
+       "max_abs": 9.466585372117443
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 7.7840912003452525,
+       "max_abs": 10.269481000489797
+      }
+     },
+     "20.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 383.58145707380027,
+       "rmse": 5.515652839758987,
+       "max_abs": 10.279454727927593
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 7.154377826334701,
+       "max_abs": 9.076343269606852
+      }
+     },
+     "30.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 381.27344800271754,
+       "rmse": 4.975046254951635,
+       "max_abs": 10.472968926961137
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 6.629059909528287,
+       "max_abs": 8.318788446484668
+      }
+     }
+    }
+   }
+  },
+  "exchanger_then_storage|cal=product_2|val=product_1|volume_m3=10": {
+   "ua_exchanger_kw_per_k": 14.956473819728405,
+   "ua_preheater_kw_per_k": 30.162557216394994,
+   "fit_rmse_supply_k": 0.8223578421788317,
+   "fit_rmse_return_k": 3.36205315424304,
+   "fit_success": true,
+   "extraction": {
+    "in_sample": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.8223578421788317,
+       "max_abs": 2.9094474943134117
+      },
+      "return_temperature_k": {
+       "rmse": 3.36205315424304,
+       "max_abs": 4.401676638637511
+      },
+      "q_out_kw": {
+       "rmse": 62.813326044763734,
+       "max_abs": 93.53336950523646
+      },
+      "steam_share": {
+       "rmse": 0.09082298159279421,
+       "max_abs": 0.13835975846171217
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 19.970603425685567,
+      "min_approach_preheater_k": 4.913052168048743
+     }
+    },
+    "validation": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.509611668132637,
+       "max_abs": 1.8441076472713647
+      },
+      "return_temperature_k": {
+       "rmse": 2.930102090519536,
+       "max_abs": 4.0511102876306495
+      },
+      "q_out_kw": {
+       "rmse": 64.29567397558887,
+       "max_abs": 89.72589333205636
+      },
+      "steam_share": {
+       "rmse": 0.07492392938744694,
+       "max_abs": 0.09982320357872598
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 17.67185346425459,
+      "min_approach_preheater_k": 5.681300632277651
+     },
+     "persistence": {
+      "supply_temperature_k": {
+       "rmse": 3.2076723764992856,
+       "max_abs": 5.685718536376953
+      },
+      "q_out_kw": {
+       "rmse": 24.37614872777216,
+       "max_abs": 42.93474141191581
+      },
+      "steam_share": {
+       "rmse": 0.028604869179253967,
+       "max_abs": 0.051585428720971715
+      }
+     },
+     "arx": {
+      "supply_temperature_k": {
+       "rmse": 102.65001935771765,
+       "max_abs": 261.3951558633889
+      },
+      "q_out_kw": {
+       "rmse": 2805.3267989795627,
+       "max_abs": 6209.855397641441
+      },
+      "steam_share": {
+       "rmse": 3.258509614536594,
+       "max_abs": 6.906898822569331
+      }
+     }
+    }
+   },
+   "storage_rollout": {
+    "persistence": {
+     "rmse": 3.4942724220846393,
+     "max_abs": 6.6412200927734375
+    },
+    "arx": {
+     "rmse": 2.4782302431630496,
+     "max_abs": 4.815889223329641
+    },
+    "by_volume_m3": {
+     "5.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 387.04347068042443,
+       "rmse": 6.291800935619937,
+       "max_abs": 8.789167203217964
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 8.203589463337856,
+       "max_abs": 11.034085107309373
+      }
+     },
+     "10.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 385.8894661448831,
+       "rmse": 6.045451754056197,
+       "max_abs": 9.440429099835171
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 7.801512397527716,
+       "max_abs": 10.286672494794558
+      }
+     },
+     "20.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 383.58145707380027,
+       "rmse": 5.495763092931035,
+       "max_abs": 10.253461600554843
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 7.171051739922626,
+       "max_abs": 9.094431441008112
+      }
+     },
+     "30.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 381.27344800271754,
+       "rmse": 4.957964314435007,
+       "max_abs": 10.447708983772678
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 6.644795201355181,
+       "max_abs": 8.337056461290437
+      }
+     }
+    }
+   }
+  },
+  "exchanger_then_storage|cal=product_2|val=product_1|volume_m3=20": {
+   "ua_exchanger_kw_per_k": 14.987283839556378,
+   "ua_preheater_kw_per_k": 30.154436648775672,
+   "fit_rmse_supply_k": 0.8568045351689044,
+   "fit_rmse_return_k": 3.35397760367514,
+   "fit_success": true,
+   "extraction": {
+    "in_sample": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.8568045351689044,
+       "max_abs": 3.0838589726671444
+      },
+      "return_temperature_k": {
+       "rmse": 3.35397760367514,
+       "max_abs": 4.576751909872868
+      },
+      "q_out_kw": {
+       "rmse": 63.06538506097957,
+       "max_abs": 97.96892473969405
+      },
+      "steam_share": {
+       "rmse": 0.09120442207152103,
+       "max_abs": 0.14492107827868694
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 19.69885323698685,
+      "min_approach_preheater_k": 4.937542967399459
+     }
+    },
+    "validation": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.5947973799141183,
+       "max_abs": 3.4968997295063886
+      },
+      "return_temperature_k": {
+       "rmse": 2.9455153315502414,
+       "max_abs": 4.879513451013594
+      },
+      "q_out_kw": {
+       "rmse": 64.14189630671953,
+       "max_abs": 88.08448255757415
+      },
+      "steam_share": {
+       "rmse": 0.07479863735321325,
+       "max_abs": 0.09799707651759904
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 16.79629176426731,
+      "min_approach_preheater_k": 5.664494361939852
+     },
+     "persistence": {
+      "supply_temperature_k": {
+       "rmse": 3.2076723764992856,
+       "max_abs": 5.685718536376953
+      },
+      "q_out_kw": {
+       "rmse": 24.37614872777216,
+       "max_abs": 42.93474141191581
+      },
+      "steam_share": {
+       "rmse": 0.028604869179253967,
+       "max_abs": 0.051585428720971715
+      }
+     },
+     "arx": {
+      "supply_temperature_k": {
+       "rmse": 102.65001935771765,
+       "max_abs": 261.3951558633889
+      },
+      "q_out_kw": {
+       "rmse": 2805.3267989795627,
+       "max_abs": 6209.855397641441
+      },
+      "steam_share": {
+       "rmse": 3.258509614536594,
+       "max_abs": 6.906898822569331
+      }
+     }
+    }
+   },
+   "storage_rollout": {
+    "persistence": {
+     "rmse": 3.4942724220846393,
+     "max_abs": 6.6412200927734375
+    },
+    "arx": {
+     "rmse": 2.4782302431630496,
+     "max_abs": 4.815889223329641
+    },
+    "by_volume_m3": {
+     "5.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 387.04347068042443,
+       "rmse": 6.246016079697199,
+       "max_abs": 8.73934739278802
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 8.237378859706759,
+       "max_abs": 11.06571657105313
+      }
+     },
+     "10.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 385.8894661448831,
+       "rmse": 6.001992275005983,
+       "max_abs": 9.390251364521113
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 7.8349417175216125,
+       "max_abs": 10.31964987444941
+      }
+     },
+     "20.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 383.58145707380027,
+       "rmse": 5.457643060970936,
+       "max_abs": 10.203595216795918
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 7.203048520366465,
+       "max_abs": 9.12912955082195
+      }
+     },
+     "30.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 381.27344800271754,
+       "rmse": 4.925246542140883,
+       "max_abs": 10.39924567481929
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 6.674993400736016,
+       "max_abs": 8.37210217853535
+      }
+     }
+    }
+   }
+  },
+  "exchanger_then_storage|cal=product_2|val=product_1|volume_m3=30": {
+   "ua_exchanger_kw_per_k": 15.01657106013378,
+   "ua_preheater_kw_per_k": 30.14629474566389,
+   "fit_rmse_supply_k": 0.9361106657713864,
+   "fit_rmse_return_k": 3.3496683515084134,
+   "fit_success": true,
+   "extraction": {
+    "in_sample": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.9361106657713864,
+       "max_abs": 4.130438791882703
+      },
+      "return_temperature_k": {
+       "rmse": 3.3496683515084134,
+       "max_abs": 5.133855755984861
+      },
+      "q_out_kw": {
+       "rmse": 63.37848262390328,
+       "max_abs": 102.43147896753385
+      },
+      "steam_share": {
+       "rmse": 0.09167413909211697,
+       "max_abs": 0.1515223365071916
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 19.409661056099253,
+      "min_approach_preheater_k": 4.961848271050165
+     }
+    },
+    "validation": {
+     "model": {
+      "supply_temperature_k": {
+       "rmse": 0.788384761170911,
+       "max_abs": 5.1983676859487815
+      },
+      "return_temperature_k": {
+       "rmse": 2.9699024470579505,
+       "max_abs": 5.7497261092756204
+      },
+      "q_out_kw": {
+       "rmse": 64.09967224948596,
+       "max_abs": 86.42230868941041
+      },
+      "steam_share": {
+       "rmse": 0.07480569628783855,
+       "max_abs": 0.10128544519309712
+      },
+      "infeasible_minutes": 0,
+      "min_approach_exchanger_k": 15.868710935927993,
+      "min_approach_preheater_k": 5.618943591929636
+     },
+     "persistence": {
+      "supply_temperature_k": {
+       "rmse": 3.2076723764992856,
+       "max_abs": 5.685718536376953
+      },
+      "q_out_kw": {
+       "rmse": 24.37614872777216,
+       "max_abs": 42.93474141191581
+      },
+      "steam_share": {
+       "rmse": 0.028604869179253967,
+       "max_abs": 0.051585428720971715
+      }
+     },
+     "arx": {
+      "supply_temperature_k": {
+       "rmse": 102.65001935771765,
+       "max_abs": 261.3951558633889
+      },
+      "q_out_kw": {
+       "rmse": 2805.3267989795627,
+       "max_abs": 6209.855397641441
+      },
+      "steam_share": {
+       "rmse": 3.258509614536594,
+       "max_abs": 6.906898822569331
+      }
+     }
+    }
+   },
+   "storage_rollout": {
+    "persistence": {
+     "rmse": 3.4942724220846393,
+     "max_abs": 6.6412200927734375
+    },
+    "arx": {
+     "rmse": 2.4782302431630496,
+     "max_abs": 4.815889223329641
+    },
+    "by_volume_m3": {
+     "5.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 387.04347068042443,
+       "rmse": 6.202858250007707,
+       "max_abs": 8.69236252721732
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 8.269257357503928,
+       "max_abs": 11.095546669126648
+      }
+     },
+     "10.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 385.8894661448831,
+       "rmse": 5.961032429402628,
+       "max_abs": 9.34292861885801
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 7.86647982691171,
+       "max_abs": 10.350747933229549
+      }
+     },
+     "20.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 383.58145707380027,
+       "rmse": 5.42173612397749,
+       "max_abs": 10.156564125646454
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 7.233236879578509,
+       "max_abs": 9.16185112385876
+      }
+     },
+     "30.0": {
+      "constant_q_in_from_calibration_day": {
+       "q_in_kw": 381.27344800271754,
+       "rmse": 4.894453947054593,
+       "max_abs": 10.353533619367184
+      },
+      "oracle_q_in_from_validation_day": {
+       "rmse": 6.703487998867515,
+       "max_abs": 8.40515474725985
+      }
+     }
+    }
+   }
+  }
+ },
+ "daily_balance": {
+  "product_1": {
+   "central": {
+    "heating_demand_kwh": 20466.969865303778,
+    "waste_heat_kwh": 6659.158796249637,
+    "steam_kwh": 13807.811069054142,
+    "waste_heat_share": 0.3253612449754198,
+    "steam_share": 0.6746387550245803,
+    "steam_negative_minutes": 0,
+    "gas_kwh": 15342.012298949046,
+    "co2_kg": 3083.7444720887584,
+    "co2_without_recovery_kg": 4570.9566032511775
+   },
+   "band_over_placeholders": {
+    "heating_demand_kwh": [
+     20084.392220373393,
+     21645.441890405917
+    ],
+    "waste_heat_share": [
+     0.30764716331345626,
+     0.3315588902657785
+    ],
+    "steam_share": [
+     0.6684411097342214,
+     0.6923528366865438
+    ],
+    "gas_kwh": [
+     13425.233424123755,
+     18732.85386769535
+    ],
+    "co2_kg": [
+     2698.4719182488748,
+     3765.303627406766
+    ],
+    "co2_without_recovery_kg": [
+     4036.962836295052,
+     5438.417274964487
+    ]
+   },
+   "mean_heating_demand_kw": 852.1986064665001,
+   "mean_q_out_kw": 277.2723995662583,
+   "max_q_out_kw": 321.1681654077922
+  },
+  "product_2": {
+   "central": {
+    "heating_demand_kwh": 16748.46099351529,
+    "waste_heat_kwh": 9306.771761000578,
+    "steam_kwh": 7441.6892325147155,
+    "waste_heat_share": 0.5556792211895766,
+    "steam_share": 0.44432077881042364,
+    "steam_negative_minutes": 0,
+    "gas_kwh": 8268.543591683017,
+    "co2_kg": 1661.9772619282867,
+    "co2_without_recovery_kg": 3740.4896218850818
+   },
+   "band_over_placeholders": {
+    "heating_demand_kwh": [
+     16345.266208535913,
+     17900.432235232212
+    ],
+    "waste_heat_share": [
+     0.5199188287019509,
+     0.5693863680323754
+    ],
+    "steam_share": [
+     0.4306136319676246,
+     0.4800811712980488
+    ],
+    "gas_kwh": [
+     7038.494447535334,
+     10742.075592789537
+    ],
+    "co2_kg": [
+     1414.7373839546021,
+     2159.1571941506973
+    ],
+    "co2_without_recovery_kg": [
+     3285.3985079157187,
+     4497.483599102094
+    ]
+   },
+   "mean_heating_demand_kw": 697.368257884051,
+   "mean_q_out_kw": 387.51305042334127,
+   "max_q_out_kw": 458.90497757861107
+  }
+ }
+}

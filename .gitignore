@@ -23,6 +23,10 @@ venv/
 # nicht vorhanden.
 local/
 
+# Channel assignment of the plant exports (roles -> tags); the committed template is
+# conf/plant/plant_local.yaml.example
+conf/plant/plant_local.yaml
+
 # Lose Konsolenmitschnitte im Root (kein Projektinhalt, in Befunde 30-34 destilliert)
 final_run.txt
 final_run2.txt
