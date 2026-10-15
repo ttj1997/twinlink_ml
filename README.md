@@ -68,10 +68,13 @@ balance model reproduce all finished cells; the gas rows of v4.1 are 108.91 time
 `cp_gas` = 1.2 instead of about 1.0 kJ/(kg K) raises the heating power by 19.1 % (Befund 75).
 Feedback goes to the partner through `docs/11_partner_model_v4.md`.
 
-**Heat recovery in the partner model (Befund 90).** At the sheet's flows the partner model v4.1
-recovers 46-65 % of what an independent counter-current calculation recovers. The deciding
-assumption is equal outlet temperatures (parallel flow); the best medium flow is about 25 kg/h
-with counter-current exchangers, while the partner model always prefers the highest flow.
+**Heat recovery in the partner model (Befund 90, corrected 2026-10-15).** At the sheet's flows the
+partner model v4.1 recovers 60-88 % of what an independent counter-current calculation recovers
+(a first version said 46-65 %: it mixed two gas-property sets; see the addendum to Befund 90). The
+largest single assumption is equal outlet temperatures (parallel flow), followed by `cp_gas`; the
+best medium flow is about 25 kg/h with counter-current exchangers, while the partner model always
+prefers the highest flow. The six scenarios keep their order (1/2 before 5/6 before 3/4) when the
+assumptions of the partner model are replaced one by one (Befund 95).
 
 **Storage of plant A (Befunde 91, 92).** The storage model (S1) bounds the volume only (about
 30 m3 at most) and leaves the compressor heat unmeasured; it serves as a scenario band, not as a
