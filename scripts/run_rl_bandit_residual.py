@@ -47,6 +47,14 @@ Gate (details and decision rule: ``analyze_bres_gate.py``): feasibility 1.0; med
 > 0 (stage 1) or > 0.5 (stage 2); distance to the limit in units of m.
 
     tools/run_here.sh scripts/run_rl_bandit_residual.py --seed 0 --cell ressep
+
+Follow-up T1b (margin study, entry "Befund 95", addendum to Befund 93): ``--margin-factor k`` runs
+the cell ``ressep`` with the Lagrange margin ``k * m`` instead of ``m`` (everything else unchanged;
+default 1.0 reproduces the runs of Befund 93). The pre-registration of that study (margins, seeds,
+metrics, gate) is the docstring of ``scripts/analyze_bres_margin.py``; run prefixes
+``rl_bandit_residual_b_k{k}``::
+
+    tools/run_here.sh scripts/run_rl_bandit_residual.py --seed 0 --cell ressep         --margin-factor 2 --prefix rl_bandit_residual_b_k2
 """
 
 from __future__ import annotations
@@ -113,6 +121,9 @@ CELLS: dict[str, dict[str, bool]] = {
     "ressep": {"residual": True, "separated": True},
 }
 PREFIX = "rl_bandit_residual"
+# T1b: the runs of one margin study exempt each other from the dirty check
+MARGIN_STUDY_FACTORS = (2, 3, 5)
+MARGIN_STUDY_PREFIX = "rl_bandit_residual_b_k"
 # -----------------------------------------------------------------------------------------------
 
 
@@ -127,8 +138,15 @@ def output_paths(cell: str, seed: int, prefix: str = PREFIX) -> dict[str, Path]:
 
 def sweep_output_paths(prefix: str = PREFIX) -> list[Path]:
     """Every file any run of the sweep writes (exempt from the dirty check of the siblings)."""
+    prefixes = [prefix]
+    if prefix.startswith(MARGIN_STUDY_PREFIX):
+        prefixes = [f"{MARGIN_STUDY_PREFIX}{k}" for k in MARGIN_STUDY_FACTORS]
     return [
-        p for cell in CELLS for seed in SEEDS for p in output_paths(cell, seed, prefix).values()
+        p
+        for pre in prefixes
+        for cell in CELLS
+        for seed in SEEDS
+        for p in output_paths(cell, seed, pre).values()
     ]
 
 
@@ -200,7 +218,9 @@ def make_callback(
     table: ReferenceTable | None,
     fixed_point: tuple[float, float],
     checkpoints: tuple[int, ...],
+    margin_factor: float = 1.0,
 ) -> Any:
+    import torch
     from stable_baselines3.common.callbacks import BaseCallback
 
     remaining = list(checkpoints)
@@ -370,6 +390,9 @@ def make_callback(
                         "checkpoint/path": str(checkpoint_file.relative_to(REPO_ROOT)),
                         "multipliers_kw": lam.reshape(-1).tolist(),
                         "quality_limit_kg_per_kg": LIMIT_KG_PER_KG,
+                        "margin_factor": margin_factor,
+                        "margin_kg_per_kg": margin_factor * MARGIN_M,
+                        "torch_num_threads": torch.get_num_threads(),
                     },
                     metrics=metrics,
                 )
@@ -397,6 +420,12 @@ def main() -> int:
     parser.add_argument("--cell", choices=sorted(CELLS), required=True)
     parser.add_argument("--prefix", type=str, default=PREFIX)
     parser.add_argument(
+        "--margin-factor",
+        type=float,
+        default=1.0,
+        help="Lagrange margin = factor * m (T1b); 1.0 = the runs of Befund 93",
+    )
+    parser.add_argument(
         "--smoke-steps",
         type=int,
         default=None,
@@ -417,6 +446,9 @@ def main() -> int:
     from stable_baselines3.common.monitor import Monitor
 
     torch.set_num_threads(1)  # up to 20 runs share the machine (one solver call per step)
+    margin_factor = float(arguments.margin_factor)
+    if margin_factor <= 0.0:
+        raise SystemExit("--margin-factor must be positive")
     spec = CELLS[arguments.cell]
     paths = output_paths(arguments.cell, arguments.seed, arguments.prefix)
     for path in paths.values():
@@ -432,7 +464,7 @@ def main() -> int:
     logger = JsonlExperimentLogger(paths["records"])
 
     lagrange = LagrangeConfig(
-        margin_kg_per_kg=MARGIN_M,
+        margin_kg_per_kg=margin_factor * MARGIN_M,
         initial_multiplier_kw=INITIAL_MULTIPLIER_KW,
         step_size_kw=STEP_SIZE_KW,
         update_interval_steps=UPDATE_INTERVAL_STEPS,
@@ -477,6 +509,7 @@ def main() -> int:
         table=table,
         fixed_point=fixed_point,
         checkpoints=checkpoints,
+        margin_factor=margin_factor,
     )
     callback.init_callback(model)
     callback.log_checkpoint(0)  # step 0: residual cells = the fixed point exactly
