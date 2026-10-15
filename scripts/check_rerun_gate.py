@@ -134,7 +134,14 @@ def run_checks(
                 failures.append(f"A1 cell {key} has no A0 counterpart")
                 continue
             for name in FINGERPRINTS:
-                if record["params"].get(name) != twin["params"].get(name):
+                new_value, old_value = record["params"].get(name), twin["params"].get(name)
+                if old_value is None and name == "measurement/digest":
+                    continue  # absent in the old records (as in the A0-against-old check)
+                if name == "process/fingerprint":
+                    same = fingerprints_equivalent(str(new_value), str(old_value))
+                else:
+                    same = new_value == old_value
+                if not same:
                     failures.append(f"{key}: A1 {name} differs from A0")
             if key[0] == "persistence":
                 worst, where, _ = max_relative_deviation(record["metrics"], twin["metrics"])
