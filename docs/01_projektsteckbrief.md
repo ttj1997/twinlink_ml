@@ -119,8 +119,4 @@ Mein AP 1 startet M1, die neuen Dyssol-Granulationsmodelle sind erst ~M21 fertig
   vorhanden und in TUHH-B-AP 2 zu erweitern.
 - **DFG-Projekt mit UFSC**: Dyssol-basierte Simulation/Optimierung keramische Fertigung.
 
-## Publikationsziel
 
-Mind. 4 Beiträge in Fachzeitschriften, z. B. Powder Technology, Advanced Powder Technology,
-Particuology. Konferenzen: DECHEMA/VDI Fachgruppe Agglomerations- und Schüttguttechnik,
-DECHEMA/VDI Jahrestagung, Partec, Granulation Workshop.
