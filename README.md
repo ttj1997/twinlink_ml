@@ -31,13 +31,22 @@ training data and is used to evaluate control strategies before anything touches
 Every number below is stated in a lab-book entry and backed by an artifact in
 `artifacts/runs/`; follow the *Befund* number for the test set, the seeds and the caveats.
 
-**Architecture comparison (Befunde 51, 55, 58, 83).**
-- On the learning-curve study, GRU/LSTM stay ahead at small training budgets; the Transformer
-  is resolvably worse on moisture against the LSTM (Befund 83, paired resolution, 5 of 5 seeds).
+**Architecture comparison (Befunde 51, 55, 58, 83, 94).** Eight methods (persistence, static
+regression, ARX, GRU, LSTM, Transformer, xLSTM, Mamba); verdicts are paired over five seeds
+(Befund 83, 94), per cell and not corrected for multiplicity: after Holm only about a quarter of
+the rank cells remain (old data 82 of 336, new data 70 of 336, Befund 94). The re-run on the
+corrected data basis (preset version 2, Befund 94, gate passed) reproduces the ends of the order:
+- **GRU against LSTM:** not distinguishable on moisture (15 of 16 cells unresolved, one with the
+  GRU worse); on energy and bed temperature the GRU is resolvably better in part of the cells
+  (5 and 9 of 16, uncorrected).
+- **Transformer, xLSTM, Mamba, ARX, static regression, persistence** are resolvably worse than
+  the LSTM in the large majority of cells; xLSTM on moisture stays unresolved in 7 of 16 cells.
+- **The middle of the order** (Transformer, xLSTM) changes between "unresolved" and "worse" from
+  cell to cell: not supported by five seeds.
 - Plant operating data without excitation do not suffice in the tested budget range (Befund 55):
   an excited experiment is needed.
-- A full re-run with the corrected excitation preset (preset version 2) is in progress
-  (Befund 89); older rank statements are provisional until it finishes.
+- The old numbers rest on the old data (`DataSpec()` defaults); 85 rank verdicts differ from them
+  in the re-run. Each number needs its arm and test set named (Befund 94).
 
 **Value of a simulator for a data-poor model (Befund 88).** Pretraining an LSTM on simulator
 data and fine-tuning on plant runs beats training from scratch at small N on every tested plant
@@ -58,6 +67,24 @@ whole exchanger): 0 of 6 test scenarios at `dT_min` = 20 K (Befund 81).
 balance model reproduce all finished cells; the gas rows of v4.1 are 108.91 times too high, and
 `cp_gas` = 1.2 instead of about 1.0 kJ/(kg K) raises the heating power by 19.1 % (Befund 75).
 Feedback goes to the partner through `docs/11_partner_model_v4.md`.
+
+**Heat recovery in the partner model (Befund 90).** At the sheet's flows the partner model v4.1
+recovers 46-65 % of what an independent counter-current calculation recovers. The deciding
+assumption is equal outlet temperatures (parallel flow); the best medium flow is about 25 kg/h
+with counter-current exchangers, while the partner model always prefers the highest flow.
+
+**Storage of plant A (Befunde 91, 92).** The storage model (S1) bounds the volume only (about
+30 m3 at most) and leaves the compressor heat unmeasured; it serves as a scenario band, not as a
+predictor. The pre-registered gate of the shifting potential (S2) reads L1 by the letter; a
+post-hoc, marked reading with a plain rule gives L2. The saving comes entirely from using
+discarded heat (a placeholder without a measured source); pure shifting in time saves about
+nothing. The storage capacity corresponds to about one hour of heating demand. Decision: no S3.
+
+**One-step bandit (Befund 93, follow-up of Befund 68).** A residual action and a separated
+moisture cost lift SAC from a negative to a clearly positive closed-regret fraction, but no cell
+meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of
+the cell `ressep` lies above the reachable admissible ceiling 0.82 of the residual box, so it is
+carried by infeasible points and is not to be quoted as a performance figure.
 
 ## Installation
 
