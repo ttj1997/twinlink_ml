@@ -134,7 +134,14 @@ def run_checks(
                 failures.append(f"A1 cell {key} has no A0 counterpart")
                 continue
             for name in FINGERPRINTS:
-                if record["params"].get(name) != twin["params"].get(name):
+                new_value, old_value = record["params"].get(name), twin["params"].get(name)
+                if old_value is None and name == "measurement/digest":
+                    continue  # absent in the old records (as in the A0-against-old check)
+                if name == "process/fingerprint":
+                    same = fingerprints_equivalent(str(new_value), str(old_value))
+                else:
+                    same = new_value == old_value
+                if not same:
                     failures.append(f"{key}: A1 {name} differs from A0")
             if key[0] == "persistence":
                 worst, where, _ = max_relative_deviation(record["metrics"], twin["metrics"])
@@ -177,6 +184,13 @@ def main() -> int:
     parser.add_argument("--prefix", required=True, help="merged files <prefix>_A0.jsonl, _A1, _N")
     parser.add_argument("--tolerance", type=float, default=1e-6)
     parser.add_argument("--artifact", default=None, help="artifact name (default <prefix>_gate)")
+    parser.add_argument(
+        "--a0-is-old",
+        action="store_true",
+        help="full run: arm A0 IS the old records (docs/15, section 10); there is no <prefix>_A0.jsonl "
+        "and the A0-against-old comparison is the identity (it was done by the pilot and the A0 "
+        "confirmation). The checks of A1 and N against A0 are unchanged; tolerance untouched.",
+    )
     arguments = parser.parse_args()
     require_clean_tree()
     old = load(RUNS_DIR / "arch_learning_curve_projected.jsonl") + load(
@@ -187,6 +201,8 @@ def main() -> int:
         for arm in ("A0", "A1", "N")
         if (RUNS_DIR / f"{arguments.prefix}_{arm}.jsonl").exists()
     }
+    if arguments.a0_is_old:
+        arms["A0"] = [r for r in old if r["params"].get("eval/primary", True)]
     if "A0" not in arms:
         raise SystemExit("arm A0 missing")
     report = run_checks(old, arms, arguments.tolerance)

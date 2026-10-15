@@ -1,0 +1,1666 @@
+{
+ "provenance": {
+  "git/commit": "ddc282c434fa4d73541ea6558ddaabf6832f1668",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "prefix": "rerun_full",
+ "tolerance": 1e-06,
+ "a0_vs_old": {
+  "cells": 320,
+  "baseline_comparisons": [
+   {
+    "key": [
+     "arx",
+     1,
+     8,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     1,
+     8,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     1,
+     16,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     1,
+     16,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     1,
+     32,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     1,
+     32,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     1,
+     64,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     1,
+     64,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     2,
+     8,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     2,
+     8,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     2,
+     16,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     2,
+     16,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     2,
+     32,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     2,
+     32,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     2,
+     64,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     2,
+     64,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     3,
+     8,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     3,
+     8,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     3,
+     16,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     3,
+     16,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     3,
+     32,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     3,
+     32,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     3,
+     64,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     3,
+     64,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     4,
+     8,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     4,
+     8,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     4,
+     16,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     4,
+     16,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     4,
+     32,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     4,
+     32,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     4,
+     64,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     4,
+     64,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     5,
+     8,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     5,
+     8,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     5,
+     16,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     5,
+     16,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     5,
+     32,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     5,
+     32,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     5,
+     64,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "arx",
+     5,
+     64,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     1,
+     8,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     1,
+     8,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     1,
+     16,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     1,
+     16,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     1,
+     32,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     1,
+     32,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     1,
+     64,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     1,
+     64,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     2,
+     8,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     2,
+     8,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     2,
+     16,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     2,
+     16,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     2,
+     32,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     2,
+     32,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     2,
+     64,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     2,
+     64,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     3,
+     8,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     3,
+     8,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     3,
+     16,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     3,
+     16,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     3,
+     32,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     3,
+     32,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     3,
+     64,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     3,
+     64,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     4,
+     8,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     4,
+     8,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     4,
+     16,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     4,
+     16,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     4,
+     32,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     4,
+     32,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     4,
+     64,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     4,
+     64,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     5,
+     8,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     5,
+     8,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     5,
+     16,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     5,
+     16,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     5,
+     32,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     5,
+     32,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     5,
+     64,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "persistence",
+     5,
+     64,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     1,
+     8,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     1,
+     8,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     1,
+     16,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     1,
+     16,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     1,
+     32,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     1,
+     32,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     1,
+     64,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     1,
+     64,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     2,
+     8,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     2,
+     8,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     2,
+     16,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     2,
+     16,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     2,
+     32,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     2,
+     32,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     2,
+     64,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     2,
+     64,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     3,
+     8,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     3,
+     8,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     3,
+     16,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     3,
+     16,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     3,
+     32,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     3,
+     32,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     3,
+     64,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     3,
+     64,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     4,
+     8,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     4,
+     8,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     4,
+     16,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     4,
+     16,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     4,
+     32,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     4,
+     32,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     4,
+     64,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     4,
+     64,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     5,
+     8,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     5,
+     8,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     5,
+     16,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     5,
+     16,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     5,
+     32,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     5,
+     32,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     5,
+     64,
+     "constant_holdout"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   },
+   {
+    "key": [
+     "static",
+     5,
+     64,
+     "excited"
+    ],
+    "max_relative_deviation": 0.0,
+    "at": "",
+    "metrics": 88
+   }
+  ],
+  "worst": 0.0
+ },
+ "failures": [
+  "('arx', 1, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('arx', 1, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('arx', 1, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('arx', 1, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('arx', 1, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('arx', 1, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('arx', 1, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('arx', 1, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('arx', 2, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('arx', 2, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('arx', 2, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('arx', 2, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('arx', 2, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('arx', 2, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('arx', 2, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('arx', 2, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('arx', 3, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('arx', 3, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('arx', 3, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('arx', 3, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('arx', 3, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('arx', 3, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('arx', 3, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('arx', 3, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('arx', 4, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('arx', 4, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('arx', 4, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('arx', 4, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('arx', 4, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('arx', 4, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('arx', 4, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('arx', 4, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('arx', 5, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('arx', 5, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('arx', 5, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('arx', 5, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('arx', 5, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('arx', 5, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('arx', 5, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('arx', 5, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('gru', 1, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('gru', 1, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('gru', 1, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('gru', 1, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('gru', 1, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('gru', 1, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('gru', 1, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('gru', 1, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('gru', 2, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('gru', 2, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('gru', 2, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('gru', 2, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('gru', 2, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('gru', 2, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('gru', 2, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('gru', 2, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('gru', 3, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('gru', 3, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('gru', 3, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('gru', 3, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('gru', 3, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('gru', 3, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('gru', 3, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('gru', 3, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('gru', 4, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('gru', 4, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('gru', 4, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('gru', 4, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('gru', 4, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('gru', 4, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('gru', 4, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('gru', 4, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('gru', 5, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('gru', 5, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('gru', 5, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('gru', 5, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('gru', 5, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('gru', 5, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('gru', 5, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('gru', 5, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('lstm', 1, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('lstm', 1, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('lstm', 1, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('lstm', 1, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('lstm', 1, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('lstm', 1, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('lstm', 1, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('lstm', 1, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('lstm', 2, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('lstm', 2, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('lstm', 2, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('lstm', 2, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('lstm', 2, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('lstm', 2, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('lstm', 2, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('lstm', 2, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('lstm', 3, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('lstm', 3, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('lstm', 3, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('lstm', 3, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('lstm', 3, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('lstm', 3, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('lstm', 3, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('lstm', 3, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('lstm', 4, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('lstm', 4, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('lstm', 4, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('lstm', 4, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('lstm', 4, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('lstm', 4, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('lstm', 4, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('lstm', 4, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('lstm', 5, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('lstm', 5, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('lstm', 5, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('lstm', 5, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('lstm', 5, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('lstm', 5, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('lstm', 5, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('lstm', 5, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('mamba', 1, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('mamba', 1, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('mamba', 1, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('mamba', 1, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('mamba', 1, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('mamba', 1, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('mamba', 1, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('mamba', 1, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('mamba', 2, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('mamba', 2, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('mamba', 2, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('mamba', 2, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('mamba', 2, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('mamba', 2, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('mamba', 2, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('mamba', 2, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('mamba', 3, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('mamba', 3, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('mamba', 3, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('mamba', 3, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('mamba', 3, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('mamba', 3, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('mamba', 3, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('mamba', 3, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('mamba', 4, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('mamba', 4, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('mamba', 4, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('mamba', 4, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('mamba', 4, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('mamba', 4, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('mamba', 4, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('mamba', 4, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('mamba', 5, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('mamba', 5, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('mamba', 5, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('mamba', 5, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('mamba', 5, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('mamba', 5, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('mamba', 5, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('mamba', 5, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('persistence', 1, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('persistence', 1, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('persistence', 1, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('persistence', 1, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('persistence', 1, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('persistence', 1, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('persistence', 1, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('persistence', 1, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('persistence', 2, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('persistence', 2, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('persistence', 2, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('persistence', 2, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('persistence', 2, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('persistence', 2, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('persistence', 2, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('persistence', 2, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('persistence', 3, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('persistence', 3, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('persistence', 3, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('persistence', 3, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('persistence', 3, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('persistence', 3, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('persistence', 3, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('persistence', 3, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('persistence', 4, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('persistence', 4, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('persistence', 4, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('persistence', 4, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('persistence', 4, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('persistence', 4, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('persistence', 4, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('persistence', 4, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('persistence', 5, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('persistence', 5, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('persistence', 5, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('persistence', 5, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('persistence', 5, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('persistence', 5, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('persistence', 5, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('persistence', 5, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('static', 1, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('static', 1, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('static', 1, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('static', 1, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('static', 1, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('static', 1, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('static', 1, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('static', 1, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('static', 2, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('static', 2, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('static', 2, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('static', 2, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('static', 2, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('static', 2, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('static', 2, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('static', 2, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('static', 3, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('static', 3, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('static', 3, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('static', 3, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('static', 3, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('static', 3, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('static', 3, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('static', 3, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('static', 4, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('static', 4, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('static', 4, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('static', 4, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('static', 4, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('static', 4, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('static', 4, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('static', 4, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('static', 5, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('static', 5, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('static', 5, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('static', 5, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('static', 5, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('static', 5, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('static', 5, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('static', 5, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('transformer', 1, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('transformer', 1, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('transformer', 1, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('transformer', 1, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('transformer', 1, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('transformer', 1, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('transformer', 1, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('transformer', 1, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('transformer', 2, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('transformer', 2, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('transformer', 2, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('transformer', 2, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('transformer', 2, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('transformer', 2, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('transformer', 2, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('transformer', 2, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('transformer', 3, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('transformer', 3, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('transformer', 3, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('transformer', 3, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('transformer', 3, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('transformer', 3, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('transformer', 3, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('transformer', 3, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('transformer', 4, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('transformer', 4, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('transformer', 4, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('transformer', 4, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('transformer', 4, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('transformer', 4, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('transformer', 4, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('transformer', 4, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('transformer', 5, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('transformer', 5, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('transformer', 5, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('transformer', 5, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('transformer', 5, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('transformer', 5, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('transformer', 5, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('transformer', 5, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('xlstm', 1, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('xlstm', 1, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('xlstm', 1, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('xlstm', 1, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('xlstm', 1, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('xlstm', 1, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('xlstm', 1, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('xlstm', 1, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('xlstm', 2, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('xlstm', 2, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('xlstm', 2, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('xlstm', 2, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('xlstm', 2, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('xlstm', 2, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('xlstm', 2, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('xlstm', 2, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('xlstm', 3, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('xlstm', 3, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('xlstm', 3, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('xlstm', 3, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('xlstm', 3, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('xlstm', 3, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('xlstm', 3, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('xlstm', 3, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('xlstm', 4, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('xlstm', 4, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('xlstm', 4, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('xlstm', 4, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('xlstm', 4, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('xlstm', 4, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('xlstm', 4, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('xlstm', 4, 64, 'excited'): A1 measurement/digest differs from A0",
+  "('xlstm', 5, 8, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('xlstm', 5, 8, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('xlstm', 5, 8, 'excited'): A1 process/fingerprint differs from A0",
+  "('xlstm', 5, 8, 'excited'): A1 measurement/digest differs from A0",
+  "('xlstm', 5, 64, 'constant_holdout'): A1 process/fingerprint differs from A0",
+  "('xlstm', 5, 64, 'constant_holdout'): A1 measurement/digest differs from A0",
+  "('xlstm', 5, 64, 'excited'): A1 process/fingerprint differs from A0",
+  "('xlstm', 5, 64, 'excited'): A1 measurement/digest differs from A0"
+ ],
+ "passed": false
+}

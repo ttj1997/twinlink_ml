@@ -1,0 +1,304 @@
+{
+ "provenance": {
+  "git/commit": "8528c3d3eee03342cafa3a0574fb0722a9ab2b56",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "tolerance": 1e-06,
+ "seeds": [
+  1,
+  2,
+  3,
+  4,
+  5
+ ],
+ "a1": [
+  {
+   "seed": 1,
+   "guard_pool": {
+    "total_steps": 147456,
+    "projected_steps": 8867,
+    "runs_with_projection": 34,
+    "projection_active": 1
+   },
+   "guard_holdout": {
+    "total_steps": 41472,
+    "projected_steps": 4286,
+    "runs_with_projection": 10,
+    "projection_active": 1
+   },
+   "persistence_vs_old": {
+    "n8/excited": {
+     "worst": 1.1854557852517608e-14,
+     "at": "nrmse_truth_run_median/product_moisture_kg_per_kg/h1",
+     "metrics": 56
+    },
+    "n8/constant_holdout": {
+     "worst": 3.855033061436656e-14,
+     "at": "nrmse_truth_run_max/product_moisture_kg_per_kg/h1",
+     "metrics": 56
+    },
+    "n64/excited": {
+     "worst": 2.2310093494909336e-14,
+     "at": "nrmse_truth_run_min/product_moisture_kg_per_kg/h1",
+     "metrics": 56
+    },
+    "n64/constant_holdout": {
+     "worst": 1.4732167824210758e-14,
+     "at": "nrmse_run_max/product_moisture_kg_per_kg/h1",
+     "metrics": 56
+    }
+   },
+   "failures": []
+  },
+  {
+   "seed": 2,
+   "guard_pool": {
+    "total_steps": 147456,
+    "projected_steps": 11633,
+    "runs_with_projection": 38,
+    "projection_active": 1
+   },
+   "guard_holdout": {
+    "total_steps": 41472,
+    "projected_steps": 4286,
+    "runs_with_projection": 10,
+    "projection_active": 1
+   },
+   "persistence_vs_old": {
+    "n8/excited": {
+     "worst": 6.878635551352857e-15,
+     "at": "nrmse_run_min/product_moisture_kg_per_kg/h1",
+     "metrics": 56
+    },
+    "n8/constant_holdout": {
+     "worst": 1.2086850678410628e-14,
+     "at": "nrmse_truth_run_min/product_moisture_kg_per_kg/h36",
+     "metrics": 56
+    },
+    "n64/excited": {
+     "worst": 1.0278077858112436e-14,
+     "at": "nrmse_run_max/product_moisture_kg_per_kg/h36",
+     "metrics": 56
+    },
+    "n64/constant_holdout": {
+     "worst": 2.6121535498280486e-14,
+     "at": "nrmse_truth_run_max/product_moisture_kg_per_kg/h1",
+     "metrics": 56
+    }
+   },
+   "failures": []
+  },
+  {
+   "seed": 3,
+   "guard_pool": {
+    "total_steps": 147456,
+    "projected_steps": 9258,
+    "runs_with_projection": 35,
+    "projection_active": 1
+   },
+   "guard_holdout": {
+    "total_steps": 41472,
+    "projected_steps": 4286,
+    "runs_with_projection": 10,
+    "projection_active": 1
+   },
+   "persistence_vs_old": {
+    "n8/excited": {
+     "worst": 1.1474003216599494e-14,
+     "at": "nrmse_run_min/product_moisture_kg_per_kg/h1",
+     "metrics": 56
+    },
+    "n8/constant_holdout": {
+     "worst": 7.117788948776057e-15,
+     "at": "nrmse_run_max/product_moisture_kg_per_kg/h1",
+     "metrics": 56
+    },
+    "n64/excited": {
+     "worst": 1.2198780996737765e-14,
+     "at": "nrmse_truth_run_min/energy_target/h1",
+     "metrics": 56
+    },
+    "n64/constant_holdout": {
+     "worst": 1.551446504990102e-14,
+     "at": "nrmse_truth_run_min/product_moisture_kg_per_kg/h36",
+     "metrics": 56
+    }
+   },
+   "failures": []
+  },
+  {
+   "seed": 4,
+   "guard_pool": {
+    "total_steps": 147456,
+    "projected_steps": 14565,
+    "runs_with_projection": 41,
+    "projection_active": 1
+   },
+   "guard_holdout": {
+    "total_steps": 41472,
+    "projected_steps": 4286,
+    "runs_with_projection": 10,
+    "projection_active": 1
+   },
+   "persistence_vs_old": {
+    "n8/excited": {
+     "worst": 6.220554250254442e-15,
+     "at": "nrmse_truth_run_min/energy_target/h36",
+     "metrics": 56
+    },
+    "n8/constant_holdout": {
+     "worst": 1.3407928019787396e-14,
+     "at": "nrmse_run_max/product_moisture_kg_per_kg/h1",
+     "metrics": 56
+    },
+    "n64/excited": {
+     "worst": 1.2331912106319566e-14,
+     "at": "nrmse_truth_run_max/product_moisture_kg_per_kg/h1",
+     "metrics": 56
+    },
+    "n64/constant_holdout": {
+     "worst": 8.21564422929541e-15,
+     "at": "nrmse_truth_run_max/product_moisture_kg_per_kg/h1",
+     "metrics": 56
+    }
+   },
+   "failures": []
+  },
+  {
+   "seed": 5,
+   "guard_pool": {
+    "total_steps": 147456,
+    "projected_steps": 12041,
+    "runs_with_projection": 47,
+    "projection_active": 1
+   },
+   "guard_holdout": {
+    "total_steps": 41472,
+    "projected_steps": 4286,
+    "runs_with_projection": 10,
+    "projection_active": 1
+   },
+   "persistence_vs_old": {
+    "n8/excited": {
+     "worst": 1.0207716357551003e-14,
+     "at": "nrmse_truth_run_min/energy_target/h36",
+     "metrics": 56
+    },
+    "n8/constant_holdout": {
+     "worst": 1.1586164938750721e-14,
+     "at": "nrmse_truth_run_max/product_moisture_kg_per_kg/h1",
+     "metrics": 56
+    },
+    "n64/excited": {
+     "worst": 3.164392070839084e-14,
+     "at": "nrmse_truth_run_min/energy_target/h36",
+     "metrics": 56
+    },
+    "n64/constant_holdout": {
+     "worst": 1.480481782195563e-14,
+     "at": "nrmse_truth_run_min/energy_target/h36",
+     "metrics": 56
+    }
+   },
+   "failures": []
+  }
+ ],
+ "n": [
+  {
+   "seed": 1,
+   "guard_pool": {
+    "total_steps": 147456,
+    "projected_steps": 0,
+    "runs_with_projection": 0,
+    "projection_active": 1
+   },
+   "guard_holdout": {
+    "total_steps": 41472,
+    "projected_steps": 0,
+    "runs_with_projection": 0,
+    "projection_active": 1
+   },
+   "excitation_fingerprint": "e747958e",
+   "failures": []
+  },
+  {
+   "seed": 2,
+   "guard_pool": {
+    "total_steps": 147456,
+    "projected_steps": 0,
+    "runs_with_projection": 0,
+    "projection_active": 1
+   },
+   "guard_holdout": {
+    "total_steps": 41472,
+    "projected_steps": 0,
+    "runs_with_projection": 0,
+    "projection_active": 1
+   },
+   "excitation_fingerprint": "6b498587",
+   "failures": []
+  },
+  {
+   "seed": 3,
+   "guard_pool": {
+    "total_steps": 147456,
+    "projected_steps": 0,
+    "runs_with_projection": 0,
+    "projection_active": 1
+   },
+   "guard_holdout": {
+    "total_steps": 41472,
+    "projected_steps": 0,
+    "runs_with_projection": 0,
+    "projection_active": 1
+   },
+   "excitation_fingerprint": "366bba01",
+   "failures": []
+  },
+  {
+   "seed": 4,
+   "guard_pool": {
+    "total_steps": 147456,
+    "projected_steps": 0,
+    "runs_with_projection": 0,
+    "projection_active": 1
+   },
+   "guard_holdout": {
+    "total_steps": 41472,
+    "projected_steps": 0,
+    "runs_with_projection": 0,
+    "projection_active": 1
+   },
+   "excitation_fingerprint": "96983d4b",
+   "failures": []
+  },
+  {
+   "seed": 5,
+   "guard_pool": {
+    "total_steps": 147456,
+    "projected_steps": 0,
+    "runs_with_projection": 0,
+    "projection_active": 1
+   },
+   "guard_holdout": {
+    "total_steps": 41472,
+    "projected_steps": 0,
+    "runs_with_projection": 0,
+    "projection_active": 1
+   },
+   "excitation_fingerprint": "8721bfbb",
+   "failures": []
+  }
+ ],
+ "failures": [],
+ "passed": true
+}
