@@ -1,8 +1,7 @@
 # A1 -- simulator pretraining under a structurally different plant: design of the main run (DRAFT)
 
-Status: draft for review, written and committed BEFORE any computation of the main run; updated after the second pilot (see the section below the title). The file name
-carries the placeholder `NN` (the number is assigned when the finding is entered into the lab
-book, `docs/04_stand_ap1.md`, entry "Befund 88"). Nothing below has been run except the pilot
+Status: draft for review, written and committed BEFORE any computation of the main run; updated after the second pilot (see the section below the title). The file was
+named with the placeholder `NN` and is now `docs/17` (lab book `docs/04_stand_ap1.md`, entry "Befund 88"). Nothing below has been run except the pilot
 (artifact `artifacts/runs/a1_pilot_pp.json`, script commit `46998d6`, clean tree).
 
 ## Decisions after the second pilot, the confirmation on the new data, and how the main run is operated
