@@ -54,14 +54,33 @@ import math
 import os
 import subprocess
 import sys
-import warnings
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
 
 import numpy as np
-from scipy.optimize import brentq
 
+from twinlink_ml.flowsheet.bed_state import SOLID_FRACTION, bed_state_at_partner_inputs
+from twinlink_ml.flowsheet.exchanger import approach_diagnostics, solve_stage  # noqa: F401
+from twinlink_ml.flowsheet.loop import LoopInputs, StageKind, StageModel, StageOut  # noqa: F401
+from twinlink_ml.flowsheet.loop import run_stage as _run_stage
+from twinlink_ml.flowsheet.thermo import (  # noqa: F401
+    DEW_POINT_MARGIN_K,
+    HTM_BOILING_CELSIUS,
+    PROFILE_NODES,
+    REPO_PROPS,
+    T_KALT_CELSIUS,
+    GasProps,
+    Profile,
+    ProfileKind,
+    capacity,
+    condensate_kg_per_h,
+    dew_point,
+    exhaust_profile,
+    latent_heat,
+    saturation_humidity,
+)
+from twinlink_ml.flowsheet.thermo import partner_props as _partner_props
 from twinlink_ml.heatnetwork import (
     HeatNetworkConfig,
     HeatSinkConfig,
@@ -83,13 +102,7 @@ from twinlink_ml.partner_v4_1.inputs import (
     SiInputsV41,
     load_excel_inputs_v41,
 )
-from twinlink_ml.simulation.backend import NumpyBackend
 from twinlink_ml.simulation.config import GasConfig
-from twinlink_ml.simulation.thermo import (
-    dew_point_celsius,
-    latent_heat_j_per_kg,
-    saturation_humidity_kg_per_kg,
-)
 from twinlink_ml.utils.code_location import require_code_location
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -98,44 +111,19 @@ LOCAL = Path(os.environ.get("TWINLINK_LOCAL_DIR", ROOT / "local"))
 CASES = lay.CASES
 SCENARIOS = (1, 2, 3, 4, 5, 6)
 DT_MIN_K = (20.0, 10.0, 5.0)
-DEW_POINT_MARGIN_K = 3.0
-"""Module default ``DEFAULT_DEW_POINT_APPROACH_K`` (placeholder)."""
-T_KALT_CELSIUS = 15.0
-"""Module default ``DEFAULT_COLD_TEMPERATURE_CELSIUS`` (placeholder)."""
-PROFILE_NODES = 400
-"""Module default ``DEFAULT_APPROACH_PROFILE_NODES``."""
 HTM_FLOWS_KG_PER_H = tuple(float(f) for f in range(20, 151, 5))
 """Scan range of the task (20-150 kg/h per circuit), step 5 kg/h."""
 EQUAL_FLOW_CURVE_KG_PER_H = tuple(float(f) for f in range(5, 151, 5))
 """Both circuits equal; goes below the range of the task to show where an optimum at its
 lower edge really lies."""
-HTM_BOILING_CELSIUS = 100.0
-SOLID_FRACTION = 0.40
-"""Suspension solid fraction of this comparison (run parameter; the config default stays 0.3)."""
 
-_BACKEND = NumpyBackend()
-_GAS = GasConfig()
-
-ProfileKind = Literal["linear", "sensible", "condensing"]
-StageKind = Literal["equal_outlet", "counter_current", "direct"]
-
-
-# --------------------------------------------------------------------------- properties, plant
-@dataclass(frozen=True)
-class Props:
-    """Gas properties of a model, J/(kg K)."""
-
-    name: str
-    cp_air: float
-    cp_vapour: float
-
-
-REPO = Props("repository", _GAS.cp_dry_air_j_per_kg_k, _GAS.cp_vapour_j_per_kg_k)
+Props = GasProps
+REPO = REPO_PROPS
+Model = StageModel
 
 
 def partner_props(inputs: SiInputsV41) -> Props:
-    m = inputs.plant.material
-    return Props("partner", m.cp_gas_j_per_kg_k, m.cp_vapour_j_per_kg_k)
+    return _partner_props(inputs.plant.material)
 
 
 @dataclass(frozen=True)
@@ -186,235 +174,25 @@ def plant_from_inputs(
     )
 
 
-def capacity(stream: c.Stream, props: Props) -> float:
-    """``M (cp_air + Y cp_vapour)`` [W/K]."""
-    return stream.dry_air_kg_per_s * (props.cp_air + stream.humidity_kg_per_kg * props.cp_vapour)
-
-
-# --------------------------------------------------------------------------- thermodynamics
-def dew_point(y: float) -> float:
-    return float(dew_point_celsius(_BACKEND, _GAS, _BACKEND.asarray(np.asarray(y))))
-
-
-def saturation_humidity(t: np.ndarray) -> np.ndarray:
-    return np.asarray(
-        saturation_humidity_kg_per_kg(_BACKEND, _GAS, _BACKEND.asarray(np.asarray(t))),
-        dtype=np.float64,
-    )
-
-
-def latent_heat(t: float) -> float:
-    return float(latent_heat_j_per_kg(_BACKEND, _BACKEND.asarray(np.asarray(t))))
-
-
-@dataclass(frozen=True)
-class Profile:
-    """Heat released by the exhaust ``q_w`` [W] against its temperature ``t_c`` [degC]."""
-
-    q_w: np.ndarray
-    t_c: np.ndarray
-
-    @property
-    def total_w(self) -> float:
-        return float(self.q_w[-1])
-
-    def temperature_at(self, q_w: float) -> float:
-        return float(np.interp(q_w, self.q_w, self.t_c))
-
-
-def exhaust_profile(
-    stream: c.Stream, props: Props, kind: ProfileKind, *, nodes: int = PROFILE_NODES
-) -> Profile:
-    """Release curve of an exhaust.
-
-    ``linear``: sensible heat down to ``T_kalt`` (the dew point is not a limit: what the partner
-    model assumes); ``sensible``: sensible heat down to dew point + margin (no condensation);
-    ``condensing``: as :mod:`twinlink_ml.heatnetwork.approach`, condensation from the dew point on,
-    latent heat at ``T_kalt``, down to ``T_kalt``.
-    """
-    m, y, t_out = stream.dry_air_kg_per_s, stream.humidity_kg_per_kg, stream.temperature_celsius
-    cap = capacity(stream, props)
-    dew = dew_point(y)
-    floor = dew + DEW_POINT_MARGIN_K if kind == "sensible" else T_KALT_CELSIUS
-    if t_out <= floor:
-        return Profile(np.zeros(2), np.array([t_out, t_out]))
-    if kind != "condensing":
-        return Profile(np.array([0.0, cap * (t_out - floor)]), np.array([t_out, floor]))
-    knee = float(np.clip(dew, floor, t_out))
-    fractions = np.linspace(0.0, 1.0, nodes + 1)[1:]
-    t_nodes = np.concatenate([[t_out, knee], knee + (floor - knee) * fractions])
-    y_s = saturation_humidity(t_nodes)
-    q_nodes = cap * (t_out - t_nodes) + m * np.maximum(y - y_s, 0.0) * latent_heat(T_KALT_CELSIUS)
-    return Profile(np.maximum.accumulate(np.maximum(q_nodes, 0.0)), t_nodes)
-
-
-def condensate_kg_per_h(stream: c.Stream, t_exhaust_out: float) -> float:
-    """Water that would leave the exhaust below its saturation humidity [kg/h]."""
-    y_s = float(saturation_humidity(np.asarray(t_exhaust_out)))
-    return stream.dry_air_kg_per_s * max(stream.humidity_kg_per_kg - y_s, 0.0) * 3600.0
-
-
-# --------------------------------------------------------------------------- stages
-@dataclass(frozen=True)
-class StageOut:
-    """One pre-heating stage (temperatures degC, ``q_w`` W)."""
-
-    source: int
-    sink: int
-    q_w: float
-    gas_in_celsius: float
-    gas_out_celsius: float
-    exhaust_in_celsius: float
-    exhaust_out_celsius: float
-    htm_cold_celsius: float | None
-    """``T1``: medium leaving the pre-heating exchanger (``None``: no circuit, direct exchange)."""
-    htm_hot_celsius: float | None
-    """``T2``: medium leaving the recovery exchanger."""
-    binding: str
-    min_approach_recovery_k: float
-    """Smallest approach in the recovery exchanger (exhaust against medium; direct: against gas)."""
-    min_approach_preheater_k: float | None
-    exhaust_dew_point_celsius: float
-    condensate_modelled_kg_per_h: float
-    """Condensate the model takes out (0 unless the profile is condensing)."""
-    condensate_unmodelled_kg_per_h: float
-    """Water the exhaust would drop below saturation at its outlet temperature, if the model
-    ignores condensation (the partner's (4.1) does)."""
-
-    @property
-    def cools_gas(self) -> bool:
-        return self.q_w < -1e-9
-
-
-def _min_g(profile: Profile, inverse_capacity: float, q: float) -> float:
-    mask = profile.q_w <= q
-    g_nodes = profile.t_c[mask] + profile.q_w[mask] * inverse_capacity
-    return float(min(g_nodes.min(), profile.temperature_at(q) + q * inverse_capacity))
-
-
-def solve_stage(
-    profile: Profile,
-    gas_capacity_w_per_k: float,
-    gas_in_celsius: float,
-    gas_target_celsius: float,
-    htm_capacity_w_per_k: float | None,
-    dt_recovery_k: float,
-    dt_preheater_k: float,
-) -> tuple[float, str]:
-    """Largest duty [W] of one stage whose approaches stay >= the given minima; and what binds.
-
-    Counter-current, unlimited area. ``htm_capacity_w_per_k=None``: direct exchange exhaust -> gas
-    with ``dt_recovery_k`` as the minimum along the exchanger (the module's stage). Otherwise the
-    circuit: recovery exchanger exhaust -> medium (``dt_recovery_k``) and pre-heating exchanger
-    medium -> gas (``dt_preheater_k``); the medium returns to the recovery exchanger at ``T1`` and
-    leaves it at ``T2 = T1 + Q / B``. The most favourable ``T1`` is the lowest the pre-heating
-    exchanger admits, ``T1 = T_h,in + dt + max(0, Q (1/C - 1/B))`` (its cold end, or its warm end
-    for a medium with more capacity than the gas), so that the condition on the recovery exchanger,
-    ``min over q <= Q of (T_src(q) + q/B) - Q/B - T1 >= dt_recovery``, is monotone in ``Q``.
-    """
-    cg = gas_capacity_w_per_k
-    demand = max(cg * (gas_target_celsius - gas_in_celsius), 0.0)
-    cap_q = min(profile.total_w, demand)
-
-    def margin(q: float) -> float:
-        if htm_capacity_w_per_k is None:
-            return _min_g(profile, 1.0 / cg, q) - q / cg - gas_in_celsius - dt_recovery_k
-        b = htm_capacity_w_per_k
-        t1 = gas_in_celsius + dt_preheater_k + max(0.0, q * (1.0 / cg - 1.0 / b))
-        return _min_g(profile, 1.0 / b, q) - q / b - t1 - dt_recovery_k
-
-    if cap_q <= 0.0 or margin(0.0) < 0.0:
-        return 0.0, "no_driving_force"
-    if margin(cap_q) >= 0.0:
-        return cap_q, "sink_target" if demand <= profile.total_w else "exhaust_floor"
-    lo, hi = 0.0, cap_q
-    for _ in range(200):
-        mid = 0.5 * (lo + hi)
-        lo, hi = (mid, hi) if margin(mid) >= 0.0 else (lo, mid)
-        if hi - lo <= 1e-13 * cap_q:
-            break
-    return lo, "approach"
-
-
-@dataclass(frozen=True)
-class Model:
-    """One way of computing a stage."""
-
-    name: str
-    props: Props
-    kind: StageKind
-    profile: ProfileKind = "linear"
-    dt_min_k: float = 0.0
-    split: Literal["half", "each"] = "half"
-    """``half``: ``dt_min_k`` is the approach through the circuit, ``dt_min_k / 2`` per exchanger;
-    ``each``: ``dt_min_k`` per exchanger."""
-    nodes: int = PROFILE_NODES
-
-
-def _approach_diagnostics(
-    profile: Profile,
-    q: float,
-    gas_in: float,
-    cg: float,
-    b: float | None,
-    t1: float | None,
-) -> tuple[float, float | None]:
-    """Smallest approach in the recovery exchanger and (circuit) in the pre-heating exchanger."""
-    if q <= 0.0:
-        return math.nan, None
-    mask = profile.q_w <= q
-    qs = np.concatenate([profile.q_w[mask], [q]])
-    ts = np.concatenate([profile.t_c[mask], [profile.temperature_at(q)]])
-    if b is None or t1 is None:
-        return float(np.min(ts - (gas_in + (q - qs) / cg))), None
-    recovery = float(np.min(ts - (t1 + (q - qs) / b)))
-    t2 = t1 + q / b
-    preheater = min(t1 - gas_in, t2 - (gas_in + q / cg))
-    return recovery, float(preheater)
-
-
 def run_stage(
     plant: Plant, model: Model, source: int, sink: int, gas: c.Stream, htm_kg_per_s: float
 ) -> StageOut:
-    exhaust = plant.exhausts[source]
-    props = model.props
-    cg = capacity(gas, props)
-    a = capacity(exhaust, props)
-    b = htm_kg_per_s * plant.htm_cp_j_per_kg_k
-    t_c, t_h = exhaust.temperature_celsius, gas.temperature_celsius
-    dew = dew_point(exhaust.humidity_kg_per_kg)
-    if model.kind == "equal_outlet":
-        q = (t_c - t_h) / (1.0 / a + 1.0 / b + 1.0 / cg)
-        t1 = t_h + q / cg
-        t2 = t1 + q / b
-        t_ex_out = t_c - q / a
-        return StageOut(
-            source, sink, q, t_h, t1, t_c, t_ex_out, t1, t2, "equal_outlet", 0.0, 0.0, dew, 0.0,
-            condensate_kg_per_h(exhaust, t_ex_out),
-        )  # fmt: skip
-    dt_total = model.dt_min_k
-    profile = exhaust_profile(exhaust, props, model.profile, nodes=model.nodes)
-    target = plant.targets_celsius[sink]
-    if model.kind == "direct":
-        q, binding = solve_stage(profile, cg, t_h, target, None, dt_total, 0.0)
-        t1 = t2 = None
-        b_arg = None
-    else:
-        dt = dt_total / 2.0 if model.split == "half" else dt_total
-        q, binding = solve_stage(profile, cg, t_h, target, b, dt, dt)
-        t1 = t_h + dt + max(0.0, q * (1.0 / cg - 1.0 / b))
-        t2 = t1 + q / b
-        b_arg = b
-    t_ex_out = profile.temperature_at(q) if q > 0.0 else t_c
-    rec, pre = _approach_diagnostics(profile, q, t_h, cg, b_arg, t1)
-    modelled = condensate_kg_per_h(exhaust, t_ex_out) if model.profile == "condensing" else 0.0
-    unmodelled = condensate_kg_per_h(exhaust, t_ex_out) if model.profile != "condensing" else 0.0
-    return StageOut(
-        source, sink, q, t_h, t_h + q / cg, t_c, t_ex_out, t1, t2, binding, rec, pre, dew,
-        modelled, unmodelled,
-    )  # fmt: skip
+    """One stage of the plant in the way ``model`` prescribes (``twinlink_ml.flowsheet.loop``)."""
+    return _run_stage(
+        model,
+        LoopInputs(
+            source,
+            sink,
+            plant.exhausts[source],
+            gas,
+            htm_kg_per_s,
+            plant.htm_cp_j_per_kg_k,
+            plant.targets_celsius[sink],
+        ),
+    )
 
 
+# --------------------------------------------------------------------------- scenarios
 @dataclass(frozen=True)
 class ScenarioOut:
     """One scenario: stages, heaters, totals."""
@@ -585,89 +363,12 @@ def module_direct(
 def bed_exhaust_at_partner_inputs(solid_fraction: float) -> dict[str, Any]:
     """Dryer 2 of the partner workbook in the laboratory grey-box model (an extrapolation).
 
-    Inputs of dryer 2 (300 degC, 12 kg/h spray, 100 kg/h dry air of 6 g/kg at 15 degC); the gas
-    velocity is the root of the dry-air flow. The bounds of the process configuration are widened
-    in memory for this run only (the files stay untouched), as in ``report_dryer_block_vs_bed.py``
-    (Befund 75, 9.6), where the same state was computed with the solid fraction 0.4.
+    Lifted to :func:`twinlink_ml.flowsheet.bed_state.bed_state_at_partner_inputs` (the solve is
+    the one of Befund 90, unchanged); same record as before.
     """
-    from twinlink_ml.simulation import PlaceholderConfigWarning, load_process_config
-    from twinlink_ml.simulation.greybox import GreyBoxFluidBedGranulator
-    from twinlink_ml.simulation.operating_point import (
-        DEFAULT_SEARCH_MAX_ITERATIONS,
-        DEFAULT_SEARCH_TOLERANCE,
-        build_variant_config,
-    )
-    from twinlink_ml.simulation.steady_state import solve_steady_state
-    from twinlink_ml.simulation.thermo import relative_humidity_from_absolute_humidity
-
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", PlaceholderConfigWarning)
-        config = load_process_config(ROOT / "conf" / "process" / "greybox_gab_placeholder.yaml")
-    t_in, spray, air_kg_h, y_in, t_s, t_amb, nozzle_bar = 300.0, 12.0, 100.0, 0.006, 15.0, 15.0, 1.0
-    phi = float(
-        relative_humidity_from_absolute_humidity(
-            _BACKEND, config.gas, np.array(y_in), np.array(t_amb)
-        )
-    )
-
-    def variant_for(u: float) -> Any:
-        actions = dataclasses.replace(
-            config.actions,
-            inlet_temperature_celsius=dataclasses.replace(
-                config.actions.inlet_temperature_celsius, maximum=t_in, nominal=t_in
-            ),
-            gas_velocity_m_per_s=dataclasses.replace(
-                config.actions.gas_velocity_m_per_s, nominal=u
-            ),
-            spray_rate_kg_per_h=dataclasses.replace(
-                config.actions.spray_rate_kg_per_h, maximum=spray, nominal=spray
-            ),
-            nozzle_pressure_bar=dataclasses.replace(
-                config.actions.nozzle_pressure_bar, nominal=nozzle_bar
-            ),
-        )
-        disturbances = dataclasses.replace(
-            config.disturbances,
-            ambient_temperature_celsius=dataclasses.replace(
-                config.disturbances.ambient_temperature_celsius, nominal=t_amb
-            ),
-            ambient_relative_humidity=dataclasses.replace(
-                config.disturbances.ambient_relative_humidity, nominal=phi
-            ),
-            suspension_solid_fraction=dataclasses.replace(
-                config.disturbances.suspension_solid_fraction, nominal=solid_fraction
-            ),
-        )
-        operation = dataclasses.replace(config.operation, suspension_temperature_celsius=t_s)
-        return dataclasses.replace(
-            config, actions=actions, disturbances=disturbances, operation=operation
-        )
-
-    def solve(u: float) -> Any:
-        variant = build_variant_config(
-            variant_for(u), t_in=t_in, u_gas=u, p_nozzle=nozzle_bar, t_amb=t_amb, phi_amb=phi
-        )
-        return solve_steady_state(
-            GreyBoxFluidBedGranulator(variant),
-            max_iterations=DEFAULT_SEARCH_MAX_ITERATIONS,
-            tolerance=DEFAULT_SEARCH_TOLERANCE,
-        )
-
-    target = air_kg_h / 3600.0
-    u_star = brentq(lambda u: solve(u).dry_air_mass_flow_kg_per_s - target, 1.3, 1.9, xtol=1e-6)
-    solution = solve(u_star)
-    return {
-        "label": "extrapolation: every input of dryer 2 is outside the laboratory model's range",
-        "solid_fraction": solid_fraction,
-        "gas_velocity_m_per_s": u_star,
-        "dry_air_kg_per_h": solution.dry_air_mass_flow_kg_per_s * 3600.0,
-        "exhaust_temperature_celsius": solution.bed_temperature_celsius,
-        "exhaust_humidity_kg_per_kg": solution.outlet_humidity_kg_per_kg,
-        "product_moisture_kg_per_kg": solution.particle_moisture_kg_per_kg,
-        "feasible": bool(solution.feasible),
-        "residual_inf_norm": solution.residual_inf_norm,
-        "config_fingerprint_base": config.fingerprint,
-    }
+    return bed_state_at_partner_inputs(
+        ROOT / "conf" / "process" / "greybox_gab_placeholder.yaml", solid_fraction
+    ).as_dict()
 
 
 # --------------------------------------------------------------------------- serialisation
