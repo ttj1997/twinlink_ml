@@ -715,3 +715,163 @@ Variant (ii) (c, 10 K): scenario 1 25 / 25 kg/h, gas 0.8313 against 0.8932 at 20
 * The pinch target bounds any wiring with the same approach; the circuit stays at 78 % of it at 10 K (scenario 1, 20 kg/h) because of the medium flow.
 * All numbers are deterministic; no confidence statement is made. Numerical floors: rebuild against `evaluate_cascade` 3.8e-13 kW, against `loops` 2.5e-10 W, node count 0.0 kW, condensation profile against a complete enthalpy balance at most 0.9 %. Every difference reported above exceeds them by many orders of magnitude, except the optimum flow, which is resolved to 5 kg/h only.
 * The full test suite was not run for this branch (subset: `tests/test_heat_recovery_comparison.py`, `tests/test_denylist.py`, the heat-network and partner tests).
+
+## 11. Flowsheet of the partner model from exchangeable units: which assumption moves which scenario (feedback to the partner)
+
+Branch `partner-units`. Lab book: Befund 95. **Question:** the units of the partner workbook existed twice, as a faithful rebuild (section 7) and as physical alternatives (sections 9 and 10); how do the six scenarios change when the assumptions are replaced one at a time, and does the ranking of the scenarios survive every intermediate step?
+
+Code: `src/twinlink_ml/flowsheet/` (units `DryerBlock`, `HeatExchanger`, `HeatTransferLoop`, `Preheater`, `Burner`, class `Flowsheet`, `decomposition.py`), tests `tests/test_flowsheet_units.py` and `tests/test_flowsheet_workbook.py`, script `scripts/report_partner_flowsheet.py` (commit `7f6b8b8`), artifact `artifacts/runs/partner_flowsheet_decomposition.json` (`git/dirty=False`). Model against model, no plant data; the partner model is the equation document of section 7 with the circuit flows of the sheet (20 kg/h each). `Preheater` is the pre-heating train of one sink (its stages in the drawn order); `HeatExchanger` is one exchanger; `HeatTransferLoop` couples the recovery exchanger and the pre-heating exchanger through the medium.
+
+### 11.1 The switches
+
+One switch per assumption, each `"partner"` (the workbook) or `"physical"` (the independent calculation):
+
+| Switch | `partner` | `physical` |
+|---|---|---|
+| `exchanger` | equal outlet temperatures of both fluids (parallel flow, unlimited area) | counter-current, unlimited area, minimum approach `dT_min` checked **along** the exchanger; main convention: `dT_min` per exchanger (10 K); sensitivity: `dT_min` through the circuit (each of the two exchangers gets half, the convention of section 10) |
+| `cp_gas` | 1.2 kJ/(kg K) (gas), 2.0 (vapour) | 1.006 and 1.86 kJ/(kg K) (gas and vapour; the property set of the step "c_p of the gas" of section 10), in the dryer, the exchangers and the burner |
+| `condensation` | off (neglected, equation 4.1) | on (condensing release curve of the exhaust; with the equal-outlet exchanger the outlet is the point of the curve where it equals the medium temperature) |
+| `heat_loss` | off | `UA (T - T_amb)` of the bed, `UA` = 2 W/K (laboratory placeholder, **not** a plant value, section 9.6); dryers only |
+| `product_moisture` | equilibrium moisture 2 g/kg | product moisture of the fluidised-bed model, **dryer 2 only** (0.0566 kg/kg), **an extrapolation** of the laboratory model (every input of dryer 2 is outside its range, section 9.6); dryer 1 keeps 2 g/kg |
+| `gas_formula` | `Scenarios` row 26/39 as built (108.91 times too high) | corrected (efficiency `/100`, humidity in kg/kg) |
+| `boiling_check` | water in the circuit unlimited | flag when the medium leaves the recovery exchanger above 100 degC (1 atm); a flag only, nothing is capped |
+
+Not switches but outputs: fan and pump power (placeholders without source: fan and pump efficiencies of the laboratory process, pressure drops 4 kPa per dryer line and 0.5 kPa per exchanger side, 1 bar per medium circuit), booked as electricity in the CO2 with the factors 0.366 (electricity) and 0.201 kg/kWh (gas) of `carrier_energy`. CO2 is always computed from the **corrected** fuel; the as-built fuel is reported but never ranked or converted.
+
+### 11.2 Reproduction
+
+* **Workbook (all switches `partner`).** Scenarios 1-6 against every numeric cell of the sheet `Scenarios` (230 cells, as built, gas rows included): largest relative difference 2.0e-15 (cell I24), largest absolute 5.7e-14; the tolerance of the workbook tests is `rel` 1e-12, `abs` 1e-12. With the gas formula on `physical` only rows 26, 39 and 41 differ from the sheet, by the factor 108.911 (section 7.3).
+* **Befund 90 (all switches `physical`, and `partner`).** With the exhausts pinned to the two source variants of Befund 90 (11.5 explains why they have to be pinned), columns a, b and c at `dT_min` 20 / 10 / 5 K in both conventions: 156 scenario rows compared, largest difference 0.0 kW (recovery and stages) and 4.4e-16 kg/h (gas).
+* **Script.** `scripts/report_heat_recovery_comparison.py` now uses the lifted units; its new artifact `heat_recovery_comparison_r3_units.json` equals `heat_recovery_comparison_r2.json` in all 113 524 numbers (largest difference 0.0). Its 39 tests are unchanged and pass.
+* **Mirror pairs** 1/2, 3/4, 5/6 have the same total fuel, recovery and CO2 in every state of the study (test, relative 1e-9).
+
+### 11.3 Decomposition (main convention: `dT_min` 10 K per exchanger)
+
+The decomposition depends on the order of the switches, so two orders are given: the order of the table in 11.1 and its reverse. Step *k* has the first *k* switches of the order on `physical`. Fuel and CO2 are shown from the step where `gas_formula` is on `physical` (before it the sheet's formula would give figures 108.9 times too high; the ranking uses the corrected fuel in every step). Fuel in kg/h of the corrected formula; scenarios 2, 4, 6 equal 1, 3, 5.
+
+Forward order:
+
+| Step | Switch turned to `physical` | Recovery kW (sc. 1 / 3 / 5) | Fuel kg/h (1 / 3 / 5) | CO2 kg/h (1 / 3 / 5) | Ranking (CO2, lowest first) | Medium above 100 degC, stages in sc. 1 |
+|---|---|---|---|---|---|---|
+| 0 | none (partner model as built) | 1.777 / 1.420 / 1.606 | - | - | 1=2 < 5=6 < 3=4 | not checked |
+| 1 | exchanger | 3.195 / 2.325 / 2.592 | - | - | 1=2 < 5=6 < 3=4 | not checked |
+| 2 | cp_gas | 2.284 / 1.725 / 1.822 | - | - | 1=2 < 5=6 < 3=4 | not checked |
+| 3 | condensation | 2.284 / 1.725 / 1.822 | - | - | 1=2 < 5=6 < 3=4 | not checked |
+| 4 | heat_loss | 2.097 / 1.601 / 1.687 | - | - | 1=2 < 5=6 < 3=4 | not checked |
+| 5 | product_moisture | 2.205 / 1.709 / 1.795 | - | - | 1=2 < 5=6 < 3=4 | not checked |
+| 6 | gas_formula | 2.205 / 1.709 / 1.795 | 0.9662 / 1.0158 / 1.0071 | 2.584 / 2.709 / 2.687 | 1=2 < 5=6 < 3=4 | not checked |
+| 7 | boiling_check | 2.205 / 1.709 / 1.795 | 0.9662 / 1.0158 / 1.0071 | 2.584 / 2.709 / 2.687 | 1=2 < 5=6 < 3=4 | 0 |
+
+Reverse order:
+
+| Step | Switch turned to `physical` | Recovery kW (sc. 1 / 3 / 5) | Fuel kg/h (1 / 3 / 5) | CO2 kg/h (1 / 3 / 5) | Ranking (CO2, lowest first) | Medium above 100 degC, stages in sc. 1 |
+|---|---|---|---|---|---|---|
+| 0 | none (partner model as built) | 1.777 / 1.420 / 1.606 | - | - | 1=2 < 5=6 < 3=4 | not checked |
+| 1 | boiling_check | 1.777 / 1.420 / 1.606 | - | - | 1=2 < 5=6 < 3=4 | 1 |
+| 2 | gas_formula | 1.777 / 1.420 / 1.606 | 1.2363 / 1.2720 / 1.2534 | 3.265 / 3.355 / 3.308 | 1=2 < 5=6 < 3=4 | 1 |
+| 3 | product_moisture | 1.817 / 1.448 / 1.646 | 1.2323 / 1.2692 / 1.2494 | 3.255 / 3.347 / 3.298 | 1=2 < 5=6 < 3=4 | 1 |
+| 4 | heat_loss | 1.726 / 1.376 / 1.565 | 1.2414 / 1.2764 / 1.2575 | 3.277 / 3.365 / 3.318 | 1=2 < 5=6 < 3=4 | 1 |
+| 5 | condensation | 1.726 / 1.376 / 1.565 | 1.2414 / 1.2764 / 1.2575 | 3.277 / 3.365 / 3.318 | 1=2 < 5=6 < 3=4 | 1 |
+| 6 | cp_gas | 1.220 / 0.950 / 1.101 | 1.0646 / 1.0916 / 1.0766 | 2.832 / 2.900 / 2.862 | 1=2 < 5=6 < 3=4 | 0 |
+| 7 | exchanger | 2.205 / 1.709 / 1.795 | 0.9662 / 1.0158 / 1.0071 | 2.584 / 2.709 / 2.687 | 1=2 < 5=6 < 3=4 | 0 |
+
+Each switch alone (order-free). From the partner model, one switch to `physical` (dQ = change of the recovered heat, dFuel and dCO2 = change of the corrected fuel and of the CO2):
+
+| Switch | dQ kW (sc. 1 / 3 / 5) | dFuel kg/h (1 / 3 / 5) | dCO2 kg/h (1 / 3 / 5) |
+|---|---|---|---|
+| exchanger | +1.419 / +0.905 / +0.986 | -0.1419 / -0.0905 / -0.0986 | -0.3575 / -0.2281 / -0.2486 |
+| cp_gas | -0.525 / -0.441 / -0.482 | -0.1748 / -0.1832 / -0.1792 | -0.4401 / -0.4613 / -0.4510 |
+| condensation | -0.000 / +0.000 / -0.000 | +0.0000 / -0.0000 / +0.0000 | +0.0000 / -0.0000 / +0.0000 |
+| heat_loss | -0.089 / -0.071 / -0.080 | +0.0089 / +0.0071 / +0.0080 | +0.0221 / +0.0177 / +0.0198 |
+| product_moisture | +0.040 / +0.028 / +0.040 | -0.0040 / -0.0028 / -0.0040 | -0.0100 / -0.0070 / -0.0101 |
+| gas_formula | +0.000 / +0.000 / +0.000 | +0.0000 / +0.0000 / +0.0000 | +0.0000 / +0.0000 / +0.0000 |
+| boiling_check | +0.000 / +0.000 / +0.000 | +0.0000 / +0.0000 / +0.0000 | +0.0000 / +0.0000 / +0.0000 |
+
+From the all-`physical` state, one switch back to `partner`:
+
+| Switch | dQ kW (sc. 1 / 3 / 5) | dFuel kg/h (1 / 3 / 5) | dCO2 kg/h (1 / 3 / 5) |
+|---|---|---|---|
+| exchanger | -0.985 / -0.759 / -0.694 | +0.0985 / +0.0759 / +0.0694 | +0.2483 / +0.1913 / +0.1751 |
+| cp_gas | +0.876 / +0.572 / +0.731 | +0.1397 / +0.1701 / +0.1542 | +0.3518 / +0.4284 / +0.3883 |
+| condensation | -0.017 / +0.000 / -0.003 | +0.0017 / -0.0000 / +0.0003 | +0.0043 / -0.0000 / +0.0008 |
+| heat_loss | +0.193 / +0.130 / +0.141 | -0.0193 / -0.0130 / -0.0141 | -0.0483 / -0.0325 / -0.0353 |
+| product_moisture | -0.108 / -0.108 / -0.108 | +0.0108 / +0.0108 / +0.0108 | +0.0272 / +0.0272 / +0.0272 |
+| gas_formula | +0.000 / +0.000 / +0.000 | +0.0000 / +0.0000 / +0.0000 | +0.0000 / +0.0000 / +0.0000 |
+| boiling_check | +0.000 / +0.000 / +0.000 | +0.0000 / +0.0000 / +0.0000 | +0.0000 / +0.0000 / +0.0000 |
+
+Sensitivity, `dT_min` **through the circuit** (the convention of section 10; 5 K per exchanger). Forward order:
+
+| Step | Switch turned to `physical` | Recovery kW (sc. 1 / 3 / 5) | Fuel kg/h (1 / 3 / 5) | CO2 kg/h (1 / 3 / 5) | Ranking (CO2, lowest first) | Medium above 100 degC, stages in sc. 1 |
+|---|---|---|---|---|---|---|
+| 0 | none (partner model as built) | 1.777 / 1.420 / 1.606 | - | - | 1=2 < 5=6 < 3=4 | not checked |
+| 1 | exchanger | 3.662 / 2.559 / 2.897 | - | - | 1=2 < 5=6 < 3=4 | not checked |
+| 2 | cp_gas | 2.406 / 1.846 / 2.056 | - | - | 1=2 < 5=6 < 3=4 | not checked |
+| 3 | condensation | 2.750 / 1.958 / 2.096 | - | - | 1=2 < 5=6 < 3=4 | not checked |
+| 4 | heat_loss | 2.564 / 1.834 / 1.961 | - | - | 1=2 < 5=6 < 3=4 | not checked |
+| 5 | product_moisture | 2.672 / 1.942 / 2.069 | - | - | 1=2 < 5=6 < 3=4 | not checked |
+| 6 | gas_formula | 2.672 / 1.942 / 2.069 | 0.9195 / 0.9924 / 0.9797 | 2.466 / 2.650 / 2.618 | 1=2 < 5=6 < 3=4 | not checked |
+| 7 | boiling_check | 2.672 / 1.942 / 2.069 | 0.9195 / 0.9924 / 0.9797 | 2.466 / 2.650 / 2.618 | 1=2 < 5=6 < 3=4 | 1 |
+
+Reverse order:
+
+| Step | Switch turned to `physical` | Recovery kW (sc. 1 / 3 / 5) | Fuel kg/h (1 / 3 / 5) | CO2 kg/h (1 / 3 / 5) | Ranking (CO2, lowest first) | Medium above 100 degC, stages in sc. 1 |
+|---|---|---|---|---|---|---|
+| 0 | none (partner model as built) | 1.777 / 1.420 / 1.606 | - | - | 1=2 < 5=6 < 3=4 | not checked |
+| 1 | boiling_check | 1.777 / 1.420 / 1.606 | - | - | 1=2 < 5=6 < 3=4 | 1 |
+| 2 | gas_formula | 1.777 / 1.420 / 1.606 | 1.2363 / 1.2720 / 1.2534 | 3.265 / 3.355 / 3.308 | 1=2 < 5=6 < 3=4 | 1 |
+| 3 | product_moisture | 1.817 / 1.448 / 1.646 | 1.2323 / 1.2692 / 1.2494 | 3.255 / 3.347 / 3.298 | 1=2 < 5=6 < 3=4 | 1 |
+| 4 | heat_loss | 1.726 / 1.376 / 1.565 | 1.2414 / 1.2764 / 1.2575 | 3.277 / 3.365 / 3.318 | 1=2 < 5=6 < 3=4 | 1 |
+| 5 | condensation | 1.726 / 1.376 / 1.565 | 1.2414 / 1.2764 / 1.2575 | 3.277 / 3.365 / 3.318 | 1=2 < 5=6 < 3=4 | 1 |
+| 6 | cp_gas | 1.220 / 0.950 / 1.101 | 1.0646 / 1.0916 / 1.0766 | 2.832 / 2.900 / 2.862 | 1=2 < 5=6 < 3=4 | 0 |
+| 7 | exchanger | 2.672 / 1.942 / 2.069 | 0.9195 / 0.9924 / 0.9797 | 2.466 / 2.650 / 2.618 | 1=2 < 5=6 < 3=4 | 1 |
+
+One switch to `physical` from the partner model:
+
+| Switch | dQ kW (sc. 1 / 3 / 5) | dFuel kg/h (1 / 3 / 5) | dCO2 kg/h (1 / 3 / 5) |
+|---|---|---|---|
+| exchanger | +1.885 / +1.139 / +1.291 | -0.1885 / -0.1139 / -0.1291 | -0.4751 / -0.2870 / -0.3255 |
+| cp_gas | -0.525 / -0.441 / -0.482 | -0.1748 / -0.1832 / -0.1792 | -0.4401 / -0.4613 / -0.4510 |
+| condensation | -0.000 / +0.000 / -0.000 | +0.0000 / -0.0000 / +0.0000 | +0.0000 / -0.0000 / +0.0000 |
+| heat_loss | -0.089 / -0.071 / -0.080 | +0.0089 / +0.0071 / +0.0080 | +0.0221 / +0.0177 / +0.0198 |
+| product_moisture | +0.040 / +0.028 / +0.040 | -0.0040 / -0.0028 / -0.0040 | -0.0100 / -0.0070 / -0.0101 |
+| gas_formula | +0.000 / +0.000 / +0.000 | +0.0000 / +0.0000 / +0.0000 | +0.0000 / +0.0000 / +0.0000 |
+| boiling_check | +0.000 / +0.000 / +0.000 | +0.0000 / +0.0000 / +0.0000 | +0.0000 / +0.0000 / +0.0000 |
+
+One switch back to `partner` from all-`physical`:
+
+| Switch | dQ kW (sc. 1 / 3 / 5) | dFuel kg/h (1 / 3 / 5) | dCO2 kg/h (1 / 3 / 5) |
+|---|---|---|---|
+| exchanger | -1.451 / -0.992 / -0.968 | +0.1451 / +0.0992 / +0.0968 | +0.3659 / +0.2501 / +0.2441 |
+| cp_gas | +0.876 / +0.572 / +0.762 | +0.1397 / +0.1701 / +0.1511 | +0.3517 / +0.4284 / +0.3804 |
+| condensation | -0.357 / -0.107 / -0.044 | +0.0357 / +0.0107 / +0.0044 | +0.0899 / +0.0269 / +0.0109 |
+| heat_loss | +0.193 / +0.130 / +0.141 | -0.0193 / -0.0130 / -0.0141 | -0.0483 / -0.0325 / -0.0353 |
+| product_moisture | -0.108 / -0.108 / -0.108 | +0.0108 / +0.0108 / +0.0108 | +0.0272 / +0.0272 / +0.0272 |
+| gas_formula | +0.000 / +0.000 / +0.000 | +0.0000 / +0.0000 / +0.0000 | +0.0000 / +0.0000 / +0.0000 |
+| boiling_check | +0.000 / +0.000 / +0.000 | +0.0000 / +0.0000 / +0.0000 | +0.0000 / +0.0000 / +0.0000 |
+
+### 11.4 Reading
+
+1. **The ranking of the scenarios never changes.** By CO2, by corrected fuel and by recovered heat, in every one of the 4 x 8 steps (two orders, two conventions) the order is 1 = 2 < 5 = 6 < 3 = 4 (lowest CO2 first; the equal signs are the mirror pairs). The smallest distance between two neighbouring groups in any step is 0.022 kg CO2/h. Scenario 1/2 (each exhaust to the sink of its own dryer) is best in every state, 3/4 (the cold exhaust behind the hot one) worst: the second stage of 3/4 recovers 0 kW in the physical states because the gas leaves the first stage warmer than exhaust 1.
+2. **The levels move much more than the order.** From the partner model to the all-`physical` state the recovery of scenario 1 goes from 1.777 to 2.205 kW and the corrected fuel of scenarios 1 / 3 / 5 from 1.2363 / 1.2720 / 1.2534 to 0.9662 / 1.0158 / 1.0071 kg/h (about -20 %); the no-recovery fuel falls from 1.4140 to 1.1867 kg/h. The recovered *heat* moves in both directions (the exchanger raises it by 1.42 kW in scenario 1, `cp_gas` lowers it by 0.53 kW, the heat loss by 0.09 kW, the wetter product raises it by 0.04 kW), the *fuel* does not follow it: `cp_gas` lowers the recovery and the fuel, because the heat demand falls more than the recovery. For the fuel `cp_gas` is the largest single switch (-0.17 to -0.18 kg/h), the exchanger the second (-0.09 to -0.14 kg/h).
+3. **Order dependence.** The exchanger step is +1.42 kW in scenario 1 from the partner model but -0.99 kW when taken away from the all-`physical` state; `cp_gas` is -0.53 kW from the partner model and +0.88 kW back from all-`physical` (as in section 10.5, where the heat effect of `cp_gas` depended on the order).
+4. **Condensation** adds nothing at 10 K per exchanger (the exhaust stays above its dew point) and 0.36 kW in scenario 1 at 10 K through the circuit (5 K per exchanger), 0.04 kW in scenario 5.
+5. **Boiling flag.** In the partner model one stage per scenario (the stage with exhaust 2) has the medium above 100 degC (102.6 degC in scenarios 1-4, 107.1 degC in 5, 6; section 10.2). With the physical exchanger at 10 K per exchanger no stage does; at 5 K per exchanger (through the circuit) one does. A flag, never a cap.
+6. **Electricity** (placeholders) is 0.43 kW in each of the scenarios 1-6 (two exchangers on the gas side and two circuits in all six; the scenarios differ by less than 1 W in the partner state). In the physical state of scenario 1 it is 0.157 of 2.584 kg CO2/h (the fuel power is 12.1 kW). It is visible in the CO2 but, by this structure, cannot reorder the scenarios; it would if the pressure drops depended on the scenario (a placeholder question, not a result).
+
+### 11.5 What the units showed that was not visible before
+
+* **Befund 90 mixes two property sets.** Its columns b, c and d use the repository's gas properties in the exchangers but take the exhausts of the dryers from the partner's model with `cp_gas` 1.2 (variant (i): 72.28 and 134.66 degC). With one property set for the whole flowsheet (`cp_gas` `physical` also in the dryers) the exhausts fall to 58.94 and 108.93 degC (all-`physical`: 56.26 and 108.25 degC, with heat loss and product moisture). That is why the all-`physical` flowsheet (2.672 kW in scenario 1, 10 K through the circuit) is below column c of Befund 90 (3.662 kW, variant (i)), and why the reproduction in 11.2 needs pinned exhausts. The ranking and the mechanism (flow arrangement first) are unaffected; the absolute numbers of columns b-d are those of a mixed property set. To be confirmed by the project lead before anything of Befund 90 is restated.
+* **The dryer block is not the bed.** In the all-`physical` state the block gives 108.25 degC for dryer 2 against 103.49 degC of the laboratory model itself. The remaining 4.8 K come from constants that are not switches here (other material constants of the bed model, e.g. suspension heat capacity and latent-heat slope; not examined in this study, see section 9.6). With dryer 2 pinned to the bed state the recovery of scenarios 1 / 3 / 5 is 2.094 / 1.598 / 1.684 kW (10 K per exchanger) against 2.205 / 1.709 / 1.795 kW with the block; the ranking is the same (artifact `physical_with_dryer_2_pinned_to_the_bed`).
+
+### 11.6 For the partner
+
+1. The ranking 1 = 2 < 5 = 6 < 3 = 4 does not depend on any single assumption of the workbook, nor on the order in which they are replaced; the amount of fuel and CO2 does (about -20 % of fuel with all assumptions replaced).
+2. The assumptions that matter for the fuel, in this order: `cp_gas` (1.2 or about 1.0 kJ/(kg K)), the exchanger arrangement, then the heat loss and the product moisture of the dryer (small), condensation (only with small approaches). The gas formula of `Scenarios` row 26/39 changes only the figures of the sheet, not the physics (factor 108.91).
+3. The questions of section 10.7 stand (finite areas or counter-current exchangers in the Dyssol unit, medium and pressure, flow of the medium, measured values of the real circuit).
+
+### 11.7 Caveats
+
+* Model against model, no plant data. Placeholders: `dT_min` 10 K (and its convention), `UA` 2 W/K, dew-point margin 3 K, `T_kalt` 15 degC, the fan and pump numbers, the product moisture of dryer 2 (extrapolation).
+* Product moisture `physical` applies to dryer 2 only; dryer 1 keeps the equilibrium moisture because the laboratory model was solved only for dryer 2.
+* The `heat_loss` and `product_moisture` switches act on the dryer block of the equation document; the other constants of the bed model (11.5) are not switches.
+* "Ranking" is the order of totals of one deterministic calculation; no confidence statement is made. The medium temperature is not capped anywhere.
