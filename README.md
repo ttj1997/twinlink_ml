@@ -38,7 +38,7 @@ the rank cells remain (old data 82 of 336, new data 70 of 336, Befund 94). The r
 corrected data basis (preset version 2, Befund 94, gate passed) reproduces the ends of the order:
 - **GRU against LSTM:** not distinguishable on moisture (15 of 16 cells unresolved, one with the
   GRU worse); on energy and bed temperature the GRU is resolvably better in part of the cells
-  (5 and 9 of 16, uncorrected). *Precision (2026-10-16, addendum to Befund 94): after Holm
+  (5 and 9 of 16, uncorrected). *Precision (2026-10-16, Befund 98, addendum to Befund 94): after Holm
   correction no GRU-against-LSTM cell is resolved in any channel; the GRU is recommended as the
   default on practical grounds (never resolved worse, fewer parameters, lower single-window
   latency), not as a ranked winner.*

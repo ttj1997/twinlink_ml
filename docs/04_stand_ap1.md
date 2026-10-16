@@ -10330,7 +10330,7 @@ Reading: per prediction every learned architecture is far below the sample time 
 **Caveats.** One run of the whole measurement (no repetition across sessions); the medians of 300 (batch 1) and 15 (batch) repeats carry the spread of one process. The machine-load probe of single models shows isolated readings above the idle limit after the measurement of the simulator-only model (74 % after, 12 % before; a 5 s probe of the machine, not of the process; a model of 7 us, not affecting any statement here). Weights untrained to convergence; the inference cost does not depend on them. Placeholders: none of the numbers is a statement about the plant. Part B times only `predict` (no data windowing, no evaluation).
 
 
-### Befund NN (2026-10-16): Holm counts of the rank cells of Befund 94 by arm, channel and candidate -- no GRU-against-LSTM cell is resolved after Holm; addendum to Befund 94 (number to be assigned by the managing session)
+### Befund 98 (2026-10-16): Holm counts of the rank cells of Befund 94 by arm, channel and candidate -- no GRU-against-LSTM cell is resolved after Holm; addendum to Befund 94
 
 Addendum to Befund 94 (no existing finding changed). Pure re-analysis of the artifact `rerun_evaluation_rerun_full.json` (rank cells, paired t over five seeds, `rmse_run_median_physical`), no training, no new data. Script `scripts/analyze_94_holm_rank_cells.py` (commit `46e8c82`, committed before the run; rule in its docstring; test `tests/test_analyze_94_holm_rank_cells.py`), artifact `holm_rank_cells_rerun_full` (commit `405fc6b`, clean tree, `git/dirty=False`, `code/package_dir` `src/twinlink_ml`). The script asserts that its Holm totals reproduce `multiplicity['rank_<arm>']` of Befund 94 (A0 82, A1 20, N 70).
 

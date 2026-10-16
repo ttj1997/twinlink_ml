@@ -15,7 +15,7 @@
   Linux/Windows confound between model families does not apply to the new records.
 - **Statistics.** Paired resolution over seeds (t distribution, four degrees of freedom)
   replaces the unpaired z threshold; **Holm correction is the main form**, uncorrected counts
-  are given as an addition (Befund 83, 94 and the addendum to Befund 94).
+  are given as an addition (Befund 83, 94 and its addendum, Befund 98).
 - **Rank statements.** Cut back to what survives Holm: no GRU-against-LSTM cell is resolved;
   Mamba and the baselines are clearly behind LSTM; the deficits of Transformer and xLSTM and
   the middle of the order are uncorrected tendencies only.
@@ -124,7 +124,7 @@ runs, median and range over five seeds, arm N; the second figure is the constant
 cells unresolved, one cell with GRU worse, uncorrected). On energy and bed temperature GRU is
 better than LSTM in 5 of 16 and 9 of 16 cells without correction and never worse; **after
 Holm correction, no GRU-versus-LSTM cell is resolved in any channel** (also not when the
-family is restricted to the GRU cells, a post-hoc sensitivity; addendum to Befund 94). GRU is
+family is restricted to the GRU cells, a post-hoc sensitivity; Befund 98, addendum to Befund 94). GRU is
 recommended as the default on practical grounds: never resolved worse, about 25 % fewer
 parameters (42,819 against 57,027, Befund 28), lower single-window latency (Befund 97; LSTM
 is faster in batch). **This is not a performance ranking.**
