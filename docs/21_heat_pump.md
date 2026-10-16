@@ -14,6 +14,13 @@ Confidentiality: roles only (plant A with storage A1, plant C with lines C1/C2, 
 exports only through `TWINLINK_PLANT_DATA_ACE` / `TWINLINK_PLANT_DATA_RID`; channel tags only in
 the git-ignored role file of storage test 1.
 
+**Solid fraction (added 2026-10-16).** Sections 1-8 were computed with the solid fraction 0.3 of
+Befund 99 (the "Befund-99 assumption"). The parallel study 4 (branch `plant-a-operating-point`,
+`docs/23` section 5) shows from the energy balance of the two measured days that it must be at least
+0.575 (product 1) and 0.625 (product 2); its reference 0.634 (band 0.60-0.70, PLACEHOLDER) was
+rerun with new artifact names (`*_sf0634`). **Section 9 gives the study-4 results side by side
+with the Befund-99 assumption and the difference; the readings and conclusions do not change.**
+
 **Every number below is a scenario result on placeholders and carries its scenario.** Annual
 figures are day values x 365 of the measured day (a scaling, not an annual simulation).
 
@@ -115,7 +122,7 @@ Value of a kWh (artifact `criteria_values`): gas heat 0.2365 kg CO2; 0.0601 / 0.
 today, 1.94 at 150 EUR/t, 1.36 at 300 EUR/t. Equivalently, for a pump of COP 3 the electricity CO2
 factor may be up to 0.71 kg/kWh (COP 2: 0.47; COP 4: 0.95).
 
-## 5. Stage A: results
+## 5. Stage A: results (Befund-99 assumption, solid fraction 0.3; study 4 in section 9)
 
 **Own pinch calculation (references, artifact `stage_a.references.*.pinch`).**
 
@@ -209,7 +216,7 @@ reference still saves under CO2 today; under cost today RA2 saves nothing at a q
 "condensing limit 100 degC" has no effect because the pre-registered design grid stops at 90 degC
 (a limitation of the grid, not a statement that 100 degC adds nothing).
 
-## 6. Stage B: storage and the gate
+## 6. Stage B: storage and the gate (Befund-99 assumption; study 4 in section 9)
 
 **Gate (fixed in the script docstring before any computation).** Cell = (run, `C` in {0.5, 1, 2,
 5 MWh}); rule gap `D = (J_rule - J_foresight)/J_none`, storage gain `G = (J_pump - J_foresight)/J_none`.
@@ -311,12 +318,69 @@ efficiency, quality, amplitude, size change `D` by at most 0.3. RB2: site A alon
    space and temperature level for a storage of 1-2 MWh.
 8. Not needed for this question: intake humidity, solid fraction, `T_kalt` (effects 0 to -25 t/a).
 
-## 9. Reproducibility
+## 9. Solid fraction 0.634 (study 4) against the Befund-99 assumption 0.3
+
+Rerun of the unchanged pre-registered grids with `--solid-fraction 0.634 --solid-fraction-band
+0.60 0.70` (script `3603fb3`; default behaviour of the script unchanged); realism of the solid
+fraction checked against the band 0.60-0.70, every other placeholder against its old band; in the
+Stage-A sensitivity the band ends 0.60 / 0.70 and the Befund-99 value 0.3 (marked unrealistic)
+replace 0.2 / 0.5. Artifacts (clean tree): `gate_heat_pump_sf0634`, `gate_heat_pump_tables_sf0634`,
+`gate_heat_pump_stage_b_maps_sf0634`, `gate_heat_pump_rule_tuning_posthoc_sf0634` (declared
+post-hoc, as in section 6) and the side-by-side `gate_heat_pump_solid_fraction_comparison`.
+
+**What changes physically.** Less water evaporates, so the reconstructed exhaust of plant A is
+drier: its heat down to `T_kalt` falls from 825 to 604 kW mean (product 1) and from 917 to 642 kW
+(product 2), and product 2 is no longer capped at saturation (share of capped steps 1.0 -> 0.0).
+The surplus below the pinch shrinks (cold utility RA1 27 779 -> 16 052 kWh/d), the pinch
+temperatures stay (RA1 50.7 degC, RA2 15.2 -> 14.9 degC, RA3/RA4 75.0 degC).
+
+**Stage A (quality 0.50; annual saving; study 4 | Befund 99 | difference).**
+
+| item | CO2 today t/a | CO2 2030 t/a | cost today kEUR/a | cost 300 kEUR/a |
+|---|---|---|---|---|
+| main grid median (1000 kW) | 244 / 265 / -20 | 328 / 356 / -28 | 34.3 / 37.1 / -2.8 | 130 / 141 / -11 |
+| main grid range (1000 kW) | 2.3-813 / 7.0-893 | 55-1248 / 52-1334 | 0.5-89 / 0.4-130 | 1.2-465 / 3.9-504 |
+| RA1 (500 kW, design 35->90 resp. 40->85 unchanged) | 483 / 497 / -14 | 686 / 705 / -19 | 52.4 / 53.3 / -0.9 | 267 / 275 / -8 |
+| RA2 (500 kW, design 10->70 -> 5->65, COP 2.86 -> 2.82) | 154 / 201 / -48 | 240 / 311 / -71 | 9.6 / 18.3 / -8.7 | 88 / 115 / -27 |
+| RA3, RA4 (plant A alone) | unchanged (262, 245) | unchanged | unchanged (46, 47) | unchanged |
+
+Every main-grid scenario still saves under every central criterion; in the price grid three
+combinations at 55 EUR/t leave 2-5 % of the scenarios without saving (electricity / gas 0.16 / 0.030
+and 0.20 / 0.040: 98 %, 0.20 / 0.030: 95 %). Payback at 600 EUR/kW (500 kW, cost today): RA1 5.7 a
+(5.6 a), RA2 31 a (16 a), RA3 and RA4 unchanged. Plant A alone is unaffected because its pinch is
+set by the compressor heat, not by the exhaust; plant C by annual figure, where the surplus below
+the pinch is already scarce, loses most. Around the new base the solid fraction is a small
+sensitivity (RA1, CO2 today: 0.60 +1.5, 0.70 -2.9 t/a; RA3: 0); the sensitivity ranking is unchanged
+in its order (exhaust-C reading -329, heat-pump approach 20 K -230, compressor temperatures 90-50
+-201, compressor level 400 kW -191, mode shift -157 t/a in RA1).
+
+**Stage B (study 4 | Befund 99).** Reading **L1 | L1**. Cells with `D >= 2` points 121 (58 runs) |
+114 (62 runs); cells with `G >= 5 %` 821 | 700; largest `D` 9.2 | 9.2 points (same cell: A, product 2,
+week, flat, 1000 kW, CO2 2030, amplitude 0.4); largest `G` 20.9 | 20.7 %. Per criterion: cost today 8
+cells (max 2.9 points) | 4 (2.4); CO2 today 24 (2.4) | 14 (2.3); CO2 2030 43 | 42; cost 150 12 (2.5) |
+34 (3.3); cost 300 34 (3.1) | 20 (2.6); mode shift 84 (max 4.2) | 76 (4.0), flat 36 | 36, weekly 1 | 2;
+site A+C 19 (2.9) | 10 (2.4). Declared post-hoc tuned constant: **18 | 18 cells remain, all in mode
+shift**, largest 2.7 | 2.7 points, median 0.70 | 0.79. Signal swing alone (mode flat, cost): largest
+`D` inside the band 1.45 | 1.17 points; 2 points first at amplitude 0.8 (outside the band) | never.
+Flags: 137 | 48 runs with a non-converged rule, none in an L1 cell; 9 | 2 runs with a rule below the
+programme (at most 0.08 points, non-converged rules).
+
+**Reading.** The study-4 value lowers the Stage-A savings by about 8 % in the median (more where
+plant C is read by its annual figure, nothing for plant A alone) and leaves the Stage-B reading and
+its interpretation unchanged (L1, mostly closed by a tuned constant; what survives rests on the
+assumed night profile of the compressors). The partner question on the solid fraction (section 8,
+item 8) is answered by study 4 for this purpose.
+
+## 10. Reproducibility
 
 `scripts/gate_heat_pump.py --name gate_heat_pump` (pre-registration commit `37fa2e9`, script
 `dad1d80`, clean tree, about 12 minutes on 14 processes);
 `scripts/analyze_heat_pump_rule_tuning.py --name gate_heat_pump_rule_tuning_posthoc` (script
 `87bc625`); `scripts/analyze_heat_pump_tables.py --name gate_heat_pump_tables` and
 `scripts/analyze_heat_pump_stage_b_maps.py --name gate_heat_pump_stage_b_maps` (aggregations, no
-plant data). The first two need `TWINLINK_PLANT_DATA_ACE` / `TWINLINK_PLANT_DATA_RID` and the
+plant data). Study-4 variant: `scripts/gate_heat_pump.py --name gate_heat_pump_sf0634
+--solid-fraction 0.634 --solid-fraction-band 0.60 0.70` (script `3603fb3`, about 43 minutes on a
+shared, fully loaded machine), the follow-up scripts with `--source gate_heat_pump_sf0634` and
+`scripts/analyze_heat_pump_solid_fraction_comparison.py --name
+gate_heat_pump_solid_fraction_comparison`. The first two need `TWINLINK_PLANT_DATA_ACE` / `TWINLINK_PLANT_DATA_RID` and the
 git-ignored role file of storage test 1.
