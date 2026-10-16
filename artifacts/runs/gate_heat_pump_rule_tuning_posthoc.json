@@ -1,0 +1,5862 @@
+{
+ "provenance": {
+  "git/commit": "87bc625740a2c34b5039c054cdc28b86a83d9332",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used"
+ },
+ "name": "gate_heat_pump_rule_tuning_posthoc",
+ "declared_post_hoc": true,
+ "source_artifact": "gate_heat_pump",
+ "source_provenance": {
+  "git/commit": "dad1d800151898be76c4e2df1e93cbae7f4f6c60",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used"
+ },
+ "raw_file_sha256": {
+  "product_1": "e1ec8c7b72e35fa6a11b4fe74a2263907f8a245c449c5e4b6f659ce8b24998b6",
+  "product_2": "40a66b790032dcbf9d10d2155dc281d4e43825404bcd7892fb73f5b849938bdd"
+ },
+ "kappas": [
+  0.05,
+  0.1,
+  0.2,
+  0.3,
+  0.4,
+  0.5,
+  0.6,
+  0.7,
+  0.8,
+  0.9,
+  0.999999
+ ],
+ "l1_breakdown_from_source": {
+  "mode": {
+   "shift": 76,
+   "flat": 36,
+   "weekly": 2
+  },
+  "amplitude": {
+   "0.1": 22,
+   "0.0": 12,
+   "0.4": 30,
+   "0.6": 26,
+   "0.2": 12,
+   "0.3": 12
+  },
+  "criterion": {
+   "co2_today": 14,
+   "co2_2030": 42,
+   "cost_150": 34,
+   "cost_300": 20,
+   "cost_today": 4
+  },
+  "kind": {
+   "co2": 56,
+   "cost": 58
+  },
+  "site": {
+   "A": 104,
+   "A+C": 10
+  },
+  "day": {
+   "product_1": 46,
+   "product_2": 68
+  },
+  "horizon": {
+   "day": 54,
+   "week": 60
+  },
+  "size_kw": {
+   "500.0": 37,
+   "1000.0": 77
+  },
+  "capacity_kwh": {
+   "2000.0": 38,
+   "5000.0": 32,
+   "1000.0": 38,
+   "500.0": 6
+  }
+ },
+ "summary": {
+  "n_l1_cells": 114,
+  "n_l1_runs": 62,
+  "n_cells_still_gap_at_least_2_points_with_tuned_constant": 18,
+  "max_gap_artifact": 0.09202324,
+  "max_gap_tuned_constant": 0.026850229256281825,
+  "median_gap_artifact": 0.02400868,
+  "median_gap_tuned_constant": 0.007907192496557096,
+  "still_by_mode": {
+   "shift": 18
+  },
+  "still_by_amplitude": {
+   "0.1": 4,
+   "0.4": 4,
+   "0.6": 4,
+   "0.0": 6
+  },
+  "still_by_criterion": {
+   "co2_today": 4,
+   "cost_150": 8,
+   "cost_300": 6
+  },
+  "kappa_best_counts": {
+   "0.8": 27,
+   "0.7": 12,
+   "0.4": 30,
+   "0.3": 16,
+   "0.05": 4,
+   "0.6": 3,
+   "0.5": 22
+  },
+  "check_max_relative_deviation_foresight_vs_artifact": 4.867496226505051e-07,
+  "check_max_deviation_named_rule_gap_vs_artifact": 3.042001762987301e-08
+ },
+ "cells": [
+  {
+   "key": "B|A+C|product_1|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.4",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02034501,
+   "gap_tuned_constant": 0.0005246317049274753,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.4,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A+C|product_1|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.4",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02067323,
+   "gap_tuned_constant": 0.00012916664426719133,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.4,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A+C|product_1|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.4",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.02067323,
+   "gap_tuned_constant": 0.0016773412696459943,
+   "kappa_best": 0.7,
+   "mode": "flat",
+   "amplitude": 0.4,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A+C|product_1|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.4",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02028003,
+   "gap_tuned_constant": 0.0016532343201907764,
+   "kappa_best": 0.7,
+   "mode": "flat",
+   "amplitude": 0.4,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A+C|product_1|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.4",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02071138,
+   "gap_tuned_constant": 0.0018187973972358315,
+   "kappa_best": 0.7,
+   "mode": "flat",
+   "amplitude": 0.4,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A+C|product_1|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.4",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.02071138,
+   "gap_tuned_constant": 0.001818797397237908,
+   "kappa_best": 0.7,
+   "mode": "flat",
+   "amplitude": 0.4,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A+C|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_today|A0.6",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02279392,
+   "gap_tuned_constant": 0.0020876895161045933,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_today"
+  },
+  {
+   "key": "B|A+C|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_today|A0.6",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.02279392,
+   "gap_tuned_constant": 0.0020876895161045933,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_today"
+  },
+  {
+   "key": "B|A+C|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_today|A0.6",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.0235664,
+   "gap_tuned_constant": 0.0018121025446300593,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_today"
+  },
+  {
+   "key": "B|A+C|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_today|A0.6",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.0235664,
+   "gap_tuned_constant": 0.0018121025446300593,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_today"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.03369061,
+   "gap_tuned_constant": 0.016683222668537185,
+   "kappa_best": 0.3,
+   "mode": "shift",
+   "amplitude": 0.0,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.03369061,
+   "gap_tuned_constant": 0.01668322266853712,
+   "kappa_best": 0.3,
+   "mode": "shift",
+   "amplitude": 0.0,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|co2_today|A0.1",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02208076,
+   "gap_tuned_constant": 0.022080750340012636,
+   "kappa_best": 0.05,
+   "mode": "shift",
+   "amplitude": 0.1,
+   "criterion": "co2_today"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|co2_today|A0.1",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.02208076,
+   "gap_tuned_constant": 0.022080750340012636,
+   "kappa_best": 0.05,
+   "mode": "shift",
+   "amplitude": 0.1,
+   "criterion": "co2_today"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.4",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02158307,
+   "gap_tuned_constant": 0.021583070206642522,
+   "kappa_best": 0.7,
+   "mode": "shift",
+   "amplitude": 0.4,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.6",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02523901,
+   "gap_tuned_constant": 0.024425724027495672,
+   "kappa_best": 0.6,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_300|A0",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.0262332,
+   "gap_tuned_constant": 0.026746390955278615,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.0,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_300|A0",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.02627147,
+   "gap_tuned_constant": 0.026746390955278483,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.0,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_300|A0.1",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02112863,
+   "gap_tuned_constant": 0.01926900969254508,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.1,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_300|A0.1",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.02112863,
+   "gap_tuned_constant": 0.01926900969254508,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.1,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|500|co2_2030|A0",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.04012939,
+   "gap_tuned_constant": 0.016683222668537185,
+   "kappa_best": 0.3,
+   "mode": "shift",
+   "amplitude": 0.0,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|500|co2_2030|A0",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.04012939,
+   "gap_tuned_constant": 0.01668322266853712,
+   "kappa_best": 0.3,
+   "mode": "shift",
+   "amplitude": 0.0,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|500|co2_today|A0.1",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02208076,
+   "gap_tuned_constant": 0.022080750340012636,
+   "kappa_best": 0.05,
+   "mode": "shift",
+   "amplitude": 0.1,
+   "criterion": "co2_today"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|500|co2_today|A0.1",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.02208076,
+   "gap_tuned_constant": 0.022080750340012636,
+   "kappa_best": 0.05,
+   "mode": "shift",
+   "amplitude": 0.1,
+   "criterion": "co2_today"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.4",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02158307,
+   "gap_tuned_constant": 0.021583070206642522,
+   "kappa_best": 0.7,
+   "mode": "shift",
+   "amplitude": 0.4,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.6",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02523901,
+   "gap_tuned_constant": 0.024425724027495672,
+   "kappa_best": 0.6,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_300|A0",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.0262332,
+   "gap_tuned_constant": 0.026746390955278615,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.0,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_300|A0",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.02627147,
+   "gap_tuned_constant": 0.026746390955278483,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.0,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_300|A0.1",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02112863,
+   "gap_tuned_constant": 0.01926900969254508,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.1,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_300|A0.1",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.02112863,
+   "gap_tuned_constant": 0.01926900969254508,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.1,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02847665,
+   "gap_tuned_constant": 0.016880796893336394,
+   "kappa_best": 0.3,
+   "mode": "shift",
+   "amplitude": 0.0,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|co2_today|A0.1",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02236819,
+   "gap_tuned_constant": 0.01630715887782812,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.1,
+   "criterion": "co2_today"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|co2_today|A0.1",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.02262113,
+   "gap_tuned_constant": 0.016560097666962346,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.1,
+   "criterion": "co2_today"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|co2_today|A0.2",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02254558,
+   "gap_tuned_constant": 0.003500042500418267,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.2,
+   "criterion": "co2_today"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.4",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02162397,
+   "gap_tuned_constant": 0.02162397327594589,
+   "kappa_best": 0.7,
+   "mode": "shift",
+   "amplitude": 0.4,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.6",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02557701,
+   "gap_tuned_constant": 0.026850229256281825,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_300|A0",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02490787,
+   "gap_tuned_constant": 0.023963138561373526,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.0,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_300|A0.1",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02129877,
+   "gap_tuned_constant": 0.01583469554598206,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.1,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_300|A0.1",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.02152036,
+   "gap_tuned_constant": 0.016056285255208105,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.1,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_300|A0.2",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.0207385,
+   "gap_tuned_constant": 0.019960731790527445,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.2,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|500|co2_2030|A0",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.03308824,
+   "gap_tuned_constant": 0.016880796893336394,
+   "kappa_best": 0.3,
+   "mode": "shift",
+   "amplitude": 0.0,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|500|co2_today|A0.1",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02236819,
+   "gap_tuned_constant": 0.01630715887782812,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.1,
+   "criterion": "co2_today"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|500|co2_today|A0.1",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.02262113,
+   "gap_tuned_constant": 0.016560097666962346,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.1,
+   "criterion": "co2_today"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|500|co2_today|A0.2",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02254558,
+   "gap_tuned_constant": 0.003500042500418267,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.2,
+   "criterion": "co2_today"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.4",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02162397,
+   "gap_tuned_constant": 0.02162397327594589,
+   "kappa_best": 0.7,
+   "mode": "shift",
+   "amplitude": 0.4,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.6",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02557701,
+   "gap_tuned_constant": 0.026850229256281825,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_300|A0",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02490787,
+   "gap_tuned_constant": 0.023963138561373526,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.0,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_300|A0.1",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02129877,
+   "gap_tuned_constant": 0.01583469554598206,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.1,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_300|A0.1",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.02152036,
+   "gap_tuned_constant": 0.016056285255208105,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.1,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_300|A0.2",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.0207385,
+   "gap_tuned_constant": 0.019960731790527445,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.2,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.1",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02291859,
+   "gap_tuned_constant": 0.0026572415593649045,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.1,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.1",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02495157,
+   "gap_tuned_constant": 0.004690221440150296,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.1,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.1",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.02495157,
+   "gap_tuned_constant": 0.004690221440150296,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.1,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.2",
+   "capacity_kwh": 500.0,
+   "gap_artifact": 0.03024592,
+   "gap_tuned_constant": 0.010526502777969637,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.2,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.2",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.04583719,
+   "gap_tuned_constant": 0.0038447260374904852,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.2,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.2",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.04990315,
+   "gap_tuned_constant": 0.004061996186186414,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.2,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.2",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.04990315,
+   "gap_tuned_constant": 0.004061996186186414,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.2,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.3",
+   "capacity_kwh": 500.0,
+   "gap_artifact": 0.04275111,
+   "gap_tuned_constant": 0.013407880908153601,
+   "kappa_best": 0.7,
+   "mode": "flat",
+   "amplitude": 0.3,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.3",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.06613802,
+   "gap_tuned_constant": 0.0070653663314374174,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.3,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.3",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.07223696,
+   "gap_tuned_constant": 0.0054737862794870615,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.3,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.3",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.07223696,
+   "gap_tuned_constant": 0.0054737862794870615,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.3,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.4",
+   "capacity_kwh": 500.0,
+   "gap_artifact": 0.0512355,
+   "gap_tuned_constant": 0.016404706388839285,
+   "kappa_best": 0.7,
+   "mode": "flat",
+   "amplitude": 0.4,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.4",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.08148753,
+   "gap_tuned_constant": 0.007259573616764232,
+   "kappa_best": 0.7,
+   "mode": "flat",
+   "amplitude": 0.4,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.4",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.08961945,
+   "gap_tuned_constant": 0.005889823013205027,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.4,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.4",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.08961945,
+   "gap_tuned_constant": 0.005889823013205027,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.4,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|co2_today|A0.4",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02057421,
+   "gap_tuned_constant": 0.007879323435926724,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.4,
+   "criterion": "co2_today"
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.3",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02199738,
+   "gap_tuned_constant": 0.006453911838751428,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.3,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.4",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02538676,
+   "gap_tuned_constant": 0.009485330017809029,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.4,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.6",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.03180649,
+   "gap_tuned_constant": 0.006909207461459182,
+   "kappa_best": 0.3,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.6",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02091849,
+   "gap_tuned_constant": 0.004716800537965787,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.6",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.02091849,
+   "gap_tuned_constant": 0.004716800537965787,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_300|A0.6",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02270274,
+   "gap_tuned_constant": 0.007439886005599964,
+   "kappa_best": 0.3,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|500|co2_today|A0.4",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02057421,
+   "gap_tuned_constant": 0.007879323435926724,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.4,
+   "criterion": "co2_today"
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.3",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02199738,
+   "gap_tuned_constant": 0.006453911838751428,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.3,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.4",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02538676,
+   "gap_tuned_constant": 0.009485330017809029,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.4,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.6",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.03180649,
+   "gap_tuned_constant": 0.006909207461459182,
+   "kappa_best": 0.3,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.6",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02091849,
+   "gap_tuned_constant": 0.004716800537965787,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.6",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.02091849,
+   "gap_tuned_constant": 0.004716800537965787,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_300|A0.6",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02270274,
+   "gap_tuned_constant": 0.007439886005599964,
+   "kappa_best": 0.3,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.1",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02445096,
+   "gap_tuned_constant": 0.013615451617264275,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.1,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.1",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02841107,
+   "gap_tuned_constant": 0.013407349839650268,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.1,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.1",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.03296854,
+   "gap_tuned_constant": 0.007935061557187468,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.1,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.2",
+   "capacity_kwh": 500.0,
+   "gap_artifact": 0.03067297,
+   "gap_tuned_constant": 0.0117674241658982,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.2,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.2",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.04676574,
+   "gap_tuned_constant": 0.009172302372938734,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.2,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.2",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.05242547,
+   "gap_tuned_constant": 0.008390285033055786,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.2,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.2",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.05507518,
+   "gap_tuned_constant": 0.004202120160030664,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.2,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.3",
+   "capacity_kwh": 500.0,
+   "gap_artifact": 0.0413649,
+   "gap_tuned_constant": 0.013398994331447438,
+   "kappa_best": 0.7,
+   "mode": "flat",
+   "amplitude": 0.3,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.3",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.06483468,
+   "gap_tuned_constant": 0.010901637560131872,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.3,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.3",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.0724838,
+   "gap_tuned_constant": 0.007737794053292038,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.3,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.3",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.07446276,
+   "gap_tuned_constant": 0.0025795938264223527,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.3,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.4",
+   "capacity_kwh": 500.0,
+   "gap_artifact": 0.0513468,
+   "gap_tuned_constant": 0.016738242941259703,
+   "kappa_best": 0.6,
+   "mode": "flat",
+   "amplitude": 0.4,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.4",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.08075192,
+   "gap_tuned_constant": 0.008236032508647847,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.4,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.4",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.09042793,
+   "gap_tuned_constant": 0.004750200615336823,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.4,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.4",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.09202324,
+   "gap_tuned_constant": 0.005420037914092251,
+   "kappa_best": 0.8,
+   "mode": "flat",
+   "amplitude": 0.4,
+   "criterion": "co2_2030"
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|co2_today|A0.4",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02178023,
+   "gap_tuned_constant": 0.007873378776715356,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.4,
+   "criterion": "co2_today"
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.3",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02211872,
+   "gap_tuned_constant": 0.006615213286041292,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.3,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.4",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02695229,
+   "gap_tuned_constant": 0.00947788382587493,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.4,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.4",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02172637,
+   "gap_tuned_constant": 0.0018421069645166528,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.4,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.4",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.0217824,
+   "gap_tuned_constant": 0.0008022326488386805,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.4,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.6",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.0329964,
+   "gap_tuned_constant": 0.006340727095052991,
+   "kappa_best": 0.3,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.6",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02718565,
+   "gap_tuned_constant": 0.003519927284034292,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.6",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.02719256,
+   "gap_tuned_constant": 0.0035268357356372476,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_300|A0.6",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02346965,
+   "gap_tuned_constant": 0.007872276827684726,
+   "kappa_best": 0.3,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|500|co2_today|A0.4",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02178023,
+   "gap_tuned_constant": 0.007873378776715356,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.4,
+   "criterion": "co2_today"
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.3",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02211872,
+   "gap_tuned_constant": 0.006615213286041292,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.3,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.4",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02695229,
+   "gap_tuned_constant": 0.00947788382587493,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.4,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.4",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02172637,
+   "gap_tuned_constant": 0.0018421069645166528,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.4,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.4",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.0217824,
+   "gap_tuned_constant": 0.0008022326488386805,
+   "kappa_best": 0.5,
+   "mode": "shift",
+   "amplitude": 0.4,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.6",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.0329964,
+   "gap_tuned_constant": 0.006340727095052991,
+   "kappa_best": 0.3,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.6",
+   "capacity_kwh": 2000.0,
+   "gap_artifact": 0.02718565,
+   "gap_tuned_constant": 0.003519927284034292,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.6",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.02719256,
+   "gap_tuned_constant": 0.0035268357356372476,
+   "kappa_best": 0.4,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_300|A0.6",
+   "capacity_kwh": 1000.0,
+   "gap_artifact": 0.02346965,
+   "gap_tuned_constant": 0.007872276827684726,
+   "kappa_best": 0.3,
+   "mode": "shift",
+   "amplitude": 0.6,
+   "criterion": "cost_300"
+  },
+  {
+   "key": "B|A|product_2|week|weekly|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.6",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.0208531,
+   "gap_tuned_constant": 0.013153383319850668,
+   "kappa_best": 0.3,
+   "mode": "weekly",
+   "amplitude": 0.6,
+   "criterion": "cost_150"
+  },
+  {
+   "key": "B|A|product_2|week|weekly|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.6",
+   "capacity_kwh": 5000.0,
+   "gap_artifact": 0.0208531,
+   "gap_tuned_constant": 0.013154233889312857,
+   "kappa_best": 0.3,
+   "mode": "weekly",
+   "amplitude": 0.6,
+   "criterion": "cost_150"
+  }
+ ],
+ "runs": [
+  {
+   "key": "B|A+C|product_1|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.4",
+   "meta": {
+    "site": "A+C",
+    "day": "product_1",
+    "horizon": "day",
+    "mode": "flat",
+    "size_kw": 1000.0,
+    "criterion": "co2_2030",
+    "kind": "co2",
+    "amplitude": 0.4,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    1610.3927571084894,
+    1585.172417963866,
+    1583.986367120116,
+    1583.986367120116
+   ],
+   "foresight_artifact_per_day": [
+    1610.393,
+    1585.172,
+    1583.986,
+    1583.986
+   ],
+   "named_rules_recomputed_per_day": [
+    1658.6902294102697,
+    1658.6902294102697,
+    1658.6902294102697,
+    1658.6902294102697
+   ],
+   "gap_artifact": [
+    0.01336564,
+    0.02034501,
+    0.02067323,
+    0.02067323
+   ],
+   "gap_named_recomputed": [
+    0.013365639184066748,
+    0.02034500967783902,
+    0.020673232395841123,
+    0.020673232395841123
+   ],
+   "gap_tuned_constant": [
+    0.0007138380934594364,
+    0.0005246317049274753,
+    0.00012916664426719133,
+    0.0016773412696459943
+   ],
+   "kappa_best": [
+    0.6,
+    0.8,
+    0.8,
+    0.7
+   ],
+   "level_best": [
+    70.0,
+    70.0,
+    70.0,
+    70.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A+C|product_1|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.4",
+   "meta": {
+    "site": "A+C",
+    "day": "product_1",
+    "horizon": "week",
+    "mode": "flat",
+    "size_kw": 1000.0,
+    "criterion": "co2_2030",
+    "kind": "co2",
+    "amplitude": 0.4,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    1610.1824253358882,
+    1585.1041195873192,
+    1583.5453822506856,
+    1583.5453822506781
+   ],
+   "foresight_artifact_per_day": [
+    1610.182,
+    1585.104,
+    1583.545,
+    1583.545
+   ],
+   "named_rules_recomputed_per_day": [
+    1658.3871102084881,
+    1658.3871102084881,
+    1658.387110208488,
+    1658.3871102084881
+   ],
+   "gap_artifact": [
+    0.01333996,
+    0.02028003,
+    0.02071138,
+    0.02071138
+   ],
+   "gap_named_recomputed": [
+    0.013339961581489685,
+    0.02028002635110546,
+    0.020711384760382028,
+    0.020711384760384168
+   ],
+   "gap_tuned_constant": [
+    0.0008821798240589793,
+    0.0016532343201907764,
+    0.0018187973972358315,
+    0.001818797397237908
+   ],
+   "kappa_best": [
+    0.6,
+    0.7,
+    0.7,
+    0.7
+   ],
+   "level_best": [
+    70.0,
+    70.0,
+    70.0,
+    70.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A+C|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_today|A0.6",
+   "meta": {
+    "site": "A+C",
+    "day": "product_2",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_today",
+    "kind": "cost",
+    "amplitude": 0.6,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    641.2715035409944,
+    630.0943106016973,
+    624.3679374104295,
+    624.3679374104295
+   ],
+   "foresight_artifact_per_day": [
+    641.2715,
+    630.0943,
+    624.3679,
+    624.3679
+   ],
+   "named_rules_recomputed_per_day": [
+    650.463599919327,
+    643.8690315086542,
+    641.9382140260959,
+    641.9382140260959
+   ],
+   "gap_artifact": [
+    0.01192491,
+    0.01786994,
+    0.02279392,
+    0.02279392
+   ],
+   "gap_named_recomputed": [
+    0.011924905509000158,
+    0.017869943750318647,
+    0.022793917707684665,
+    0.022793917707684665
+   ],
+   "gap_tuned_constant": [
+    0.0045565214576028246,
+    0.000638833549153192,
+    0.0020876895161045933,
+    0.0020876895161045933
+   ],
+   "kappa_best": [
+    0.3,
+    0.3,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    40.0,
+    40.0,
+    40.0,
+    40.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A+C|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_today|A0.6",
+   "meta": {
+    "site": "A+C",
+    "day": "product_2",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_today",
+    "kind": "cost",
+    "amplitude": 0.6,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    641.2644432294722,
+    630.0904645063362,
+    624.3116733801565,
+    624.3116733801567
+   ],
+   "foresight_artifact_per_day": [
+    641.2644,
+    630.0905,
+    624.3117,
+    624.3117
+   ],
+   "named_rules_recomputed_per_day": [
+    650.4533522670486,
+    644.4399612045884,
+    642.4774009379815,
+    642.4774009379817
+   ],
+   "gap_artifact": [
+    0.01192077,
+    0.0186156,
+    0.0235664,
+    0.0235664
+   ],
+   "gap_named_recomputed": [
+    0.011920770572226404,
+    0.018615600314169978,
+    0.02356639614222583,
+    0.02356639614222583
+   ],
+   "gap_tuned_constant": [
+    0.004481076211026481,
+    0.0031965283686659954,
+    0.0018121025446300593,
+    0.0018121025446300593
+   ],
+   "kappa_best": [
+    0.3,
+    0.4,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    40.0,
+    40.0,
+    40.0,
+    40.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "co2_2030",
+    "kind": "co2",
+    "amplitude": 0.0,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    897.3111909839592,
+    797.3111909839595,
+    703.6588247034123,
+    703.6588247034123
+   ],
+   "foresight_artifact_per_day": [
+    897.3112,
+    797.3112,
+    703.6588,
+    703.6588
+   ],
+   "named_rules_recomputed_per_day": [
+    899.8797820703712,
+    798.8586161552457,
+    761.7826564723177,
+    761.7826564723177
+   ],
+   "gap_artifact": [
+    0.001488845,
+    0.0008969418,
+    0.03369061,
+    0.03369061
+   ],
+   "gap_named_recomputed": [
+    0.0014888449768910997,
+    0.000896941597894679,
+    0.03369060004318596,
+    0.03369060004318596
+   ],
+   "gap_tuned_constant": [
+    0.0014888449768910997,
+    0.000896941597894679,
+    0.016683222668537185,
+    0.01668322266853712
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.3,
+    0.3
+   ],
+   "level_best": [
+    50.0,
+    50.0,
+    70.0,
+    70.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|co2_today|A0.1",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "co2_today",
+    "kind": "co2",
+    "amplitude": 0.1,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    1174.5849408479526,
+    1085.5996237559136,
+    1026.712707723198,
+    1026.712707723198
+   ],
+   "foresight_artifact_per_day": [
+    1174.585,
+    1085.6,
+    1026.713,
+    1026.713
+   ],
+   "named_rules_recomputed_per_day": [
+    1176.596152334574,
+    1087.2727682251843,
+    1064.806948147796,
+    1064.806948147796
+   ],
+   "gap_artifact": [
+    0.001165769,
+    0.0009698131,
+    0.02208076,
+    0.02208076
+   ],
+   "gap_named_recomputed": [
+    0.0011657683214594194,
+    0.0009698128876428279,
+    0.022080750340012636,
+    0.022080750340012636
+   ],
+   "gap_tuned_constant": [
+    0.0011657683214594194,
+    0.0009698128876428279,
+    0.022080750340012636,
+    0.022080750340012636
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.05,
+    0.05
+   ],
+   "level_best": [
+    60.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.4",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.4,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    446.1536474534822,
+    423.63535566537814,
+    418.6345122038115,
+    418.6345122038115
+   ],
+   "foresight_artifact_per_day": [
+    446.1536,
+    423.6354,
+    418.6345,
+    418.6345
+   ],
+   "named_rules_recomputed_per_day": [
+    450.8275288221457,
+    436.630772600412,
+    425.560139603541,
+    425.560139603541
+   ],
+   "gap_artifact": [
+    0.007762483,
+    0.02158307,
+    0.01150223,
+    0.01150223
+   ],
+   "gap_named_recomputed": [
+    0.007762483514125125,
+    0.021583070206642522,
+    0.011502232143890826,
+    0.011502232143890826
+   ],
+   "gap_tuned_constant": [
+    0.007762483514125125,
+    0.021583070206642522,
+    0.0006054367089066568,
+    0.000605436708906468
+   ],
+   "kappa_best": [
+    0.05,
+    0.7,
+    0.6,
+    0.6
+   ],
+   "level_best": [
+    60.0,
+    70.0,
+    70.0,
+    70.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.6",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.6,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    440.62720507088966,
+    415.47172554535325,
+    410.8217083473954,
+    410.8217083473954
+   ],
+   "foresight_artifact_per_day": [
+    440.6272,
+    415.4717,
+    410.8217,
+    410.8217
+   ],
+   "named_rules_recomputed_per_day": [
+    451.3772368709273,
+    430.6684248274837,
+    420.41142304469486,
+    420.41142304469486
+   ],
+   "gap_artifact": [
+    0.01785389,
+    0.02523901,
+    0.01592681,
+    0.01592681
+   ],
+   "gap_named_recomputed": [
+    0.017853885890983696,
+    0.025239007655940286,
+    0.015926806089268976,
+    0.015926806089268976
+   ],
+   "gap_tuned_constant": [
+    0.017853885890983696,
+    0.024425724027495672,
+    0.00026873353714825134,
+    0.00026873353714825134
+   ],
+   "kappa_best": [
+    0.05,
+    0.6,
+    0.6,
+    0.6
+   ],
+   "level_best": [
+    60.0,
+    70.0,
+    70.0,
+    70.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_300|A0",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_300",
+    "kind": "cost",
+    "amplitude": 0.0,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    556.5995559311975,
+    506.8292271269413,
+    469.10555044810917,
+    469.10555044810917
+   ],
+   "foresight_artifact_per_day": [
+    556.5996,
+    506.8292,
+    469.1056,
+    469.1056
+   ],
+   "named_rules_recomputed_per_day": [
+    556.5995559311975,
+    506.82922712694125,
+    491.68958596783415,
+    491.72253146344553
+   ],
+   "gap_artifact": [
+    0.0,
+    -6.602827e-17,
+    0.0262332,
+    0.02627147
+   ],
+   "gap_named_recomputed": [
+    0.0,
+    -6.60282755248671e-17,
+    0.026233202535041703,
+    0.026271471420079365
+   ],
+   "gap_tuned_constant": [
+    0.0,
+    -6.60282755248671e-17,
+    0.026746390955278615,
+    0.026746390955278483
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.5,
+    0.5
+   ],
+   "level_best": [
+    60.0,
+    50.0,
+    70.0,
+    70.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_300|A0.1",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_300",
+    "kind": "cost",
+    "amplitude": 0.1,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    556.236750862103,
+    506.8097491909114,
+    468.1139915025163,
+    468.1139915025163
+   ],
+   "foresight_artifact_per_day": [
+    556.2368,
+    506.8097,
+    468.114,
+    468.114
+   ],
+   "named_rules_recomputed_per_day": [
+    557.1159689983308,
+    507.54117846709545,
+    486.3035246464418,
+    486.3035246464418
+   ],
+   "gap_artifact": [
+    0.001021284,
+    0.0008496148,
+    0.02112863,
+    0.02112863
+   ],
+   "gap_named_recomputed": [
+    0.0010212837037030314,
+    0.0008496148673445007,
+    0.021128628962954407,
+    0.021128628962954407
+   ],
+   "gap_tuned_constant": [
+    0.0010212837037030314,
+    0.0008496148673445007,
+    0.01926900969254508,
+    0.01926900969254508
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    60.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|500|co2_2030|A0",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "co2_2030",
+    "kind": "co2",
+    "amplitude": 0.0,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    928.0410494904836,
+    809.8057553728366,
+    703.6588247034123,
+    703.6588247034123
+   ],
+   "foresight_artifact_per_day": [
+    928.041,
+    809.8058,
+    703.6588,
+    703.6588
+   ],
+   "named_rules_recomputed_per_day": [
+    930.650012844945,
+    815.6823718790461,
+    772.890992719309,
+    772.890992719309
+   ],
+   "gap_artifact": [
+    0.001512247,
+    0.003406293,
+    0.04012939,
+    0.04012939
+   ],
+   "gap_named_recomputed": [
+    0.0015122461514918448,
+    0.003406291882219014,
+    0.04012937915070548,
+    0.04012937915070548
+   ],
+   "gap_tuned_constant": [
+    0.0015122461514918448,
+    0.003406291882219014,
+    0.016683222668537185,
+    0.01668322266853712
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.3,
+    0.3
+   ],
+   "level_best": [
+    50.0,
+    50.0,
+    70.0,
+    70.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|500|co2_today|A0.1",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "co2_today",
+    "kind": "co2",
+    "amplitude": 0.1,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    1174.5849408479526,
+    1085.5996237559136,
+    1026.712707723198,
+    1026.712707723198
+   ],
+   "foresight_artifact_per_day": [
+    1174.585,
+    1085.6,
+    1026.713,
+    1026.713
+   ],
+   "named_rules_recomputed_per_day": [
+    1176.596152334574,
+    1087.2727682251843,
+    1064.806948147796,
+    1064.806948147796
+   ],
+   "gap_artifact": [
+    0.001165769,
+    0.0009698131,
+    0.02208076,
+    0.02208076
+   ],
+   "gap_named_recomputed": [
+    0.0011657683214594194,
+    0.0009698128876428279,
+    0.022080750340012636,
+    0.022080750340012636
+   ],
+   "gap_tuned_constant": [
+    0.0011657683214594194,
+    0.0009698128876428279,
+    0.022080750340012636,
+    0.022080750340012636
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.05,
+    0.05
+   ],
+   "level_best": [
+    60.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.4",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.4,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    446.1536474534822,
+    423.63535566537814,
+    418.6345122038115,
+    418.6345122038115
+   ],
+   "foresight_artifact_per_day": [
+    446.1536,
+    423.6354,
+    418.6345,
+    418.6345
+   ],
+   "named_rules_recomputed_per_day": [
+    450.8275288221457,
+    436.630772600412,
+    425.560139603541,
+    425.560139603541
+   ],
+   "gap_artifact": [
+    0.007762483,
+    0.02158307,
+    0.01150223,
+    0.01150223
+   ],
+   "gap_named_recomputed": [
+    0.007762483514125125,
+    0.021583070206642522,
+    0.011502232143890826,
+    0.011502232143890826
+   ],
+   "gap_tuned_constant": [
+    0.007762483514125125,
+    0.021583070206642522,
+    0.0006054367089066568,
+    0.000605436708906468
+   ],
+   "kappa_best": [
+    0.05,
+    0.7,
+    0.6,
+    0.6
+   ],
+   "level_best": [
+    60.0,
+    70.0,
+    70.0,
+    70.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.6",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.6,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    440.62720507088966,
+    415.47172554535325,
+    410.8217083473954,
+    410.8217083473954
+   ],
+   "foresight_artifact_per_day": [
+    440.6272,
+    415.4717,
+    410.8217,
+    410.8217
+   ],
+   "named_rules_recomputed_per_day": [
+    451.3772368709273,
+    430.6684248274837,
+    420.41142304469486,
+    420.41142304469486
+   ],
+   "gap_artifact": [
+    0.01785389,
+    0.02523901,
+    0.01592681,
+    0.01592681
+   ],
+   "gap_named_recomputed": [
+    0.017853885890983696,
+    0.025239007655940286,
+    0.015926806089268976,
+    0.015926806089268976
+   ],
+   "gap_tuned_constant": [
+    0.017853885890983696,
+    0.024425724027495672,
+    0.00026873353714825134,
+    0.00026873353714825134
+   ],
+   "kappa_best": [
+    0.05,
+    0.6,
+    0.6,
+    0.6
+   ],
+   "level_best": [
+    60.0,
+    70.0,
+    70.0,
+    70.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_300|A0",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "cost_300",
+    "kind": "cost",
+    "amplitude": 0.0,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    556.5995559311975,
+    506.8292271269413,
+    469.10555044810917,
+    469.10555044810917
+   ],
+   "foresight_artifact_per_day": [
+    556.5996,
+    506.8292,
+    469.1056,
+    469.1056
+   ],
+   "named_rules_recomputed_per_day": [
+    556.5995559311975,
+    506.82922712694125,
+    491.68958596783415,
+    491.72253146344553
+   ],
+   "gap_artifact": [
+    0.0,
+    -6.602827e-17,
+    0.0262332,
+    0.02627147
+   ],
+   "gap_named_recomputed": [
+    0.0,
+    -6.60282755248671e-17,
+    0.026233202535041703,
+    0.026271471420079365
+   ],
+   "gap_tuned_constant": [
+    0.0,
+    -6.60282755248671e-17,
+    0.026746390955278615,
+    0.026746390955278483
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.5,
+    0.5
+   ],
+   "level_best": [
+    60.0,
+    50.0,
+    70.0,
+    70.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_300|A0.1",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "cost_300",
+    "kind": "cost",
+    "amplitude": 0.1,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    556.236750862103,
+    506.8097491909114,
+    468.1139915025163,
+    468.1139915025163
+   ],
+   "foresight_artifact_per_day": [
+    556.2368,
+    506.8097,
+    468.114,
+    468.114
+   ],
+   "named_rules_recomputed_per_day": [
+    557.1159689983308,
+    507.54117846709545,
+    486.3035246464418,
+    486.3035246464418
+   ],
+   "gap_artifact": [
+    0.001021284,
+    0.0008496148,
+    0.02112863,
+    0.02112863
+   ],
+   "gap_named_recomputed": [
+    0.0010212837037030314,
+    0.0008496148673445007,
+    0.021128628962954407,
+    0.021128628962954407
+   ],
+   "gap_tuned_constant": [
+    0.0010212837037030314,
+    0.0008496148673445007,
+    0.01926900969254508,
+    0.01926900969254508
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    60.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "co2_2030",
+    "kind": "co2",
+    "amplitude": 0.0,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    896.2319335313134,
+    796.2370419726637,
+    703.3179649090073,
+    701.4656564051822
+   ],
+   "foresight_artifact_per_day": [
+    896.2319,
+    796.237,
+    703.318,
+    701.4657
+   ],
+   "named_rules_recomputed_per_day": [
+    899.8797820703713,
+    798.8586161552457,
+    752.4465461599642,
+    702.7564772931132
+   ],
+   "gap_artifact": [
+    0.002114421,
+    0.001519556,
+    0.02847665,
+    0.000748205
+   ],
+   "gap_named_recomputed": [
+    0.002114420237057865,
+    0.0015195558272908217,
+    0.028476639121039895,
+    0.000748204805828679
+   ],
+   "gap_tuned_constant": [
+    0.002114420237057865,
+    0.0015195558272908217,
+    0.016880796893336394,
+    0.01795445950400321
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.3,
+    0.3
+   ],
+   "level_best": [
+    50.0,
+    50.0,
+    70.0,
+    70.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|co2_today|A0.1",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "co2_today",
+    "kind": "co2",
+    "amplitude": 0.1,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    1173.8493626923464,
+    1084.789333991423,
+    1026.2168119280436,
+    1025.7804358584983
+   ],
+   "foresight_artifact_per_day": [
+    1173.849,
+    1084.789,
+    1026.217,
+    1025.78
+   ],
+   "named_rules_recomputed_per_day": [
+    1176.596152334574,
+    1087.2727682251846,
+    1064.8069481477962,
+    1064.8069481477962
+   ],
+   "gap_artifact": [
+    0.001592135,
+    0.001439485,
+    0.02236819,
+    0.02262113
+   ],
+   "gap_named_recomputed": [
+    0.001592135074765751,
+    0.0014394850951305453,
+    0.022368188837943708,
+    0.022621127627077933
+   ],
+   "gap_tuned_constant": [
+    0.001592135074765751,
+    0.0014394850951305453,
+    0.01630715887782812,
+    0.016560097666962346
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    60.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|co2_today|A0.2",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "co2_today",
+    "kind": "co2",
+    "amplitude": 0.2,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    1173.2636648493778,
+    1084.923633804127,
+    1024.0764984686066,
+    1024.038179326168
+   ],
+   "foresight_artifact_per_day": [
+    1173.264,
+    1084.924,
+    1024.076,
+    1024.038
+   ],
+   "named_rules_recomputed_per_day": [
+    1177.7774472256415,
+    1088.9013569157873,
+    1062.9726719270159,
+    1057.9679551869617
+   ],
+   "gap_artifact": [
+    0.002616346,
+    0.002305628,
+    0.02254558,
+    0.01966689
+   ],
+   "gap_named_recomputed": [
+    0.002616345689756017,
+    0.0023056270441753957,
+    0.022545578694945872,
+    0.019666881437305432
+   ],
+   "gap_tuned_constant": [
+    0.002616345689756017,
+    0.0023056270441753957,
+    0.003500042500418267,
+    0.001592680290853566
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    60.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.4",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.4,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    446.15364745348217,
+    423.61072745287504,
+    417.8185090462659,
+    417.7816710171211
+   ],
+   "foresight_artifact_per_day": [
+    446.1536,
+    423.6107,
+    417.8185,
+    417.7817
+   ],
+   "named_rules_recomputed_per_day": [
+    450.8275288221458,
+    436.63077260041206,
+    425.0807440789336,
+    425.0807440789336
+   ],
+   "gap_artifact": [
+    0.007762483,
+    0.02162397,
+    0.01206128,
+    0.01212246
+   ],
+   "gap_named_recomputed": [
+    0.007762483514125314,
+    0.02162397327594589,
+    0.01206127739885383,
+    0.012122458796363535
+   ],
+   "gap_tuned_constant": [
+    0.007762483514125314,
+    0.02162397327594589,
+    0.000452898674259726,
+    0.00022444933523728096
+   ],
+   "kappa_best": [
+    0.05,
+    0.7,
+    0.6,
+    0.6
+   ],
+   "level_best": [
+    60.0,
+    70.0,
+    70.0,
+    70.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.6",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.6,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    440.62720507088966,
+    415.4650235479421,
+    410.1796458946815,
+    410.17880218395754
+   ],
+   "foresight_artifact_per_day": [
+    440.6272,
+    415.465,
+    410.1796,
+    410.1788
+   ],
+   "named_rules_recomputed_per_day": [
+    451.37723687092716,
+    430.8652405434061,
+    420.7537449531594,
+    420.7537449531594
+   ],
+   "gap_artifact": [
+    0.01785389,
+    0.02557701,
+    0.01756169,
+    0.01756309
+   ],
+   "gap_named_recomputed": [
+    0.01785388589098351,
+    0.025577014286826575,
+    0.01756169297930464,
+    0.017563094232368
+   ],
+   "gap_tuned_constant": [
+    0.01785388589098351,
+    0.026850229256281825,
+    0.0010570706072892812,
+    0.0010584718603526408
+   ],
+   "kappa_best": [
+    0.05,
+    0.5,
+    0.6,
+    0.6
+   ],
+   "level_best": [
+    60.0,
+    70.0,
+    70.0,
+    70.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_300|A0",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_300",
+    "kind": "cost",
+    "amplitude": 0.0,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    556.1712294139552,
+    506.3968138566187,
+    468.83286261258525,
+    467.35101580952517
+   ],
+   "foresight_artifact_per_day": [
+    556.1712,
+    506.3968,
+    468.8329,
+    467.351
+   ],
+   "named_rules_recomputed_per_day": [
+    556.5995559311974,
+    506.8292271269412,
+    490.2759281647441,
+    475.2571737925255
+   ],
+   "gap_artifact": [
+    0.0004975362,
+    0.0005022833,
+    0.02490787,
+    0.009183648
+   ],
+   "gap_named_recomputed": [
+    0.000497536247148144,
+    0.0005022833447681526,
+    0.02490787269222328,
+    0.009183648487487449
+   ],
+   "gap_tuned_constant": [
+    0.000497536247148144,
+    0.0005022833447681526,
+    0.023963138561373526,
+    0.001177088487744119
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    60.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_300|A0.1",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_300",
+    "kind": "cost",
+    "amplitude": 0.1,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    555.9151866410729,
+    506.4555241572542,
+    467.8972064554543,
+    467.7064409605712
+   ],
+   "foresight_artifact_per_day": [
+    555.9152,
+    506.4555,
+    467.8972,
+    467.7064
+   ],
+   "named_rules_recomputed_per_day": [
+    557.1159689983307,
+    507.5411784670954,
+    486.2332104788535,
+    486.2332104788535
+   ],
+   "gap_artifact": [
+    0.001394807,
+    0.001261076,
+    0.02129877,
+    0.02152036
+   ],
+   "gap_named_recomputed": [
+    0.0013948068205497067,
+    0.0012610761866819486,
+    0.02129876685719224,
+    0.02152035656641828
+   ],
+   "gap_tuned_constant": [
+    0.0013948068205497067,
+    0.0012610761866819486,
+    0.01583469554598206,
+    0.016056285255208105
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    60.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_300|A0.2",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_300",
+    "kind": "cost",
+    "amplitude": 0.2,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    555.6591438681904,
+    506.51423445788987,
+    466.96155029832335,
+    466.94479876064514
+   ],
+   "foresight_artifact_per_day": [
+    555.6591,
+    506.5142,
+    466.9616,
+    466.9448
+   ],
+   "named_rules_recomputed_per_day": [
+    557.6323820654641,
+    508.2531298072496,
+    484.8152234523744,
+    481.77748766153866
+   ],
+   "gap_artifact": [
+    0.002292077,
+    0.002019869,
+    0.0207385,
+    0.01722938
+   ],
+   "gap_named_recomputed": [
+    0.0022920773939515337,
+    0.0020198690285956125,
+    0.02073850014252733,
+    0.017229380096243453
+   ],
+   "gap_tuned_constant": [
+    0.0022920773939515337,
+    0.0020198690285956125,
+    0.019960731790527445,
+    0.019980190070262343
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    60.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|500|co2_2030|A0",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "co2_2030",
+    "kind": "co2",
+    "amplitude": 0.0,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    928.0410494904838,
+    809.8057553728369,
+    703.3179649090073,
+    701.4656564051822
+   ],
+   "foresight_artifact_per_day": [
+    928.041,
+    809.8058,
+    703.318,
+    701.4657
+   ],
+   "named_rules_recomputed_per_day": [
+    930.650012844945,
+    815.6823718790462,
+    760.4025719125116,
+    702.7564772931132
+   ],
+   "gap_artifact": [
+    0.001512247,
+    0.003406293,
+    0.03308824,
+    0.000748205
+   ],
+   "gap_named_recomputed": [
+    0.001512246151491713,
+    0.003406291882218948,
+    0.033088229124742234,
+    0.000748204805828679
+   ],
+   "gap_tuned_constant": [
+    0.001512246151491713,
+    0.003406291882218948,
+    0.016880796893336394,
+    0.01795445950400321
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.3,
+    0.3
+   ],
+   "level_best": [
+    50.0,
+    50.0,
+    70.0,
+    70.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|500|co2_today|A0.1",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "co2_today",
+    "kind": "co2",
+    "amplitude": 0.1,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    1173.8493626923464,
+    1084.789333991423,
+    1026.2168119280436,
+    1025.7804358584983
+   ],
+   "foresight_artifact_per_day": [
+    1173.849,
+    1084.789,
+    1026.217,
+    1025.78
+   ],
+   "named_rules_recomputed_per_day": [
+    1176.596152334574,
+    1087.2727682251846,
+    1064.8069481477962,
+    1064.8069481477962
+   ],
+   "gap_artifact": [
+    0.001592135,
+    0.001439485,
+    0.02236819,
+    0.02262113
+   ],
+   "gap_named_recomputed": [
+    0.001592135074765751,
+    0.0014394850951305453,
+    0.022368188837943708,
+    0.022621127627077933
+   ],
+   "gap_tuned_constant": [
+    0.001592135074765751,
+    0.0014394850951305453,
+    0.01630715887782812,
+    0.016560097666962346
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    60.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|500|co2_today|A0.2",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "co2_today",
+    "kind": "co2",
+    "amplitude": 0.2,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    1173.2636648493778,
+    1084.923633804127,
+    1024.0764984686066,
+    1024.038179326168
+   ],
+   "foresight_artifact_per_day": [
+    1173.264,
+    1084.924,
+    1024.076,
+    1024.038
+   ],
+   "named_rules_recomputed_per_day": [
+    1177.7774472256415,
+    1088.9013569157873,
+    1062.9726719270159,
+    1057.9679551869617
+   ],
+   "gap_artifact": [
+    0.002616346,
+    0.002305628,
+    0.02254558,
+    0.01966689
+   ],
+   "gap_named_recomputed": [
+    0.002616345689756017,
+    0.0023056270441753957,
+    0.022545578694945872,
+    0.019666881437305432
+   ],
+   "gap_tuned_constant": [
+    0.002616345689756017,
+    0.0023056270441753957,
+    0.003500042500418267,
+    0.001592680290853566
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    60.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.4",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.4,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    446.15364745348217,
+    423.61072745287504,
+    417.8185090462659,
+    417.7816710171211
+   ],
+   "foresight_artifact_per_day": [
+    446.1536,
+    423.6107,
+    417.8185,
+    417.7817
+   ],
+   "named_rules_recomputed_per_day": [
+    450.8275288221458,
+    436.63077260041206,
+    425.0807440789336,
+    425.0807440789336
+   ],
+   "gap_artifact": [
+    0.007762483,
+    0.02162397,
+    0.01206128,
+    0.01212246
+   ],
+   "gap_named_recomputed": [
+    0.007762483514125314,
+    0.02162397327594589,
+    0.01206127739885383,
+    0.012122458796363535
+   ],
+   "gap_tuned_constant": [
+    0.007762483514125314,
+    0.02162397327594589,
+    0.000452898674259726,
+    0.00022444933523728096
+   ],
+   "kappa_best": [
+    0.05,
+    0.7,
+    0.6,
+    0.6
+   ],
+   "level_best": [
+    60.0,
+    70.0,
+    70.0,
+    70.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.6",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.6,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    440.62720507088966,
+    415.4650235479421,
+    410.1796458946815,
+    410.17880218395754
+   ],
+   "foresight_artifact_per_day": [
+    440.6272,
+    415.465,
+    410.1796,
+    410.1788
+   ],
+   "named_rules_recomputed_per_day": [
+    451.37723687092716,
+    430.8652405434061,
+    420.7537449531594,
+    420.7537449531594
+   ],
+   "gap_artifact": [
+    0.01785389,
+    0.02557701,
+    0.01756169,
+    0.01756309
+   ],
+   "gap_named_recomputed": [
+    0.01785388589098351,
+    0.025577014286826575,
+    0.01756169297930464,
+    0.017563094232368
+   ],
+   "gap_tuned_constant": [
+    0.01785388589098351,
+    0.026850229256281825,
+    0.0010570706072892812,
+    0.0010584718603526408
+   ],
+   "kappa_best": [
+    0.05,
+    0.5,
+    0.6,
+    0.6
+   ],
+   "level_best": [
+    60.0,
+    70.0,
+    70.0,
+    70.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_300|A0",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "cost_300",
+    "kind": "cost",
+    "amplitude": 0.0,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    556.1712294139552,
+    506.3968138566187,
+    468.83286261258525,
+    467.35101580952517
+   ],
+   "foresight_artifact_per_day": [
+    556.1712,
+    506.3968,
+    468.8329,
+    467.351
+   ],
+   "named_rules_recomputed_per_day": [
+    556.5995559311974,
+    506.8292271269412,
+    490.2759281647441,
+    475.2571737925255
+   ],
+   "gap_artifact": [
+    0.0004975362,
+    0.0005022833,
+    0.02490787,
+    0.009183648
+   ],
+   "gap_named_recomputed": [
+    0.000497536247148144,
+    0.0005022833447681526,
+    0.02490787269222328,
+    0.009183648487487449
+   ],
+   "gap_tuned_constant": [
+    0.000497536247148144,
+    0.0005022833447681526,
+    0.023963138561373526,
+    0.001177088487744119
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    60.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_300|A0.1",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "cost_300",
+    "kind": "cost",
+    "amplitude": 0.1,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    555.9151866410729,
+    506.4555241572542,
+    467.8972064554543,
+    467.7064409605712
+   ],
+   "foresight_artifact_per_day": [
+    555.9152,
+    506.4555,
+    467.8972,
+    467.7064
+   ],
+   "named_rules_recomputed_per_day": [
+    557.1159689983307,
+    507.5411784670954,
+    486.2332104788535,
+    486.2332104788535
+   ],
+   "gap_artifact": [
+    0.001394807,
+    0.001261076,
+    0.02129877,
+    0.02152036
+   ],
+   "gap_named_recomputed": [
+    0.0013948068205497067,
+    0.0012610761866819486,
+    0.02129876685719224,
+    0.02152035656641828
+   ],
+   "gap_tuned_constant": [
+    0.0013948068205497067,
+    0.0012610761866819486,
+    0.01583469554598206,
+    0.016056285255208105
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    60.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_1|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_300|A0.2",
+   "meta": {
+    "site": "A",
+    "day": "product_1",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "cost_300",
+    "kind": "cost",
+    "amplitude": 0.2,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    555.6591438681904,
+    506.51423445788987,
+    466.96155029832335,
+    466.94479876064514
+   ],
+   "foresight_artifact_per_day": [
+    555.6591,
+    506.5142,
+    466.9616,
+    466.9448
+   ],
+   "named_rules_recomputed_per_day": [
+    557.6323820654641,
+    508.2531298072496,
+    484.8152234523744,
+    481.77748766153866
+   ],
+   "gap_artifact": [
+    0.002292077,
+    0.002019869,
+    0.0207385,
+    0.01722938
+   ],
+   "gap_named_recomputed": [
+    0.0022920773939515337,
+    0.0020198690285956125,
+    0.02073850014252733,
+    0.017229380096243453
+   ],
+   "gap_tuned_constant": [
+    0.0022920773939515337,
+    0.0020198690285956125,
+    0.019960731790527445,
+    0.019980190070262343
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    60.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.1",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "day",
+    "mode": "flat",
+    "size_kw": 1000.0,
+    "criterion": "co2_2030",
+    "kind": "co2",
+    "amplitude": 0.1,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    904.7251139183826,
+    895.6490339155306,
+    893.2821330233664,
+    893.2821330233664
+   ],
+   "foresight_artifact_per_day": [
+    904.7251,
+    895.649,
+    893.2821,
+    893.2821
+   ],
+   "named_rules_recomputed_per_day": [
+    922.3320457946368,
+    922.3320457946368,
+    922.3320457946368,
+    922.3320457946368
+   ],
+   "gap_artifact": [
+    0.01512296,
+    0.02291859,
+    0.02495157,
+    0.02495157
+   ],
+   "gap_named_recomputed": [
+    0.015122956092198407,
+    0.022918587968159966,
+    0.024951567848945356,
+    0.024951567848945356
+   ],
+   "gap_tuned_constant": [
+    0.004728860354928435,
+    0.0026572415593649045,
+    0.004690221440150296,
+    0.004690221440150296
+   ],
+   "kappa_best": [
+    0.8,
+    0.8,
+    0.8,
+    0.8
+   ],
+   "level_best": [
+    40.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.2",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "day",
+    "mode": "flat",
+    "size_kw": 1000.0,
+    "criterion": "co2_2030",
+    "kind": "co2",
+    "amplitude": 0.2,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    889.6617250505533,
+    871.5095650448494,
+    866.7757632605208,
+    866.7757632605208
+   ],
+   "foresight_artifact_per_day": [
+    889.6617,
+    871.5096,
+    866.7758,
+    866.7758
+   ],
+   "named_rules_recomputed_per_day": [
+    924.8755888030619,
+    924.8755888030619,
+    924.8755888030619,
+    924.8755888030619
+   ],
+   "gap_artifact": [
+    0.03024592,
+    0.04583719,
+    0.04990315,
+    0.04990315
+   ],
+   "gap_named_recomputed": [
+    0.03024591218439701,
+    0.04583717593632003,
+    0.04990313569789111,
+    0.04990313569789111
+   ],
+   "gap_tuned_constant": [
+    0.010526502777969637,
+    0.0038447260374904852,
+    0.004061996186186414,
+    0.004061996186186414
+   ],
+   "kappa_best": [
+    0.8,
+    0.8,
+    0.8,
+    0.8
+   ],
+   "level_best": [
+    50.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.3",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "day",
+    "mode": "flat",
+    "size_kw": 1000.0,
+    "criterion": "co2_2030",
+    "kind": "co2",
+    "amplitude": 0.3,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    874.5983361827241,
+    847.3700961741681,
+    840.2693934976751,
+    840.2693934976751
+   ],
+   "foresight_artifact_per_day": [
+    874.5983,
+    847.3701,
+    840.2694,
+    840.2694
+   ],
+   "named_rules_recomputed_per_day": [
+    924.3713924476915,
+    924.3713924476916,
+    924.3713924476917,
+    924.371392447692
+   ],
+   "gap_artifact": [
+    0.04275111,
+    0.06613802,
+    0.07223696,
+    0.07223696
+   ],
+   "gap_named_recomputed": [
+    0.04275110222268668,
+    0.06613799785057145,
+    0.07223693749292821,
+    0.07223693749292841
+   ],
+   "gap_tuned_constant": [
+    0.013407880908153601,
+    0.0070653663314374174,
+    0.0054737862794870615,
+    0.0054737862794870615
+   ],
+   "kappa_best": [
+    0.7,
+    0.8,
+    0.8,
+    0.8
+   ],
+   "level_best": [
+    40.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|day|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.4",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "day",
+    "mode": "flat",
+    "size_kw": 1000.0,
+    "criterion": "co2_2030",
+    "kind": "co2",
+    "amplitude": 0.4,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    858.4515951915082,
+    823.2306273034869,
+    813.7630237348294,
+    813.7630237348294
+   ],
+   "foresight_artifact_per_day": [
+    858.4516,
+    823.2306,
+    813.763,
+    813.763
+   ],
+   "named_rules_recomputed_per_day": [
+    918.1026170802851,
+    918.1026170802851,
+    918.1026170802852,
+    918.1026170802854
+   ],
+   "gap_artifact": [
+    0.0512355,
+    0.08148753,
+    0.08961945,
+    0.08961945
+   ],
+   "gap_named_recomputed": [
+    0.05123549015915531,
+    0.08148750423172832,
+    0.08961942375487077,
+    0.08961942375487096
+   ],
+   "gap_tuned_constant": [
+    0.016404706388839285,
+    0.007259573616764232,
+    0.005889823013205027,
+    0.005889823013205027
+   ],
+   "kappa_best": [
+    0.7,
+    0.7,
+    0.8,
+    0.8
+   ],
+   "level_best": [
+    40.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|co2_today|A0.4",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "co2_today",
+    "kind": "co2",
+    "amplitude": 0.4,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    1306.8628468921584,
+    1280.2120444915288,
+    1253.9591626760339,
+    1253.9591626760339
+   ],
+   "foresight_artifact_per_day": [
+    1306.863,
+    1280.212,
+    1253.959,
+    1253.959
+   ],
+   "named_rules_recomputed_per_day": [
+    1323.1606794933816,
+    1317.3113410320996,
+    1277.6203152413682,
+    1277.6203152413684
+   ],
+   "gap_artifact": [
+    0.009038313,
+    0.02057421,
+    0.0131218,
+    0.0131218
+   ],
+   "gap_named_recomputed": [
+    0.00903831346001776,
+    0.0205742125032419,
+    0.013121800851896305,
+    0.013121800851896431
+   ],
+   "gap_tuned_constant": [
+    0.008816606757910683,
+    0.007879323435926724,
+    0.001831355155106,
+    0.001831355155106
+   ],
+   "kappa_best": [
+    0.4,
+    0.4,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    60.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    false
+   ]
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.3",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.3,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    498.0207617884864,
+    489.28279378828006,
+    480.6752915536915,
+    480.6752915536915
+   ],
+   "foresight_artifact_per_day": [
+    498.0208,
+    489.2828,
+    480.6753,
+    480.6753
+   ],
+   "named_rules_recomputed_per_day": [
+    503.1262684148817,
+    503.1262684148817,
+    489.6085521065364,
+    489.60855210653654
+   ],
+   "gap_artifact": [
+    0.008112688,
+    0.02199738,
+    0.01419502,
+    0.01419502
+   ],
+   "gap_named_recomputed": [
+    0.008112687677891766,
+    0.02199738326492649,
+    0.014195016893285442,
+    0.014195016893285622
+   ],
+   "gap_tuned_constant": [
+    0.008112687677891766,
+    0.006453911838751428,
+    0.00621538477444872,
+    0.00621538477444881
+   ],
+   "kappa_best": [
+    0.05,
+    0.5,
+    0.6,
+    0.6
+   ],
+   "level_best": [
+    50.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.4",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.4,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    498.3594712221577,
+    486.70884722188254,
+    475.23217757576447,
+    475.23217757576447
+   ],
+   "foresight_artifact_per_day": [
+    498.3595,
+    486.7088,
+    475.2322,
+    475.2322
+   ],
+   "named_rules_recomputed_per_day": [
+    504.9082810693642,
+    502.6853367822683,
+    485.57585082836977,
+    485.57585082836977
+   ],
+   "gap_artifact": [
+    0.01040611,
+    0.02538676,
+    0.01643617,
+    0.01643617
+   ],
+   "gap_named_recomputed": [
+    0.010406107138832502,
+    0.025386759723788795,
+    0.0164361730737382,
+    0.0164361730737382
+   ],
+   "gap_tuned_constant": [
+    0.0053814480590964045,
+    0.009485330017809029,
+    0.00229392829753685,
+    0.00229392829753685
+   ],
+   "kappa_best": [
+    0.4,
+    0.5,
+    0.5,
+    0.5
+   ],
+   "level_best": [
+    60.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    false
+   ]
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.6",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.6,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    499.0368900895003,
+    481.5609540890875,
+    464.34594961991036,
+    464.34594961991036
+   ],
+   "foresight_artifact_per_day": [
+    499.0369,
+    481.561,
+    464.3459,
+    464.3459
+   ],
+   "named_rules_recomputed_per_day": [
+    508.47230637832945,
+    501.5775299526651,
+    477.51044827203623,
+    477.5104482720363
+   ],
+   "gap_artifact": [
+    0.01499295,
+    0.03180649,
+    0.02091849,
+    0.02091849
+   ],
+   "gap_named_recomputed": [
+    0.01499294606071434,
+    0.03180648665158741,
+    0.020918485434643367,
+    0.020918485434643457
+   ],
+   "gap_tuned_constant": [
+    0.004844684028183284,
+    0.006909207461459182,
+    0.004716800537965787,
+    0.004716800537965787
+   ],
+   "kappa_best": [
+    0.3,
+    0.3,
+    0.5,
+    0.5
+   ],
+   "level_best": [
+    60.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_300|A0.6",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_300",
+    "kind": "cost",
+    "amplitude": 0.6,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    623.1613360376558,
+    605.6854000372431,
+    588.470395568066,
+    588.470395568066
+   ],
+   "foresight_artifact_per_day": [
+    623.1613,
+    605.6854,
+    588.4704,
+    588.4704
+   ],
+   "named_rules_recomputed_per_day": [
+    633.5767345450108,
+    626.1133869602975,
+    601.6348942201919,
+    601.6348942201919
+   ],
+   "gap_artifact": [
+    0.0115752,
+    0.02270274,
+    0.01463043,
+    0.01463043
+   ],
+   "gap_named_recomputed": [
+    0.011575201263382384,
+    0.02270273766991433,
+    0.014630426413571807,
+    0.014630426413571807
+   ],
+   "gap_tuned_constant": [
+    0.0035162483501784123,
+    0.007439886005599964,
+    0.0013342044589596048,
+    0.0013342044589596048
+   ],
+   "kappa_best": [
+    0.2,
+    0.3,
+    0.3,
+    0.3
+   ],
+   "level_best": [
+    60.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    false
+   ]
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|500|co2_today|A0.4",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "co2_today",
+    "kind": "co2",
+    "amplitude": 0.4,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    1306.8628468921584,
+    1280.2120444915288,
+    1253.9591626760339,
+    1253.9591626760339
+   ],
+   "foresight_artifact_per_day": [
+    1306.863,
+    1280.212,
+    1253.959,
+    1253.959
+   ],
+   "named_rules_recomputed_per_day": [
+    1323.1606794933816,
+    1317.3113410320996,
+    1277.6203152413682,
+    1277.6203152413684
+   ],
+   "gap_artifact": [
+    0.009038313,
+    0.02057421,
+    0.0131218,
+    0.0131218
+   ],
+   "gap_named_recomputed": [
+    0.00903831346001776,
+    0.0205742125032419,
+    0.013121800851896305,
+    0.013121800851896431
+   ],
+   "gap_tuned_constant": [
+    0.008816606757910683,
+    0.007879323435926724,
+    0.001831355155106,
+    0.001831355155106
+   ],
+   "kappa_best": [
+    0.4,
+    0.4,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    60.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    false
+   ]
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.3",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.3,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    498.0207617884864,
+    489.28279378828006,
+    480.6752915536915,
+    480.6752915536915
+   ],
+   "foresight_artifact_per_day": [
+    498.0208,
+    489.2828,
+    480.6753,
+    480.6753
+   ],
+   "named_rules_recomputed_per_day": [
+    503.1262684148817,
+    503.1262684148817,
+    489.6085521065364,
+    489.60855210653654
+   ],
+   "gap_artifact": [
+    0.008112688,
+    0.02199738,
+    0.01419502,
+    0.01419502
+   ],
+   "gap_named_recomputed": [
+    0.008112687677891766,
+    0.02199738326492649,
+    0.014195016893285442,
+    0.014195016893285622
+   ],
+   "gap_tuned_constant": [
+    0.008112687677891766,
+    0.006453911838751428,
+    0.00621538477444872,
+    0.00621538477444881
+   ],
+   "kappa_best": [
+    0.05,
+    0.5,
+    0.6,
+    0.6
+   ],
+   "level_best": [
+    50.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.4",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.4,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    498.3594712221577,
+    486.70884722188254,
+    475.23217757576447,
+    475.23217757576447
+   ],
+   "foresight_artifact_per_day": [
+    498.3595,
+    486.7088,
+    475.2322,
+    475.2322
+   ],
+   "named_rules_recomputed_per_day": [
+    504.9082810693642,
+    502.6853367822683,
+    485.57585082836977,
+    485.57585082836977
+   ],
+   "gap_artifact": [
+    0.01040611,
+    0.02538676,
+    0.01643617,
+    0.01643617
+   ],
+   "gap_named_recomputed": [
+    0.010406107138832502,
+    0.025386759723788795,
+    0.0164361730737382,
+    0.0164361730737382
+   ],
+   "gap_tuned_constant": [
+    0.0053814480590964045,
+    0.009485330017809029,
+    0.00229392829753685,
+    0.00229392829753685
+   ],
+   "kappa_best": [
+    0.4,
+    0.5,
+    0.5,
+    0.5
+   ],
+   "level_best": [
+    60.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    false
+   ]
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.6",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.6,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    499.0368900895003,
+    481.5609540890875,
+    464.34594961991036,
+    464.34594961991036
+   ],
+   "foresight_artifact_per_day": [
+    499.0369,
+    481.561,
+    464.3459,
+    464.3459
+   ],
+   "named_rules_recomputed_per_day": [
+    508.47230637832945,
+    501.5775299526651,
+    477.51044827203623,
+    477.5104482720363
+   ],
+   "gap_artifact": [
+    0.01499295,
+    0.03180649,
+    0.02091849,
+    0.02091849
+   ],
+   "gap_named_recomputed": [
+    0.01499294606071434,
+    0.03180648665158741,
+    0.020918485434643367,
+    0.020918485434643457
+   ],
+   "gap_tuned_constant": [
+    0.004844684028183284,
+    0.006909207461459182,
+    0.004716800537965787,
+    0.004716800537965787
+   ],
+   "kappa_best": [
+    0.3,
+    0.3,
+    0.5,
+    0.5
+   ],
+   "level_best": [
+    60.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|day|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_300|A0.6",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "day",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "cost_300",
+    "kind": "cost",
+    "amplitude": 0.6,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    623.1613360376558,
+    605.6854000372431,
+    588.470395568066,
+    588.470395568066
+   ],
+   "foresight_artifact_per_day": [
+    623.1613,
+    605.6854,
+    588.4704,
+    588.4704
+   ],
+   "named_rules_recomputed_per_day": [
+    633.5767345450108,
+    626.1133869602975,
+    601.6348942201919,
+    601.6348942201919
+   ],
+   "gap_artifact": [
+    0.0115752,
+    0.02270274,
+    0.01463043,
+    0.01463043
+   ],
+   "gap_named_recomputed": [
+    0.011575201263382384,
+    0.02270273766991433,
+    0.014630426413571807,
+    0.014630426413571807
+   ],
+   "gap_tuned_constant": [
+    0.0035162483501784123,
+    0.007439886005599964,
+    0.0013342044589596048,
+    0.0013342044589596048
+   ],
+   "kappa_best": [
+    0.2,
+    0.3,
+    0.3,
+    0.3
+   ],
+   "level_best": [
+    60.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    false
+   ]
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.1",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "week",
+    "mode": "flat",
+    "size_kw": 1000.0,
+    "criterion": "co2_2030",
+    "kind": "co2",
+    "amplitude": 0.1,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    903.7206082737276,
+    893.8649739167114,
+    889.2544120494014,
+    883.9483631890968
+   ],
+   "foresight_artifact_per_day": [
+    903.7206,
+    893.865,
+    889.2544,
+    883.9484
+   ],
+   "named_rules_recomputed_per_day": [
+    922.3320457946369,
+    922.3320457946369,
+    922.3320457946369,
+    922.3320457946369
+   ],
+   "gap_artifact": [
+    0.01598575,
+    0.02445096,
+    0.02841107,
+    0.03296854
+   ],
+   "gap_named_recomputed": [
+    0.015985746660438848,
+    0.02445095381234088,
+    0.028411060273235964,
+    0.03296853482368089
+   ],
+   "gap_tuned_constant": [
+    0.007676873448536941,
+    0.013615451617264275,
+    0.013407349839650268,
+    0.007935061557187468
+   ],
+   "kappa_best": [
+    0.8,
+    0.8,
+    0.8,
+    0.8
+   ],
+   "level_best": [
+    40.0,
+    40.0,
+    40.0,
+    40.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.2",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "week",
+    "mode": "flat",
+    "size_kw": 1000.0,
+    "criterion": "co2_2030",
+    "kind": "co2",
+    "amplitude": 0.2,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    889.1225805321471,
+    870.386541345885,
+    863.7971955889249,
+    860.7122569174509
+   ],
+   "foresight_artifact_per_day": [
+    889.1226,
+    870.3865,
+    863.7972,
+    860.7123
+   ],
+   "named_rules_recomputed_per_day": [
+    924.8336328337388,
+    924.8336328337388,
+    924.8336328337388,
+    924.8336328337388
+   ],
+   "gap_artifact": [
+    0.03067297,
+    0.04676574,
+    0.05242547,
+    0.05507518
+   ],
+   "gap_named_recomputed": [
+    0.030672957660018298,
+    0.04676572725479858,
+    0.052425451916607316,
+    0.05507516922134374
+   ],
+   "gap_tuned_constant": [
+    0.0117674241658982,
+    0.009172302372938734,
+    0.008390285033055786,
+    0.004202120160030664
+   ],
+   "kappa_best": [
+    0.8,
+    0.8,
+    0.8,
+    0.8
+   ],
+   "level_best": [
+    40.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.3",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "week",
+    "mode": "flat",
+    "size_kw": 1000.0,
+    "criterion": "co2_2030",
+    "kind": "co2",
+    "amplitude": 0.3,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    874.0196218250898,
+    846.6948898076836,
+    837.7893926979639,
+    835.4853866861758
+   ],
+   "foresight_artifact_per_day": [
+    874.0196,
+    846.6949,
+    837.7894,
+    835.4854
+   ],
+   "named_rules_recomputed_per_day": [
+    922.1787786771375,
+    922.1787786771375,
+    922.1787786771376,
+    922.1787786771376
+   ],
+   "gap_artifact": [
+    0.0413649,
+    0.06483468,
+    0.0724838,
+    0.07446276
+   ],
+   "gap_named_recomputed": [
+    0.04136489080718588,
+    0.06483466540702008,
+    0.07248378012592958,
+    0.07446273829975109
+   ],
+   "gap_tuned_constant": [
+    0.013398994331447438,
+    0.010901637560131872,
+    0.007737794053292038,
+    0.0025795938264223527
+   ],
+   "kappa_best": [
+    0.7,
+    0.8,
+    0.8,
+    0.8
+   ],
+   "level_best": [
+    40.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|week|flat|shift+0K|compA800|hall200|water200|loss0|1000|co2_2030|A0.4",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "week",
+    "mode": "flat",
+    "size_kw": 1000.0,
+    "criterion": "co2_2030",
+    "kind": "co2",
+    "amplitude": 0.4,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    857.0375912920236,
+    822.8026327387447,
+    811.5373204258904,
+    809.6799829511551
+   ],
+   "foresight_artifact_per_day": [
+    857.0376,
+    822.8026,
+    811.5373,
+    809.68
+   ],
+   "named_rules_recomputed_per_day": [
+    916.8181887510684,
+    916.8181887510684,
+    916.8181887510684,
+    916.8181887510688
+   ],
+   "gap_artifact": [
+    0.0513468,
+    0.08075192,
+    0.09042793,
+    0.09202324
+   ],
+   "gap_named_recomputed": [
+    0.05134678528277793,
+    0.08075189564829927,
+    0.09042790420388204,
+    0.09202320957998238
+   ],
+   "gap_tuned_constant": [
+    0.016738242941259703,
+    0.008236032508647847,
+    0.004750200615336823,
+    0.005420037914092251
+   ],
+   "kappa_best": [
+    0.6,
+    0.8,
+    0.8,
+    0.8
+   ],
+   "level_best": [
+    40.0,
+    50.0,
+    50.0,
+    50.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|co2_today|A0.4",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "co2_today",
+    "kind": "co2",
+    "amplitude": 0.4,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    1306.6116333158607,
+    1280.1013623339277,
+    1253.6380077002616,
+    1253.5573472832662
+   ],
+   "foresight_artifact_per_day": [
+    1306.612,
+    1280.101,
+    1253.638,
+    1253.557
+   ],
+   "named_rules_recomputed_per_day": [
+    1323.1606794933814,
+    1319.3753492813369,
+    1284.9148068435652,
+    1284.9148068435652
+   ],
+   "gap_artifact": [
+    0.009177629,
+    0.02178023,
+    0.01734522,
+    0.01738995
+   ],
+   "gap_named_recomputed": [
+    0.009177629349654404,
+    0.02178023382254443,
+    0.0173452213923203,
+    0.01738995336070276
+   ],
+   "gap_tuned_constant": [
+    0.008084025504756358,
+    0.007873378776715356,
+    0.0015160614298263073,
+    0.0006404615604690125
+   ],
+   "kappa_best": [
+    0.3,
+    0.4,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    50.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    false
+   ]
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.3",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.3,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    497.88589817245816,
+    489.2064356050084,
+    480.5015390848931,
+    480.4137917449751
+   ],
+   "foresight_artifact_per_day": [
+    497.8859,
+    489.2064,
+    480.5015,
+    480.4138
+   ],
+   "named_rules_recomputed_per_day": [
+    503.1262684148816,
+    503.1262684148816,
+    492.2409078638927,
+    492.2409078638927
+   ],
+   "gap_artifact": [
+    0.008326987,
+    0.02211872,
+    0.01865394,
+    0.01879338
+   ],
+   "gap_named_recomputed": [
+    0.008326986958259265,
+    0.022118716981218475,
+    0.018653943557186168,
+    0.018793374727374187
+   ],
+   "gap_tuned_constant": [
+    0.008326986958259265,
+    0.006615213286041292,
+    0.007051136862815504,
+    0.0071905680330036125
+   ],
+   "kappa_best": [
+    0.05,
+    0.5,
+    0.6,
+    0.6
+   ],
+   "level_best": [
+    50.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.4",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.4,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    498.2496510795139,
+    486.66046157921534,
+    475.09178195794055,
+    475.05652057346157
+   ],
+   "foresight_artifact_per_day": [
+    498.2497,
+    486.6605,
+    475.0918,
+    475.0565
+   ],
+   "named_rules_recomputed_per_day": [
+    504.90828106936425,
+    503.6221757777937,
+    488.76469961621547,
+    488.76469961621547
+   ],
+   "gap_artifact": [
+    0.01058061,
+    0.02695229,
+    0.02172637,
+    0.0217824
+   ],
+   "gap_named_recomputed": [
+    0.01058061215531902,
+    0.026952288939028297,
+    0.021726366984550098,
+    0.021782397584508412
+   ],
+   "gap_tuned_constant": [
+    0.009650679072915783,
+    0.00947788382587493,
+    0.0018421069645166528,
+    0.0008022326488386805
+   ],
+   "kappa_best": [
+    0.4,
+    0.5,
+    0.5,
+    0.5
+   ],
+   "level_best": [
+    50.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    false
+   ]
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.6",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.6,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    498.9519319359405,
+    481.54038508483956,
+    464.27226770403547,
+    464.2679200517114
+   ],
+   "foresight_artifact_per_day": [
+    498.9519,
+    481.5404,
+    464.2723,
+    464.2679
+   ],
+   "named_rules_recomputed_per_day": [
+    508.47230637832945,
+    502.30580264695357,
+    481.3808415037739,
+    481.3808415037739
+   ],
+   "gap_artifact": [
+    0.01512795,
+    0.0329964,
+    0.02718565,
+    0.02719256
+   ],
+   "gap_named_recomputed": [
+    0.015127945193211331,
+    0.03299640163260022,
+    0.02718564992823002,
+    0.027192558379832976
+   ],
+   "gap_tuned_constant": [
+    0.0051522244391072666,
+    0.006340727095052991,
+    0.003519927284034292,
+    0.0035268357356372476
+   ],
+   "kappa_best": [
+    0.3,
+    0.3,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    60.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|1000|cost_300|A0.6",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 1000.0,
+    "criterion": "cost_300",
+    "kind": "cost",
+    "amplitude": 0.6,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    623.076377884096,
+    605.6648310329952,
+    588.3967136521909,
+    588.3923659998669
+   ],
+   "foresight_artifact_per_day": [
+    623.0764,
+    605.6648,
+    588.3967,
+    588.3924
+   ],
+   "named_rules_recomputed_per_day": [
+    633.5767345450107,
+    626.7828866460892,
+    605.5052874519293,
+    605.5052874519296
+   ],
+   "gap_artifact": [
+    0.01166962,
+    0.02346965,
+    0.01901369,
+    0.01901852
+   ],
+   "gap_named_recomputed": [
+    0.0116696198999544,
+    0.02346964869757467,
+    0.019013692555455985,
+    0.019018524338958117
+   ],
+   "gap_tuned_constant": [
+    0.003818525131210261,
+    0.007872276827684726,
+    0.0016410847031344425,
+    0.0016459164866363231
+   ],
+   "kappa_best": [
+    0.2,
+    0.3,
+    0.3,
+    0.3
+   ],
+   "level_best": [
+    60.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|500|co2_today|A0.4",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "co2_today",
+    "kind": "co2",
+    "amplitude": 0.4,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    1306.6116333158607,
+    1280.1013623339277,
+    1253.6380077002616,
+    1253.5573472832662
+   ],
+   "foresight_artifact_per_day": [
+    1306.612,
+    1280.101,
+    1253.638,
+    1253.557
+   ],
+   "named_rules_recomputed_per_day": [
+    1323.1606794933814,
+    1319.3753492813369,
+    1284.9148068435652,
+    1284.9148068435652
+   ],
+   "gap_artifact": [
+    0.009177629,
+    0.02178023,
+    0.01734522,
+    0.01738995
+   ],
+   "gap_named_recomputed": [
+    0.009177629349654404,
+    0.02178023382254443,
+    0.0173452213923203,
+    0.01738995336070276
+   ],
+   "gap_tuned_constant": [
+    0.008084025504756358,
+    0.007873378776715356,
+    0.0015160614298263073,
+    0.0006404615604690125
+   ],
+   "kappa_best": [
+    0.3,
+    0.4,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    50.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    false
+   ]
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.3",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.3,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    497.88589817245816,
+    489.2064356050084,
+    480.5015390848931,
+    480.4137917449751
+   ],
+   "foresight_artifact_per_day": [
+    497.8859,
+    489.2064,
+    480.5015,
+    480.4138
+   ],
+   "named_rules_recomputed_per_day": [
+    503.1262684148816,
+    503.1262684148816,
+    492.2409078638927,
+    492.2409078638927
+   ],
+   "gap_artifact": [
+    0.008326987,
+    0.02211872,
+    0.01865394,
+    0.01879338
+   ],
+   "gap_named_recomputed": [
+    0.008326986958259265,
+    0.022118716981218475,
+    0.018653943557186168,
+    0.018793374727374187
+   ],
+   "gap_tuned_constant": [
+    0.008326986958259265,
+    0.006615213286041292,
+    0.007051136862815504,
+    0.0071905680330036125
+   ],
+   "kappa_best": [
+    0.05,
+    0.5,
+    0.6,
+    0.6
+   ],
+   "level_best": [
+    50.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.4",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.4,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    498.2496510795139,
+    486.66046157921534,
+    475.09178195794055,
+    475.05652057346157
+   ],
+   "foresight_artifact_per_day": [
+    498.2497,
+    486.6605,
+    475.0918,
+    475.0565
+   ],
+   "named_rules_recomputed_per_day": [
+    504.90828106936425,
+    503.6221757777937,
+    488.76469961621547,
+    488.76469961621547
+   ],
+   "gap_artifact": [
+    0.01058061,
+    0.02695229,
+    0.02172637,
+    0.0217824
+   ],
+   "gap_named_recomputed": [
+    0.01058061215531902,
+    0.026952288939028297,
+    0.021726366984550098,
+    0.021782397584508412
+   ],
+   "gap_tuned_constant": [
+    0.009650679072915783,
+    0.00947788382587493,
+    0.0018421069645166528,
+    0.0008022326488386805
+   ],
+   "kappa_best": [
+    0.4,
+    0.5,
+    0.5,
+    0.5
+   ],
+   "level_best": [
+    50.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    false
+   ]
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.6",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.6,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    498.9519319359405,
+    481.54038508483956,
+    464.27226770403547,
+    464.2679200517114
+   ],
+   "foresight_artifact_per_day": [
+    498.9519,
+    481.5404,
+    464.2723,
+    464.2679
+   ],
+   "named_rules_recomputed_per_day": [
+    508.47230637832945,
+    502.30580264695357,
+    481.3808415037739,
+    481.3808415037739
+   ],
+   "gap_artifact": [
+    0.01512795,
+    0.0329964,
+    0.02718565,
+    0.02719256
+   ],
+   "gap_named_recomputed": [
+    0.015127945193211331,
+    0.03299640163260022,
+    0.02718564992823002,
+    0.027192558379832976
+   ],
+   "gap_tuned_constant": [
+    0.0051522244391072666,
+    0.006340727095052991,
+    0.003519927284034292,
+    0.0035268357356372476
+   ],
+   "kappa_best": [
+    0.3,
+    0.3,
+    0.4,
+    0.4
+   ],
+   "level_best": [
+    60.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0|500|cost_300|A0.6",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "week",
+    "mode": "shift",
+    "size_kw": 500.0,
+    "criterion": "cost_300",
+    "kind": "cost",
+    "amplitude": 0.6,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    623.076377884096,
+    605.6648310329952,
+    588.3967136521909,
+    588.3923659998669
+   ],
+   "foresight_artifact_per_day": [
+    623.0764,
+    605.6648,
+    588.3967,
+    588.3924
+   ],
+   "named_rules_recomputed_per_day": [
+    633.5767345450107,
+    626.7828866460892,
+    605.5052874519293,
+    605.5052874519296
+   ],
+   "gap_artifact": [
+    0.01166962,
+    0.02346965,
+    0.01901369,
+    0.01901852
+   ],
+   "gap_named_recomputed": [
+    0.0116696198999544,
+    0.02346964869757467,
+    0.019013692555455985,
+    0.019018524338958117
+   ],
+   "gap_tuned_constant": [
+    0.003818525131210261,
+    0.007872276827684726,
+    0.0016410847031344425,
+    0.0016459164866363231
+   ],
+   "kappa_best": [
+    0.2,
+    0.3,
+    0.3,
+    0.3
+   ],
+   "level_best": [
+    60.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|week|weekly|shift+0K|compA800|hall200|water200|loss0|1000|cost_150|A0.6",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "week",
+    "mode": "weekly",
+    "size_kw": 1000.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.6,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    479.2360265964045,
+    473.87620466601646,
+    464.0633868600539,
+    448.8224589219033
+   ],
+   "foresight_artifact_per_day": [
+    479.236,
+    473.8762,
+    464.0634,
+    448.8225
+   ],
+   "named_rules_recomputed_per_day": [
+    483.34566768069567,
+    479.55989604687795,
+    470.1198643317254,
+    461.3107258514153
+   ],
+   "gap_artifact": [
+    0.00686234,
+    0.009490713,
+    0.0101132,
+    0.0208531
+   ],
+   "gap_named_recomputed": [
+    0.0068623407506372995,
+    0.009490713708800426,
+    0.010113197553439486,
+    0.020853096729737265
+   ],
+   "gap_tuned_constant": [
+    0.0068623407506372995,
+    0.009490713708800426,
+    0.0100742474831924,
+    0.013153383319850668
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.2,
+    0.3
+   ],
+   "level_best": [
+    40.0,
+    50.0,
+    40.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "key": "B|A|product_2|week|weekly|shift+0K|compA800|hall200|water200|loss0|500|cost_150|A0.6",
+   "meta": {
+    "site": "A",
+    "day": "product_2",
+    "horizon": "week",
+    "mode": "weekly",
+    "size_kw": 500.0,
+    "criterion": "cost_150",
+    "kind": "cost",
+    "amplitude": 0.6,
+    "weekend_reduction": 0.1
+   },
+   "capacities_kwh": [
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0
+   ],
+   "foresight_recomputed_per_day": [
+    480.4041615047529,
+    474.5155317925053,
+    464.29668478675075,
+    448.8224589219033
+   ],
+   "foresight_artifact_per_day": [
+    480.4042,
+    474.5155,
+    464.2967,
+    448.8225
+   ],
+   "named_rules_recomputed_per_day": [
+    483.3466864395519,
+    479.5609148057341,
+    470.1203737111535,
+    461.3107258514153
+   ],
+   "gap_artifact": [
+    0.004913472,
+    0.008424856,
+    0.009724483,
+    0.0208531
+   ],
+   "gap_named_recomputed": [
+    0.0049134725772093215,
+    0.008424856756128325,
+    0.009724483721394598,
+    0.020853096729737265
+   ],
+   "gap_tuned_constant": [
+    0.0049134725772093215,
+    0.008424856756128325,
+    0.009685533651147514,
+    0.013154233889312857
+   ],
+   "kappa_best": [
+    0.05,
+    0.05,
+    0.2,
+    0.3
+   ],
+   "level_best": [
+    40.0,
+    50.0,
+    40.0,
+    60.0
+   ],
+   "tuned_converged": [
+    true,
+    true,
+    true,
+    true
+   ]
+  }
+ ]
+}
