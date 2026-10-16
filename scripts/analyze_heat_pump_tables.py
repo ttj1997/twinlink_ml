@@ -42,7 +42,7 @@ from _common import (  # type: ignore[import-untyped]
     write_artifact,
 )
 
-SOURCE = REPO_ROOT / "artifacts" / "runs" / "gate_heat_pump.json"
+RUNS = REPO_ROOT / "artifacts" / "runs"
 CENTRAL = ("co2_today", "co2_2030", "cost_today", "cost_150", "cost_300")
 SITE_CO2_T_PER_A = 11500.0
 DAYS = 365.0
@@ -65,9 +65,10 @@ def stats(values: list[float]) -> dict[str, float]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=(__doc__ or "").split("\n")[0])
     parser.add_argument("--name", required=True)
+    parser.add_argument("--source", default="gate_heat_pump", help="source artifact name")
     args = parser.parse_args()
     require_clean_tree()
-    src = json.loads(SOURCE.read_text(encoding="utf-8"))
+    src = json.loads((RUNS / f"{args.source}.json").read_text(encoding="utf-8"))
     sa = src["stage_a"]
 
     refs: dict[str, Any] = {}
@@ -157,7 +158,8 @@ def main() -> int:
         {
             "_provenance": provenance(NO_HEAT_NETWORK),
             "name": args.name,
-            "source_artifact": "gate_heat_pump",
+            "source_artifact": args.source,
+            "solid_fraction_setting": src.get("solid_fraction_setting"),
             "source_provenance": src["provenance"],
             "tables": tables,
         },

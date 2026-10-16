@@ -268,6 +268,41 @@ def kind_of(name: str) -> str:
     return "co2" if name.startswith("co2") else "cost"
 
 
+# ---------------------------------------------------------------- solid-fraction setting
+
+SOLID_FRACTION_STUDY4 = 0.634
+SOLID_FRACTION_STUDY4_BAND = (0.60, 0.70)
+"""Solid fraction of the sprayed suspension (PLACEHOLDER) from the parallel study 4 (branch
+``plant-a-operating-point``, ``docs/23`` section 5): the energy balance of the two measured days of
+plant A needs at least 0.575 (product 1) and 0.625 (product 2); one value for both days 0.634, band
+0.60-0.70. It replaces the value 0.3 of Befund 99 (band 0.2-0.5, inadmissible by that balance) only
+when ``--solid-fraction`` / ``--solid-fraction-band`` are given; without them the script behaves
+exactly as pre-registered (the Befund-99 assumption, artifact ``gate_heat_pump``)."""
+
+_SETTINGS: dict[str, Any] = {"solid_fraction": None, "band": None}
+
+
+def configure(solid_fraction: float | None, band: tuple[float, float] | None) -> None:
+    """Set the solid fraction of every scenario and its realism band (``None``: Befund 99)."""
+    if (solid_fraction is None) != (band is None):
+        raise ValueError("give the solid fraction and its band together")
+    if band is not None and solid_fraction is not None and not band[0] <= solid_fraction <= band[1]:
+        raise ValueError("the solid fraction must lie inside its band")
+    _SETTINGS["solid_fraction"] = solid_fraction
+    _SETTINGS["band"] = None if band is None else (float(band[0]), float(band[1]))
+
+
+def realistic_streams(scen: Scenario) -> bool:
+    """Befund-99 realism of the streams; with a configured band the solid fraction is checked
+    against that band instead of the Befund-99 band (all other placeholders unchanged)."""
+    band = _SETTINGS["band"]
+    if band is None:
+        return streams_realistic(scen)
+    sf = scen.placeholders.solid_fraction
+    neutral = scen.with_placeholders(solid_fraction=0.3)  # inside the Befund-99 band
+    return bool(band[0] - 1e-12 <= sf <= band[1] + 1e-12 and streams_realistic(neutral))
+
+
 # -------------------------------------------------------------------------------- scenarios
 
 
@@ -295,8 +330,15 @@ def scenario(
         hall_kw=hall,
         water_kw=water,
         loss_per_h=loss,
-        placeholders=replace(Placeholders(exhaust_c_basis=basis), **ph),  # type: ignore[arg-type]
+        placeholders=replace(_base_placeholders(basis), **ph),
     )
+
+
+def _base_placeholders(basis: str) -> Placeholders:
+    base = Placeholders(exhaust_c_basis=basis)  # type: ignore[arg-type]
+    if _SETTINGS["solid_fraction"] is not None:
+        base = replace(base, solid_fraction=float(_SETTINGS["solid_fraction"]))
+    return base
 
 
 def main_grid_a() -> list[tuple[str, Scenario]]:
@@ -368,8 +410,14 @@ def sensitivity_a(base: Scenario) -> dict[str, tuple[Scenario, HeatPumpSpec, Eco
     ph("compressor_T=80-50", compressor_hot_in_celsius=80.0, compressor_hot_out_celsius=50.0)
     ph("compressor_T=75-45", compressor_hot_in_celsius=75.0, compressor_hot_out_celsius=45.0)
     ph("compressor_T=90-50", compressor_hot_in_celsius=90.0, compressor_hot_out_celsius=50.0)
-    ph("solid_fraction=0.2", solid_fraction=0.2)
-    ph("solid_fraction=0.5", solid_fraction=0.5)
+    if _SETTINGS["band"] is None:
+        ph("solid_fraction=0.2", solid_fraction=0.2)
+        ph("solid_fraction=0.5", solid_fraction=0.5)
+    else:
+        lo, hi = _SETTINGS["band"]
+        ph(f"solid_fraction={lo:g}", solid_fraction=lo)
+        ph(f"solid_fraction={hi:g}", solid_fraction=hi)
+        ph("solid_fraction=0.3 (Befund-99 assumption)", solid_fraction=0.3)
     ph("humidity=0.5", relative_humidity=0.5)
     ph("humidity=0.9", relative_humidity=0.9)
     if base.site != "A":
@@ -482,9 +530,11 @@ def sensitivity_b(rid: str, base: dict[str, Any]) -> dict[str, dict[str, Any]]:
 _FACTORY: StreamFactory | None = None
 
 
-def _init_worker(days: dict[str, MeasuredDay]) -> None:
+def _init_worker(days: dict[str, MeasuredDay], settings: dict[str, Any] | None = None) -> None:
     global _FACTORY
     _FACTORY = StreamFactory(days)
+    if settings is not None:
+        configure(settings["solid_fraction"], settings["band"])
 
 
 def _factory() -> StreamFactory:
@@ -559,7 +609,7 @@ def _task_a(task: dict[str, Any]) -> tuple[str, dict[str, Any]]:
     if kind == "grid":
         out = {
             "meta": task["meta"],
-            "realistic_streams": streams_realistic(scen),
+            "realistic_streams": realistic_streams(scen),
             "qualities": {},
         }
         for q in QUALITIES:
@@ -575,7 +625,7 @@ def _task_a(task: dict[str, Any]) -> tuple[str, dict[str, Any]]:
             scen, spec, list(SENS_CRITERIA), (SENS_SIZE_KW,), SENS_CRITERIA, base_eco=eco
         )
         rec["realistic"] = bool(
-            streams_realistic(scen)
+            realistic_streams(scen)
             and is_realistic(
                 spec=spec, economics=eco, minimum_pinch_k=scen.placeholders.minimum_pinch_k
             )
@@ -674,7 +724,7 @@ def _task_b(task: dict[str, Any]) -> tuple[str, dict[str, Any]]:
     size = float(task["size"])
     pair, how = _stage_b_pair(scen, spec, crit, size, signal)
     realistic = bool(
-        streams_realistic(scen)
+        realistic_streams(scen)
         and is_realistic(
             spec=spec,
             economics=eco_used,
@@ -750,7 +800,7 @@ def run_tasks(
                 print(f"  {i}/{len(tasks)} ({time.time() - started:.0f}s)", flush=True)
         return out
     with ProcessPoolExecutor(
-        max_workers=workers, initializer=_init_worker, initargs=(days,)
+        max_workers=workers, initializer=_init_worker, initargs=(days, dict(_SETTINGS))
     ) as pool:
         for i, (k, rec) in enumerate(pool.map(_run, tasks, chunksize=2), 1):
             out[k] = rec
@@ -968,7 +1018,25 @@ def main() -> int:
     parser.add_argument("--name", required=True, help="artifact name (never overwritten)")
     parser.add_argument("--workers", type=int, default=min(14, os.cpu_count() or 1))
     parser.add_argument("--limit", type=int, default=0, help="debug: N tasks per part, no artifact")
+    parser.add_argument(
+        "--solid-fraction",
+        type=float,
+        default=None,
+        help=f"solid fraction of every scenario (study 4: {SOLID_FRACTION_STUDY4}); default Befund 99",
+    )
+    parser.add_argument(
+        "--solid-fraction-band",
+        type=float,
+        nargs=2,
+        default=None,
+        metavar=("LO", "HI"),
+        help=f"realism band of the solid fraction (study 4: {SOLID_FRACTION_STUDY4_BAND})",
+    )
     args = parser.parse_args()
+    configure(
+        args.solid_fraction,
+        None if args.solid_fraction_band is None else tuple(args.solid_fraction_band),
+    )
     if not args.limit:
         require_clean_tree()
     started = time.time()
@@ -1051,6 +1119,12 @@ def main() -> int:
         "name": args.name,
         "raw_file_sha256": hashes,
         "placeholders_streams_default": asdict(Placeholders()),
+        "solid_fraction_setting": {
+            "solid_fraction": _SETTINGS["solid_fraction"],
+            "band": _SETTINGS["band"],
+            "note": "None = Befund-99 assumption (0.3, band 0.2-0.5); otherwise study 4 "
+            "(branch plant-a-operating-point, docs/23 section 5)",
+        },
         "placeholder_bands_streams": {k: list(v) for k, v in STREAM_BANDS.items()},
         "placeholders_heat_pump_default": asdict(HeatPumpSpec()),
         "placeholders_economics_default": asdict(Economics()),

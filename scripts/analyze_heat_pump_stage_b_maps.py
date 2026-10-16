@@ -36,15 +36,16 @@ from _common import (  # type: ignore[import-untyped]
     write_artifact,
 )
 
-SOURCE = REPO_ROOT / "artifacts" / "runs" / "gate_heat_pump.json"
+RUNS = REPO_ROOT / "artifacts" / "runs"
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=(__doc__ or "").split("\n")[0])
     parser.add_argument("--name", required=True)
+    parser.add_argument("--source", default="gate_heat_pump", help="source artifact name")
     args = parser.parse_args()
     require_clean_tree()
-    src = json.loads(SOURCE.read_text(encoding="utf-8"))
+    src = json.loads((RUNS / f"{args.source}.json").read_text(encoding="utf-8"))
     grid = src["stage_b"]["grid"]
     bands = src["stage_b"]["gate"]["amplitude_bands"]
     gaps: dict[tuple[str, str, float, float], list[float]] = defaultdict(list)
@@ -99,7 +100,8 @@ def main() -> int:
         {
             "_provenance": provenance(NO_HEAT_NETWORK),
             "name": args.name,
-            "source_artifact": "gate_heat_pump",
+            "source_artifact": args.source,
+            "solid_fraction_setting": src.get("solid_fraction_setting"),
             "source_provenance": src["provenance"],
             "amplitude_bands": bands,
             "maps_by_mode_and_kind": maps,

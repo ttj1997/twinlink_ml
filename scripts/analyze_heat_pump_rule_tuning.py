@@ -58,7 +58,7 @@ from twinlink_ml.heatpump.storage import RULES, coupled_pieces, simulate_rule, s
 from twinlink_ml.storage_timeslice.profiles import Clock
 from twinlink_ml.storage_timeslice.table import storage_stream_temperatures
 
-SOURCE = REPO_ROOT / "artifacts" / "runs" / "gate_heat_pump.json"
+RUNS = REPO_ROOT / "artifacts" / "runs"
 KAPPAS = (0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0 - 1e-6)
 GAP = 0.02
 
@@ -145,11 +145,15 @@ def _run(task: dict[str, Any]) -> dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=(__doc__ or "").split("\n")[0])
     parser.add_argument("--name", required=True)
+    parser.add_argument("--source", default="gate_heat_pump", help="source artifact name")
     parser.add_argument("--workers", type=int, default=min(14, os.cpu_count() or 1))
     args = parser.parse_args()
     require_clean_tree()
-    source = json.loads(SOURCE.read_text(encoding="utf-8"))
+    source = json.loads((RUNS / f"{args.source}.json").read_text(encoding="utf-8"))
     grid: dict[str, Any] = source["stage_b"]["grid"]
+    sf = source.get("solid_fraction_setting") or {"solid_fraction": None, "band": None}
+    settings = {"solid_fraction": sf["solid_fraction"], "band": sf["band"]}
+    ghp.configure(settings["solid_fraction"], None if sf["band"] is None else tuple(sf["band"]))
     l1_cells = [
         (k, r["meta"], r["capacities_kwh"][i])
         for k, r in grid.items()
@@ -177,7 +181,7 @@ def main() -> int:
     days, hashes = ghp.load_days()
     print(f"{len(l1_cells)} L1 cells in {len(tasks)} runs", flush=True)
     with ProcessPoolExecutor(
-        max_workers=args.workers, initializer=ghp._init_worker, initargs=(days,)
+        max_workers=args.workers, initializer=ghp._init_worker, initargs=(days, settings)
     ) as pool:
         results = list(pool.map(_run, tasks))
     cells_after: list[dict[str, Any]] = []
@@ -233,7 +237,8 @@ def main() -> int:
             "_provenance": provenance(NO_HEAT_NETWORK),
             "name": args.name,
             "declared_post_hoc": True,
-            "source_artifact": "gate_heat_pump",
+            "source_artifact": args.source,
+            "solid_fraction_setting": settings,
             "source_provenance": source["provenance"],
             "raw_file_sha256": hashes,
             "kappas": list(KAPPAS),
