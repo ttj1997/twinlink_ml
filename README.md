@@ -91,6 +91,16 @@ post-hoc, marked reading with a plain rule gives L2. The saving comes entirely f
 discarded heat (a placeholder without a measured source); pure shifting in time saves about
 nothing. The storage capacity corresponds to about one hour of heating demand. Decision: no S3.
 
+**Storage test, time-slice pinch (Befund 99; scenario band, not a plant statement).** An ideal
+storage is compared with using heat only when it occurs. The pre-registered gate reads **L2**: a
+rule without foresight reaches the ideal storage (largest gap 3.9e-15). A greedy rule equals the
+programme by structure, so L1 (RL or MPC justified) cannot occur in this model; this says nothing
+about other limits. A saving above 5 % exists only through an assumed compressor load profile (a
+placeholder; with constant operation there is nothing to shift), in 339 of 2240 scenarios, all on
+the product-2 day. In the full network of the two pre-registered references the saving is 0: the
+process air absorbs the compressor heat directly, the network replaces the storage. Every number
+carries its scenario; none is a statement about the plant.
+
 **One-step bandit (Befund 93, follow-up of Befund 68).** A residual action and a separated
 moisture cost lift SAC from a negative to a clearly positive closed-regret fraction, but no cell
 meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of

@@ -1,0 +1,568 @@
+{
+ "provenance": {
+  "git/commit": "fcbc982c981e92dfdc78097db1a75ef0eb1b93eb",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used"
+ },
+ "name": "gate_storage_timeslice_posthoc_sensitivity",
+ "post_hoc": true,
+ "raw_file_sha256": {
+  "product_1": "e1ec8c7b72e35fa6a11b4fe74a2263907f8a245c449c5e4b6f659ce8b24998b6",
+  "product_2": "40a66b790032dcbf9d10d2155dc281d4e43825404bcd7892fb73f5b849938bdd"
+ },
+ "sensitivity": {
+  "R3": {
+   "base": "A+C|product_2|week|shift|shift+0K|compA800|hall200|water200|loss0",
+   "capacity_kwh": 5000.0,
+   "base_direct_kwh_per_day": 12833.357087018305,
+   "base_saving_kwh_per_day": 28.628488539698083,
+   "ranking": [
+    {
+     "variant": "water_kw=0",
+     "saving_kwh_per_day": 1536.3882620955192,
+     "delta_saving_kwh_per_day": 1507.759773555821,
+     "saving_fraction": 0.1379025353851594,
+     "delta_saving_percentage_points": 13.567174819942313,
+     "direct_kwh_per_day": 11141.116860574124
+    },
+    {
+     "variant": "compressor_c_gwh_per_a=3.6",
+     "saving_kwh_per_day": 1365.8105372593018,
+     "delta_saving_kwh_per_day": 1337.1820487196037,
+     "saving_fraction": 0.12550097542764613,
+     "delta_saving_percentage_points": 12.327018824190986,
+     "direct_kwh_per_day": 10882.867902861197
+    },
+    {
+     "variant": "compressor_temperatures=75-45",
+     "saving_kwh_per_day": 1161.6050431337972,
+     "delta_saving_kwh_per_day": 1132.976554594099,
+     "saving_fraction": 0.0807059912542006,
+     "delta_saving_percentage_points": 7.847520406846434,
+     "direct_kwh_per_day": 14393.045981866158
+    },
+    {
+     "variant": "compressor_a_kw=1200",
+     "saving_kwh_per_day": 868.8954317975677,
+     "delta_saving_kwh_per_day": 840.2669432578696,
+     "saving_fraction": 0.09734436514782548,
+     "delta_saving_percentage_points": 9.511357796208921,
+     "direct_kwh_per_day": 8925.996183529247
+    },
+    {
+     "variant": "water_kw=100",
+     "saving_kwh_per_day": 736.3882620955137,
+     "delta_saving_kwh_per_day": 707.7597735558156,
+     "saving_fraction": 0.06166829038637418,
+     "delta_saving_percentage_points": 5.943750320063792,
+     "direct_kwh_per_day": 11941.11686057412
+    },
+    {
+     "variant": "c_line_nm3_per_h=15000.0",
+     "saving_kwh_per_day": 672.7024089128445,
+     "delta_saving_kwh_per_day": 644.0739203731464,
+     "saving_fraction": 0.06428343964968439,
+     "delta_saving_percentage_points": 6.205265246394812,
+     "direct_kwh_per_day": 10464.629966578761
+    },
+    {
+     "variant": "minimum_pinch_k=30.0",
+     "saving_kwh_per_day": 390.034663939834,
+     "delta_saving_kwh_per_day": 361.4061754001359,
+     "saving_fraction": 0.02627416732586976,
+     "delta_saving_percentage_points": 2.4043380140133497,
+     "direct_kwh_per_day": 14844.796377459417
+    },
+    {
+     "variant": "shift_window=07-19",
+     "saving_kwh_per_day": 326.9325354719822,
+     "delta_saving_kwh_per_day": 298.3040469322841,
+     "saving_fraction": 0.02710194490672487,
+     "delta_saving_percentage_points": 2.487115772098861,
+     "direct_kwh_per_day": 12063.065458850506
+    },
+    {
+     "variant": "minimum_pinch_k=10.0",
+     "saving_kwh_per_day": 275.83599933329333,
+     "delta_saving_kwh_per_day": 247.20751079359525,
+     "saving_fraction": 0.034453246048510675,
+     "delta_saving_percentage_points": 3.222245886277441,
+     "direct_kwh_per_day": 8006.096114859895
+    },
+    {
+     "variant": "hall_kw=0",
+     "saving_kwh_per_day": 221.2969858122524,
+     "delta_saving_kwh_per_day": 192.6684972725543,
+     "saving_fraction": 0.017646323770716454,
+     "delta_saving_percentage_points": 1.5415536584980192,
+     "direct_kwh_per_day": 12540.684886417426
+    },
+    {
+     "variant": "low_fraction=0.1",
+     "saving_kwh_per_day": 208.65917165052088,
+     "delta_saving_kwh_per_day": 180.0306831108228,
+     "saving_fraction": 0.014598300627272203,
+     "delta_saving_percentage_points": 1.236751344153594,
+     "direct_kwh_per_day": 14293.387770129128
+    },
+    {
+     "variant": "ambient_shift_k=+5",
+     "saving_kwh_per_day": 145.89328929195835,
+     "delta_saving_kwh_per_day": 117.26480075226027,
+     "saving_fraction": 0.012565945155622362,
+     "delta_saving_percentage_points": 1.03351579698861,
+     "direct_kwh_per_day": 11610.2121635221
+    },
+    {
+     "variant": "hall_kw=100",
+     "saving_kwh_per_day": 78.84262395388214,
+     "delta_saving_kwh_per_day": 50.21413541418406,
+     "saving_fraction": 0.006237104834766309,
+     "delta_saving_percentage_points": 0.40063176490300473,
+     "direct_kwh_per_day": 12640.900873495772
+    },
+    {
+     "variant": "compressor_a_kw=400",
+     "saving_kwh_per_day": 0.0,
+     "delta_saving_kwh_per_day": -28.628488539698083,
+     "saving_fraction": 0.0,
+     "delta_saving_percentage_points": -0.22307871857362624,
+     "direct_kwh_per_day": 20164.728598478607
+    },
+    {
+     "variant": "compressor_temperatures=90-50",
+     "saving_kwh_per_day": 0.0,
+     "delta_saving_kwh_per_day": -28.628488539698083,
+     "saving_fraction": 0.0,
+     "delta_saving_percentage_points": -0.22307871857362624,
+     "direct_kwh_per_day": 12804.728598478607
+    },
+    {
+     "variant": "c_line_nm3_per_h=25000.0",
+     "saving_kwh_per_day": 0.0,
+     "delta_saving_kwh_per_day": -28.628488539698083,
+     "saving_fraction": 0.0,
+     "delta_saving_percentage_points": -0.22307871857362624,
+     "direct_kwh_per_day": 15817.529639291295
+    },
+    {
+     "variant": "compressor_c_gwh_per_a=1.2",
+     "saving_kwh_per_day": 0.0,
+     "delta_saving_kwh_per_day": -28.628488539698083,
+     "saving_fraction": 0.0,
+     "delta_saving_percentage_points": -0.22307871857362624,
+     "direct_kwh_per_day": 16092.39983135532
+    },
+    {
+     "variant": "shift_window=05-23",
+     "saving_kwh_per_day": 0.0,
+     "delta_saving_kwh_per_day": -28.628488539698083,
+     "saving_fraction": 0.0,
+     "delta_saving_percentage_points": -0.22307871857362624,
+     "direct_kwh_per_day": 13590.77121091682
+    },
+    {
+     "variant": "ambient_shift_k=-10",
+     "saving_kwh_per_day": 0.0,
+     "delta_saving_kwh_per_day": -28.628488539698083,
+     "saving_fraction": 0.0,
+     "delta_saving_percentage_points": -0.22307871857362624,
+     "direct_kwh_per_day": 13996.918656155662
+    },
+    {
+     "variant": "day=product_1",
+     "saving_kwh_per_day": 0.0,
+     "delta_saving_kwh_per_day": -28.628488539698083,
+     "saving_fraction": 0.0,
+     "delta_saving_percentage_points": -0.22307871857362624,
+     "direct_kwh_per_day": 10562.57030651438
+    },
+    {
+     "variant": "low_fraction=0.5",
+     "saving_kwh_per_day": 3.156017365554362,
+     "delta_saving_kwh_per_day": -25.47247117414372,
+     "saving_fraction": 0.00027377246309497814,
+     "delta_saving_percentage_points": -0.19570147226412846,
+     "direct_kwh_per_day": 11527.884615844161
+    },
+    {
+     "variant": "relative_humidity=0.5",
+     "saving_kwh_per_day": 41.1334494446055,
+     "delta_saving_kwh_per_day": 12.50496090490742,
+     "saving_fraction": 0.0032320694452165244,
+     "delta_saving_percentage_points": 0.1001282259480262,
+     "direct_kwh_per_day": 12726.660160561578
+    },
+    {
+     "variant": "relative_humidity=0.9",
+     "saving_kwh_per_day": 21.090249709266573,
+     "delta_saving_kwh_per_day": -7.53823883043151,
+     "saving_fraction": 0.0016351892569594286,
+     "delta_saving_percentage_points": -0.059559792877683385,
+     "direct_kwh_per_day": 12897.74233747296
+    },
+    {
+     "variant": "loss_per_h=0.01",
+     "saving_kwh_per_day": 27.88440357228137,
+     "delta_saving_kwh_per_day": -0.7440849674167112,
+     "saving_fraction": 0.002172806646242867,
+     "delta_saving_percentage_points": -0.005798053949339528,
+     "direct_kwh_per_day": 12833.357087018305
+    },
+    {
+     "variant": "loss_per_h=0.005",
+     "saving_kwh_per_day": 28.25269699193268,
+     "delta_saving_kwh_per_day": -0.37579154776540236,
+     "saving_fraction": 0.002201504781668699,
+     "delta_saving_percentage_points": -0.002928240406756353,
+     "direct_kwh_per_day": 12833.357087018305
+    },
+    {
+     "variant": "hall_temperatures=40-30",
+     "saving_kwh_per_day": 28.628488539692626,
+     "delta_saving_kwh_per_day": -5.4569682106375694e-12,
+     "saving_fraction": 0.0022307871857358383,
+     "delta_saving_percentage_points": -4.2413988987632933e-14,
+     "direct_kwh_per_day": 12833.3570870183
+    },
+    {
+     "variant": "hall_temperatures=60-45",
+     "saving_kwh_per_day": 28.628488539692626,
+     "delta_saving_kwh_per_day": -5.4569682106375694e-12,
+     "saving_fraction": 0.0022307871857358383,
+     "delta_saving_percentage_points": -4.2413988987632933e-14,
+     "direct_kwh_per_day": 12833.3570870183
+    },
+    {
+     "variant": "storage_approach=dT_min/2",
+     "saving_kwh_per_day": 28.628488539696264,
+     "delta_saving_kwh_per_day": -1.8189894035458565e-12,
+     "saving_fraction": 0.002230787185736121,
+     "delta_saving_percentage_points": -1.4137996329210978e-14,
+     "direct_kwh_per_day": 12833.357087018303
+    },
+    {
+     "variant": "cold_temperature_celsius=10.0",
+     "saving_kwh_per_day": 28.628488539698083,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.0022307871857362624,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 12833.357087018305
+    },
+    {
+     "variant": "cold_temperature_celsius=25.0",
+     "saving_kwh_per_day": 28.628488539698083,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.0022307871857362624,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 12833.357087018305
+    },
+    {
+     "variant": "exhaust_c_basis=annual",
+     "saving_kwh_per_day": 28.628488539698083,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.0022307871857362624,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 12833.357087018305
+    },
+    {
+     "variant": "solid_fraction=0.2",
+     "saving_kwh_per_day": 28.628488539698083,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.0022307871857362624,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 12833.357087018305
+    },
+    {
+     "variant": "solid_fraction=0.5",
+     "saving_kwh_per_day": 28.628488539698083,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.0022307871857362624,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 12833.357087018305
+    }
+   ]
+  },
+  "R4": {
+   "base": "A|product_2|day|shift|shift+0K|compA1200|hall200|water0|loss0",
+   "capacity_kwh": 5000.0,
+   "base_direct_kwh_per_day": 6612.515499263646,
+   "base_saving_kwh_per_day": 1244.5867995030158,
+   "ranking": [
+    {
+     "variant": "compressor_a_kw=400",
+     "saving_kwh_per_day": 0.0,
+     "delta_saving_kwh_per_day": -1244.5867995030158,
+     "saving_fraction": 0.0,
+     "delta_saving_percentage_points": -18.82168442012136,
+     "direct_kwh_per_day": 11488.86690098127
+    },
+    {
+     "variant": "day=product_1",
+     "saving_kwh_per_day": 0.0,
+     "delta_saving_kwh_per_day": -1244.5867995030158,
+     "saving_fraction": 0.0,
+     "delta_saving_percentage_points": -18.82168442012136,
+     "direct_kwh_per_day": 6704.785562200922
+    },
+    {
+     "variant": "low_fraction=0.5",
+     "saving_kwh_per_day": 32.97434581905327,
+     "delta_saving_kwh_per_day": -1211.6124536839625,
+     "saving_fraction": 0.006770189404310867,
+     "delta_saving_percentage_points": -18.14466547969027,
+     "direct_kwh_per_day": 4870.5204315343235
+    },
+    {
+     "variant": "minimum_pinch_k=30.0",
+     "saving_kwh_per_day": 291.08838835998176,
+     "delta_saving_kwh_per_day": -953.498411143034,
+     "saving_fraction": 0.03401622221630016,
+     "delta_saving_percentage_points": -15.420062198491344,
+     "direct_kwh_per_day": 8557.340274561582
+    },
+    {
+     "variant": "compressor_temperatures=75-45",
+     "saving_kwh_per_day": 802.5952097980771,
+     "delta_saving_kwh_per_day": -441.99158970493863,
+     "saving_fraction": 0.09559323580506253,
+     "delta_saving_percentage_points": -9.262360839615107,
+     "direct_kwh_per_day": 8395.941439149112
+    },
+    {
+     "variant": "shift_window=07-19",
+     "saving_kwh_per_day": 1658.8734674491016,
+     "delta_saving_kwh_per_day": 414.2866679460858,
+     "saving_fraction": 0.21867198395340148,
+     "delta_saving_percentage_points": 3.045513975218789,
+     "direct_kwh_per_day": 7586.1271181524735
+    },
+    {
+     "variant": "compressor_temperatures=90-50",
+     "saving_kwh_per_day": 1604.5867995030148,
+     "delta_saving_kwh_per_day": 359.9999999999991,
+     "saving_fraction": 0.2804828153530913,
+     "delta_saving_percentage_points": 9.226597115187769,
+     "direct_kwh_per_day": 5720.802529320912
+    },
+    {
+     "variant": "storage_approach=dT_min/2",
+     "saving_kwh_per_day": 1602.0281608379455,
+     "delta_saving_kwh_per_day": 357.44136133492975,
+     "saving_fraction": 0.24227212185987973,
+     "delta_saving_percentage_points": 5.405527765866614,
+     "direct_kwh_per_day": 6612.515499263646
+    },
+    {
+     "variant": "ambient_shift_k=+5",
+     "saving_kwh_per_day": 889.5560129291025,
+     "delta_saving_kwh_per_day": -355.03078657391325,
+     "saving_fraction": 0.1431245241698086,
+     "delta_saving_percentage_points": -4.509232003140501,
+     "direct_kwh_per_day": 6215.259181394365
+    },
+    {
+     "variant": "low_fraction=0.1",
+     "saving_kwh_per_day": 1589.1014320131571,
+     "delta_saving_kwh_per_day": 344.5146325101414,
+     "saving_fraction": 0.1862406733571473,
+     "delta_saving_percentage_points": -0.19761708440662884,
+     "direct_kwh_per_day": 8532.515499263645
+    },
+    {
+     "variant": "shift_window=05-23",
+     "saving_kwh_per_day": 922.4033462637108,
+     "delta_saving_kwh_per_day": -322.183453239305,
+     "saving_fraction": 0.1502863237777946,
+     "delta_saving_percentage_points": -3.793052042341899,
+     "direct_kwh_per_day": 6137.63996002409
+    },
+    {
+     "variant": "minimum_pinch_k=10.0",
+     "saving_kwh_per_day": 1508.2870300572663,
+     "delta_saving_kwh_per_day": 263.70023055425054,
+     "saving_fraction": 0.3816937100764037,
+     "delta_saving_percentage_points": 19.347686587519007,
+     "direct_kwh_per_day": 3951.5637544966416
+    },
+    {
+     "variant": "ambient_shift_k=-10",
+     "saving_kwh_per_day": 1458.9110737630072,
+     "delta_saving_kwh_per_day": 214.3242742599914,
+     "saving_fraction": 0.20230979362591375,
+     "delta_saving_percentage_points": 1.4092949424700159,
+     "direct_kwh_per_day": 7211.272611254031
+    },
+    {
+     "variant": "hall_temperatures=40-30",
+     "saving_kwh_per_day": 1342.6162817723016,
+     "delta_saving_kwh_per_day": 98.02948226928584,
+     "saving_fraction": 0.20304168389802826,
+     "delta_saving_percentage_points": 1.482483969681467,
+     "direct_kwh_per_day": 6612.515499263645
+    },
+    {
+     "variant": "hall_kw=0",
+     "saving_kwh_per_day": 1195.5720583683715,
+     "delta_saving_kwh_per_day": -49.01474113464428,
+     "saving_fraction": 0.18491645966045933,
+     "delta_saving_percentage_points": -0.3300384540754264,
+     "direct_kwh_per_day": 6465.471275859715
+    },
+    {
+     "variant": "hall_temperatures=60-45",
+     "saving_kwh_per_day": 1195.5720583683724,
+     "delta_saving_kwh_per_day": -49.01474113464337,
+     "saving_fraction": 0.1808044243528062,
+     "delta_saving_percentage_points": -0.7412419848407403,
+     "direct_kwh_per_day": 6612.515499263646
+    },
+    {
+     "variant": "hall_kw=100",
+     "saving_kwh_per_day": 1220.0794289356936,
+     "delta_saving_kwh_per_day": -24.50737056732214,
+     "saving_fraction": 0.1865852061047347,
+     "delta_saving_percentage_points": -0.1631638096478899,
+     "direct_kwh_per_day": 6538.993387561681
+    },
+    {
+     "variant": "relative_humidity=0.5",
+     "saving_kwh_per_day": 1234.9008758604396,
+     "delta_saving_kwh_per_day": -9.6859236425762,
+     "saving_fraction": 0.18783503410830102,
+     "delta_saving_percentage_points": -0.03818100929125767,
+     "direct_kwh_per_day": 6574.390564160818
+    },
+    {
+     "variant": "relative_humidity=0.9",
+     "saving_kwh_per_day": 1250.434026454749,
+     "delta_saving_kwh_per_day": 5.847226951733319,
+     "saving_fraction": 0.18844537302285216,
+     "delta_saving_percentage_points": 0.022852882163856836,
+     "direct_kwh_per_day": 6635.525226205013
+    },
+    {
+     "variant": "cold_temperature_celsius=10.0",
+     "saving_kwh_per_day": 1244.5867995030158,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.1882168442012136,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 6612.515499263646
+    },
+    {
+     "variant": "cold_temperature_celsius=25.0",
+     "saving_kwh_per_day": 1244.5867995030158,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.1882168442012136,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 6612.515499263646
+    },
+    {
+     "variant": "compressor_a_kw=1200",
+     "saving_kwh_per_day": 1244.5867995030158,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.1882168442012136,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 6612.515499263646
+    },
+    {
+     "variant": "water_kw=0",
+     "saving_kwh_per_day": 1244.5867995030158,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.1882168442012136,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 6612.515499263646
+    },
+    {
+     "variant": "water_kw=100",
+     "saving_kwh_per_day": 1244.5867995030158,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.1882168442012136,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 6612.515499263646
+    },
+    {
+     "variant": "c_line_nm3_per_h=15000.0",
+     "saving_kwh_per_day": 1244.5867995030158,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.1882168442012136,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 6612.515499263646
+    },
+    {
+     "variant": "c_line_nm3_per_h=25000.0",
+     "saving_kwh_per_day": 1244.5867995030158,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.1882168442012136,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 6612.515499263646
+    },
+    {
+     "variant": "exhaust_c_basis=annual",
+     "saving_kwh_per_day": 1244.5867995030158,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.1882168442012136,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 6612.515499263646
+    },
+    {
+     "variant": "compressor_c_gwh_per_a=1.2",
+     "saving_kwh_per_day": 1244.5867995030158,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.1882168442012136,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 6612.515499263646
+    },
+    {
+     "variant": "compressor_c_gwh_per_a=3.6",
+     "saving_kwh_per_day": 1244.5867995030158,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.1882168442012136,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 6612.515499263646
+    },
+    {
+     "variant": "solid_fraction=0.2",
+     "saving_kwh_per_day": 1244.5867995030158,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.1882168442012136,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 6612.515499263646
+    },
+    {
+     "variant": "solid_fraction=0.5",
+     "saving_kwh_per_day": 1244.5867995030158,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.1882168442012136,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 6612.515499263646
+    },
+    {
+     "variant": "loss_per_h=0.005",
+     "saving_kwh_per_day": 1244.5867995030158,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.1882168442012136,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 6612.515499263646
+    },
+    {
+     "variant": "loss_per_h=0.01",
+     "saving_kwh_per_day": 1244.5867995030158,
+     "delta_saving_kwh_per_day": 0.0,
+     "saving_fraction": 0.1882168442012136,
+     "delta_saving_percentage_points": 0.0,
+     "direct_kwh_per_day": 6612.515499263646
+    }
+   ]
+  }
+ },
+ "runtime_seconds": 56.580355405807495
+}

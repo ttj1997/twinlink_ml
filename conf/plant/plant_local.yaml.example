@@ -17,3 +17,13 @@ roles:
 # Exported but NOT used by the storage model (open question, see docs/18):
 unused_roles:
   auxiliary_air_heater_outlet_temperature: [TAG_AUX_HEATER_OUTLET_T]
+
+# Roles of the time-slice study (storage test 1, twinlink_ml.storage_timeslice.plant). Several tags
+# under one role are averaged, except atomising_air_flow (nozzles are summed).
+timeslice_roles:
+  ambient_temperature: [TAG_AMBIENT_T]                    # intake air, degC
+  process_air_flow: [TAG_PROCESS_AIR_FLOW]                # Nm3/h
+  supply_air_temperature: [TAG_SUPPLY_AIR_T_1, TAG_SUPPLY_AIR_T_2, TAG_SUPPLY_AIR_T_3]  # degC
+  exhaust_outlet_temperature: [TAG_EXHAUST_OUTLET_T]      # degC, before the filter
+  spray_rate: [TAG_SPRAY_RATE]                            # kg/h
+  atomising_air_flow: [TAG_NOZZLE_AIR_1, TAG_NOZZLE_AIR_2, TAG_NOZZLE_AIR_3, TAG_NOZZLE_AIR_4, TAG_NOZZLE_AIR_5, TAG_NOZZLE_AIR_6]  # Nm3/h each
