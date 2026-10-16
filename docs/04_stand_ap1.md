@@ -10293,3 +10293,38 @@ Margin part = Oracle(k m) - Oracle(m), policy part = RL(k m) - Oracle(k m), both
 **Tests.** Full suite at commit `13eadb6` (code of `472b871` plus run records and artifacts): 961 passed, 15 skipped, 0 failed (counted from the progress dots; the `-q` configuration prints no summary line; the 15 skips are the same number as in Befund 93); new tests `tests/test_bres_margin_analysis.py` (6). `test_denylist.py` ran with `local/denylist.txt` and passed; ruff clean.
 
 **Procedure note.** The first start of the 15 runs was killed by a restart of the machine at 10 000-20 000 steps (SAC state, replay buffer and optimiser state are not saved, so a continuation is not possible); the partial records were moved out of the repository unchanged and all 15 runs were started afresh with the same commit, settings and prefixes; the finished oracle references of that start (k = 1, 2) were kept. A second start attempt stopped at once at the clean-tree check (reference artifacts uncommitted, no run executed); after committing the references the 15 runs ran through. The re-run values of k = 2, seed 0 at 2 500 and 10 000 steps equal those of the aborted start (checked on that run only). Artifacts: `bres_margin`, `bres_margin_ref_*`; records `rl_bandit_residual_b_k*_ressep_*` (commits `472b871`, `886878c`, `a7a38e3`, analysis artifact `13eadb6`).
+
+
+### Befund 97 (2026-10-16): joint timing measurement on an idle machine -- inference cost of the methods of study A (incl. the simulator channel of the hybrid) and of the eight architectures of the re-run
+
+**What was measured.** Script `scripts/measure_joint_timing.py` (commit `6b77a16`, committed before the run; artifacts `joint_timing_idle` and `a1_inference_time_v2_idle`, both from a clean tree; the run itself was started by an unattended session after the merges of Befunde 94-96, nothing else was started on the machine). Machine: AMD Ryzen 7 9700X (8 cores, 16 logical CPUs), one thread (`OMP/MKL/OPENBLAS` = 1, `torch.set_num_threads(1)`), warm-up excluded, 300 repeats for the batch of one window (latency), 15 for the whole test set (throughput). Idle criterion fixed in the script: machine load <= 5 % and no other Python process above 5 % of one core; met at the start (load 0 %), between the parts (3 %) and at the end (1 %); no other Python process in any check. This is the first measurement of study A on an idle machine (the two earlier ones, `a1_inference_time_1thread` and `a1_inference_time_v2_background`, ran beside foreign processes; Befund 88 f). Part A: study A, plant P0, seed 1, 64 runs, as in the earlier measurement. Part B: the eight architectures of the re-run on the pool of arm N (preset version 2), seed 1, `n_train` 64, excited test set (4352 windows, as in part A); the networks were fitted for 2 epochs only (the weights do not change the cost of `predict`; their accuracy is not used).
+
+**Part A: study A, microseconds (median), batch of one window / per window in the batch.**
+
+| method | latency, batch 1 | per window, batched |
+|---|---|---|
+| persistence | 3 | 0.2 |
+| ARX | 248 | 4.0 |
+| simulator only | 7 | 0.7 |
+| from scratch (LSTM) | 2966 | 16.7 |
+| hybrid, network part | 2987 | 16.9 |
+| pretrain + fine-tune (LSTM) | 2967 | 17.7 |
+
+**The hybrid needs the simulator ahead of the prediction.** One horizon (36 steps of 25 s) of the open simulation for one window: 253 136 us (median; minimum 167 218), i.e. **98.8 % of the hybrid's total real-time cost of 256 123 us** (network 2987 us). Batched over all 4352 test windows the simulator channel costs 250.8 us per window against 16.9 us for the network (hybrid total 267.7 us per window). If the channel is computed ahead for the planned inputs of a whole run (7.33 s per 8 h run, 1152 steps), the cost is 6361 us per prediction at one prediction per sample, total 9349 us. One simulator step costs 7103 us; the steady-state solve at the start of a run 0.16 s. The network alone (2987 us) is not the cost of the hybrid. The earlier non-idle figures (hybrid total 231 860 us, from scratch 2220 us, pretrain + fine-tune 3498 us) lie within the spread of foreign load.
+
+**Part B: the eight architectures (arm N pool, `n_train` 64), microseconds.**
+
+| method | parameters | latency, batch 1 | per window, batched | fit, s per epoch (2-epoch fit, indicative) |
+|---|---|---|---|---|
+| persistence | - | 3 | 0.2 | - |
+| static regression | 45 | 5 | 1.7 | - |
+| ARX | 102 | 246 | 3.9 | - |
+| GRU | 42 819 | 4753 | 123.7 | 4.3 |
+| LSTM | 57 027 | 6502 | 57.2 | 4.7 |
+| Transformer | 23 523 | 31 567 | 2691.8 | 67.6 |
+| xLSTM | 8649 | 27 487 | 936.8 | 27.8 |
+| Mamba | 8139 | 14 950 | 415.8 | 14.8 |
+
+Reading: per prediction every learned architecture is far below the sample time of 25 s; the batched cost per window orders LSTM < GRU < Mamba < xLSTM < Transformer, the latency of one window GRU < LSTM < Mamba < xLSTM < Transformer. **The LSTM is faster than the GRU per window in the batch although it has 33 % more parameters (57 027 against 42 819), and the GRU is faster at batch 1 (4753 against 6502 us)**; the observation "LSTM faster than GRU" (Befund 63a, a different machine and model set, not compared here) is therefore, on this machine, a statement about the batch, not about the latency of one window. The fit times per epoch come from a 2-epoch fit and include setup; they are an indication of the training cost, not the cost of a training to convergence, and not comparable with the records of the re-run (parallel load).
+
+**Caveats.** One run of the whole measurement (no repetition across sessions); the medians of 300 (batch 1) and 15 (batch) repeats carry the spread of one process. The machine-load probe of single models shows isolated readings above the idle limit after the measurement of the simulator-only model (74 % after, 12 % before; a 5 s probe of the machine, not of the process; a model of 7 us, not affecting any statement here). Weights untrained to convergence; the inference cost does not depend on them. Placeholders: none of the numbers is a statement about the plant. Part B times only `predict` (no data windowing, no evaluation).
