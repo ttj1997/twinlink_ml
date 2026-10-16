@@ -30,6 +30,11 @@ Integrator = Literal["rk4", "euler"]
 SorptionIsothermKind = Literal["constant", "gab"]
 
 
+MAX_EXHAUST_RECIRCULATION_FRACTION = 0.95
+"""Upper bound of ``OperationConfig.exhaust_recirculation_fraction``: at ``r -> 1`` the purge
+flow vanishes and the inlet humidity diverges (the water leaves only with the purge)."""
+
+
 class PlaceholderConfigWarning(UserWarning):
     """Wird beim Laden einer Config mit Platzhalterwerten ausgelöst.
 
@@ -244,6 +249,14 @@ class EnergyConfig:
     compressor_efficiency: float = 0.50
     target: EnergyTarget = "power_kw"
     reference_value: float | None = None
+    # Pressure-loss coefficient of the exhaust recirculation duct (damper, duct, filter), referred
+    # to the superficial velocity of the RECIRCULATED flow over the bed cross-section,
+    # ``dp_rec = zeta_rec * rho_g * (r * u)**2 / 2``; the extra fan power is
+    # ``r * u * A * dp_rec / fan_efficiency``, i.e. proportional to the recirculated volume flow
+    # cubed. ``None`` (default): no extra fan power. Only read when
+    # ``OperationConfig.exhaust_recirculation_fraction`` is set. PLACEHOLDER without a source
+    # (study docs/22). Enters the fingerprint ONLY when set (``without_unset_optional_fields``).
+    recirculation_duct_loss_coefficient: float | None = None
 
     def __post_init__(self) -> None:
         for name in (
@@ -255,6 +268,11 @@ class EnergyConfig:
             value = getattr(self, name)
             if not 0.0 < value <= 1.0:
                 raise ValueError(f"{name} muss in (0, 1] liegen, ist {value}")
+        if (
+            self.recirculation_duct_loss_coefficient is not None
+            and self.recirculation_duct_loss_coefficient < 0.0
+        ):
+            raise ValueError("recirculation_duct_loss_coefficient must not be negative when set")
 
 
 @dataclass(frozen=True, slots=True)
@@ -305,10 +323,27 @@ class OperationConfig:
     suspension_temperature_celsius: float = 20.0
     initial_moisture_kg_per_kg: float = 0.005
     initial_bed_temperature_celsius: float = 55.0
+    # Exhaust recirculation: fraction ``r`` of the dry air through the bed that is taken from the
+    # exhaust (bed outlet state, T_bed and Y_out) and mixed with fresh ambient air ahead of the air
+    # heater; the heater then brings the mixture to the inlet temperature. ``None`` (default):
+    # fresh air only, exactly the behaviour of every existing config (a different config from
+    # ``0.0``, which is numerically the same). Allowed range [0, 0.95]. Read in
+    # ``greybox._rhs`` (inlet humidity, heater intake temperature) through
+    # ``thermo.recirculated_inlet_humidity``. Enters the fingerprint ONLY when set
+    # (``without_unset_optional_fields``), so every existing config keeps its fingerprint.
+    exhaust_recirculation_fraction: float | None = None
 
     def __post_init__(self) -> None:
         _require_positive(self, "mass_control_time_constant_s")
         _require_non_negative(self, "seed_mass_flow_kg_per_h", "initial_moisture_kg_per_kg")
+        if self.exhaust_recirculation_fraction is not None and not (
+            0.0 <= self.exhaust_recirculation_fraction <= MAX_EXHAUST_RECIRCULATION_FRACTION
+        ):
+            raise ValueError(
+                "exhaust_recirculation_fraction must lie in "
+                f"[0, {MAX_EXHAUST_RECIRCULATION_FRACTION}] when set, "
+                f"is {self.exhaust_recirculation_fraction}"
+            )
 
 
 @dataclass(frozen=True, slots=True)
@@ -587,6 +622,8 @@ def without_documentary_provenance(payload: dict[str, Any]) -> dict[str, Any]:
 
 _OPTIONAL_UNSET_OMITTED_FIELDS: dict[str, tuple[str, ...]] = {
     "material": ("product_moisture_limit_kg_per_kg", "drying_curve_exponent"),
+    "operation": ("exhaust_recirculation_fraction",),
+    "energy": ("recirculation_duct_loss_coefficient",),
 }
 """Optional fields that are left OUT of the fingerprint payload while they are ``None``.
 

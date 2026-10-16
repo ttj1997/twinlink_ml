@@ -79,6 +79,8 @@ def relative_humidity_from_absolute_humidity(
     gas: GasConfig,
     humidity_kg_per_kg: Array,
     temperature_celsius: Array,
+    *,
+    saturation_pressure: Array | None = None,
 ) -> Array:
     r"""Relative Feuchte aus absoluter Feuchte -- Umkehrung von :func:`absolute_humidity_kg_per_kg`.
 
@@ -105,7 +107,13 @@ def relative_humidity_from_absolute_humidity(
     :returns: relative Feuchte in [0, 1]
     """
     p_partial = humidity_kg_per_kg * gas.pressure_pa / (0.622 + humidity_kg_per_kg)
-    p_saturation = saturation_pressure_pa(backend, temperature_celsius)
+    # ``saturation_pressure``: p_s(temperature_celsius) precomputed by a caller that evaluates
+    # many humidities at one temperature (recirculated_inlet_humidity); same value, same formula.
+    p_saturation = (
+        saturation_pressure_pa(backend, temperature_celsius)
+        if saturation_pressure is None
+        else saturation_pressure
+    )
     return backend.clip(p_partial / p_saturation, 0.0, 1.0)
 
 
@@ -361,3 +369,143 @@ def evaporation_rate_kg_per_s(
         )
 
     return evaporation, outlet_humidity, saturation_degree
+
+
+_RECIRCULATION_ITERATIONS = 15
+"""Fixed step count of the bracketed root search in :func:`recirculated_inlet_humidity`.
+Checked in ``tests/test_exhaust_recirculation.py`` against 200 steps at the corners of the study
+box (r up to 0.9, GAB isotherm)."""
+
+
+def recirculated_inlet_humidity(
+    backend: ArrayBackend,
+    gas: GasConfig,
+    material: MaterialConfig,
+    isotherm: SorptionIsotherm,
+    ambient_humidity_kg_per_kg: Array,
+    recirculation_fraction: float,
+    bed_temperature_celsius: Array,
+    particle_moisture_kg_per_kg: Array,
+) -> tuple[Array, Array, Array]:
+    r"""Inlet and outlet humidity of a bed whose inlet air is partly recirculated exhaust.
+
+    A fraction :math:`r` of the dry air through the bed is taken from the exhaust (state
+    :math:`T_{bed}, Y_{out}`, well-mixed bed) and mixed with fresh air (:math:`Y_a`) ahead of the
+    heater. Gas phase quasi-stationary as everywhere in the model, so the loop is algebraic:
+
+    .. math::
+        Y_{in} = (1 - r)\,Y_a + r\,Y_{out}, \qquad
+        Y_{out} = Y_{in} + \nu\,(Y_{eff} - Y_{in})
+
+    with the saturation degree :math:`\nu = \nu_{max} f(\eta)` of
+    :func:`evaporation_rate_kg_per_s` (same drying curve, same isotherm, same driving-force
+    cap :math:`Y_{eff} = \min(Y_s(T_{bed}), Y_{max})`). For a given :math:`\nu` the pair is linear
+    and solved in closed form,
+
+    .. math:: Y_{in} = \frac{(1 - r)\,Y_a + r\,\nu\,Y_{eff}}{1 - r + r\,\nu},
+
+    so the only fixed point left is the dependence of :math:`\nu` on :math:`\varphi_{out}` through
+    the isotherm (as in the fresh-air case). A damped Picard iteration as in
+    :func:`evaporation_rate_kg_per_s` does NOT converge here near the kink of the drying curve
+    (measured: relative errors above 1 at r = 0.8 after 60 steps; the recirculation multiplies the
+    loop gain); the fixed point is therefore found by a bracketed root search on the monotone
+    residual (see the code), with a fixed step count. The returned pair is evaluated once more at
+    the final :math:`\varphi_{out}`, so the two relations above hold exactly; with them the water
+    balance of the whole loop closes exactly,
+    :math:`(1 - r)\,(Y_{out} - Y_a) = \nu\,(Y_{eff} - Y_{in}) = \dot m_{evap} / \dot m_L`
+    (the water leaves only with the purge, :math:`(1 - r)\,\dot m_L`). The dry-air flow does not
+    enter: the humidity rise per kg of dry air is independent of it.
+
+    Condensing branch (:math:`Y_a \ge Y_s(T_{bed})`, fresh air wetter than saturation at bed
+    temperature, as in :func:`evaporation_rate_kg_per_s`): :math:`Y_{out} = Y_s(T_{bed})`,
+    :math:`Y_{in} = (1 - r)\,Y_a + r\,Y_s`. :math:`r = 0` reproduces :math:`Y_{in} = Y_a`
+    exactly in both branches.
+
+    :param recirculation_fraction: :math:`r \in [0, 0.95]` (``OperationConfig``).
+    :returns: (inlet humidity :math:`Y_{in}`, outlet humidity :math:`Y_{out}`, saturation degree
+        :math:`\nu`), kg/kg dry air and -.
+    """
+    r = recirculation_fraction
+    y_saturation = saturation_humidity_kg_per_kg(backend, gas, bed_temperature_celsius)
+    y_effective = backend.minimum(y_saturation, material.max_driving_humidity_kg_per_kg)
+    drying_branch = y_saturation > ambient_humidity_kg_per_kg
+    driving = y_effective > ambient_humidity_kg_per_kg
+    p_saturation = saturation_pressure_pa(backend, bed_temperature_celsius)
+
+    def closed_form(outlet: Array) -> tuple[Array, Array, Array]:
+        relative_humidity = relative_humidity_from_absolute_humidity(
+            backend, gas, outlet, bed_temperature_celsius, saturation_pressure=p_saturation
+        )
+        eta = normalised_moisture(
+            backend,
+            material,
+            isotherm,
+            particle_moisture_kg_per_kg,
+            relative_humidity,
+            bed_temperature_celsius,
+        )
+        if material.drying_curve_exponent is not None:
+            eta = eta**material.drying_curve_exponent
+        nu = backend.where(driving, material.max_saturation_degree * eta, backend.zeros_like(eta))
+        inlet = ((1.0 - r) * ambient_humidity_kg_per_kg + r * nu * y_effective) / (1.0 - r + r * nu)
+        return inlet, inlet + nu * (y_effective - inlet), nu
+
+    # g(y) = closed_form(y).outlet is non-increasing in y (phi up -> X_eq up -> eta down -> nu down
+    # -> Y_out = Y_a + nu (Y_eff - Y_a) / (1 - r + r nu) down), so h(y) = y - g(y) is increasing
+    # with h(Y_a) <= 0 <= h(Y_eff): one root, bracketed. False position with every third step a
+    # bisection (the bracket shrinks at least by 2**-(n/3) even where eta has its kink).
+    low = ambient_humidity_kg_per_kg
+    high = backend.maximum(y_effective, low)
+    h_low = low - closed_form(low)[1]
+    h_high = high - closed_form(high)[1]
+
+    def false_position(low: Array, high: Array, h_low: Array, h_high: Array) -> Array:
+        span = h_high - h_low
+        safe_span = backend.where(span > 0.0, span, backend.zeros_like(span) + 1.0)
+        return backend.where(
+            span > 0.0, (low * h_high - high * h_low) / safe_span, 0.5 * (low + high)
+        )
+
+    for step in range(_RECIRCULATION_ITERATIONS):
+        trial = 0.5 * (low + high) if step % 3 == 2 else false_position(low, high, h_low, h_high)
+        h_trial = trial - closed_form(trial)[1]
+        below = h_trial < 0.0
+        low = backend.where(below, trial, low)
+        h_low = backend.where(below, h_trial, h_low)
+        high = backend.where(below, high, trial)
+        h_high = backend.where(below, h_high, h_trial)
+    inlet, outlet, nu = closed_form(false_position(low, high, h_low, h_high))
+
+    inlet_condensing = (1.0 - r) * ambient_humidity_kg_per_kg + r * y_saturation
+    return (
+        backend.where(drying_branch, inlet, inlet_condensing),
+        backend.where(drying_branch, outlet, y_saturation),
+        nu,
+    )
+
+
+def mixing_temperature_celsius(
+    gas: GasConfig,
+    recirculation_fraction: float,
+    ambient_temperature_celsius: Array,
+    ambient_humidity_kg_per_kg: Array,
+    exhaust_temperature_celsius: Array,
+    exhaust_humidity_kg_per_kg: Array,
+) -> Array:
+    r"""Temperature after adiabatic mixing of fresh air and recirculated exhaust.
+
+    Enthalpy per kg dry air :math:`h = c_{p,L} T + Y (\Delta h_0 + c_{p,D} T)` is linear in the
+    mixing ratio, and :math:`Y` mixes linearly, so the latent parts cancel and
+
+    .. math:: T_{mix} = T_a + \frac{r\,c_o\,(T_o - T_a)}{(1 - r)\,c_a + r\,c_o},
+        \qquad c = c_{p,L} + Y c_{p,D}
+
+    (``r = 0`` gives :math:`T_a` exactly). Fog in the mixing chamber is not modelled; the caller
+    can check :math:`\varphi(Y_{in}, T_{mix}) \le 1`.
+    """
+    c_ambient = gas.cp_dry_air_j_per_kg_k + ambient_humidity_kg_per_kg * gas.cp_vapour_j_per_kg_k
+    c_exhaust = gas.cp_dry_air_j_per_kg_k + exhaust_humidity_kg_per_kg * gas.cp_vapour_j_per_kg_k
+    r = recirculation_fraction
+    return ambient_temperature_celsius + r * c_exhaust * (
+        exhaust_temperature_celsius - ambient_temperature_celsius
+    ) / ((1.0 - r) * c_ambient + r * c_exhaust)

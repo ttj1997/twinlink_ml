@@ -45,6 +45,9 @@ class PowerBreakdown:
     pump_kw: Array
     atomiser_kw: Array
     total_kw: Array
+    recirculation_fan_kw: Array | None = None
+    """Extra fan power of the exhaust recirculation duct, already contained in ``fan_kw``;
+    ``None`` without recirculation."""
 
 
 def power_breakdown_kw(
@@ -62,6 +65,9 @@ def power_breakdown_kw(
     nozzle_pressure_bar: Array,
     ambient_temperature_celsius: Array,
     bed_mass_total_kg: Array,
+    *,
+    heater_intake_temperature_celsius: Array | None = None,
+    recirculation_fraction: float | None = None,
 ) -> PowerBreakdown:
     r"""Leistungsaufnahme aller Aggregate.
 
@@ -90,11 +96,24 @@ def power_breakdown_kw(
     Kopplung Tropfengröße -> Benetzung -> Wachstum/Agglomeration fehlt, sollte
     ``p_nozzle`` im RL-Teil entweder fixiert oder mit einer Qualitätsstrafe versehen
     werden.
+
+    Exhaust recirculation (only when ``recirculation_fraction`` is given): the heater takes the
+    mixture at ``heater_intake_temperature_celsius`` (:math:`T_{mix}`, see
+    :func:`~.thermo.mixing_temperature_celsius`) instead of :math:`T_{amb}`, with the mixed
+    humidity ``inlet_humidity_kg_per_kg``; the recirculation duct adds the fan power
+    :math:`r u A \zeta_{rec} \rho_g (r u)^2 / (2 \eta_V)` (``EnergyConfig.
+    recirculation_duct_loss_coefficient``, placeholder; ``None`` adds nothing). Both arguments
+    unset: every term exactly as before.
     """
+    heater_intake = (
+        ambient_temperature_celsius
+        if heater_intake_temperature_celsius is None
+        else heater_intake_temperature_celsius
+    )
     heater = (
         dry_air_mass_flow_kg_per_s
         * (gas.cp_dry_air_j_per_kg_k + inlet_humidity_kg_per_kg * gas.cp_vapour_j_per_kg_k)
-        * backend.maximum(inlet_temperature_celsius - ambient_temperature_celsius, 0.0)
+        * backend.maximum(inlet_temperature_celsius - heater_intake, 0.0)
         / energy.heater_efficiency
     )
 
@@ -106,6 +125,20 @@ def power_breakdown_kw(
         / 2.0
     )
     fan = volumetric_flow * delta_p / energy.fan_efficiency
+    recirculation_fan = None
+    if recirculation_fraction is not None:
+        coefficient = energy.recirculation_duct_loss_coefficient or 0.0
+        recirculated_velocity = recirculation_fraction * gas_velocity_m_per_s
+        recirculation_fan = (
+            recirculated_velocity
+            * cross_section_area_m2
+            * coefficient
+            * gas_density_kg_per_m3_value
+            * recirculated_velocity**2
+            / 2.0
+            / energy.fan_efficiency
+        )
+        fan = fan + recirculation_fan
 
     pump = (
         spray_rate_kg_per_s
@@ -130,6 +163,7 @@ def power_breakdown_kw(
         pump_kw=pump / 1000.0,
         atomiser_kw=atomiser / 1000.0,
         total_kw=total / 1000.0,
+        recirculation_fan_kw=None if recirculation_fan is None else recirculation_fan / 1000.0,
     )
 
 
