@@ -59,6 +59,11 @@ Call::
 
     TWINLINK_PLANT_DATA_ACE=... TWINLINK_PLANT_DATA_RID=... \
         tools/run_here.sh scripts/run_site_pinch.py --name run_site_pinch
+
+Paired variant alone against an existing main artifact (added 2026-10-16 after the main run, whose
+field ``variant_befund_99`` was overwritten by a shadowed loop variable; nothing else changed)::
+
+    tools/run_here.sh scripts/run_site_pinch.py --name <new> --variant-of run_site_pinch_sf0634
 """
 
 from __future__ import annotations
@@ -569,6 +574,68 @@ def summarise(results: dict[str, dict[str, Any]], config: SiteConfig) -> dict[st
     }
 
 
+def variant_only(
+    name: str,
+    main_name: str,
+    workers: int,
+    config: SiteConfig,
+    days: dict[str, MeasuredDay],
+    hashes: dict[str, str],
+    t0: float,
+) -> int:
+    """Paired variant "Befund 99 assumption" against an existing main artifact (matched by label).
+
+    Follow-up of ``run_site_pinch_sf0634``, whose field ``variant_befund_99`` was overwritten by a
+    shadowed loop variable (it holds the string "0.3"); the same 198 + 6 runs are repeated here.
+    """
+    main_path = REPO_ROOT / "artifacts" / "runs" / f"{main_name}.json"
+    main = json.loads(main_path.read_text(encoding="utf-8"))
+    main_grid = {r["label"]: r for r in main["grid"]}
+    if len(main_grid) != len(main["grid"]):
+        raise SystemExit("grid labels of the main artifact are not unique")
+    tasks = [(f"grid:{s.label}", s, False) for _, s in variant_subgrid(grid(config))]
+    tasks += [
+        (f"ref:{k}", s.with_placeholders(solid_fraction=BEFUND_99_SOLID_FRACTION), False)
+        for k, s in references(config).items()
+    ]
+    print(f"{len(tasks)} variant runs on {workers} processes", flush=True)
+    for var in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
+        os.environ.setdefault(var, "1")
+    results: dict[str, dict[str, Any]] = {}
+    with ProcessPoolExecutor(workers, initializer=_init, initargs=(days,)) as pool:
+        for key, out in pool.map(run_one, tasks, chunksize=1):
+            results[key] = out
+    var_grid = {k.removeprefix("grid:"): v for k, v in results.items() if k.startswith("grid:")}
+    var_refs = {k.removeprefix("ref:"): v for k, v in results.items() if k.startswith("ref:")}
+    paired = paired_variant(main_grid, var_grid)
+    paired["solid_fraction_main"] = main["placeholders"]["solid_fraction"]["value"]
+    paired["references"] = paired_variant(main["references"], var_refs)
+    payload: dict[str, Any] = {
+        "_provenance": provenance(NO_HEAT_NETWORK),
+        "name": name,
+        "main_artifact": main_name,
+        "main_artifact_git_commit": main["provenance"]["git/commit"],
+        "raw_file_sha256": hashes,
+        "raw_files_match_main": hashes == main["raw_file_sha256"],
+        "variant_befund_99": paired,
+        "checks": {
+            "balance_residual_max_kw": max(
+                r["checks"]["balance_residual_max_kw"] for r in results.values()
+            ),
+            "today_not_below_target_all": all(
+                r["checks"]["today_not_below_target"] for r in results.values()
+            ),
+            "network_not_below_target_all": all(
+                r["checks"]["network_not_below_target"] for r in results.values()
+            ),
+        },
+        "runtime_seconds": time.time() - t0,
+    }
+    print(json.dumps(payload["checks"], indent=1))
+    write_artifact(name, payload)
+    return 0
+
+
 def r_eta(config: SiteConfig) -> float:
     return config.placeholders.gas_efficiency
 
@@ -578,6 +645,11 @@ def main() -> int:
     parser.add_argument("--name", required=True, help="artifact name (never overwritten)")
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--smoke", action="store_true", help="few scenarios, no artifact")
+    parser.add_argument(
+        "--variant-of",
+        default="",
+        help="only the paired variant 'Befund 99 assumption', paired with this main artifact",
+    )
     args = parser.parse_args()
     if not args.smoke:
         require_clean_tree()
@@ -586,6 +658,8 @@ def main() -> int:
     t0 = time.time()
     config = load_site_config()
     days, hashes = load_days()
+    if args.variant_of:
+        return variant_only(args.name, args.variant_of, args.workers, config, days, hashes, t0)
     scenarios = grid(config)
     refs = references(config)
     tasks: list[tuple[str, SiteScenario, bool]] = []
@@ -604,9 +678,9 @@ def main() -> int:
     sens_meta: dict[str, tuple[str, str, str]] = {}
     if not args.smoke:
         for base_key, base in sens_bases.items():
-            for j, (name, variant, scenario) in enumerate(sensitivity_variants(config, base)):
+            for j, (name, label, scenario) in enumerate(sensitivity_variants(config, base)):
                 key = f"sens:{base_key}:{j}"
-                sens_meta[key] = (base_key, name, variant)
+                sens_meta[key] = (base_key, name, label)
                 tasks.append((key, scenario, False))
     print(f"{len(tasks)} runs on {args.workers} processes", flush=True)
     for var in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
@@ -624,14 +698,14 @@ def main() -> int:
         k.removeprefix("var99:"): v for k, v in results.items() if k.startswith("var99:grid:")
     }
     var_refs = {k.split(":")[2]: v for k, v in results.items() if k.startswith("var99:ref:")}
-    variant = paired_variant(grid_results, var_grid)
-    variant["solid_fraction_main"] = config.placeholders.solid_fraction
-    variant["references"] = paired_variant(ref_results, var_refs)
+    paired = paired_variant(grid_results, var_grid)
+    paired["solid_fraction_main"] = config.placeholders.solid_fraction
+    paired["references"] = paired_variant(ref_results, var_refs)
     sensitivity: dict[str, Any] = {}
     for base_key in sens_bases if not args.smoke else ():
         base = ref_results[base_key]
         entries = []
-        for key, (bk, name, variant) in sens_meta.items():
+        for key, (bk, name, label) in sens_meta.items():
             if bk != base_key:
                 continue
             r = results[key]
@@ -639,7 +713,7 @@ def main() -> int:
             entries.append(
                 {
                     "placeholder": name,
-                    "variant": variant,
+                    "variant": label,
                     "saving_kw": r["saving_kw"],
                     "delta_saving_mwh_per_a": r["saving_mwh_per_a"] - base["saving_mwh_per_a"],
                     "delta_saving_co2_t_per_a": r["saving_co2_t_per_a"]
@@ -704,7 +778,7 @@ def main() -> int:
         "climate_monthly_mean_celsius": config.climate_monthly_mean_celsius,
         "site_reference": dict(config.site_reference),
         "references": ref_results,
-        "variant_befund_99": variant,
+        "variant_befund_99": paired,
         "sensitivity": sensitivity,
         "summary": summarise(grid_results, config),
         "grid": list(grid_results.values()),
