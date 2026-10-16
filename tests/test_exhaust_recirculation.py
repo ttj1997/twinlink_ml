@@ -28,9 +28,10 @@ from twinlink_ml.simulation import (
 )
 from twinlink_ml.simulation.backend import NumpyBackend
 from twinlink_ml.simulation.config import EnergyConfig
-from twinlink_ml.simulation.oracle_search import build_variant_config, evaluate_point
+from twinlink_ml.simulation.operating_point import build_variant_config
+from twinlink_ml.simulation.oracle_search import evaluate_point
 from twinlink_ml.simulation.sorption import isotherm_from_material
-from twinlink_ml.simulation.steady_state import solve_steady_state
+from twinlink_ml.simulation.steady_state import SteadyStateSolution, solve_steady_state
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CONFIG_DIR = REPO_ROOT / "conf" / "process"
@@ -116,7 +117,7 @@ def _solve(
     u: float = 1.26,
     t_amb: float = 20.0,
     phi: float = 0.5,
-):
+) -> SteadyStateSolution:
     return evaluate_point(
         t_in, u, 1.0, t_amb, phi, max_iterations=30, tolerance=1e-7, base_config=config
     )

@@ -14,6 +14,7 @@ from twinlink_ml.evaluation import exhaust_recirculation as er
 from twinlink_ml.evaluation.carrier_energy import carrier_energy_from_diagnostics
 from twinlink_ml.simulation import PlaceholderConfigWarning, ProcessConfig, load_process_config
 from twinlink_ml.simulation.oracle_search import evaluate_point
+from twinlink_ml.simulation.steady_state import SteadyStateSolution
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 K = 271.797
@@ -25,7 +26,7 @@ def _config() -> ProcessConfig:
         return load_process_config(REPO_ROOT / "conf" / "process" / "greybox_gab_placeholder.yaml")
 
 
-def _solve(config: ProcessConfig, r: float | None):
+def _solve(config: ProcessConfig, r: float | None) -> SteadyStateSolution:
     return evaluate_point(
         90.0,
         1.26,
