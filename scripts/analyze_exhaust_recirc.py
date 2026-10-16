@@ -444,7 +444,7 @@ def envelope_table(main: dict[str, Any]) -> dict[str, Any]:
     re-computed.
     """
     res = _by_key(main["results"])
-    rows = []
+    rows: list[dict[str, Any]] = []
     for i in CONTEXTS:
         base = res[f"G_r000_{i}"]
         candidates = [res[f"R_{i}"]] + [res[f"G_r{round(r * 100):03d}_{i}"] for r in (*R_GRID, 0.9)]
