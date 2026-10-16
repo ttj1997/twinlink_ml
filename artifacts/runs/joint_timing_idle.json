@@ -1,0 +1,262 @@
+{
+ "provenance": {
+  "git/commit": "6b77a169e66e358488fa8fef3ca2fbf5457402dd",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "design": {
+  "threads": 1,
+  "part_a_artifact": "a1_inference_time_v2_idle",
+  "part_b": {
+   "arm": "N (preset version 2)",
+   "seed": 1,
+   "n_train": 64,
+   "test_windows": "excited test set of the pool",
+   "fit_epochs_networks": 2,
+   "note": "weights do not change the cost of predict; accuracy unused"
+  },
+  "idle_criterion": "machine load <= 5.0 % and no other python process > 5 % of one core",
+  "warmup_s": 11.259717199995066,
+  "wall_s_total": 989.220606803894
+ },
+ "environment": {
+  "python": "3.14.2",
+  "numpy": "2.5.3",
+  "torch": "2.14.0+cpu",
+  "torch_num_threads": 1,
+  "torch_num_interop_threads": 1,
+  "logical_cpus": 16,
+  "processor": "AMD Ryzen 7 9700X 8-Core Processor",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "thread_variables": {
+   "OMP_NUM_THREADS": "1",
+   "MKL_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1"
+  }
+ },
+ "load_at_start": {
+  "machine_load_pct": 0.0,
+  "other_python_processes_cpu_pct_of_one_core": {}
+ },
+ "load_between_parts": {
+  "machine_load_pct": 3.0,
+  "other_python_processes_cpu_pct_of_one_core": {}
+ },
+ "load_at_end": {
+  "machine_load_pct": 1.0,
+  "other_python_processes_cpu_pct_of_one_core": {}
+ },
+ "idle_at_start": true,
+ "idle_between_parts": true,
+ "idle_at_end": true,
+ "results": [
+  {
+   "method": "persistence",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 0.1819852955390268,
+   "throughput_us_per_window_min": 0.17911305108367848,
+   "latency_batch1_us_median": 3.1999952625483274,
+   "latency_batch1_us_min": 3.0999945010989904,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 0.0,
+    "other_python_processes_cpu_pct_of_one_core": {}
+   },
+   "load_after": {
+    "machine_load_pct": 0.0,
+    "other_python_processes_cpu_pct_of_one_core": {}
+   },
+   "n_parameters": 0,
+   "fit_elapsed_s": 1.5899997379165143e-05,
+   "fit_epochs": 0,
+   "fit_s_per_epoch_indicative": null
+  },
+  {
+   "method": "static",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 1.7132812502040906,
+   "throughput_us_per_window_min": 1.6867647048002254,
+   "latency_batch1_us_median": 5.000001692678779,
+   "latency_batch1_us_min": 4.900000931229442,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 3.0,
+    "other_python_processes_cpu_pct_of_one_core": {}
+   },
+   "load_after": {
+    "machine_load_pct": 0.0,
+    "other_python_processes_cpu_pct_of_one_core": {}
+   },
+   "n_parameters": 45,
+   "fit_elapsed_s": 0.04322469999897294,
+   "fit_epochs": 0,
+   "fit_s_per_epoch_indicative": null
+  },
+  {
+   "method": "arx",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 3.932559742318464,
+   "throughput_us_per_window_min": 3.7298943027508358,
+   "latency_batch1_us_median": 246.29999825265259,
+   "latency_batch1_us_min": 245.09999639121816,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 7.0,
+    "other_python_processes_cpu_pct_of_one_core": {}
+   },
+   "load_after": {
+    "machine_load_pct": 2.0,
+    "other_python_processes_cpu_pct_of_one_core": {}
+   },
+   "n_parameters": 102,
+   "fit_elapsed_s": 0.025773499997740146,
+   "fit_epochs": 0,
+   "fit_s_per_epoch_indicative": null
+  },
+  {
+   "method": "gru",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 123.65965073466695,
+   "throughput_us_per_window_min": 120.6845818026469,
+   "latency_batch1_us_median": 4753.400004119612,
+   "latency_batch1_us_min": 4716.099996585399,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 0.0,
+    "other_python_processes_cpu_pct_of_one_core": {}
+   },
+   "load_after": {
+    "machine_load_pct": 2.0,
+    "other_python_processes_cpu_pct_of_one_core": {}
+   },
+   "n_parameters": 42819,
+   "fit_elapsed_s": 8.63993869999831,
+   "fit_epochs": 2,
+   "fit_s_per_epoch_indicative": 4.319969349999155
+  },
+  {
+   "method": "lstm",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 57.197886029732274,
+   "throughput_us_per_window_min": 49.90829503646958,
+   "latency_batch1_us_median": 6501.899999420857,
+   "latency_batch1_us_min": 6398.400000762194,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 2.0,
+    "other_python_processes_cpu_pct_of_one_core": {}
+   },
+   "load_after": {
+    "machine_load_pct": 1.0,
+    "other_python_processes_cpu_pct_of_one_core": {}
+   },
+   "n_parameters": 57027,
+   "fit_elapsed_s": 9.39510860000155,
+   "fit_epochs": 2,
+   "fit_s_per_epoch_indicative": 4.697554300000775
+  },
+  {
+   "method": "transformer",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 2691.822863053015,
+   "throughput_us_per_window_min": 2616.3855698521675,
+   "latency_batch1_us_median": 31566.99999817647,
+   "latency_batch1_us_min": 24103.600000671577,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 5.0,
+    "other_python_processes_cpu_pct_of_one_core": {}
+   },
+   "load_after": {
+    "machine_load_pct": 4.0,
+    "other_python_processes_cpu_pct_of_one_core": {}
+   },
+   "n_parameters": 23523,
+   "fit_elapsed_s": 135.1613753999991,
+   "fit_epochs": 2,
+   "fit_s_per_epoch_indicative": 67.58068769999954
+  },
+  {
+   "method": "xlstm",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 936.7723575354269,
+   "throughput_us_per_window_min": 923.9608915449668,
+   "latency_batch1_us_median": 27487.299998028902,
+   "latency_batch1_us_min": 19223.900002543814,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 6.0,
+    "other_python_processes_cpu_pct_of_one_core": {}
+   },
+   "load_after": {
+    "machine_load_pct": 0.0,
+    "other_python_processes_cpu_pct_of_one_core": {}
+   },
+   "n_parameters": 8649,
+   "fit_elapsed_s": 55.66747190000024,
+   "fit_epochs": 2,
+   "fit_s_per_epoch_indicative": 27.83373595000012
+  },
+  {
+   "method": "mamba",
+   "n_test_windows": 4352,
+   "throughput_us_per_window_median": 415.7630055136879,
+   "throughput_us_per_window_min": 330.64535845576705,
+   "latency_batch1_us_median": 14949.849999538856,
+   "latency_batch1_us_min": 13563.900000008289,
+   "repeats": {
+    "batch": 15,
+    "single": 300,
+    "warmup": 3
+   },
+   "load_before": {
+    "machine_load_pct": 3.0,
+    "other_python_processes_cpu_pct_of_one_core": {}
+   },
+   "load_after": {
+    "machine_load_pct": 3.0,
+    "other_python_processes_cpu_pct_of_one_core": {}
+   },
+   "n_parameters": 8139,
+   "fit_elapsed_s": 29.56615459999739,
+   "fit_epochs": 2,
+   "fit_s_per_epoch_indicative": 14.783077299998695
+  }
+ ]
+}
