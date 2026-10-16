@@ -68,13 +68,16 @@ balance model reproduce all finished cells; the gas rows of v4.1 are 108.91 time
 `cp_gas` = 1.2 instead of about 1.0 kJ/(kg K) raises the heating power by 19.1 % (Befund 75).
 Feedback goes to the partner through `docs/11_partner_model_v4.md`.
 
-**Heat recovery in the partner model (Befund 90, corrected 2026-10-15).** At the sheet's flows the
+**Heat recovery in the partner model (Befunde 90, 95; Befund 90 corrected 2026-10-15).** At the sheet's flows the
 partner model v4.1 recovers 60-88 % of what an independent counter-current calculation recovers
 (a first version said 46-65 %: it mixed two gas-property sets; see the addendum to Befund 90). The
 largest single assumption is equal outlet temperatures (parallel flow), followed by `cp_gas`; the
 best medium flow is about 25 kg/h with counter-current exchangers, while the partner model always
 prefers the highest flow. The six scenarios keep their order (1/2 before 5/6 before 3/4) when the
-assumptions of the partner model are replaced one by one (Befund 95).
+assumptions of the partner model are replaced one by one (Befund 95). For this the units of the
+model are rebuilt as a flowsheet (`src/twinlink_ml/flowsheet/`) with seven switches, one per
+assumption; with all switches on `partner` it reproduces all 230 checked cells of the sheet
+(largest relative difference 2.0e-15). Model against model, no plant data.
 
 **Storage of plant A (Befunde 91, 92).** The storage model (S1) bounds the volume only (about
 30 m3 at most) and leaves the compressor heat unmeasured; it serves as a scenario band, not as a
@@ -88,6 +91,17 @@ moisture cost lift SAC from a negative to a clearly positive closed-regret fract
 meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of
 the cell `ressep` lies above the reachable admissible ceiling 0.82 of the residual box, so it is
 carried by infeasible points and is not to be quoted as a performance figure.
+
+**Margin needed by the RL policy (Befund 96, addendum to Befund 93).** RL needs a margin of 5 m
+(m = the margin of the earlier cells) to be feasible against the true quality limit in all five
+seeds: 6.9 % extra energy over the optimiser with margin m (median, range 6.3-8.1 %), of which
+6.5 points are the margin itself (the optimiser pays it too) and 0.4 points the policy. The gate is
+met only by the strict pre-registered reading and only at the 25 grid contexts; quality limit,
+lower gas-velocity bound and penalty weight are placeholders.
+
+**Inference cost (Befund 97).** On an idle machine, one thread: a prediction of one window by a network of
+the eight architectures takes 4.8 ms (GRU) to 31.6 ms (Transformer); the hybrid of study A is dominated (98.8 %) by the
+simulator channel it needs ahead of the prediction (about 253 ms of 256 ms per prediction).
 
 ## Installation
 
