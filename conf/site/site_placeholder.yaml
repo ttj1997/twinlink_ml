@@ -46,7 +46,7 @@ placeholders:
   water_kw: [200.0, 0.0, 200.0, kW, "partner: up to about 200 kW for hall heating and process water; constant (Befund 99)"]
   water_supply_celsius: [60.0, 45.0, 70.0, degC, "Befund 99 placeholder (hot process water)"]
   water_return_celsius: [15.0, 10.0, 25.0, degC, "Befund 99 placeholder (fresh-water intake)"]
-  solid_fraction: [0.3, 0.2, 0.5, "-", "solid fraction of the sprayed suspension for the exhaust humidity reconstruction (Befund 99)"]
+  solid_fraction: [0.634, 0.60, 0.70, "-", "solid fraction of the sprayed suspension for the exhaust humidity reconstruction; the energy balance of the two measured days of plant A requires at least 0.575 (product 1) and 0.625 (product 2), 0.634 fits both (parallel study 4, branch plant-a-operating-point, docs/23 section 5); the 0.3 of Befund 99 (band 0.2-0.5) is inadmissible and is kept only as the variant 'Befund 99 assumption'"]
   relative_humidity: [0.75, 0.5, 0.9, "-", "relative humidity of the intake air (storage A1 convention, Befund 91/99)"]
   normal_density_kg_per_nm3: [1.293, 1.293, 1.293, kg/Nm3, "normal density of air (convention of storage A1, Befund 91)"]
   gas_efficiency: [0.90, 0.80, 1.0, "-", "useful heat per fuel (LHV) of steam heater and direct burner; repository default of heatnetwork"]

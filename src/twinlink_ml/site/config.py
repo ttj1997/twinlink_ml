@@ -34,7 +34,7 @@ hall_day_factor                  0.4      0.2 - 0.6      Befund 99
 water_kw                         200      0 - 200        partner: up to about 200 kW
 water_supply_celsius             60       45 - 70        Befund 99
 water_return_celsius             15       10 - 25        Befund 99
-solid_fraction                   0.3      0.2 - 0.5      Befund 99 (exhaust humidity reconstruction)
+solid_fraction                   0.634    0.6 - 0.7      balance of plant A (study 4, docs/23)
 relative_humidity                0.75     0.5 - 0.9      Befund 91/99 convention
 normal_density_kg_per_nm3        1.293    1.293 - 1.293  Befund 91 convention
 gas_efficiency                   0.9      0.8 - 1        heatnetwork default heater efficiency
@@ -46,6 +46,11 @@ boiler_flue_celsius              180      130 - 250      shell boiler without ec
 boiler_excess_air                1.15     1.05 - 1.3     gas boiler air ratio, variant
 climate_shift_k                  0        -3 - 3         uniform shift of the monthly means
 ================================ ======== ============== ===========================================
+
+``solid_fraction``: the energy balance of the two measured days of plant A requires at least 0.575
+(product 1) and 0.625 (product 2); 0.634 fits both (parallel study 4, branch
+``plant-a-operating-point``, ``docs/23`` section 5). The 0.3 of Befund 99 is inadmissible by that
+balance; the study script keeps it only as the paired variant "Befund 99 assumption".
 
 Monthly climate: typical long-term monthly means for northern Germany (order of magnitude,
 placeholder, not the site's station), see the YAML file.

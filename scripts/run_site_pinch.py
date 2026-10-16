@@ -46,6 +46,15 @@ Checks (recorded): energy balance per step; fossil today >= target <= every netw
 Befund 99 reproduced (``direct_kwh_per_day`` of every day-horizon scenario of its artifact
 recomputed with this package's problem table).
 
+Variant "Befund 99 assumption" (revision of 2026-10-16, before the first complete run; a first
+start with ``solid_fraction`` 0.3 was stopped after 100 of 2340 runs, no artifact, no result
+used): the main value of ``solid_fraction`` is 0.634 (band 0.60-0.70; the energy balance of the
+measured days of plant A requires at least 0.575 / 0.625, parallel study 4, ``docs/23`` section 5).
+The 0.3 of Befund 99 is run as a PAIRED variant on the sub-grid ``dT_min`` 20 K, hall/water
+200/200, generic flow 20 000 Nm3/h (2 x 3 x 3 x 11 = 198 scenarios) and on R1-R6; the artifact
+reports the difference per scenario (``variant_befund_99``). In the sensitivity the 0.3 is an extra
+entry ``solid_fraction_befund_99`` next to the band ends 0.60 / 0.70.
+
 Call::
 
     TWINLINK_PLANT_DATA_ACE=... TWINLINK_PLANT_DATA_RID=... \
@@ -108,7 +117,75 @@ GENERIC_FLOWS = (10000.0, 20000.0, 30000.0)
 DT_MIN = (10.0, 20.0)
 HALL_WATER = ((0.0, 0.0), (200.0, 200.0))
 
+BEFUND_99_SOLID_FRACTION = 0.3
+"""Solid fraction of Befund 99 (inadmissible by the energy balance of plant A; paired variant)."""
+
 _STATE: dict[str, Any] = {}
+
+
+def variant_subgrid(scenarios: list[SiteScenario]) -> list[tuple[int, SiteScenario]]:
+    """Indices and scenarios of the sub-grid of the paired variant "Befund 99 assumption"."""
+    out = []
+    for i, s in enumerate(scenarios):
+        ph = s.placeholders
+        if ph.minimum_pinch_k != 20.0 or ph.hall_kw != 200.0:
+            continue
+        if s.n_generic and ph.generic_flow_nm3_per_h != 20000.0:
+            continue
+        out.append((i, s.with_placeholders(solid_fraction=BEFUND_99_SOLID_FRACTION)))
+    return out
+
+
+def paired_variant(
+    main: dict[str, dict[str, Any]], variant: dict[str, dict[str, Any]]
+) -> dict[str, Any]:
+    """Differences variant (0.3) minus main (0.634) per scenario, same label."""
+    fields = ("saving_kw", "fossil_today_kw", "fossil_target_kw", "rec_target_kw")
+    rows = []
+    for key, v in variant.items():
+        m = main[key]
+        best = m["network_best_level"]
+        rows.append(
+            {
+                "label": m["label"],
+                **{f"main_{f}": m[f] for f in fields},
+                **{f"delta_{f}": v[f] - m[f] for f in fields},
+                "main_network_best_level": best,
+                "variant_network_best_level": v["network_best_level"],
+                "delta_network_fossil_at_main_best_kw": v["network"][best]["fossil_kw"]
+                - m["network"][best]["fossil_kw"],
+                "main_pinch_dominant": max(
+                    m["pinch_labels_weighted"], key=m["pinch_labels_weighted"].get
+                ),
+                "variant_pinch_dominant": max(
+                    v["pinch_labels_weighted"], key=v["pinch_labels_weighted"].get
+                ),
+                "delta_supply_kw": v["mean_kw"]["supply_kw"] - m["mean_kw"]["supply_kw"],
+            }
+        )
+
+    def spread(name: str) -> dict[str, float]:
+        a = np.asarray([row[name] for row in rows], dtype=float)
+        if a.size == 0:
+            return {"min": float("nan"), "median": float("nan"), "max": float("nan")}
+        return {"min": float(a.min()), "median": float(np.median(a)), "max": float(a.max())}
+
+    return {
+        "solid_fraction_main": None,
+        "solid_fraction_variant": BEFUND_99_SOLID_FRACTION,
+        "n": len(rows),
+        "rows": rows,
+        "delta_saving_kw": spread("delta_saving_kw"),
+        "delta_fossil_target_kw": spread("delta_fossil_target_kw"),
+        "delta_supply_kw": spread("delta_supply_kw"),
+        "delta_network_fossil_at_main_best_kw": spread("delta_network_fossil_at_main_best_kw"),
+        "best_level_changed": sum(
+            row["main_network_best_level"] != row["variant_network_best_level"] for row in rows
+        ),
+        "pinch_dominant_changed": sum(
+            row["main_pinch_dominant"] != row["variant_pinch_dominant"] for row in rows
+        ),
+    }
 
 
 def sha256_of(path: str) -> str:
@@ -232,6 +309,13 @@ def sensitivity_variants(
         out.append(("generic_day", other, replace(base, generic_day=other)))
         out.append(("generic_today", "own", replace(base, generic_today="own")))
     out.append(("boiler", "on", replace(base, boiler=True)))
+    out.append(
+        (
+            "solid_fraction_befund_99",
+            f"{BEFUND_99_SOLID_FRACTION:g}",
+            base.with_placeholders(solid_fraction=BEFUND_99_SOLID_FRACTION),
+        )
+    )
     return out
 
 
@@ -492,7 +576,7 @@ def r_eta(config: SiteConfig) -> float:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--name", required=True, help="artifact name (never overwritten)")
-    parser.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2) - 2))
+    parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--smoke", action="store_true", help="few scenarios, no artifact")
     args = parser.parse_args()
     if not args.smoke:
@@ -510,6 +594,12 @@ def main() -> int:
         refs = {"R1": refs["R1"]}
     tasks += [(f"grid:{i}", s, False) for i, s in enumerate(scenarios)]
     tasks += [(f"ref:{k}", s, True) for k, s in refs.items()]
+    sub = variant_subgrid(scenarios)
+    tasks += [(f"var99:grid:{i}", s, False) for i, s in sub]
+    tasks += [
+        (f"var99:ref:{k}", s.with_placeholders(solid_fraction=BEFUND_99_SOLID_FRACTION), False)
+        for k, s in refs.items()
+    ]
     sens_bases = {"R1": references(config)["R1"], "R5": references(config)["R5"]}
     sens_meta: dict[str, tuple[str, str, str]] = {}
     if not args.smoke:
@@ -519,6 +609,8 @@ def main() -> int:
                 sens_meta[key] = (base_key, name, variant)
                 tasks.append((key, scenario, False))
     print(f"{len(tasks)} runs on {args.workers} processes", flush=True)
+    for var in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
+        os.environ.setdefault(var, "1")  # one thread per worker (spawned workers inherit this)
     results: dict[str, dict[str, Any]] = {}
     with ProcessPoolExecutor(args.workers, initializer=_init, initargs=(days,)) as pool:
         for n, (key, out) in enumerate(pool.map(run_one, tasks, chunksize=1), 1):
@@ -528,6 +620,13 @@ def main() -> int:
 
     grid_results = {k: v for k, v in results.items() if k.startswith("grid:")}
     ref_results = {k.split(":")[1]: v for k, v in results.items() if k.startswith("ref:")}
+    var_grid = {
+        k.removeprefix("var99:"): v for k, v in results.items() if k.startswith("var99:grid:")
+    }
+    var_refs = {k.split(":")[2]: v for k, v in results.items() if k.startswith("var99:ref:")}
+    variant = paired_variant(grid_results, var_grid)
+    variant["solid_fraction_main"] = config.placeholders.solid_fraction
+    variant["references"] = paired_variant(ref_results, var_refs)
     sensitivity: dict[str, Any] = {}
     for base_key in sens_bases if not args.smoke else ():
         base = ref_results[base_key]
@@ -605,6 +704,7 @@ def main() -> int:
         "climate_monthly_mean_celsius": config.climate_monthly_mean_celsius,
         "site_reference": dict(config.site_reference),
         "references": ref_results,
+        "variant_befund_99": variant,
         "sensitivity": sensitivity,
         "summary": summarise(grid_results, config),
         "grid": list(grid_results.values()),
