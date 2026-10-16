@@ -1,398 +1,314 @@
-# Synthese AP1 für M2: Methodik der Simulations- und ML-Modellierung
+# Synthesis AP1 for M2: methodology of simulation and ML modelling
 
-> Meilenstein M2 (TUHH-B, AP1): "Methodik der Simulations- und ML-Modellierung dokumentiert
-> (Vorgehensweisen, Werkzeuge, Vorlagen; Reduzierung des Trainingsdatenbedarfs)"
-> (`docs/01_projektsteckbrief.md`). Entwurf, Stand 2026-09-25, **3. Fassung nach Durchsicht**
-> -- **noch nicht final**, siehe Konsistenzprüfung (SY4) und Rückverfolgungstabelle im Anhang.
-> Jede Zahl in diesem Dokument ist auf einen Befund in `docs/04_stand_ap1.md` und ein
-> committetes Artefakt zurückgeführt.
+> Milestone M2 (TUHH-B, AP1): "Methodology of simulation and ML modelling documented
+> (procedures, tools, templates; reduction of the training-data need)"
+> (`docs/01_projektsteckbrief.md`). **Version 5**, state 2026-10-16, draft for review by the
+> project lead. Every number in sections 2 to 8 is traced to a finding in
+> `docs/04_stand_ap1.md` and a committed artifact (appendix) and is checked against that
+> artifact by `scripts/check_m2_synthesis_consistency.py`, or listed there as not machine-checkable
+> with the reason. Findings are cited as "Befund N" (lab-book entries, in German or English as written).
 
-## 1. Fragestellung und Rahmen
+## Changes from the previous version (version 3, 2026-09-25)
 
-TwinLink baut einen digitalen Zwilling für die Wirbelschichtsprühgranulation. Der Prozess
-lädt ein Partikelbett mit einer Suspension, die auf der heißen Oberfläche antrocknet;
-Zulufttemperatur, Gasgeschwindigkeit, Sprührate und Düsendruck bestimmen, wie viel Wasser
-verdampft, wie schnell das Bett wächst und wie feucht das Produkt bleibt. Modelliert wird
-kontinuierlicher Betrieb mit geregeltem Füllstand (Sollwert-Feststoffmasse, Zeitkonstante
-600 s) und laufendem Produktabzug, nicht eine Folge einzelner Chargen -- die genaue
-Betriebsart der Zielanlage ist ein offener Klärungspunkt für AP2. Ein schwacher, indirekter
-Hinweis aus den Anlagendaten: die 24-Stunden-Aufzeichnungen zeigen eine über den Tag
-nahezu konstante Sprührate (Variationskoeffizient 0,12-2,01 %, Befund 56a), vereinbar mit
-kontinuierlichem Betrieb, aber kein Beleg dafür. Der für die
-Verfahrensführung entscheidende Zustand -- Bettmasse, Wassergehalt, Partikelzahl,
-Betttemperatur -- ist an der realen Anlage nur teilweise messbar: Betttemperatur ist
-inline verfügbar, die Produktfeuchte im Allgemeinen nicht (Abschnitt 5). Ein Regler, der
-nur auf gemessenen Größen operiert, braucht deshalb ein Modell, das aus der Historie der
-Stellgrößen auf den unbeobachteten Zustand schließt -- einen Soft Sensor. AP1 baut und
-vergleicht die dafür infrage kommenden Modellklassen, mit dem Ziel, den
-Trainingsdatenbedarf jeder Klasse zu quantifizieren, nicht nur ihre Bestgüte.
+- **Data basis.** The architecture comparison now rests on the re-run on preset version 2
+  (arm N, Befund 94); the old records (arm A0) are used only as a comparison. The old
+  Linux/Windows confound between model families does not apply to the new records.
+- **Statistics.** Paired resolution over seeds (t distribution, four degrees of freedom)
+  replaces the unpaired z threshold; **Holm correction is the main form**, uncorrected counts
+  are given as an addition (Befund 83, 94 and the addendum to Befund 94).
+- **Rank statements.** Cut back to what survives Holm: no GRU-against-LSTM cell is resolved;
+  Mamba and the baselines are clearly behind LSTM; the deficits of Transformer and xLSTM and
+  the middle of the order are uncorrected tendencies only.
+- **Seeds.** The "40 to 41 seeds" estimate is replaced by paired seed numbers; on the
+  quality variable (product moisture) the M2 target of 12.5 % is not reachable with five seeds.
+- **Cost.** Inference times only from the joint measurement on an idle machine (Befund 97);
+  Table 2, Figure 4 and the cost ratios of version 3 are removed.
+- **Removed or restated (review of 2026-10-09, `docs/12`).** Persistence factors, model R^2
+  and "factor 20", the solid-fraction range, the soft-sensor margin factors, early-stopping
+  epoch counts, the ARX/NARX paragraph and the pinch statement are no longer taken over.
+- **New.** Studies A and B (Befunde 88, 87), the outlook with the corrected figures of
+  Befunde 80, 81, 93, 96, the partner model (Befunde 90, 95) and the storage of plant A
+  (Befunde 91, 92).
 
-Bis ein physikalisch vollständiges Populationsbilanzmodell (Dyssol) für die Granulation
-verfügbar ist -- laut Terminplanung erst ab Monat 21 (`docs/01_projektsteckbrief.md`,
-Kritische Terminlage) --, trägt ein reduziertes Grey-Box-Modell mit vier Zuständen
-(Feststoffmasse, Wassermasse, Partikelzahl, Betttemperatur) die gesamte
-Methodikentwicklung (`docs/02_prozess_setup.md`); dieses Grey-Box-Modell ist selbst bereits
-ein physikalisches Modell, kein Datensatz. Die in diesem Dokument verglichenen
-ML-Architekturen werden nicht gebraucht, weil kein physikalisches Modell existierte,
-sondern weil der reale Anlagenzustand nicht vollständig messbar ist (Abschnitt 5) -- ein
-Soft Sensor überbrückt genau diese Lücke, unabhängig davon, welches Prozessmodell im
-Hintergrund steht. Die in diesem Dokument berichteten Zahlen sind Aussagen **über das
-Grey-Box-Modell**, nicht über die reale Anlage -- Abschnitt 6 macht diese Grenze explizit.
+## 1. Question and frame
 
-## 2. Methode
+TwinLink builds a digital twin for fluidised-bed spray granulation. The process loads a
+particle bed with a suspension that dries on the hot surface; inlet temperature, gas
+velocity, spray rate and nozzle pressure determine how much water evaporates, how fast the
+bed grows and how moist the product stays. The simulator models continuous operation with a
+controlled bed level (solids-mass set point, time constant 600 s), not a sequence of
+batches; the operating mode of the target plant is an open question for AP2. The state that
+matters for operation (bed mass, water content, particle number, bed temperature) is only
+partly measurable at a real plant: the bed temperature is available inline, the product
+moisture in general is not. A controller that acts on measured quantities only therefore
+needs a model that infers the unobserved state from the history of the manipulated
+variables, a soft sensor. AP1 builds and compares the candidate model classes and asks how
+much training data each needs, not only how good it gets at best.
 
-**Lernkurven als primäres Ergebnisformat.** Statt eines einzelnen Gütewerts wird für jede
-Architektur die Fehlerentwicklung über die Anzahl Simulationsläufe $n_{\mathrm{train}} \in
-\{8, 16, 32, 64\}$ berichtet, mit Median und Spannweite über 5 Seeds je Stützstelle. Ein
-Modell, das bei kleinem $n_{\mathrm{train}}$ führt, aber nicht weiter besser wird, hat einen
-anderen Trainingsdatenbedarf als eines, dessen Kurve bei $n_{\mathrm{train}}=64$ noch fällt.
+Until a full population-balance model is available (planned for month 21), a reduced
+grey-box model with four states (solids mass, water mass, particle number, bed temperature)
+carries the methodology work (`docs/02_prozess_setup.md`). The ML architectures are needed
+because the real state is not fully measurable, whatever process model stands behind them.
+**All numbers in this document are statements about the grey-box simulator, not about a real
+plant**; section 7 makes the limit explicit.
 
-**Splits auf Laufebene.** Trainings-, Validierungs- und Testmenge werden nach
-Simulationsläufen getrennt, nie nach Fenstern oder Zeitpunkten. Ein fenster-/punktweiser
-Split, wie in Teilen der Literatur verbreitet, berichtet auf demselben Datensatz einen um
-29 bis 68 % niedrigeren Fehler, je nach Zielgröße (Befund 39) -- die laufweise Konvention
-verhindert nachweislich genau diese Größenordnung an optimistischer Verzerrung.
+## 2. Method
 
-**Zwei Testmengen, zwei Fragen.** Die *angeregte* Testmenge (Sprünge/PRBS/Rampen innerhalb
-jedes Laufs) misst Identifikationsgüte; der *Konstantlauf-Holdout* (Stellgrößen je Lauf
-konstant, Läufe untereinander verschieden) misst Betriebsrelevanz -- reale
-Anlagenaufzeichnungen ähneln eher Letzterem. Beide werden durchgehend getrennt berichtet:
-eine Verwechslung hat im Projekt bereits einmal zu einer falschen Zahl geführt (Befund 51,
-Anhang Zeile K5) -- Persistenz ist auf der angeregten Menge strukturell schwach und auf dem
-Konstantlauf trivial stark, ein Faktor gegen sie ist deshalb nur mit Testmenge zitierbar.
+**Learning curves as the primary result format.** For every method the error is reported
+over the number of training runs ($n_{\mathrm{train}} \in \{8, 16, 32, 64\}$), as median and range over
+five seeds (Figure 1). A model that leads at small $n_{\mathrm{train}}$ but stops improving has a
+different data need from one whose curve still falls at 64.
 
-**Baselines vor jedem Architekturvergleich.** Persistenz (letzte Messung fortschreiben),
-statische quadratische Regression (kennt nur die aktuellen Stellgrößen) und linearer ARX(4,2)
-laufen vor jedem neuronalen Modell. Die statische Regression ist die testmengenrobustere
-Referenz: ihr absoluter Fehler ändert sich zwischen den Testmengen nur um Faktor ~1,4, während
-Persistenz auf `product_moisture_kg_per_kg` um Faktor 6,3 schwankt (Befund 58 OA5a) -- ein
-Vergleich nur gegen Persistenz kann deshalb eine Architektur besser aussehen lassen, als sie
-gegenüber der eigentlich bindenden Referenz ist (Abschnitt 4).
+**Run-level splits.** Training, validation and test sets are separated by simulation runs,
+never by windows or time points. A window-wise split, common in parts of the literature,
+reports on the same data an error that is lower by 29 to 68 % depending on the target
+(Befund 39: ExtraTrees, horizon 1, three targets).
 
-**Auflösungsvermögen -- eine Rangaussage ist keine Rangaussage ohne sie.** Mit $n$ Seeds ist
-die kleinste nachweisbare relative Differenz zweier Modelle
+**Two test sets, always named.** The *excited* test set (steps, PRBS, ramps inside every
+run) measures identification quality; the *constant-run holdout* (set points constant within
+a run, different between runs) measures operational relevance; plant records resemble the
+latter. Both are reported apart. A factor against persistence is quotable only with metric,
+test set and budget named, because persistence is structurally weak on the excited set and
+trivially strong on constant runs (Befund 51, K5). The excited set contains a small share of
+constant runs (`docs/12`, D-W2).
 
-$$
-\Delta_{\min} = z_{1-\alpha/2}\,\sqrt{\frac{\hat\sigma_{\mathrm{Kandidat}}^2+
-\hat\sigma_{\mathrm{Referenz}}^2}{n}}, \qquad
-\hat\sigma = \frac{\text{Spannweite über die Seeds}}{d_2(n)}
-$$
+**Baselines first.** Persistence, a static quadratic regression and a linear ARX run before
+any neural model. The error metric is the run-median RMSE in physical units at horizon 36
+(900 s) unless stated; horizon 1 is reported separately.
 
-mit den Hartley-Konstanten $d_2$ aus der Prozessregelung (`evaluation/resolution.py`) --
-eine Zwei-Stichproben-Schwelle, die die Streuung *beider* verglichener Modelle nutzt, nicht
-nur einer Referenz (Befund 63g). Die Schwelle hängt deshalb vom jeweils geprüften Kandidaten
-ab: für die Vergleiche zwischen GRU, LSTM und Transformer liegt sie mit den gefahrenen 5
-Seeds bei `energy_target` (3,9-10,5 %) und `bed_temperature_celsius` (5,5-11,1 %) in der
-Größenordnung, die die M2-Definition für drei Seeds nennt (10 bis 15 %) -- **für diese drei
-Architekturen ist die M2-Auflösung erreicht.** Für xLSTM und Mamba liegt sie auf denselben
-beiden Kanälen wegen ihrer eigenen, deutlich größeren Streuung dagegen bei 17,2 bis
-1189,7 % (Tabelle 1) -- **für diese beiden nicht erreicht.** Auf
-`product_moisture_kg_per_kg` ist die Schwelle für alle vier Architekturen zu groß (34,8 bis
-357,3 % je nach Kandidat) -- dort ist die M2-Auflösung mit 5 Seeds für keinen Vergleich
-erreicht. Das heißt nicht, dass auf diesem Kanal keine Rangaussage möglich ist: eine
-verfehlte Auflösung bedeutet, dass *kleine* Unterschiede nicht nachweisbar sind -- *große*
-bleiben es, wie die weiterhin auflösbaren Rückstände von Transformer, xLSTM und Mamba in
-Abschnitt 3 zeigen. Um eine *kleine* Differenz von 12,5 % zwischen GRU/LSTM/Transformer
-wären überschlägig **40 bis 41 Seeds** nötig (`SeedSpread.required_replicates`, Skalierung
-mit $1/\sqrt{n}$, Befund 63h) -- eine Abschätzung, keine exakte Zahl. **Jede Rangaussage in
-Abschnitt 3 ist gegen die tatsächlich erreichte Schwelle geprüft**, nicht nur berichtet.
+**Data basis.** The old records (arm A0, Befund 51/58) rest on the legacy data
+configuration. The re-run (Befund 94) adds arm A1 (legacy trajectories, planned future
+inputs) and **arm N, the preset version 2** (`DataSpec.new_study`: planned future inputs, own
+disturbance process of the solid fraction, per-run cap of the gas velocity at the terminal
+velocity of the initial diameter; Befund 82, 86). Arm N is the basis of this synthesis.
+`process/fingerprint` covers the process configuration only; the data, excitation and split
+digests are recorded next to it. The new records come from one machine; arm A0 carries a
+platform confound (GRU, LSTM and baselines on Linux, Transformer, xLSTM and Mamba on
+Windows; Befund 83 b); at the cells re-run, Befund 84 and 85 found no platform effect for
+GRU and LSTM beyond the last digits.
 
-*Tabelle 1 -- Auflösungsschwelle (relativ, 95 % Konfidenz, $n=5$, Zwei-Stichproben gegen
-LSTM als Referenz, Befund 63g/h):*
+**Resolution: paired over seeds, Holm as the main form.** All methods run with the same
+master seeds; per cell the differences `reference - candidate` are formed per seed and
+tested with the t distribution on four degrees of freedom (`evaluation/paired_resolution.py`;
+Befund 82). The test is on the mean of the differences; the tables report medians. The
+verdict per cell is "candidate better", "candidate worse" or "unresolved". With many cells,
+a family-wise correction is needed: **the main form counts a cell as resolved only if it
+survives Holm (5 %) within the family of all rank cells of one arm** (336 cells in A0 and N,
+168 in A1; Befund 94); the uncorrected count is given as an addition, the sign convention is
+"candidate against LSTM". The older z thresholds of Befund 63 are superseded (Befund 67, 83).
+The re-analysis of the old records applied 632 uncorrected paired tests (Befund 83).
 
-| Kanal | Testmenge | GRU/Transformer | xLSTM/Mamba |
+**Number of seeds.** On energy and bed temperature, 3 to 11 seeds resolve a 10 to 12.5 %
+difference of GRU or Transformer against LSTM at 80 % power; on the **product moisture the
+paired standard deviation is 25 to 60 % of the mean**, so 37 and 45 seeds are needed for GRU
+(constant / excited) and 33 and 193 for the Transformer at 12.5 % (Befund 83, addendum b;
+old data A0; pairing does not remove the moisture problem). The M2 definition of 10 to 15 %
+sits in a note of the project profile and the work plan, not in the formal definition.
+
+## 3. Architecture comparison (arm N)
+
+Eight methods (persistence, static regression, ARX, GRU, LSTM, Transformer, xLSTM, Mamba),
+three targets, two test sets, $n_{\mathrm{train}} \in \{8,16,32,64\}$, five seeds, horizons 1 and 36;
+the trained networks are per-target composites (Befund 26, 28). Learning curves: Figure 1
+(excited test set) and Figure 2 (constant-run holdout), generated by
+`scripts/plot_synthesis_v5_figures.py` from the records of Befund 94.
+
+![Learning curves, arm N, excited test set](figures/fig1_learning_curves_arm_n_excited.png)
+
+![Learning curves, arm N, constant-run holdout](figures/fig1_learning_curves_arm_n_constant_holdout.png)
+
+*Figures 1 and 2: error (RMSE in physical units, horizon 36) over the number of training
+runs, median and range over five seeds, arm N; the second figure is the constant-run holdout.*
+
+**GRU and LSTM.** On the product moisture GRU and LSTM are not distinguishable (15 of 16
+cells unresolved, one cell with GRU worse, uncorrected). On energy and bed temperature GRU is
+better than LSTM in 5 of 16 and 9 of 16 cells without correction and never worse; **after
+Holm correction, no GRU-versus-LSTM cell is resolved in any channel** (also not when the
+family is restricted to the GRU cells, a post-hoc sensitivity; addendum to Befund 94). GRU is
+recommended as the default on practical grounds: never resolved worse, about 25 % fewer
+parameters (42,819 against 57,027, Befund 28), lower single-window latency (Befund 97; LSTM
+is faster in batch). **This is not a performance ranking.**
+
+**Transformer, xLSTM, Mamba.** Against LSTM they are worse in 39 (Transformer), 38 (xLSTM)
+and 44 (Mamba) of 48 cells without correction, never better. After Holm correction the
+deficit is resolved in 14 of 48 cells for Mamba, in 2 of 48 for the Transformer and in 2 of
+48 for xLSTM. **Only Mamba, and the baselines, are clearly behind LSTM; the deficits of
+Transformer and xLSTM are an uncorrected tendency.** On the product moisture xLSTM stays
+unresolved in 7 of 16 cells (uncorrected); its optimisation is unstable there (Befund 58,
+63). Baselines: against LSTM the static regression is resolved worse in 21 of 48 cells after
+Holm, persistence in 19, ARX in 12.
+
+**Middle of the order.** Only the ends of the order are reproduced on the new data basis;
+the middle (Transformer, xLSTM) changes between unresolved and worse from cell to cell
+and is not supported by five seeds: after Holm, 70 of 336 rank cells remain in arm N (82 of
+336 in A0). 85 rank verdicts differ between A0 and an arm of the re-run, 45 in A1 and 40 in
+N (Befund 94 b).
+
+**A1 against A0.** Planned future inputs on the legacy trajectories make the recurrent
+models and ARX worse in the resolved cells, not better: the tendency is weaker than the old
+data suggested, and after Holm hardly resolved (3 of 192 tests in A1 against A0; 24 of 384 in
+N against A0; Befund 94 a). The data show no sign that the old results profited from
+missing planned inputs.
+
+**Static explainability of dE.** The energy target is largely explained by a static
+regression on the current set points (Befund 16, 59), which is why R^2 is a poor yardstick:
+the trained networks improve the physical RMSE over the static regression by factors of 5.2
+to 7.8 (GRU, LSTM, Transformer, $n_{\mathrm{train}}$ = 64, horizon 36, both test sets, all
+five seeds better; Befund 83 e). Comparisons are therefore made in physical units.
+
+## 4. Inference and compute cost
+
+All timings are from the joint measurement on an idle machine (Befund 97): one thread,
+warm-up excluded, one process; arm N pool, $n_{\mathrm{train}}$ = 64, 4352 excited-test windows.
+Earlier measurements under load are not quoted as results. Latency of one window and cost
+per window in a batch differ in order and are reported apart (microseconds):
+
+| method | parameters | latency, one window | per window in a batch |
 |---|---|---|---|
-| `energy_target` | angeregt | 8,7-10,5 % | 23,3-1189,7 % |
-| `energy_target` | Konstantlauf | 3,9-4,7 % | 17,2-1034,9 % |
-| `product_moisture_kg_per_kg` | angeregt | 50,0-91,0 % | 298,6-357,3 % |
-| `product_moisture_kg_per_kg` | Konstantlauf | 34,8-45,5 % | 142,0-147,8 % |
-| `bed_temperature_celsius` | angeregt | 5,5-11,1 % | 49,4-82,0 % |
-| `bed_temperature_celsius` | Konstantlauf | 6,2-8,3 % | 23,7-34,3 % |
+| persistence | 0 | 3 | 0.2 |
+| static regression | 45 | 5 | 1.7 |
+| ARX | 102 | 246 | 3.9 |
+| GRU | 42,819 | 4,753 | 123.7 |
+| LSTM | 57,027 | 6,502 | 57.2 |
+| Mamba | 8,139 | 14,950 | 415.8 |
+| xLSTM | 8,649 | 27,487 | 936.8 |
+| Transformer | 23,523 | 31,567 | 2,691.8 |
 
-**Metriken.** Ein-Schritt-Fehler ($h=1$) und Mehrschritt-Rollout-Fehler ($h=36$, 900 s) werden
-getrennt berichtet -- ein Modell, das nur einschrittig gut ist, akkumuliert Fehler im Rollout
-anders als eines mit trainiertem Mehrschrittverhalten. Inferenzzeit (µs/Fenster) ist die
-dritte Pflichtmetrik (Abschnitt 3.2).
+![Inference cost on an idle machine](figures/fig2_inference_cost_idle.png)
 
-**Reproduzierbarkeit.** Jeder Trainingslauf trägt einen Fingerprint der vollständigen
-Konfiguration, den Git-Commit und dessen Dirty-Status, sowie deterministische, aus Lauf-IDs
-berechnete Splits. Die beiden für den Achtervergleich zentralen Datensätze
-(`arch_learning_curve_projected.jsonl`, Commit `0b3eaaf`, und
-`arch_learning_curve_projected_extended.jsonl`, Commit `256d644`) sind **protokollgleich**:
-gleicher Fingerprint, je `master_seed` identische Splits und Seeds (Befund 58, OA5) -- beide
-sind deshalb gemeinsam auswertbar, nicht nur nebeneinander zitierbar. Alle in diesem Dokument
-berichteten Inferenzzeiten (Abschnitt 3.2) sind zusätzlich auf identische
-Thread-Einstellungen geprüft (`torch/num_threads`, `env/mkl_num_threads`,
-`env/omp_num_threads`, alle `1`) -- ohne diese Prüfung wären zwei Datenfamilien mit
-unterschiedlicher Parallelisierung vermischt worden (Abschnitt 3.2).
+Per prediction every learned architecture is far below the sample time of 25 s. The batch
+order is LSTM < GRU < Mamba < xLSTM < Transformer, the single-window order GRU < LSTM <
+Mamba < xLSTM < Transformer: that LSTM is faster than GRU is a statement about the batch,
+not about single-window latency. The Transformer is the most expensive in both columns
+(no KV caching in this implementation, Befund 37). Fit times per epoch (2-epoch fit, setup
+included, indicative only): GRU 4.3 s, LSTM 4.7 s, Mamba 14.8 s, xLSTM 27.8 s, Transformer
+67.6 s.
 
-## 3. Ergebnis: Architekturvergleich
+**Hybrid of study A.** The hybrid (network plus open simulation as exogenous channels)
+needs the simulator ahead of every prediction: one horizon of 36 steps costs 253,136 µs in
+the simulator, of 256,123 µs in total, i.e. **98.8 % simulator share**; the network alone
+(2,987 µs) is not the cost of the hybrid.
 
-Acht Architekturen -- Persistenz, statische Regression, linearer ARX, GRU, LSTM,
-Transformer, xLSTM, Mamba -- unter identischem Protokoll (Befund 51+58), drei Zielkanäle
-(`energy_target`, `product_moisture_kg_per_kg`, `bed_temperature_celsius`), zwei
-Testmengen, $n_{\mathrm{train}} \in \{8,16,32,64\}$, 5 Seeds. Lernkurven: Abbildung 1
-(Konstantlauf-Holdout) und Abbildung 2 (angeregt).
+## 5. Methodological findings
 
-![Lernkurven, acht Architekturen, Konstantlauf-Holdout](figures/abb1_lernkurven_konstantlauf.png)
+- **Run-level splits** prevent an optimistic bias of 29 to 68 % (section 2; Befund 39).
+- **Negative transfer.** A shared loss over targets of unequal difficulty degrades the energy
+  target in soft-sensor operation; per-target networks (composite) avoid it (Befund 26).
+- **Static explainability of dE** makes R^2 uninformative; compare in physical units (section 3).
+- **t instead of z, paired instead of unpaired** at the resolution threshold: the z
+  threshold of Befund 63 g was too small at few seeds, and pairing over seeds removes the
+  shared seed effect (Befund 67, 82, 83).
+- **Seed budget.** Five seeds resolve large differences everywhere and 10 to 12.5 % on
+  energy and bed temperature; on the product moisture they resolve only large differences
+  (section 2; Befund 83 addendum b).
+- **Holm and Benjamini-Hochberg.** In arm N 260 of 336 rank cells are resolved without
+  correction and 70 after Holm (Befund 94); the main form here is Holm.
+- **Test sets.** A constant-run holdout hides what an excited set shows and conversely;
+  every number is quoted with its test set (Befund 51).
 
-![Lernkurven, acht Architekturen, angeregte Testmenge](figures/abb2_lernkurven_angeregt.png)
+## 6. Data need and plant link
 
-**Kernaussage.** GRU und LSTM sind die besten der acht verglichenen Architekturen und
-untereinander nicht unterscheidbar; der Transformer erreicht auf der Betttemperatur
-(Konstantlauf) Gleichstand und liegt auf dem Energieverbrauch klar auflösbar zurück. Auf
-der Produktfeuchte gilt der Rückstand klar nur auf der angeregten Testmenge -- auf dem
-Konstantlauf liegt er nur knapp über der Auflösungsschwelle (−45,9 % gegen 45,5 %). Das
-Ganze bei rund zehnfachem Rechenaufwand; xLSTM und Mamba liegen zurück. Im Detail:
+**Study A (Befund 88): the value of a simulator for a data-poor model.** Pre-training on
+the grey-box simulator plus fine-tuning on the plant data beats training from scratch at
+small $N$ on every plant variant (the error ratio from-scratch over fine-tuned falls from 12.69
+(identical plant) and 10.27 (parameter deviation) at $N$ = 2 to 1.32 and 1.27 at $N$ = 64);
+the crossover is not reached on four of the five plants, and pre-training is never resolved
+worse than training from scratch, for the deviations tested. **The hybrid is never better
+than pre-training plus fine-tuning**, so it does not pay (cost: section 4). Five seeds, one
+LSTM, plants that are variants of the same grey-box model.
 
-**GRU und LSTM sind gegeneinander mit fünf Seeds nicht unterscheidbar.** An keiner der sechs
-geprüften Kombinationen (3 Kanäle × 2 Testmengen, $n_{\mathrm{train}}=64$) liegt der
-Unterschied über der Auflösungsschwelle: die gemessenen Differenzen liegen zwischen
-$-19{,}9\,\%$ und $+3{,}5\,\%$, die zugehörigen Schwellen zwischen $3{,}9\,\%$ und
-$50{,}0\,\%$ (Befund 63c). **Die belastbare Empfehlung lautet "GRU oder LSTM", nicht eines
-von beiden.**
+**Study B (Befund 87): excitation and active learning.** At equal cost per run, a better
+designed excitation is worth several additional runs of the plain random-step design at
+small $N$, but with ten seeds the advantage is not established in the primary test (HB1:
+not established); active learning is not better than random selection from the same pool
+(HB2: not established on the deployment-like test set, refuted on the neutral mix), and a
+dependence of the ranking on the test set is not established (HB3). Constant operation is far worse
+than any excited design. Reservation: the per-run gas-velocity limit shapes every plan.
 
-**Gegen den Transformer ist der Vorsprung kanalabhängig -- auf der Betttemperatur
-(Konstantlauf) besteht keiner.** Bei `bed_temperature_celsius` (Konstantlauf) liegt der
-Faktor bei 1,026 (200 Trainingsepochen) und 1,000 (600 Epochen) -- **beide Werte unterhalb
-der Auflösungsschwelle** ($-2{,}6\,\%$ gegen $8{,}3\,\%$ bzw. $+0{,}0\,\%$ gegen $7{,}5\,\%$):
-der Unterschied ist zu keinem Zeitpunkt nachweisbar, unabhängig vom Epochenbudget. Auf allen
-übrigen geprüften Kombinationen ist der Transformer-Rückstand dagegen
-auflösbar: `energy_target` (Konstantlauf) in beiden Konfigurationen ($-8{,}2\,\%$ gegen
-$4{,}7\,\%$ bei 200 Epochen, $-15{,}8\,\%$ gegen $9{,}8\,\%$ bei 600 Epochen, wachsend statt
-gleichbleibend), `bed_temperature_celsius` auf der angeregten Testmenge ($-16{,}5\,\%$
-gegen $11{,}1\,\%$) und `product_moisture_kg_per_kg` auf beiden Testmengen (angeregt
-$-98{,}6\,\%$ gegen $91{,}0\,\%$; Konstantlauf $-45{,}9\,\%$ gegen $45{,}5\,\%$ -- dort nur
-knapp). Kostenseitig ist der Transformer, unabhängig vom Ergebnis, in dieser
-Implementierung 9,5- bis 16,9-fach teurer bei Inferenz (Tabelle 2) und 9,6- bis 11,4-fach
-teurer beim Training (`training/elapsed_s`, dieselbe Datenfamilie, $n_{\mathrm{train}}=64$)
-als GRU/LSTM -- ein Effekt, der auch bei aufgelöster Güte gegen ihn spricht. Ursache ist das
-Fehlen von KV-Caching im Decoder-Loop dieser konkreten Implementierung (Befund 37c), keine
-zwingende Eigenschaft der Transformer-Architektur an sich.
+**Plant data (Befund 55, 56).** Operating records of the application partner (two 24-hour
+exports, two products, one-minute sampling) show a coefficient of variation of the manipulated
+variables inside one operating point of only 0.12 to 2.01 % (air flow, inlet temperature, spray
+rate) but large differences between the products: operating data cover different operating
+points but little dynamics within one. This agrees with the synthetic experiment of Befund 55,
+where a model trained on constant runs only stays worse on the product moisture than the same
+model trained on excited data by a factor of 2 to 3 over the whole budget range (NRMSE, no
+catching up). The product moisture is not measured at the plant (Befund 56); a validation of
+the soft sensor against plant data is still open.
 
-**xLSTM und Mamba bleiben zurück -- in 10 von 12 geprüften Zellen auflösbar belegt, mit
-einer benannten Ausnahme.** Über 3 Kanäle × 2 Testmengen ist Mamba durchgehend (6/6),
-xLSTM auf `energy_target` und `bed_temperature_celsius` (4/4) nachweisbar schlechter als
-LSTM. Auf `product_moisture_kg_per_kg` ist xLSTMs Rückstand dagegen -- trotz großer
-Medianunterschiede (Faktor > 2 in beiden Testmengen) -- **nicht statistisch belastbar**:
-die Architektur zeigt auf diesem Kanal bereits in Befund 58 eine divergierende
-Optimierung (der Fehler steigt dort streckenweise mit wachsendem $n_{\mathrm{train}}$
-statt zu fallen), und genau diese Instabilität erzeugt eine so große eigene
-Seed-zu-Seed-Streuung, dass die Auflösungsschwelle den Medianunterschied nicht mehr
-unterschreitet. Das ist als Optimierungsversagen unter dem hier gefahrenen festen
-Protokoll zu lesen, nicht als belastbare Kapazitätsaussage über die Architektur auf diesem
-einen Kanal (Befund 63 Nachtrag).
+## 7. Limits
 
-**Baselines: der lineare ARX sättigt sanft, nicht scharf, und überholt sein nichtlineares
-Gegenstück nie.** Unter der aktuellen Konfiguration (GAB-Isotherme, Δt=25 s/900 s-Horizont,
-Befund 44) fällt der ARX-Fehler auf `product_moisture_kg_per_kg` noch messbar bis
-$n_{\mathrm{train}}=64$ ($-7{,}8\,\%$ Δ zur vorigen Stützstelle), erst ab $n=128$ wird der
-Zugewinn klein. Das nichtlineare `RandomFeatureNARX` (identische Ridge-Regression, einzige
-Änderung: nichtlineare statt lineare Basisfunktion) schließt die relative Lücke zum ARX
-drastisch (69 % → 12 % über $n=8$ bis $256$), überholt ihn aber an keiner Stützstelle --
-reine Nichtlinearität ohne gelernten Zustand oder Rollout-Training hilft auf dieser Aufgabe
-nicht. Ein direkter Vergleich dieser ARX/NARX-Kurve mit GRU/LSTM ist nicht zulässig (andere
-Konfiguration, Befund 43e/44c).
+- **Grey-box simulator, not the plant.** Four states, no agglomeration, no breakage; the
+  GAB sorption isotherm uses placeholder parameters (Befund 34). All numbers are statements
+  about the model.
+- **No validation against plant data.** Plant exports lack gas consumption, heating power,
+  intake humidity, product moisture, particle size and product mass flow (Befund 56); the
+  energy target cannot be validated at all.
+- **Placeholders that influence results:** the critical moisture of 0.20 kg/kg (kinetics
+  parameter and quality limit at once), the bed-temperature limit, the steady-state
+  particle diameter, the lower bound of the gas velocity (0.80 and 1.26 m/s), the box
+  minimum of the inlet temperature, the soft-sensor margin and the penalty weight, the
+  minimum approach temperature and the cold-side temperature of the heat network. The
+  reference state of the gas velocity (mass flow) and the nozzle-pressure kink at 1 bar
+  are unresolved questions of the register (`docs/12`, E-Q1, E-Q3).
+- **Five seeds.** Only large differences are resolved on the product moisture; verdicts are
+  per cell and their family-wise correction is conservative.
+- **One timing run** on one machine (Befund 97); the networks were fitted for two epochs only.
 
-### 3.1 Statische Regression und `energy_target`: R² täuscht über die verbleibende Lücke
+## 8. Outlook (context for AP3, not a result of AP1)
 
-`energy_target` ist zu R² = 0,972 statisch erklärbar (Befund 59b) -- eine Zahl, die
-verdeckt, wie groß die verbleibende Lücke in physikalischen Einheiten ist: bei
-$n_{\mathrm{train}}=64$, h=36, liegen die trainierten Modelle bei R² ≥ 0,999 (angeregt) bzw.
-≥ 0,9989 (Konstantlauf) -- eine Verschiebung, die in R²-Einheiten in der
-dritten/vierten Nachkommastelle verschwindet, aber **Faktor 5,2 bis 7,8 im RMSE** bedeutet
-(Befund 59a). Ein zweites, unabhängiges Protokoll (Befund 50, 3 Seeds, nur GRU, eigener
-Kanal `bed_temperature_celsius` als Anwendungsgröße, nicht Teil des Achtervergleichs oben)
-zeigt dasselbe Muster deutlicher: R²$_{\mathrm{stat}}$ = 0,768 sieht nach einer schwachen
-Baseline aus, aber der physikalische Restfehler der besten linearen Regression (FIR, k=43:
-3,62 K) gegenüber GRU (0,18 K) ist dort **Faktor 20** (Befund 50j). Die praktische
-Konsequenz: R² ist zur Einordnung eines Architekturvergleichs ungeeignet, sobald die
-Zielgröße eine große Varianz gegenüber ihrem Restfehler hat.
+- **Model-based optimisation (Befund 80).** Adapting the operating point to the ambient
+  state saves a median of 9.0 % (lower gas-velocity bound 0.80 m/s) to 16.5 % (1.26 m/s)
+  against a fixed point; a soft-sensor safety margin costs 1.30 to 1.46 % and leaves 94 % (1.26
+  m/s) to 85 % (0.80 m/s) of that benefit. The gas velocity sits on its lower bound at 22 (1.26
+  m/s) and 17 (0.80 m/s) of 25 test points: it is the main lever, but the bound itself is a
+  placeholder, and the moisture limit binds at 13 (1.26 m/s) and 25 (0.80 m/s) of 25 points.
+  Set points are optimised line by line before any interconnection. **A coupling gain of
+  two lines is not demonstrated in the corrected model** (0 of 6 scenarios at 20 K minimum
+  approach, 1 of 6 at 10 K as a sensitivity; Befund 81).
+- **Reinforcement learning (Befunde 62, 68, 93, 96).** The line is closed as a diagnostic
+  finding: with a residual action and a separated moisture cost the policy needs a margin of
+  five times the base margin to be feasible in every seed, at 6.9 % extra energy over the
+  optimiser with the base margin, of which 6.5 points are the margin itself.
+- **Partner model (Befunde 74, 75, 90, 95).** The ranking of the partner's scenarios is
+  robust against every assumption switched (Befund 95); the model recovers 60 to 88 % of an
+  independent counter-current calculation, and the flow arrangement is the assumption that
+  matters (Befund 90 with its addendum).
+- **Storage of plant A (Befunde 91, 92).** The model bounds the storage volume only from
+  above and is not a predictor. The saving read by the pre-registered rule is L1 (L2 only
+  post hoc with a plain rule); it consists entirely of the added discarded compressor heat,
+  pure shifting in time saves nothing, and no RL was built.
 
-### 3.2 Inferenzzeit
+## Appendix: traceability table
 
-*Tabelle 2 -- Inferenzzeit und Parameterzahl, $n_{\mathrm{train}}=64$, nur die untereinander
-thread-geprüfte, protokollgleiche Datenfamilie (Befund 51+58), nach Inferenzzeit sortiert:*
+Columns: statement (section) · number(s) · Befund · artifact · commit that added the
+artifact in the current history · checked by `scripts/check_m2_synthesis_consistency.py`
+(`yes`, or `no: reason`).
 
-![Inferenzzeit und Parameterzahl je Architektur](figures/abb4_inferenzzeit_parameter.png)
-
-| Architektur | µs/Fenster | Parameter |
-|---|---|---|
-| Persistenz | 0,15 | 0 |
-| Statisch | 1,76 | 45 |
-| ARX | 5,25 | 102 |
-| LSTM | 182,8 | 57.027 |
-| GRU | 323,1 | 42.819 |
-| Mamba | 494,1 | 8.139 |
-| xLSTM | 1.121,9 | 8.649 |
-| Transformer | 3.081,6 | 23.523 |
-
-**Unerwartet und unerklärt: LSTM ist bei gleicher Kapazitätsstufe schneller als GRU, nicht
-langsamer.** Beide Architekturen laufen mit identischer `hidden_size` (64), LSTM hat dabei
-33 % mehr Parameter als GRU (57.027 gegen 42.819 -- der zusätzliche Zellzustand, konsistent
-mit der bereits in Befund 30 notierten Beobachtung). Mehr Parameter bei gleicher
-Kapazitätsstufe legt eine langsamere, nicht schnellere Inferenz nahe -- gemessen ist das
-Gegenteil (182,8 gegen 323,1 µs/Fenster, Faktor 1,77). **Die Modellgröße erklärt den
-Unterschied nicht** (Befund 63a); er bleibt als offene, unerklärte Beobachtung stehen, kein
-CPU-Kernel-Profiling wurde durchgeführt.
-
-**Vorbehalt.** Andernorts im Laborbuch zitierte Einzelwerte für GRU/Transformer/Mamba
-stammen aus Datensätzen ohne geloggte Thread-Einstellungen und sind mit Tabelle 2 **nicht
-poolbar** -- eine Abweichung zum hier berichteten GRU-Wert (323,1 µs) ist damit erklärt,
-nicht widersprüchlich.
-
-## 4. Methodische Befunde (Zusammenfassung)
-
-- **Testmengenwahl ändert die berichtete Zahl, nicht nur ihre Größe.** Der Faktor gegen die
-  Persistenz-Baseline auf `product_moisture_kg_per_kg` hängt stark von der Testmenge ab:
-  1,31 (GRU)/1,70 (LSTM) auf dem Konstantlauf-Holdout, 4,4 bis 24 auf der angeregten
-  Testmenge -- beide Zahlen sind gültig, aber nur mit Testmenge zitierbar, nicht
-  austauschbar (Befund 51, K5).
-- **Laufweise Splits verhindern nachweislich optimistische Verzerrung** (Abschnitt 2).
-- **Betriebsdaten genügen für die Feuchte im getesteten Budgetbereich nicht.** Ein
-  ausschließlich auf rein konstanten Läufen trainiertes Modell bleibt bei
-  `product_moisture_kg_per_kg` über den gesamten Budgetbereich ($n_{\mathrm{train}} \le 64$)
-  um Faktor 2,2 bis 3,1 schlechter als das gleiche Modell auf angeregten Daten, ohne
-  erkennbares Aufholen (Abbildung 3, Befund 55). Grund, an den Epochenzahlen sichtbar: das
-  konstant trainierte Modell erschöpft sein lernbares Signal nach rund einem Achtel der
-  Epochen (Early Stopping bei ≈24 statt ≈170) -- eine Messung des Informationsgehalts der
-  Daten, keine Recheneffizienz.
-
-![Befund 55: angeregt gegen konstant trainiert](figures/abb3_befund55_angeregt_vs_konstant.png)
-
-## 5. Datenbedarf und Anlagenbezug
-
-Reale Betriebsaufzeichnungen des Anwendungspartners (zwei 24-Stunden-Exporte, zwei
-Produkte, Minutentakt) bestätigen das synthetische Ergebnis aus Abschnitt 4 unabhängig:
-Stellgrößen variieren innerhalb eines Betriebspunkts kaum (Variationskoeffizient 0,12 bis
-2,01 % über Luftmenge, Zulufttemperatur, Sprührate), zwischen den zwei beobachteten
-Produkten dagegen stark (Befund 56, 56a) -- exakt das Muster, das Befund 55 aus dem
-synthetischen Experiment ableitet: Betriebsdaten decken verschiedene Arbeitspunkte ab, aber
-innerhalb eines Arbeitspunkts kaum Dynamik.
-
-Eine Validierung der Betttemperatur gegen diese Anlagendaten steht noch aus. Die
-Anlagendaten erlauben aber bereits eine prüfbare Vorhersage: bei gemessenem Luftstrom und
-gemessener Zulufttemperatur legt die Betttemperatur im Beharrungszustand im Wesentlichen
-den Wassergehalt der Sprühsuspension fest, unabhängig von der im Export nicht enthaltenen
-Bettmasse. Je nach Bilanzraum -- mit oder ohne die laut
-Befund 56 (NA4) vermutete Verdampfung oberhalb des Betts -- und unbekanntem Wandverlust
-sagt das Modell für beide Produkte einen Suspensions-Feststoffanteil zwischen rund 59 und
-73 % vorher (Befund 56, NB2) -- deutlich über dem
-bisherigen Konfigurations-Nominalwert (30 %), für den keine Anlagenmessung vorlag. Für
-eines der beiden Produkte (RID) ist diese Vorhersage mit der im Leitsystem angezeigten
-Suspensionsdichte konsistent: über die gesamte vorhergesagte Spanne liegt die implizierte
-Feststoffdichte im für eine organische Formulierung plausiblen Bereich -- ein erster
-unabhängiger Hinweis, dass "deutlich über 30 %" zutrifft, der aber innerhalb der Spanne
-nicht zwischen den Bilanzräumen unterscheiden kann. Werte über etwa 70 % sind für eine
-sprühbare Suspension hoch; das obere Ende der Spanne ist entsprechend vorsichtig zu lesen.
-Die Produktfeuchte selbst ist an der Anlage F-5 nicht gemessen.
-
-Genau das ist der Grund, warum die in diesem Dokument verglichenen Modelle gebraucht
-werden: der Anlagenzustand ist nicht direkt beobachtbar, und die Größe, die ihn am
-vollständigsten repräsentiert -- die Produktfeuchte -- bindet an 17 von 25 geprüften
-Störgrößenkombinationen als aktive Nebenbedingung am energetischen Optimum (Befund 52c),
-ist aber an der Anlage F-5 nicht gemessen (Befund 56). Ein Soft Sensor ist an dieser Stelle
-keine Komfortfunktion, sondern die Voraussetzung dafür, dass ein Regler die
-Qualitätsgrenze überhaupt kennt.
-
-## 6. Grenzen
-
-- **Vier-Zustandsmodell statt Populationsbilanz.** Das Grey-Box-Modell kennt weder
-  Agglomeration noch Bruch noch eine Kopplung des Partikelwachstums an die
-  Trocknungsbedingungen; die Partikelgröße ist im stationären Fall eine Konstante des
-  Materialsystems (Befund 62a). Alle Architekturvergleiche in Abschnitt 3 sind Aussagen
-  **über dieses Modell**.
-- **Die Wahrheit ist der Simulator, nicht die Anlage.** Solange Dyssol-Granulationsmodelle
-  fehlen (bis Monat 21), gibt es keine unabhängige physikalische Referenz für die
-  Produktfeuchte -- jede hier berichtete Modellgüte ist relativ zum Grey-Box-Modell, nicht
-  zur Anlage.
-- **Sechs unbelegte Platzhalter beeinflussen die Ergebnisse dieses Dokuments direkt** (mit
-  Fundstelle, vollständige Liste im Anhang der Bestandsaufnahme,
-  `docs/08_synthese_m2_bestand.md`, Tabelle 3): die kritische Gutsfeuchte (0,20 kg/kg, bindet
-  an der Regret-Nebenbedingung in Abschnitt 5), die 80-°C-Bettemperaturgrenze (frei gesetzt,
-  an Anlage F-5 existiert ein realer, erfragbarer Grenzwert), der Beharrungsdurchmesser
-  d50 (≈750 µm, geht in jede Fluidisierungs-Zulässigkeitsprüfung des Modells ein, Befund 46),
-  die Kaltseitentemperatur des Wärmeübertragers, der Versatz zwischen Bett- und
-  Abluft-Temperatur im Modell (Ursache vermutlich fortlaufende Verdampfung oberhalb des
-  Betts, nicht ein Leitungsverlust im engen Sinn -- Befund 56 NA4 widerlegt die frühere
-  Lesart als reiner Wärmeverlust) und der Wandverlust der Anlage (im Modell nur als kleiner
-  Platzhalterwert hinterlegt, nicht anlagenseitig ermittelt -- geht direkt in die Breite der
-  Feststoffanteil-Spanne in Abschnitt 5 ein, Befund 56 NB2).
-- **Fehlende Anlagenmessgrößen.** In den bisher verfügbaren Anlagenexporten fehlen
-  Gasverbrauch/Heizleistung, die Feuchte der Ansaugluft, Produktfeuchte, Partikelgröße und
-  Produktmassenstrom vollständig (Befund 56) -- `energy_target` ist an diesen Daten deshalb
-  überhaupt nicht validierbar.
-- **Inferenzzeit unvollständig kreuzvalidiert.** Tabelle 2 (Abschnitt 3.2) ist intern
-  konsistent, aber nicht mit allen im Laborbuch an anderer Stelle zitierten Einzelwerten
-  poolbar (fehlende Thread-Protokollierung in älteren Datensätzen).
-
-## 7. Ausblick
-
-AP1 ist nicht RL ("erst müssen stabile Mehrschritt-Rollouts stehen",
-`docs/05_arbeitsplan_ap1.md`) -- die folgenden Punkte sind Kontext für AP3, nicht Ergebnis
-dieses Arbeitspakets.
-
-Die Modelle aus Abschnitt 3 werden nachgelagert gebraucht, weil zwei Eigenschaften des
-Prozesses zusammenfallen: der Anlagenzustand ist nicht vollständig messbar, und ausgerechnet
-die unbeobachtete Größe -- die Produktfeuchte -- bindet an einer Mehrheit der geprüften
-Betriebspunkte als aktive Qualitätsgrenze (Abschnitt 5). Eine mögliche künftige
-Validierungsoption, im Rahmen dieses Dokuments nicht geprüft: an Anlage KR-1 des
-Anwendungspartners existiert bereits eine kapazitive In-situ-Feuchtemessung (Befund 63i) --
-nicht an Anlage F-5, um die es in Abschnitt 5 geht. Sie wäre eine mögliche Grundlage, den
-Feuchte-Soft-Sensor aus Abschnitt 3 gegen eine reale Messung zu prüfen; nicht geprüft, die
-Übertragbarkeit zwischen den beiden Anlagen ist offen. Eine Voruntersuchung zur
-RL-Eignung (Befund 52, kein Netztraining, reine Optimierung) zeigt, dass ein fester
-Betriebspunkt gegenüber dem instanzoptimalen Wert einen Regret im **Prozentbereich** trägt
-(Median 16 %, bis 26 % je nach Störgrößenkombination; Bruttoverbrauch, Labormaßstab --
-kein Einsparpotenzial an der realen Anlage F-5, siehe Befund 52 Vorbehalte) -- groß genug,
-um eine adaptive Regelung inhaltlich zu rechtfertigen, nicht nur eine feste Fahrweise zu
-bestätigen. Ob eine
-solche Regelung die vom Feuchte-Soft-Sensor gelieferte Information sicher nutzen kann, hängt
-an der Größenordnung des Vorhersagefehlers relativ zu einer gehaltenen Sicherheitsmarge:
-eine spätere Nachrechnung (Befund 62, Nachtrag HA1) findet die Marge eines
-straf-basierten Regel-Agenten zur Feuchtegrenze **85,7-fach** (empfohlener, angeregt
-trainierter Soft Sensor) bzw. **31,3-fach** (aus reinen Betriebsdaten trainierter Soft
-Sensor) so groß wie der dreifache Vorhersagefehler -- eine Brücke zwischen der
-Modellgüte aus Abschnitt 3 und einer künftigen Regelungsaufgabe, mit dem Vorbehalt, dass
-die kritische Gutsfeuchte selbst ein unbelegter Platzhalter ist und die Aussage im Modell
-gilt. Der zugrundeliegende Agent lief mit SB3-Standard-Hyperparametern, nicht auf die
-Aufgabe abgestimmt (Befund 62, FA2/GA1); die Faktoren 85,7 und 31,3 zeigen damit vor allem,
-was ohne gezielte Kopplung der gehaltenen Marge an die Schätzunsicherheit des Soft Sensors
-passiert -- sie sind keine Eigenschaft des Prozesses oder des Soft Sensors selbst.
-
-Auf Verbundebene liegt die beste der sechs vom Partner geprüften Wärmeübertrager-
-Verschaltungen 2,3 bis 4,2 % über dem thermodynamischen Optimum (Pinch-Analyse, Befund 60,
-Daten des Partnermodells) -- die Verschaltungsfrage ist für diesen Datenfall praktisch
-gelöst.
-
-## Anhang: Rückverfolgungstabelle
-
-Spalten: Aussage · Zahl(en) · Befund · Artefakt · Commit · **über Auflösungsvermögen
-ja/nein**. Letztere Spalte ist nur dort ausgefüllt, wo ein Auflösungsvermögen-Test
-durchgeführt wurde (Befund 63) -- "n/g" heißt nicht geprüft, nicht "ja".
-
-| Aussage (Abschnitt) | Zahl(en) | Befund | Artefakt | Commit | Über Auflösung? |
+| Statement (section) | Number(s) | Befund | Artifact | Commit | Checked |
 |---|---|---|---|---|---|
-| GRU/LSTM gegeneinander nicht unterscheidbar (3) | 6/6 Zellen unter Schwelle | 58, 63c | `arch_learning_curve_projected(_extended).jsonl`, `analyze_m2_resolution_verdicts.json` | 0b3eaaf, 256d644, 47c5292 | **Nein** (alle 6) |
-| Transformer/LSTM `bed_temperature_celsius`, 200→600 Epochen (3) | 1,026 → 1,000 | 58-Nachtrag, 63d | `arch_epoch_budget_probe600.jsonl` | 7e3fb1d, 0ed48e5, 47c5292 | **Nein** (beide) |
-| Transformer/LSTM `energy_target`, 200→600 Epochen (3) | 1,082 → 1,158 | 58-Nachtrag, 63d | `arch_epoch_budget_probe600.jsonl` | 7e3fb1d, 0ed48e5, 47c5292 | **Ja** (beide) |
-| Transformer/LSTM `product_moisture_kg_per_kg` (3) | −98,6 % / −45,9 % | 63d-Nachtrag | `analyze_m2_resolution_verdicts.json` | 47c5292 | **Ja** (Konstantlauf knapp) |
-| xLSTM/Mamba "bleiben zurück" (3) | 10/12 Zellen über Schwelle | 63e-Nachtrag | `analyze_m2_resolution_verdicts.json` | 47c5292 | **Teilweise** (xLSTM/Feuchte: nein) |
-| Seedbedarf 12,5 % auf Feuchte (2) | ≈40-41 Seeds | 63h | `analyze_m2_resolution_verdicts.json` (Methode), Berechnung Befund 63h | 47c5292 | n/a (Abschätzung) |
-| ARX sättigt sanft, NARX überholt ARX nie (3) | ARX −7,8 % (Δ bei n=64); NARX-Lücke 69 %→12 % | 44 | `arx_narx_learning_curve_gab_900s.jsonl` | 9652942 | n/g |
-| `energy_target` R²-Kompression (3.1) | R²$_{\mathrm{stat}}$=0,972 vs. Faktor 5,2-7,8 RMSE | 59a/b | `analyze_energy_target_static_factor.py`-Ergebnis | bc6b097 | n/g |
-| `bed_temperature_celsius` R²-Kompression, eigenes Protokoll (3.1) | R²$_{\mathrm{stat}}$=0,768 vs. Faktor 20 RMSE | 50j | `outlet_temperature_gru_protocol.jsonl` | f3d9a7a (Skript), b0ae64a (Ergebnis) | n/g |
-| Inferenzzeit + Parameterzahl (3.2) | Tabelle 2 | 51, 58, 63a | `arch_learning_curve_projected(_extended).jsonl` | 0b3eaaf, 256d644, 47c5292 | n/a (Kostenmetrik) |
-| LSTM schneller als GRU, unerklärt (3.2) | 182,8 vs. 323,1 µs/Fenster, 1,33x mehr Parameter | 63a | `analyze_m2_resolution_verdicts.json` | 47c5292 | n/a |
-| Transformer-Kosten Training/Inferenz (3) | 9,6-11,4x Training, 9,5-16,9x Inferenz | 51, 58 | `arch_learning_curve_projected(_extended).jsonl` (`training/elapsed_s`) | 0b3eaaf, 256d644 | n/a |
-| K5-Testmengenfalle (4) | 1,31/1,70 (Konstantlauf) vs. 4,4-24 (`excited`) | 51 | `arch_learning_curve_projected.jsonl` | 0b3eaaf | n/g |
-| Laufweise vs. punktweise Splits (2) | 29-68 % niedrigerer Fehler punktweise | 39 | `extra_trees_split_comparison.jsonl` | a0bbc19 | n/g |
-| Betriebsdaten genügen nicht (4) | Faktor 2,2-3,1, kein Aufholen | 55 | `arch_learning_curve_constant_trained.jsonl` | 1b85ce4 | n/g |
-| Anlagendaten: CV Stellgrößen (5) | 0,12-2,01 % | 56a | (Rohdaten nicht im Repo) | e3efc19, 88c0746 | n/a |
-| Feuchte bindet an 17/25 Optima (5) | 17/25 | 52c | `bb1_bb3_operating_point_regret.json` | 7103b73 | n/a |
-| Regret fester Betriebspunkt (7) | Median 16 %, bis 26 % | 52 | `study_operating_point_regret_win_repro.json` | 7103b73 | n/a |
-| Sicherheitsmarge/Vorhersagefehler (7) | 85,7x / 31,3x | 62 (HA1-Nachtrag) | `rl_bandit_ha1_margin_vs_prediction_error.json` | 7e9ff67, f99c7f4 | n/a |
-| Verschaltungslücke zum Optimum (7) | 2,3-4,2 % über Pinch-Ziel, Fall 1 beste Verschaltung | 60 (PA3) | `run_pinch_benchmark.json` | 8b41828 (Skript), 16ded7e (Ergebnis) | n/a |
-| Feststoffanteil-Vorhersage (5) | Spanne ~59 bis 73 % (ACE 59,1-72,6 %, RID 64,0-71,2 %), je nach Bilanzraum (Bett vs. ganzer Apparat) und Wandverlust | 56 (NB2 + Nachtrag) | `study_plant_solid_fraction_prediction.json` | 6f7262c, 914233a (Skript), e40d49b, ae426f3 (Ergebnis), 7f88680 (Befund-Nachtrag) | n/a |
+| GRU against LSTM, cells per channel (3) | 5/16, 9/16 better, 1 worse (moisture), 15/16 unresolved; Holm 0 | 94 c, addendum | `holm_rank_cells_rerun_full.json` | 405fc6b | yes |
+| Transformer, xLSTM, Mamba against LSTM (3) | 39 / 38 / 44 of 48; Holm 2 / 2 / 14 | addendum to 94 | `holm_rank_cells_rerun_full.json` | 405fc6b | yes |
+| Baselines against LSTM (3) | Holm 21 / 19 / 12 of 48 | addendum to 94 | `holm_rank_cells_rerun_full.json` | 405fc6b | yes |
+| xLSTM moisture unresolved (3) | 7 of 16 | 94 c | `rerun_evaluation_rerun_full.json` | aac7b55 | yes |
+| Middle of the order, Holm survivors (3) | 70 of 336 (N), 82 of 336 (A0) | 94 b, d | `rerun_evaluation_rerun_full.json` | aac7b55 | yes |
+| Rank verdicts differing from A0 (3) | 85, 45, 40 | 94 b | `rerun_evaluation_rerun_full.json` | aac7b55 | yes |
+| A1 / N against A0, Holm (3) | 3 of 192; 24 of 384 | 94 a | `rerun_evaluation_rerun_full.json` | aac7b55 | yes |
+| Gain over static regression (3) | 5.2 to 7.8 | 83 e | `paired_reevaluation_58_63_67.json` | db3cc5d | yes |
+| Seed numbers (2) | 3-11; 37, 45; 33, 193 | 83 addendum b | `paired_reevaluation_83_addendum.json` | 714d4ac | yes |
+| Number of paired tests, old data (2) | 632 | 83 b | `paired_reevaluation_58_63_67.json` | db3cc5d | yes |
+| Rank-cell families (2) | 336, 336, 168 | 94 | `rerun_evaluation_rerun_full.json` | aac7b55 | yes |
+| Inference cost (4) | table of section 4 | 97 | `joint_timing_idle.json` | 3ce113a | yes |
+| Hybrid simulator share (4) | 253,136 of 256,123 µs, 98.8 % | 97 | `a1_inference_time_v2_idle.json` | 3ce113a | yes |
+| Run-level against window-wise split (2, 5) | 29-68 % | 39 | `extra_trees_split_comparison.jsonl` | 7384455 | yes |
+| Constant-trained model against excited (6) | factor 2 to 3 | 55 | `arch_learning_curve_constant_trained.jsonl` | 7384455 | yes |
+| Plant data variation (6) | 0.12-2.01 % | 56a | raw plant data not in the repository | - | no: raw data are never in the repository |
+| Study A ratios (6) | 12.69, 10.27, 1.32, 1.27 | 88 d | `a1_main_analysis.json` | 93ef6aa | yes |
+| Study A crossover (6) | four of five plants | 88 d | `a1_main_analysis.json` | 93ef6aa | yes |
+| Study B verdicts (6) | HB1 not established; HB2 not established (T3), refuted (T1); HB3 not established | 87 add. 4 | `b1_main_analysis.json` | 2462ef7 | yes |
+| Model-based optimisation (8) | 9.0 / 16.5 %; 1.30 / 1.46 %; 94 / 85 %; 22 / 17 of 25; 13 / 25 of 25 | 80 | `m1_k1_comparison.json` | 603cf69 | yes |
+| Coupling test (8) | 0 of 6 (20 K), 1 of 6 (10 K) | 81 | `m4r_test_dt20_umin126.json`, `m4r_test_dt10_umin126.json` | 65dcb7e, 609a629 | yes |
+| RL margin (8) | k = 5; 6.9 %; 6.5 points | 96 | `bres_margin.json` | 13eadb6 | yes |
+| Partner model recovery (8) | 60 to 88 % | 90 addendum | `heat_recovery_comparison_r4_consistent.json` | 0737e75 | yes |
+| Storage readings (8) | L1 pre-registered, L2 post hoc | 92 | `gate_storage_shift.json`, `gate_storage_shift_posthoc.json` | 8019fe2, 3c99b40 | yes |
 
-Vollständige Aussagen-, Korrektur- und Platzhaltertabellen: `docs/08_synthese_m2_bestand.md`.
+Older tables of statements, corrections and placeholders: `docs/08_synthese_m2_bestand.md`.

@@ -38,9 +38,14 @@ the rank cells remain (old data 82 of 336, new data 70 of 336, Befund 94). The r
 corrected data basis (preset version 2, Befund 94, gate passed) reproduces the ends of the order:
 - **GRU against LSTM:** not distinguishable on moisture (15 of 16 cells unresolved, one with the
   GRU worse); on energy and bed temperature the GRU is resolvably better in part of the cells
-  (5 and 9 of 16, uncorrected).
+  (5 and 9 of 16, uncorrected). *Precision (2026-10-16, addendum to Befund 94): after Holm
+  correction no GRU-against-LSTM cell is resolved in any channel; the GRU is recommended as the
+  default on practical grounds (never resolved worse, fewer parameters, lower single-window
+  latency), not as a ranked winner.*
 - **Transformer, xLSTM, Mamba, ARX, static regression, persistence** are resolvably worse than
-  the LSTM in the large majority of cells; xLSTM on moisture stays unresolved in 7 of 16 cells.
+  the LSTM in the large majority of cells (uncorrected); xLSTM on moisture stays unresolved in 7 of
+  16 cells. *After Holm (2026-10-16): clearly behind only Mamba and the baselines; the deficits of
+  Transformer and xLSTM are an uncorrected tendency.*
 - **The middle of the order** (Transformer, xLSTM) changes between "unresolved" and "worse" from
   cell to cell: not supported by five seeds.
 - Plant operating data without excitation do not suffice in the tested budget range (Befund 55):

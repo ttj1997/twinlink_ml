@@ -1,0 +1,1006 @@
+{
+ "provenance": {
+  "git/commit": "46e8c824da637a29ad2623e7afacca9fa095886e",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "source": "rerun_evaluation_rerun_full.json",
+ "A0": {
+  "family_main": "all 336 rank cells of arm A0 (as Befund 94)",
+  "family_sensitivity": "only the 48 GRU-against-LSTM cells of arm A0 (post hoc, added after the main result)",
+  "by_candidate": {
+   "arx": {
+    "bed_temperature_celsius": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 16,
+     "unresolved_uncorrected": 0,
+     "better_holm": 0,
+     "worse_holm": 4
+    },
+    "energy_target": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 14,
+     "unresolved_uncorrected": 2,
+     "better_holm": 0,
+     "worse_holm": 7
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 10,
+     "unresolved_uncorrected": 6,
+     "better_holm": 0,
+     "worse_holm": 5
+    },
+    "all": {
+     "cells": 48,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 40,
+     "unresolved_uncorrected": 8,
+     "better_holm": 0,
+     "worse_holm": 16
+    }
+   },
+   "gru": {
+    "bed_temperature_celsius": {
+     "cells": 16,
+     "better_uncorrected": 6,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 10,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "energy_target": {
+     "cells": 16,
+     "better_uncorrected": 5,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 11,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 16,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "all": {
+     "cells": 48,
+     "better_uncorrected": 11,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 37,
+     "better_holm": 0,
+     "worse_holm": 0
+    }
+   },
+   "mamba": {
+    "bed_temperature_celsius": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 16,
+     "unresolved_uncorrected": 0,
+     "better_holm": 0,
+     "worse_holm": 5
+    },
+    "energy_target": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 14,
+     "unresolved_uncorrected": 2,
+     "better_holm": 0,
+     "worse_holm": 11
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 11,
+     "unresolved_uncorrected": 5,
+     "better_holm": 0,
+     "worse_holm": 6
+    },
+    "all": {
+     "cells": 48,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 41,
+     "unresolved_uncorrected": 7,
+     "better_holm": 0,
+     "worse_holm": 22
+    }
+   },
+   "persistence": {
+    "bed_temperature_celsius": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 14,
+     "unresolved_uncorrected": 2,
+     "better_holm": 0,
+     "worse_holm": 7
+    },
+    "energy_target": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 13,
+     "unresolved_uncorrected": 3,
+     "better_holm": 0,
+     "worse_holm": 10
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 11,
+     "unresolved_uncorrected": 5,
+     "better_holm": 0,
+     "worse_holm": 2
+    },
+    "all": {
+     "cells": 48,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 38,
+     "unresolved_uncorrected": 10,
+     "better_holm": 0,
+     "worse_holm": 19
+    }
+   },
+   "static": {
+    "bed_temperature_celsius": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 16,
+     "unresolved_uncorrected": 0,
+     "better_holm": 0,
+     "worse_holm": 10
+    },
+    "energy_target": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 16,
+     "unresolved_uncorrected": 0,
+     "better_holm": 0,
+     "worse_holm": 12
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 8,
+     "unresolved_uncorrected": 8,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "all": {
+     "cells": 48,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 40,
+     "unresolved_uncorrected": 8,
+     "better_holm": 0,
+     "worse_holm": 22
+    }
+   },
+   "transformer": {
+    "bed_temperature_celsius": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 13,
+     "unresolved_uncorrected": 3,
+     "better_holm": 0,
+     "worse_holm": 1
+    },
+    "energy_target": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 13,
+     "unresolved_uncorrected": 3,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 10,
+     "unresolved_uncorrected": 6,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "all": {
+     "cells": 48,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 36,
+     "unresolved_uncorrected": 12,
+     "better_holm": 0,
+     "worse_holm": 1
+    }
+   },
+   "xlstm": {
+    "bed_temperature_celsius": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 16,
+     "unresolved_uncorrected": 0,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "energy_target": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 15,
+     "unresolved_uncorrected": 1,
+     "better_holm": 0,
+     "worse_holm": 1
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 7,
+     "unresolved_uncorrected": 9,
+     "better_holm": 0,
+     "worse_holm": 1
+    },
+    "all": {
+     "cells": 48,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 38,
+     "unresolved_uncorrected": 10,
+     "better_holm": 0,
+     "worse_holm": 2
+    }
+   }
+  },
+  "gru_by_channel_and_horizon": {
+   "bed_temperature_celsius/h1/candidate better": 5,
+   "bed_temperature_celsius/h1/unresolved": 3,
+   "bed_temperature_celsius/h36/candidate better": 1,
+   "bed_temperature_celsius/h36/unresolved": 7,
+   "energy_target/h1/candidate better": 2,
+   "energy_target/h1/unresolved": 6,
+   "energy_target/h36/candidate better": 3,
+   "energy_target/h36/unresolved": 5,
+   "product_moisture_kg_per_kg/h1/unresolved": 8,
+   "product_moisture_kg_per_kg/h36/unresolved": 8
+  },
+  "gru_vs_lstm": {
+   "bed_temperature_celsius": {
+    "main_family": {
+     "cells": 16,
+     "better_uncorrected": 6,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 10,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "sensitivity_family": {
+     "cells": 16,
+     "better_uncorrected": 6,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 10,
+     "better_holm": 0,
+     "worse_holm": 0
+    }
+   },
+   "energy_target": {
+    "main_family": {
+     "cells": 16,
+     "better_uncorrected": 5,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 11,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "sensitivity_family": {
+     "cells": 16,
+     "better_uncorrected": 5,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 11,
+     "better_holm": 0,
+     "worse_holm": 0
+    }
+   },
+   "product_moisture_kg_per_kg": {
+    "main_family": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 16,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "sensitivity_family": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 16,
+     "better_holm": 0,
+     "worse_holm": 0
+    }
+   },
+   "all": {
+    "main_family": {
+     "cells": 48,
+     "better_uncorrected": 11,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 37,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "sensitivity_family": {
+     "cells": 48,
+     "better_uncorrected": 11,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 37,
+     "better_holm": 0,
+     "worse_holm": 0
+    }
+   }
+  }
+ },
+ "A1": {
+  "family_main": "all 168 rank cells of arm A1 (as Befund 94)",
+  "family_sensitivity": "only the 24 GRU-against-LSTM cells of arm A1 (post hoc, added after the main result)",
+  "by_candidate": {
+   "arx": {
+    "bed_temperature_celsius": {
+     "cells": 8,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 8,
+     "unresolved_uncorrected": 0,
+     "better_holm": 0,
+     "worse_holm": 1
+    },
+    "energy_target": {
+     "cells": 8,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 4,
+     "unresolved_uncorrected": 4,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 8,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 6,
+     "unresolved_uncorrected": 2,
+     "better_holm": 0,
+     "worse_holm": 1
+    },
+    "all": {
+     "cells": 24,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 18,
+     "unresolved_uncorrected": 6,
+     "better_holm": 0,
+     "worse_holm": 2
+    }
+   },
+   "gru": {
+    "bed_temperature_celsius": {
+     "cells": 8,
+     "better_uncorrected": 1,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 7,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "energy_target": {
+     "cells": 8,
+     "better_uncorrected": 1,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 7,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 8,
+     "better_uncorrected": 1,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 7,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "all": {
+     "cells": 24,
+     "better_uncorrected": 3,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 21,
+     "better_holm": 0,
+     "worse_holm": 0
+    }
+   },
+   "mamba": {
+    "bed_temperature_celsius": {
+     "cells": 8,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 7,
+     "unresolved_uncorrected": 1,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "energy_target": {
+     "cells": 8,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 6,
+     "unresolved_uncorrected": 2,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 8,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 6,
+     "unresolved_uncorrected": 2,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "all": {
+     "cells": 24,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 19,
+     "unresolved_uncorrected": 5,
+     "better_holm": 0,
+     "worse_holm": 0
+    }
+   },
+   "persistence": {
+    "bed_temperature_celsius": {
+     "cells": 8,
+     "better_uncorrected": 2,
+     "worse_uncorrected": 5,
+     "unresolved_uncorrected": 1,
+     "better_holm": 0,
+     "worse_holm": 3
+    },
+    "energy_target": {
+     "cells": 8,
+     "better_uncorrected": 3,
+     "worse_uncorrected": 3,
+     "unresolved_uncorrected": 2,
+     "better_holm": 0,
+     "worse_holm": 3
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 8,
+     "better_uncorrected": 2,
+     "worse_uncorrected": 4,
+     "unresolved_uncorrected": 2,
+     "better_holm": 0,
+     "worse_holm": 2
+    },
+    "all": {
+     "cells": 24,
+     "better_uncorrected": 7,
+     "worse_uncorrected": 12,
+     "unresolved_uncorrected": 5,
+     "better_holm": 0,
+     "worse_holm": 8
+    }
+   },
+   "static": {
+    "bed_temperature_celsius": {
+     "cells": 8,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 8,
+     "unresolved_uncorrected": 0,
+     "better_holm": 0,
+     "worse_holm": 6
+    },
+    "energy_target": {
+     "cells": 8,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 8,
+     "unresolved_uncorrected": 0,
+     "better_holm": 0,
+     "worse_holm": 3
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 8,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 4,
+     "unresolved_uncorrected": 4,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "all": {
+     "cells": 24,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 20,
+     "unresolved_uncorrected": 4,
+     "better_holm": 0,
+     "worse_holm": 9
+    }
+   },
+   "transformer": {
+    "bed_temperature_celsius": {
+     "cells": 8,
+     "better_uncorrected": 1,
+     "worse_uncorrected": 3,
+     "unresolved_uncorrected": 4,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "energy_target": {
+     "cells": 8,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 8,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 8,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 2,
+     "unresolved_uncorrected": 6,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "all": {
+     "cells": 24,
+     "better_uncorrected": 1,
+     "worse_uncorrected": 5,
+     "unresolved_uncorrected": 18,
+     "better_holm": 0,
+     "worse_holm": 0
+    }
+   },
+   "xlstm": {
+    "bed_temperature_celsius": {
+     "cells": 8,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 7,
+     "unresolved_uncorrected": 1,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "energy_target": {
+     "cells": 8,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 4,
+     "unresolved_uncorrected": 4,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 8,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 7,
+     "unresolved_uncorrected": 1,
+     "better_holm": 0,
+     "worse_holm": 1
+    },
+    "all": {
+     "cells": 24,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 18,
+     "unresolved_uncorrected": 6,
+     "better_holm": 0,
+     "worse_holm": 1
+    }
+   }
+  },
+  "gru_by_channel_and_horizon": {
+   "bed_temperature_celsius/h1/candidate better": 1,
+   "bed_temperature_celsius/h1/unresolved": 3,
+   "bed_temperature_celsius/h36/unresolved": 4,
+   "energy_target/h1/unresolved": 4,
+   "energy_target/h36/candidate better": 1,
+   "energy_target/h36/unresolved": 3,
+   "product_moisture_kg_per_kg/h1/candidate better": 1,
+   "product_moisture_kg_per_kg/h1/unresolved": 3,
+   "product_moisture_kg_per_kg/h36/unresolved": 4
+  },
+  "gru_vs_lstm": {
+   "bed_temperature_celsius": {
+    "main_family": {
+     "cells": 8,
+     "better_uncorrected": 1,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 7,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "sensitivity_family": {
+     "cells": 8,
+     "better_uncorrected": 1,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 7,
+     "better_holm": 0,
+     "worse_holm": 0
+    }
+   },
+   "energy_target": {
+    "main_family": {
+     "cells": 8,
+     "better_uncorrected": 1,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 7,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "sensitivity_family": {
+     "cells": 8,
+     "better_uncorrected": 1,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 7,
+     "better_holm": 0,
+     "worse_holm": 0
+    }
+   },
+   "product_moisture_kg_per_kg": {
+    "main_family": {
+     "cells": 8,
+     "better_uncorrected": 1,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 7,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "sensitivity_family": {
+     "cells": 8,
+     "better_uncorrected": 1,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 7,
+     "better_holm": 0,
+     "worse_holm": 0
+    }
+   },
+   "all": {
+    "main_family": {
+     "cells": 24,
+     "better_uncorrected": 3,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 21,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "sensitivity_family": {
+     "cells": 24,
+     "better_uncorrected": 3,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 21,
+     "better_holm": 0,
+     "worse_holm": 0
+    }
+   }
+  }
+ },
+ "N": {
+  "family_main": "all 336 rank cells of arm N (as Befund 94)",
+  "family_sensitivity": "only the 48 GRU-against-LSTM cells of arm N (post hoc, added after the main result)",
+  "by_candidate": {
+   "arx": {
+    "bed_temperature_celsius": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 16,
+     "unresolved_uncorrected": 0,
+     "better_holm": 0,
+     "worse_holm": 4
+    },
+    "energy_target": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 14,
+     "unresolved_uncorrected": 2,
+     "better_holm": 0,
+     "worse_holm": 6
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 14,
+     "unresolved_uncorrected": 2,
+     "better_holm": 0,
+     "worse_holm": 2
+    },
+    "all": {
+     "cells": 48,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 44,
+     "unresolved_uncorrected": 4,
+     "better_holm": 0,
+     "worse_holm": 12
+    }
+   },
+   "gru": {
+    "bed_temperature_celsius": {
+     "cells": 16,
+     "better_uncorrected": 9,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 7,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "energy_target": {
+     "cells": 16,
+     "better_uncorrected": 5,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 11,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 1,
+     "unresolved_uncorrected": 15,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "all": {
+     "cells": 48,
+     "better_uncorrected": 14,
+     "worse_uncorrected": 1,
+     "unresolved_uncorrected": 33,
+     "better_holm": 0,
+     "worse_holm": 0
+    }
+   },
+   "mamba": {
+    "bed_temperature_celsius": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 16,
+     "unresolved_uncorrected": 0,
+     "better_holm": 0,
+     "worse_holm": 6
+    },
+    "energy_target": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 15,
+     "unresolved_uncorrected": 1,
+     "better_holm": 0,
+     "worse_holm": 6
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 13,
+     "unresolved_uncorrected": 3,
+     "better_holm": 0,
+     "worse_holm": 2
+    },
+    "all": {
+     "cells": 48,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 44,
+     "unresolved_uncorrected": 4,
+     "better_holm": 0,
+     "worse_holm": 14
+    }
+   },
+   "persistence": {
+    "bed_temperature_celsius": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 14,
+     "unresolved_uncorrected": 2,
+     "better_holm": 0,
+     "worse_holm": 4
+    },
+    "energy_target": {
+     "cells": 16,
+     "better_uncorrected": 1,
+     "worse_uncorrected": 13,
+     "unresolved_uncorrected": 2,
+     "better_holm": 0,
+     "worse_holm": 10
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 12,
+     "unresolved_uncorrected": 4,
+     "better_holm": 0,
+     "worse_holm": 5
+    },
+    "all": {
+     "cells": 48,
+     "better_uncorrected": 1,
+     "worse_uncorrected": 39,
+     "unresolved_uncorrected": 8,
+     "better_holm": 0,
+     "worse_holm": 19
+    }
+   },
+   "static": {
+    "bed_temperature_celsius": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 16,
+     "unresolved_uncorrected": 0,
+     "better_holm": 0,
+     "worse_holm": 11
+    },
+    "energy_target": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 16,
+     "unresolved_uncorrected": 0,
+     "better_holm": 0,
+     "worse_holm": 10
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 8,
+     "unresolved_uncorrected": 8,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "all": {
+     "cells": 48,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 40,
+     "unresolved_uncorrected": 8,
+     "better_holm": 0,
+     "worse_holm": 21
+    }
+   },
+   "transformer": {
+    "bed_temperature_celsius": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 13,
+     "unresolved_uncorrected": 3,
+     "better_holm": 0,
+     "worse_holm": 1
+    },
+    "energy_target": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 14,
+     "unresolved_uncorrected": 2,
+     "better_holm": 0,
+     "worse_holm": 1
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 12,
+     "unresolved_uncorrected": 4,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "all": {
+     "cells": 48,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 39,
+     "unresolved_uncorrected": 9,
+     "better_holm": 0,
+     "worse_holm": 2
+    }
+   },
+   "xlstm": {
+    "bed_temperature_celsius": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 14,
+     "unresolved_uncorrected": 2,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "energy_target": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 15,
+     "unresolved_uncorrected": 1,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "product_moisture_kg_per_kg": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 9,
+     "unresolved_uncorrected": 7,
+     "better_holm": 0,
+     "worse_holm": 2
+    },
+    "all": {
+     "cells": 48,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 38,
+     "unresolved_uncorrected": 10,
+     "better_holm": 0,
+     "worse_holm": 2
+    }
+   }
+  },
+  "gru_by_channel_and_horizon": {
+   "bed_temperature_celsius/h1/candidate better": 7,
+   "bed_temperature_celsius/h1/unresolved": 1,
+   "bed_temperature_celsius/h36/candidate better": 2,
+   "bed_temperature_celsius/h36/unresolved": 6,
+   "energy_target/h1/candidate better": 2,
+   "energy_target/h1/unresolved": 6,
+   "energy_target/h36/candidate better": 3,
+   "energy_target/h36/unresolved": 5,
+   "product_moisture_kg_per_kg/h1/unresolved": 8,
+   "product_moisture_kg_per_kg/h36/candidate worse": 1,
+   "product_moisture_kg_per_kg/h36/unresolved": 7
+  },
+  "gru_vs_lstm": {
+   "bed_temperature_celsius": {
+    "main_family": {
+     "cells": 16,
+     "better_uncorrected": 9,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 7,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "sensitivity_family": {
+     "cells": 16,
+     "better_uncorrected": 9,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 7,
+     "better_holm": 0,
+     "worse_holm": 0
+    }
+   },
+   "energy_target": {
+    "main_family": {
+     "cells": 16,
+     "better_uncorrected": 5,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 11,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "sensitivity_family": {
+     "cells": 16,
+     "better_uncorrected": 5,
+     "worse_uncorrected": 0,
+     "unresolved_uncorrected": 11,
+     "better_holm": 0,
+     "worse_holm": 0
+    }
+   },
+   "product_moisture_kg_per_kg": {
+    "main_family": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 1,
+     "unresolved_uncorrected": 15,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "sensitivity_family": {
+     "cells": 16,
+     "better_uncorrected": 0,
+     "worse_uncorrected": 1,
+     "unresolved_uncorrected": 15,
+     "better_holm": 0,
+     "worse_holm": 0
+    }
+   },
+   "all": {
+    "main_family": {
+     "cells": 48,
+     "better_uncorrected": 14,
+     "worse_uncorrected": 1,
+     "unresolved_uncorrected": 33,
+     "better_holm": 0,
+     "worse_holm": 0
+    },
+    "sensitivity_family": {
+     "cells": 48,
+     "better_uncorrected": 14,
+     "worse_uncorrected": 1,
+     "unresolved_uncorrected": 33,
+     "better_holm": 0,
+     "worse_holm": 0
+    }
+   }
+  }
+ }
+}
