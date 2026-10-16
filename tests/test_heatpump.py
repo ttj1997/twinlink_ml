@@ -586,3 +586,20 @@ def test_stage_b_on_synthetic_day_checks_pass() -> None:
     assert all(v for k, v in bools.items() if k != "rules_converged_all"), res.checks
     assert np.all(res.gap_fraction() >= -1e-9)
     assert np.all(res.storage_gain_fraction() >= -1e-9)
+
+
+def test_explicit_stored_value_reproduces_named_rule() -> None:
+    rng = np.random.default_rng(23)
+    pieces = _random_pieces(rng, n_steps=8)
+    elec = rng.uniform(0.1, 1.0, size=8)
+    kw: dict[str, Any] = {
+        "q_max_kw": 80.0,
+        "capacities_kwh": np.array([0.0, 100.0]),
+        "loss_per_h": 0.0,
+        "dt_h": DT_H,
+        "heat_value": 1.0,
+        "electricity": elec,
+    }
+    named = simulate_rule(pieces, "gas_value", **kw)
+    explicit = simulate_rule(pieces, "myopic", stored_value=np.full(8, 1.0 - 1e-6), **kw)
+    assert np.allclose(named.objective, explicit.objective)

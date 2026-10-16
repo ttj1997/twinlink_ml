@@ -483,13 +483,21 @@ def simulate_rule(
     electricity: FloatArray,
     window_steps: int = 96,
     max_cycles: int = 30,
+    stored_value: FloatArray | None = None,
 ) -> RuleRun:
-    """Rule without foresight, all capacities at once, cyclic steady state (see module)."""
+    """Rule without foresight, all capacities at once, cyclic steady state (see module).
+
+    :param stored_value: if given, the value ``v_t`` per step overrides the named ``rule``
+        (e.g. a constant ``kappa * c_U`` for the post-hoc rule-tuning analysis).
+    """
     caps = np.asarray(capacities_kwh, dtype=np.float64)
     n = pieces.n_steps
     elec = np.asarray(electricity, dtype=np.float64)
     p = elec / pieces.cop
-    v = rule_values(rule, heat_value, elec, pieces.cop, window_steps)
+    if stored_value is None:
+        v = rule_values(rule, heat_value, elec, pieces.cop, window_steps)
+    else:
+        v = np.broadcast_to(np.asarray(stored_value, dtype=np.float64), (n,)).copy()
     t_charge = _case_table(pieces, "charge", q_max_kw, heat_value, p, -v)
     t_dis = _case_table(pieces, "discharge", q_max_kw, heat_value, p, v)
     keep = 1.0 - loss_per_h * dt_h
