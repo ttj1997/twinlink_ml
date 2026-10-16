@@ -66,7 +66,7 @@ def main() -> int:
                     "gain": r["storage_gain_fraction"][i],
                 }
             )
-    maps: dict[str, dict[str, dict[str, dict[str, float]]]] = {}
+    maps: dict[str, dict[str, dict[str, float]]] = {}
     for (mode, kind, amp, cap), vals in sorted(gaps.items()):
         band = bands["price"] if kind == "cost" else bands["co2"]
         row = maps.setdefault(f"{mode}|{kind}", {}).setdefault(
