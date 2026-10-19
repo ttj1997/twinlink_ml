@@ -1,0 +1,92 @@
+# Site data set of the site pinch study (docs/20_site_pinch.md, package twinlink_ml.site).
+#
+# EVERY number below is a placeholder (status "placeholder") unless it is a convention of an
+# earlier study; the source says where the value and its band come from. Roles only: plant A
+# (existing fluidised-bed line with storage A1), plant C with lines C1/C2 (planned new plant),
+# compressor station, hall heating, process water, generic further lines, steam boiler.
+# No company, person, product or measuring-point names; the measured days of plant A are read
+# through TWINLINK_PLANT_DATA_ACE / TWINLINK_PLANT_DATA_RID and the git-ignored role file.
+#
+# The same table (name, value, band, source) is repeated in the docstring of
+# src/twinlink_ml/site/config.py; tests/test_site.py checks that both agree.
+
+provenance:
+  status: placeholder
+  description: >-
+    Site data set for the site pinch analysis: partner statements of an order of magnitude,
+    conventions of Befund 91/99, literature and manufacturer ranges; nothing here is a plant
+    measurement except the two measured days of plant A (read at run time, not stored here).
+  open_todos:
+    - compressor heat as a time series and its water temperatures
+    - plant C volume flow against the annual exhaust-heat figure (factor about 4.9, Befund 99)
+    - number, size and exhaust state of the further lines of the site
+    - hall-heating and process-water demand (power, temperatures, schedule)
+    - operating schedule of plant C
+
+placeholders:
+  # name: [value, low, high, unit, source]
+  minimum_pinch_k: [20.0, 10.0, 30.0, K, "repository default of heatnetwork (two exchanger stages of about 10 K in series); band of Befund 99"]
+  cold_temperature_celsius: [15.0, 10.0, 25.0, degC, "repository default T_kalt of heatnetwork (cooling-water level); band of Befund 99"]
+  compressor_station_kw: [800.0, 400.0, 1200.0, kW, "partner: about 1200 kW waste heat of about 1300 kW electric (7 compressors), about 400 kW used today; mean of the band as main case"]
+  compressor_hot_in_celsius: [80.0, 70.0, 90.0, degC, "brief: cooling water 50-80 degC; oil-injected screw compressors with heat recovery deliver 70-90 degC (manufacturer data, order of magnitude)"]
+  compressor_hot_out_celsius: [50.0, 40.0, 55.0, degC, "brief: cooling water 50-80 degC; return band of Befund 99"]
+  compressor_used_today_kw: [400.0, 300.0, 500.0, kW, "partner: up to about 400 kW of the compressor heat used today (compressor -> plant A); band +-25 %"]
+  compressor_c_gwh_per_a: [2.4, 1.2, 3.6, GWh/a, "partner annual figure of plant C compressor heat (Befund 99); band of Befund 99"]
+  exhaust_c_gwh_per_a: [1.8, 1.8, 1.8, GWh/a, "partner annual figure of the plant C exhaust heat (Befund 99); used only in the reading 'annual'"]
+  c_line_nm3_per_h: [20000.0, 15000.0, 25000.0, Nm3/h, "partner: 2 lines of about 20 000 m3/h each (read as Nm3/h as in Befund 99); band of Befund 99"]
+  c_low_temperature_today_kw: [200.0, 100.0, 300.0, kW, "partner: about 200 kW of plant C heat recovery for hall heating and process water (planned design); band +-50 %"]
+  c_operating_fraction: [1.0, 0.5, 1.0, "-", "no schedule of plant C known; 1 = continuous like plant A (partner: plant A 24/7); combined exactly from the runs with and without plant C"]
+  generic_flow_nm3_per_h: [20000.0, 10000.0, 30000.0, Nm3/h, "brief: further lines of the site as scaled copies of plant A, 10 000-30 000 m3/h (no data)"]
+  hall_kw: [200.0, 0.0, 200.0, kW, "partner: up to about 200 kW for hall heating and process water; peak at the design temperature (Befund 99 profile)"]
+  hall_supply_celsius: [50.0, 40.0, 60.0, degC, "Befund 99 placeholder (low-temperature heating circuit)"]
+  hall_return_celsius: [35.0, 30.0, 45.0, degC, "Befund 99 placeholder"]
+  hall_limit_celsius: [15.0, 12.0, 17.0, degC, "heating limit temperature, common value for industrial halls (Befund 99)"]
+  hall_design_celsius: [-10.0, -14.0, -8.0, degC, "design outdoor temperature, order of magnitude for northern Germany (Befund 99)"]
+  hall_day_factor: [0.4, 0.2, 0.6, "-", "Befund 99 placeholder: day share of the hall-heating demand (1 at night)"]
+  water_kw: [200.0, 0.0, 200.0, kW, "partner: up to about 200 kW for hall heating and process water; constant (Befund 99)"]
+  water_supply_celsius: [60.0, 45.0, 70.0, degC, "Befund 99 placeholder (hot process water)"]
+  water_return_celsius: [15.0, 10.0, 25.0, degC, "Befund 99 placeholder (fresh-water intake)"]
+  solid_fraction: [0.634, 0.60, 0.70, "-", "solid fraction of the sprayed suspension for the exhaust humidity reconstruction; the energy balance of the two measured days of plant A requires at least 0.575 (product 1) and 0.625 (product 2), 0.634 fits both (parallel study 4, branch plant-a-operating-point, docs/23 section 5); the 0.3 of Befund 99 (band 0.2-0.5) is inadmissible and is kept only as the variant 'Befund 99 assumption'"]
+  relative_humidity: [0.75, 0.5, 0.9, "-", "relative humidity of the intake air (storage A1 convention, Befund 91/99)"]
+  normal_density_kg_per_nm3: [1.293, 1.293, 1.293, kg/Nm3, "normal density of air (convention of storage A1, Befund 91)"]
+  gas_efficiency: [0.90, 0.80, 1.0, "-", "useful heat per fuel (LHV) of steam heater and direct burner; repository default of heatnetwork"]
+  electricity_co2_kg_per_kwh: [0.366, 0.20, 0.366, kg/kWh, "carrier_energy (UBA, project description); low end = variant '2030' (placeholder 0.20)"]
+  gas_co2_kg_per_kwh: [0.201, 0.201, 0.201, kg/kWh, "carrier_energy (UBA, project description)"]
+  network_pump_fraction: [0.015, 0.005, 0.03, "-", "pump electricity per kWh of transported heat; district-heating networks 0.5-3 % (literature order of magnitude)"]
+  heat_pump_carnot_efficiency: [0.5, 0.4, 0.6, "-", "exergetic efficiency of industrial heat pumps 0.4-0.6 of Carnot (review literature, e.g. high-temperature heat pump surveys)"]
+  boiler_flue_celsius: [180.0, 130.0, 250.0, degC, "flue gas after a shell steam boiler without economiser (manufacturer data, order of magnitude); variant only"]
+  boiler_excess_air: [1.15, 1.05, 1.3, "-", "air ratio of a gas-fired boiler (literature order of magnitude); variant only"]
+  climate_shift_k: [0.0, -3.0, 3.0, K, "uniform shift of the monthly means below (warm/cold year)"]
+
+climate_monthly_mean_celsius:
+  # typical long-term monthly means for northern Germany, order of magnitude (DWD 1991-2020
+  # class of values); placeholder, not the site's station
+  values: [2.0, 2.5, 5.0, 9.0, 13.0, 16.0, 18.5, 18.0, 14.5, 10.0, 6.0, 3.0]
+  days: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+site_reference:
+  # partner statements of an order of magnitude (for consistency checks and the report only)
+  gas_gwh_per_a: 30.0
+  electricity_gwh_per_a: 15.0
+  co2_t_per_a: 11500.0
+  co2_reduction_target_2030: 0.80
+  co2_price_eur_per_t_today: 55.0
+  co2_price_eur_per_t_2030: 300.0
+  roadmap_network_kw: [400.0, 1200.0]
+  compressor_electric_kw: 1300.0
+
+streams:
+  # name: kind, temperatures, capacity basis, humidity basis, operating time
+  exhaust_a: {kind: hot, temperature: "measured outlet of plant A (product day), down to cold_temperature_celsius", capacity: "measured process + atomising air (dry)", humidity: "reconstructed from spray rate and solid_fraction, capped at saturation", operation: "24/7 (partner)"}
+  compressor_a: {kind: hot, temperature: "compressor_hot_in_celsius -> compressor_hot_out_celsius", capacity: "compressor_station_kw / span", humidity: "none (water)", operation: "24/7, constant"}
+  compressor_c: {kind: hot, temperature: "compressor_hot_in_celsius -> compressor_hot_out_celsius", capacity: "compressor_c_gwh_per_a / 8760 h / span", humidity: "none (water)", operation: "c_operating_fraction"}
+  exhaust_c1: {kind: hot, temperature: "state of the measured exhaust of plant A", capacity: "c_line_nm3_per_h (reading 'volume') or scaled to exhaust_c_gwh_per_a (reading 'annual')", humidity: "as exhaust_a", operation: "c_operating_fraction"}
+  exhaust_c2: {kind: hot, temperature: "as exhaust_c1", capacity: "as exhaust_c1", humidity: "as exhaust_a", operation: "c_operating_fraction"}
+  exhaust_generic: {kind: hot, temperature: "measured outlet of plant A on the generic product day (product 1 about 61 degC, product 2 about 34 degC)", capacity: "n_generic x generic_flow_nm3_per_h / measured flow of plant A", humidity: "as exhaust_a of that day", operation: "24/7"}
+  boiler_flue: {kind: hot, temperature: "boiler_flue_celsius down to cold_temperature_celsius", capacity: "fuel of the steam heater of plant A today, methane stoichiometry, boiler_excess_air", humidity: "combustion water + intake humidity", operation: "variant only"}
+  air_a: {kind: cold, temperature: "measured intake (shifted to the month) -> measured supply", capacity: "measured process air", humidity: "intake at relative_humidity", operation: "24/7"}
+  air_c1: {kind: cold, temperature: "intake -> supply profile of plant A", capacity: "c_line_nm3_per_h", humidity: "intake at relative_humidity", operation: "c_operating_fraction"}
+  air_c2: {kind: cold, temperature: "as air_c1", capacity: "c_line_nm3_per_h", humidity: "intake at relative_humidity", operation: "c_operating_fraction"}
+  air_generic: {kind: cold, temperature: "as air_a of the generic product day", capacity: "n_generic x generic_flow_nm3_per_h", humidity: "intake at relative_humidity", operation: "24/7"}
+  hall: {kind: cold, temperature: "hall_return_celsius -> hall_supply_celsius", capacity: "hall_kw x heating degree x day/night factor", humidity: "none (water)", operation: "heating season by the monthly climate"}
+  water: {kind: cold, temperature: "water_return_celsius -> water_supply_celsius", capacity: "water_kw, constant", humidity: "none (water)", operation: "24/7"}
