@@ -16,8 +16,8 @@ the git-ignored role file of storage test 1.
 
 **Solid fraction (added 2026-10-16).** Sections 1-8 were computed with the solid fraction 0.3 of
 Befund 99 (the "Befund-99 assumption"). The parallel study 4 (branch `plant-a-operating-point`,
-`docs/23` section 5) shows from the energy balance of the two measured days that it must be at least
-0.575 (product 1) and 0.625 (product 2); its reference 0.634 (band 0.60-0.70, PLACEHOLDER) was
+`docs/23` section 5) shows from the energy balance of the two measured days that it must be larger
+(product-specific minima kept locally); its reference 0.634 (band 0.60-0.70, PLACEHOLDER) was
 rerun with new artifact names (`*_sf0634`). **Section 9 gives the study-4 results side by side
 with the Befund-99 assumption and the difference; the readings and conclusions do not change.**
 
