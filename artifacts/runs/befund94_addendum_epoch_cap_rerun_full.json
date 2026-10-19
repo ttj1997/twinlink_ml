@@ -1,0 +1,662 @@
+{
+ "provenance": {
+  "git/commit": "a36bceac58cae19835315d86d4d2429cf8797f37",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "source": "rerun_full_N.jsonl",
+ "last": 20,
+ "gru": {
+  "epoch_cap": 200,
+  "total": {
+   "trainings": 60,
+   "at_cap": 33,
+   "best_in_last": 32,
+   "at_cap_and_best_in_last": 32
+  },
+  "by_head": {
+   "bed_temperature_celsius": {
+    "trainings": 20,
+    "at_cap": 13,
+    "best_in_last": 12,
+    "at_cap_and_best_in_last": 12
+   },
+   "energy_target": {
+    "trainings": 20,
+    "at_cap": 17,
+    "best_in_last": 17,
+    "at_cap_and_best_in_last": 17
+   },
+   "product_moisture_kg_per_kg": {
+    "trainings": 20,
+    "at_cap": 3,
+    "best_in_last": 3,
+    "at_cap_and_best_in_last": 3
+   }
+  },
+  "by_n_train": {
+   "8": {
+    "trainings": 15,
+    "at_cap": 11,
+    "best_in_last": 11,
+    "at_cap_and_best_in_last": 11
+   },
+   "16": {
+    "trainings": 15,
+    "at_cap": 10,
+    "best_in_last": 10,
+    "at_cap_and_best_in_last": 10
+   },
+   "32": {
+    "trainings": 15,
+    "at_cap": 8,
+    "best_in_last": 7,
+    "at_cap_and_best_in_last": 7
+   },
+   "64": {
+    "trainings": 15,
+    "at_cap": 4,
+    "best_in_last": 4,
+    "at_cap_and_best_in_last": 4
+   }
+  },
+  "by_head_and_n_train": {
+   "bed_temperature_celsius/n16": {
+    "trainings": 5,
+    "at_cap": 4,
+    "best_in_last": 4,
+    "at_cap_and_best_in_last": 4
+   },
+   "bed_temperature_celsius/n32": {
+    "trainings": 5,
+    "at_cap": 3,
+    "best_in_last": 2,
+    "at_cap_and_best_in_last": 2
+   },
+   "bed_temperature_celsius/n64": {
+    "trainings": 5,
+    "at_cap": 1,
+    "best_in_last": 1,
+    "at_cap_and_best_in_last": 1
+   },
+   "bed_temperature_celsius/n8": {
+    "trainings": 5,
+    "at_cap": 5,
+    "best_in_last": 5,
+    "at_cap_and_best_in_last": 5
+   },
+   "energy_target/n16": {
+    "trainings": 5,
+    "at_cap": 5,
+    "best_in_last": 5,
+    "at_cap_and_best_in_last": 5
+   },
+   "energy_target/n32": {
+    "trainings": 5,
+    "at_cap": 4,
+    "best_in_last": 4,
+    "at_cap_and_best_in_last": 4
+   },
+   "energy_target/n64": {
+    "trainings": 5,
+    "at_cap": 3,
+    "best_in_last": 3,
+    "at_cap_and_best_in_last": 3
+   },
+   "energy_target/n8": {
+    "trainings": 5,
+    "at_cap": 5,
+    "best_in_last": 5,
+    "at_cap_and_best_in_last": 5
+   },
+   "product_moisture_kg_per_kg/n16": {
+    "trainings": 5,
+    "at_cap": 1,
+    "best_in_last": 1,
+    "at_cap_and_best_in_last": 1
+   },
+   "product_moisture_kg_per_kg/n32": {
+    "trainings": 5,
+    "at_cap": 1,
+    "best_in_last": 1,
+    "at_cap_and_best_in_last": 1
+   },
+   "product_moisture_kg_per_kg/n64": {
+    "trainings": 5,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "product_moisture_kg_per_kg/n8": {
+    "trainings": 5,
+    "at_cap": 1,
+    "best_in_last": 1,
+    "at_cap_and_best_in_last": 1
+   }
+  }
+ },
+ "lstm": {
+  "epoch_cap": 200,
+  "total": {
+   "trainings": 60,
+   "at_cap": 32,
+   "best_in_last": 32,
+   "at_cap_and_best_in_last": 32
+  },
+  "by_head": {
+   "bed_temperature_celsius": {
+    "trainings": 20,
+    "at_cap": 13,
+    "best_in_last": 13,
+    "at_cap_and_best_in_last": 13
+   },
+   "energy_target": {
+    "trainings": 20,
+    "at_cap": 18,
+    "best_in_last": 18,
+    "at_cap_and_best_in_last": 18
+   },
+   "product_moisture_kg_per_kg": {
+    "trainings": 20,
+    "at_cap": 1,
+    "best_in_last": 1,
+    "at_cap_and_best_in_last": 1
+   }
+  },
+  "by_n_train": {
+   "8": {
+    "trainings": 15,
+    "at_cap": 10,
+    "best_in_last": 10,
+    "at_cap_and_best_in_last": 10
+   },
+   "16": {
+    "trainings": 15,
+    "at_cap": 10,
+    "best_in_last": 10,
+    "at_cap_and_best_in_last": 10
+   },
+   "32": {
+    "trainings": 15,
+    "at_cap": 7,
+    "best_in_last": 7,
+    "at_cap_and_best_in_last": 7
+   },
+   "64": {
+    "trainings": 15,
+    "at_cap": 5,
+    "best_in_last": 5,
+    "at_cap_and_best_in_last": 5
+   }
+  },
+  "by_head_and_n_train": {
+   "bed_temperature_celsius/n16": {
+    "trainings": 5,
+    "at_cap": 5,
+    "best_in_last": 5,
+    "at_cap_and_best_in_last": 5
+   },
+   "bed_temperature_celsius/n32": {
+    "trainings": 5,
+    "at_cap": 2,
+    "best_in_last": 2,
+    "at_cap_and_best_in_last": 2
+   },
+   "bed_temperature_celsius/n64": {
+    "trainings": 5,
+    "at_cap": 2,
+    "best_in_last": 2,
+    "at_cap_and_best_in_last": 2
+   },
+   "bed_temperature_celsius/n8": {
+    "trainings": 5,
+    "at_cap": 4,
+    "best_in_last": 4,
+    "at_cap_and_best_in_last": 4
+   },
+   "energy_target/n16": {
+    "trainings": 5,
+    "at_cap": 5,
+    "best_in_last": 5,
+    "at_cap_and_best_in_last": 5
+   },
+   "energy_target/n32": {
+    "trainings": 5,
+    "at_cap": 5,
+    "best_in_last": 5,
+    "at_cap_and_best_in_last": 5
+   },
+   "energy_target/n64": {
+    "trainings": 5,
+    "at_cap": 3,
+    "best_in_last": 3,
+    "at_cap_and_best_in_last": 3
+   },
+   "energy_target/n8": {
+    "trainings": 5,
+    "at_cap": 5,
+    "best_in_last": 5,
+    "at_cap_and_best_in_last": 5
+   },
+   "product_moisture_kg_per_kg/n16": {
+    "trainings": 5,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "product_moisture_kg_per_kg/n32": {
+    "trainings": 5,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "product_moisture_kg_per_kg/n64": {
+    "trainings": 5,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "product_moisture_kg_per_kg/n8": {
+    "trainings": 5,
+    "at_cap": 1,
+    "best_in_last": 1,
+    "at_cap_and_best_in_last": 1
+   }
+  }
+ },
+ "transformer": {
+  "epoch_cap": 200,
+  "total": {
+   "trainings": 60,
+   "at_cap": 44,
+   "best_in_last": 44,
+   "at_cap_and_best_in_last": 44
+  },
+  "by_head": {
+   "bed_temperature_celsius": {
+    "trainings": 20,
+    "at_cap": 20,
+    "best_in_last": 20,
+    "at_cap_and_best_in_last": 20
+   },
+   "energy_target": {
+    "trainings": 20,
+    "at_cap": 19,
+    "best_in_last": 19,
+    "at_cap_and_best_in_last": 19
+   },
+   "product_moisture_kg_per_kg": {
+    "trainings": 20,
+    "at_cap": 5,
+    "best_in_last": 5,
+    "at_cap_and_best_in_last": 5
+   }
+  },
+  "by_n_train": {
+   "8": {
+    "trainings": 15,
+    "at_cap": 10,
+    "best_in_last": 10,
+    "at_cap_and_best_in_last": 10
+   },
+   "16": {
+    "trainings": 15,
+    "at_cap": 12,
+    "best_in_last": 12,
+    "at_cap_and_best_in_last": 12
+   },
+   "32": {
+    "trainings": 15,
+    "at_cap": 12,
+    "best_in_last": 12,
+    "at_cap_and_best_in_last": 12
+   },
+   "64": {
+    "trainings": 15,
+    "at_cap": 10,
+    "best_in_last": 10,
+    "at_cap_and_best_in_last": 10
+   }
+  },
+  "by_head_and_n_train": {
+   "bed_temperature_celsius/n16": {
+    "trainings": 5,
+    "at_cap": 5,
+    "best_in_last": 5,
+    "at_cap_and_best_in_last": 5
+   },
+   "bed_temperature_celsius/n32": {
+    "trainings": 5,
+    "at_cap": 5,
+    "best_in_last": 5,
+    "at_cap_and_best_in_last": 5
+   },
+   "bed_temperature_celsius/n64": {
+    "trainings": 5,
+    "at_cap": 5,
+    "best_in_last": 5,
+    "at_cap_and_best_in_last": 5
+   },
+   "bed_temperature_celsius/n8": {
+    "trainings": 5,
+    "at_cap": 5,
+    "best_in_last": 5,
+    "at_cap_and_best_in_last": 5
+   },
+   "energy_target/n16": {
+    "trainings": 5,
+    "at_cap": 5,
+    "best_in_last": 5,
+    "at_cap_and_best_in_last": 5
+   },
+   "energy_target/n32": {
+    "trainings": 5,
+    "at_cap": 5,
+    "best_in_last": 5,
+    "at_cap_and_best_in_last": 5
+   },
+   "energy_target/n64": {
+    "trainings": 5,
+    "at_cap": 4,
+    "best_in_last": 4,
+    "at_cap_and_best_in_last": 4
+   },
+   "energy_target/n8": {
+    "trainings": 5,
+    "at_cap": 5,
+    "best_in_last": 5,
+    "at_cap_and_best_in_last": 5
+   },
+   "product_moisture_kg_per_kg/n16": {
+    "trainings": 5,
+    "at_cap": 2,
+    "best_in_last": 2,
+    "at_cap_and_best_in_last": 2
+   },
+   "product_moisture_kg_per_kg/n32": {
+    "trainings": 5,
+    "at_cap": 2,
+    "best_in_last": 2,
+    "at_cap_and_best_in_last": 2
+   },
+   "product_moisture_kg_per_kg/n64": {
+    "trainings": 5,
+    "at_cap": 1,
+    "best_in_last": 1,
+    "at_cap_and_best_in_last": 1
+   },
+   "product_moisture_kg_per_kg/n8": {
+    "trainings": 5,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   }
+  }
+ },
+ "xlstm": {
+  "epoch_cap": 200,
+  "total": {
+   "trainings": 60,
+   "at_cap": 4,
+   "best_in_last": 4,
+   "at_cap_and_best_in_last": 4
+  },
+  "by_head": {
+   "bed_temperature_celsius": {
+    "trainings": 20,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "energy_target": {
+    "trainings": 20,
+    "at_cap": 1,
+    "best_in_last": 1,
+    "at_cap_and_best_in_last": 1
+   },
+   "product_moisture_kg_per_kg": {
+    "trainings": 20,
+    "at_cap": 3,
+    "best_in_last": 3,
+    "at_cap_and_best_in_last": 3
+   }
+  },
+  "by_n_train": {
+   "8": {
+    "trainings": 15,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "16": {
+    "trainings": 15,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "32": {
+    "trainings": 15,
+    "at_cap": 2,
+    "best_in_last": 2,
+    "at_cap_and_best_in_last": 2
+   },
+   "64": {
+    "trainings": 15,
+    "at_cap": 2,
+    "best_in_last": 2,
+    "at_cap_and_best_in_last": 2
+   }
+  },
+  "by_head_and_n_train": {
+   "bed_temperature_celsius/n16": {
+    "trainings": 5,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "bed_temperature_celsius/n32": {
+    "trainings": 5,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "bed_temperature_celsius/n64": {
+    "trainings": 5,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "bed_temperature_celsius/n8": {
+    "trainings": 5,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "energy_target/n16": {
+    "trainings": 5,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "energy_target/n32": {
+    "trainings": 5,
+    "at_cap": 1,
+    "best_in_last": 1,
+    "at_cap_and_best_in_last": 1
+   },
+   "energy_target/n64": {
+    "trainings": 5,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "energy_target/n8": {
+    "trainings": 5,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "product_moisture_kg_per_kg/n16": {
+    "trainings": 5,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "product_moisture_kg_per_kg/n32": {
+    "trainings": 5,
+    "at_cap": 1,
+    "best_in_last": 1,
+    "at_cap_and_best_in_last": 1
+   },
+   "product_moisture_kg_per_kg/n64": {
+    "trainings": 5,
+    "at_cap": 2,
+    "best_in_last": 2,
+    "at_cap_and_best_in_last": 2
+   },
+   "product_moisture_kg_per_kg/n8": {
+    "trainings": 5,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   }
+  }
+ },
+ "mamba": {
+  "epoch_cap": 200,
+  "total": {
+   "trainings": 60,
+   "at_cap": 22,
+   "best_in_last": 22,
+   "at_cap_and_best_in_last": 22
+  },
+  "by_head": {
+   "bed_temperature_celsius": {
+    "trainings": 20,
+    "at_cap": 8,
+    "best_in_last": 8,
+    "at_cap_and_best_in_last": 8
+   },
+   "energy_target": {
+    "trainings": 20,
+    "at_cap": 13,
+    "best_in_last": 13,
+    "at_cap_and_best_in_last": 13
+   },
+   "product_moisture_kg_per_kg": {
+    "trainings": 20,
+    "at_cap": 1,
+    "best_in_last": 1,
+    "at_cap_and_best_in_last": 1
+   }
+  },
+  "by_n_train": {
+   "8": {
+    "trainings": 15,
+    "at_cap": 3,
+    "best_in_last": 3,
+    "at_cap_and_best_in_last": 3
+   },
+   "16": {
+    "trainings": 15,
+    "at_cap": 7,
+    "best_in_last": 7,
+    "at_cap_and_best_in_last": 7
+   },
+   "32": {
+    "trainings": 15,
+    "at_cap": 3,
+    "best_in_last": 3,
+    "at_cap_and_best_in_last": 3
+   },
+   "64": {
+    "trainings": 15,
+    "at_cap": 9,
+    "best_in_last": 9,
+    "at_cap_and_best_in_last": 9
+   }
+  },
+  "by_head_and_n_train": {
+   "bed_temperature_celsius/n16": {
+    "trainings": 5,
+    "at_cap": 2,
+    "best_in_last": 2,
+    "at_cap_and_best_in_last": 2
+   },
+   "bed_temperature_celsius/n32": {
+    "trainings": 5,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "bed_temperature_celsius/n64": {
+    "trainings": 5,
+    "at_cap": 5,
+    "best_in_last": 5,
+    "at_cap_and_best_in_last": 5
+   },
+   "bed_temperature_celsius/n8": {
+    "trainings": 5,
+    "at_cap": 1,
+    "best_in_last": 1,
+    "at_cap_and_best_in_last": 1
+   },
+   "energy_target/n16": {
+    "trainings": 5,
+    "at_cap": 5,
+    "best_in_last": 5,
+    "at_cap_and_best_in_last": 5
+   },
+   "energy_target/n32": {
+    "trainings": 5,
+    "at_cap": 3,
+    "best_in_last": 3,
+    "at_cap_and_best_in_last": 3
+   },
+   "energy_target/n64": {
+    "trainings": 5,
+    "at_cap": 4,
+    "best_in_last": 4,
+    "at_cap_and_best_in_last": 4
+   },
+   "energy_target/n8": {
+    "trainings": 5,
+    "at_cap": 1,
+    "best_in_last": 1,
+    "at_cap_and_best_in_last": 1
+   },
+   "product_moisture_kg_per_kg/n16": {
+    "trainings": 5,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "product_moisture_kg_per_kg/n32": {
+    "trainings": 5,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "product_moisture_kg_per_kg/n64": {
+    "trainings": 5,
+    "at_cap": 0,
+    "best_in_last": 0,
+    "at_cap_and_best_in_last": 0
+   },
+   "product_moisture_kg_per_kg/n8": {
+    "trainings": 5,
+    "at_cap": 1,
+    "best_in_last": 1,
+    "at_cap_and_best_in_last": 1
+   }
+  }
+ }
+}
