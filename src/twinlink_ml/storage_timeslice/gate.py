@@ -59,16 +59,20 @@ class Cell:
 
 def gate_cells(
     records: Sequence[tuple[Scenario, ScenarioResult]],
+    realistic: Callable[[Scenario], bool] = is_realistic,
 ) -> tuple[list[Cell], dict[str, int]]:
     """Cells of all realistic scenarios above the denominator floor.
 
+    :param realistic: which scenarios count; default :func:`is_realistic` (the pre-registered
+        bands). A re-check that moves one placeholder outside its band on purpose passes its own
+        predicate and says so.
     :returns: ``(cells, counts)`` with the number of scenarios, of unrealistic ones and of those
         excluded by the floor.
     """
     cells: list[Cell] = []
     counts = {"n_scenarios": len(records), "n_unrealistic": 0, "n_excluded_floor": 0}
     for scenario, result in records:
-        if not is_realistic(scenario):
+        if not realistic(scenario):
             counts["n_unrealistic"] += 1
             continue
         if result.direct_kwh_per_day < DIRECT_FLOOR_KWH_PER_DAY:

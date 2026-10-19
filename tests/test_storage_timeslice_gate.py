@@ -74,6 +74,15 @@ def test_floor_and_unrealistic_scenarios_are_excluded() -> None:
     assert gate_verdict(cells, counts)["reading"] == "L3"
 
 
+def test_realism_predicate_can_be_replaced() -> None:
+    big = _result(1000.0, [1000, 800, 700, 600, 500, 400], [1000, 800, 700, 600, 500, 400])
+    off_band = _scenario().with_placeholders(solid_fraction=0.634)
+    assert not is_realistic(off_band)
+    assert gate_cells([(off_band, big)])[1]["n_unrealistic"] == 1
+    cells, counts = gate_cells([(off_band, big)], realistic=lambda _: True)
+    assert len(cells) == 4 and counts["n_unrealistic"] == 0
+
+
 def test_subset_verdicts_split_by_value() -> None:
     a = _result(1000.0, [1000, 900, 800, 700, 650, 600], [1000, 900, 800, 700, 650, 600], "a")
     c = _result(1000.0, [1000, 999, 998, 997, 996, 995], [1000, 999, 998, 997, 996, 995], "c")
