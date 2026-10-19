@@ -32,7 +32,12 @@ Every number below is stated in a lab-book entry and backed by an artifact in
 `artifacts/runs/`; follow the *Befund* number for the test set, the seeds and the caveats.
 
 **Architecture comparison (Befunde 51, 55, 58, 83, 94).** Eight methods (persistence, static
-regression, ARX, GRU, LSTM, Transformer, xLSTM, Mamba); verdicts are paired over five seeds
+regression, ARX, GRU, LSTM, Transformer, xLSTM, Mamba). **Every statement below holds for the tested,
+untuned configuration** (one fixed protocol for all networks, no hyperparameter tuning; at most 200
+epochs with early stopping), not for the architectures in general. The networks differ in size: LSTM
+57,027 parameters, GRU 42,819, Transformer 23,523, xLSTM 8,649 (the mLSTM-only variant), Mamba 8,139
+(`docs/08`, section 3, Befund 67); capacity-matched variants (Befund 67, old data) do not remove the
+xLSTM and Mamba deficit. Verdicts are paired over five seeds
 (Befund 83, 94), per cell and not corrected for multiplicity: after Holm only about a quarter of
 the rank cells remain (old data 82 of 336, new data 70 of 336, Befund 94). The re-run on the
 corrected data basis (preset version 2, Befund 94, gate passed) reproduces the ends of the order:
@@ -44,8 +49,10 @@ corrected data basis (preset version 2, Befund 94, gate passed) reproduces the e
   latency), not as a ranked winner.*
 - **Transformer, xLSTM, Mamba, ARX, static regression, persistence** are resolvably worse than
   the LSTM in the large majority of cells (uncorrected); xLSTM on moisture stays unresolved in 7 of
-  16 cells. *After Holm (2026-10-16): clearly behind only Mamba and the baselines; the deficits of
-  Transformer and xLSTM are an uncorrected tendency.*
+  16 cells. *After Holm (2026-10-16): clearly behind only Mamba and the baselines. The xLSTM deficit
+  is large and consistent across all seeds, not resolved under Holm with five seeds and a family of
+  336 tests (the Transformer deficit on moisture likewise); only small or inconsistent cells are called
+  an uncorrected tendency (Befund 98, `docs/08` version 5b).*
 - **The middle of the order** (Transformer, xLSTM) changes between "unresolved" and "worse" from
   cell to cell: not supported by five seeds.
 - Plant operating data without excitation do not suffice in the tested budget range (Befund 55):
