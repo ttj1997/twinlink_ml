@@ -1,0 +1,3117 @@
+{
+ "provenance": {
+  "git/commit": "161c8d7cb11887f50610517c4619d8808a560602",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "synthesis": "08_synthese_m2.md",
+ "claims": [
+  {
+   "fragment": "paired comparisons over five seeds",
+   "written": "five",
+   "computed": 5.0,
+   "source": "rerun_full_N.jsonl (master_seed)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "best of the eight methods tested",
+   "written": "eight",
+   "computed": 8.0,
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "by a factor of about seven",
+   "written": "seven",
+   "computed": 7.0,
+   "source": "rerun_full_N.jsonl (model/n_parameters, LSTM over Mamba)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the moisture error of GRU and LSTM at 8 training runs is 3.7 to 5.1 times the error at 64 runs",
+   "written": "8",
+   "computed": 8.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (part_b curves)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the moisture error of GRU and LSTM at 8 training runs is 3.7 to 5.1 times the error at 64 runs",
+   "written": "3.7",
+   "computed": 3.7340742994833165,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (part_b curves)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the moisture error of GRU and LSTM at 8 training runs is 3.7 to 5.1 times the error at 64 runs",
+   "written": "5.1",
+   "computed": 5.125056450932377,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (part_b curves)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the moisture error of GRU and LSTM at 8 training runs is 3.7 to 5.1 times the error at 64 runs",
+   "written": "64",
+   "computed": 64.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (part_b curves)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the error of GRU and LSTM on the product moisture at 8 training runs is 3.7 to 5.1 times the error at 64 runs",
+   "written": "8",
+   "computed": 8.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (part_b curves)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the error of GRU and LSTM on the product moisture at 8 training runs is 3.7 to 5.1 times the error at 64 runs",
+   "written": "3.7",
+   "computed": 3.7340742994833165,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (part_b curves)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the error of GRU and LSTM on the product moisture at 8 training runs is 3.7 to 5.1 times the error at 64 runs",
+   "written": "5.1",
+   "computed": 5.125056450932377,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (part_b curves)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the error of GRU and LSTM on the product moisture at 8 training runs is 3.7 to 5.1 times the error at 64 runs",
+   "written": "64",
+   "computed": 64.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (part_b curves)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "every point also uses 32 validation runs",
+   "written": "32",
+   "computed": 32.0,
+   "source": "befund94 addendum",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "below the sample time of 25 s",
+   "written": "25",
+   "computed": 25.0,
+   "source": "rerun_full_N.jsonl (data/sample_time_s)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "splits by run, two named test sets",
+   "written": "two",
+   "computed": 2.0,
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "large and consistent across all seeds but not resolved under Holm with five seeds",
+   "written": "five",
+   "computed": 5.0,
+   "source": "rerun_full_N.jsonl (master_seed)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "and the curves still fall at 64 runs, so the need beyond 64 runs is not determined",
+   "written": "64",
+   "computed": 64.0,
+   "source": "befund94 addendum (falls_32_to_64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "and the curves still fall at 64 runs, so the need beyond 64 runs is not determined",
+   "written": "64",
+   "computed": 64.0,
+   "source": "befund94 addendum (falls_32_to_64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "and the curves still fall at 64 runs",
+   "assertion": "GRU and LSTM lower at 64 than at 32 runs in every cell (uncorrected)",
+   "source": "befund94 addendum",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "The three predicted targets",
+   "written": "three",
+   "computed": 3.0,
+   "source": "rerun_full_N.jsonl (data/target_names)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the instantaneous total power of heater, fan, pump and atomiser in kW (absolute, no reference point",
+   "assertion": "energy.target power_kw, reference_value null",
+   "source": "greybox_gab_placeholder.yaml",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "grey-box model with four states",
+   "written": "four",
+   "computed": 4.0,
+   "source": "GreyBoxFluidBedGranulator.state_names",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Four states, no agglomeration",
+   "written": "four",
+   "computed": 4.0,
+   "source": "GreyBoxFluidBedGranulator.state_names",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "as median and range over five seeds (Figures 1 and 2)",
+   "written": "five",
+   "computed": 5.0,
+   "source": "rerun_full_N.jsonl (master_seed)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "lower by 29 to 68 % depending on the target",
+   "written": "29",
+   "computed": 28.73395759409043,
+   "source": "extra_trees_split_comparison.jsonl (median of nrmse_run_median at h1, point-level against run-level)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "lower by 29 to 68 % depending on the target",
+   "written": "68",
+   "computed": 68.09409528276412,
+   "source": "extra_trees_split_comparison.jsonl (median of nrmse_run_median at h1, point-level against run-level)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "an optimistic bias of 29 to 68 %",
+   "written": "29",
+   "computed": 28.73395759409043,
+   "source": "extra_trees_split_comparison.jsonl (median of nrmse_run_median at h1, point-level against run-level)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "an optimistic bias of 29 to 68 %",
+   "written": "68",
+   "computed": 68.09409528276412,
+   "source": "extra_trees_split_comparison.jsonl (median of nrmse_run_median at h1, point-level against run-level)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "run-median NRMSE of the energy target, the product moisture and the median particle diameter",
+   "assertion": "the three channels of the comparison exist in the records",
+   "source": "extra_trees_split_comparison.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Two test sets, always named",
+   "written": "two",
+   "computed": 2.0,
+   "source": "rerun_full_N.jsonl (tags test_set)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "with the t distribution on four degrees of freedom",
+   "written": "four",
+   "computed": 4.0,
+   "source": "rerun_evaluation_rerun_full.json (degrees_of_freedom)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "only if it survives Holm (5 %)",
+   "written": "5",
+   "computed": 5.0,
+   "source": "scripts/analyze_rerun.py ALPHA",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(336 cells in A0 and N, 168 in A1",
+   "written": "336",
+   "computed": 336.0,
+   "source": "rerun_evaluation_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(336 cells in A0 and N, 168 in A1",
+   "written": "336",
+   "computed": 336.0,
+   "source": "rerun_evaluation_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(336 cells in A0 and N, 168 in A1",
+   "written": "168",
+   "computed": 168.0,
+   "source": "rerun_evaluation_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "applied 632 uncorrected paired tests",
+   "written": "632",
+   "computed": 632.0,
+   "source": "paired_reevaluation_58_63_67.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a paired difference of 12.5 % between GRU and LSTM is resolved at 80 % power with 3 to 6 seeds on energy and bed temperature, with 5 seeds on the product moisture on the excited test set and with 16 on the constant-run holdout",
+   "written": "12.5",
+   "computed": 12.5,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (N, n_train 64, h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a paired difference of 12.5 % between GRU and LSTM is resolved at 80 % power with 3 to 6 seeds on energy and bed temperature, with 5 seeds on the product moisture on the excited test set and with 16 on the constant-run holdout",
+   "written": "80",
+   "computed": 80.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (N, n_train 64, h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a paired difference of 12.5 % between GRU and LSTM is resolved at 80 % power with 3 to 6 seeds on energy and bed temperature, with 5 seeds on the product moisture on the excited test set and with 16 on the constant-run holdout",
+   "written": "3",
+   "computed": 3.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (N, n_train 64, h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a paired difference of 12.5 % between GRU and LSTM is resolved at 80 % power with 3 to 6 seeds on energy and bed temperature, with 5 seeds on the product moisture on the excited test set and with 16 on the constant-run holdout",
+   "written": "6",
+   "computed": 6.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (N, n_train 64, h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a paired difference of 12.5 % between GRU and LSTM is resolved at 80 % power with 3 to 6 seeds on energy and bed temperature, with 5 seeds on the product moisture on the excited test set and with 16 on the constant-run holdout",
+   "written": "5",
+   "computed": 5.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (N, n_train 64, h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a paired difference of 12.5 % between GRU and LSTM is resolved at 80 % power with 3 to 6 seeds on energy and bed temperature, with 5 seeds on the product moisture on the excited test set and with 16 on the constant-run holdout",
+   "written": "16",
+   "computed": 16.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (N, n_train 64, h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the Transformer needs 4 to 7 seeds on energy and bed temperature but 210 (excited) and 69 (constant-run holdout) on the moisture",
+   "written": "4",
+   "computed": 4.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (N, n_train 64, h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the Transformer needs 4 to 7 seeds on energy and bed temperature but 210 (excited) and 69 (constant-run holdout) on the moisture",
+   "written": "7",
+   "computed": 7.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (N, n_train 64, h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the Transformer needs 4 to 7 seeds on energy and bed temperature but 210 (excited) and 69 (constant-run holdout) on the moisture",
+   "written": "210",
+   "computed": 210.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (N, n_train 64, h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the Transformer needs 4 to 7 seeds on energy and bed temperature but 210 (excited) and 69 (constant-run holdout) on the moisture",
+   "written": "69",
+   "computed": 69.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (N, n_train 64, h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "planning figures estimated from five seeds",
+   "written": "five",
+   "computed": 5.0,
+   "source": "befund94 addendum (seeds_row over five seeds)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the old data A0 gave 45 and 37 seeds for GRU and 193 and 33 for the Transformer on the moisture",
+   "written": "45",
+   "computed": 45.0,
+   "source": "paired_reevaluation_83_addendum.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the old data A0 gave 45 and 37 seeds for GRU and 193 and 33 for the Transformer on the moisture",
+   "written": "37",
+   "computed": 37.0,
+   "source": "paired_reevaluation_83_addendum.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the old data A0 gave 45 and 37 seeds for GRU and 193 and 33 for the Transformer on the moisture",
+   "written": "193",
+   "computed": 193.0,
+   "source": "paired_reevaluation_83_addendum.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the old data A0 gave 45 and 37 seeds for GRU and 193 and 33 for the Transformer on the moisture",
+   "written": "33",
+   "computed": 33.0,
+   "source": "paired_reevaluation_83_addendum.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(GRU on the excited set 3 to 753 seeds)",
+   "written": "3",
+   "computed": 3.0,
+   "source": "befund94 addendum (ranges over all budgets and horizons)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(GRU on the excited set 3 to 753 seeds)",
+   "written": "753",
+   "computed": 753.0,
+   "source": "befund94 addendum (ranges over all budgets and horizons)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Eight methods (persistence, static regression, ARX, GRU, LSTM, Transformer, xLSTM, Mamba), three targets, two test sets",
+   "written": "eight",
+   "computed": 8.0,
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Eight methods (persistence, static regression, ARX, GRU, LSTM, Transformer, xLSTM, Mamba), three targets, two test sets",
+   "written": "three",
+   "computed": 3.0,
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Eight methods (persistence, static regression, ARX, GRU, LSTM, Transformer, xLSTM, Mamba), three targets, two test sets",
+   "written": "two",
+   "computed": 2.0,
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "$n_{\\mathrm{train}} \\in \\{8,16,32,64\\}$, five seeds, horizons 1 and 36",
+   "written": "five",
+   "computed": 5.0,
+   "source": "rerun_full_N.jsonl (master_seed)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "median and range over five seeds, arm N, excited test set",
+   "written": "five",
+   "computed": 5.0,
+   "source": "rerun_full_N.jsonl (master_seed)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "LSTM 57,027 parameters, GRU 42,819, Transformer 23,523, xLSTM 8,649 and Mamba 8,139",
+   "written": "57,027",
+   "computed": 57027.0,
+   "source": "rerun_full_N.jsonl (model/n_parameters)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "LSTM 57,027 parameters, GRU 42,819, Transformer 23,523, xLSTM 8,649 and Mamba 8,139",
+   "written": "42,819",
+   "computed": 42819.0,
+   "source": "rerun_full_N.jsonl (model/n_parameters)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "LSTM 57,027 parameters, GRU 42,819, Transformer 23,523, xLSTM 8,649 and Mamba 8,139",
+   "written": "23,523",
+   "computed": 23523.0,
+   "source": "rerun_full_N.jsonl (model/n_parameters)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "LSTM 57,027 parameters, GRU 42,819, Transformer 23,523, xLSTM 8,649 and Mamba 8,139",
+   "written": "8,649",
+   "computed": 8649.0,
+   "source": "rerun_full_N.jsonl (model/n_parameters)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "LSTM 57,027 parameters, GRU 42,819, Transformer 23,523, xLSTM 8,649 and Mamba 8,139",
+   "written": "8,139",
+   "computed": 8139.0,
+   "source": "rerun_full_N.jsonl (model/n_parameters)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(at most 200 epochs, early stopping)",
+   "written": "200",
+   "computed": 200.0,
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(sLSTM only, and mixed mLSTM and sLSTM, 47,955 to 50,739 parameters)",
+   "written": "47,955",
+   "computed": 47955.0,
+   "source": "sx3_capacity_matched.json (parameters)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(sLSTM only, and mixed mLSTM and sLSTM, 47,955 to 50,739 parameters)",
+   "written": "50,739",
+   "computed": 50739.0,
+   "source": "sx3_capacity_matched.json (parameters)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "stay 1.6 to 3.3 times behind it on the moisture",
+   "written": "1.6",
+   "computed": 1.5835019809004063,
+   "source": "sx3_capacity_matched.json (medians)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "stay 1.6 to 3.3 times behind it on the moisture",
+   "written": "3.3",
+   "computed": 3.2640112903106493,
+   "source": "sx3_capacity_matched.json (medians)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "come close to the LSTM on energy and bed temperature",
+   "assertion": "sLSTM and mixed variants within a factor 1.2 of the LSTM median on energy and bed temperature",
+   "source": "sx3_capacity_matched.json (medians)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the capacity-matched mLSTM-only variant (50,301) diverges on the energy target",
+   "written": "50,301",
+   "computed": 50301.0,
+   "source": "sx3_capacity_matched.json (parameters)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a Mamba of 53,211 parameters is not better than the small one (resolved worse than LSTM in 6 of 6 cells, 3 of them after Holm in the family of 96 tests",
+   "written": "53,211",
+   "computed": 53211.0,
+   "source": "sx3_capacity_matched.json, paired_reevaluation_83_addendum.json (family b63_67)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a Mamba of 53,211 parameters is not better than the small one (resolved worse than LSTM in 6 of 6 cells, 3 of them after Holm in the family of 96 tests",
+   "written": "6",
+   "computed": 6.0,
+   "source": "sx3_capacity_matched.json, paired_reevaluation_83_addendum.json (family b63_67)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a Mamba of 53,211 parameters is not better than the small one (resolved worse than LSTM in 6 of 6 cells, 3 of them after Holm in the family of 96 tests",
+   "written": "6",
+   "computed": 6.0,
+   "source": "sx3_capacity_matched.json, paired_reevaluation_83_addendum.json (family b63_67)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a Mamba of 53,211 parameters is not better than the small one (resolved worse than LSTM in 6 of 6 cells, 3 of them after Holm in the family of 96 tests",
+   "written": "3",
+   "computed": 3.0,
+   "source": "sx3_capacity_matched.json, paired_reevaluation_83_addendum.json (family b63_67)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a Mamba of 53,211 parameters is not better than the small one (resolved worse than LSTM in 6 of 6 cells, 3 of them after Holm in the family of 96 tests",
+   "written": "96",
+   "computed": 96.0,
+   "source": "sx3_capacity_matched.json, paired_reevaluation_83_addendum.json (family b63_67)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a small LSTM of 8,517 parameters is not resolved worse than the large one in any cell",
+   "written": "8,517",
+   "computed": 8517.0,
+   "source": "sx3_capacity_matched.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "is not resolved worse than the large one in any cell",
+   "assertion": "small LSTM against LSTM: no cell worse (paired re-evaluation)",
+   "source": "paired_reevaluation_83_addendum.json (family b63_67)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "but whose median is at least 1.5 times that of LSTM (or at most 1/1.5 of it) with all five seeds on that side",
+   "written": "1.5",
+   "computed": 1.5,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json (large_ratio_threshold)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "but whose median is at least 1.5 times that of LSTM (or at most 1/1.5 of it) with all five seeds on that side",
+   "written": "1",
+   "computed": 1.0,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json (large_ratio_threshold)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "but whose median is at least 1.5 times that of LSTM (or at most 1/1.5 of it) with all five seeds on that side",
+   "written": "1.5",
+   "computed": 1.5,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json (large_ratio_threshold)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "but whose median is at least 1.5 times that of LSTM (or at most 1/1.5 of it) with all five seeds on that side",
+   "written": "five",
+   "computed": 5.0,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json (large_ratio_threshold)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "not resolved under Holm with five seeds and a family of 336 tests",
+   "written": "five",
+   "computed": 5.0,
+   "source": "rerun_evaluation_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "not resolved under Holm with five seeds and a family of 336 tests",
+   "written": "336",
+   "computed": 336.0,
+   "source": "rerun_evaluation_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(15 of 16 cells unresolved, one cell with GRU worse, uncorrected)",
+   "written": "15",
+   "computed": 15.0,
+   "source": "holm_rank_cells_rerun_full.json (arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(15 of 16 cells unresolved, one cell with GRU worse, uncorrected)",
+   "written": "16",
+   "computed": 16.0,
+   "source": "holm_rank_cells_rerun_full.json (arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(15 of 16 cells unresolved, one cell with GRU worse, uncorrected)",
+   "written": "one",
+   "computed": 1.0,
+   "source": "holm_rank_cells_rerun_full.json (arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "in 5 of 16 and 9 of 16 cells without correction",
+   "written": "5",
+   "computed": 5.0,
+   "source": "holm_rank_cells_rerun_full.json (arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "in 5 of 16 and 9 of 16 cells without correction",
+   "written": "9",
+   "computed": 9.0,
+   "source": "holm_rank_cells_rerun_full.json (arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "in 5 of 16 and 9 of 16 cells without correction",
+   "written": "16",
+   "computed": 16.0,
+   "source": "holm_rank_cells_rerun_full.json (arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "and never worse",
+   "assertion": "GRU worse than LSTM in 0 cells on energy and bed temperature (arm N)",
+   "source": "holm_rank_cells_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(on bed temperature mostly at horizon 1: 7 of the 9 cells)",
+   "written": "1",
+   "computed": 1.0,
+   "source": "holm_rank_cells_rerun_full.json (gru_by_channel_and_horizon, N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(on bed temperature mostly at horizon 1: 7 of the 9 cells)",
+   "written": "7",
+   "computed": 7.0,
+   "source": "holm_rank_cells_rerun_full.json (gru_by_channel_and_horizon, N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(on bed temperature mostly at horizon 1: 7 of the 9 cells)",
+   "written": "9",
+   "computed": 9.0,
+   "source": "holm_rank_cells_rerun_full.json (gru_by_channel_and_horizon, N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(median ratio of the medians 0.94 on energy and 0.98 on bed temperature)",
+   "written": "0.94",
+   "computed": 0.943165428554718,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(median ratio of the medians 0.94 on energy and 0.98 on bed temperature)",
+   "written": "0.98",
+   "computed": 0.9759857040588255,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "After Holm correction, no GRU-versus-LSTM cell is resolved in any channel",
+   "assertion": "0 resolved GRU-against-LSTM cells after Holm, all arms, channels, both families",
+   "source": "holm_rank_cells_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "after Holm no GRU-against-LSTM cell is resolved",
+   "assertion": "as above (summary)",
+   "source": "holm_rank_cells_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "about 25 % fewer parameters (42,819 against 57,027, Befund 28)",
+   "written": "25",
+   "computed": 24.914514177494873,
+   "source": "rerun_full_N.jsonl (model/n_parameters)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "about 25 % fewer parameters (42,819 against 57,027, Befund 28)",
+   "written": "42,819",
+   "computed": 42819.0,
+   "source": "rerun_full_N.jsonl (model/n_parameters)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "about 25 % fewer parameters (42,819 against 57,027, Befund 28)",
+   "written": "57,027",
+   "computed": 57027.0,
+   "source": "rerun_full_N.jsonl (model/n_parameters)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(mLSTM-only variant, 8.6k parameters)",
+   "written": "8.6",
+   "computed": 8.649,
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "they are worse in 39 (Transformer), 38 (xLSTM) and 44 (Mamba) of 48 cells without correction",
+   "written": "39",
+   "computed": 39.0,
+   "source": "holm_rank_cells_rerun_full.json (arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "they are worse in 39 (Transformer), 38 (xLSTM) and 44 (Mamba) of 48 cells without correction",
+   "written": "38",
+   "computed": 38.0,
+   "source": "holm_rank_cells_rerun_full.json (arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "they are worse in 39 (Transformer), 38 (xLSTM) and 44 (Mamba) of 48 cells without correction",
+   "written": "44",
+   "computed": 44.0,
+   "source": "holm_rank_cells_rerun_full.json (arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "they are worse in 39 (Transformer), 38 (xLSTM) and 44 (Mamba) of 48 cells without correction",
+   "written": "48",
+   "computed": 48.0,
+   "source": "holm_rank_cells_rerun_full.json (arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "never better",
+   "assertion": "Transformer, xLSTM, Mamba better than LSTM in 0 cells uncorrected (arm N)",
+   "source": "holm_rank_cells_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "resolved in 14 of 48 cells for Mamba, in 2 of 48 for the Transformer and in 2 of 48 for xLSTM",
+   "written": "14",
+   "computed": 14.0,
+   "source": "holm_rank_cells_rerun_full.json (arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "resolved in 14 of 48 cells for Mamba, in 2 of 48 for the Transformer and in 2 of 48 for xLSTM",
+   "written": "2",
+   "computed": 2.0,
+   "source": "holm_rank_cells_rerun_full.json (arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "resolved in 14 of 48 cells for Mamba, in 2 of 48 for the Transformer and in 2 of 48 for xLSTM",
+   "written": "2",
+   "computed": 2.0,
+   "source": "holm_rank_cells_rerun_full.json (arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "every seed is worse in all 48 cells, the median ratio is 3.3",
+   "written": "48",
+   "computed": 48.0,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "every seed is worse in all 48 cells, the median ratio is 3.3",
+   "written": "48",
+   "computed": 48.0,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "every seed is worse in all 48 cells, the median ratio is 3.3",
+   "written": "3.3",
+   "computed": 3.2645741634760066,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "on the energy target at horizon 36 the xLSTM median is 10.4 to 24.5 times the LSTM's in all 8 cells",
+   "written": "36",
+   "computed": 36.0,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json (xlstm_energy_h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "on the energy target at horizon 36 the xLSTM median is 10.4 to 24.5 times the LSTM's in all 8 cells",
+   "written": "10.4",
+   "computed": 10.381942406218464,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json (xlstm_energy_h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "on the energy target at horizon 36 the xLSTM median is 10.4 to 24.5 times the LSTM's in all 8 cells",
+   "written": "24.5",
+   "computed": 24.462017342691702,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json (xlstm_energy_h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "on the energy target at horizon 36 the xLSTM median is 10.4 to 24.5 times the LSTM's in all 8 cells",
+   "written": "8",
+   "computed": 8.0,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json (xlstm_energy_h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "with every seed worse, and none of these cells survives Holm",
+   "assertion": "all seeds worse and Holm-adjusted p >= 0.05 in all 8 cells",
+   "source": "befund98_addendum_effect_sizes_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "times that of the static regression, but with 4 and 3 of 5 seeds worse this is not resolved",
+   "written": "4",
+   "computed": 4.0,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json (vs_static, n_train 64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "times that of the static regression, but with 4 and 3 of 5 seeds worse this is not resolved",
+   "written": "3",
+   "computed": 3.0,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json (vs_static, n_train 64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "times that of the static regression, but with 4 and 3 of 5 seeds worse this is not resolved",
+   "written": "5",
+   "computed": 5.0,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json (vs_static, n_train 64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the xLSTM median on the energy target is also 3.4 (excited) and 2.3 (constant-run holdout)",
+   "written": "3.4",
+   "computed": 3.4308135730275344,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json (vs_static, n_train 64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the xLSTM median on the energy target is also 3.4 (excited) and 2.3 (constant-run holdout)",
+   "written": "2.3",
+   "computed": 2.319236654408784,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json (vs_static, n_train 64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "this is not resolved",
+   "assertion": "xLSTM against static at n_train 64: unresolved on both test sets",
+   "source": "befund98_addendum_effect_sizes_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "it stays unresolved in 7 of 16 cells (uncorrected)",
+   "written": "7",
+   "computed": 7.0,
+   "source": "rerun_evaluation_rerun_full.json (rank cells, arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "it stays unresolved in 7 of 16 cells (uncorrected)",
+   "written": "16",
+   "computed": 16.0,
+   "source": "rerun_evaluation_rerun_full.json (rank cells, arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "large and consistent on the moisture (11 of 16 cells, median ratio 1.67)",
+   "written": "11",
+   "computed": 11.0,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "large and consistent on the moisture (11 of 16 cells, median ratio 1.67)",
+   "written": "16",
+   "computed": 16.0,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "large and consistent on the moisture (11 of 16 cells, median ratio 1.67)",
+   "written": "1.67",
+   "computed": 1.6731366127278178,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "small on energy and bed temperature (median ratio 1.26 and 1.16)",
+   "written": "1.26",
+   "computed": 1.2608585518712399,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "small on energy and bed temperature (median ratio 1.26 and 1.16)",
+   "written": "1.16",
+   "computed": 1.157223120291913,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Mamba is resolved behind LSTM in 14 of 48 cells after Holm (median ratio 3.2)",
+   "written": "14",
+   "computed": 14.0,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Mamba is resolved behind LSTM in 14 of 48 cells after Holm (median ratio 3.2)",
+   "written": "48",
+   "computed": 48.0,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Mamba is resolved behind LSTM in 14 of 48 cells after Holm (median ratio 3.2)",
+   "written": "3.2",
+   "computed": 3.186948514103617,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "static regression in 21 of 48 cells, persistence in 19, ARX in 12",
+   "written": "21",
+   "computed": 21.0,
+   "source": "holm_rank_cells_rerun_full.json (arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "static regression in 21 of 48 cells, persistence in 19, ARX in 12",
+   "written": "48",
+   "computed": 48.0,
+   "source": "holm_rank_cells_rerun_full.json (arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "static regression in 21 of 48 cells, persistence in 19, ARX in 12",
+   "written": "19",
+   "computed": 19.0,
+   "source": "holm_rank_cells_rerun_full.json (arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "static regression in 21 of 48 cells, persistence in 19, ARX in 12",
+   "written": "12",
+   "computed": 12.0,
+   "source": "holm_rank_cells_rerun_full.json (arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "persistence is better than LSTM in one cell (energy, uncorrected)",
+   "written": "one",
+   "computed": 1.0,
+   "source": "holm_rank_cells_rerun_full.json (arm N)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "after Holm, 70 of 336 rank cells remain in arm N (82 of 336 in A0)",
+   "written": "70",
+   "computed": 70.0,
+   "source": "rerun_evaluation_rerun_full.json (multiplicity)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "after Holm, 70 of 336 rank cells remain in arm N (82 of 336 in A0)",
+   "written": "82",
+   "computed": 82.0,
+   "source": "rerun_evaluation_rerun_full.json (multiplicity)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "85 rank verdicts differ between A0 and an arm of the re-run, 45 in A1 and 40 in N",
+   "written": "85",
+   "computed": 85.0,
+   "source": "rerun_evaluation_rerun_full.json (rank_verdicts_changed_against_a0)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "85 rank verdicts differ between A0 and an arm of the re-run, 45 in A1 and 40 in N",
+   "written": "45",
+   "computed": 45.0,
+   "source": "rerun_evaluation_rerun_full.json (rank_verdicts_changed_against_a0)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "85 rank verdicts differ between A0 and an arm of the re-run, 45 in A1 and 40 in N",
+   "written": "40",
+   "computed": 40.0,
+   "source": "rerun_evaluation_rerun_full.json (rank_verdicts_changed_against_a0)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "after Holm 3 of 192 tests remain (GRU and LSTM, all worse in A1",
+   "written": "3",
+   "computed": 3.0,
+   "source": "rerun_evaluation_rerun_full.json (a1_vs_a0, Holm recomputed)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "after Holm 3 of 192 tests remain (GRU and LSTM, all worse in A1",
+   "written": "192",
+   "computed": 192.0,
+   "source": "rerun_evaluation_rerun_full.json (a1_vs_a0, Holm recomputed)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(GRU and LSTM, all worse in A1",
+   "assertion": "A1 against A0 after Holm: Counter({('gru[A1]', 'candidate worse'): 2, ('lstm[A1]', 'candidate worse'): 1})",
+   "source": "rerun_evaluation_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Of 384 tests 24 survive Holm, and all of them are persistence",
+   "written": "384",
+   "computed": 384.0,
+   "source": "rerun_evaluation_rerun_full.json (n_vs_a0, Holm recomputed)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Of 384 tests 24 survive Holm, and all of them are persistence",
+   "written": "24",
+   "computed": 24.0,
+   "source": "rerun_evaluation_rerun_full.json (n_vs_a0, Holm recomputed)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "and all of them are persistence",
+   "assertion": "N against A0 after Holm: Counter({('persistence[N]', 'candidate worse'): 16, ('persistence[N]', 'candidate better'): 8})",
+   "source": "rerun_evaluation_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "N against A0 mixes three changes (planned inputs, solid-fraction process, per-run cap",
+   "written": "three",
+   "computed": 3.0,
+   "source": "twinlink_ml.evaluation.experiments.NEW_STUDY_OPTIONS",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "by factors of 5.2 to 7.8 (GRU, LSTM, Transformer,",
+   "written": "5.2",
+   "computed": 5.197147025486191,
+   "source": "paired_reevaluation_58_63_67.json (part_58_cells, ratio of medians against static)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "by factors of 5.2 to 7.8 (GRU, LSTM, Transformer,",
+   "written": "7.8",
+   "computed": 7.821268065686012,
+   "source": "paired_reevaluation_58_63_67.json (part_58_cells, ratio of medians against static)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "all five seeds better; Befund 83 e",
+   "assertion": "every one of the six cells resolved better, no seed worse",
+   "source": "paired_reevaluation_58_63_67.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "is not supported by five seeds",
+   "written": "five",
+   "computed": 5.0,
+   "source": "rerun_full_N.jsonl (master_seed)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| persistence | 0 | 3 | 0.2 |",
+   "assertion": "persistence: parameters, latency, batch cost equal the artifact",
+   "source": "joint_timing_idle.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| static regression | 45 | 5 | 1.7 |",
+   "assertion": "static regression: parameters, latency, batch cost equal the artifact",
+   "source": "joint_timing_idle.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| ARX | 102 | 246 | 3.9 |",
+   "assertion": "ARX: parameters, latency, batch cost equal the artifact",
+   "source": "joint_timing_idle.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| GRU | 42,819 | 4,753 | 123.7 |",
+   "assertion": "GRU: parameters, latency, batch cost equal the artifact",
+   "source": "joint_timing_idle.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| LSTM | 57,027 | 6,502 | 57.2 |",
+   "assertion": "LSTM: parameters, latency, batch cost equal the artifact",
+   "source": "joint_timing_idle.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| Mamba | 8,139 | 14,950 | 415.8 |",
+   "assertion": "Mamba: parameters, latency, batch cost equal the artifact",
+   "source": "joint_timing_idle.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| xLSTM | 8,649 | 27,487 | 936.8 |",
+   "assertion": "xLSTM: parameters, latency, batch cost equal the artifact",
+   "source": "joint_timing_idle.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| Transformer | 23,523 | 31,567 | 2,691.8 |",
+   "assertion": "Transformer: parameters, latency, batch cost equal the artifact",
+   "source": "joint_timing_idle.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "on an idle machine (Befund 97): one thread, warm-up excluded, one process",
+   "written": "one",
+   "computed": 1.0,
+   "source": "joint_timing_idle.json (environment, design)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "on an idle machine (Befund 97): one thread, warm-up excluded, one process",
+   "written": "one",
+   "computed": 1.0,
+   "source": "joint_timing_idle.json (environment, design)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "= 64, 4352 excited-test windows",
+   "written": "4352",
+   "computed": 4352.0,
+   "source": "joint_timing_idle.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "inference cost of the eight methods",
+   "written": "eight",
+   "computed": 8.0,
+   "source": "joint_timing_idle.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(2-epoch fit, setup included, indicative only): GRU 4.3 s, LSTM 4.7 s, Mamba 14.8 s, xLSTM 27.8 s, Transformer 67.6 s",
+   "written": "2",
+   "computed": 2.0,
+   "source": "joint_timing_idle.json (fit_s_per_epoch_indicative)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(2-epoch fit, setup included, indicative only): GRU 4.3 s, LSTM 4.7 s, Mamba 14.8 s, xLSTM 27.8 s, Transformer 67.6 s",
+   "written": "4.3",
+   "computed": 4.319969349999155,
+   "source": "joint_timing_idle.json (fit_s_per_epoch_indicative)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(2-epoch fit, setup included, indicative only): GRU 4.3 s, LSTM 4.7 s, Mamba 14.8 s, xLSTM 27.8 s, Transformer 67.6 s",
+   "written": "4.7",
+   "computed": 4.697554300000775,
+   "source": "joint_timing_idle.json (fit_s_per_epoch_indicative)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(2-epoch fit, setup included, indicative only): GRU 4.3 s, LSTM 4.7 s, Mamba 14.8 s, xLSTM 27.8 s, Transformer 67.6 s",
+   "written": "14.8",
+   "computed": 14.783077299998695,
+   "source": "joint_timing_idle.json (fit_s_per_epoch_indicative)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(2-epoch fit, setup included, indicative only): GRU 4.3 s, LSTM 4.7 s, Mamba 14.8 s, xLSTM 27.8 s, Transformer 67.6 s",
+   "written": "27.8",
+   "computed": 27.83373595000012,
+   "source": "joint_timing_idle.json (fit_s_per_epoch_indicative)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(2-epoch fit, setup included, indicative only): GRU 4.3 s, LSTM 4.7 s, Mamba 14.8 s, xLSTM 27.8 s, Transformer 67.6 s",
+   "written": "67.6",
+   "computed": 67.58068769999954,
+   "source": "joint_timing_idle.json (fit_s_per_epoch_indicative)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "one horizon of 36 steps costs 253,136 \u00b5s in the simulator, of 256,123 \u00b5s in total, i.e. 98.8 % simulator share",
+   "written": "one",
+   "computed": 1.0,
+   "source": "a1_inference_time_v2_idle.json (hybrid_total)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "one horizon of 36 steps costs 253,136 \u00b5s in the simulator, of 256,123 \u00b5s in total, i.e. 98.8 % simulator share",
+   "written": "36",
+   "computed": 36.0,
+   "source": "a1_inference_time_v2_idle.json (hybrid_total)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "one horizon of 36 steps costs 253,136 \u00b5s in the simulator, of 256,123 \u00b5s in total, i.e. 98.8 % simulator share",
+   "written": "253,136",
+   "computed": 253135.95000261557,
+   "source": "a1_inference_time_v2_idle.json (hybrid_total)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "one horizon of 36 steps costs 253,136 \u00b5s in the simulator, of 256,123 \u00b5s in total, i.e. 98.8 % simulator share",
+   "written": "256,123",
+   "computed": 256123.4000058903,
+   "source": "a1_inference_time_v2_idle.json (hybrid_total)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "one horizon of 36 steps costs 253,136 \u00b5s in the simulator, of 256,123 \u00b5s in total, i.e. 98.8 % simulator share",
+   "written": "98.8",
+   "computed": 98.83358958876619,
+   "source": "a1_inference_time_v2_idle.json (hybrid_total)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the network alone (2,987 \u00b5s)",
+   "written": "2,987",
+   "computed": 2987.4500032747164,
+   "source": "a1_inference_time_v2_idle.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "The batch order is LSTM < GRU < Mamba < xLSTM < Transformer, the single-window order GRU < LSTM < Mamba < xLSTM < Transformer",
+   "assertion": "orders recomputed from the medians",
+   "source": "joint_timing_idle.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Latency of one window and cost per window in a batch",
+   "assertion": "latency is measured at a batch of 1 window",
+   "source": "joint_timing_idle.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| method | parameters | latency, one window |",
+   "assertion": "table header (batch of 1)",
+   "source": "joint_timing_idle.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "latency of one window and cost per window in a batch, microseconds",
+   "assertion": "caption of Figure 3",
+   "source": "joint_timing_idle.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "With five seeds and a family of 336 tests",
+   "written": "five",
+   "computed": 5.0,
+   "source": "rerun_evaluation_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "With five seeds and a family of 336 tests",
+   "written": "336",
+   "computed": 336.0,
+   "source": "rerun_evaluation_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Five seeds resolve large differences everywhere",
+   "written": "five",
+   "computed": 5.0,
+   "source": "rerun_full_N.jsonl (master_seed)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "for a 10 to 12.5 % difference of GRU against LSTM on energy and bed temperature (3 to 8 seeds, arm N, $n_{\\mathrm{train}}$ = 64), not for the Transformer (4 to 10 seeds)",
+   "written": "10",
+   "computed": 10.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (N, n_train 64, h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "for a 10 to 12.5 % difference of GRU against LSTM on energy and bed temperature (3 to 8 seeds, arm N, $n_{\\mathrm{train}}$ = 64), not for the Transformer (4 to 10 seeds)",
+   "written": "12.5",
+   "computed": 12.5,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (N, n_train 64, h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "for a 10 to 12.5 % difference of GRU against LSTM on energy and bed temperature (3 to 8 seeds, arm N, $n_{\\mathrm{train}}$ = 64), not for the Transformer (4 to 10 seeds)",
+   "written": "3",
+   "computed": 3.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (N, n_train 64, h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "for a 10 to 12.5 % difference of GRU against LSTM on energy and bed temperature (3 to 8 seeds, arm N, $n_{\\mathrm{train}}$ = 64), not for the Transformer (4 to 10 seeds)",
+   "written": "8",
+   "computed": 8.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (N, n_train 64, h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "for a 10 to 12.5 % difference of GRU against LSTM on energy and bed temperature (3 to 8 seeds, arm N, $n_{\\mathrm{train}}$ = 64), not for the Transformer (4 to 10 seeds)",
+   "written": "64",
+   "computed": 64.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (N, n_train 64, h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "for a 10 to 12.5 % difference of GRU against LSTM on energy and bed temperature (3 to 8 seeds, arm N, $n_{\\mathrm{train}}$ = 64), not for the Transformer (4 to 10 seeds)",
+   "written": "4",
+   "computed": 4.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (N, n_train 64, h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "for a 10 to 12.5 % difference of GRU against LSTM on energy and bed temperature (3 to 8 seeds, arm N, $n_{\\mathrm{train}}$ = 64), not for the Transformer (4 to 10 seeds)",
+   "written": "10",
+   "computed": 10.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (N, n_train 64, h36)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "In arm N 260 of 336 rank cells are resolved without correction, 251 after Benjamini-Hochberg and 70 after Holm",
+   "written": "260",
+   "computed": 260.0,
+   "source": "rerun_evaluation_rerun_full.json (multiplicity)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "In arm N 260 of 336 rank cells are resolved without correction, 251 after Benjamini-Hochberg and 70 after Holm",
+   "written": "336",
+   "computed": 336.0,
+   "source": "rerun_evaluation_rerun_full.json (multiplicity)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "In arm N 260 of 336 rank cells are resolved without correction, 251 after Benjamini-Hochberg and 70 after Holm",
+   "written": "251",
+   "computed": 251.0,
+   "source": "rerun_evaluation_rerun_full.json (multiplicity)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "In arm N 260 of 336 rank cells are resolved without correction, 251 after Benjamini-Hochberg and 70 after Holm",
+   "written": "70",
+   "computed": 70.0,
+   "source": "rerun_evaluation_rerun_full.json (multiplicity)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the curves still fall between 32 and 64 runs",
+   "written": "32",
+   "computed": 32.0,
+   "source": "befund94 addendum (falls_32_to_64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the curves still fall between 32 and 64 runs",
+   "written": "64",
+   "computed": 64.0,
+   "source": "befund94 addendum (falls_32_to_64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the curves still fall between 32 and 64 runs",
+   "assertion": "GRU and LSTM lower at 64 than at 32 runs in every cell (uncorrected)",
+   "source": "befund94 addendum",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "GRU and LSTM beat the static regression in every seed from 8 runs; on the constant-run holdout they beat persistence on the moisture in every seed only from 32 runs",
+   "written": "8",
+   "computed": 8.0,
+   "source": "befund94 addendum (beats_baseline)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "GRU and LSTM beat the static regression in every seed from 8 runs; on the constant-run holdout they beat persistence on the moisture in every seed only from 32 runs",
+   "written": "32",
+   "computed": 32.0,
+   "source": "befund94 addendum (beats_baseline)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "GRU and LSTM beat the static regression in every seed from 8 runs; on the constant-run holdout they beat persistence on the moisture in every seed only from 32 runs",
+   "written": "32",
+   "computed": 32.0,
+   "source": "befund94 addendum (beats_baseline)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the static regression from 8 runs; persistence from 8 runs on the excited set, and on the constant-run holdout from 32 runs on the moisture",
+   "written": "8",
+   "computed": 8.0,
+   "source": "befund94 addendum (beats_baseline)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the static regression from 8 runs; persistence from 8 runs on the excited set, and on the constant-run holdout from 32 runs on the moisture",
+   "written": "8",
+   "computed": 8.0,
+   "source": "befund94 addendum (beats_baseline)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the static regression from 8 runs; persistence from 8 runs on the excited set, and on the constant-run holdout from 32 runs on the moisture",
+   "written": "32",
+   "computed": 32.0,
+   "source": "befund94 addendum (beats_baseline)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Paired tests over five seeds, 2640 tests without multiplicity correction",
+   "written": "five",
+   "computed": 5.0,
+   "source": "a1_main_analysis.json (design)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Paired tests over five seeds, 2640 tests without multiplicity correction",
+   "written": "2640",
+   "computed": 2640.0,
+   "source": "a1_main_analysis.json (design)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Paired tests over five seeds",
+   "assertion": "five seeds, no correction",
+   "source": "a1_main_analysis.json (design)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "falls from 12.69 (identical plant) and 10.27 (parameter deviation) at $N$ = 2 to 1.32 and 1.27 at $N$ = 64",
+   "written": "12.69",
+   "computed": 12.69357246611934,
+   "source": "a1_main_analysis.json (ha1)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "falls from 12.69 (identical plant) and 10.27 (parameter deviation) at $N$ = 2 to 1.32 and 1.27 at $N$ = 64",
+   "written": "10.27",
+   "computed": 10.26924247138565,
+   "source": "a1_main_analysis.json (ha1)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "falls from 12.69 (identical plant) and 10.27 (parameter deviation) at $N$ = 2 to 1.32 and 1.27 at $N$ = 64",
+   "written": "1.32",
+   "computed": 1.3230466951403288,
+   "source": "a1_main_analysis.json (ha1)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "falls from 12.69 (identical plant) and 10.27 (parameter deviation) at $N$ = 2 to 1.32 and 1.27 at $N$ = 64",
+   "written": "1.27",
+   "computed": 1.2726124695459833,
+   "source": "a1_main_analysis.json (ha1)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "reduces the error at 2 real runs by a factor of 12.69 (identical plant) and 10.27 (parameter deviation)",
+   "written": "2",
+   "computed": 2.0,
+   "source": "a1_main_analysis.json (ha1)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "reduces the error at 2 real runs by a factor of 12.69 (identical plant) and 10.27 (parameter deviation)",
+   "written": "12.69",
+   "computed": 12.69357246611934,
+   "source": "a1_main_analysis.json (ha1)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "reduces the error at 2 real runs by a factor of 12.69 (identical plant) and 10.27 (parameter deviation)",
+   "written": "10.27",
+   "computed": 10.26924247138565,
+   "source": "a1_main_analysis.json (ha1)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the crossover is not reached on four of the five plants",
+   "written": "four",
+   "computed": 4.0,
+   "source": "a1_main_analysis.json (crossover)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the crossover is not reached on four of the five plants",
+   "written": "five",
+   "computed": 5.0,
+   "source": "a1_main_analysis.json (crossover)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "The hybrid is not better than pre-training plus fine-tuning in two of three channels at any $N$ (resolved better in 1 of 90 cells, worse in 34)",
+   "written": "two",
+   "computed": 2.0,
+   "source": "a1_main_analysis.json (comparisons, hybrid against pretrain_finetune, excited)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "The hybrid is not better than pre-training plus fine-tuning in two of three channels at any $N$ (resolved better in 1 of 90 cells, worse in 34)",
+   "written": "three",
+   "computed": 3.0,
+   "source": "a1_main_analysis.json (comparisons, hybrid against pretrain_finetune, excited)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "The hybrid is not better than pre-training plus fine-tuning in two of three channels at any $N$ (resolved better in 1 of 90 cells, worse in 34)",
+   "written": "1",
+   "computed": 1.0,
+   "source": "a1_main_analysis.json (comparisons, hybrid against pretrain_finetune, excited)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "The hybrid is not better than pre-training plus fine-tuning in two of three channels at any $N$ (resolved better in 1 of 90 cells, worse in 34)",
+   "written": "90",
+   "computed": 90.0,
+   "source": "a1_main_analysis.json (comparisons, hybrid against pretrain_finetune, excited)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "The hybrid is not better than pre-training plus fine-tuning in two of three channels at any $N$ (resolved better in 1 of 90 cells, worse in 34)",
+   "written": "34",
+   "computed": 34.0,
+   "source": "a1_main_analysis.json (comparisons, hybrid against pretrain_finetune, excited)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "not better than pre-training plus fine-tuning in two of three channels at any $N$",
+   "assertion": "no (plant, N) with the hybrid better in two or more channels",
+   "source": "a1_main_analysis.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "With the simulator making up 98.8 % of its inference cost",
+   "written": "98.8",
+   "computed": 98.83358958876619,
+   "source": "a1_inference_time_v2_idle.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Five seeds, an LSTM, plants that are variants",
+   "written": "five",
+   "computed": 5.0,
+   "source": "a1_main_analysis.json (design seeds)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(ten seeds, paired t;",
+   "written": "ten",
+   "computed": 10.0,
+   "source": "b1_main_analysis.json (seeds)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "LSTM, product moisture, horizon 24)",
+   "written": "24",
+   "computed": 24.0,
+   "source": "b1_main_analysis.json (primary)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(HB1: not established)",
+   "assertion": "HB1: not established",
+   "source": "b1_main_analysis.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(HB2: not established on the deployment-like test set, refuted on the neutral mix)",
+   "assertion": "HB2 per test set: {'T3': 'not established', 'T1': 'refuted'}",
+   "source": "b1_main_analysis.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "not established (HB3)",
+   "assertion": "HB3: not established",
+   "source": "b1_main_analysis.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(the gas velocity sits on it in 20 to 24 % of the steps)",
+   "written": "20",
+   "computed": 19.620496961805557,
+   "source": "b1_pool_limits.json (at_cap, gas velocity)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(the gas velocity sits on it in 20 to 24 % of the steps)",
+   "written": "24",
+   "computed": 23.966742621527782,
+   "source": "b1_pool_limits.json (at_cap, gas velocity)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(plan B2: 18 % of the inlet-temperature and 35 % of the spray-rate steps)",
+   "written": "18",
+   "computed": 18.34255642361111,
+   "source": "b1_pool_limits.json (ratelim_changed, plan b2)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(plan B2: 18 % of the inlet-temperature and 35 % of the spray-rate steps)",
+   "written": "35",
+   "computed": 35.230305989583336,
+   "source": "b1_pool_limits.json (ratelim_changed, plan b2)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "by a factor of 2 to 3 over the whole budget range (GRU and LSTM, run-median NRMSE at horizon 36 on the constant-run holdout",
+   "written": "2",
+   "computed": 2.2213479443175834,
+   "source": "befund55_addendum_ratio_range.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "by a factor of 2 to 3 over the whole budget range (GRU and LSTM, run-median NRMSE at horizon 36 on the constant-run holdout",
+   "written": "3",
+   "computed": 3.058466372712824,
+   "source": "befund55_addendum_ratio_range.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "by a factor of 2 to 3 over the whole budget range (GRU and LSTM, run-median NRMSE at horizon 36 on the constant-run holdout",
+   "written": "36",
+   "computed": 36.0,
+   "source": "befund55_addendum_ratio_range.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "on the constant-run holdout, legacy data configuration of arm A0",
+   "assertion": "test set constant_holdout, legacy fingerprint, no preset version",
+   "source": "befund55_addendum_ratio_range.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "for the LSTM at the largest budget it is not separable from the seed spread with five seeds, and the two training arms",
+   "written": "five",
+   "computed": 5.0,
+   "source": "befund55_addendum_ratio_range.json (two record files, five seeds per arm)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "for the LSTM at the largest budget it is not separable from the seed spread with five seeds, and the two training arms",
+   "written": "two",
+   "computed": 2.0,
+   "source": "befund55_addendum_ratio_range.json (two record files, five seeds per arm)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "for the LSTM at the largest budget it is not separable from the seed spread",
+   "assertion": "LSTM, n_train 64: difference of medians below the larger seed range",
+   "source": "befund55_addendum_ratio_range.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the critical moisture of 0.20 kg/kg",
+   "assertion": "material.critical_moisture_kg_per_kg of the process configuration",
+   "source": "greybox_gab_placeholder.yaml",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the lower bound of the gas velocity (0.80 and 1.26 m/s)",
+   "assertion": "0.80 m/s = actions.gas_velocity_m_per_s.minimum of the configuration; 1.26 m/s in the coupling-test artifact",
+   "source": "greybox_gab_placeholder.yaml, m4r_test_dt20_umin126.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "parameter counts that differ by a factor of about seven",
+   "written": "seven",
+   "computed": 7.0,
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Five seeds. Large differences are resolved",
+   "written": "five",
+   "computed": 5.0,
+   "source": "rerun_full_N.jsonl (master_seed)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "A single timing run on a single machine (Befund 97); the networks used for the timing were fitted for two epochs only",
+   "written": "two",
+   "computed": 2.0,
+   "source": "joint_timing_idle.json (design)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "saves a median of 9.0 % (lower gas-velocity bound 0.80 m/s) to 16.5 % (1.26 m/s)",
+   "written": "9.0",
+   "computed": 9.027899213807867,
+   "source": "m1_k1_comparison.json (rerun_k1, CO2, median regret)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "saves a median of 9.0 % (lower gas-velocity bound 0.80 m/s) to 16.5 % (1.26 m/s)",
+   "written": "16.5",
+   "computed": 16.51739500229584,
+   "source": "m1_k1_comparison.json (rerun_k1, CO2, median regret)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "costs 1.30 to 1.46 % and leaves 94 % (1.26 m/s) to 85 % (0.80 m/s)",
+   "written": "1.30",
+   "computed": 1.2950345931102216,
+   "source": "m1_k1_comparison.json (rerun_k1, CO2, median cost and remaining benefit)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "costs 1.30 to 1.46 % and leaves 94 % (1.26 m/s) to 85 % (0.80 m/s)",
+   "written": "1.46",
+   "computed": 1.4576536817215202,
+   "source": "m1_k1_comparison.json (rerun_k1, CO2, median cost and remaining benefit)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "costs 1.30 to 1.46 % and leaves 94 % (1.26 m/s) to 85 % (0.80 m/s)",
+   "written": "94",
+   "computed": 93.85604686042716,
+   "source": "m1_k1_comparison.json (rerun_k1, CO2, median cost and remaining benefit)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "costs 1.30 to 1.46 % and leaves 94 % (1.26 m/s) to 85 % (0.80 m/s)",
+   "written": "85",
+   "computed": 84.9404135637901,
+   "source": "m1_k1_comparison.json (rerun_k1, CO2, median cost and remaining benefit)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(its figures change by 74 to 87 %)",
+   "written": "74",
+   "computed": 73.63335348236659,
+   "source": "m1_gas_bound_sensitivity_k1.json (S1 relative changes)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(its figures change by 74 to 87 %)",
+   "written": "87",
+   "computed": 86.69653717883865,
+   "source": "m1_gas_bound_sensitivity_k1.json (S1 relative changes)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "saving itself is not stable between the two bounds",
+   "assertion": "S1 not stable, S2 and S3 stable",
+   "source": "m1_gas_bound_sensitivity_k1.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "lower bound at 22 (1.26 m/s) and 17 (0.80 m/s) of 25 test points",
+   "written": "22",
+   "computed": 22.0,
+   "source": "m1_k1_comparison.json (rerun_k1, bounds M0)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "lower bound at 22 (1.26 m/s) and 17 (0.80 m/s) of 25 test points",
+   "written": "17",
+   "computed": 17.0,
+   "source": "m1_k1_comparison.json (rerun_k1, bounds M0)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "lower bound at 22 (1.26 m/s) and 17 (0.80 m/s) of 25 test points",
+   "written": "25",
+   "computed": 25.0,
+   "source": "m1_k1_comparison.json (rerun_k1, bounds M0)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the moisture limit binds at 13 (1.26 m/s) and 25 (0.80 m/s) of 25 points",
+   "written": "13",
+   "computed": 13.0,
+   "source": "m1_k1_comparison.json (rerun_k1, bounds M0)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the moisture limit binds at 13 (1.26 m/s) and 25 (0.80 m/s) of 25 points",
+   "written": "25",
+   "computed": 25.0,
+   "source": "m1_k1_comparison.json (rerun_k1, bounds M0)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the moisture limit binds at 13 (1.26 m/s) and 25 (0.80 m/s) of 25 points",
+   "written": "25",
+   "computed": 25.0,
+   "source": "m1_k1_comparison.json (rerun_k1, bounds M0)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "The margin m (0.006 kg/kg) is the median half-width of the calibrated band",
+   "written": "0.006",
+   "computed": 0.005961819615175404,
+   "source": "bres_margin.json (m_kg_per_kg)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "calibrated to 95 % coverage on validation runs",
+   "written": "95",
+   "computed": 95.0,
+   "source": "verify_fa2_spread_calibration.json (target_coverage)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(0 of 6 scenarios at 20 K minimum approach, 1 of 6 at 10 K as a sensitivity",
+   "written": "0",
+   "computed": 0.0,
+   "source": "m4r_test_dt20_umin126.json, m4r_test_dt10_umin126.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(0 of 6 scenarios at 20 K minimum approach, 1 of 6 at 10 K as a sensitivity",
+   "written": "6",
+   "computed": 6.0,
+   "source": "m4r_test_dt20_umin126.json, m4r_test_dt10_umin126.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(0 of 6 scenarios at 20 K minimum approach, 1 of 6 at 10 K as a sensitivity",
+   "written": "1",
+   "computed": 1.0,
+   "source": "m4r_test_dt20_umin126.json, m4r_test_dt10_umin126.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(0 of 6 scenarios at 20 K minimum approach, 1 of 6 at 10 K as a sensitivity",
+   "written": "20",
+   "computed": 20.0,
+   "source": "m4r_test_dt20_umin126.json, m4r_test_dt10_umin126.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "(0 of 6 scenarios at 20 K minimum approach, 1 of 6 at 10 K as a sensitivity",
+   "written": "10",
+   "computed": 10.0,
+   "source": "m4r_test_dt20_umin126.json, m4r_test_dt10_umin126.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the policy is feasible in every seed at five times the base margin, the smallest tested factor that meets the gate (factors 1, 2, 3 and 5 tested, 4 not)",
+   "written": "five",
+   "computed": 5.0,
+   "source": "bres_margin.json (gate_k, cells)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the policy is feasible in every seed at five times the base margin, the smallest tested factor that meets the gate (factors 1, 2, 3 and 5 tested, 4 not)",
+   "written": "1",
+   "computed": 1.0,
+   "source": "bres_margin.json (gate_k, cells)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the policy is feasible in every seed at five times the base margin, the smallest tested factor that meets the gate (factors 1, 2, 3 and 5 tested, 4 not)",
+   "written": "2",
+   "computed": 2.0,
+   "source": "bres_margin.json (gate_k, cells)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the policy is feasible in every seed at five times the base margin, the smallest tested factor that meets the gate (factors 1, 2, 3 and 5 tested, 4 not)",
+   "written": "3",
+   "computed": 3.0,
+   "source": "bres_margin.json (gate_k, cells)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the policy is feasible in every seed at five times the base margin, the smallest tested factor that meets the gate (factors 1, 2, 3 and 5 tested, 4 not)",
+   "written": "5",
+   "computed": 5.0,
+   "source": "bres_margin.json (gate_k, cells)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the policy is feasible in every seed at five times the base margin, the smallest tested factor that meets the gate (factors 1, 2, 3 and 5 tested, 4 not)",
+   "written": "4",
+   "computed": 4.0,
+   "source": "bres_margin.json (gate_k, cells)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the smallest tested factor that meets the gate (factors 1, 2, 3 and 5 tested, 4 not)",
+   "assertion": "tested factors 1, 2, 3, 5; feasible in every seed only at 5",
+   "source": "bres_margin.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "at 6.9 % extra energy over the optimiser with the base margin, of which 6.5 points are the margin itself",
+   "written": "6.9",
+   "computed": 6.914934871914297,
+   "source": "bres_margin.json (cells 5, medians over five seeds)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "at 6.9 % extra energy over the optimiser with the base margin, of which 6.5 points are the margin itself",
+   "written": "6.5",
+   "computed": 6.534221607705592,
+   "source": "bres_margin.json (cells 5, medians over five seeds)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the model recovers 60 to 88 % of an independent counter-current calculation",
+   "written": "60",
+   "computed": 59.54629659134352,
+   "source": "heat_recovery_comparison_r4_consistent.json (variant (i), scenarios 1, 3, 5, 20/10/5 K)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the model recovers 60 to 88 % of an independent counter-current calculation",
+   "written": "88",
+   "computed": 88.12990508094455,
+   "source": "heat_recovery_comparison_r4_consistent.json (variant (i), scenarios 1, 3, 5, 20/10/5 K)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "The saving read by the pre-registered rule is L1 (L2 only post hoc with a plain rule)",
+   "assertion": "pre-registered gate L1 (all products), post-hoc rule R1b L2",
+   "source": "gate_storage_shift.json, gate_storage_shift_posthoc.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "storage reads L2 by its pre-registered gate",
+   "assertion": "time-slice gate reading L2",
+   "source": "gate_storage_timeslice.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Python 3.14.2, NumPy 2.5.3, SciPy 1.18.1, PyTorch 2.14.0 (CPU build), Windows 11; one thread per process",
+   "assertion": "versions, platform and threads of every arm-N record and of the timing environment",
+   "source": "rerun_full_N.jsonl, joint_timing_idle.json (environment)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "AMD Ryzen 7 9700X with 16 logical CPUs",
+   "assertion": "processor 'AMD Ryzen 7 9700X 8-Core Processor', logical CPUs 16",
+   "source": "joint_timing_idle.json (environment)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| persistence | `persistence` | 0 | last measured value held over the horizon |",
+   "assertion": "row assembled from the model parameters of the arm-N records",
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| static regression | `static_quadratic` | 45 | quadratic in the current inputs, ridge 1e-06 |",
+   "assertion": "row assembled from the model parameters of the arm-N records",
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| ARX | `arx_p4_q2` | 102 | 4 target lags, 2 input lags, ridge 0.0001 |",
+   "assertion": "row assembled from the model parameters of the arm-N records",
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| GRU | `composite_gru_h64_l1` | 42,819 | hidden size 64, 1 layer |",
+   "assertion": "row assembled from the model parameters of the arm-N records",
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| LSTM | `composite_lstm_h64_l1` | 57,027 | hidden size 64, 1 layer |",
+   "assertion": "row assembled from the model parameters of the arm-N records",
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| Transformer | `composite_transformer_h16_l1` | 23,523 | width 16, 1 layer, 2 heads |",
+   "assertion": "row assembled from the model parameters of the arm-N records",
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| xLSTM | `composite_xlstm_h64_l1` | 8,649 | mLSTM cells only, hidden size 64, 1 layer |",
+   "assertion": "row assembled from the model parameters of the arm-N records",
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| Mamba | `composite_mamba_h16_l1` | 8,139 | hidden size 16, state size 16, 1 layer |",
+   "assertion": "row assembled from the model parameters of the arm-N records",
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a composite of 3 independent heads, one per target; optimiser AdamW, learning rate 0.001, weight decay 0.0001, batch size 256, at most 200 epochs, early stopping with patience 20 on the validation runs, gradient clipping at 1.0",
+   "written": "3",
+   "computed": 3.0,
+   "source": "rerun_full_N.jsonl (model parameters of the five networks)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a composite of 3 independent heads, one per target; optimiser AdamW, learning rate 0.001, weight decay 0.0001, batch size 256, at most 200 epochs, early stopping with patience 20 on the validation runs, gradient clipping at 1.0",
+   "written": "one",
+   "computed": 1.0,
+   "source": "rerun_full_N.jsonl (model parameters of the five networks)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a composite of 3 independent heads, one per target; optimiser AdamW, learning rate 0.001, weight decay 0.0001, batch size 256, at most 200 epochs, early stopping with patience 20 on the validation runs, gradient clipping at 1.0",
+   "written": "0.001",
+   "computed": 0.001,
+   "source": "rerun_full_N.jsonl (model parameters of the five networks)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a composite of 3 independent heads, one per target; optimiser AdamW, learning rate 0.001, weight decay 0.0001, batch size 256, at most 200 epochs, early stopping with patience 20 on the validation runs, gradient clipping at 1.0",
+   "written": "0.0001",
+   "computed": 0.0001,
+   "source": "rerun_full_N.jsonl (model parameters of the five networks)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a composite of 3 independent heads, one per target; optimiser AdamW, learning rate 0.001, weight decay 0.0001, batch size 256, at most 200 epochs, early stopping with patience 20 on the validation runs, gradient clipping at 1.0",
+   "written": "256",
+   "computed": 256.0,
+   "source": "rerun_full_N.jsonl (model parameters of the five networks)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a composite of 3 independent heads, one per target; optimiser AdamW, learning rate 0.001, weight decay 0.0001, batch size 256, at most 200 epochs, early stopping with patience 20 on the validation runs, gradient clipping at 1.0",
+   "written": "200",
+   "computed": 200.0,
+   "source": "rerun_full_N.jsonl (model parameters of the five networks)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a composite of 3 independent heads, one per target; optimiser AdamW, learning rate 0.001, weight decay 0.0001, batch size 256, at most 200 epochs, early stopping with patience 20 on the validation runs, gradient clipping at 1.0",
+   "written": "20",
+   "computed": 20.0,
+   "source": "rerun_full_N.jsonl (model parameters of the five networks)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a composite of 3 independent heads, one per target; optimiser AdamW, learning rate 0.001, weight decay 0.0001, batch size 256, at most 200 epochs, early stopping with patience 20 on the validation runs, gradient clipping at 1.0",
+   "written": "1.0",
+   "computed": 1.0,
+   "source": "rerun_full_N.jsonl (model parameters of the five networks)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Common to the five networks",
+   "written": "five",
+   "computed": 5.0,
+   "source": "rerun_full_N.jsonl (model/net_core)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "optimiser AdamW",
+   "assertion": "TorchSequenceModel uses torch.optim.AdamW",
+   "source": "src/twinlink_ml/models/torch_sequence.py",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "no dropout, no teacher forcing, equal weight of all horizon steps",
+   "assertion": "dropout 0, teacher forcing 0, horizon weight decay 1.0",
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "input windows of 32 past steps, prediction of 36 steps (900 s) ahead, window stride 8",
+   "written": "32",
+   "computed": 32.0,
+   "source": "rerun_full_N.jsonl (data/*)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "input windows of 32 past steps, prediction of 36 steps (900 s) ahead, window stride 8",
+   "written": "36",
+   "computed": 36.0,
+   "source": "rerun_full_N.jsonl (data/*)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "input windows of 32 past steps, prediction of 36 steps (900 s) ahead, window stride 8",
+   "written": "900",
+   "computed": 900.0,
+   "source": "rerun_full_N.jsonl (data/*)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "input windows of 32 past steps, prediction of 36 steps (900 s) ahead, window stride 8",
+   "written": "8",
+   "computed": 8.0,
+   "source": "rerun_full_N.jsonl (data/*)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Manipulated variables (4), box and rate limit: inlet temperature 60 to 120 degC (0.5 K/s), gas velocity 0.8 to 2.5 m/s (0.05 m/s per s), spray rate 0.4 to 3.0 kg/h (0.02 kg/h per s), nozzle pressure 1.0 to 4.0 bar (0.05 bar/s)",
+   "written": "4",
+   "computed": 4.0,
+   "source": "greybox_gab_placeholder.yaml (actions)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Manipulated variables (4), box and rate limit: inlet temperature 60 to 120 degC (0.5 K/s), gas velocity 0.8 to 2.5 m/s (0.05 m/s per s), spray rate 0.4 to 3.0 kg/h (0.02 kg/h per s), nozzle pressure 1.0 to 4.0 bar (0.05 bar/s)",
+   "written": "60",
+   "computed": 60.0,
+   "source": "greybox_gab_placeholder.yaml (actions)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Manipulated variables (4), box and rate limit: inlet temperature 60 to 120 degC (0.5 K/s), gas velocity 0.8 to 2.5 m/s (0.05 m/s per s), spray rate 0.4 to 3.0 kg/h (0.02 kg/h per s), nozzle pressure 1.0 to 4.0 bar (0.05 bar/s)",
+   "written": "120",
+   "computed": 120.0,
+   "source": "greybox_gab_placeholder.yaml (actions)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Manipulated variables (4), box and rate limit: inlet temperature 60 to 120 degC (0.5 K/s), gas velocity 0.8 to 2.5 m/s (0.05 m/s per s), spray rate 0.4 to 3.0 kg/h (0.02 kg/h per s), nozzle pressure 1.0 to 4.0 bar (0.05 bar/s)",
+   "written": "0.5",
+   "computed": 0.5,
+   "source": "greybox_gab_placeholder.yaml (actions)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Manipulated variables (4), box and rate limit: inlet temperature 60 to 120 degC (0.5 K/s), gas velocity 0.8 to 2.5 m/s (0.05 m/s per s), spray rate 0.4 to 3.0 kg/h (0.02 kg/h per s), nozzle pressure 1.0 to 4.0 bar (0.05 bar/s)",
+   "written": "0.8",
+   "computed": 0.8,
+   "source": "greybox_gab_placeholder.yaml (actions)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Manipulated variables (4), box and rate limit: inlet temperature 60 to 120 degC (0.5 K/s), gas velocity 0.8 to 2.5 m/s (0.05 m/s per s), spray rate 0.4 to 3.0 kg/h (0.02 kg/h per s), nozzle pressure 1.0 to 4.0 bar (0.05 bar/s)",
+   "written": "2.5",
+   "computed": 2.5,
+   "source": "greybox_gab_placeholder.yaml (actions)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Manipulated variables (4), box and rate limit: inlet temperature 60 to 120 degC (0.5 K/s), gas velocity 0.8 to 2.5 m/s (0.05 m/s per s), spray rate 0.4 to 3.0 kg/h (0.02 kg/h per s), nozzle pressure 1.0 to 4.0 bar (0.05 bar/s)",
+   "written": "0.05",
+   "computed": 0.05,
+   "source": "greybox_gab_placeholder.yaml (actions)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Manipulated variables (4), box and rate limit: inlet temperature 60 to 120 degC (0.5 K/s), gas velocity 0.8 to 2.5 m/s (0.05 m/s per s), spray rate 0.4 to 3.0 kg/h (0.02 kg/h per s), nozzle pressure 1.0 to 4.0 bar (0.05 bar/s)",
+   "written": "0.4",
+   "computed": 0.4,
+   "source": "greybox_gab_placeholder.yaml (actions)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Manipulated variables (4), box and rate limit: inlet temperature 60 to 120 degC (0.5 K/s), gas velocity 0.8 to 2.5 m/s (0.05 m/s per s), spray rate 0.4 to 3.0 kg/h (0.02 kg/h per s), nozzle pressure 1.0 to 4.0 bar (0.05 bar/s)",
+   "written": "3.0",
+   "computed": 3.0,
+   "source": "greybox_gab_placeholder.yaml (actions)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Manipulated variables (4), box and rate limit: inlet temperature 60 to 120 degC (0.5 K/s), gas velocity 0.8 to 2.5 m/s (0.05 m/s per s), spray rate 0.4 to 3.0 kg/h (0.02 kg/h per s), nozzle pressure 1.0 to 4.0 bar (0.05 bar/s)",
+   "written": "0.02",
+   "computed": 0.02,
+   "source": "greybox_gab_placeholder.yaml (actions)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Manipulated variables (4), box and rate limit: inlet temperature 60 to 120 degC (0.5 K/s), gas velocity 0.8 to 2.5 m/s (0.05 m/s per s), spray rate 0.4 to 3.0 kg/h (0.02 kg/h per s), nozzle pressure 1.0 to 4.0 bar (0.05 bar/s)",
+   "written": "1.0",
+   "computed": 1.0,
+   "source": "greybox_gab_placeholder.yaml (actions)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Manipulated variables (4), box and rate limit: inlet temperature 60 to 120 degC (0.5 K/s), gas velocity 0.8 to 2.5 m/s (0.05 m/s per s), spray rate 0.4 to 3.0 kg/h (0.02 kg/h per s), nozzle pressure 1.0 to 4.0 bar (0.05 bar/s)",
+   "written": "4.0",
+   "computed": 4.0,
+   "source": "greybox_gab_placeholder.yaml (actions)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Manipulated variables (4), box and rate limit: inlet temperature 60 to 120 degC (0.5 K/s), gas velocity 0.8 to 2.5 m/s (0.05 m/s per s), spray rate 0.4 to 3.0 kg/h (0.02 kg/h per s), nozzle pressure 1.0 to 4.0 bar (0.05 bar/s)",
+   "written": "0.05",
+   "computed": 0.05,
+   "source": "greybox_gab_placeholder.yaml (actions)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Disturbances (3): ambient temperature 5 to 35 degC, ambient relative humidity 0.25 to 0.85, solid fraction of the suspension 0.20 to 0.40 (preset version 2: own disturbance process)",
+   "written": "3",
+   "computed": 3.0,
+   "source": "greybox_gab_placeholder.yaml (disturbances), rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Disturbances (3): ambient temperature 5 to 35 degC, ambient relative humidity 0.25 to 0.85, solid fraction of the suspension 0.20 to 0.40 (preset version 2: own disturbance process)",
+   "written": "5",
+   "computed": 5.0,
+   "source": "greybox_gab_placeholder.yaml (disturbances), rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Disturbances (3): ambient temperature 5 to 35 degC, ambient relative humidity 0.25 to 0.85, solid fraction of the suspension 0.20 to 0.40 (preset version 2: own disturbance process)",
+   "written": "35",
+   "computed": 35.0,
+   "source": "greybox_gab_placeholder.yaml (disturbances), rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Disturbances (3): ambient temperature 5 to 35 degC, ambient relative humidity 0.25 to 0.85, solid fraction of the suspension 0.20 to 0.40 (preset version 2: own disturbance process)",
+   "written": "0.25",
+   "computed": 0.25,
+   "source": "greybox_gab_placeholder.yaml (disturbances), rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Disturbances (3): ambient temperature 5 to 35 degC, ambient relative humidity 0.25 to 0.85, solid fraction of the suspension 0.20 to 0.40 (preset version 2: own disturbance process)",
+   "written": "0.85",
+   "computed": 0.85,
+   "source": "greybox_gab_placeholder.yaml (disturbances), rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Disturbances (3): ambient temperature 5 to 35 degC, ambient relative humidity 0.25 to 0.85, solid fraction of the suspension 0.20 to 0.40 (preset version 2: own disturbance process)",
+   "written": "0.20",
+   "computed": 0.2,
+   "source": "greybox_gab_placeholder.yaml (disturbances), rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Disturbances (3): ambient temperature 5 to 35 degC, ambient relative humidity 0.25 to 0.85, solid fraction of the suspension 0.20 to 0.40 (preset version 2: own disturbance process)",
+   "written": "0.40",
+   "computed": 0.4,
+   "source": "greybox_gab_placeholder.yaml (disturbances), rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Disturbances (3): ambient temperature 5 to 35 degC, ambient relative humidity 0.25 to 0.85, solid fraction of the suspension 0.20 to 0.40 (preset version 2: own disturbance process)",
+   "written": "2",
+   "computed": 2.0,
+   "source": "greybox_gab_placeholder.yaml (disturbances), rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "States (4): solids mass, water mass, particle number, bed temperature. Outputs (4): energy target dE (kW), bed temperature, product moisture (kg/kg) and median particle diameter; the first three are the targets of the comparison",
+   "written": "4",
+   "computed": 4.0,
+   "source": "GreyBoxFluidBedGranulator, rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "States (4): solids mass, water mass, particle number, bed temperature. Outputs (4): energy target dE (kW), bed temperature, product moisture (kg/kg) and median particle diameter; the first three are the targets of the comparison",
+   "written": "4",
+   "computed": 4.0,
+   "source": "GreyBoxFluidBedGranulator, rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "States (4): solids mass, water mass, particle number, bed temperature. Outputs (4): energy target dE (kW), bed temperature, product moisture (kg/kg) and median particle diameter; the first three are the targets of the comparison",
+   "written": "three",
+   "computed": 3.0,
+   "source": "GreyBoxFluidBedGranulator, rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "sample time 25 s, integration with a fourth-order Runge-Kutta scheme and 5 substeps per sample; a run lasts 28,800 s (8 h); the prediction horizon is 36 steps (900 s), the history 32 steps",
+   "written": "25",
+   "computed": 25.0,
+   "source": "greybox_gab_placeholder.yaml (numerics), rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "sample time 25 s, integration with a fourth-order Runge-Kutta scheme and 5 substeps per sample; a run lasts 28,800 s (8 h); the prediction horizon is 36 steps (900 s), the history 32 steps",
+   "written": "5",
+   "computed": 5.0,
+   "source": "greybox_gab_placeholder.yaml (numerics), rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "sample time 25 s, integration with a fourth-order Runge-Kutta scheme and 5 substeps per sample; a run lasts 28,800 s (8 h); the prediction horizon is 36 steps (900 s), the history 32 steps",
+   "written": "28,800",
+   "computed": 28800.0,
+   "source": "greybox_gab_placeholder.yaml (numerics), rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "sample time 25 s, integration with a fourth-order Runge-Kutta scheme and 5 substeps per sample; a run lasts 28,800 s (8 h); the prediction horizon is 36 steps (900 s), the history 32 steps",
+   "written": "8",
+   "computed": 8.0,
+   "source": "greybox_gab_placeholder.yaml (numerics), rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "sample time 25 s, integration with a fourth-order Runge-Kutta scheme and 5 substeps per sample; a run lasts 28,800 s (8 h); the prediction horizon is 36 steps (900 s), the history 32 steps",
+   "written": "36",
+   "computed": 36.0,
+   "source": "greybox_gab_placeholder.yaml (numerics), rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "sample time 25 s, integration with a fourth-order Runge-Kutta scheme and 5 substeps per sample; a run lasts 28,800 s (8 h); the prediction horizon is 36 steps (900 s), the history 32 steps",
+   "written": "900",
+   "computed": 900.0,
+   "source": "greybox_gab_placeholder.yaml (numerics), rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "sample time 25 s, integration with a fourth-order Runge-Kutta scheme and 5 substeps per sample; a run lasts 28,800 s (8 h); the prediction horizon is 36 steps (900 s), the history 32 steps",
+   "written": "32",
+   "computed": 32.0,
+   "source": "greybox_gab_placeholder.yaml (numerics), rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "fourth-order Runge-Kutta scheme",
+   "assertion": "integrator rk4",
+   "source": "greybox_gab_placeholder.yaml",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a step, PRBS or ramp signal (weights 0.40, 0.30, 0.30), amplitudes 15, 35, 70 and 100 % of the span",
+   "written": "0.40",
+   "computed": 0.4,
+   "source": "twinlink_ml.simulation.excitation.ExcitationConfig defaults",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a step, PRBS or ramp signal (weights 0.40, 0.30, 0.30), amplitudes 15, 35, 70 and 100 % of the span",
+   "written": "0.30",
+   "computed": 0.3,
+   "source": "twinlink_ml.simulation.excitation.ExcitationConfig defaults",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a step, PRBS or ramp signal (weights 0.40, 0.30, 0.30), amplitudes 15, 35, 70 and 100 % of the span",
+   "written": "0.30",
+   "computed": 0.3,
+   "source": "twinlink_ml.simulation.excitation.ExcitationConfig defaults",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a step, PRBS or ramp signal (weights 0.40, 0.30, 0.30), amplitudes 15, 35, 70 and 100 % of the span",
+   "written": "15",
+   "computed": 15.0,
+   "source": "twinlink_ml.simulation.excitation.ExcitationConfig defaults",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a step, PRBS or ramp signal (weights 0.40, 0.30, 0.30), amplitudes 15, 35, 70 and 100 % of the span",
+   "written": "35",
+   "computed": 35.0,
+   "source": "twinlink_ml.simulation.excitation.ExcitationConfig defaults",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a step, PRBS or ramp signal (weights 0.40, 0.30, 0.30), amplitudes 15, 35, 70 and 100 % of the span",
+   "written": "70",
+   "computed": 70.0,
+   "source": "twinlink_ml.simulation.excitation.ExcitationConfig defaults",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "a step, PRBS or ramp signal (weights 0.40, 0.30, 0.30), amplitudes 15, 35, 70 and 100 % of the span",
+   "written": "100",
+   "computed": 100.0,
+   "source": "twinlink_ml.simulation.excitation.ExcitationConfig defaults",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Sobol sampling of the levels, randomised initial conditions, rate limits applied",
+   "assertion": "ExcitationConfig defaults",
+   "source": "twinlink_ml.simulation.excitation",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "10 % of the runs are constant. Constant-run holdout: 32 runs with constant set points",
+   "written": "10",
+   "computed": 10.0,
+   "source": "rerun_full_N.jsonl (data/constant_run_fraction, holdout/n_runs)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "10 % of the runs are constant. Constant-run holdout: 32 runs with constant set points",
+   "written": "32",
+   "computed": 32.0,
+   "source": "rerun_full_N.jsonl (data/constant_run_fraction, holdout/n_runs)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "up to 64 training, 32 validation and 32 test runs per seed",
+   "written": "64",
+   "computed": 64.0,
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "up to 64 training, 32 validation and 32 test runs per seed",
+   "written": "32",
+   "computed": 32.0,
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "up to 64 training, 32 validation and 32 test runs per seed",
+   "written": "32",
+   "computed": 32.0,
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "every parameter of the process configuration is a placeholder",
+   "assertion": "provenance.status placeholder",
+   "source": "greybox_gab_placeholder.yaml",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "data need (arm N, horizon 36, median over five seeds)",
+   "written": "36",
+   "computed": 36.0,
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "data need (arm N, horizon 36, median over five seeds)",
+   "written": "five",
+   "computed": 5.0,
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the data need for a given error beyond 64 runs is not determined by these data",
+   "written": "64",
+   "computed": 64.0,
+   "source": "befund94 addendum (falls_32_to_64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Still falling at 64 runs:",
+   "written": "64",
+   "computed": 64.0,
+   "source": "befund94 addendum (falls_32_to_64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "the data need for a given error beyond 64 runs is therefore not determined",
+   "written": "64",
+   "computed": 64.0,
+   "source": "befund94 addendum (falls_32_to_64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Error at 8, 16 and 32 training runs relative to the error at 64 runs",
+   "written": "8",
+   "computed": 8.0,
+   "source": "rerun_full_N.jsonl (n_train)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Error at 8, 16 and 32 training runs relative to the error at 64 runs",
+   "written": "16",
+   "computed": 16.0,
+   "source": "rerun_full_N.jsonl (n_train)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Error at 8, 16 and 32 training runs relative to the error at 64 runs",
+   "written": "32",
+   "computed": 32.0,
+   "source": "rerun_full_N.jsonl (n_train)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Error at 8, 16 and 32 training runs relative to the error at 64 runs",
+   "written": "64",
+   "computed": 64.0,
+   "source": "rerun_full_N.jsonl (n_train)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| energy target | 2.30 / 1.41 / 1.15 | 1.55 / 1.36 / 1.16 | 2.84 / 1.69 / 1.19 | 2.42 / 1.51 / 1.24 |",
+   "assertion": "energy target: ratios to the error at 64 runs equal the artifact",
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| product moisture | 3.73 / 1.69 / 1.62 | 4.66 / 1.50 / 1.45 | 4.75 / 1.96 / 1.64 | 5.13 / 1.95 / 1.85 |",
+   "assertion": "product moisture: ratios to the error at 64 runs equal the artifact",
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "| bed temperature | 1.61 / 1.32 / 1.06 | 1.49 / 1.22 / 1.11 | 2.03 / 1.28 / 1.12 | 1.64 / 1.15 / 1.08 |",
+   "assertion": "bed temperature: ratios to the error at 64 runs equal the artifact",
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "product moisture 7.08e-4 / 6.17e-4 kg/kg on the excited set and 6.71e-4 / 5.43e-4 kg/kg on the constant-run holdout (persistence 1.18e-2 and 1.62e-3 kg/kg)",
+   "written": "7.08e-4",
+   "computed": 0.000707748302235408,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (curves, n_train 64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "product moisture 7.08e-4 / 6.17e-4 kg/kg on the excited set and 6.71e-4 / 5.43e-4 kg/kg on the constant-run holdout (persistence 1.18e-2 and 1.62e-3 kg/kg)",
+   "written": "6.17e-4",
+   "computed": 0.0006171433670616893,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (curves, n_train 64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "product moisture 7.08e-4 / 6.17e-4 kg/kg on the excited set and 6.71e-4 / 5.43e-4 kg/kg on the constant-run holdout (persistence 1.18e-2 and 1.62e-3 kg/kg)",
+   "written": "6.71e-4",
+   "computed": 0.0006705952479880519,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (curves, n_train 64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "product moisture 7.08e-4 / 6.17e-4 kg/kg on the excited set and 6.71e-4 / 5.43e-4 kg/kg on the constant-run holdout (persistence 1.18e-2 and 1.62e-3 kg/kg)",
+   "written": "5.43e-4",
+   "computed": 0.0005426168388083522,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (curves, n_train 64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "product moisture 7.08e-4 / 6.17e-4 kg/kg on the excited set and 6.71e-4 / 5.43e-4 kg/kg on the constant-run holdout (persistence 1.18e-2 and 1.62e-3 kg/kg)",
+   "written": "1.18e-2",
+   "computed": 0.011802961747820778,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (curves, n_train 64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "product moisture 7.08e-4 / 6.17e-4 kg/kg on the excited set and 6.71e-4 / 5.43e-4 kg/kg on the constant-run holdout (persistence 1.18e-2 and 1.62e-3 kg/kg)",
+   "written": "1.62e-3",
+   "computed": 0.0016243492102761266,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (curves, n_train 64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Absolute errors at 64 runs (GRU / LSTM)",
+   "written": "64",
+   "computed": 64.0,
+   "source": "rerun_full_N.jsonl",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "in a paired test of the error at 64 against 32 runs, GRU and LSTM are lower at 64 runs in all 12 cells uncorrected, in 2 of them after Holm (family of 48 tests)",
+   "written": "64",
+   "computed": 64.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (falls_32_to_64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "in a paired test of the error at 64 against 32 runs, GRU and LSTM are lower at 64 runs in all 12 cells uncorrected, in 2 of them after Holm (family of 48 tests)",
+   "written": "32",
+   "computed": 32.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (falls_32_to_64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "in a paired test of the error at 64 against 32 runs, GRU and LSTM are lower at 64 runs in all 12 cells uncorrected, in 2 of them after Holm (family of 48 tests)",
+   "written": "12",
+   "computed": 12.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (falls_32_to_64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "in a paired test of the error at 64 against 32 runs, GRU and LSTM are lower at 64 runs in all 12 cells uncorrected, in 2 of them after Holm (family of 48 tests)",
+   "written": "12",
+   "computed": 12.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (falls_32_to_64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "in a paired test of the error at 64 against 32 runs, GRU and LSTM are lower at 64 runs in all 12 cells uncorrected, in 2 of them after Holm (family of 48 tests)",
+   "written": "2",
+   "computed": 2.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (falls_32_to_64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "in a paired test of the error at 64 against 32 runs, GRU and LSTM are lower at 64 runs in all 12 cells uncorrected, in 2 of them after Holm (family of 48 tests)",
+   "written": "48",
+   "computed": 48.0,
+   "source": "befund94_addendum_seeds_data_need_rerun_full.json (falls_32_to_64)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "training runs plus 32 validation runs for early stopping (appendix C); each run is 8 h of simulated operation",
+   "written": "32",
+   "computed": 32.0,
+   "source": "befund94 addendum (runs_behind_each_point)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "training runs plus 32 validation runs for early stopping (appendix C); each run is 8 h of simulated operation",
+   "written": "8",
+   "computed": 8.0,
+   "source": "befund94 addendum (runs_behind_each_point)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Caveats: simulator with placeholder parameters; fixed, untuned protocol; five seeds",
+   "written": "five",
+   "computed": 5.0,
+   "source": "rerun_full_N.jsonl (master_seed)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Median ratio at least 1.5 (or at most 1/1.5) with all seeds on that side",
+   "written": "1.5",
+   "computed": 1.5,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json (large_ratio_threshold)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Median ratio at least 1.5 (or at most 1/1.5) with all seeds on that side",
+   "written": "1",
+   "computed": 1.0,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json (large_ratio_threshold)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  },
+  {
+   "fragment": "Median ratio at least 1.5 (or at most 1/1.5) with all seeds on that side",
+   "written": "1.5",
+   "computed": 1.5,
+   "source": "befund98_addendum_effect_sizes_rerun_full.json (large_ratio_threshold)",
+   "status": "confirmed",
+   "fragment_in_text": true
+  }
+ ],
+ "exemptions": [
+  {
+   "exemption": "n_{\\mathrm{train}} \\in \\{8, 16, 32, 64\\}",
+   "in_text": true,
+   "verified": true,
+   "reason": "n_train set of the N records"
+  },
+  {
+   "exemption": "n_{\\mathrm{train}} \\in \\{8,16,32,64\\}",
+   "in_text": true,
+   "verified": true,
+   "reason": "n_train set of the N records"
+  },
+  {
+   "exemption": "n_{\\mathrm{train}}$ = 64",
+   "in_text": true,
+   "verified": true,
+   "reason": "largest n_train of the N records"
+  },
+  {
+   "exemption": "arm N, the preset version 2",
+   "in_text": true,
+   "verified": true,
+   "reason": "records of arm N carry data/new_study_version 2"
+  },
+  {
+   "exemption": "Preset version 2",
+   "in_text": true,
+   "verified": true,
+   "reason": "records of arm N carry data/new_study_version 2"
+  },
+  {
+   "exemption": "N the preset version 2",
+   "in_text": true,
+   "verified": true,
+   "reason": "records of arm N carry data/new_study_version 2"
+  },
+  {
+   "exemption": "whose curve still falls at 64",
+   "in_text": true,
+   "verified": true,
+   "reason": "largest n_train of the N records"
+  },
+  {
+   "exemption": "time constant 600 s",
+   "in_text": true,
+   "verified": true,
+   "reason": "operation.mass_control_time_constant_s of greybox_gab_placeholder.yaml"
+  },
+  {
+   "exemption": "planned for month 21",
+   "in_text": true,
+   "verified": true,
+   "reason": "docs/01: the Dyssol granulation models are planned for month M21"
+  },
+  {
+   "exemption": "horizon 36 (900 s)",
+   "in_text": true,
+   "verified": true,
+   "reason": "36 steps x sample time 25 s from the records"
+  },
+  {
+   "exemption": "The M2 definition of 10 to 15 %",
+   "in_text": true,
+   "verified": true,
+   "reason": "docs/01 note"
+  },
+  {
+   "exemption": "two 24-hour exports, two products, one-minute sampling",
+   "in_text": true,
+   "verified": true,
+   "reason": "NOT CHECKABLE: raw plant data are never in the repository (CLAUDE.md)"
+  },
+  {
+   "exemption": "of only 0.12 to 2.01 %",
+   "in_text": true,
+   "verified": true,
+   "reason": "NOT CHECKABLE against an artifact (raw plant data); compared with the text of Befund 56"
+  },
+  {
+   "exemption": "nozzle-pressure kink at 1 bar",
+   "in_text": true,
+   "verified": true,
+   "reason": "register row E-Q1 (kink at 1.0 bar) and nozzle_pressure_bar.minimum of the configuration"
+  },
+  {
+   "exemption": "revised after review 4",
+   "in_text": true,
+   "verified": true,
+   "reason": "review 4 report in docs/reviews/2026-10-19"
+  }
+ ],
+ "bad_references": [],
+ "uncovered_numeric_tokens": [],
+ "summary": {
+  "claims": 382,
+  "confirmed": 382,
+  "deviating": 0,
+  "exemptions": 15,
+  "uncovered": 0
+ }
+}
