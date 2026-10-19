@@ -234,7 +234,7 @@ loop must replace in-plant recovery.
 ## 6. Paired variant "Befund 99 assumption" (solid fraction 0.3)
 
 Main value 0.634 (band 0.60-0.70): the energy balance of the two measured days of plant A requires
-a solid fraction of at least 0.575 (product 1) and 0.625 (product 2) (parallel study 4, branch
+a larger solid fraction (product-specific minima kept locally) (parallel study 4, branch
 `plant-a-operating-point`, `docs/23` section 5); the 0.3 of Befund 99 is inadmissible by that
 balance (on product 2 its reconstructed exhaust humidity was capped at saturation in every step).
 The 0.3 is kept as a paired variant: 198 grid scenarios (`dT_min` 20 K, hall/water 200/200, further
