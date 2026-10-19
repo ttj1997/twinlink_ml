@@ -166,8 +166,8 @@ EUR/a for the mix. Range at the measured weather: 27-967 t/a (product 1), 0-770 
 
 ## 5. Calibration on one day, check on the other
 
-The dryer balance closes with a non-negative wall loss only if the solid fraction is at least
-**0.575 (product 1) and 0.625 (product 2)** (reference placeholders): with less solids the
+The dryer balance closes with a non-negative wall loss only if the solid fraction is large enough
+(product-specific minima kept locally; reference placeholders): with less solids the
 evaporation alone needs more heat than the process air releases. The value 0.3 used for the
 exhaust humidity in Befund 99 (band 0.2-0.5) is therefore inadmissible by the energy balance of
 the same days (section 8, item 1). With one shared `x_s` and one shared `UA` both days are
@@ -244,7 +244,7 @@ transfer, not through the balance at today's point.
 ## 8. Notes, caveats and what was not done
 
 1. **Report, not fixed:** the solid fraction 0.3 (band 0.2-0.5) of Befund 99 is inadmissible by
-   the dryer energy balance of the same two days (needs at least 0.575 / 0.625). It enters
+   the dryer energy balance of the same two days (needs a larger value; product-specific minima kept locally). It enters
    Befund 99 only through the reconstructed exhaust humidity of plant A (product 2 capped at
    saturation in every step there; with `x_s` 0.65 the reconstructed relative humidity is 0.71).
    Whether this moves a Befund 99 number is for the managing session to decide.

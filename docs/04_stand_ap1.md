@@ -10377,7 +10377,7 @@ Branch `plant-a-operating-point` (worktree of its own, not merged, not pushed). 
 
 **Sensitivity ranking** (one at a time, largest change of the saving, kg/d): minimum air fraction 690 > fan law 561 > waste-heat variant 306 > constraint variant 125 > calibration day 103 > electricity factor 101 > weather 80 > boiler efficiency 23 > solid fraction 11 > fan heat fraction, room temperature, intake humidity, feed and atomising-air temperature, cp of the solids (each <= 7).
 
-**Calibration check.** The balance needs a solid fraction of at least 0.575 / 0.625 (wall loss >= 0); one shared solid fraction and `UA` fit both days only at 0.634 / 0.93 kW/K; at the reference 0.65 the transfer misses the pre-registered 2 K (outlet error +1.4 K one way, -3.5 K the other), at 0.70-0.75 by 5-16 K. The fan data cannot identify any exponent (within-day flow CV 0.05-0.10 %; the exhaust fan's two-point exponent 8.8 is unphysical and not used).
+**Calibration check.** The balance needs a larger solid fraction than the 0.3 of Befund 99 (wall loss >= 0; product-specific minima kept locally); one shared solid fraction and `UA` fit both days only at 0.634 / 0.93 kW/K; at the reference 0.65 the transfer misses the pre-registered 2 K (outlet error +1.4 K one way, -3.5 K the other), at 0.70-0.75 by 5-16 K. The fan data cannot identify any exponent (within-day flow CV 0.05-0.10 %; the exhaust fan's two-point exponent 8.8 is unphysical and not used).
 
 **Report, not fixed (for the managing session).** The solid fraction 0.3 (band 0.2-0.5) used for the reconstructed exhaust humidity of plant A in Befund 99 is inadmissible by the energy balance of the same days; it enters Befund 99 only through that humidity. Not changed here.
 
