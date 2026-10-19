@@ -190,6 +190,18 @@ class SteadyStateSolution:
     def particle_moisture_kg_per_kg(self) -> float:
         return self.water_mass_kg / self.solid_mass_kg
 
+    @property
+    def exhaust_dry_air_mass_flow_kg_per_s(self) -> float:
+        """Dry-air flow of the exhaust that LEAVES the line.
+
+        With exhaust recirculation the purge, ``(1 - r)`` of the bed flow; without, the bed flow
+        ``dry_air_mass_flow_kg_per_s``. ``exhaust_sensible_kw``/``exhaust_latent_kw`` refer to
+        this flow.
+        """
+        return self.diagnostics.get(
+            "exhaust_dry_air_mass_flow_kg_per_s", self.dry_air_mass_flow_kg_per_s
+        )
+
 
 def solve_steady_state(
     simulator: GreyBoxFluidBedGranulator,
@@ -399,9 +411,14 @@ def solve_steady_state(
     dry_air_flow = diagnostics_scalar["dry_air_mass_flow_kg_per_s"]
     outlet_humidity = diagnostics_scalar["outlet_humidity_kg_per_kg"]
     inlet_humidity = diagnostics_scalar["inlet_humidity_kg_per_kg"]
+    # Exhaust recirculation: only the purge (1 - r) of the bed flow leaves the line, and its
+    # latent part is counted against the FRESH air humidity (the recirculated water stays in the
+    # loop). Without recirculation both names are the old quantities (same floats).
+    exhaust_flow = diagnostics_scalar.get("exhaust_dry_air_mass_flow_kg_per_s", dry_air_flow)
+    fresh_air_humidity = diagnostics_scalar.get("fresh_air_humidity_kg_per_kg", inlet_humidity)
 
     exhaust_sensible_kw = (
-        dry_air_flow
+        exhaust_flow
         * (gas.cp_dry_air_j_per_kg_k + outlet_humidity * gas.cp_vapour_j_per_kg_k)
         * (temperature - ambient_temperature)
         / 1000.0
@@ -412,7 +429,7 @@ def solve_steady_state(
         )[0]
     )
     exhaust_latent_kw = (
-        dry_air_flow * (outlet_humidity - inlet_humidity) * latent_heat_at_ambient / 1000.0
+        exhaust_flow * (outlet_humidity - fresh_air_humidity) * latent_heat_at_ambient / 1000.0
     )
 
     dew_point_celsius = _solve_dew_point(

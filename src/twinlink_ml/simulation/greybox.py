@@ -106,6 +106,8 @@ from .thermo import (
     evaporation_rate_kg_per_s,
     gas_density_kg_per_m3,
     latent_heat_j_per_kg,
+    mixing_temperature_celsius,
+    recirculated_inlet_humidity,
     relative_humidity_from_absolute_humidity,
     saturation_humidity_kg_per_kg,
 )
@@ -401,28 +403,63 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
             6.0 * solid_mass / (math.pi * material.particle_density_kg_per_m3 * particle_count)
         ) ** (1.0 / 3.0)
 
-        inlet_absolute_humidity = absolute_humidity_kg_per_kg(
-            backend, gas, ambient_temperature, ambient_humidity
-        )
-        bed_gas_density = gas_density_kg_per_m3(
-            backend, gas, bed_temperature, inlet_absolute_humidity
-        )
-        moist_air_flow = bed_gas_density * gas_velocity * geometry.cross_section_area_m2
-        dry_air_flow = moist_air_flow / (1.0 + inlet_absolute_humidity)
-
+        recirculation = operation.exhaust_recirculation_fraction
         # Guenstig genug, um pro _rhs-Aufruf frisch zu konstruieren (liest nur Felder aus
         # material, keine Iteration) -- keine Caching-Notwendigkeit, siehe sorption.py.
         isotherm = isotherm_from_material(material)
-        evaporation, outlet_humidity, saturation_degree = evaporation_rate_kg_per_s(
-            backend,
-            gas,
-            material,
-            isotherm,
-            dry_air_flow,
-            bed_temperature,
-            inlet_absolute_humidity,
-            moisture,
-        )
+        if recirculation is None:
+            inlet_absolute_humidity = absolute_humidity_kg_per_kg(
+                backend, gas, ambient_temperature, ambient_humidity
+            )
+            bed_gas_density = gas_density_kg_per_m3(
+                backend, gas, bed_temperature, inlet_absolute_humidity
+            )
+            moist_air_flow = bed_gas_density * gas_velocity * geometry.cross_section_area_m2
+            dry_air_flow = moist_air_flow / (1.0 + inlet_absolute_humidity)
+
+            evaporation, outlet_humidity, saturation_degree = evaporation_rate_kg_per_s(
+                backend,
+                gas,
+                material,
+                isotherm,
+                dry_air_flow,
+                bed_temperature,
+                inlet_absolute_humidity,
+                moisture,
+            )
+        else:
+            # Exhaust recirculation (OperationConfig.exhaust_recirculation_fraction): the inlet
+            # air is the mixture of fresh air and bed exhaust, see
+            # thermo.recirculated_inlet_humidity; the bed itself sees only Y_in and T_in.
+            fresh_air_humidity = absolute_humidity_kg_per_kg(
+                backend, gas, ambient_temperature, ambient_humidity
+            )
+            inlet_absolute_humidity, outlet_humidity, saturation_degree = (
+                recirculated_inlet_humidity(
+                    backend,
+                    gas,
+                    material,
+                    isotherm,
+                    fresh_air_humidity,
+                    recirculation,
+                    bed_temperature,
+                    moisture,
+                )
+            )
+            bed_gas_density = gas_density_kg_per_m3(
+                backend, gas, bed_temperature, inlet_absolute_humidity
+            )
+            moist_air_flow = bed_gas_density * gas_velocity * geometry.cross_section_area_m2
+            dry_air_flow = moist_air_flow / (1.0 + inlet_absolute_humidity)
+            evaporation = dry_air_flow * (outlet_humidity - inlet_absolute_humidity)
+            mixing_temperature = mixing_temperature_celsius(
+                gas,
+                recirculation,
+                ambient_temperature,
+                fresh_air_humidity,
+                bed_temperature,
+                outlet_humidity,
+            )
 
         spray_solid = spray_rate * solid_fraction
         seed_flow = operation.seed_mass_flow_kg_per_h / _SECONDS_PER_HOUR
@@ -477,6 +514,8 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
             nozzle_pressure,
             ambient_temperature,
             solid_mass + water_mass,
+            heater_intake_temperature_celsius=None if recirculation is None else mixing_temperature,
+            recirculation_fraction=recirculation,
         )
         reference_flow = product_flow if cfg.operation.mode == "continuous" else solid_inflow
         target = energy_target(backend, cfg.energy, power.total_kw, reference_flow)
@@ -514,6 +553,23 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
             "power_atomiser_kw": power.atomiser_kw,
             "power_total_kw": power.total_kw,
         }
+        if recirculation is not None:
+            # Added only with recirculation, so the diagnostics of every existing config keep
+            # their keys. ``exhaust_*``: the purge leaving the line, (1 - r) of the bed flow.
+            assert power.recirculation_fan_kw is not None
+            diagnostics.update(
+                {
+                    "exhaust_recirculation_fraction": backend.zeros_like(bed_temperature)
+                    + recirculation,
+                    "fresh_air_humidity_kg_per_kg": fresh_air_humidity,
+                    "mixing_temperature_celsius": mixing_temperature,
+                    "mixing_relative_humidity": relative_humidity_from_absolute_humidity(
+                        backend, gas, inlet_absolute_humidity, mixing_temperature
+                    ),
+                    "exhaust_dry_air_mass_flow_kg_per_s": (1.0 - recirculation) * dry_air_flow,
+                    "power_recirculation_fan_kw": power.recirculation_fan_kw,
+                }
+            )
         return derivative, diagnostics
 
     def _product_mass_flow(self, solid_inflow: Array, solid_mass: Array) -> Array:
@@ -729,6 +785,20 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
         inlet_absolute_humidity = absolute_humidity_kg_per_kg(
             backend, gas, ambient_temperature, ambient_humidity
         )
+        recirculation = cfg.operation.exhaust_recirculation_fraction
+        if recirculation is not None:
+            # Same inlet humidity as in _rhs (mixture of fresh air and exhaust).
+            water_mass = backend.maximum(state[..., IDX_WATER_MASS], 0.0)
+            inlet_absolute_humidity, _, _ = recirculated_inlet_humidity(
+                backend,
+                gas,
+                material,
+                isotherm_from_material(material),
+                inlet_absolute_humidity,
+                recirculation,
+                bed_temperature,
+                water_mass / solid_mass,
+            )
         u_mf = minimum_fluidization_velocity_m_per_s(
             backend, gas, material, diameter, bed_temperature, inlet_absolute_humidity
         )

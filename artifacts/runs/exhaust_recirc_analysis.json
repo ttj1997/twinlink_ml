@@ -1,0 +1,6367 @@
+{
+ "provenance": {
+  "git/commit": "6a9dca15e1d0ee507c55ed9f5343eeaaf9402b71",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used"
+ },
+ "inputs": {
+  "anchor": "exhaust_recirc_anchor",
+  "main": "exhaust_recirc_main",
+  "sensitivity": "exhaust_recirc_sensitivity"
+ },
+ "anchor_gate_passed": true,
+ "anchor_rows": [
+  {
+   "context_index": 0,
+   "m1_co2_kg_per_h": 0.38269642179863667,
+   "relative_differences": {
+    "fresh_reduced_vs_m1": -1.1102230246251565e-16,
+    "r0_vs_fresh": 2.8726921019739393e-07,
+    "r0_reduced_vs_full": 0.0,
+    "rfree_reduced_vs_full": 0.00039580372445535694
+   }
+  },
+  {
+   "context_index": 12,
+   "m1_co2_kg_per_h": 0.29522488138002856,
+   "relative_differences": {
+    "fresh_reduced_vs_m1": -3.9306714504361295e-06,
+    "r0_vs_fresh": 7.58911609834989e-05,
+    "r0_reduced_vs_full": 4.0419814784087293e-07,
+    "rfree_reduced_vs_full": 3.144664526555374e-07
+   }
+  },
+  {
+   "context_index": 24,
+   "m1_co2_kg_per_h": 0.25697169602843356,
+   "relative_differences": {
+    "fresh_reduced_vs_m1": -2.0365018575718707e-05,
+    "r0_vs_fresh": 5.765465573759343e-05,
+    "r0_reduced_vs_full": -3.271713339580984e-06,
+    "rfree_reduced_vs_full": 0.0006528611319953637
+   }
+  }
+ ],
+ "electricity_2030_co2_kg_per_kwh": 0.2,
+ "electricity_co2_kg_per_kwh": 0.366,
+ "grid": {
+  "rows": [
+   {
+    "scale": "lab",
+    "r": 0.0,
+    "extension": false,
+    "n_feasible": 25,
+    "co2_saving_pct": {
+     "n": 25,
+     "median": 0.0,
+     "min": 0.0,
+     "max": 0.0,
+     "p10": 0.0,
+     "p90": 0.0
+    },
+    "co2_saving_2030_pct": {
+     "n": 25,
+     "median": 0.0,
+     "min": 0.0,
+     "max": 0.0,
+     "p10": 0.0,
+     "p90": 0.0
+    },
+    "kwh_saving_pct": {
+     "n": 25,
+     "median": 0.0,
+     "min": 0.0,
+     "max": 0.0,
+     "p10": 0.0,
+     "p90": 0.0
+    },
+    "heater_gas_saving_pct": {
+     "n": 25,
+     "median": 0.0,
+     "min": 0.0,
+     "max": 0.0,
+     "p10": 0.0,
+     "p90": 0.0
+    },
+    "binding_counts": {
+     "moisture": 17,
+     "gas_velocity_box_min": 17,
+     "gas_velocity_u_mf": 0,
+     "gas_velocity_u_terminal": 0,
+     "bed_temperature": 0,
+     "inlet_temperature_box_min": 8,
+     "inlet_temperature_box_max": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "near_limit_counts": {
+     "moisture": 17,
+     "gas_velocity_box_min": 21,
+     "inlet_temperature_box_min": 14,
+     "inlet_temperature_box_max": 0,
+     "bed_temperature": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "inlet_temperature_celsius": {
+     "n": 25,
+     "median": 60.33624591078446,
+     "min": 60.0,
+     "max": 71.94079992106765,
+     "p10": 60.0,
+     "p90": 67.14282368680524
+    },
+    "inlet_humidity_kg_per_kg": {
+     "n": 25,
+     "median": 0.007655401801675636,
+     "min": 0.0013417920899543283,
+     "max": 0.030814109728551184,
+     "p10": 0.0025231591433341285,
+     "p90": 0.01970171332250102
+    },
+    "exhaust_dew_point_celsius": {
+     "n": 25,
+     "median": 23.647250086069107,
+     "min": 16.84717319905758,
+     "max": 37.52863630652428,
+     "p10": 18.320307716727257,
+     "p90": 31.70399782061577
+    },
+    "product_moisture_kg_per_kg": {
+     "n": 25,
+     "median": 0.14403801519478016,
+     "min": 0.13441749345822673,
+     "max": 0.14403813439193713,
+     "p10": 0.13746051343777094,
+     "p90": 0.14403813439193713
+    },
+    "mixing_temperature_celsius": {
+     "n": 25,
+     "median": 20.0,
+     "min": 5.0,
+     "max": 35.0,
+     "p10": 5.0,
+     "p90": 35.0
+    }
+   },
+   {
+    "scale": "lab",
+    "r": 0.1,
+    "extension": false,
+    "n_feasible": 25,
+    "co2_saving_pct": {
+     "n": 25,
+     "median": 2.11290277934989,
+     "min": -1.1863360641692244,
+     "max": 4.619323079311599,
+     "p10": 0.31728116849633725,
+     "p90": 4.054406468632632
+    },
+    "co2_saving_2030_pct": {
+     "n": 25,
+     "median": 2.184063854679663,
+     "min": -1.4859649798848018,
+     "max": 4.76203155553887,
+     "p10": 0.41841330546401606,
+     "p90": 4.185684625183317
+    },
+    "kwh_saving_pct": {
+     "n": 25,
+     "median": 2.1836195714072915,
+     "min": -1.4805122030744355,
+     "max": 4.761147307882618,
+     "p10": 0.41779150821933403,
+     "p90": 4.184869723512035
+    },
+    "heater_gas_saving_pct": {
+     "n": 25,
+     "median": 2.277042865769463,
+     "min": -2.6712238321473736,
+     "max": 4.945257114526392,
+     "p10": 0.057587655154036854,
+     "p90": 4.354942400212709
+    },
+    "binding_counts": {
+     "moisture": 20,
+     "gas_velocity_box_min": 15,
+     "gas_velocity_u_mf": 0,
+     "gas_velocity_u_terminal": 0,
+     "bed_temperature": 0,
+     "inlet_temperature_box_min": 7,
+     "inlet_temperature_box_max": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "near_limit_counts": {
+     "moisture": 20,
+     "gas_velocity_box_min": 21,
+     "inlet_temperature_box_min": 9,
+     "inlet_temperature_box_max": 0,
+     "bed_temperature": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "inlet_temperature_celsius": {
+     "n": 25,
+     "median": 61.50447049251714,
+     "min": 60.0,
+     "max": 72.34179298491225,
+     "p10": 60.0,
+     "p90": 67.68570419108855
+    },
+    "inlet_humidity_kg_per_kg": {
+     "n": 25,
+     "median": 0.008861783710434112,
+     "min": 0.0025267033905010654,
+     "max": 0.03210038543803531,
+     "p10": 0.0037107712638018795,
+     "p90": 0.020900691299967664
+    },
+    "exhaust_dew_point_celsius": {
+     "n": 25,
+     "median": 24.70689967274666,
+     "min": 18.30771543085575,
+     "max": 38.0496783554554,
+     "p10": 19.677290126681328,
+     "p90": 32.563463002443314
+    },
+    "product_moisture_kg_per_kg": {
+     "n": 25,
+     "median": 0.14403807479335867,
+     "min": 0.13916356665747281,
+     "max": 0.14403813439193713,
+     "p10": 0.1423324230756348,
+     "p90": 0.14403813439193713
+    },
+    "mixing_temperature_celsius": {
+     "n": 25,
+     "median": 21.525141846166697,
+     "min": 7.7216154075154435,
+     "max": 35.93652273966376,
+     "p10": 7.777631075679002,
+     "p90": 35.31572131589192
+    }
+   },
+   {
+    "scale": "lab",
+    "r": 0.2,
+    "extension": false,
+    "n_feasible": 25,
+    "co2_saving_pct": {
+     "n": 25,
+     "median": 4.216575321678651,
+     "min": -2.4803076000564417,
+     "max": 8.938577837575446,
+     "p10": -0.14763470485787503,
+     "p90": 7.453566583475973
+    },
+    "co2_saving_2030_pct": {
+     "n": 25,
+     "median": 4.369152763037654,
+     "min": -2.2719156415559993,
+     "max": 9.21739504025073,
+     "p10": 0.18976696327316814,
+     "p90": 7.69540059488218
+    },
+    "kwh_saving_pct": {
+     "n": 25,
+     "median": 4.3682001691564665,
+     "min": -2.273251090519346,
+     "max": 9.21566753260522,
+     "p10": 0.18762542975227628,
+     "p90": 7.693899322986899
+    },
+    "heater_gas_saving_pct": {
+     "n": 25,
+     "median": 4.568510340848652,
+     "min": -3.8658459346024854,
+     "max": 9.57532768142071,
+     "p10": 0.6480288280260927,
+     "p90": 8.007247138704203
+    },
+    "binding_counts": {
+     "moisture": 25,
+     "gas_velocity_box_min": 14,
+     "gas_velocity_u_mf": 0,
+     "gas_velocity_u_terminal": 0,
+     "bed_temperature": 0,
+     "inlet_temperature_box_min": 1,
+     "inlet_temperature_box_max": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "near_limit_counts": {
+     "moisture": 25,
+     "gas_velocity_box_min": 18,
+     "inlet_temperature_box_min": 4,
+     "inlet_temperature_box_max": 0,
+     "bed_temperature": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "inlet_temperature_celsius": {
+     "n": 25,
+     "median": 62.23484813477025,
+     "min": 60.00012337397233,
+     "max": 73.01546740427224,
+     "p10": 60.28233885985627,
+     "p90": 67.37816801390193
+    },
+    "inlet_humidity_kg_per_kg": {
+     "n": 25,
+     "median": 0.01038336675789613,
+     "min": 0.004010551396657892,
+     "max": 0.03372629753043272,
+     "p10": 0.005203132334559006,
+     "p90": 0.022466896477257397
+    },
+    "exhaust_dew_point_celsius": {
+     "n": 25,
+     "median": 25.958709865808487,
+     "min": 19.991647079586983,
+     "max": 38.709354251623154,
+     "p10": 21.268685549497604,
+     "p90": 33.51921293139458
+    },
+    "product_moisture_kg_per_kg": {
+     "n": 25,
+     "median": 0.14403813439193713,
+     "min": 0.14403801519478016,
+     "max": 0.14403813439193713,
+     "p10": 0.14403803903421156,
+     "p90": 0.14403813439193713
+    },
+    "mixing_temperature_celsius": {
+     "n": 25,
+     "median": 23.20671313253407,
+     "min": 10.496943724859864,
+     "max": 36.9792410506124,
+     "p10": 10.740925580242438,
+     "p90": 35.79687661263106
+    }
+   },
+   {
+    "scale": "lab",
+    "r": 0.3,
+    "extension": false,
+    "n_feasible": 25,
+    "co2_saving_pct": {
+     "n": 25,
+     "median": 5.759515375835633,
+     "min": -4.3090180955105195,
+     "max": 12.088607500356863,
+     "p10": -0.6110856779556559,
+     "p90": 10.869979303220239
+    },
+    "co2_saving_2030_pct": {
+     "n": 25,
+     "median": 6.0171506099245375,
+     "min": -4.632048105296938,
+     "max": 12.468271568215838,
+     "p10": -0.6491667273186325,
+     "p90": 11.192972696346402
+    },
+    "kwh_saving_pct": {
+     "n": 25,
+     "median": 6.015538310629543,
+     "min": -4.629978015381742,
+     "max": 12.465919229215029,
+     "p10": -0.6531364754395591,
+     "p90": 11.19097141385875
+    },
+    "heater_gas_saving_pct": {
+     "n": 25,
+     "median": 6.355624939050597,
+     "min": -5.0809470698941706,
+     "max": 12.955666754962515,
+     "p10": 0.20054503711631128,
+     "p90": 11.607648174020909
+    },
+    "binding_counts": {
+     "moisture": 25,
+     "gas_velocity_box_min": 15,
+     "gas_velocity_u_mf": 0,
+     "gas_velocity_u_terminal": 0,
+     "bed_temperature": 0,
+     "inlet_temperature_box_min": 1,
+     "inlet_temperature_box_max": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "near_limit_counts": {
+     "moisture": 25,
+     "gas_velocity_box_min": 21,
+     "inlet_temperature_box_min": 2,
+     "inlet_temperature_box_max": 0,
+     "bed_temperature": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "inlet_temperature_celsius": {
+     "n": 25,
+     "median": 63.429650910266176,
+     "min": 60.049362011197516,
+     "max": 73.75917723764626,
+     "p10": 61.579446153531855,
+     "p90": 69.75753726474784
+    },
+    "inlet_humidity_kg_per_kg": {
+     "n": 25,
+     "median": 0.012361511337637781,
+     "min": 0.005945886694054236,
+     "max": 0.03583240014609783,
+     "p10": 0.007139337471860352,
+     "p90": 0.024573890289400966
+    },
+    "exhaust_dew_point_celsius": {
+     "n": 25,
+     "median": 27.22579076886177,
+     "min": 22.021025866270065,
+     "max": 39.51805517077446,
+     "p10": 23.14936861395836,
+     "p90": 34.70377108454704
+    },
+    "product_moisture_kg_per_kg": {
+     "n": 25,
+     "median": 0.14403813439193713,
+     "min": 0.1440377768004662,
+     "max": 0.14403813439193713,
+     "p10": 0.14403801519478016,
+     "p90": 0.14403813439193713
+    },
+    "mixing_temperature_celsius": {
+     "n": 25,
+     "median": 25.120175969479938,
+     "min": 13.605512111231619,
+     "max": 38.161703600799946,
+     "p10": 13.949321786338109,
+     "p90": 36.60735217218014
+    }
+   },
+   {
+    "scale": "lab",
+    "r": 0.4,
+    "extension": false,
+    "n_feasible": 25,
+    "co2_saving_pct": {
+     "n": 25,
+     "median": 7.304554997917945,
+     "min": -5.724327801735241,
+     "max": 15.277005862556447,
+     "p10": -0.8430525372311458,
+     "p90": 14.346336035270673
+    },
+    "co2_saving_2030_pct": {
+     "n": 25,
+     "median": 7.630624667928531,
+     "min": -6.195066011840122,
+     "max": 15.767845529123791,
+     "p10": -1.6977282669660045,
+     "p90": 14.788084998031005
+    },
+    "kwh_saving_pct": {
+     "n": 25,
+     "median": 7.628586869626863,
+     "min": -6.192049355827001,
+     "max": 15.764804363555173,
+     "p10": -1.6922295857923189,
+     "p90": 14.785348012792092
+    },
+    "heater_gas_saving_pct": {
+     "n": 25,
+     "median": 8.05765555786937,
+     "min": -6.849227819444792,
+     "max": 16.397962812274525,
+     "p10": -1.212896116570467,
+     "p90": 15.356894259498755
+    },
+    "binding_counts": {
+     "moisture": 25,
+     "gas_velocity_box_min": 15,
+     "gas_velocity_u_mf": 0,
+     "gas_velocity_u_terminal": 0,
+     "bed_temperature": 0,
+     "inlet_temperature_box_min": 0,
+     "inlet_temperature_box_max": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "near_limit_counts": {
+     "moisture": 25,
+     "gas_velocity_box_min": 21,
+     "inlet_temperature_box_min": 1,
+     "inlet_temperature_box_max": 0,
+     "bed_temperature": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "inlet_temperature_celsius": {
+     "n": 25,
+     "median": 65.4695846355961,
+     "min": 60.11530953867286,
+     "max": 74.72147699893117,
+     "p10": 63.395432361339715,
+     "p90": 70.50182941535218
+    },
+    "inlet_humidity_kg_per_kg": {
+     "n": 25,
+     "median": 0.015036602639346785,
+     "min": 0.008564353699884087,
+     "max": 0.038674112115002775,
+     "p10": 0.00977513658592307,
+     "p90": 0.027336151581500514
+    },
+    "exhaust_dew_point_celsius": {
+     "n": 25,
+     "median": 28.562864512205124,
+     "min": 24.44081798195839,
+     "max": 40.55532023310661,
+     "p10": 25.457033663988113,
+     "p90": 36.006570011377335
+    },
+    "product_moisture_kg_per_kg": {
+     "n": 25,
+     "median": 0.14403807479335867,
+     "min": 0.1440367636246319,
+     "max": 0.14403813439193713,
+     "p10": 0.14403791983705458,
+     "p90": 0.14403813439193713
+    },
+    "mixing_temperature_celsius": {
+     "n": 25,
+     "median": 27.315554956054303,
+     "min": 17.07670478429005,
+     "max": 39.54846993638689,
+     "p10": 17.50071606916855,
+     "p90": 37.57286914893797
+    }
+   },
+   {
+    "scale": "lab",
+    "r": 0.5,
+    "extension": false,
+    "n_feasible": 25,
+    "co2_saving_pct": {
+     "n": 25,
+     "median": 9.206078578189725,
+     "min": -7.163385105249076,
+     "max": 18.52133410907021,
+     "p10": -0.9969332262486928,
+     "p90": 17.907902421134544
+    },
+    "co2_saving_2030_pct": {
+     "n": 25,
+     "median": 9.630023839070468,
+     "min": -8.089650875680409,
+     "max": 19.13512300704391,
+     "p10": -1.8982517204987686,
+     "p90": 18.481935933712666
+    },
+    "kwh_saving_pct": {
+     "n": 25,
+     "median": 9.627374359489648,
+     "min": -8.08138778563352,
+     "max": 19.131320067326385,
+     "p10": -1.8924634620492136,
+     "p90": 18.478379349334443
+    },
+    "heater_gas_saving_pct": {
+     "n": 25,
+     "median": 10.185235619529,
+     "min": -9.881501818580208,
+     "max": 19.9230768322187,
+     "p10": -2.5702160238886886,
+     "p90": 19.21883593822441
+    },
+    "binding_counts": {
+     "moisture": 25,
+     "gas_velocity_box_min": 15,
+     "gas_velocity_u_mf": 0,
+     "gas_velocity_u_terminal": 0,
+     "bed_temperature": 0,
+     "inlet_temperature_box_min": 0,
+     "inlet_temperature_box_max": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "near_limit_counts": {
+     "moisture": 25,
+     "gas_velocity_box_min": 24,
+     "inlet_temperature_box_min": 1,
+     "inlet_temperature_box_max": 0,
+     "bed_temperature": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "inlet_temperature_celsius": {
+     "n": 25,
+     "median": 67.78385377101918,
+     "min": 60.124938918975815,
+     "max": 76.01698042271741,
+     "p10": 65.73661639209982,
+     "p90": 72.40839009210958
+    },
+    "inlet_humidity_kg_per_kg": {
+     "n": 25,
+     "median": 0.018120493354691136,
+     "min": 0.01230740314322165,
+     "max": 0.04271707196807856,
+     "p10": 0.01354461382792381,
+     "p90": 0.031260542489937426
+    },
+    "exhaust_dew_point_celsius": {
+     "n": 25,
+     "median": 30.804782062768936,
+     "min": 27.415510565042496,
+     "max": 41.93623572587967,
+     "p10": 28.30626943707466,
+     "p90": 37.70728150010109
+    },
+    "product_moisture_kg_per_kg": {
+     "n": 25,
+     "median": 0.14403807479335867,
+     "min": 0.14403789599762318,
+     "max": 0.14403813439193713,
+     "p10": 0.1440379555962017,
+     "p90": 0.14403813439193713
+    },
+    "mixing_temperature_celsius": {
+     "n": 25,
+     "median": 29.99397323133862,
+     "min": 21.076524460001377,
+     "max": 41.24599827795314,
+     "p10": 21.57212566213236,
+     "p90": 39.14058805565208
+    }
+   },
+   {
+    "scale": "lab",
+    "r": 0.6,
+    "extension": false,
+    "n_feasible": 25,
+    "co2_saving_pct": {
+     "n": 25,
+     "median": 11.108276828790075,
+     "min": -9.780950086781527,
+     "max": 21.84984627039732,
+     "p10": -1.7714437827101555,
+     "p90": 21.426701089053495
+    },
+    "co2_saving_2030_pct": {
+     "n": 25,
+     "median": 11.658187687792731,
+     "min": -10.061613462992991,
+     "max": 22.597769034922877,
+     "p10": -2.0353925135704727,
+     "p90": 22.170403305461875
+    },
+    "kwh_saving_pct": {
+     "n": 25,
+     "median": 11.6547509762013,
+     "min": -10.059827737261905,
+     "max": 22.593135022811815,
+     "p10": -2.032507424458782,
+     "p90": 22.165795085573386
+    },
+    "heater_gas_saving_pct": {
+     "n": 25,
+     "median": 12.378367898053956,
+     "min": -10.814818861904051,
+     "max": 23.557917719900402,
+     "p10": -2.676235804636107,
+     "p90": 23.12530414589522
+    },
+    "binding_counts": {
+     "moisture": 25,
+     "gas_velocity_box_min": 14,
+     "gas_velocity_u_mf": 0,
+     "gas_velocity_u_terminal": 0,
+     "bed_temperature": 0,
+     "inlet_temperature_box_min": 0,
+     "inlet_temperature_box_max": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "near_limit_counts": {
+     "moisture": 25,
+     "gas_velocity_box_min": 23,
+     "inlet_temperature_box_min": 0,
+     "inlet_temperature_box_max": 0,
+     "bed_temperature": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "inlet_temperature_celsius": {
+     "n": 25,
+     "median": 70.65176923752682,
+     "min": 63.61326781138037,
+     "max": 77.65408157284577,
+     "p10": 68.76666962176796,
+     "p90": 74.46063326773316
+    },
+    "inlet_humidity_kg_per_kg": {
+     "n": 25,
+     "median": 0.024727160805758826,
+     "min": 0.018100736065693793,
+     "max": 0.048831313744060446,
+     "p10": 0.019293129700174504,
+     "p90": 0.03725737921442813
+    },
+    "exhaust_dew_point_celsius": {
+     "n": 25,
+     "median": 34.7824202477932,
+     "min": 31.230394691228867,
+     "max": 43.826816380023956,
+     "p10": 31.835450261831284,
+     "p90": 40.02907404303551
+    },
+    "product_moisture_kg_per_kg": {
+     "n": 25,
+     "median": 0.14403807479335867,
+     "min": 0.14403712121610285,
+     "max": 0.14403813439193713,
+     "p10": 0.14403776488075054,
+     "p90": 0.14403813439193713
+    },
+    "mixing_temperature_celsius": {
+     "n": 25,
+     "median": 33.373185102321116,
+     "min": 25.899063857816472,
+     "max": 43.41719662713623,
+     "p10": 26.348620850301852,
+     "p90": 41.11336691358806
+    }
+   },
+   {
+    "scale": "lab",
+    "r": 0.7,
+    "extension": false,
+    "n_feasible": 25,
+    "co2_saving_pct": {
+     "n": 25,
+     "median": 13.03290144837349,
+     "min": -11.767864254898264,
+     "max": 25.239886788724963,
+     "p10": -1.2877779361626462,
+     "p90": 24.94975680733152
+    },
+    "co2_saving_2030_pct": {
+     "n": 25,
+     "median": 13.734624765517879,
+     "min": -12.078625457915294,
+     "max": 26.143187659968405,
+     "p10": -2.0248939699886783,
+     "p90": 25.883082023079737
+    },
+    "kwh_saving_pct": {
+     "n": 25,
+     "median": 13.730239289911205,
+     "min": -12.076648234224985,
+     "max": 26.137590949484625,
+     "p10": -2.0201528944367855,
+     "p90": 25.87729936663215
+    },
+    "heater_gas_saving_pct": {
+     "n": 25,
+     "median": 14.653623250113778,
+     "min": -12.503120499774422,
+     "max": 27.302803578616885,
+     "p10": -3.058209010009126,
+     "p90": 27.03383049021538
+    },
+    "binding_counts": {
+     "moisture": 25,
+     "gas_velocity_box_min": 16,
+     "gas_velocity_u_mf": 0,
+     "gas_velocity_u_terminal": 0,
+     "bed_temperature": 0,
+     "inlet_temperature_box_min": 0,
+     "inlet_temperature_box_max": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "near_limit_counts": {
+     "moisture": 25,
+     "gas_velocity_box_min": 23,
+     "inlet_temperature_box_min": 0,
+     "inlet_temperature_box_max": 0,
+     "bed_temperature": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "inlet_temperature_celsius": {
+     "n": 25,
+     "median": 74.30043232438933,
+     "min": 73.04214637476879,
+     "max": 80.65649938114717,
+     "p10": 73.27956080377834,
+     "p90": 77.77206502746083
+    },
+    "inlet_humidity_kg_per_kg": {
+     "n": 25,
+     "median": 0.03491589549921117,
+     "min": 0.028138972617242974,
+     "max": 0.0596250955587357,
+     "p10": 0.029359349914604187,
+     "p90": 0.04771676228616412
+    },
+    "exhaust_dew_point_celsius": {
+     "n": 25,
+     "median": 39.17053386569023,
+     "min": 36.37229725718498,
+     "max": 46.78493231534958,
+     "p10": 36.900168150663376,
+     "p90": 43.50071328878403
+    },
+    "product_moisture_kg_per_kg": {
+     "n": 25,
+     "median": 0.14403807479335867,
+     "min": 0.14403694242036735,
+     "max": 0.14403813439193713,
+     "p10": 0.14403771720188774,
+     "p90": 0.14403813439193713
+    },
+    "mixing_temperature_celsius": {
+     "n": 25,
+     "median": 37.968310940927836,
+     "min": 32.07278687217541,
+     "max": 46.57175645026544,
+     "p10": 32.509337069607966,
+     "p90": 44.18543899801851
+    }
+   },
+   {
+    "scale": "lab",
+    "r": 0.8,
+    "extension": false,
+    "n_feasible": 25,
+    "co2_saving_pct": {
+     "n": 25,
+     "median": 15.012052600255432,
+     "min": -13.659560458905284,
+     "max": 28.71207902727575,
+     "p10": -1.386448991901332,
+     "p90": 25.349502194832734
+    },
+    "co2_saving_2030_pct": {
+     "n": 25,
+     "median": 15.875298929825677,
+     "min": -13.957584027837866,
+     "max": 29.78905486105767,
+     "p10": -2.03486978908506,
+     "p90": 27.24079418874924
+    },
+    "kwh_saving_pct": {
+     "n": 25,
+     "median": 15.869904003323466,
+     "min": -13.955687847571351,
+     "max": 29.782382087753014,
+     "p10": -2.030693047569513,
+     "p90": 27.22839624016919
+    },
+    "heater_gas_saving_pct": {
+     "n": 25,
+     "median": 17.005832929944674,
+     "min": -14.364679656702851,
+     "max": 31.171626671415954,
+     "p10": -2.9469945973860794,
+     "p90": 29.810007917626674
+    },
+    "binding_counts": {
+     "moisture": 24,
+     "gas_velocity_box_min": 15,
+     "gas_velocity_u_mf": 0,
+     "gas_velocity_u_terminal": 0,
+     "bed_temperature": 0,
+     "inlet_temperature_box_min": 0,
+     "inlet_temperature_box_max": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "near_limit_counts": {
+     "moisture": 25,
+     "gas_velocity_box_min": 21,
+     "inlet_temperature_box_min": 0,
+     "inlet_temperature_box_max": 0,
+     "bed_temperature": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "inlet_temperature_celsius": {
+     "n": 25,
+     "median": 80.99870981143255,
+     "min": 63.94212107824023,
+     "max": 85.58123922178353,
+     "p10": 76.16164180481921,
+     "p90": 83.49759025923315
+    },
+    "inlet_humidity_kg_per_kg": {
+     "n": 25,
+     "median": 0.05671236574746447,
+     "min": 0.0367512016908738,
+     "max": 0.08248751406402262,
+     "p10": 0.0464936416031598,
+     "p90": 0.07021792204197942
+    },
+    "exhaust_dew_point_celsius": {
+     "n": 25,
+     "median": 46.03489011526108,
+     "min": 38.48573014140129,
+     "max": 51.768207252025604,
+     "p10": 42.805067360401154,
+     "p90": 49.271370232105255
+    },
+    "product_moisture_kg_per_kg": {
+     "n": 25,
+     "median": 0.14403801519478016,
+     "min": 0.14378215849733483,
+     "max": 0.14403813439193713,
+     "p10": 0.1440378602384761,
+     "p90": 0.14403813439193713
+    },
+    "mixing_temperature_celsius": {
+     "n": 25,
+     "median": 45.04828148724096,
+     "min": 35.81360488174237,
+     "max": 51.66564463218312,
+     "p10": 39.7090027874618,
+     "p90": 49.51156712710927
+    }
+   },
+   {
+    "scale": "lab",
+    "r": 0.9,
+    "extension": true,
+    "n_feasible": 22,
+    "co2_saving_pct": {
+     "n": 22,
+     "median": 13.082223258651954,
+     "min": -15.721316835176037,
+     "max": 22.243788519765683,
+     "p10": -2.1012485063721598,
+     "p90": 18.245415620548393
+    },
+    "co2_saving_2030_pct": {
+     "n": 22,
+     "median": 15.552442911518057,
+     "min": -16.031944176752866,
+     "max": 24.20742452229806,
+     "p10": -3.1764463296068586,
+     "p90": 22.841543462298834
+    },
+    "kwh_saving_pct": {
+     "n": 22,
+     "median": 15.54648008065973,
+     "min": -16.02996780475836,
+     "max": 24.195206515176217,
+     "p10": -3.1695399229126986,
+     "p90": 22.824097590501335
+    },
+    "heater_gas_saving_pct": {
+     "n": 22,
+     "median": 16.80436292362844,
+     "min": -16.45625636593573,
+     "max": 32.87249366000393,
+     "p10": -4.678995327292101,
+     "p90": 27.898176157002943
+    },
+    "binding_counts": {
+     "moisture": 22,
+     "gas_velocity_box_min": 10,
+     "gas_velocity_u_mf": 0,
+     "gas_velocity_u_terminal": 0,
+     "bed_temperature": 0,
+     "inlet_temperature_box_min": 0,
+     "inlet_temperature_box_max": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "near_limit_counts": {
+     "moisture": 22,
+     "gas_velocity_box_min": 13,
+     "inlet_temperature_box_min": 0,
+     "inlet_temperature_box_max": 0,
+     "bed_temperature": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "inlet_temperature_celsius": {
+     "n": 22,
+     "median": 94.16795450526995,
+     "min": 63.76224210706701,
+     "max": 96.96013834423206,
+     "p10": 68.54320172416016,
+     "p90": 96.07432209052968
+    },
+    "inlet_humidity_kg_per_kg": {
+     "n": 22,
+     "median": 0.13306546140106898,
+     "min": 0.058673031935567097,
+     "max": 0.16462260142800764,
+     "p10": 0.07144319016399063,
+     "p90": 0.1507398982921657
+    },
+    "exhaust_dew_point_celsius": {
+     "n": 22,
+     "median": 59.39333379268646,
+     "min": 44.97621268033981,
+     "max": 62.81359106302261,
+     "p10": 48.316309571266174,
+     "p90": 61.3994060754776
+    },
+    "product_moisture_kg_per_kg": {
+     "n": 22,
+     "median": 0.14403804499406941,
+     "min": 0.1439717415755024,
+     "max": 0.14403813439193713,
+     "p10": 0.14403760396458862,
+     "p90": 0.14403813439193713
+    },
+    "mixing_temperature_celsius": {
+     "n": 22,
+     "median": 58.81288771261205,
+     "min": 43.85199075561257,
+     "max": 62.70164576251186,
+     "p10": 47.4781977701742,
+     "p90": 61.44000777022153
+    }
+   }
+  ],
+  "largest_feasible_grid_r_per_context": [
+   0.9,
+   0.9,
+   0.8,
+   0.8,
+   0.8,
+   0.9,
+   0.9,
+   0.9,
+   0.9,
+   0.9,
+   0.9,
+   0.9,
+   0.9,
+   0.9,
+   0.9,
+   0.9,
+   0.9,
+   0.9,
+   0.9,
+   0.9,
+   0.9,
+   0.9,
+   0.9,
+   0.9,
+   0.9
+  ]
+ },
+ "r_free": {
+  "rows": [
+   {
+    "scale": "lab",
+    "context_index": 0,
+    "ambient_temperature_celsius": 5.0,
+    "ambient_relative_humidity": 0.25,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.0013417920899543283,
+    "r_star": 0.8148320607974631,
+    "t_in_r0": 60.0,
+    "t_in_star": 81.57430619328431,
+    "u_r0": 1.26,
+    "u_star": 1.269343534382743,
+    "co2_r0_kg_per_h": 0.3826965317355354,
+    "co2_star_kg_per_h": 0.2711689794854715,
+    "co2_saving_pct": 29.14255630807119,
+    "co2_saving_2030_pct": 30.27158235520554,
+    "kwh_saving_pct": 30.26458708694485,
+    "heater_gas_saving_pct": 31.720973824322073,
+    "electric_change_kw": 0.00656629313516488,
+    "recirculation_fan_kw": 0.006596343473124565,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": false,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": false,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.05474909291930311,
+    "outlet_humidity_kg_per_kg": 0.06688572856329328,
+    "dew_point_r0_celsius": 16.84717319905758,
+    "dew_point_star_celsius": 45.49240440130234,
+    "mixing_saturation_ratio": 0.9705480743302107,
+    "bed_temperature_celsius": 50.10333226769364
+   },
+   {
+    "scale": "lab",
+    "context_index": 1,
+    "ambient_temperature_celsius": 5.0,
+    "ambient_relative_humidity": 0.4,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.002149649706923314,
+    "r_star": 0.7937222344723677,
+    "t_in_r0": 60.0,
+    "t_in_star": 80.0213356818152,
+    "u_r0": 1.26,
+    "u_star": 1.2633847064379051,
+    "co2_r0_kg_per_h": 0.38277386484860565,
+    "co2_star_kg_per_h": 0.2741326249590796,
+    "co2_saving_pct": 28.382616961713346,
+    "co2_saving_2030_pct": 29.447085915791803,
+    "kwh_saving_pct": 29.44049027268296,
+    "heater_gas_saving_pct": 30.81377361572385,
+    "electric_change_kw": 0.005572914324608311,
+    "recirculation_fan_kw": 0.0060586693088740505,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": false,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": false,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.048424231875809375,
+    "outlet_humidity_kg_per_kg": 0.06045037527453628,
+    "dew_point_r0_celsius": 17.85636581480503,
+    "dew_point_star_celsius": 43.713203966617584,
+    "mixing_saturation_ratio": 0.9701398754093501,
+    "bed_temperature_celsius": 48.66443870458828
+   },
+   {
+    "scale": "lab",
+    "context_index": 2,
+    "ambient_temperature_celsius": 5.0,
+    "ambient_relative_humidity": 0.55,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.0029596040254314606,
+    "r_star": 0.7733686802939155,
+    "t_in_r0": 60.0,
+    "t_in_star": 77.60528145987882,
+    "u_r0": 1.26,
+    "u_star": 1.286337395589008,
+    "co2_r0_kg_per_h": 0.3828518178858788,
+    "co2_star_kg_per_h": 0.2785363242416763,
+    "co2_saving_pct": 27.24696312537742,
+    "co2_saving_2030_pct": 28.34608887527138,
+    "kwh_saving_pct": 28.339278103388075,
+    "heater_gas_saving_pct": 29.757458198062036,
+    "electric_change_kw": 0.007046332430347926,
+    "recirculation_fan_kw": 0.005962821516437227,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": false,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": false,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.0427286770645093,
+    "outlet_humidity_kg_per_kg": 0.05438277909371037,
+    "dew_point_r0_celsius": 18.811650946736336,
+    "dew_point_star_celsius": 41.860136687755585,
+    "mixing_saturation_ratio": 0.9695293718068692,
+    "bed_temperature_celsius": 47.09507628939379
+   },
+   {
+    "scale": "lab",
+    "context_index": 3,
+    "ambient_temperature_celsius": 5.0,
+    "ambient_relative_humidity": 0.7,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.0037716632187066827,
+    "r_star": 0.7376291810848656,
+    "t_in_r0": 60.069672188602006,
+    "t_in_star": 76.14066891996124,
+    "u_r0": 1.26,
+    "u_star": 1.2680009594874115,
+    "co2_r0_kg_per_h": 0.38331424299874595,
+    "co2_star_kg_per_h": 0.283164054851029,
+    "co2_saving_pct": 26.127437207712777,
+    "co2_saving_2030_pct": 27.092966227683746,
+    "kwh_saving_pct": 27.086983160598834,
+    "heater_gas_saving_pct": 28.33284910135244,
+    "electric_change_kw": 0.0047665465819235475,
+    "recirculation_fan_kw": 0.004997683086743763,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.03653444336410215,
+    "outlet_humidity_kg_per_kg": 0.048187991891075255,
+    "dew_point_r0_celsius": 19.72296603024006,
+    "dew_point_star_celsius": 39.75253149867058,
+    "mixing_saturation_ratio": 0.9721645333592694,
+    "bed_temperature_celsius": 45.48427233097293
+   },
+   {
+    "scale": "lab",
+    "context_index": 4,
+    "ambient_temperature_celsius": 5.0,
+    "ambient_relative_humidity": 0.85,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.004585835502512639,
+    "r_star": 0.6950411275621958,
+    "t_in_r0": 60.6210157064332,
+    "t_in_star": 74.07500150104032,
+    "u_r0": 1.26160271581767,
+    "u_star": 1.2673712815010085,
+    "co2_r0_kg_per_h": 0.3868914656330349,
+    "co2_star_kg_per_h": 0.28985426660075364,
+    "co2_saving_pct": 25.081245685662314,
+    "co2_saving_2030_pct": 25.97301990950893,
+    "kwh_saving_pct": 25.967495127679964,
+    "heater_gas_saving_pct": 27.117595005831696,
+    "electric_change_kw": 0.003957451328482409,
+    "recirculation_fan_kw": 0.004211440396133034,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.03078179275732732,
+    "outlet_humidity_kg_per_kg": 0.04227562998517155,
+    "dew_point_r0_celsius": 20.607317462563515,
+    "dew_point_star_celsius": 37.48695269227028,
+    "mixing_saturation_ratio": 0.9774905948663144,
+    "bed_temperature_celsius": 43.72945798957259
+   },
+   {
+    "scale": "lab",
+    "context_index": 5,
+    "ambient_temperature_celsius": 12.5,
+    "ambient_relative_humidity": 0.25,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.0022321958886025737,
+    "r_star": 0.8870231487511107,
+    "t_in_r0": 60.0,
+    "t_in_star": 90.55111194192457,
+    "u_r0": 1.26,
+    "u_star": 1.2909006151699287,
+    "co2_r0_kg_per_h": 0.33328504065983255,
+    "co2_star_kg_per_h": 0.25430792654900947,
+    "co2_saving_pct": 23.69656734501657,
+    "co2_saving_2030_pct": 24.9609148320477,
+    "kwh_saving_pct": 24.953047892054194,
+    "heater_gas_saving_pct": 26.599940715688785,
+    "electric_change_kw": 0.009337541013523715,
+    "recirculation_fan_kw": 0.008499641366364403,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": false,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": false,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.10566244992043536,
+    "outlet_humidity_kg_per_kg": 0.11883597807563795,
+    "dew_point_r0_celsius": 17.99274556338787,
+    "dew_point_star_celsius": 55.64455181360245,
+    "mixing_saturation_ratio": 0.9581878665528637,
+    "bed_temperature_celsius": 58.71253139268536
+   },
+   {
+    "scale": "lab",
+    "context_index": 6,
+    "ambient_temperature_celsius": 12.5,
+    "ambient_relative_humidity": 0.4,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.0035792203551672113,
+    "r_star": 0.8726763063932121,
+    "t_in_r0": 60.0,
+    "t_in_star": 89.47554518441294,
+    "u_r0": 1.26,
+    "u_star": 1.262623099702858,
+    "co2_r0_kg_per_h": 0.3334077404381816,
+    "co2_star_kg_per_h": 0.25475266971271604,
+    "co2_saving_pct": 23.591255146654078,
+    "co2_saving_2030_pct": 24.70549421900463,
+    "kwh_saving_pct": 24.698560544840255,
+    "heater_gas_saving_pct": 26.150279321605673,
+    "electric_change_kw": 0.006439540777007063,
+    "recirculation_fan_kw": 0.007650981573789593,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": false,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": false,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.09399377876267942,
+    "outlet_humidity_kg_per_kg": 0.10718528567988916,
+    "dew_point_r0_celsius": 19.54278104007244,
+    "dew_point_star_celsius": 53.8256099820137,
+    "mixing_saturation_ratio": 0.9557878530438892,
+    "bed_temperature_celsius": 57.18313235084438
+   },
+   {
+    "scale": "lab",
+    "context_index": 7,
+    "ambient_temperature_celsius": 12.5,
+    "ambient_relative_humidity": 0.55,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.0049320708551542905,
+    "r_star": 0.8580642977777584,
+    "t_in_r0": 60.33624591078446,
+    "t_in_star": 87.2214744616312,
+    "u_r0": 1.260537937408621,
+    "u_star": 1.2689055387537211,
+    "co2_r0_kg_per_h": 0.33555908492779496,
+    "co2_star_kg_per_h": 0.2566799912477521,
+    "co2_saving_pct": 23.506767428757268,
+    "co2_saving_2030_pct": 24.622922085940544,
+    "kwh_saving_pct": 24.61597733116627,
+    "heater_gas_saving_pct": 26.069786759864357,
+    "electric_change_kw": 0.0066320448905051455,
+    "recirculation_fan_kw": 0.007463709216572171,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.08260147936173878,
+    "outlet_humidity_kg_per_kg": 0.09544907372747416,
+    "dew_point_r0_celsius": 20.98590537905693,
+    "dew_point_star_celsius": 51.77621394395828,
+    "mixing_saturation_ratio": 0.9530787275775182,
+    "bed_temperature_celsius": 55.39939563104582
+   },
+   {
+    "scale": "lab",
+    "context_index": 8,
+    "ambient_temperature_celsius": 12.5,
+    "ambient_relative_humidity": 0.7,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.006290785267861813,
+    "r_star": 0.8401238669930606,
+    "t_in_r0": 61.25545634797098,
+    "t_in_star": 84.67235421771446,
+    "u_r0": 1.2618621336065612,
+    "u_star": 1.2807604583769585,
+    "co2_r0_kg_per_h": 0.34117780053664226,
+    "co2_star_kg_per_h": 0.25932288015399213,
+    "co2_saving_pct": 23.991865899217256,
+    "co2_saving_2030_pct": 25.14196683432688,
+    "kwh_saving_pct": 25.13481455446781,
+    "heater_gas_saving_pct": 26.631060742381308,
+    "electric_change_kw": 0.00735902869928283,
+    "recirculation_fan_kw": 0.007285290207184423,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.07176461659091113,
+    "outlet_humidity_kg_per_kg": 0.08422433042161487,
+    "dew_point_r0_celsius": 22.350946217775345,
+    "dew_point_star_celsius": 49.56302911043167,
+    "mixing_saturation_ratio": 0.9505609630619168,
+    "bed_temperature_celsius": 53.48074049250353
+   },
+   {
+    "scale": "lab",
+    "context_index": 9,
+    "ambient_temperature_celsius": 12.5,
+    "ambient_relative_humidity": 0.85,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.007655401801675636,
+    "r_star": 0.8134158996452288,
+    "t_in_r0": 62.24773745851479,
+    "t_in_star": 82.41521225119499,
+    "u_r0": 1.2600141368205038,
+    "u_star": 1.274546793043628,
+    "co2_r0_kg_per_h": 0.34636160698927765,
+    "co2_star_kg_per_h": 0.26232244268937066,
+    "co2_saving_pct": 24.26341794357958,
+    "co2_saving_2030_pct": 25.36246834267609,
+    "kwh_saving_pct": 25.355637435027667,
+    "heater_gas_saving_pct": 26.78359209809037,
+    "electric_change_kw": 0.00655499819316871,
+    "recirculation_fan_kw": 0.006593915088122771,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.06106018749847886,
+    "outlet_humidity_kg_per_kg": 0.07331035853425943,
+    "dew_point_r0_celsius": 23.647250086069107,
+    "dew_point_star_celsius": 47.110014855861664,
+    "mixing_saturation_ratio": 0.9488012791823638,
+    "bed_temperature_celsius": 51.43314472836107
+   },
+   {
+    "scale": "lab",
+    "context_index": 10,
+    "ambient_temperature_celsius": 20.0,
+    "ambient_relative_humidity": 0.25,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.0036093941704481995,
+    "r_star": 0.9111594621369847,
+    "t_in_r0": 60.0,
+    "t_in_star": 96.62723417949712,
+    "u_r0": 1.26,
+    "u_star": 1.269158346718084,
+    "co2_r0_kg_per_h": 0.28405133185194475,
+    "co2_star_kg_per_h": 0.24480587119566216,
+    "co2_saving_pct": 13.816326929506673,
+    "co2_saving_2030_pct": 14.79952192025429,
+    "kwh_saving_pct": 14.793369017309832,
+    "heater_gas_saving_pct": 16.091217390675027,
+    "electric_change_kw": 0.007298488166391254,
+    "recirculation_fan_kw": 0.008441132606890276,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": false,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": false,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.15213067585819237,
+    "outlet_humidity_kg_per_kg": 0.16661190674866397,
+    "dew_point_r0_celsius": 19.610249623656273,
+    "dew_point_star_celsius": 61.536225378513336,
+    "mixing_saturation_ratio": 0.9467217169033795,
+    "bed_temperature_celsius": 63.98223642033613
+   },
+   {
+    "scale": "lab",
+    "context_index": 11,
+    "ambient_temperature_celsius": 20.0,
+    "ambient_relative_humidity": 0.4,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.005795208026479798,
+    "r_star": 0.9178734367593863,
+    "t_in_r0": 60.394866273504476,
+    "t_in_star": 99.15827158821146,
+    "u_r0": 1.2600218620064738,
+    "u_star": 1.2607606122555526,
+    "co2_r0_kg_per_h": 0.28651194483544495,
+    "co2_star_kg_per_h": 0.2446197776491286,
+    "co2_saving_pct": 14.621438282573763,
+    "co2_saving_2030_pct": 15.56313753966042,
+    "kwh_saving_pct": 15.55724534126105,
+    "heater_gas_saving_pct": 16.799817903204616,
+    "electric_change_kw": 0.006194851182231884,
+    "recirculation_fan_kw": 0.008332056527080613,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.17439838986882444,
+    "outlet_humidity_kg_per_kg": 0.18948412971225106,
+    "dew_point_r0_celsius": 21.877032667398453,
+    "dew_point_star_celsius": 63.73690575361252,
+    "mixing_saturation_ratio": 0.9559774608434255,
+    "bed_temperature_celsius": 65.97679879399169
+   },
+   {
+    "scale": "lab",
+    "context_index": 12,
+    "ambient_temperature_celsius": 20.0,
+    "ambient_relative_humidity": 0.55,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.007996349445869877,
+    "r_star": 0.9078227693622811,
+    "t_in_r0": 61.89184892080803,
+    "t_in_star": 96.82811491352194,
+    "u_r0": 1.2600040987283974,
+    "u_star": 1.26,
+    "co2_r0_kg_per_h": 0.2952461258189485,
+    "co2_star_kg_per_h": 0.2451850262652634,
+    "co2_saving_pct": 16.95571767955515,
+    "co2_saving_2030_pct": 17.957444672802904,
+    "kwh_saving_pct": 17.95118430039384,
+    "heater_gas_saving_pct": 19.269337218314597,
+    "electric_change_kw": 0.006223305466631371,
+    "recirculation_fan_kw": 0.008172176781229985,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.15152827996065169,
+    "outlet_humidity_kg_per_kg": 0.16610202310682992,
+    "dew_point_r0_celsius": 23.95328179001808,
+    "dew_point_star_celsius": 61.48344129323959,
+    "mixing_saturation_ratio": 0.9525069436108561,
+    "bed_temperature_celsius": 63.949765546750356
+   },
+   {
+    "scale": "lab",
+    "context_index": 13,
+    "ambient_temperature_celsius": 20.0,
+    "ambient_relative_humidity": 0.7,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.010212980217882596,
+    "r_star": 0.8960007992629251,
+    "t_in_r0": 63.253774656737136,
+    "t_in_star": 93.97311628444892,
+    "u_r0": 1.26122343190396,
+    "u_star": 1.2719329769589887,
+    "co2_r0_kg_per_h": 0.30343631896246837,
+    "co2_star_kg_per_h": 0.24643522675305546,
+    "co2_saving_pct": 18.78519104249459,
+    "co2_saving_2030_pct": 19.88250934983029,
+    "kwh_saving_pct": 19.875658411081034,
+    "heater_gas_saving_pct": 21.316264680170537,
+    "electric_change_kw": 0.007217829134723727,
+    "recirculation_fan_kw": 0.00821020528992156,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.130413159922748,
+    "outlet_humidity_kg_per_kg": 0.14436484682753892,
+    "dew_point_r0_celsius": 25.81432655453682,
+    "dew_point_star_celsius": 59.0533122420311,
+    "mixing_saturation_ratio": 0.9489482237699671,
+    "bed_temperature_celsius": 61.75961856518359
+   },
+   {
+    "scale": "lab",
+    "context_index": 14,
+    "ambient_temperature_celsius": 20.0,
+    "ambient_relative_humidity": 0.85,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.012445264416832438,
+    "r_star": 0.8777629628332416,
+    "t_in_r0": 64.55920187720426,
+    "t_in_star": 91.526810572739,
+    "u_r0": 1.2617510972923518,
+    "u_star": 1.260010467974336,
+    "co2_r0_kg_per_h": 0.31110762074598214,
+    "co2_star_kg_per_h": 0.24743382100989608,
+    "co2_saving_pct": 20.46680810434901,
+    "co2_saving_2030_pct": 21.53059944573569,
+    "kwh_saving_pct": 21.523963874784457,
+    "heater_gas_saving_pct": 22.91761447954348,
+    "electric_change_kw": 0.00603767558719874,
+    "recirculation_fan_kw": 0.007627059562114974,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.11016311191592058,
+    "outlet_humidity_kg_per_kg": 0.12377127341552004,
+    "dew_point_r0_celsius": 27.51448854804039,
+    "dew_point_star_celsius": 56.360051333904266,
+    "mixing_saturation_ratio": 0.9449034900895515,
+    "bed_temperature_celsius": 59.401543318214436
+   },
+   {
+    "scale": "lab",
+    "context_index": 15,
+    "ambient_temperature_celsius": 27.5,
+    "ambient_relative_humidity": 0.25,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.005687741635088912,
+    "r_star": 0.46167890889517715,
+    "t_in_r0": 60.0,
+    "t_in_star": 65.54744104129288,
+    "u_r0": 1.26,
+    "u_star": 1.2600020389350441,
+    "co2_r0_kg_per_h": 0.23500646173828077,
+    "co2_star_kg_per_h": 0.23687354494609714,
+    "co2_saving_pct": -0.7944816470177196,
+    "co2_saving_2030_pct": -0.7547669281461333,
+    "kwh_saving_pct": -0.7550175320188979,
+    "heater_gas_saving_pct": -0.7015694644950665,
+    "electric_change_kw": 0.0010494841306344371,
+    "recirculation_fan_kw": 0.0012467624538673066,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": false,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": false,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.015187520234665998,
+    "outlet_humidity_kg_per_kg": 0.0262643337568962,
+    "dew_point_r0_celsius": 21.783495396375656,
+    "dew_point_star_celsius": 29.41729411482811,
+    "mixing_saturation_ratio": 0.4842566001662367,
+    "bed_temperature_celsius": 37.8870215828462
+   },
+   {
+    "scale": "lab",
+    "context_index": 16,
+    "ambient_temperature_celsius": 27.5,
+    "ambient_relative_humidity": 0.4,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.009150591956518593,
+    "r_star": 0.5704527402377858,
+    "t_in_r0": 60.334778267470355,
+    "t_in_star": 68.40854091368661,
+    "u_r0": 1.3125224067565142,
+    "u_star": 1.3008443316902898,
+    "co2_r0_kg_per_h": 0.24678097002468175,
+    "co2_star_kg_per_h": 0.24259274309114784,
+    "co2_saving_pct": 1.6971433952605919,
+    "co2_saving_2030_pct": 1.8686253441197898,
+    "kwh_saving_pct": 1.8675428391352833,
+    "heater_gas_saving_pct": 2.0985420132662136,
+    "electric_change_kw": 0.0012718080845709745,
+    "recirculation_fan_kw": 0.002549395022391778,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.023737372916916494,
+    "outlet_humidity_kg_per_kg": 0.03472112555465258,
+    "dew_point_r0_celsius": 24.580017179250717,
+    "dew_point_star_celsius": 34.11506101489067,
+    "mixing_saturation_ratio": 0.6346770090367677,
+    "bed_temperature_celsius": 41.05525400421049
+   },
+   {
+    "scale": "lab",
+    "context_index": 17,
+    "ambient_temperature_celsius": 27.5,
+    "ambient_relative_humidity": 0.55,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.012651862188834528,
+    "r_star": 0.8758421701728536,
+    "t_in_r0": 60.119111238262796,
+    "t_in_star": 90.63749471800352,
+    "u_r0": 1.3936509498074456,
+    "u_star": 1.2600032756720778,
+    "co2_r0_kg_per_h": 0.2605102556223051,
+    "co2_star_kg_per_h": 0.23896515596964724,
+    "co2_saving_pct": 8.270346056507872,
+    "co2_saving_2030_pct": 8.423329040299787,
+    "kwh_saving_pct": 8.42236185368196,
+    "heater_gas_saving_pct": 8.629174478969004,
+    "electric_change_kw": -0.0038696740224091336,
+    "recirculation_fan_kw": 0.007588744654264217,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.10834181294813662,
+    "outlet_humidity_kg_per_kg": 0.12190665034366499,
+    "dew_point_r0_celsius": 26.89701572060585,
+    "dew_point_star_celsius": 56.09327703714371,
+    "mixing_saturation_ratio": 0.9028920553475095,
+    "bed_temperature_celsius": 59.167439180865216
+   },
+   {
+    "scale": "lab",
+    "context_index": 18,
+    "ambient_temperature_celsius": 27.5,
+    "ambient_relative_humidity": 0.7,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.016192195295323654,
+    "r_star": 0.9144282045027846,
+    "t_in_r0": 66.07554985270693,
+    "t_in_star": 98.94557578524989,
+    "u_r0": 1.2600007692965591,
+    "u_star": 1.2600002036764788,
+    "co2_r0_kg_per_h": 0.27090035922499445,
+    "co2_star_kg_per_h": 0.2390934655771826,
+    "co2_saving_pct": 11.741178099138228,
+    "co2_saving_2030_pct": 12.623944336661575,
+    "kwh_saving_pct": 12.618409596819403,
+    "heater_gas_saving_pct": 13.788759561172292,
+    "electric_change_kw": 0.006284838916404495,
+    "recirculation_fan_kw": 0.008202033178369102,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.17848588089330214,
+    "outlet_humidity_kg_per_kg": 0.193673253730332,
+    "dew_point_r0_celsius": 30.063372403383255,
+    "dew_point_star_celsius": 64.10789221525192,
+    "mixing_saturation_ratio": 0.9417134311434797,
+    "bed_temperature_celsius": 66.31328741620541
+   },
+   {
+    "scale": "lab",
+    "context_index": 19,
+    "ambient_temperature_celsius": 27.5,
+    "ambient_relative_humidity": 0.85,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.019772248666543576,
+    "r_star": 0.889139754116904,
+    "t_in_r0": 67.85433957620413,
+    "t_in_star": 92.17851364937277,
+    "u_r0": 1.2600008940793503,
+    "u_star": 1.3053336192474274,
+    "co2_r0_kg_per_h": 0.2812424618297857,
+    "co2_star_kg_per_h": 0.24143921594856602,
+    "co2_saving_pct": 14.152644526810288,
+    "co2_saving_2030_pct": 15.344798956444095,
+    "kwh_saving_pct": 15.33733601152736,
+    "heater_gas_saving_pct": 16.912173442188237,
+    "electric_change_kw": 0.01033949373648059,
+    "recirculation_fan_kw": 0.00868782090349393,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.12841341338336382,
+    "outlet_humidity_kg_per_kg": 0.14195907499366348,
+    "dew_point_r0_celsius": 32.1940515935421,
+    "dew_point_star_celsius": 58.760423362255096,
+    "mixing_saturation_ratio": 0.9293374728798993,
+    "bed_temperature_celsius": 61.441103958254274
+   },
+   {
+    "scale": "lab",
+    "context_index": 20,
+    "ambient_temperature_celsius": 35.0,
+    "ambient_relative_humidity": 0.25,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.008756752676537439,
+    "r_star": 0.061282926260374376,
+    "t_in_r0": 62.2062686315783,
+    "t_in_star": 62.1592651687653,
+    "u_r0": 1.2605582217001423,
+    "u_star": 1.2609484344139217,
+    "co2_r0_kg_per_h": 0.19934913220478231,
+    "co2_star_kg_per_h": 0.19898419124766373,
+    "co2_saving_pct": 0.18306623815331768,
+    "co2_saving_2030_pct": 0.20719835292384303,
+    "kwh_saving_pct": 0.2070448119137036,
+    "heater_gas_saving_pct": 0.24016245194974362,
+    "electric_change_kw": 0.00015665083501076316,
+    "recirculation_fan_kw": 2.95507302421095e-06,
+    "binding": {
+     "moisture": false,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": false,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": false,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": false,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.00946844774271076,
+    "outlet_humidity_kg_per_kg": 0.020370020997790984,
+    "dew_point_r0_celsius": 24.661348313093185,
+    "dew_point_star_celsius": 25.234465152025223,
+    "mixing_saturation_ratio": 0.2584281650185153,
+    "bed_temperature_celsius": 35.50000113248825
+   },
+   {
+    "scale": "lab",
+    "context_index": 21,
+    "ambient_temperature_celsius": 35.0,
+    "ambient_relative_humidity": 0.4,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.014130162162203102,
+    "r_star": 0.029480458722973227,
+    "t_in_r0": 60.0,
+    "t_in_star": 60.3145691064195,
+    "u_r0": 1.4107346747654783,
+    "u_star": 1.4052475876539388,
+    "co2_r0_kg_per_h": 0.20839777287709088,
+    "co2_star_kg_per_h": 0.20941406915013144,
+    "co2_saving_pct": -0.4876713695207924,
+    "co2_saving_2030_pct": -0.5567297589485154,
+    "kwh_saving_pct": -0.5562872085006276,
+    "heater_gas_saving_pct": -0.6526968164096925,
+    "electric_change_kw": -0.0004453389896623694,
+    "recirculation_fan_kw": 4.5280084879581385e-07,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.01442996990821018,
+    "outlet_humidity_kg_per_kg": 0.024299873184150247,
+    "dew_point_r0_celsius": 27.889017313718796,
+    "dew_point_star_celsius": 28.12789961695671,
+    "mixing_saturation_ratio": 0.39365833818676105,
+    "bed_temperature_celsius": 36.3127743601799
+   },
+   {
+    "scale": "lab",
+    "context_index": 22,
+    "ambient_temperature_celsius": 35.0,
+    "ambient_relative_humidity": 0.55,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.019595910306437186,
+    "r_star": 0.0067972070578297536,
+    "t_in_r0": 60.252477719803224,
+    "t_in_star": 60.54963304689306,
+    "u_r0": 1.523412036576936,
+    "u_star": 1.5114001481185908,
+    "co2_r0_kg_per_h": 0.22723587163434816,
+    "co2_star_kg_per_h": 0.2273840484731939,
+    "co2_saving_pct": -0.06520838359718173,
+    "co2_saving_2030_pct": -0.14911872772132018,
+    "kwh_saving_pct": -0.14858008879341522,
+    "heater_gas_saving_pct": -0.2662015608683399,
+    "electric_change_kw": -0.0010222327081909482,
+    "recirculation_fan_kw": 6.847197820784045e-09,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "inlet_temperature_box_min": true,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.01965957152995803,
+    "outlet_humidity_kg_per_kg": 0.0289617017232969,
+    "dew_point_r0_celsius": 30.968917161226273,
+    "dew_point_star_celsius": 31.050757318735123,
+    "mixing_saturation_ratio": 0.5369144011247202,
+    "bed_temperature_celsius": 37.98614805936813
+   },
+   {
+    "scale": "lab",
+    "context_index": 23,
+    "ambient_temperature_celsius": 35.0,
+    "ambient_relative_humidity": 0.7,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.025156397909921455,
+    "r_star": 0.7959491248512017,
+    "t_in_r0": 69.67702427319975,
+    "t_in_star": 84.0767119601602,
+    "u_r0": 1.2600039571757455,
+    "u_star": 1.26115856757745,
+    "co2_r0_kg_per_h": 0.24377085535709767,
+    "co2_star_kg_per_h": 0.23281912998245685,
+    "co2_saving_pct": 4.492631146819304,
+    "co2_saving_2030_pct": 5.067623976368541,
+    "kwh_saving_pct": 5.06400299662303,
+    "heater_gas_saving_pct": 5.834191126581811,
+    "electric_change_kw": 0.005194097228427869,
+    "recirculation_fan_kw": 0.005894727697681454,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.07482787298160937,
+    "outlet_humidity_kg_per_kg": 0.08756173704635649,
+    "dew_point_r0_celsius": 34.990241676568985,
+    "dew_point_star_celsius": 50.25047808885574,
+    "mixing_saturation_ratio": 0.8412695108269052,
+    "bed_temperature_celsius": 54.11353168312537
+   },
+   {
+    "scale": "lab",
+    "context_index": 24,
+    "ambient_temperature_celsius": 35.0,
+    "ambient_relative_humidity": 0.85,
+    "feasible": true,
+    "ambient_humidity_kg_per_kg": 0.030814109728551184,
+    "r_star": 0.8571953271407953,
+    "t_in_r0": 71.94079992106765,
+    "t_in_star": 90.69661483278426,
+    "u_r0": 1.2600000000000002,
+    "u_star": 1.2600005335787359,
+    "co2_r0_kg_per_h": 0.2569812781080191,
+    "co2_star_kg_per_h": 0.23378293926402582,
+    "co2_saving_pct": 9.027248605340855,
+    "co2_saving_2030_pct": 9.82197125600669,
+    "kwh_saving_pct": 9.816978572746994,
+    "heater_gas_saving_pct": 10.875516386580053,
+    "electric_change_kw": 0.0060157888135519005,
+    "recirculation_fan_kw": 0.0070869088448545755,
+    "binding": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "binding_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_star": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "near_r0": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "bed_temperature": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "inlet_humidity_kg_per_kg": 0.11288753788985101,
+    "outlet_humidity_kg_per_kg": 0.12656058146336405,
+    "dew_point_r0_celsius": 37.52863630652428,
+    "dew_point_star_celsius": 56.751390397548676,
+    "mixing_saturation_ratio": 0.8968524500142526,
+    "bed_temperature_celsius": 59.74560667585018
+   }
+  ],
+  "summary": {
+   "n_feasible": 25,
+   "r_star": {
+    "n": 25,
+    "median": 0.8401238669930606,
+    "min": 0.0067972070578297536,
+    "max": 0.9178734367593863,
+    "p10": 0.22144131931429564,
+    "p90": 0.9098247850271033
+   },
+   "co2_saving_pct": {
+    "n": 25,
+    "median": 16.95571767955515,
+    "min": -0.7944816470177196,
+    "max": 29.14255630807119,
+    "p10": 0.03410146510301812,
+    "p90": 26.799152758311564
+   },
+   "co2_saving_2030_pct": {
+    "n": 25,
+    "median": 17.957444672802904,
+    "min": -0.7547669281461333,
+    "max": 30.27158235520554,
+    "p10": -0.006591895463254754,
+    "p90": 27.84483981623633
+   },
+   "kwh_saving_pct": {
+    "n": 25,
+    "median": 17.95118430039384,
+    "min": -0.7550175320188979,
+    "max": 30.26458708694485,
+    "p10": -0.006330128510567551,
+    "p90": 27.83836012627238
+   },
+   "heater_gas_saving_pct": {
+    "n": 25,
+    "median": 19.269337218314597,
+    "min": -0.7015694644950665,
+    "max": 31.720973824322073,
+    "p10": -0.06365595574110633,
+    "p90": 29.1876145593782
+   },
+   "binding_counts_star": {
+    "moisture": 24,
+    "gas_velocity_box_min": 8,
+    "gas_velocity_u_mf": 0,
+    "gas_velocity_u_terminal": 0,
+    "bed_temperature": 0,
+    "inlet_temperature_box_min": 0,
+    "inlet_temperature_box_max": 0,
+    "fog": 0,
+    "recirculation_box_max": 0
+   },
+   "binding_counts_r0": {
+    "moisture": 17,
+    "gas_velocity_box_min": 17,
+    "gas_velocity_u_mf": 0,
+    "gas_velocity_u_terminal": 0,
+    "bed_temperature": 0,
+    "inlet_temperature_box_min": 8,
+    "inlet_temperature_box_max": 0,
+    "fog": 0,
+    "recirculation_box_max": 0
+   },
+   "near_counts_star": {
+    "moisture": 24,
+    "gas_velocity_box_min": 16,
+    "inlet_temperature_box_min": 1,
+    "inlet_temperature_box_max": 0,
+    "bed_temperature": 0,
+    "fog": 0,
+    "recirculation_box_max": 0
+   },
+   "near_counts_r0": {
+    "moisture": 17,
+    "gas_velocity_box_min": 21,
+    "inlet_temperature_box_min": 14,
+    "inlet_temperature_box_max": 0,
+    "bed_temperature": 0,
+    "fog": 0,
+    "recirculation_box_max": 0
+   },
+   "dew_point_rise_k": {
+    "n": 25,
+    "median": 26.566371768712997,
+    "min": 0.0818401575088501,
+    "max": 41.92597575485706,
+    "p10": 3.3973895907402065,
+    "p90": 37.60314755141735
+   },
+   "spearman_r_star_vs_ambient_humidity": 0.008461538461538461,
+   "spearman_saving_vs_ambient_temperature": -0.8930769230769231
+  },
+  "envelope": {
+   "rows": [
+    {
+     "scale": "lab",
+     "context_index": 0,
+     "feasible": true,
+     "ambient_temperature_celsius": 5.0,
+     "ambient_relative_humidity": 0.25,
+     "source": "R",
+     "r_env": 0.8148320607974631,
+     "co2_saving_pct": 29.14255630807119,
+     "heater_gas_saving_pct": 31.720973824322073,
+     "co2_saving_2030_pct": 30.27158235520554,
+     "r_free_deficit_pct": 0.0,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 1,
+     "feasible": true,
+     "ambient_temperature_celsius": 5.0,
+     "ambient_relative_humidity": 0.4,
+     "source": "R",
+     "r_env": 0.7937222344723677,
+     "co2_saving_pct": 28.382616961713346,
+     "heater_gas_saving_pct": 30.81377361572385,
+     "co2_saving_2030_pct": 29.447085915791803,
+     "r_free_deficit_pct": 0.0,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 2,
+     "feasible": true,
+     "ambient_temperature_celsius": 5.0,
+     "ambient_relative_humidity": 0.55,
+     "source": "R",
+     "r_env": 0.7733686802939155,
+     "co2_saving_pct": 27.24696312537742,
+     "heater_gas_saving_pct": 29.757458198062036,
+     "co2_saving_2030_pct": 28.34608887527138,
+     "r_free_deficit_pct": 0.0,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 3,
+     "feasible": true,
+     "ambient_temperature_celsius": 5.0,
+     "ambient_relative_humidity": 0.7,
+     "source": "R",
+     "r_env": 0.7376291810848656,
+     "co2_saving_pct": 26.127437207712777,
+     "heater_gas_saving_pct": 28.33284910135244,
+     "co2_saving_2030_pct": 27.092966227683746,
+     "r_free_deficit_pct": 0.0,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 4,
+     "feasible": true,
+     "ambient_temperature_celsius": 5.0,
+     "ambient_relative_humidity": 0.85,
+     "source": "R",
+     "r_env": 0.6950411275621958,
+     "co2_saving_pct": 25.081245685662314,
+     "heater_gas_saving_pct": 27.117595005831696,
+     "co2_saving_2030_pct": 25.97301990950893,
+     "r_free_deficit_pct": 0.0,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 5,
+     "feasible": true,
+     "ambient_temperature_celsius": 12.5,
+     "ambient_relative_humidity": 0.25,
+     "source": "R",
+     "r_env": 0.8870231487511107,
+     "co2_saving_pct": 23.69656734501657,
+     "heater_gas_saving_pct": 26.599940715688785,
+     "co2_saving_2030_pct": 24.9609148320477,
+     "r_free_deficit_pct": 0.0,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 6,
+     "feasible": true,
+     "ambient_temperature_celsius": 12.5,
+     "ambient_relative_humidity": 0.4,
+     "source": "R",
+     "r_env": 0.8726763063932121,
+     "co2_saving_pct": 23.591255146654078,
+     "heater_gas_saving_pct": 26.150279321605673,
+     "co2_saving_2030_pct": 24.70549421900463,
+     "r_free_deficit_pct": 0.0,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 7,
+     "feasible": true,
+     "ambient_temperature_celsius": 12.5,
+     "ambient_relative_humidity": 0.55,
+     "source": "R",
+     "r_env": 0.8580642977777584,
+     "co2_saving_pct": 23.506767428757268,
+     "heater_gas_saving_pct": 26.069786759864357,
+     "co2_saving_2030_pct": 24.622922085940544,
+     "r_free_deficit_pct": 0.0,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 8,
+     "feasible": true,
+     "ambient_temperature_celsius": 12.5,
+     "ambient_relative_humidity": 0.7,
+     "source": "R",
+     "r_env": 0.8401238669930606,
+     "co2_saving_pct": 23.991865899217256,
+     "heater_gas_saving_pct": 26.631060742381308,
+     "co2_saving_2030_pct": 25.14196683432688,
+     "r_free_deficit_pct": 0.0,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 9,
+     "feasible": true,
+     "ambient_temperature_celsius": 12.5,
+     "ambient_relative_humidity": 0.85,
+     "source": "R",
+     "r_env": 0.8134158996452288,
+     "co2_saving_pct": 24.26341794357958,
+     "heater_gas_saving_pct": 26.78359209809037,
+     "co2_saving_2030_pct": 25.36246834267609,
+     "r_free_deficit_pct": 0.0,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 10,
+     "feasible": true,
+     "ambient_temperature_celsius": 20.0,
+     "ambient_relative_humidity": 0.25,
+     "source": "R",
+     "r_env": 0.9111594621369847,
+     "co2_saving_pct": 13.816326929506673,
+     "heater_gas_saving_pct": 16.091217390675027,
+     "co2_saving_2030_pct": 14.79952192025429,
+     "r_free_deficit_pct": 0.0,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 11,
+     "feasible": true,
+     "ambient_temperature_celsius": 20.0,
+     "ambient_relative_humidity": 0.4,
+     "source": "R",
+     "r_env": 0.9178734367593863,
+     "co2_saving_pct": 14.621438282573763,
+     "heater_gas_saving_pct": 16.799817903204616,
+     "co2_saving_2030_pct": 15.56313753966042,
+     "r_free_deficit_pct": 0.0,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 12,
+     "feasible": true,
+     "ambient_temperature_celsius": 20.0,
+     "ambient_relative_humidity": 0.55,
+     "source": "R",
+     "r_env": 0.9078227693622811,
+     "co2_saving_pct": 16.95571767955515,
+     "heater_gas_saving_pct": 19.269337218314597,
+     "co2_saving_2030_pct": 17.957444672802904,
+     "r_free_deficit_pct": 0.0,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 13,
+     "feasible": true,
+     "ambient_temperature_celsius": 20.0,
+     "ambient_relative_humidity": 0.7,
+     "source": "R",
+     "r_env": 0.8960007992629251,
+     "co2_saving_pct": 18.78519104249459,
+     "heater_gas_saving_pct": 21.316264680170537,
+     "co2_saving_2030_pct": 19.88250934983029,
+     "r_free_deficit_pct": 0.0,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 14,
+     "feasible": true,
+     "ambient_temperature_celsius": 20.0,
+     "ambient_relative_humidity": 0.85,
+     "source": "R",
+     "r_env": 0.8777629628332416,
+     "co2_saving_pct": 20.46680810434901,
+     "heater_gas_saving_pct": 22.91761447954348,
+     "co2_saving_2030_pct": 21.53059944573569,
+     "r_free_deficit_pct": 0.0,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 15,
+     "feasible": true,
+     "ambient_temperature_celsius": 27.5,
+     "ambient_relative_humidity": 0.25,
+     "source": "G_r010",
+     "r_env": 0.1,
+     "co2_saving_pct": 0.4179884046022764,
+     "heater_gas_saving_pct": 0.6791466008360336,
+     "co2_saving_2030_pct": 0.5296188072343999,
+     "r_free_deficit_pct": 1.2124700516199942,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": true,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "inlet_temperature_box_min": true,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 16,
+     "feasible": true,
+     "ambient_temperature_celsius": 27.5,
+     "ambient_relative_humidity": 0.4,
+     "source": "G_r090",
+     "r_env": 0.9,
+     "co2_saving_pct": 3.4636575073102582,
+     "heater_gas_saving_pct": 4.26624803508977,
+     "co2_saving_2030_pct": 3.8065330969756506,
+     "r_free_deficit_pct": 1.7665141120496701,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 17,
+     "feasible": true,
+     "ambient_temperature_celsius": 27.5,
+     "ambient_relative_humidity": 0.55,
+     "source": "G_r090",
+     "r_env": 0.9,
+     "co2_saving_pct": 8.367869877445544,
+     "heater_gas_saving_pct": 8.759177394736229,
+     "co2_saving_2030_pct": 8.534700005239637,
+     "r_free_deficit_pct": 0.09752382093767374,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 18,
+     "feasible": true,
+     "ambient_temperature_celsius": 27.5,
+     "ambient_relative_humidity": 0.7,
+     "source": "R",
+     "r_env": 0.9144282045027846,
+     "co2_saving_pct": 11.741178099138228,
+     "heater_gas_saving_pct": 13.788759561172292,
+     "co2_saving_2030_pct": 12.623944336661575,
+     "r_free_deficit_pct": 0.0,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 19,
+     "feasible": true,
+     "ambient_temperature_celsius": 27.5,
+     "ambient_relative_humidity": 0.85,
+     "source": "G_r090",
+     "r_env": 0.9,
+     "co2_saving_pct": 14.77132096149596,
+     "heater_gas_saving_pct": 17.01907447326292,
+     "co2_saving_2030_pct": 15.742381380846894,
+     "r_free_deficit_pct": 0.6186764346856717,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 20,
+     "feasible": true,
+     "ambient_temperature_celsius": 35.0,
+     "ambient_relative_humidity": 0.25,
+     "source": "G_r010",
+     "r_env": 0.1,
+     "co2_saving_pct": 0.3256828739925166,
+     "heater_gas_saving_pct": 0.40987514750722154,
+     "co2_saving_2030_pct": 0.36126732823482666,
+     "r_free_deficit_pct": 0.14261663583919015,
+     "binding": {
+      "moisture": false,
+      "gas_velocity_box_min": true,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": false,
+      "gas_velocity_box_min": true,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 21,
+     "feasible": true,
+     "ambient_temperature_celsius": 35.0,
+     "ambient_relative_humidity": 0.4,
+     "source": "G_r000",
+     "r_env": 0.0,
+     "co2_saving_pct": 0.0,
+     "heater_gas_saving_pct": 0.0,
+     "co2_saving_2030_pct": 0.0,
+     "r_free_deficit_pct": 0.4876713695208033,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": true,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "inlet_temperature_box_min": true,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 22,
+     "feasible": true,
+     "ambient_temperature_celsius": 35.0,
+     "ambient_relative_humidity": 0.55,
+     "source": "G_r000",
+     "r_env": 0.0,
+     "co2_saving_pct": 0.0,
+     "heater_gas_saving_pct": 0.0,
+     "co2_saving_2030_pct": 0.0,
+     "r_free_deficit_pct": 0.06520838359718943,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "inlet_temperature_box_min": true,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 23,
+     "feasible": true,
+     "ambient_temperature_celsius": 35.0,
+     "ambient_relative_humidity": 0.7,
+     "source": "G_r080",
+     "r_env": 0.8,
+     "co2_saving_pct": 4.493332485895585,
+     "heater_gas_saving_pct": 5.856831254886952,
+     "co2_saving_2030_pct": 5.077728284142379,
+     "r_free_deficit_pct": 0.0007013390762762813,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": false,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    },
+    {
+     "scale": "lab",
+     "context_index": 24,
+     "feasible": true,
+     "ambient_temperature_celsius": 35.0,
+     "ambient_relative_humidity": 0.85,
+     "source": "G_r090",
+     "r_env": 0.9,
+     "co2_saving_pct": 9.067881660271349,
+     "heater_gas_saving_pct": 10.985441133209516,
+     "co2_saving_2030_pct": 9.89239852011784,
+     "r_free_deficit_pct": 0.040633054930492365,
+     "binding": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "gas_velocity_u_mf": false,
+      "gas_velocity_u_terminal": false,
+      "bed_temperature": false,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "fog": false,
+      "recirculation_box_max": false
+     },
+     "near": {
+      "moisture": true,
+      "gas_velocity_box_min": true,
+      "inlet_temperature_box_min": false,
+      "inlet_temperature_box_max": false,
+      "bed_temperature": false,
+      "fog": false,
+      "recirculation_box_max": false
+     }
+    }
+   ],
+   "summary": {
+    "n_feasible": 25,
+    "n_r_free_beaten_by_grid": 9,
+    "n_r_free_beaten_by_more_than_0p1_pct": 5,
+    "r_free_deficit_pct": {
+     "n": 25,
+     "median": 0.0,
+     "min": 0.0,
+     "max": 1.7665141120496701,
+     "p10": 0.0,
+     "p90": 0.5662744086197246
+    },
+    "r_env": {
+     "n": 25,
+     "median": 0.8580642977777584,
+     "min": 0.0,
+     "max": 0.9178734367593863,
+     "p10": 0.1,
+     "p90": 0.9098247850271033
+    },
+    "co2_saving_pct": {
+     "n": 25,
+     "median": 16.95571767955515,
+     "min": 0.0,
+     "max": 29.14255630807119,
+     "p10": 0.36260508623642057,
+     "p90": 26.799152758311564
+    },
+    "heater_gas_saving_pct": {
+     "n": 25,
+     "median": 19.269337218314597,
+     "min": 0.0,
+     "max": 31.720973824322073,
+     "p10": 0.5175837288387465,
+     "p90": 29.1876145593782
+    },
+    "co2_saving_2030_pct": {
+     "n": 25,
+     "median": 17.957444672802904,
+     "min": 0.0,
+     "max": 30.27158235520554,
+     "p10": 0.428607919834656,
+     "p90": 27.84483981623633
+    },
+    "near_counts": {
+     "moisture": 24,
+     "gas_velocity_box_min": 17,
+     "inlet_temperature_box_min": 3,
+     "inlet_temperature_box_max": 0,
+     "bed_temperature": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "n_r_env_zero": 2
+   }
+  }
+ },
+ "limit_at_unchanged_set_points": {
+  "rows": [
+   {
+    "scale": "lab",
+    "context_index": 0,
+    "limit_minus_margin": 0.18134398460388185,
+    "limit": 0.25725150108337397,
+    "r0_moisture_kg_per_kg": 0.13441749345822673,
+    "r0_binding_moisture": false
+   },
+   {
+    "scale": "lab",
+    "context_index": 1,
+    "limit_minus_margin": 0.12720379829406736,
+    "limit": 0.21294131278991696,
+    "r0_moisture_kg_per_kg": 0.1376258637339257,
+    "r0_binding_moisture": false
+   },
+   {
+    "scale": "lab",
+    "context_index": 2,
+    "limit_minus_margin": 0.06522498130798339,
+    "limit": 0.16286993026733398,
+    "r0_moisture_kg_per_kg": 0.14096207296047963,
+    "r0_binding_moisture": false
+   },
+   {
+    "scale": "lab",
+    "context_index": 3,
+    "limit_minus_margin": 0.0021798133850097655,
+    "limit": 0.11271972656250001,
+    "r0_moisture_kg_per_kg": 0.14403712121610285,
+    "r0_binding_moisture": true
+   },
+   {
+    "scale": "lab",
+    "context_index": 4,
+    "limit_minus_margin": 0.0021734714508056642,
+    "limit": 0.11341009140014649,
+    "r0_moisture_kg_per_kg": 0.14403813439193713,
+    "r0_binding_moisture": true
+   },
+   {
+    "scale": "lab",
+    "context_index": 5,
+    "limit_minus_margin": 0.17314929962158204,
+    "limit": 0.2509747982025147,
+    "r0_moisture_kg_per_kg": 0.13498272637659892,
+    "r0_binding_moisture": false
+   },
+   {
+    "scale": "lab",
+    "context_index": 6,
+    "limit_minus_margin": 0.07700104713439941,
+    "limit": 0.17289562225341792,
+    "r0_moisture_kg_per_kg": 0.14037854327851187,
+    "r0_binding_moisture": false
+   },
+   {
+    "scale": "lab",
+    "context_index": 7,
+    "limit_minus_margin": 0.0021789073944091797,
+    "limit": 0.11370091438293457,
+    "r0_moisture_kg_per_kg": 0.14403813439193713,
+    "r0_binding_moisture": true
+   },
+   {
+    "scale": "lab",
+    "context_index": 8,
+    "limit_minus_margin": 0.0022042751312255863,
+    "limit": 0.11484699249267578,
+    "r0_moisture_kg_per_kg": 0.14403807479335867,
+    "r0_binding_moisture": true
+   },
+   {
+    "scale": "lab",
+    "context_index": 9,
+    "limit_minus_margin": 0.0022287368774414062,
+    "limit": 0.11596045494079589,
+    "r0_moisture_kg_per_kg": 0.14403813439193713,
+    "r0_binding_moisture": true
+   },
+   {
+    "scale": "lab",
+    "context_index": 10,
+    "limit_minus_margin": 0.13363270759582518,
+    "limit": 0.2191908359527588,
+    "r0_moisture_kg_per_kg": 0.1373502799070011,
+    "r0_binding_moisture": false
+   },
+   {
+    "scale": "lab",
+    "context_index": 11,
+    "limit_minus_margin": 0.0021979331970214846,
+    "limit": 0.11442570686340331,
+    "r0_moisture_kg_per_kg": 0.14403801519478016,
+    "r0_binding_moisture": true
+   },
+   {
+    "scale": "lab",
+    "context_index": 12,
+    "limit_minus_margin": 0.002234172821044922,
+    "limit": 0.11622500419616699,
+    "r0_moisture_kg_per_kg": 0.14403813439193713,
+    "r0_binding_moisture": true
+   },
+   {
+    "scale": "lab",
+    "context_index": 13,
+    "limit_minus_margin": 0.0022731304168701165,
+    "limit": 0.11797084808349607,
+    "r0_moisture_kg_per_kg": 0.14403813439193713,
+    "r0_binding_moisture": true
+   },
+   {
+    "scale": "lab",
+    "context_index": 14,
+    "limit_minus_margin": 0.0023102760314941406,
+    "limit": 0.11966323852539062,
+    "r0_moisture_kg_per_kg": 0.14403813439193713,
+    "r0_binding_moisture": true
+   },
+   {
+    "scale": "lab",
+    "context_index": 15,
+    "limit_minus_margin": 0.03524937629699708,
+    "limit": 0.14076375961303714,
+    "r0_moisture_kg_per_kg": 0.1424946504062768,
+    "r0_binding_moisture": false
+   },
+   {
+    "scale": "lab",
+    "context_index": 16,
+    "limit_minus_margin": 0.0022613525390625,
+    "limit": 0.11728320121765134,
+    "r0_moisture_kg_per_kg": 0.14403807479335867,
+    "r0_binding_moisture": true
+   },
+   {
+    "scale": "lab",
+    "context_index": 17,
+    "limit_minus_margin": 0.002325677871704101,
+    "limit": 0.12034907341003417,
+    "r0_moisture_kg_per_kg": 0.14403813439193713,
+    "r0_binding_moisture": true
+   },
+   {
+    "scale": "lab",
+    "context_index": 18,
+    "limit_minus_margin": 0.0023718833923339847,
+    "limit": 0.12236309051513672,
+    "r0_moisture_kg_per_kg": 0.14403801519478016,
+    "r0_binding_moisture": true
+   },
+   {
+    "scale": "lab",
+    "context_index": 19,
+    "limit_minus_margin": 0.0024289608001708983,
+    "limit": 0.12483463287353515,
+    "r0_moisture_kg_per_kg": 0.1440379555962017,
+    "r0_binding_moisture": true
+   },
+   {
+    "scale": "lab",
+    "context_index": 20,
+    "limit_minus_margin": 0.1305840492248535,
+    "limit": 0.21986761093139645,
+    "r0_moisture_kg_per_kg": 0.137777601714754,
+    "r0_binding_moisture": false
+   },
+   {
+    "scale": "lab",
+    "context_index": 21,
+    "limit_minus_margin": 0.0023546695709228517,
+    "limit": 0.12156853675842284,
+    "r0_moisture_kg_per_kg": 0.14403807479335867,
+    "r0_binding_moisture": true
+   },
+   {
+    "scale": "lab",
+    "context_index": 22,
+    "limit_minus_margin": 0.002457952499389649,
+    "limit": 0.1263258934020996,
+    "r0_moisture_kg_per_kg": 0.14403813439193713,
+    "r0_binding_moisture": true
+   },
+   {
+    "scale": "lab",
+    "context_index": 23,
+    "limit_minus_margin": 0.0025068759918212887,
+    "limit": 0.1283426284790039,
+    "r0_moisture_kg_per_kg": 0.14403801519478016,
+    "r0_binding_moisture": true
+   },
+   {
+    "scale": "lab",
+    "context_index": 24,
+    "limit_minus_margin": 0.002582073211669922,
+    "limit": 0.1318306922912598,
+    "r0_moisture_kg_per_kg": 0.14403807479335867,
+    "r0_binding_moisture": true
+   }
+  ],
+  "summary": {
+   "limit_minus_margin": {
+    "n": 25,
+    "median": 0.0023718833923339847,
+    "min": 0.0021734714508056642,
+    "max": 0.18134398460388185,
+    "p10": 0.0021870613098144533,
+    "p90": 0.13241324424743653
+   },
+   "limit": {
+    "n": 25,
+    "median": 0.12236309051513672,
+    "min": 0.11271972656250001,
+    "max": 0.25725150108337397,
+    "p10": 0.11399083137512207,
+    "p90": 0.2195969009399414
+   },
+   "n_zero_limit_minus_margin": 0
+  }
+ },
+ "recovery": {
+  "joint_rows": [
+   {
+    "scale": "lab x k",
+    "context_index": 0,
+    "r_star_with_recovery": 0.81411501779766,
+    "r_star_without_recovery": 0.8148320607974631,
+    "co2_j0_kg_per_h": 99.41972961256276,
+    "co2_j_kg_per_h": 66.45069544227204,
+    "co2_g0_kg_per_h": 104.01579362659521,
+    "co2_r_kg_per_h": 73.70293239967758,
+    "recovered_j0_kw": 18.29279209565157,
+    "recovered_j_kw": 28.75278554573583,
+    "saving_recirculation_with_recovery_pct": 33.16146030447938,
+    "saving_recirculation_without_recovery_pct": 29.14255630807119,
+    "saving_recovery_without_recirculation_pct": 4.418621301426395,
+    "saving_both_pct": 36.114802257027975,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 33.16146030447938,
+    "saving_both_env_pct": 36.114802257027975,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 16.84717319905758,
+    "dew_point_j_celsius": 45.48392206430435
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 1,
+    "r_star_with_recovery": 0.793778579882418,
+    "r_star_without_recovery": 0.7937222344723677,
+    "co2_j0_kg_per_h": 99.37586518839996,
+    "co2_j_kg_per_h": 66.84998592962121,
+    "co2_g0_kg_per_h": 104.03681253965705,
+    "co2_r_kg_per_h": 74.50844253735043,
+    "recovered_j0_kw": 18.551034233859102,
+    "recovered_j_kw": 30.493373888143857,
+    "saving_recirculation_with_recovery_pct": 32.73015957860104,
+    "saving_recirculation_without_recovery_pct": 28.382616961713346,
+    "saving_recovery_without_recirculation_pct": 4.480094341106822,
+    "saving_both_pct": 35.743911892591726,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 32.73015957860104,
+    "saving_both_env_pct": 35.743911892591726,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 17.85636581480503,
+    "dew_point_j_celsius": 43.714121878147125
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 2,
+    "r_star_with_recovery": 0.7679144577452851,
+    "r_star_without_recovery": 0.7733686802939155,
+    "co2_j0_kg_per_h": 99.32994880124892,
+    "co2_j_kg_per_h": 67.38597371271837,
+    "co2_g0_kg_per_h": 104.05799994629697,
+    "co2_r_kg_per_h": 75.70535507192419,
+    "recovered_j0_kw": 18.818114010141592,
+    "recovered_j_kw": 32.50059318163088,
+    "saving_recirculation_with_recovery_pct": 32.159459935339164,
+    "saving_recirculation_without_recovery_pct": 27.24696312537742,
+    "saving_recovery_without_recirculation_pct": 4.543669057149035,
+    "saving_both_pct": 35.24190956245995,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 32.159459935339164,
+    "saving_both_env_pct": 35.24190956245995,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 18.811650946736336,
+    "dew_point_j_celsius": 41.800489127635956
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 3,
+    "r_star_with_recovery": 0.7356769768636469,
+    "r_star_without_recovery": 0.7376291810848656,
+    "co2_j0_kg_per_h": 99.2889409258644,
+    "co2_j_kg_per_h": 68.17636720736013,
+    "co2_g0_kg_per_h": 104.18368573417077,
+    "co2_r_kg_per_h": 76.96315866329448,
+    "recovered_j0_kw": 19.48060072027447,
+    "recovered_j_kw": 34.81504091897622,
+    "saving_recirculation_with_recovery_pct": 31.335386829974286,
+    "saving_recirculation_without_recovery_pct": 26.127437207712777,
+    "saving_recovery_without_recirculation_pct": 4.698187411794519,
+    "saving_both_pct": 34.561379042285836,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 31.335386829974286,
+    "saving_both_env_pct": 34.561379042285836,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 19.722955599427223,
+    "dew_point_j_celsius": 39.73275884985924
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 4,
+    "r_star_with_recovery": 0.6920699206509129,
+    "r_star_without_recovery": 0.6950411275621958,
+    "co2_j0_kg_per_h": 99.3242585236123,
+    "co2_j_kg_per_h": 69.33494109854642,
+    "co2_g0_kg_per_h": 105.1559643424904,
+    "co2_r_kg_per_h": 78.78153857262294,
+    "recovered_j0_kw": 23.106124068945892,
+    "recovered_j_kw": 37.61626945717319,
+    "saving_recirculation_with_recovery_pct": 30.193346389730692,
+    "saving_recirculation_without_recovery_pct": 25.081245685662314,
+    "saving_recovery_without_recirculation_pct": 5.545767998365159,
+    "saving_both_pct": 34.06466144637863,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 30.193346389730692,
+    "saving_both_env_pct": 34.06466144637863,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 20.617355033755302,
+    "dew_point_j_celsius": 37.421292811632156
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 5,
+    "r_star_with_recovery": 0.8847595410112052,
+    "r_star_without_recovery": 0.8870231487511107,
+    "co2_j0_kg_per_h": 90.58589543754033,
+    "co2_j_kg_per_h": 64.6099177947957,
+    "co2_g0_kg_per_h": 90.58589543754032,
+    "co2_r_kg_per_h": 69.12014772009728,
+    "recovered_j0_kw": 0.0,
+    "recovered_j_kw": 16.892912024292347,
+    "saving_recirculation_with_recovery_pct": 28.67552119154716,
+    "saving_recirculation_without_recovery_pct": 23.69656734501657,
+    "saving_recovery_without_recirculation_pct": -2.220446049250313e-14,
+    "saving_both_pct": 28.675521191547137,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 28.67552119154716,
+    "saving_both_env_pct": 28.675521191547137,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 17.99274556338787,
+    "dew_point_j_celsius": 55.73412328958511
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 6,
+    "r_star_with_recovery": 0.8723955463297381,
+    "r_star_without_recovery": 0.8726763063932121,
+    "co2_j0_kg_per_h": 90.61924487701631,
+    "co2_j_kg_per_h": 64.71094183991038,
+    "co2_g0_kg_per_h": 90.6192448770163,
+    "co2_r_kg_per_h": 69.24102760610813,
+    "recovered_j0_kw": 0.0,
+    "recovered_j_kw": 17.950436129344183,
+    "saving_recirculation_with_recovery_pct": 28.590287937476553,
+    "saving_recirculation_without_recovery_pct": 23.591255146654078,
+    "saving_recovery_without_recirculation_pct": -2.220446049250313e-14,
+    "saving_both_pct": 28.590287937476543,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 28.590287937476553,
+    "saving_both_env_pct": 28.590287937476543,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 19.54278104007244,
+    "dew_point_j_celsius": 53.82172554731369
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 7,
+    "r_star_with_recovery": 0.8589336428067047,
+    "r_star_without_recovery": 0.8580642977777584,
+    "co2_j0_kg_per_h": 91.15425651383698,
+    "co2_j_kg_per_h": 65.02527638032853,
+    "co2_g0_kg_per_h": 91.20397399237179,
+    "co2_r_kg_per_h": 69.76486794020069,
+    "recovered_j0_kw": 0.18802173886322346,
+    "recovered_j_kw": 19.08409983508974,
+    "saving_recirculation_with_recovery_pct": 28.664574900616014,
+    "saving_recirculation_without_recovery_pct": 23.506767428757268,
+    "saving_recovery_without_recirculation_pct": 0.05451240374565458,
+    "saving_both_pct": 28.703461555559862,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 28.664574900616014,
+    "saving_both_env_pct": 28.703461555559862,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 20.98759099841118,
+    "dew_point_j_celsius": 51.78737074136734
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 8,
+    "r_star_with_recovery": 0.8372172648455498,
+    "r_star_without_recovery": 0.8401238669930606,
+    "co2_j0_kg_per_h": 91.21122161044327,
+    "co2_j_kg_per_h": 65.19547766663945,
+    "co2_g0_kg_per_h": 92.73112439680834,
+    "co2_r_kg_per_h": 70.48319738468976,
+    "recovered_j0_kw": 5.933749099070183,
+    "recovered_j_kw": 20.448519521935822,
+    "saving_recirculation_with_recovery_pct": 28.522525501209973,
+    "saving_recirculation_without_recovery_pct": 23.991865899217256,
+    "saving_recovery_without_recirculation_pct": 1.639042766117238,
+    "saving_both_pct": 29.694071876385685,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 28.522525501209973,
+    "saving_both_env_pct": 29.694071876385685,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 22.36655279994011,
+    "dew_point_j_celsius": 49.528970420360565
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 9,
+    "r_star_with_recovery": 0.8109995637775761,
+    "r_star_without_recovery": 0.8134158996452288,
+    "co2_j0_kg_per_h": 91.27831851124571,
+    "co2_j_kg_per_h": 65.68466853155687,
+    "co2_g0_kg_per_h": 94.14006776959582,
+    "co2_r_kg_per_h": 71.29846967428973,
+    "recovered_j0_kw": 11.389704992039825,
+    "recovered_j_kw": 21.939230685737233,
+    "saving_recirculation_with_recovery_pct": 28.039133933581006,
+    "saving_recirculation_without_recovery_pct": 24.26341794357958,
+    "saving_recovery_without_recirculation_pct": 3.039884425571182,
+    "saving_both_pct": 30.226661093640217,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 28.039133933581006,
+    "saving_both_env_pct": 30.226661093640217,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 23.647366911172867,
+    "dew_point_j_celsius": 47.082811295986176
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 10,
+    "r_star_with_recovery": 0.8614003583506064,
+    "r_star_without_recovery": 0.9111594621369847,
+    "co2_j0_kg_per_h": 77.2043179468614,
+    "co2_j_kg_per_h": 63.77941944527448,
+    "co2_g0_kg_per_h": 77.20431794686137,
+    "co2_r_kg_per_h": 66.53751697562721,
+    "recovered_j0_kw": 0.0,
+    "recovered_j_kw": 12.632375453573594,
+    "saving_recirculation_with_recovery_pct": 17.388792309294253,
+    "saving_recirculation_without_recovery_pct": 13.816326929506673,
+    "saving_recovery_without_recirculation_pct": -4.440892098500626e-14,
+    "saving_both_pct": 17.38879230929422,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 17.388792309294253,
+    "saving_both_env_pct": 17.38879230929422,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 19.610249623656273,
+    "dew_point_j_celsius": 52.10918217897415
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 11,
+    "r_star_with_recovery": 0.8972864771670603,
+    "r_star_without_recovery": 0.9178734367593863,
+    "co2_j0_kg_per_h": 77.91467521350557,
+    "co2_j_kg_per_h": 63.666237348288824,
+    "co2_g0_kg_per_h": 77.8731053307605,
+    "co2_r_kg_per_h": 66.4869372960997,
+    "recovered_j0_kw": 0.0,
+    "recovered_j_kw": 11.938968642175478,
+    "saving_recirculation_with_recovery_pct": 18.287232573545985,
+    "saving_recirculation_without_recovery_pct": 14.621438282573763,
+    "saving_recovery_without_recirculation_pct": -0.053381565520616014,
+    "saving_both_pct": 18.24361301906352,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 18.287232573545985,
+    "saving_both_env_pct": 18.24361301906352,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 21.78527072072029,
+    "dew_point_j_celsius": 58.8240972161293
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 12,
+    "r_star_with_recovery": 0.8748213012239162,
+    "r_star_without_recovery": 0.9078227693622811,
+    "co2_j0_kg_per_h": 80.24910060733282,
+    "co2_j_kg_per_h": 63.875803908820735,
+    "co2_g0_kg_per_h": 80.24703007619105,
+    "co2_r_kg_per_h": 66.64057021024438,
+    "recovered_j0_kw": 0.0,
+    "recovered_j_kw": 12.972186127581354,
+    "saving_recirculation_with_recovery_pct": 20.40309059490688,
+    "saving_recirculation_without_recovery_pct": 16.95571767955515,
+    "saving_recovery_without_recirculation_pct": -0.0025801966001770538,
+    "saving_both_pct": 20.40103683815657,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 20.40309059490688,
+    "saving_both_env_pct": 20.40103683815657,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 23.951034992933273,
+    "dew_point_j_celsius": 54.94668036699295
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 13,
+    "r_star_with_recovery": 0.8949502018299801,
+    "r_star_without_recovery": 0.8960007992629251,
+    "co2_j0_kg_per_h": 82.46116587872308,
+    "co2_j_kg_per_h": 63.77215715722366,
+    "co2_g0_kg_per_h": 82.47310052400748,
+    "co2_r_kg_per_h": 66.98037103190407,
+    "recovered_j0_kw": 0.0,
+    "recovered_j_kw": 12.382226265045723,
+    "saving_recirculation_with_recovery_pct": 22.664012232116193,
+    "saving_recirculation_without_recovery_pct": 18.78519104249459,
+    "saving_recovery_without_recirculation_pct": 0.014470955024814547,
+    "saving_both_pct": 22.675203488124072,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 22.664012232116193,
+    "saving_both_env_pct": 22.675203488124072,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 25.82274004817009,
+    "dew_point_j_celsius": 59.037857949733734
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 14,
+    "r_star_with_recovery": 0.8627792928552289,
+    "r_star_without_recovery": 0.8777629628332416,
+    "co2_j0_kg_per_h": 84.5698526535252,
+    "co2_j_kg_per_h": 64.03649335201655,
+    "co2_g0_kg_per_h": 84.55813782377773,
+    "co2_r_kg_per_h": 67.25178601877418,
+    "recovered_j0_kw": 0.0,
+    "recovered_j_kw": 13.827827796605776,
+    "saving_recirculation_with_recovery_pct": 24.279762417976425,
+    "saving_recirculation_without_recovery_pct": 20.46680810434901,
+    "saving_recovery_without_recirculation_pct": -0.013854171873894927,
+    "saving_both_pct": 24.26927200611849,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 24.279762417976425,
+    "saving_both_env_pct": 24.26927200611849,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 27.508513778448105,
+    "dew_point_j_celsius": 54.13962334394455
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 15,
+    "r_star_with_recovery": 0.8931727572222896,
+    "r_star_without_recovery": 0.46167890889517715,
+    "co2_j0_kg_per_h": 63.87406625879167,
+    "co2_j_kg_per_h": 62.638257046448494,
+    "co2_g0_kg_per_h": 63.874066258791665,
+    "co2_r_kg_per_h": 64.38153399242171,
+    "recovered_j0_kw": 0.0,
+    "recovered_j_kw": 7.748215465144853,
+    "saving_recirculation_with_recovery_pct": 1.9347589479213445,
+    "saving_recirculation_without_recovery_pct": -0.7944816470177196,
+    "saving_recovery_without_recirculation_pct": -2.220446049250313e-14,
+    "saving_both_pct": 1.9347589479213334,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 1.9347589479213445,
+    "saving_both_env_pct": 1.9347589479213334,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 21.783495396375656,
+    "dew_point_j_celsius": 57.965461909770966
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 16,
+    "r_star_with_recovery": 0.8888260078371355,
+    "r_star_without_recovery": 0.5704527402377858,
+    "co2_j0_kg_per_h": 67.08978366584492,
+    "co2_j_kg_per_h": 62.733667825930965,
+    "co2_g0_kg_per_h": 67.0743430379376,
+    "co2_r_kg_per_h": 65.93599525515481,
+    "recovered_j0_kw": 0.0,
+    "recovered_j_kw": 7.998739124238114,
+    "saving_recirculation_with_recovery_pct": 6.492964505013942,
+    "saving_recirculation_without_recovery_pct": 1.6971433952605919,
+    "saving_recovery_without_recirculation_pct": -0.02302017016937441,
+    "saving_both_pct": 6.471439026322656,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 6.492964505013942,
+    "saving_both_env_pct": 6.471439026322656,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 24.622460156679153,
+    "dew_point_j_celsius": 57.69983500242233
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 17,
+    "r_star_with_recovery": 0.8766517659354416,
+    "r_star_without_recovery": 0.8758421701728536,
+    "co2_j0_kg_per_h": 70.56800250996099,
+    "co2_j_kg_per_h": 62.909069456033805,
+    "co2_g0_kg_per_h": 70.80592255052605,
+    "co2_r_kg_per_h": 64.95002772709461,
+    "recovered_j0_kw": 0.0,
+    "recovered_j_kw": 8.183514430279022,
+    "saving_recirculation_with_recovery_pct": 10.853266043411235,
+    "saving_recirculation_without_recovery_pct": 8.270346056507872,
+    "saving_recovery_without_recirculation_pct": 0.336017146581602,
+    "saving_both_pct": 11.152814355122864,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 10.853266043411235,
+    "saving_both_env_pct": 11.152814355122864,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 27.67530456185341,
+    "dew_point_j_celsius": 56.187104284763336
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 18,
+    "r_star_with_recovery": 0.8966011201622167,
+    "r_star_without_recovery": 0.9144282045027846,
+    "co2_j0_kg_per_h": 73.62989720156226,
+    "co2_j_kg_per_h": 62.88658869075697,
+    "co2_g0_kg_per_h": 73.62992220162067,
+    "co2_r_kg_per_h": 64.98490190167148,
+    "recovered_j0_kw": 0.0,
+    "recovered_j_kw": 8.541496096508093,
+    "saving_recirculation_with_recovery_pct": 14.590959541061721,
+    "saving_recirculation_without_recovery_pct": 11.741178099138228,
+    "saving_recovery_without_recirculation_pct": 3.395366675595923e-05,
+    "saving_both_pct": 14.5909885405627,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 14.590959541061721,
+    "saving_both_env_pct": 14.5909885405627,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 30.063372403383255,
+    "dew_point_j_celsius": 60.24212449789047
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 19,
+    "r_star_with_recovery": 0.9002786326678218,
+    "r_star_without_recovery": 0.889139754116904,
+    "co2_j0_kg_per_h": 76.4408882125775,
+    "co2_j_kg_per_h": 62.95700025983184,
+    "co2_g0_kg_per_h": 76.44087532243034,
+    "co2_r_kg_per_h": 65.62246996486454,
+    "recovered_j0_kw": 0.0,
+    "recovered_j_kw": 8.721670590406617,
+    "saving_recirculation_with_recovery_pct": 17.63962751877999,
+    "saving_recirculation_without_recovery_pct": 14.152644526810288,
+    "saving_recovery_without_recirculation_pct": -1.6862898433167572e-05,
+    "saving_both_pct": 17.639613630434038,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 17.63962751877999,
+    "saving_both_env_pct": 17.639613630434038,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 32.19402864575386,
+    "dew_point_j_celsius": 61.45810693502426
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 20,
+    "r_star_with_recovery": 0.1262653472852331,
+    "r_star_without_recovery": 0.061282926260374376,
+    "co2_j0_kg_per_h": 54.177425984968764,
+    "co2_j_kg_per_h": 54.00640183291306,
+    "co2_g0_kg_per_h": 54.18250879101993,
+    "co2_r_kg_per_h": 54.08331891043911,
+    "recovered_j0_kw": 0.0,
+    "recovered_j_kw": 0.0,
+    "saving_recirculation_with_recovery_pct": 0.31567419261142593,
+    "saving_recirculation_without_recovery_pct": 0.18306623815331768,
+    "saving_recovery_without_recirculation_pct": 0.009380898309396812,
+    "saving_both_pct": 0.3250254778458195,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 0.31567419261142593,
+    "saving_both_env_pct": 0.3250254778458195,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 24.665145128965378,
+    "dew_point_j_celsius": 25.87699070572853
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 21,
+    "r_star_with_recovery": 3.851062967921977e-07,
+    "r_star_without_recovery": 0.029480458722973227,
+    "co2_j0_kg_per_h": 56.68450826379403,
+    "co2_j_kg_per_h": 56.78007702277756,
+    "co2_g0_kg_per_h": 56.641902756530136,
+    "co2_r_kg_per_h": 56.91812909942555,
+    "recovered_j0_kw": 0.0,
+    "recovered_j_kw": 0.0,
+    "saving_recirculation_with_recovery_pct": -0.16859766788270836,
+    "saving_recirculation_without_recovery_pct": -0.4876713695207924,
+    "saving_recovery_without_recirculation_pct": -0.07521906078442608,
+    "saving_both_pct": -0.2439435462494144,
+    "j_beaten_by_j0": true,
+    "saving_recirculation_with_recovery_env_pct": 0.0,
+    "saving_both_env_pct": -0.07521906078442608,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 27.91768118739128,
+    "dew_point_j_celsius": 27.982656806707382
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 22,
+    "r_star_with_recovery": 0.9010780189658084,
+    "r_star_without_recovery": 0.0067972070578297536,
+    "co2_j0_kg_per_h": 61.75543147388229,
+    "co2_j_kg_per_h": 61.9284797759195,
+    "co2_g0_kg_per_h": 61.76204268506858,
+    "co2_r_kg_per_h": 61.80231671478012,
+    "recovered_j0_kw": 0.0,
+    "recovered_j_kw": 4.754171485995511,
+    "saving_recirculation_with_recovery_pct": -0.2802155177401566,
+    "saving_recirculation_without_recovery_pct": -0.06520838359718173,
+    "saving_recovery_without_recirculation_pct": 0.010704327283994619,
+    "saving_both_pct": -0.2694811952700382,
+    "j_beaten_by_j0": true,
+    "saving_recirculation_with_recovery_env_pct": 0.0,
+    "saving_both_env_pct": 0.010704327283994619,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 30.954460054636,
+    "dew_point_j_celsius": 61.59286469221115
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 23,
+    "r_star_with_recovery": 0.9049425222112375,
+    "r_star_without_recovery": 0.7959491248512017,
+    "co2_j0_kg_per_h": 66.25619808446002,
+    "co2_j_kg_per_h": 62.04865276525581,
+    "co2_g0_kg_per_h": 66.25620270978803,
+    "co2_r_kg_per_h": 63.27955591014835,
+    "recovered_j0_kw": 0.0,
+    "recovered_j_kw": 5.171946996855448,
+    "saving_recirculation_with_recovery_pct": 6.350417682947418,
+    "saving_recirculation_without_recovery_pct": 4.492631146819304,
+    "saving_recovery_without_recirculation_pct": 6.980973576986571e-06,
+    "saving_both_pct": 6.350424220600004,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 6.350417682947418,
+    "saving_both_env_pct": 6.350424220600004,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": false,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 34.99024376273155,
+    "dew_point_j_celsius": 63.060409128665924
+   },
+   {
+    "scale": "lab x k",
+    "context_index": 24,
+    "r_star_with_recovery": 0.9032985764340015,
+    "r_star_without_recovery": 0.8571953271407953,
+    "co2_j0_kg_per_h": 69.86478861709529,
+    "co2_j_kg_per_h": 62.14720271811825,
+    "co2_g0_kg_per_h": 69.84675682416264,
+    "co2_r_kg_per_h": 63.5415164428776,
+    "recovered_j0_kw": 0.0,
+    "recovered_j_kw": 5.45062446643365,
+    "saving_recirculation_with_recovery_pct": 11.046459957496547,
+    "saving_recirculation_without_recovery_pct": 9.027248605340855,
+    "saving_recovery_without_recirculation_pct": -0.025816220756014197,
+    "saving_both_pct": 11.023495515228877,
+    "j_beaten_by_j0": false,
+    "saving_recirculation_with_recovery_env_pct": 11.046459957496547,
+    "saving_both_env_pct": 11.023495515228877,
+    "binding_j": {
+     "moisture": true,
+     "gas_velocity_box_min": true,
+     "gas_velocity_u_mf": false,
+     "gas_velocity_u_terminal": false,
+     "bed_temperature": false,
+     "inlet_temperature_box_min": false,
+     "inlet_temperature_box_max": false,
+     "fog": false,
+     "recirculation_box_max": false
+    },
+    "dew_point_j0_celsius": 37.51770690083504,
+    "dew_point_j_celsius": 63.43458741903305
+   }
+  ],
+  "joint_summary": {
+   "r_star_with_recovery": {
+    "n": 25,
+    "median": 0.8723955463297381,
+    "min": 3.851062967921977e-07,
+    "max": 0.9049425222112375,
+    "p10": 0.7095127431360065,
+    "p90": 0.9007582644466138
+   },
+   "r_star_without_recovery": {
+    "n": 25,
+    "median": 0.8401238669930606,
+    "min": 0.0067972070578297536,
+    "max": 0.9178734367593863,
+    "p10": 0.22144131931429564,
+    "p90": 0.9098247850271033
+   },
+   "saving_recirculation_with_recovery_pct": {
+    "n": 25,
+    "median": 20.40309059490688,
+    "min": -0.2802155177401566,
+    "max": 33.16146030447938,
+    "p10": 0.9633080947353939,
+    "p90": 31.829830693193216
+   },
+   "saving_recirculation_without_recovery_pct": {
+    "n": 25,
+    "median": 16.95571767955515,
+    "min": -0.7944816470177196,
+    "max": 29.14255630807119,
+    "p10": 0.03410146510301812,
+    "p90": 26.799152758311564
+   },
+   "saving_recovery_without_recirculation_pct": {
+    "n": 25,
+    "median": 3.395366675595923e-05,
+    "min": -0.07521906078442608,
+    "max": 5.545767998365159,
+    "p10": -0.024697800521358282,
+    "p90": 4.51823917073215
+   },
+   "saving_both_pct": {
+    "n": 25,
+    "median": 20.40103683815657,
+    "min": -0.2694811952700382,
+    "max": 36.114802257027975,
+    "p10": 0.9689188658760256,
+    "p90": 34.969697354390306
+   },
+   "saving_recirculation_with_recovery_env_pct": {
+    "n": 25,
+    "median": 20.40309059490688,
+    "min": 0.0,
+    "max": 33.16146030447938,
+    "p10": 0.9633080947353939,
+    "p90": 31.829830693193216
+   },
+   "saving_both_env_pct": {
+    "n": 25,
+    "median": 20.40103683815657,
+    "min": -0.07521906078442608,
+    "max": 36.114802257027975,
+    "p10": 0.9689188658760256,
+    "p90": 34.969697354390306
+   },
+   "recovered_j0_kw": {
+    "n": 25,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 23.106124068945892,
+    "p10": 0.0,
+    "p90": 18.711282099628598
+   },
+   "recovered_j_kw": {
+    "n": 25,
+    "median": 12.632375453573594,
+    "min": 0.0,
+    "max": 37.61626945717319,
+    "p10": 4.921281690339486,
+    "p90": 31.697705464236076
+   }
+  },
+  "grid_descriptive": [
+   {
+    "scale": "lab x k",
+    "r": 0.0,
+    "fresh_air": {
+     "recovered_kw": {
+      "n": 25,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 23.03356480735946,
+      "p10": 0.0,
+      "p90": 18.711282099628598
+     },
+     "co2_after_kg_per_h": {
+      "n": 25,
+      "median": 80.24703007619104,
+      "min": 54.18250879101993,
+      "max": 99.41972961256276,
+      "p10": 62.60685211455782,
+      "p90": 99.35324823128438
+     },
+     "saving_vs_r0_after_pct": {
+      "n": 25,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "p10": 0.0,
+      "p90": 0.0
+     }
+    },
+    "mixed_air": {
+     "recovered_kw": {
+      "n": 25,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 23.03356480735946,
+      "p10": 0.0,
+      "p90": 18.711282099628598
+     },
+     "co2_after_kg_per_h": {
+      "n": 25,
+      "median": 80.24703007619104,
+      "min": 54.18250879101993,
+      "max": 99.41972961256278,
+      "p10": 62.60685211455782,
+      "p90": 99.35324823128437
+     },
+     "saving_vs_r0_after_pct": {
+      "n": 25,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "p10": 0.0,
+      "p90": 0.0
+     }
+    }
+   },
+   {
+    "scale": "lab x k",
+    "r": 0.1,
+    "fresh_air": {
+     "recovered_kw": {
+      "n": 25,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 25.40787437609227,
+      "p10": 0.0,
+      "p90": 18.257061229731377
+     },
+     "co2_after_kg_per_h": {
+      "n": 25,
+      "median": 78.79730841277366,
+      "min": 54.006045639188095,
+      "max": 95.01792602643536,
+      "p10": 62.73593412204644,
+      "p90": 94.9669817985637
+     },
+     "saving_vs_r0_after_pct": {
+      "n": 25,
+      "median": 2.112902779349901,
+      "min": -1.1863360641692688,
+      "max": 4.4565208134346275,
+      "p10": 0.31728116849636834,
+      "p90": 4.404159964999039
+     }
+    },
+    "mixed_air": {
+     "recovered_kw": {
+      "n": 25,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 25.40787437609227,
+      "p10": 0.0,
+      "p90": 18.257061229731377
+     },
+     "co2_after_kg_per_h": {
+      "n": 25,
+      "median": 78.7973084127737,
+      "min": 54.006045639188095,
+      "max": 95.01792602643536,
+      "p10": 62.73593412204645,
+      "p90": 94.9669817985637
+     },
+     "saving_vs_r0_after_pct": {
+      "n": 25,
+      "median": 1.7200390109062824,
+      "min": -1.1863360641692688,
+      "max": 4.456520813434583,
+      "p10": 0.08525111843406222,
+      "p90": 4.404159964999034
+     }
+    }
+   },
+   {
+    "scale": "lab x k",
+    "r": 0.2,
+    "fresh_air": {
+     "recovered_kw": {
+      "n": 25,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 27.532728941501933,
+      "p10": 0.0,
+      "p90": 21.04019488935681
+     },
+     "co2_after_kg_per_h": {
+      "n": 25,
+      "median": 77.34571952305984,
+      "min": 54.38075280662565,
+      "max": 90.72515669167049,
+      "p10": 62.88713557956779,
+      "p90": 90.63325871958718
+     },
+     "saving_vs_r0_after_pct": {
+      "n": 25,
+      "median": 4.216575321678661,
+      "min": -2.4803076000564417,
+      "max": 8.88699687092014,
+      "p10": -0.14763470485785726,
+      "p90": 8.72965965393531
+     }
+    },
+    "mixed_air": {
+     "recovered_kw": {
+      "n": 25,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 17.245975132513596,
+      "p10": 0.0,
+      "p90": 12.067332757487549
+     },
+     "co2_after_kg_per_h": {
+      "n": 25,
+      "median": 77.34571952305984,
+      "min": 54.38075280662565,
+      "max": 93.30970358617881,
+      "p10": 62.887135579567776,
+      "p90": 92.88769033021931
+     },
+     "saving_vs_r0_after_pct": {
+      "n": 25,
+      "median": 3.6154740560199294,
+      "min": -2.480307600056464,
+      "max": 7.321693232423132,
+      "p10": -0.14763470485784838,
+      "p90": 6.543083774380582
+     }
+    }
+   },
+   {
+    "scale": "lab x k",
+    "r": 0.3,
+    "fresh_air": {
+     "recovered_kw": {
+      "n": 25,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 29.425412821506526,
+      "p10": 0.0,
+      "p90": 24.05143763856215
+     },
+     "co2_after_kg_per_h": {
+      "n": 25,
+      "median": 75.84293015333753,
+      "min": 55.270795668912726,
+      "max": 86.51228005292296,
+      "p10": 62.985735693756254,
+      "p90": 86.38612972700966
+     },
+     "saving_vs_r0_after_pct": {
+      "n": 25,
+      "median": 5.759515375835644,
+      "min": -4.309018095510542,
+      "max": 13.146355895813821,
+      "p10": -0.6110856779556693,
+      "p90": 13.016109309776196
+     }
+    },
+    "mixed_air": {
+     "recovered_kw": {
+      "n": 25,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 4.0677902735916645,
+      "p10": 0.0,
+      "p90": 0.5698643141913682
+     },
+     "co2_after_kg_per_h": {
+      "n": 25,
+      "median": 75.84293015333753,
+      "min": 55.270795668912704,
+      "max": 92.82231311892747,
+      "p10": 62.985735693756254,
+      "p90": 92.28587502475783
+     },
+     "saving_vs_r0_after_pct": {
+      "n": 25,
+      "median": 5.759515375835644,
+      "min": -4.309018095510542,
+      "max": 9.53359414585685,
+      "p10": -0.6110856779556604,
+      "p90": 7.984419611197782
+     }
+    }
+   },
+   {
+    "scale": "lab x k",
+    "r": 0.4,
+    "fresh_air": {
+     "recovered_kw": {
+      "n": 25,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 30.903591630086705,
+      "p10": 0.0,
+      "p90": 26.592146834172336
+     },
+     "co2_after_kg_per_h": {
+      "n": 25,
+      "median": 74.38534163007994,
+      "min": 56.559497394592086,
+      "max": 82.30733741638838,
+      "p10": 63.13314956248419,
+      "p90": 82.2246925376571
+     },
+     "saving_vs_r0_after_pct": {
+      "n": 25,
+      "median": 7.304554997917911,
+      "min": -5.724327801735218,
+      "max": 17.33554414548182,
+      "p10": -0.843052537231128,
+      "p90": 17.179285240587895
+     }
+    },
+    "mixed_air": {
+     "recovered_kw": {
+      "n": 25,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "p10": 0.0,
+      "p90": 0.0
+     },
+     "co2_after_kg_per_h": {
+      "n": 25,
+      "median": 74.38534163007995,
+      "min": 56.559497394592086,
+      "max": 90.049470281341,
+      "p10": 63.13314956248419,
+      "p90": 88.93860373696175
+     },
+     "saving_vs_r0_after_pct": {
+      "n": 25,
+      "median": 7.304554997917889,
+      "min": -5.724327801735218,
+      "max": 11.878986752848952,
+      "p10": -0.8430525372311369,
+      "p90": 10.935108962686927
+     }
+    }
+   },
+   {
+    "scale": "lab x k",
+    "r": 0.5,
+    "fresh_air": {
+     "recovered_kw": {
+      "n": 25,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 39.63403213236269,
+      "p10": 0.0,
+      "p90": 28.691886288520056
+     },
+     "co2_after_kg_per_h": {
+      "n": 25,
+      "median": 72.85942543071333,
+      "min": 58.06381055540612,
+      "max": 78.14889468630807,
+      "p10": 63.122686033906405,
+      "p90": 78.0295391325141
+     },
+     "saving_vs_r0_after_pct": {
+      "n": 25,
+      "median": 9.206078578189747,
+      "min": -7.163385105249076,
+      "max": 23.19668737448808,
+      "p10": -0.996933226248715,
+      "p90": 21.41991263301431
+     }
+    },
+    "mixed_air": {
+     "recovered_kw": {
+      "n": 25,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "p10": 0.0,
+      "p90": 0.0
+     },
+     "co2_after_kg_per_h": {
+      "n": 25,
+      "median": 72.85942543071334,
+      "min": 58.06381055540612,
+      "max": 86.27656623865708,
+      "p10": 63.122686033906405,
+      "p90": 85.34303998222813
+     },
+     "saving_vs_r0_after_pct": {
+      "n": 25,
+      "median": 9.206078578189736,
+      "min": -7.163385105249076,
+      "max": 14.754665605021543,
+      "p10": -0.9969332262487239,
+      "p90": 14.105722989965244
+     }
+    }
+   },
+   {
+    "scale": "lab x k",
+    "r": 0.6,
+    "fresh_air": {
+     "recovered_kw": {
+      "n": 25,
+      "median": 4.92927648821957,
+      "min": 0.0,
+      "max": 41.52034910132139,
+      "p10": 0.0,
+      "p90": 39.4161701076278
+     },
+     "co2_after_kg_per_h": {
+      "n": 25,
+      "median": 70.09448711078014,
+      "min": 59.4820729316356,
+      "max": 71.9864589821477,
+      "p10": 63.03601473109119,
+      "p90": 71.90565278977563
+     },
+     "saving_vs_r0_after_pct": {
+      "n": 25,
+      "median": 12.651612098007249,
+      "min": -9.780950086781527,
+      "max": 27.839961809800528,
+      "p10": -1.7714437827101688,
+      "p90": 27.563024901022196
+     }
+    },
+    "mixed_air": {
+     "recovered_kw": {
+      "n": 25,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "p10": 0.0,
+      "p90": 0.0
+     },
+     "co2_after_kg_per_h": {
+      "n": 25,
+      "median": 71.3329678284453,
+      "min": 59.4820729316356,
+      "max": 82.38848544323103,
+      "p10": 63.03601473109118,
+      "p90": 81.82694227969132
+     },
+     "saving_vs_r0_after_pct": {
+      "n": 25,
+      "median": 11.108276828790075,
+      "min": -9.780950086781527,
+      "max": 18.237051197955857,
+      "p10": -1.77144378271016,
+      "p90": 17.373534664246506
+     }
+    }
+   },
+   {
+    "scale": "lab x k",
+    "r": 0.7,
+    "fresh_air": {
+     "recovered_kw": {
+      "n": 25,
+      "median": 10.054669181377086,
+      "min": 0.0,
+      "max": 37.32543921677563,
+      "p10": 0.0,
+      "p90": 35.96567925370932
+     },
+     "co2_after_kg_per_h": {
+      "n": 25,
+      "median": 67.26227809929345,
+      "min": 60.55863287544548,
+      "max": 69.47387125040059,
+      "p10": 62.96964830386692,
+      "p90": 69.0447457655555
+     },
+     "saving_vs_r0_after_pct": {
+      "n": 25,
+      "median": 16.180975127140695,
+      "min": -11.767864254898285,
+      "max": 30.652858763021186,
+      "p10": -1.2877779361626507,
+      "p90": 30.42704692931438
+     }
+    },
+    "mixed_air": {
+     "recovered_kw": {
+      "n": 25,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "p10": 0.0,
+      "p90": 0.0
+     },
+     "co2_after_kg_per_h": {
+      "n": 25,
+      "median": 69.78851373111443,
+      "min": 60.55863287544548,
+      "max": 78.85188785361544,
+      "p10": 62.969648303866904,
+      "p90": 78.09570195119824
+     },
+     "saving_vs_r0_after_pct": {
+      "n": 25,
+      "median": 13.03290144837348,
+      "min": -11.767864254898285,
+      "max": 21.783809535705423,
+      "p10": -1.287777936162624,
+      "p90": 21.22106415454849
+     }
+    }
+   },
+   {
+    "scale": "lab x k",
+    "r": 0.8,
+    "fresh_air": {
+     "recovered_kw": {
+      "n": 25,
+      "median": 13.194515530151975,
+      "min": 0.0,
+      "max": 33.760726445759474,
+      "p10": 0.0,
+      "p90": 31.01588479463578
+     },
+     "co2_after_kg_per_h": {
+      "n": 25,
+      "median": 64.88518168405977,
+      "min": 61.58360133748095,
+      "max": 74.79562786773475,
+      "p10": 62.95271760224739,
+      "p90": 68.15865114457793
+     },
+     "saving_vs_r0_after_pct": {
+      "n": 25,
+      "median": 19.143198667347395,
+      "min": -13.659560458905261,
+      "max": 32.941242427613645,
+      "p10": -0.8776784353168392,
+      "p90": 29.711262013693297
+     }
+    },
+    "mixed_air": {
+     "recovered_kw": {
+      "n": 25,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "p10": 0.0,
+      "p90": 0.0
+     },
+     "co2_after_kg_per_h": {
+      "n": 25,
+      "median": 68.20030371101045,
+      "min": 61.58360133748095,
+      "max": 83.2780103872318,
+      "p10": 62.952717602247375,
+      "p90": 75.95139219923017
+     },
+     "saving_vs_r0_after_pct": {
+      "n": 25,
+      "median": 15.012052600255421,
+      "min": -13.659560458905261,
+      "max": 25.41651737673868,
+      "p10": -1.3864489919013188,
+      "p90": 22.365314914608195
+     }
+    }
+   }
+  ]
+ },
+ "sensitivity": {
+  "scale": "lab",
+  "subgrid": [
+   0,
+   2,
+   4,
+   10,
+   12,
+   14,
+   20,
+   22,
+   24
+  ],
+  "reference_main_on_subgrid": {
+   "n_feasible": 9,
+   "r_star": {
+    "n": 9,
+    "median": 0.8148320607974631,
+    "min": 0.0067972070578297536,
+    "max": 0.9111594621369847,
+    "p10": 0.05038578241986545,
+    "p90": 0.9084901079172218
+   },
+   "co2_saving_pct": {
+    "n": 9,
+    "median": 16.95571767955515,
+    "min": -0.06520838359718173,
+    "max": 29.14255630807119,
+    "p10": 0.1334113138032178,
+    "p90": 27.626081761916176
+   },
+   "co2_saving_env_pct": {
+    "n": 9,
+    "median": 16.95571767955515,
+    "min": 0.0,
+    "max": 29.14255630807119,
+    "p10": 0.14645299052265415,
+    "p90": 27.626081761916176
+   },
+   "n_r_free_beaten_by_r0": 1,
+   "binding_counts": {
+    "moisture": 8,
+    "gas_velocity_box_min": 4,
+    "gas_velocity_u_mf": 0,
+    "gas_velocity_u_terminal": 0,
+    "bed_temperature": 0,
+    "inlet_temperature_box_min": 0,
+    "inlet_temperature_box_max": 0,
+    "fog": 0,
+    "recirculation_box_max": 0
+   }
+  },
+  "variants": {
+   "xcr017": {
+    "n_feasible": 9,
+    "r_star": {
+     "n": 9,
+     "median": 0.602351876976023,
+     "min": 0.0,
+     "max": 0.8530994867612035,
+     "p10": 0.2484320091426247,
+     "p90": 0.8229469610279976
+    },
+    "co2_saving_pct": {
+     "n": 9,
+     "median": 12.768782891262154,
+     "min": -0.7883059856987895,
+     "max": 23.490826798916686,
+     "p10": 0.799993434487707,
+     "p90": 20.393759627631198
+    },
+    "co2_saving_env_pct": {
+     "n": 9,
+     "median": 12.768782891262154,
+     "min": 0.0,
+     "max": 23.490826798916686,
+     "p10": 0.9576546316274648,
+     "p90": 20.393759627631198
+    },
+    "n_r_free_beaten_by_r0": 1,
+    "binding_counts": {
+     "moisture": 9,
+     "gas_velocity_box_min": 6,
+     "gas_velocity_u_mf": 0,
+     "gas_velocity_u_terminal": 0,
+     "bed_temperature": 0,
+     "inlet_temperature_box_min": 1,
+     "inlet_temperature_box_max": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "delta_median_saving_pp": -4.186934788292996,
+    "delta_median_r_star": -0.21248018382144007
+   },
+   "xcr025": {
+    "n_feasible": 9,
+    "r_star": {
+     "n": 9,
+     "median": 0.9343915838028569,
+     "min": 0.011090329317202996,
+     "max": 0.949914424891558,
+     "p10": 0.6528275679602366,
+     "p90": 0.9474566691696329
+    },
+    "co2_saving_pct": {
+     "n": 9,
+     "median": 23.083553775677167,
+     "min": -0.09617975576750037,
+     "max": 37.17945487016286,
+     "p10": 4.73421294610477,
+     "p90": 37.08814535592622
+    },
+    "co2_saving_env_pct": {
+     "n": 9,
+     "median": 23.083553775677167,
+     "min": 0.0,
+     "max": 37.17945487016286,
+     "p10": 4.75344889725827,
+     "p90": 37.08814535592622
+    },
+    "n_r_free_beaten_by_r0": 1,
+    "binding_counts": {
+     "moisture": 9,
+     "gas_velocity_box_min": 7,
+     "gas_velocity_u_mf": 0,
+     "gas_velocity_u_terminal": 0,
+     "bed_temperature": 0,
+     "inlet_temperature_box_min": 1,
+     "inlet_temperature_box_max": 0,
+     "fog": 0,
+     "recirculation_box_max": 1
+    },
+    "delta_median_saving_pp": 6.127836096122017,
+    "delta_median_r_star": 0.11955952300539385
+   },
+   "lq020": {
+    "n_feasible": 9,
+    "r_star": {
+     "n": 9,
+     "median": 0.7650741422213749,
+     "min": 0.004494352862493235,
+     "max": 0.872559619895819,
+     "p10": 0.38844016677849436,
+     "p90": 0.8627799012038311
+    },
+    "co2_saving_pct": {
+     "n": 9,
+     "median": 14.962350501563403,
+     "min": 0.04840763009991145,
+     "max": 29.556642423858015,
+     "p10": 1.27191995557846,
+     "p90": 28.26531767732125
+    },
+    "co2_saving_env_pct": {
+     "n": 9,
+     "median": 14.962350501563403,
+     "min": 0.04840763009991145,
+     "max": 29.556642423858015,
+     "p10": 1.27191995557846,
+     "p90": 28.26531767732125
+    },
+    "n_r_free_beaten_by_r0": 0,
+    "binding_counts": {
+     "moisture": 4,
+     "gas_velocity_box_min": 5,
+     "gas_velocity_u_mf": 0,
+     "gas_velocity_u_terminal": 0,
+     "bed_temperature": 0,
+     "inlet_temperature_box_min": 0,
+     "inlet_temperature_box_max": 0,
+     "fog": 5,
+     "recirculation_box_max": 0
+    },
+    "delta_median_saving_pp": -1.9933671779917468,
+    "delta_median_r_star": -0.049757918576088134
+   },
+   "gab_m070": {
+    "n_feasible": 9,
+    "r_star": {
+     "n": 9,
+     "median": 0.8132883464984302,
+     "min": 0.20406190183171619,
+     "max": 0.9168482267485517,
+     "p10": 0.20828118765718184,
+     "p90": 0.9096291823451491
+    },
+    "co2_saving_pct": {
+     "n": 9,
+     "median": 16.333358871393557,
+     "min": -1.2252299004479106,
+     "max": 29.33532323787218,
+     "p10": -0.08255717690970771,
+     "p90": 27.80429520497563
+    },
+    "co2_saving_env_pct": {
+     "n": 9,
+     "median": 16.333358871393557,
+     "min": 0.0,
+     "max": 29.33532323787218,
+     "p10": 0.16248880317987435,
+     "p90": 27.80429520497563
+    },
+    "n_r_free_beaten_by_r0": 1,
+    "binding_counts": {
+     "moisture": 9,
+     "gas_velocity_box_min": 6,
+     "gas_velocity_u_mf": 0,
+     "gas_velocity_u_terminal": 0,
+     "bed_temperature": 0,
+     "inlet_temperature_box_min": 0,
+     "inlet_temperature_box_max": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "delta_median_saving_pp": -0.622358808161593,
+    "delta_median_r_star": -0.0015437142990328834
+   },
+   "gab_m130": {
+    "n_feasible": 9,
+    "r_star": {
+     "n": 9,
+     "median": 0.8132921966458302,
+     "min": 0.08235348840153978,
+     "max": 0.9205553353810377,
+     "p10": 0.45958610662691396,
+     "p90": 0.9055956940700377
+    },
+    "co2_saving_pct": {
+     "n": 9,
+     "median": 17.469603359820074,
+     "min": -0.3014214334762677,
+     "max": 29.042044097035934,
+     "p10": -0.05112927640174901,
+     "p90": 27.570306536977778
+    },
+    "co2_saving_env_pct": {
+     "n": 9,
+     "median": 17.469603359820074,
+     "min": 0.0,
+     "max": 29.042044097035934,
+     "p10": 0.009155010293504517,
+     "p90": 27.570306536977778
+    },
+    "n_r_free_beaten_by_r0": 1,
+    "binding_counts": {
+     "moisture": 9,
+     "gas_velocity_box_min": 5,
+     "gas_velocity_u_mf": 0,
+     "gas_velocity_u_terminal": 0,
+     "bed_temperature": 0,
+     "inlet_temperature_box_min": 0,
+     "inlet_temperature_box_max": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "delta_median_saving_pp": 0.5138856802649236,
+    "delta_median_r_star": -0.0015398641516328748
+   },
+   "gab_k080": {
+    "n_feasible": 9,
+    "r_star": {
+     "n": 9,
+     "median": 0.813598415799853,
+     "min": 0.1213776319501774,
+     "max": 0.9212022612501669,
+     "p10": 0.13363517270480113,
+     "p90": 0.910558010526257
+    },
+    "co2_saving_pct": {
+     "n": 9,
+     "median": 17.02533626339785,
+     "min": -0.5962770864490041,
+     "max": 29.133964179409666,
+     "p10": 0.06847050345639707,
+     "p90": 27.69253308366883
+    },
+    "co2_saving_env_pct": {
+     "n": 9,
+     "median": 17.02533626339785,
+     "min": 0.0,
+     "max": 29.133964179409666,
+     "p10": 0.18772592074619787,
+     "p90": 27.69253308366883
+    },
+    "n_r_free_beaten_by_r0": 1,
+    "binding_counts": {
+     "moisture": 9,
+     "gas_velocity_box_min": 3,
+     "gas_velocity_u_mf": 0,
+     "gas_velocity_u_terminal": 0,
+     "bed_temperature": 0,
+     "inlet_temperature_box_min": 0,
+     "inlet_temperature_box_max": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "delta_median_saving_pp": 0.06961858384270059,
+    "delta_median_r_star": -0.0012336449976100283
+   },
+   "nu045": {
+    "n_feasible": 9,
+    "r_star": {
+     "n": 9,
+     "median": 0.8692463317716721,
+     "min": 0.0373192792027719,
+     "max": 0.9227435548774017,
+     "p10": 0.5564874339542222,
+     "p90": 0.9070952756665986
+    },
+    "co2_saving_pct": {
+     "n": 9,
+     "median": 23.516235420073738,
+     "min": -0.27121391591593547,
+     "max": 31.275047069019212,
+     "p10": 5.404321938415966,
+     "p90": 30.03559390823764
+    },
+    "co2_saving_env_pct": {
+     "n": 9,
+     "median": 23.516235420073738,
+     "min": 0.0,
+     "max": 31.275047069019212,
+     "p10": 5.458564721599153,
+     "p90": 30.03559390823764
+    },
+    "n_r_free_beaten_by_r0": 1,
+    "binding_counts": {
+     "moisture": 9,
+     "gas_velocity_box_min": 6,
+     "gas_velocity_u_mf": 0,
+     "gas_velocity_u_terminal": 0,
+     "bed_temperature": 0,
+     "inlet_temperature_box_min": 1,
+     "inlet_temperature_box_max": 0,
+     "fog": 0,
+     "recirculation_box_max": 0
+    },
+    "delta_median_saving_pp": 6.560517740518588,
+    "delta_median_r_star": 0.054414270974209034
+   },
+   "umin080": {
+    "n_feasible": 9,
+    "r_star": {
+     "n": 9,
+     "median": 0.7985755318842453,
+     "min": 0.058595152974571796,
+     "max": 0.8742202196012764,
+     "p10": 0.5168605589188643,
+     "p90": 0.8562307114357247
+    },
+    "co2_saving_pct": {
+     "n": 9,
+     "median": 15.695707738202147,
+     "min": -0.3434133751079482,
+     "max": 20.807533744399777,
+     "p10": 2.3333982141438003,
+     "p90": 19.48381686299981
+    },
+    "co2_saving_env_pct": {
+     "n": 9,
+     "median": 15.695707738202147,
+     "min": 0.0,
+     "max": 20.807533744399777,
+     "p10": 2.40208088916539,
+     "p90": 19.48381686299981
+    },
+    "n_r_free_beaten_by_r0": 1,
+    "binding_counts": {
+     "moisture": 8,
+     "gas_velocity_box_min": 2,
+     "gas_velocity_u_mf": 0,
+     "gas_velocity_u_terminal": 0,
+     "bed_temperature": 0,
+     "inlet_temperature_box_min": 0,
+     "inlet_temperature_box_max": 0,
+     "fog": 1,
+     "recirculation_box_max": 0
+    },
+    "delta_median_saving_pp": -1.2600099413530028,
+    "delta_median_r_star": -0.016256528913217716
+   }
+  },
+  "ranking_by_abs_delta_saving": [
+   "nu045",
+   "xcr025",
+   "xcr017",
+   "lq020",
+   "umin080",
+   "gab_m070",
+   "gab_m130",
+   "gab_k080"
+  ]
+ },
+ "transfer": {
+  "placeholders": {
+   "ambient_annual_mean_celsius": {
+    "value": 10.0,
+    "band": [
+     8.0,
+     12.0
+    ],
+    "source": "long-term annual mean of the air temperature in Germany, order of magnitude",
+    "status": "placeholder"
+   },
+   "ambient_relative_humidity": {
+    "value": 0.75,
+    "band": [
+     0.5,
+     0.9
+    ],
+    "source": "as storage test 1 (docs/19), annual mean order of magnitude",
+    "status": "placeholder"
+   },
+   "normal_density_kg_per_nm3": {
+    "value": 1.293,
+    "band": [
+     1.293,
+     1.293
+    ],
+    "source": "dry air at 0 degC, 1.01325 bar (definition); volumes read as Nm3/h",
+    "status": "placeholder (the reading m3/h = Nm3/h is an assumption)"
+   },
+   "plant_a_air_nm3_per_h": {
+    "value": 30000.0,
+    "band": [
+     25000.0,
+     35000.0
+    ],
+    "source": "partner, order of magnitude (about 30 000 m3/h process air)",
+    "status": "partner statement, order of magnitude"
+   },
+   "plant_a_inlet_celsius": {
+    "value": 82.5,
+    "band": [
+     80.0,
+     85.0
+    ],
+    "source": "partner (inlet air about 80-85 degC)",
+    "status": "partner statement, order of magnitude"
+   },
+   "plant_a_heat_supply_efficiency": {
+    "value": 0.85,
+    "band": [
+     0.75,
+     0.92
+    ],
+    "source": "steam heater: gas boiler (about 0.90-0.95) times steam distribution losses; typical literature range",
+    "status": "placeholder"
+   },
+   "plant_a_hours_per_year": {
+    "value": 8760.0,
+    "band": [
+     8000.0,
+     8760.0
+    ],
+    "source": "partner (operation 24/7)",
+    "status": "partner statement"
+   },
+   "plant_c_air_nm3_per_h_per_line": {
+    "value": 20000.0,
+    "band": [
+     15000.0,
+     25000.0
+    ],
+    "source": "partner (2 lines of about 20 000 m3/h)",
+    "status": "partner statement, order of magnitude"
+   },
+   "plant_c_lines": {
+    "value": 2.0,
+    "band": [
+     2.0,
+     2.0
+    ],
+    "source": "partner",
+    "status": "partner statement"
+   },
+   "plant_c_inlet_celsius": {
+    "value": 80.0,
+    "band": [
+     70.0,
+     90.0
+    ],
+    "source": "no partner figure; same process as plant A assumed (as docs/19)",
+    "status": "placeholder"
+   },
+   "plant_c_burner_efficiency": {
+    "value": 0.95,
+    "band": [
+     0.9,
+     1.0
+    ],
+    "source": "direct-fired gas burner: the flue gas enters the process air, only radiation and casing losses; typical manufacturer range",
+    "status": "placeholder"
+   },
+   "plant_c_hours_volume_reading": {
+    "value": 8760.0,
+    "band": [
+     6000.0,
+     8760.0
+    ],
+    "source": "volume reading: lines run at the stated flow all year (planned plant)",
+    "status": "placeholder"
+   },
+   "plant_c_reading_factor": {
+    "value": 4.9,
+    "band": [
+     4.9,
+     4.9
+    ],
+    "source": "Befund 99: exhaust of plant C by volume flow is 4.9 times the partner's annual figure (999 against 205 kW mean); annual reading = volume reading / 4.9",
+    "status": "derived (contradiction of the partner data, both readings carried)"
+   },
+   "site_gas_gwh_per_year": {
+    "value": 30.0,
+    "band": [
+     30.0,
+     30.0
+    ],
+    "source": "partner (site about 30 GWh/a gas)",
+    "status": "partner statement, order of magnitude"
+   },
+   "site_co2_t_per_year": {
+    "value": 11500.0,
+    "band": [
+     11500.0,
+     11500.0
+    ],
+    "source": "partner (about 11 500 t CO2/a)",
+    "status": "partner statement, order of magnitude"
+   },
+   "co2_price_eur_per_t": {
+    "value": [
+     55.0,
+     300.0
+    ],
+    "band": [
+     55.0,
+     300.0
+    ],
+    "source": "partner (55 EUR/t now, 300 EUR/t assumed for 2030)",
+    "status": "partner statement"
+   },
+   "exhaust_temperatures_celsius": {
+    "value": [
+     34.4,
+     45.0,
+     60.7
+    ],
+    "band": [
+     30.0,
+     65.0
+    ],
+    "source": "34.4 and 60.7: measured exhaust outlet of plant A on the two days of docs/19 (product 2 / product 1); 45: middle placeholder",
+    "status": "measurement (two days) and placeholder"
+   },
+   "humidity_pickup_kg_per_kg": {
+    "value": [
+     0.005,
+     0.01,
+     0.02
+    ],
+    "band": [
+     0.005,
+     0.02
+    ],
+    "source": "evaporated water per kg dry air of a spray granulator; no plant figure (the exhaust humidity of plant A is reconstructed, docs/19)",
+    "status": "placeholder"
+   },
+   "exhaust_relative_humidity_limit": {
+    "value": [
+     0.6,
+     0.9
+    ],
+    "band": [
+     0.5,
+     0.95
+    ],
+    "source": "a design limit of the exhaust relative humidity (product moisture, condensation in ducts and filter); no partner figure",
+    "status": "placeholder"
+   }
+  },
+  "ambient_humidity_kg_per_kg": 0.005704913856197891,
+  "plants": {
+   "A": {
+    "dry_air_kg_per_s": 10.713878247532037,
+    "heater_duty_kw": 789.6589783040539,
+    "fuel_mwh_per_year": 8138.132529345308
+   },
+   "C_volume_reading": {
+    "dry_air_kg_per_s": 14.285170996709383,
+    "heater_duty_kw": 1016.572477816713,
+    "fuel_mwh_per_year": 9373.868321762533
+   },
+   "C_annual_reading": {
+    "dry_air_kg_per_s": 14.285170996709383,
+    "heater_duty_kw": 207.46377098300263,
+    "fuel_mwh_per_year": 1913.0343513801085
+   }
+  },
+  "rows": [
+   {
+    "scale": "transfer",
+    "plant": "A",
+    "saving_fraction_label": "lab_r_star_p10",
+    "heater_gas_saving_fraction": 0.005175837288387465,
+    "fuel_without_mwh_per_year": 8138.132529345308,
+    "fuel_saving_mwh_per_year": 42.12164980322444,
+    "co2_saving_t_per_year": 8.466451610448114,
+    "share_of_site_gas_pct": 0.14040549934408147,
+    "share_of_site_co2_pct": 0.07362131835172273,
+    "value_keur_per_year": {
+     "55": 0.4656548385746463,
+     "300": 2.5399354831344345
+    }
+   },
+   {
+    "scale": "transfer",
+    "plant": "A",
+    "saving_fraction_label": "lab_r_star_median",
+    "heater_gas_saving_fraction": 0.19269337218314597,
+    "fuel_without_mwh_per_year": 8138.132529345308,
+    "fuel_saving_mwh_per_year": 1568.1642003529025,
+    "co2_saving_t_per_year": 315.2010042709334,
+    "share_of_site_gas_pct": 5.227214001176342,
+    "share_of_site_co2_pct": 2.7408782980081168,
+    "value_keur_per_year": {
+     "55": 17.336055234901337,
+     "300": 94.56030128128003
+    }
+   },
+   {
+    "scale": "transfer",
+    "plant": "A",
+    "saving_fraction_label": "lab_r_star_p90",
+    "heater_gas_saving_fraction": 0.291876145593782,
+    "fuel_without_mwh_per_year": 8138.132529345308,
+    "fuel_saving_mwh_per_year": 2375.3267549966845,
+    "co2_saving_t_per_year": 477.4406777543336,
+    "share_of_site_gas_pct": 7.917755849988949,
+    "share_of_site_co2_pct": 4.151658067428988,
+    "value_keur_per_year": {
+     "55": 26.25923727648835,
+     "300": 143.23220332630007
+    }
+   },
+   {
+    "scale": "transfer",
+    "plant": "C_volume_reading",
+    "saving_fraction_label": "lab_r_star_p10",
+    "heater_gas_saving_fraction": 0.005175837288387465,
+    "fuel_without_mwh_per_year": 9373.868321762533,
+    "fuel_saving_mwh_per_year": 48.51761719621255,
+    "co2_saving_t_per_year": 9.752041056438722,
+    "share_of_site_gas_pct": 0.16172539065404185,
+    "share_of_site_co2_pct": 0.08480035701251062,
+    "value_keur_per_year": {
+     "55": 0.5363622581041297,
+     "300": 2.9256123169316166
+    }
+   },
+   {
+    "scale": "transfer",
+    "plant": "C_volume_reading",
+    "saving_fraction_label": "lab_r_star_median",
+    "heater_gas_saving_fraction": 0.19269337218314597,
+    "fuel_without_mwh_per_year": 9373.868321762533,
+    "fuel_saving_mwh_per_year": 1806.2822973211896,
+    "co2_saving_t_per_year": 363.06274176155915,
+    "share_of_site_gas_pct": 6.020940991070632,
+    "share_of_site_co2_pct": 3.1570673196657317,
+    "value_keur_per_year": {
+     "55": 19.968450796885755,
+     "300": 108.91882252846774
+    }
+   },
+   {
+    "scale": "transfer",
+    "plant": "C_volume_reading",
+    "saving_fraction_label": "lab_r_star_p90",
+    "heater_gas_saving_fraction": 0.291876145593782,
+    "fuel_without_mwh_per_year": 9373.868321762533,
+    "fuel_saving_mwh_per_year": 2736.008555059702,
+    "co2_saving_t_per_year": 549.9377195670002,
+    "share_of_site_gas_pct": 9.120028516865673,
+    "share_of_site_co2_pct": 4.782067126669567,
+    "value_keur_per_year": {
+     "55": 30.246574576185008,
+     "300": 164.98131587010005
+    }
+   },
+   {
+    "scale": "transfer",
+    "plant": "C_annual_reading",
+    "saving_fraction_label": "lab_r_star_p10",
+    "heater_gas_saving_fraction": 0.005175837288387465,
+    "fuel_without_mwh_per_year": 1913.0343513801085,
+    "fuel_saving_mwh_per_year": 9.901554529839293,
+    "co2_saving_t_per_year": 1.990212460497698,
+    "share_of_site_gas_pct": 0.03300518176613098,
+    "share_of_site_co2_pct": 0.017306195308675637,
+    "value_keur_per_year": {
+     "55": 0.10946168532737338,
+     "300": 0.5970637381493095
+    }
+   },
+   {
+    "scale": "transfer",
+    "plant": "C_annual_reading",
+    "saving_fraction_label": "lab_r_star_median",
+    "heater_gas_saving_fraction": 0.19269337218314597,
+    "fuel_without_mwh_per_year": 1913.0343513801085,
+    "fuel_saving_mwh_per_year": 368.6290402696305,
+    "co2_saving_t_per_year": 74.09443709419573,
+    "share_of_site_gas_pct": 1.228763467565435,
+    "share_of_site_co2_pct": 0.6442994529930063,
+    "value_keur_per_year": {
+     "55": 4.075194040180765,
+     "300": 22.228331128258716
+    }
+   },
+   {
+    "scale": "transfer",
+    "plant": "C_annual_reading",
+    "saving_fraction_label": "lab_r_star_p90",
+    "heater_gas_saving_fraction": 0.291876145593782,
+    "fuel_without_mwh_per_year": 1913.0343513801085,
+    "fuel_saving_mwh_per_year": 558.3690928693269,
+    "co2_saving_t_per_year": 112.23218766673472,
+    "share_of_site_gas_pct": 1.8612303095644231,
+    "share_of_site_co2_pct": 0.9759320666672584,
+    "value_keur_per_year": {
+     "55": 6.172770321670409,
+     "300": 33.66965630002042
+    }
+   }
+  ],
+  "mixing_upper_bound": [
+   {
+    "scale": "transfer",
+    "inlet": "A",
+    "exhaust_celsius": 34.4,
+    "r": 0.2,
+    "mixing_celsius": 14.951167483936821,
+    "duty_saving_pct_upper_bound": 6.829196529568029
+   },
+   {
+    "scale": "transfer",
+    "inlet": "A",
+    "exhaust_celsius": 34.4,
+    "r": 0.4,
+    "mixing_celsius": 19.866363438083955,
+    "duty_saving_pct_upper_bound": 13.608777155977869
+   },
+   {
+    "scale": "transfer",
+    "inlet": "A",
+    "exhaust_celsius": 34.4,
+    "r": 0.6,
+    "mixing_celsius": 24.745978457445403,
+    "duty_saving_pct_upper_bound": 20.339280630959177
+   },
+   {
+    "scale": "transfer",
+    "inlet": "C",
+    "exhaust_celsius": 34.4,
+    "r": 0.2,
+    "mixing_celsius": 14.951167483936821,
+    "duty_saving_pct_upper_bound": 7.07309640562403
+   },
+   {
+    "scale": "transfer",
+    "inlet": "C",
+    "exhaust_celsius": 34.4,
+    "r": 0.4,
+    "mixing_celsius": 19.866363438083955,
+    "duty_saving_pct_upper_bound": 14.094804911548508
+   },
+   {
+    "scale": "transfer",
+    "inlet": "C",
+    "exhaust_celsius": 34.4,
+    "r": 0.6,
+    "mixing_celsius": 24.745978457445403,
+    "duty_saving_pct_upper_bound": 21.06568351063629
+   },
+   {
+    "scale": "transfer",
+    "inlet": "A",
+    "exhaust_celsius": 45.0,
+    "r": 0.2,
+    "mixing_celsius": 17.102084505647078,
+    "duty_saving_pct_upper_bound": 9.795978628478727
+   },
+   {
+    "scale": "transfer",
+    "inlet": "A",
+    "exhaust_celsius": 45.0,
+    "r": 0.4,
+    "mixing_celsius": 24.152570505448296,
+    "duty_saving_pct_upper_bound": 19.520786904066615
+   },
+   {
+    "scale": "transfer",
+    "inlet": "A",
+    "exhaust_celsius": 45.0,
+    "r": 0.6,
+    "mixing_celsius": 31.152018279122508,
+    "duty_saving_pct_upper_bound": 29.175197626375873
+   },
+   {
+    "scale": "transfer",
+    "inlet": "C",
+    "exhaust_celsius": 45.0,
+    "r": 0.2,
+    "mixing_celsius": 17.102084505647078,
+    "duty_saving_pct_upper_bound": 10.145835008067253
+   },
+   {
+    "scale": "transfer",
+    "inlet": "C",
+    "exhaust_celsius": 45.0,
+    "r": 0.4,
+    "mixing_celsius": 24.152570505448296,
+    "duty_saving_pct_upper_bound": 20.217957864926138
+   },
+   {
+    "scale": "transfer",
+    "inlet": "C",
+    "exhaust_celsius": 45.0,
+    "r": 0.6,
+    "mixing_celsius": 31.152018279122508,
+    "duty_saving_pct_upper_bound": 30.21716897017501
+   },
+   {
+    "scale": "transfer",
+    "inlet": "A",
+    "exhaust_celsius": 60.7,
+    "r": 0.2,
+    "mixing_celsius": 20.2878766981802,
+    "duty_saving_pct_upper_bound": 14.190174756110618
+   },
+   {
+    "scale": "transfer",
+    "inlet": "A",
+    "exhaust_celsius": 60.7,
+    "r": 0.4,
+    "mixing_celsius": 30.501009275035106,
+    "duty_saving_pct_upper_bound": 28.277254172462218
+   },
+   {
+    "scale": "transfer",
+    "inlet": "A",
+    "exhaust_celsius": 60.7,
+    "r": 0.6,
+    "mixing_celsius": 40.64020933575746,
+    "duty_saving_pct_upper_bound": 42.262357704493056
+   },
+   {
+    "scale": "transfer",
+    "inlet": "C",
+    "exhaust_celsius": 60.7,
+    "r": 0.2,
+    "mixing_celsius": 20.2878766981802,
+    "duty_saving_pct_upper_bound": 14.696966711685997
+   },
+   {
+    "scale": "transfer",
+    "inlet": "C",
+    "exhaust_celsius": 60.7,
+    "r": 0.4,
+    "mixing_celsius": 30.501009275035106,
+    "duty_saving_pct_upper_bound": 29.28715610719301
+   },
+   {
+    "scale": "transfer",
+    "inlet": "C",
+    "exhaust_celsius": 60.7,
+    "r": 0.6,
+    "mixing_celsius": 40.64020933575746,
+    "duty_saving_pct_upper_bound": 43.77172762251066
+   }
+  ],
+  "humidity_headroom": [
+   {
+    "scale": "transfer",
+    "exhaust_celsius": 34.4,
+    "exhaust_rh_limit": 0.6,
+    "humidity_pickup_kg_per_kg": 0.005,
+    "fresh_air_exhaust_rh": 0.3031930677044926,
+    "r_max": 0.6668690327280451
+   },
+   {
+    "scale": "transfer",
+    "exhaust_celsius": 34.4,
+    "exhaust_rh_limit": 0.6,
+    "humidity_pickup_kg_per_kg": 0.01,
+    "fresh_air_exhaust_rh": 0.44480703666181914,
+    "r_max": 0.3337380654560901
+   },
+   {
+    "scale": "transfer",
+    "exhaust_celsius": 34.4,
+    "exhaust_rh_limit": 0.6,
+    "humidity_pickup_kg_per_kg": 0.02,
+    "fresh_air_exhaust_rh": 0.7280349745764724,
+    "r_max": 0.0
+   },
+   {
+    "scale": "transfer",
+    "exhaust_celsius": 34.4,
+    "exhaust_rh_limit": 0.9,
+    "humidity_pickup_kg_per_kg": 0.005,
+    "fresh_air_exhaust_rh": 0.3031930677044926,
+    "r_max": 0.8068920534790679
+   },
+   {
+    "scale": "transfer",
+    "exhaust_celsius": 34.4,
+    "exhaust_rh_limit": 0.9,
+    "humidity_pickup_kg_per_kg": 0.01,
+    "fresh_air_exhaust_rh": 0.44480703666181914,
+    "r_max": 0.6137841069581358
+   },
+   {
+    "scale": "transfer",
+    "exhaust_celsius": 34.4,
+    "exhaust_rh_limit": 0.9,
+    "humidity_pickup_kg_per_kg": 0.02,
+    "fresh_air_exhaust_rh": 0.7280349745764724,
+    "r_max": 0.22756821391627147
+   },
+   {
+    "scale": "transfer",
+    "exhaust_celsius": 45.0,
+    "exhaust_rh_limit": 0.6,
+    "humidity_pickup_kg_per_kg": 0.005,
+    "fresh_air_exhaust_rh": 0.164586511667227,
+    "r_max": 0.8425349564127312
+   },
+   {
+    "scale": "transfer",
+    "exhaust_celsius": 45.0,
+    "exhaust_rh_limit": 0.6,
+    "humidity_pickup_kg_per_kg": 0.01,
+    "fresh_air_exhaust_rh": 0.2414607928983344,
+    "r_max": 0.6850699128254625
+   },
+   {
+    "scale": "transfer",
+    "exhaust_celsius": 45.0,
+    "exhaust_rh_limit": 0.6,
+    "humidity_pickup_kg_per_kg": 0.02,
+    "fresh_air_exhaust_rh": 0.3952093553605492,
+    "r_max": 0.37013982565092485
+   },
+   {
+    "scale": "transfer",
+    "exhaust_celsius": 45.0,
+    "exhaust_rh_limit": 0.9,
+    "humidity_pickup_kg_per_kg": 0.005,
+    "fresh_air_exhaust_rh": 0.164586511667227,
+    "r_max": 0.9042630561346073
+   },
+   {
+    "scale": "transfer",
+    "exhaust_celsius": 45.0,
+    "exhaust_rh_limit": 0.9,
+    "humidity_pickup_kg_per_kg": 0.01,
+    "fresh_air_exhaust_rh": 0.2414607928983344,
+    "r_max": 0.8085261122692147
+   },
+   {
+    "scale": "transfer",
+    "exhaust_celsius": 45.0,
+    "exhaust_rh_limit": 0.9,
+    "humidity_pickup_kg_per_kg": 0.02,
+    "fresh_air_exhaust_rh": 0.3952093553605492,
+    "r_max": 0.6170522245384293
+   },
+   {
+    "scale": "transfer",
+    "exhaust_celsius": 60.7,
+    "exhaust_rh_limit": 0.6,
+    "humidity_pickup_kg_per_kg": 0.005,
+    "fresh_air_exhaust_rh": 0.06744071656378044,
+    "r_max": 0.9380515429123338
+   },
+   {
+    "scale": "transfer",
+    "exhaust_celsius": 60.7,
+    "exhaust_rh_limit": 0.6,
+    "humidity_pickup_kg_per_kg": 0.01,
+    "fresh_air_exhaust_rh": 0.09894060412463825,
+    "r_max": 0.8761030858246678
+   },
+   {
+    "scale": "transfer",
+    "exhaust_celsius": 60.7,
+    "exhaust_rh_limit": 0.6,
+    "humidity_pickup_kg_per_kg": 0.02,
+    "fresh_air_exhaust_rh": 0.16194037924635385,
+    "r_max": 0.7522061716493355
+   },
+   {
+    "scale": "transfer",
+    "exhaust_celsius": 60.7,
+    "exhaust_rh_limit": 0.9,
+    "humidity_pickup_kg_per_kg": 0.005,
+    "fresh_air_exhaust_rh": 0.06744071656378044,
+    "r_max": 0.962574238369632
+   },
+   {
+    "scale": "transfer",
+    "exhaust_celsius": 60.7,
+    "exhaust_rh_limit": 0.9,
+    "humidity_pickup_kg_per_kg": 0.01,
+    "fresh_air_exhaust_rh": 0.09894060412463825,
+    "r_max": 0.925148476739264
+   },
+   {
+    "scale": "transfer",
+    "exhaust_celsius": 60.7,
+    "exhaust_rh_limit": 0.9,
+    "humidity_pickup_kg_per_kg": 0.02,
+    "fresh_air_exhaust_rh": 0.16194037924635385,
+    "r_max": 0.8502969534785281
+   }
+  ],
+  "note": "transfer of LAB saving fractions to partner orders of magnitude; no plant model"
+ }
+}
