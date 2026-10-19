@@ -36,8 +36,10 @@ regression, ARX, GRU, LSTM, Transformer, xLSTM, Mamba). **Every statement below 
 untuned configuration** (one fixed protocol for all networks, no hyperparameter tuning; at most 200
 epochs with early stopping), not for the architectures in general. The networks differ in size: LSTM
 57,027 parameters, GRU 42,819, Transformer 23,523, xLSTM 8,649 (the mLSTM-only variant), Mamba 8,139
-(`docs/08`, section 3, Befund 67); capacity-matched variants (Befund 67, old data) do not remove the
-xLSTM and Mamba deficit. Verdicts are paired over five seeds
+(`docs/08`, section 3, Befund 67); at equal capacity (Befund 67, old data) the sLSTM and the
+mixed variant largely close the gap to the LSTM on energy and bed temperature but not on the moisture,
+no capacity-matched variant is better than GRU or LSTM, and a larger Mamba stays behind. The fixed
+training budget (200 epochs) is reached by part of the heads of every network (addendum to Befund 94). Verdicts are paired over five seeds
 (Befund 83, 94), per cell and not corrected for multiplicity: after Holm only about a quarter of
 the rank cells remain (old data 82 of 336, new data 70 of 336, Befund 94). The re-run on the
 corrected data basis (preset version 2, Befund 94, gate passed) reproduces the ends of the order:
@@ -49,7 +51,7 @@ corrected data basis (preset version 2, Befund 94, gate passed) reproduces the e
   latency), not as a ranked winner.*
 - **Transformer, xLSTM, Mamba, ARX, static regression, persistence** are resolvably worse than
   the LSTM in the large majority of cells (uncorrected); xLSTM on moisture stays unresolved in 7 of
-  16 cells. *After Holm (2026-10-16): clearly behind only Mamba and the baselines. The xLSTM deficit
+  16 cells. *After Holm (2026-10-16): Mamba and the baselines are resolved behind the LSTM in part of the cells. The xLSTM deficit
   is large and consistent across all seeds, not resolved under Holm with five seeds and a family of
   336 tests (the Transformer deficit on moisture likewise); only small or inconsistent cells are called
   an uncorrected tendency (Befund 98, `docs/08` version 5b).*

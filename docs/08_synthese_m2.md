@@ -2,8 +2,9 @@
 
 > Milestone M2 (TUHH-B, AP1): "Methodology of simulation and ML modelling documented
 > (procedures, tools, templates; reduction of the training-data need)"
-> (`docs/01_projektsteckbrief.md`). **Version 5b**, state 2026-10-19, draft for review by the
-> project lead, revised after review 4 (`docs/reviews/2026-10-19/review4_synthesis_v5.md`).
+> (`docs/01_projektsteckbrief.md`). **Version 5c**, state 2026-10-19, draft for review by the
+> project lead, revised after review 4 (`docs/reviews/2026-10-19/review4_synthesis_v5.md`) and its
+> follow-up check 4b (`docs/reviews/2026-10-19/review4b_followup.md`).
 > Every number in the summary, in sections 1 to 8 and in appendices A to E is traced to a finding
 > in `docs/04_stand_ap1.md` and a committed artifact (appendix F) and is checked against that
 > artifact or configuration by `scripts/check_m2_synthesis_consistency.py`, or listed there as not
@@ -20,26 +21,39 @@ parameters, not about a plant.** The method: learning curves over the number of 
 runs, splits by run, two named test sets (excited and constant-run holdout), baselines before any
 network, and paired comparisons over five seeds with Holm correction as the main form.
 
-GRU and LSTM are the best of the eight methods tested; GRU is recommended as the default on
-practical grounds (fewer parameters, lower latency), not as a performance rank: after Holm no
-GRU-against-LSTM cell is resolved. In the tested, untuned configuration Mamba and the baselines are
+In the tested, untuned configuration GRU and LSTM have the lowest errors of the eight methods
+tested; against the Transformer this is large and consistent on the moisture and only an uncorrected
+tendency on energy and bed temperature. GRU is recommended as the default on practical grounds
+(fewer parameters, lower latency), not as a performance rank: after Holm no GRU-against-LSTM cell
+is resolved. Mamba and the baselines are
 resolved behind LSTM after Holm in part of the cells, and the deficit of the xLSTM (mLSTM-only
 variant) is large and consistent across all seeds but not resolved under Holm with five seeds. The
-networks differ in size by a factor of about seven; on the old data, capacity-matched variants with
-recurrent memory mixing come close to LSTM on energy and bed temperature but not on the moisture, and
-a larger Mamba stays behind.
+networks differ in size by a factor of about seven; on the old data, at equal capacity the sLSTM and the
+mixed variant largely close the gap to the LSTM on energy and bed temperature but not on the moisture,
+and no capacity-matched variant is better than GRU or LSTM; a larger Mamba stays behind.
 
 Data need: with the fixed protocol the moisture error of GRU and LSTM at 8 training runs is 3.7 to
-5.1 times the error at 64 runs, and the curves still fall at 64 runs, so the need beyond 64 runs is
-not determined; every point also uses 32 validation runs. Pre-training on the simulator and
+5.1 times the error at 64 runs, and the curves still fall at 64 runs in the medians (an uncorrected statement, see section 6), so the
+need beyond 64 runs is not determined; every point also uses 32 validation runs. Pre-training on the simulator and
 fine-tuning on few plant runs beats training from scratch at small numbers of runs on every plant
 variant tested (study A); a hybrid with the simulator as an input channel is not recommended as the
 default. A planned excitation was not established as better than a plain random-step design in the
-primary test (study B), but models trained on constant operation alone stay far behind models trained
-on excited data, and plant records contain little dynamics: an excitation experiment at the plant is
-needed. Inference is far below the sample time of 25 s for every method. Open: a validation against
+primary test (study B), but in the simulator models trained on constant operation alone stay far behind models trained
+on excited data (old data, Befund 55), and plant records contain little dynamics; we recommend an
+excitation experiment at the plant. Inference is far below the sample time of 25 s for every method. Open: a validation against
 plant data (the moisture is not measured at the plant), the placeholder parameters, and more seeds
 where the paired spread is large.
+
+## Changes from version 5b (review 4b, 2026-10-19)
+
+- **Summary:** GRU and LSTM "have the lowest errors" in the tested, untuned configuration, with the
+  qualification against the Transformer (N1); the capacity-matched variants in one sentence (SX3); the
+  falling curves marked as an uncorrected statement (N3); the plant recommendation marked as a
+  simulator result and a recommendation (N6).
+- **Fixed training budget** (N4): the heads that reach the cap of 200 epochs, per network (new addendum to
+  Befund 94); section 3, section 7 and appendix B.
+- **Appendix C:** the sample time of 25 s is set by `DataSpec`, the YAML configuration says 5 s (N5).
+- The README paragraph on the architecture comparison is corrected accordingly (N2, `docs/12` section H).
 
 ## Changes from version 5 (review 4, 2026-10-19)
 
@@ -187,7 +201,7 @@ arm N, excited test set; logarithmic axes.*
 Transformer 23,523, xLSTM 8,649 and Mamba 8,139 (appendix B). The xLSTM of this comparison is the
 **mLSTM-only variant**, without sLSTM cells and without hidden-to-hidden weights (Befund 67 SX0). All
 networks were trained with the same fixed protocol without hyperparameter tuning (at most 200 epochs,
-early stopping); the epoch cap of the Transformer binds at $n_{\mathrm{train}}$ = 64 (Befund 58). The
+early stopping); the epoch cap binds for part of the heads of all five networks at $n_{\mathrm{train}}$ = 64 (section 7, appendix B). The
 capacity-matched variants of SX3 (Befund 67, re-evaluated in Befund 83 d; old data A0 at
 $n_{\mathrm{train}}$ = 64, same untuned protocol) answer part of the size question: the variants with
 recurrent memory mixing (sLSTM only, and mixed mLSTM and sLSTM, 47,955 to 50,739 parameters) come
@@ -374,6 +388,11 @@ sensor against plant data is still open.
   are unresolved questions of the register (`docs/12`, E-Q1, E-Q3).
 - **Untuned, unequal models.** Fixed protocol without hyperparameter tuning, parameter counts that
   differ by a factor of about seven (section 3).
+- **Fixed training budget.** All networks stop at the cap of 200 epochs at the latest. Heads that reach
+  it at 64 runs: Transformer 10 of 15, Mamba 9 of 15, LSTM 5 of 15, GRU 4 of 15, xLSTM 2 of 15 (addendum
+  to Befund 94); their best epoch lies in the last 20 epochs, so those curves had not flattened. The
+  comparison is made at this budget and every rank statement holds for it, not for networks trained to
+  convergence.
 - **Five seeds.** Large differences are resolved; on the moisture of the constant-run holdout and for
   the Transformer more seeds are needed (section 2); the family-wise correction is conservative.
 - **A single timing run** on a single machine (Befund 97); the networks used for the timing were
@@ -470,7 +489,9 @@ Common to the five networks: a composite of 3 independent heads, one per target;
 learning rate 0.001, weight decay 0.0001, batch size 256, at most 200 epochs, early stopping with
 patience 20 on the validation runs, gradient clipping at 1.0, no dropout, no teacher forcing, equal
 weight of all horizon steps; input windows of 32 past steps, prediction of 36 steps (900 s) ahead,
-window stride 8. No hyperparameter was tuned for any architecture.
+window stride 8. No hyperparameter was tuned for any architecture. Over all four budgets the cap of
+200 epochs is reached by 44 of 60 head-trainings of the Transformer, 33 of the GRU, 32 of the LSTM, 22 of
+Mamba and 4 of the xLSTM (addendum to Befund 94, section 7).
 
 ## Appendix C: simulator interface
 
@@ -482,7 +503,8 @@ window stride 8. No hyperparameter was tuned for any architecture.
 - **States (4):** solids mass, water mass, particle number, bed temperature. **Outputs (4):** energy
   target dE (kW), bed temperature, product moisture (kg/kg) and median particle diameter; the first
   three are the targets of the comparison.
-- **Time:** sample time 25 s, integration with a fourth-order Runge-Kutta scheme and 5 substeps per
+- **Time:** sample time 25 s (set by the data specification `DataSpec`, overriding the 5 s of the YAML
+  configuration), integration with a fourth-order Runge-Kutta scheme and 5 substeps per
   sample; a run lasts 28,800 s (8 h); the prediction horizon is 36 steps (900 s), the history 32 steps.
 - **Excitation (excited pool):** per run and channel a step, PRBS or ramp signal (weights 0.40,
   0.30, 0.30), amplitudes 15, 35, 70 and 100 % of the span, Sobol sampling of the levels, randomised
@@ -575,6 +597,7 @@ artifact in the current history · script that writes it · checked by
 | Hybrid simulator share (4, 6) | 253,136 of 256,123 µs, 98.8 % | 97 | `a1_inference_time_v2_idle.json` | 3ce113a | `measure_joint_timing.py` | yes |
 | Run-level against window-wise split (2, 5) | 29-68 % | 39 | `extra_trees_split_comparison.jsonl` | 7384455 | `run_extra_trees_split_comparison.py` | yes |
 | Data need (6, D) | ratios to 64 runs, absolute errors, 12 of 12 / 2 after Holm, baselines | 94 addendum | `befund94_addendum_seeds_data_need_rerun_full.json` | 198afc1 | `analyze_94_addendum_seeds_data_need.py` | yes |
+| Epoch cap (3, 7, B) | heads at the cap of 200 epochs: 44 / 33 / 32 / 22 / 4 of 60 (Transformer, GRU, LSTM, Mamba, xLSTM); at 64 runs 10 / 9 / 5 / 4 / 2 of 15 | 94 addendum | `befund94_addendum_epoch_cap_rerun_full.json` | 6930205 | `analyze_94_epoch_cap.py` | yes |
 | Constant-trained model against excited (6) | factor 2 to 3 | 55 with addendum | `befund55_addendum_ratio_range.json` | 6ef5501 | `analyze_55_addendum_ratio_range.py` | yes |
 | Plant data variation (6) | 0.12-2.01 % | 56a | raw plant data not in the repository | - | - | no: raw data are never in the repository |
 | Study A ratios, tests, hybrid cells (6, D) | 12.69, 10.27, 1.32, 1.27; 2640; 1 and 34 of 90 | 88 d | `a1_main_analysis.json` | 93ef6aa | `analyze_a1_main.py` | yes |

@@ -1,4 +1,4 @@
-r"""Consistency check of ``docs/08_synthese_m2.md`` (version 5b): every number of the summary, of
+r"""Consistency check of ``docs/08_synthese_m2.md`` (version 5c): every number of the summary, of
 sections 1-8 and of appendices A-E against its committed artifact or configuration.
 
 No new run, no simulation: pure re-reading of committed artifacts and configuration files. Three parts:
@@ -24,6 +24,11 @@ Version 5b (review 4, finding 22): the exemptions "600 s", "month 21" and "1 bar
 the configuration and the plan row instead of a bare grep; "0.80 m/s" against the configuration;
 "Holm (5 %)" against ``analyze_rerun.ALPHA`` (the analysis of Befund 94); number words are covered;
 the loose tolerances are replaced by claims with the rounding of the written number.
+
+Version 5c (review 4b): the claims for the epoch cap (addendum to Befund 94, artifact
+``befund94_addendum_epoch_cap_rerun_full``), for the sample time of the YAML configuration (5 s against
+the 25 s of ``DataSpec``) and for the statement that no capacity-matched variant is better than GRU or LSTM
+are added; the summary claims follow the new wording.
 
 Call::
 
@@ -54,7 +59,7 @@ from analyze_rerun import ALPHA as RERUN_ALPHA
 
 SYNTHESIS = REPO_ROOT / "docs" / "08_synthese_m2.md"
 CONFIG = REPO_ROOT / "conf" / "process" / "greybox_gab_placeholder.yaml"
-ARTIFACT_NAME = "check_m2_synthesis_consistency_v5b"
+ARTIFACT_NAME = "check_m2_synthesis_consistency_v5c"
 MICRO = "µ"
 WORDS = {
     "one": 1,
@@ -229,7 +234,9 @@ def main() -> int:
     # ---- summary ---------------------------------------------------------------------
     five("paired comparisons over five seeds")
     report.claim(
-        "best of the eight methods tested", [("eight", len(methods_n))], "rerun_full_N.jsonl"
+        "lowest errors of the eight methods tested",
+        [("eight", len(methods_n))],
+        "rerun_full_N.jsonl",
     )
     report.claim(
         "by a factor of about seven",
@@ -273,7 +280,7 @@ def main() -> int:
         c for c in need94["part_b_data_need"]["falls_32_to_64"] if c["method"] in ("gru", "lstm")
     ]
     report.claim(
-        "and the curves still fall at 64 runs, so the need beyond 64 runs is not determined",
+        "and the curves still fall at 64 runs in the medians (an uncorrected statement, see section 6), so the need beyond 64 runs is not determined",
         [("64", max(n_set)), ("64", max(n_set))],
         "befund94 addendum (falls_32_to_64)",
     )
@@ -481,6 +488,83 @@ def main() -> int:
         max(sx3_ratio(v, c) for v in mixing for c in other_cells) < 1.2,
         "sLSTM and mixed variants within a factor 1.2 of the LSTM median on energy and bed temperature",
         "sx3_capacity_matched.json (medians)",
+    )
+    matched = ("mlstm_cm", "slstm_cm", "slstm_l1_cm", "mixed_cm", "mamba_cm")
+    report.truth(
+        "no capacity-matched variant is better than GRU or LSTM",
+        all(
+            med[v][c] >= min(med["lstm"][c], med["gru"][c])
+            for v in matched
+            for c in med["lstm"]
+        ),
+        "median of every capacity-matched variant in every cell is not below the better of GRU and LSTM",
+        "sx3_capacity_matched.json (medians)",
+    )
+    report.truth(
+        "at equal capacity the sLSTM and the mixed variant largely close the gap to the LSTM on energy and bed temperature but not on the moisture",
+        max(sx3_ratio(v, c) for v in mixing for c in other_cells) < 1.2
+        and min(sx3_ratio(v, c) for v in mixing for c in moist_cells) > 1.5,
+        "sLSTM and mixed variants within 1.2 of the LSTM on energy and bed temperature, above 1.5 on moisture",
+        "sx3_capacity_matched.json (medians)",
+    )
+    cap = load("befund94_addendum_epoch_cap_rerun_full")
+    cap_networks = ("gru", "lstm", "transformer", "xlstm", "mamba")
+    cap64 = {n: cap[n]["by_n_train"]["64"] for n in cap_networks}
+    cap_all = {n: cap[n]["total"] for n in cap_networks}
+    cap_source = "befund94_addendum_epoch_cap_rerun_full.json"
+    report.claim(
+        "the epoch cap binds for part of the heads of all five networks",
+        [("five", len(cap_networks))],
+        cap_source,
+    )
+    report.claim(
+        "All networks stop at the cap of 200 epochs at the latest",
+        [("200", cap["gru"]["epoch_cap"])],
+        cap_source,
+    )
+    report.claim(
+        "Heads that reach it at 64 runs: Transformer 10 of 15, Mamba 9 of 15, LSTM 5 of 15, GRU 4 of 15, xLSTM 2 of 15",
+        [
+            ("10", cap64["transformer"]["at_cap"]),
+            ("15", cap64["transformer"]["trainings"]),
+            ("9", cap64["mamba"]["at_cap"]),
+            ("15", cap64["mamba"]["trainings"]),
+            ("5", cap64["lstm"]["at_cap"]),
+            ("15", cap64["lstm"]["trainings"]),
+            ("4", cap64["gru"]["at_cap"]),
+            ("15", cap64["gru"]["trainings"]),
+            ("2", cap64["xlstm"]["at_cap"]),
+            ("15", cap64["xlstm"]["trainings"]),
+        ],
+        cap_source,
+    )
+    report.claim(
+        "their best epoch lies in the last 20 epochs",
+        [("20", cap["last"])],
+        cap_source,
+    )
+    report.truth(
+        "their best epoch lies in the last 20 epochs",
+        all(
+            cap64[n]["at_cap_and_best_in_last"] == cap64[n]["at_cap"]
+            for n in cap_networks
+        ),
+        "at 64 runs every head that reaches the cap has its best epoch in the last 20 epochs",
+        cap_source,
+    )
+    report.claim(
+        "Over all four budgets the cap of 200 epochs is reached by 44 of 60 head-trainings of the Transformer, 33 of the GRU, 32 of the LSTM, 22 of Mamba and 4 of the xLSTM",
+        [
+            ("four", len(n_set)),
+            ("200", cap["gru"]["epoch_cap"]),
+            ("44", cap_all["transformer"]["at_cap"]),
+            ("60", cap_all["transformer"]["trainings"]),
+            ("33", cap_all["gru"]["at_cap"]),
+            ("32", cap_all["lstm"]["at_cap"]),
+            ("22", cap_all["mamba"]["at_cap"]),
+            ("4", cap_all["xlstm"]["at_cap"]),
+        ],
+        cap_source,
     )
     fam = next(f for f in seeds83["families"] if f["family"] == "b63_67")
     mamba_cm = [
@@ -1457,9 +1541,10 @@ def main() -> int:
         "GreyBoxFluidBedGranulator, rerun_full_N.jsonl",
     )
     report.claim(
-        "sample time 25 s, integration with a fourth-order Runge-Kutta scheme and 5 substeps per sample; a run lasts 28,800 s (8 h); the prediction horizon is 36 steps (900 s), the history 32 steps",
+        "sample time 25 s (set by the data specification `DataSpec`, overriding the 5 s of the YAML configuration), integration with a fourth-order Runge-Kutta scheme and 5 substeps per sample; a run lasts 28,800 s (8 h); the prediction horizon is 36 steps (900 s), the history 32 steps",
         [
             ("25", sample_time),
+            ("5", config["numerics"]["sample_time_s"]),
             ("5", config["numerics"]["substeps"]),
             ("28,800", common("data/run_duration_s")),
             ("8", common("data/run_duration_s") / 3600),
