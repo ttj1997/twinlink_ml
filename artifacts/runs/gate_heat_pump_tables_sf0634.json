@@ -1,0 +1,1648 @@
+{
+ "provenance": {
+  "git/commit": "c1ecd5cddaeb45e69c09d7432f2ceee54b3e7c41",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used"
+ },
+ "name": "gate_heat_pump_tables_sf0634",
+ "source_artifact": "gate_heat_pump_sf0634",
+ "solid_fraction_setting": {
+  "solid_fraction": 0.634,
+  "band": [
+   0.6,
+   0.7
+  ],
+  "note": "None = Befund-99 assumption (0.3, band 0.2-0.5); otherwise study 4 (branch plant-a-operating-point, docs/23 section 5)"
+ },
+ "source_provenance": {
+  "git/commit": "3603fb3dd2d2c7397e6c4afb37d35d80df736682",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used"
+ },
+ "tables": {
+  "references": {
+   "RA1": {
+    "label": "A+C|product_1|day|flat|shift+0K|compA800|hall200|water200|loss0",
+    "direct_kwh_per_day": 15281.2,
+    "pinch": {
+     "hot_utility_kwh_per_day": 15281.2,
+     "cold_utility_kwh_per_day": 16052.44,
+     "pinch_high_mean_shifted": 50.66911,
+     "pinch_high_min_shifted": 50.51938,
+     "pinch_high_max_shifted": 50.82164,
+     "pinch_low_mean_shifted": 50.66911,
+     "share_steps_without_hot_utility": 0.0,
+     "share_steps_without_cold_utility": 0.0
+    },
+    "rows": [
+     {
+      "size_kw": 250.0,
+      "criterion": "co2_today",
+      "pair": "40->80",
+      "cop": 4.414375,
+      "heat_kwh_per_day": 5756.682,
+      "gas_heat_replaced_kwh_per_day": 5756.682,
+      "work_kwh_per_day": 1304.076,
+      "annual_saving": 322.6578465,
+      "annual_direct": 1318.947575,
+      "share_of_site_co2": 0.02805720404347826
+     },
+     {
+      "size_kw": 250.0,
+      "criterion": "co2_2030",
+      "pair": "40->85",
+      "cop": 3.979444,
+      "heat_kwh_per_day": 6000.0,
+      "gas_heat_replaced_kwh_per_day": 6000.0,
+      "work_kwh_per_day": 1507.748,
+      "annual_saving": 407.8050099999999,
+      "annual_direct": 1318.947575,
+      "share_of_site_co2": 0.0354613052173913
+     },
+     {
+      "size_kw": 250.0,
+      "criterion": "cost_today",
+      "pair": "40->80",
+      "cop": 4.414375,
+      "heat_kwh_per_day": 5756.682,
+      "gas_heat_replaced_kwh_per_day": 5756.682,
+      "work_kwh_per_day": 1304.076,
+      "annual_saving": 50.049237999999995,
+      "annual_direct": 335.019265,
+      "simple_payback_a": {
+       "400": 1.998032417596448,
+       "600": 2.9970486263946716,
+       "1000": 4.99508104399112
+      }
+     },
+     {
+      "size_kw": 250.0,
+      "criterion": "cost_150",
+      "pair": "40->80",
+      "cop": 4.414375,
+      "heat_kwh_per_day": 5756.682,
+      "gas_heat_replaced_kwh_per_day": 5756.682,
+      "work_kwh_per_day": 1304.076,
+      "annual_saving": 97.251841,
+      "annual_direct": 460.31938499999995,
+      "simple_payback_a": {
+       "400": 1.0282581694263249,
+       "600": 1.5423872541394872,
+       "1000": 2.570645423565812
+      }
+     },
+     {
+      "size_kw": 250.0,
+      "criterion": "cost_300",
+      "pair": "40->80",
+      "cop": 4.414375,
+      "heat_kwh_per_day": 5756.682,
+      "gas_heat_replaced_kwh_per_day": 5756.682,
+      "work_kwh_per_day": 1304.076,
+      "annual_saving": 171.7822495,
+      "annual_direct": 658.16143,
+      "simple_payback_a": {
+       "400": 0.5821323232817486,
+       "600": 0.8731984849226229,
+       "1000": 1.4553308082043714
+      }
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "co2_today",
+      "pair": "35->90",
+      "cop": 3.301364,
+      "heat_kwh_per_day": 10527.26,
+      "gas_heat_replaced_kwh_per_day": 10527.26,
+      "work_kwh_per_day": 3188.76,
+      "annual_saving": 482.6395,
+      "annual_direct": 1318.947575,
+      "share_of_site_co2": 0.041968652173913046
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "co2_2030",
+      "pair": "30->90",
+      "cop": 3.02625,
+      "heat_kwh_per_day": 12000.0,
+      "gas_heat_replaced_kwh_per_day": 11303.8,
+      "work_kwh_per_day": 3965.304,
+      "annual_saving": 686.1839399999999,
+      "annual_direct": 1318.947575,
+      "share_of_site_co2": 0.05966816869565216
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "cost_today",
+      "pair": "40->85",
+      "cop": 3.979444,
+      "heat_kwh_per_day": 7229.495,
+      "gas_heat_replaced_kwh_per_day": 7229.495,
+      "work_kwh_per_day": 1816.71,
+      "annual_saving": 52.40086,
+      "annual_direct": 335.019265,
+      "simple_payback_a": {
+       "400": 3.8167312521206713,
+       "600": 5.725096878181007,
+       "1000": 9.541828130301678
+      }
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "cost_150",
+      "pair": "35->90",
+      "cop": 3.301364,
+      "heat_kwh_per_day": 10527.26,
+      "gas_heat_replaced_kwh_per_day": 10527.26,
+      "work_kwh_per_day": 3188.76,
+      "annual_saving": 130.8914455,
+      "annual_direct": 460.31938499999995,
+      "simple_payback_a": {
+       "400": 1.5279837367217401,
+       "600": 2.29197560508261,
+       "1000": 3.8199593418043505
+      }
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "cost_300",
+      "pair": "35->90",
+      "cop": 3.301364,
+      "heat_kwh_per_day": 10527.26,
+      "gas_heat_replaced_kwh_per_day": 10527.26,
+      "work_kwh_per_day": 3188.76,
+      "annual_saving": 267.18536549999993,
+      "annual_direct": 658.16143,
+      "simple_payback_a": {
+       "400": 0.7485439916431352,
+       "600": 1.1228159874647028,
+       "1000": 1.8713599791078381
+      }
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "co2_today",
+      "pair": "35->90",
+      "cop": 3.301364,
+      "heat_kwh_per_day": 10527.26,
+      "gas_heat_replaced_kwh_per_day": 10527.26,
+      "work_kwh_per_day": 3188.76,
+      "annual_saving": 482.6395,
+      "annual_direct": 1318.947575,
+      "share_of_site_co2": 0.041968652173913046
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "co2_2030",
+      "pair": "30->90",
+      "cop": 3.02625,
+      "heat_kwh_per_day": 15212.81,
+      "gas_heat_replaced_kwh_per_day": 12365.45,
+      "work_kwh_per_day": 5026.952,
+      "annual_saving": 700.316375,
+      "annual_direct": 1318.947575,
+      "share_of_site_co2": 0.06089707608695652
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "cost_today",
+      "pair": "40->85",
+      "cop": 3.979444,
+      "heat_kwh_per_day": 7229.495,
+      "gas_heat_replaced_kwh_per_day": 7229.495,
+      "work_kwh_per_day": 1816.71,
+      "annual_saving": 52.40086,
+      "annual_direct": 335.019265,
+      "simple_payback_a": {
+       "400": 7.633462504241343,
+       "600": 11.450193756362014,
+       "1000": 19.083656260603355
+      }
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "cost_150",
+      "pair": "35->90",
+      "cop": 3.301364,
+      "heat_kwh_per_day": 10527.26,
+      "gas_heat_replaced_kwh_per_day": 10527.26,
+      "work_kwh_per_day": 3188.76,
+      "annual_saving": 130.8914455,
+      "annual_direct": 460.31938499999995,
+      "simple_payback_a": {
+       "400": 3.0559674734434803,
+       "600": 4.58395121016522,
+       "1000": 7.639918683608701
+      }
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "cost_300",
+      "pair": "35->90",
+      "cop": 3.301364,
+      "heat_kwh_per_day": 10527.26,
+      "gas_heat_replaced_kwh_per_day": 10527.26,
+      "work_kwh_per_day": 3188.76,
+      "annual_saving": 267.18536549999993,
+      "annual_direct": 658.16143,
+      "simple_payback_a": {
+       "400": 1.4970879832862705,
+       "600": 2.2456319749294056,
+       "1000": 3.7427199582156763
+      }
+     }
+    ],
+    "breakeven_sweeps": {
+     "co2_factor_kg_per_kwh_at_500_1000_kw": [
+      1.0,
+      1.0
+     ],
+     "co2_factor_axis_end": 1.0,
+     "value_ratio_at_500_1000_kw": [
+      7.9,
+      7.9
+     ],
+     "value_ratio_axis_end": 8.0
+    }
+   },
+   "RA2": {
+    "label": "A+C|product_1|day|flat|shift+0K|compA800|hall200|water200|loss0",
+    "direct_kwh_per_day": 17014.13,
+    "pinch": {
+     "hot_utility_kwh_per_day": 17014.13,
+     "cold_utility_kwh_per_day": 5156.183,
+     "pinch_high_mean_shifted": 14.89425,
+     "pinch_high_min_shifted": 10.92672,
+     "pinch_high_max_shifted": 17.50324,
+     "pinch_low_mean_shifted": 14.89425,
+     "share_steps_without_hot_utility": 0.0,
+     "share_steps_without_cold_utility": 0.0
+    },
+    "rows": [
+     {
+      "size_kw": 250.0,
+      "criterion": "co2_today",
+      "pair": "5->65",
+      "cop": 2.817917,
+      "heat_kwh_per_day": 3948.216,
+      "gas_heat_replaced_kwh_per_day": 3948.216,
+      "work_kwh_per_day": 1401.112,
+      "annual_saving": 153.6029865,
+      "annual_direct": 1468.5198300000002,
+      "share_of_site_co2": 0.013356781434782607
+     },
+     {
+      "size_kw": 250.0,
+      "criterion": "co2_2030",
+      "pair": "5->65",
+      "cop": 2.817917,
+      "heat_kwh_per_day": 4065.063,
+      "gas_heat_replaced_kwh_per_day": 3989.682,
+      "work_kwh_per_day": 1442.577,
+      "annual_saving": 239.04831850000002,
+      "annual_direct": 1468.5198300000002,
+      "share_of_site_co2": 0.020786810304347828
+     },
+     {
+      "size_kw": 250.0,
+      "criterion": "cost_today",
+      "pair": "10->60",
+      "cop": 3.3315,
+      "heat_kwh_per_day": 2189.186,
+      "gas_heat_replaced_kwh_per_day": 2189.186,
+      "work_kwh_per_day": 657.1172,
+      "annual_saving": 9.6192319,
+      "annual_direct": 373.011385,
+      "simple_payback_a": {
+       "400": 10.395840441272654,
+       "600": 15.59376066190898,
+       "1000": 25.989601103181634
+      }
+     },
+     {
+      "size_kw": 250.0,
+      "criterion": "cost_150",
+      "pair": "5->60",
+      "cop": 3.028636,
+      "heat_kwh_per_day": 3474.46,
+      "gas_heat_replaced_kwh_per_day": 3474.46,
+      "work_kwh_per_day": 1147.203,
+      "annual_saving": 37.6653355,
+      "annual_direct": 512.52059,
+      "simple_payback_a": {
+       "400": 2.654961084841525,
+       "600": 3.982441627262287,
+       "1000": 6.637402712103812
+      }
+     },
+     {
+      "size_kw": 250.0,
+      "criterion": "cost_300",
+      "pair": "5->65",
+      "cop": 2.817917,
+      "heat_kwh_per_day": 3948.216,
+      "gas_heat_replaced_kwh_per_day": 3948.216,
+      "work_kwh_per_day": 1401.112,
+      "annual_saving": 88.224734,
+      "annual_direct": 732.79882,
+      "simple_payback_a": {
+       "400": 1.1334689884131586,
+       "600": 1.7002034826197379,
+       "1000": 2.8336724710328967
+      }
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "co2_today",
+      "pair": "5->65",
+      "cop": 2.817917,
+      "heat_kwh_per_day": 3948.216,
+      "gas_heat_replaced_kwh_per_day": 3948.216,
+      "work_kwh_per_day": 1401.112,
+      "annual_saving": 153.6029865,
+      "annual_direct": 1468.5198300000002,
+      "share_of_site_co2": 0.013356781434782607
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "co2_2030",
+      "pair": "5->65",
+      "cop": 2.817917,
+      "heat_kwh_per_day": 4274.627,
+      "gas_heat_replaced_kwh_per_day": 4064.05,
+      "work_kwh_per_day": 1516.946,
+      "annual_saving": 240.0382715,
+      "annual_direct": 1468.5198300000002,
+      "share_of_site_co2": 0.020872893173913044
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "cost_today",
+      "pair": "10->60",
+      "cop": 3.3315,
+      "heat_kwh_per_day": 2189.186,
+      "gas_heat_replaced_kwh_per_day": 2189.186,
+      "work_kwh_per_day": 657.1172,
+      "annual_saving": 9.6192319,
+      "annual_direct": 373.011385,
+      "simple_payback_a": {
+       "400": 20.791680882545307,
+       "600": 31.18752132381796,
+       "1000": 51.97920220636327
+      }
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "cost_150",
+      "pair": "5->60",
+      "cop": 3.028636,
+      "heat_kwh_per_day": 3474.46,
+      "gas_heat_replaced_kwh_per_day": 3474.46,
+      "work_kwh_per_day": 1147.203,
+      "annual_saving": 37.6653355,
+      "annual_direct": 512.52059,
+      "simple_payback_a": {
+       "400": 5.30992216968305,
+       "600": 7.964883254524574,
+       "1000": 13.274805424207624
+      }
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "cost_300",
+      "pair": "5->65",
+      "cop": 2.817917,
+      "heat_kwh_per_day": 3948.216,
+      "gas_heat_replaced_kwh_per_day": 3948.216,
+      "work_kwh_per_day": 1401.112,
+      "annual_saving": 88.224734,
+      "annual_direct": 732.79882,
+      "simple_payback_a": {
+       "400": 2.266937976826317,
+       "600": 3.4004069652394757,
+       "1000": 5.667344942065793
+      }
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "co2_today",
+      "pair": "5->65",
+      "cop": 2.817917,
+      "heat_kwh_per_day": 3948.216,
+      "gas_heat_replaced_kwh_per_day": 3948.216,
+      "work_kwh_per_day": 1401.112,
+      "annual_saving": 153.6029865,
+      "annual_direct": 1468.5198300000002,
+      "share_of_site_co2": 0.013356781434782607
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "co2_2030",
+      "pair": "5->65",
+      "cop": 2.817917,
+      "heat_kwh_per_day": 4274.627,
+      "gas_heat_replaced_kwh_per_day": 4064.05,
+      "work_kwh_per_day": 1516.946,
+      "annual_saving": 240.0382715,
+      "annual_direct": 1468.5198300000002,
+      "share_of_site_co2": 0.020872893173913044
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "cost_today",
+      "pair": "10->60",
+      "cop": 3.3315,
+      "heat_kwh_per_day": 2189.186,
+      "gas_heat_replaced_kwh_per_day": 2189.186,
+      "work_kwh_per_day": 657.1172,
+      "annual_saving": 9.6192319,
+      "annual_direct": 373.011385,
+      "simple_payback_a": {
+       "400": 41.583361765090615,
+       "600": 62.37504264763592,
+       "1000": 103.95840441272654
+      }
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "cost_150",
+      "pair": "5->60",
+      "cop": 3.028636,
+      "heat_kwh_per_day": 3474.46,
+      "gas_heat_replaced_kwh_per_day": 3474.46,
+      "work_kwh_per_day": 1147.203,
+      "annual_saving": 37.6653355,
+      "annual_direct": 512.52059,
+      "simple_payback_a": {
+       "400": 10.6198443393661,
+       "600": 15.929766509049148,
+       "1000": 26.54961084841525
+      }
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "cost_300",
+      "pair": "5->65",
+      "cop": 2.817917,
+      "heat_kwh_per_day": 3948.216,
+      "gas_heat_replaced_kwh_per_day": 3948.216,
+      "work_kwh_per_day": 1401.112,
+      "annual_saving": 88.224734,
+      "annual_direct": 732.79882,
+      "simple_payback_a": {
+       "400": 4.533875953652634,
+       "600": 6.800813930478951,
+       "1000": 11.334689884131587
+      }
+     }
+    ],
+    "breakeven_sweeps": {
+     "co2_factor_kg_per_kwh_at_500_1000_kw": [
+      0.86,
+      0.86
+     ],
+     "co2_factor_axis_end": 1.0,
+     "value_ratio_at_500_1000_kw": [
+      3.7,
+      3.7
+     ],
+     "value_ratio_axis_end": 8.0
+    }
+   },
+   "RA3": {
+    "label": "A|product_1|day|flat|shift+0K|compA800|hall0|water0|loss0",
+    "direct_kwh_per_day": 5643.157,
+    "pinch": {
+     "hot_utility_kwh_per_day": 5643.157,
+     "cold_utility_kwh_per_day": 16359.06,
+     "pinch_high_mean_shifted": 75.0,
+     "pinch_high_min_shifted": 75.0,
+     "pinch_high_max_shifted": 75.0,
+     "pinch_low_mean_shifted": 75.0,
+     "share_steps_without_hot_utility": 0.0,
+     "share_steps_without_cold_utility": 0.0
+    },
+    "rows": [
+     {
+      "size_kw": 250.0,
+      "criterion": "co2_today",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4325.003,
+      "gas_heat_replaced_kwh_per_day": 4325.003,
+      "work_kwh_per_day": 833.6781,
+      "annual_saving": 261.927577,
+      "annual_direct": 487.070965,
+      "share_of_site_co2": 0.02277631104347826
+     },
+     {
+      "size_kw": 250.0,
+      "criterion": "co2_2030",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4325.003,
+      "gas_heat_replaced_kwh_per_day": 4325.003,
+      "work_kwh_per_day": 833.6781,
+      "annual_saving": 312.440146,
+      "annual_direct": 487.070965,
+      "share_of_site_co2": 0.02716870834782609
+     },
+     {
+      "size_kw": 250.0,
+      "criterion": "cost_today",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4325.003,
+      "gas_heat_replaced_kwh_per_day": 4325.003,
+      "work_kwh_per_day": 833.6781,
+      "annual_saving": 46.1328975,
+      "annual_direct": 123.71839250000001,
+      "simple_payback_a": {
+       "400": 2.1676505361493934,
+       "600": 3.2514758042240897,
+       "1000": 5.419126340373483
+      }
+     },
+     {
+      "size_kw": 250.0,
+      "criterion": "cost_150",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4325.003,
+      "gas_heat_replaced_kwh_per_day": 4325.003,
+      "work_kwh_per_day": 833.6781,
+      "annual_saving": 81.5962975,
+      "annual_direct": 169.990136,
+      "simple_payback_a": {
+       "400": 1.2255458037173808,
+       "600": 1.838318705576071,
+       "1000": 3.0638645092934516
+      }
+     },
+     {
+      "size_kw": 250.0,
+      "criterion": "cost_300",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4325.003,
+      "gas_heat_replaced_kwh_per_day": 4325.003,
+      "work_kwh_per_day": 833.6781,
+      "annual_saving": 137.59109350000003,
+      "annual_direct": 243.05076250000002,
+      "simple_payback_a": {
+       "400": 0.7267912294046852,
+       "600": 1.0901868441070277,
+       "1000": 1.816978073511713
+      }
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "co2_today",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4325.003,
+      "gas_heat_replaced_kwh_per_day": 4325.003,
+      "work_kwh_per_day": 833.6781,
+      "annual_saving": 261.927577,
+      "annual_direct": 487.070965,
+      "share_of_site_co2": 0.02277631104347826
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "co2_2030",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4325.003,
+      "gas_heat_replaced_kwh_per_day": 4325.003,
+      "work_kwh_per_day": 833.6781,
+      "annual_saving": 312.440146,
+      "annual_direct": 487.070965,
+      "share_of_site_co2": 0.02716870834782609
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "cost_today",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4325.003,
+      "gas_heat_replaced_kwh_per_day": 4325.003,
+      "work_kwh_per_day": 833.6781,
+      "annual_saving": 46.1328975,
+      "annual_direct": 123.71839250000001,
+      "simple_payback_a": {
+       "400": 4.335301072298787,
+       "600": 6.502951608448179,
+       "1000": 10.838252680746965
+      }
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "cost_150",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4325.003,
+      "gas_heat_replaced_kwh_per_day": 4325.003,
+      "work_kwh_per_day": 833.6781,
+      "annual_saving": 81.5962975,
+      "annual_direct": 169.990136,
+      "simple_payback_a": {
+       "400": 2.4510916074347615,
+       "600": 3.676637411152142,
+       "1000": 6.127729018586903
+      }
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "cost_300",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4325.003,
+      "gas_heat_replaced_kwh_per_day": 4325.003,
+      "work_kwh_per_day": 833.6781,
+      "annual_saving": 137.59109350000003,
+      "annual_direct": 243.05076250000002,
+      "simple_payback_a": {
+       "400": 1.4535824588093704,
+       "600": 2.1803736882140554,
+       "1000": 3.633956147023426
+      }
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "co2_today",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4325.003,
+      "gas_heat_replaced_kwh_per_day": 4325.003,
+      "work_kwh_per_day": 833.6781,
+      "annual_saving": 261.927577,
+      "annual_direct": 487.070965,
+      "share_of_site_co2": 0.02277631104347826
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "co2_2030",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4325.003,
+      "gas_heat_replaced_kwh_per_day": 4325.003,
+      "work_kwh_per_day": 833.6781,
+      "annual_saving": 312.440146,
+      "annual_direct": 487.070965,
+      "share_of_site_co2": 0.02716870834782609
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "cost_today",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4325.003,
+      "gas_heat_replaced_kwh_per_day": 4325.003,
+      "work_kwh_per_day": 833.6781,
+      "annual_saving": 46.1328975,
+      "annual_direct": 123.71839250000001,
+      "simple_payback_a": {
+       "400": 8.670602144597574,
+       "600": 13.005903216896359,
+       "1000": 21.67650536149393
+      }
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "cost_150",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4325.003,
+      "gas_heat_replaced_kwh_per_day": 4325.003,
+      "work_kwh_per_day": 833.6781,
+      "annual_saving": 81.5962975,
+      "annual_direct": 169.990136,
+      "simple_payback_a": {
+       "400": 4.902183214869523,
+       "600": 7.353274822304284,
+       "1000": 12.255458037173806
+      }
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "cost_300",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4325.003,
+      "gas_heat_replaced_kwh_per_day": 4325.003,
+      "work_kwh_per_day": 833.6781,
+      "annual_saving": 137.59109350000003,
+      "annual_direct": 243.05076250000002,
+      "simple_payback_a": {
+       "400": 2.907164917618741,
+       "600": 4.360747376428111,
+       "1000": 7.267912294046852
+      }
+     }
+    ],
+    "breakeven_sweeps": {
+     "co2_factor_kg_per_kwh_at_500_1000_kw": [
+      1.0,
+      1.0
+     ],
+     "co2_factor_axis_end": 1.0,
+     "value_ratio_at_500_1000_kw": [
+      7.9,
+      7.9
+     ],
+     "value_ratio_axis_end": 8.0
+    }
+   },
+   "RA4": {
+    "label": "A|product_2|day|flat|shift+0K|compA800|hall0|water0|loss0",
+    "direct_kwh_per_day": 4837.546,
+    "pinch": {
+     "hot_utility_kwh_per_day": 4837.546,
+     "cold_utility_kwh_per_day": 20299.93,
+     "pinch_high_mean_shifted": 75.0,
+     "pinch_high_min_shifted": 75.0,
+     "pinch_high_max_shifted": 75.0,
+     "pinch_low_mean_shifted": 75.0,
+     "share_steps_without_hot_utility": 0.0,
+     "share_steps_without_cold_utility": 0.0
+    },
+    "rows": [
+     {
+      "size_kw": 250.0,
+      "criterion": "co2_today",
+      "pair": "60->90",
+      "cop": 6.0525,
+      "heat_kwh_per_day": 3815.919,
+      "gas_heat_replaced_kwh_per_day": 3815.919,
+      "work_kwh_per_day": 630.4699,
+      "annual_saving": 245.1342555,
+      "annual_direct": 417.53700499999997,
+      "share_of_site_co2": 0.021316022217391303
+     },
+     {
+      "size_kw": 250.0,
+      "criterion": "co2_2030",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4014.551,
+      "gas_heat_replaced_kwh_per_day": 4014.551,
+      "work_kwh_per_day": 773.836,
+      "annual_saving": 290.01294,
+      "annual_direct": 417.53700499999997,
+      "share_of_site_co2": 0.02521851652173913
+     },
+     {
+      "size_kw": 250.0,
+      "criterion": "cost_today",
+      "pair": "60->90",
+      "cop": 6.0525,
+      "heat_kwh_per_day": 3815.919,
+      "gas_heat_replaced_kwh_per_day": 3815.919,
+      "work_kwh_per_day": 630.4699,
+      "annual_saving": 46.839318500000005,
+      "annual_direct": 106.05651700000001,
+      "simple_payback_a": {
+       "400": 2.134958475111033,
+       "600": 3.2024377126665495,
+       "1000": 5.337396187777583
+      }
+     },
+     {
+      "size_kw": 250.0,
+      "criterion": "cost_150",
+      "pair": "60->90",
+      "cop": 6.0525,
+      "heat_kwh_per_day": 3815.919,
+      "gas_heat_replaced_kwh_per_day": 3815.919,
+      "work_kwh_per_day": 630.4699,
+      "annual_saving": 78.128396,
+      "annual_direct": 145.722527,
+      "simple_payback_a": {
+       "400": 1.2799443623545017,
+       "600": 1.9199165435317527,
+       "1000": 3.1998609058862546
+      }
+     },
+     {
+      "size_kw": 250.0,
+      "criterion": "cost_300",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4014.551,
+      "gas_heat_replaced_kwh_per_day": 4014.551,
+      "work_kwh_per_day": 773.836,
+      "annual_saving": 127.714668,
+      "annual_direct": 208.35309600000002,
+      "simple_payback_a": {
+       "400": 0.7829954191322801,
+       "600": 1.1744931286984202,
+       "1000": 1.9574885478307003
+      }
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "co2_today",
+      "pair": "60->90",
+      "cop": 6.0525,
+      "heat_kwh_per_day": 3815.919,
+      "gas_heat_replaced_kwh_per_day": 3815.919,
+      "work_kwh_per_day": 630.4699,
+      "annual_saving": 245.1342555,
+      "annual_direct": 417.53700499999997,
+      "share_of_site_co2": 0.021316022217391303
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "co2_2030",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4014.551,
+      "gas_heat_replaced_kwh_per_day": 4014.551,
+      "work_kwh_per_day": 773.836,
+      "annual_saving": 290.01294,
+      "annual_direct": 417.53700499999997,
+      "share_of_site_co2": 0.02521851652173913
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "cost_today",
+      "pair": "60->90",
+      "cop": 6.0525,
+      "heat_kwh_per_day": 3815.919,
+      "gas_heat_replaced_kwh_per_day": 3815.919,
+      "work_kwh_per_day": 630.4699,
+      "annual_saving": 46.839318500000005,
+      "annual_direct": 106.05651700000001,
+      "simple_payback_a": {
+       "400": 4.269916950222066,
+       "600": 6.404875425333099,
+       "1000": 10.674792375555166
+      }
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "cost_150",
+      "pair": "60->90",
+      "cop": 6.0525,
+      "heat_kwh_per_day": 3815.919,
+      "gas_heat_replaced_kwh_per_day": 3815.919,
+      "work_kwh_per_day": 630.4699,
+      "annual_saving": 78.128396,
+      "annual_direct": 145.722527,
+      "simple_payback_a": {
+       "400": 2.5598887247090034,
+       "600": 3.8398330870635053,
+       "1000": 6.399721811772509
+      }
+     },
+     {
+      "size_kw": 500.0,
+      "criterion": "cost_300",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4014.551,
+      "gas_heat_replaced_kwh_per_day": 4014.551,
+      "work_kwh_per_day": 773.836,
+      "annual_saving": 127.714668,
+      "annual_direct": 208.35309600000002,
+      "simple_payback_a": {
+       "400": 1.5659908382645602,
+       "600": 2.3489862573968403,
+       "1000": 3.9149770956614005
+      }
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "co2_today",
+      "pair": "60->90",
+      "cop": 6.0525,
+      "heat_kwh_per_day": 3815.919,
+      "gas_heat_replaced_kwh_per_day": 3815.919,
+      "work_kwh_per_day": 630.4699,
+      "annual_saving": 245.1342555,
+      "annual_direct": 417.53700499999997,
+      "share_of_site_co2": 0.021316022217391303
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "co2_2030",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4014.551,
+      "gas_heat_replaced_kwh_per_day": 4014.551,
+      "work_kwh_per_day": 773.836,
+      "annual_saving": 290.01294,
+      "annual_direct": 417.53700499999997,
+      "share_of_site_co2": 0.02521851652173913
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "cost_today",
+      "pair": "60->90",
+      "cop": 6.0525,
+      "heat_kwh_per_day": 3815.919,
+      "gas_heat_replaced_kwh_per_day": 3815.919,
+      "work_kwh_per_day": 630.4699,
+      "annual_saving": 46.839318500000005,
+      "annual_direct": 106.05651700000001,
+      "simple_payback_a": {
+       "400": 8.539833900444131,
+       "600": 12.809750850666198,
+       "1000": 21.34958475111033
+      }
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "cost_150",
+      "pair": "60->90",
+      "cop": 6.0525,
+      "heat_kwh_per_day": 3815.919,
+      "gas_heat_replaced_kwh_per_day": 3815.919,
+      "work_kwh_per_day": 630.4699,
+      "annual_saving": 78.128396,
+      "annual_direct": 145.722527,
+      "simple_payback_a": {
+       "400": 5.119777449418007,
+       "600": 7.679666174127011,
+       "1000": 12.799443623545018
+      }
+     },
+     {
+      "size_kw": 1000.0,
+      "criterion": "cost_300",
+      "pair": "55->90",
+      "cop": 5.187857,
+      "heat_kwh_per_day": 4014.551,
+      "gas_heat_replaced_kwh_per_day": 4014.551,
+      "work_kwh_per_day": 773.836,
+      "annual_saving": 127.714668,
+      "annual_direct": 208.35309600000002,
+      "simple_payback_a": {
+       "400": 3.1319816765291204,
+       "600": 4.697972514793681,
+       "1000": 7.829954191322801
+      }
+     }
+    ],
+    "breakeven_sweeps": {
+     "co2_factor_kg_per_kwh_at_500_1000_kw": [
+      1.0,
+      1.0
+     ],
+     "co2_factor_axis_end": 1.0,
+     "value_ratio_at_500_1000_kw": [
+      7.9,
+      7.9
+     ],
+     "value_ratio_axis_end": 8.0
+    }
+   }
+  },
+  "grid": {
+   "A+C|annual|product_1": {
+    "co2_today": {
+     "n": 72,
+     "median": 203.9602115,
+     "min": 2.28648921,
+     "max": 510.54703500000005
+    },
+    "co2_2030": {
+     "n": 72,
+     "median": 324.939717,
+     "min": 105.5703735,
+     "max": 654.6421
+    },
+    "cost_today": {
+     "n": 72,
+     "median": 21.722593575,
+     "min": 0.47316008500000006,
+     "max": 75.431557
+    },
+    "cost_150": {
+     "n": 72,
+     "median": 51.602568500000004,
+     "min": 0.7414310700000001,
+     "max": 150.1768045
+    },
+    "cost_300": {
+     "n": 72,
+     "median": 114.799143,
+     "min": 1.1806541849999999,
+     "max": 274.41440950000003
+    }
+   },
+   "A+C|annual|product_2": {
+    "co2_today": {
+     "n": 72,
+     "median": 303.70878025,
+     "min": 70.61173199999999,
+     "max": 751.90876
+    },
+    "co2_2030": {
+     "n": 72,
+     "median": 409.63439,
+     "min": 114.45794099999999,
+     "max": 1149.6171399999998
+    },
+    "cost_today": {
+     "n": 72,
+     "median": 43.21021475,
+     "min": 8.642440800000001,
+     "max": 71.49265949999999
+    },
+    "cost_150": {
+     "n": 72,
+     "median": 86.91195675,
+     "min": 20.1708928,
+     "max": 204.90541549999998
+    },
+    "cost_300": {
+     "n": 72,
+     "median": 164.93289675,
+     "min": 38.3737275,
+     "max": 424.18073499999997
+    }
+   },
+   "A+C|volume|product_1": {
+    "co2_today": {
+     "n": 72,
+     "median": 340.47898975,
+     "min": 221.0050545,
+     "max": 518.17152
+    },
+    "co2_2030": {
+     "n": 72,
+     "median": 485.4432475,
+     "min": 377.62571499999996,
+     "max": 727.814745
+    },
+    "cost_today": {
+     "n": 72,
+     "median": 50.654298499999996,
+     "min": 33.13946325,
+     "max": 77.447379
+    },
+    "cost_150": {
+     "n": 72,
+     "median": 96.94938375,
+     "min": 66.01360799999999,
+     "max": 150.1768045
+    },
+    "cost_300": {
+     "n": 72,
+     "median": 186.64026800000002,
+     "min": 119.18593200000001,
+     "max": 286.855471
+    }
+   },
+   "A+C|volume|product_2": {
+    "co2_today": {
+     "n": 72,
+     "median": 302.6612485,
+     "min": 27.6888489,
+     "max": 812.7922199999999
+    },
+    "co2_2030": {
+     "n": 72,
+     "median": 397.275125,
+     "min": 105.5703735,
+     "max": 1247.738265
+    },
+    "cost_today": {
+     "n": 72,
+     "median": 46.029182750000004,
+     "min": 3.3889454299999997,
+     "max": 88.9322135
+    },
+    "cost_150": {
+     "n": 72,
+     "median": 90.66939450000001,
+     "min": 7.9095792,
+     "max": 218.5589705
+    },
+    "cost_300": {
+     "n": 72,
+     "median": 161.87229875,
+     "min": 15.047417,
+     "max": 464.89685000000003
+    }
+   },
+   "A|volume|product_1": {
+    "co2_today": {
+     "n": 72,
+     "median": 198.28303799999998,
+     "min": 85.2016945,
+     "max": 294.64259999999996
+    },
+    "co2_2030": {
+     "n": 72,
+     "median": 293.6036275,
+     "min": 160.65193949999997,
+     "max": 355.367504
+    },
+    "cost_today": {
+     "n": 72,
+     "median": 30.76645225,
+     "min": 9.628488299999999,
+     "max": 60.226313999999995
+    },
+    "cost_150": {
+     "n": 72,
+     "median": 63.444811,
+     "min": 20.583415799999997,
+     "max": 95.79768100000001
+    },
+    "cost_300": {
+     "n": 72,
+     "median": 109.51531175,
+     "min": 48.937192499999995,
+     "max": 151.96304150000003
+    }
+   },
+   "A|volume|product_2": {
+    "co2_today": {
+     "n": 72,
+     "median": 216.26321175,
+     "min": 38.762890500000005,
+     "max": 411.84337
+    },
+    "co2_2030": {
+     "n": 72,
+     "median": 282.68209750000005,
+     "min": 65.57396549999999,
+     "max": 628.9008400000001
+    },
+    "cost_today": {
+     "n": 72,
+     "median": 37.034524250000004,
+     "min": 5.54532455,
+     "max": 55.985671
+    },
+    "cost_150": {
+     "n": 72,
+     "median": 60.9183905,
+     "min": 12.378942149999999,
+     "max": 112.2329375
+    },
+    "cost_300": {
+     "n": 72,
+     "median": 122.03110699999999,
+     "min": 22.0024482,
+     "max": 231.91479500000003
+    }
+   },
+   "C|annual|product_1": {
+    "co2_today": {
+     "n": 24,
+     "median": 45.9725165,
+     "min": 9.42449345,
+     "max": 114.3926425
+    },
+    "co2_2030": {
+     "n": 24,
+     "median": 130.7300425,
+     "min": 55.1359145,
+     "max": 270.0807645
+    },
+    "cost_today": {
+     "n": 24,
+     "median": 3.2561885425000003,
+     "min": 0.58977576,
+     "max": 7.1585844
+    },
+    "cost_150": {
+     "n": 24,
+     "median": 11.808952675,
+     "min": 2.42086834,
+     "max": 29.38402935
+    },
+    "cost_300": {
+     "n": 24,
+     "median": 25.912165775000002,
+     "min": 5.31206765,
+     "max": 64.4768485
+    }
+   },
+   "C|annual|product_2": {
+    "co2_today": {
+     "n": 24,
+     "median": 137.5231305,
+     "min": 60.017753,
+     "max": 308.3126165
+    },
+    "co2_2030": {
+     "n": 24,
+     "median": 264.197804,
+     "min": 114.609854,
+     "max": 524.898105
+    },
+    "cost_today": {
+     "n": 24,
+     "median": 10.2332568,
+     "min": 3.75585365,
+     "max": 22.38860725
+    },
+    "cost_150": {
+     "n": 24,
+     "median": 35.325555925,
+     "min": 15.416753199999999,
+     "max": 79.19624
+    },
+    "cost_300": {
+     "n": 24,
+     "median": 77.5142105,
+     "min": 33.8286964,
+     "max": 173.778836
+    }
+   },
+   "C|volume|product_1": {
+    "co2_today": {
+     "n": 24,
+     "median": 119.03890999999999,
+     "min": 55.526355,
+     "max": 208.8178505
+    },
+    "co2_2030": {
+     "n": 24,
+     "median": 188.140199,
+     "min": 97.8436155,
+     "max": 334.651418
+    },
+    "cost_today": {
+     "n": 24,
+     "median": 13.20381295,
+     "min": 4.80582725,
+     "max": 34.57882615
+    },
+    "cost_150": {
+     "n": 24,
+     "median": 32.28324442500001,
+     "min": 14.520911800000002,
+     "max": 62.9025305
+    },
+    "cost_300": {
+     "n": 24,
+     "median": 65.89897975,
+     "min": 31.89259405,
+     "max": 119.43858499999999
+    }
+   },
+   "C|volume|product_2": {
+    "co2_today": {
+     "n": 24,
+     "median": 340.9546395,
+     "min": 111.68762749999999,
+     "max": 614.295
+    },
+    "co2_2030": {
+     "n": 24,
+     "median": 523.2050525,
+     "min": 169.61466049999999,
+     "max": 943.020205
+    },
+    "cost_today": {
+     "n": 24,
+     "median": 35.486320174999996,
+     "min": 12.78953795,
+     "max": 62.663966499999994
+    },
+    "cost_150": {
+     "n": 24,
+     "median": 90.300197,
+     "min": 29.84994455,
+     "max": 164.85228650000002
+    },
+    "cost_300": {
+     "n": 24,
+     "median": 194.22874575,
+     "min": 63.6316545,
+     "max": 351.3613005
+    }
+   }
+  },
+  "grid_by_mode": {
+   "A+C|flat": {
+    "co2_today": {
+     "n": 144,
+     "median": 408.8417925,
+     "min": 2.28648921,
+     "max": 812.7922199999999
+    },
+    "co2_2030": {
+     "n": 144,
+     "median": 560.1436000000001,
+     "min": 105.5703735,
+     "max": 1247.738265
+    },
+    "cost_today": {
+     "n": 144,
+     "median": 53.8733065,
+     "min": 0.47316008500000006,
+     "max": 88.9322135
+    },
+    "cost_150": {
+     "n": 144,
+     "median": 118.06990800000001,
+     "min": 0.7414310700000001,
+     "max": 218.5589705
+    },
+    "cost_300": {
+     "n": 144,
+     "median": 222.18376725000002,
+     "min": 1.1806541849999999,
+     "max": 464.89685000000003
+    }
+   },
+   "A+C|shift": {
+    "co2_today": {
+     "n": 144,
+     "median": 286.58471399999996,
+     "min": 78.30491,
+     "max": 522.226305
+    },
+    "co2_2030": {
+     "n": 144,
+     "median": 407.91615249999995,
+     "min": 159.8979955,
+     "max": 782.429695
+    },
+    "cost_today": {
+     "n": 144,
+     "median": 35.98522225,
+     "min": 7.013942200000001,
+     "max": 59.689690999999996
+    },
+    "cost_150": {
+     "n": 144,
+     "median": 84.32523825000001,
+     "min": 18.91726015,
+     "max": 142.313792
+    },
+    "cost_300": {
+     "n": 144,
+     "median": 154.86183499999999,
+     "min": 44.975884,
+     "max": 291.286133
+    }
+   },
+   "A|flat": {
+    "co2_today": {
+     "n": 72,
+     "median": 250.24996775,
+     "min": 38.762890500000005,
+     "max": 406.451955
+    },
+    "co2_2030": {
+     "n": 72,
+     "median": 306.15294800000004,
+     "min": 65.57396549999999,
+     "max": 611.29105
+    },
+    "cost_today": {
+     "n": 72,
+     "median": 40.42376825,
+     "min": 5.54532455,
+     "max": 60.226313999999995
+    },
+    "cost_150": {
+     "n": 72,
+     "median": 78.128396,
+     "min": 12.378942149999999,
+     "max": 110.76366650000001
+    },
+    "cost_300": {
+     "n": 72,
+     "median": 136.604973,
+     "min": 22.0024482,
+     "max": 225.81878400000002
+    }
+   },
+   "A|shift": {
+    "co2_today": {
+     "n": 72,
+     "median": 182.269393,
+     "min": 91.0388475,
+     "max": 411.84337
+    },
+    "co2_2030": {
+     "n": 72,
+     "median": 271.90968825000004,
+     "min": 138.526406,
+     "max": 628.9008400000001
+    },
+    "cost_today": {
+     "n": 72,
+     "median": 30.967656674999997,
+     "min": 10.6874847,
+     "max": 41.1756135
+    },
+    "cost_150": {
+     "n": 72,
+     "median": 56.671268749999996,
+     "min": 22.619816500000002,
+     "max": 112.2329375
+    },
+    "cost_300": {
+     "n": 72,
+     "median": 95.89407750000001,
+     "min": 51.44883050000001,
+     "max": 231.91479500000003
+    }
+   },
+   "C|flat": {
+    "co2_today": {
+     "n": 48,
+     "median": 203.39166925,
+     "min": 12.6686609,
+     "max": 614.295
+    },
+    "co2_2030": {
+     "n": 48,
+     "median": 328.94513574999996,
+     "min": 130.7300425,
+     "max": 943.020205
+    },
+    "cost_today": {
+     "n": 48,
+     "median": 20.91448905,
+     "min": 0.792792775,
+     "max": 62.663966499999994
+    },
+    "cost_150": {
+     "n": 48,
+     "median": 54.4091995,
+     "min": 3.2541972849999996,
+     "max": 164.85228650000002
+    },
+    "cost_300": {
+     "n": 48,
+     "median": 111.4627145,
+     "min": 7.1406264,
+     "max": 351.3613005
+    }
+   },
+   "C|shift": {
+    "co2_today": {
+     "n": 48,
+     "median": 102.67698199999998,
+     "min": 9.42449345,
+     "max": 279.55189399999995
+    },
+    "co2_2030": {
+     "n": 48,
+     "median": 164.96981649999998,
+     "min": 55.1359145,
+     "max": 428.74068000000005
+    },
+    "cost_today": {
+     "n": 48,
+     "median": 8.971145199999999,
+     "min": 0.58977576,
+     "max": 29.479732350000003
+    },
+    "cost_150": {
+     "n": 48,
+     "median": 27.1120394,
+     "min": 2.42086834,
+     "max": 75.86671000000001
+    },
+    "cost_300": {
+     "n": 48,
+     "median": 58.7153235,
+     "min": 5.31206765,
+     "max": 158.3190785
+    }
+   }
+  },
+  "quality": {
+   "0.45": {
+    "co2_today": {
+     "n": 528,
+     "median": 226.0965855,
+     "min": 2.2565468,
+     "max": 724.68779
+    },
+    "co2_2030": {
+     "n": 528,
+     "median": 318.463011,
+     "min": 57.602913,
+     "max": 1189.5127349999998
+    },
+    "cost_today": {
+     "n": 528,
+     "median": 27.92626315,
+     "min": 0.1177729075,
+     "max": 67.64355200000001
+    },
+    "cost_150": {
+     "n": 528,
+     "median": 62.440312750000004,
+     "min": 0.73757448,
+     "max": 184.98652600000003
+    },
+    "cost_300": {
+     "n": 528,
+     "median": 125.497001,
+     "min": 1.1709455500000001,
+     "max": 418.31627999999995
+    }
+   },
+   "0.5": {
+    "co2_today": {
+     "n": 528,
+     "median": 244.22642750000003,
+     "min": 2.28648921,
+     "max": 812.7922199999999
+    },
+    "co2_2030": {
+     "n": 528,
+     "median": 328.2709625,
+     "min": 55.1359145,
+     "max": 1247.738265
+    },
+    "cost_today": {
+     "n": 528,
+     "median": 34.33702095,
+     "min": 0.47316008500000006,
+     "max": 88.9322135
+    },
+    "cost_150": {
+     "n": 528,
+     "median": 71.4136005,
+     "min": 0.7414310700000001,
+     "max": 218.5589705
+    },
+    "cost_300": {
+     "n": 528,
+     "median": 130.11446999999998,
+     "min": 1.1806541849999999,
+     "max": 464.89685000000003
+    }
+   },
+   "0.55": {
+    "co2_today": {
+     "n": 528,
+     "median": 253.66682400000002,
+     "min": 2.31018355,
+     "max": 899.972105
+    },
+    "co2_2030": {
+     "n": 528,
+     "median": 331.85294475,
+     "min": 51.700315499999995,
+     "max": 1295.3777
+    },
+    "cost_today": {
+     "n": 528,
+     "median": 39.26443700000001,
+     "min": 0.4815372,
+     "max": 108.35459350000001
+    },
+    "cost_150": {
+     "n": 528,
+     "median": 75.28010025,
+     "min": 0.75560256,
+     "max": 246.2156045
+    },
+    "cost_300": {
+     "n": 528,
+     "median": 135.60666149999997,
+     "min": 1.18833707,
+     "max": 503.00796
+    }
+   }
+  },
+  "across_share_min_over_grid": 0.0,
+  "breakeven": {
+   "analytic_cop": {
+    "co2_today": 1.5477611940298506,
+    "co2_2030": 0.845771144278607,
+    "cost_today": 2.663793947703457,
+    "cost_150": 1.938702779757662,
+    "cost_300": 1.3559322033898304
+   },
+   "co2_factor_for_cop": {
+    "2": 0.47294117647058825,
+    "3": 0.7094117647058824,
+    "4": 0.9458823529411765,
+    "5": 1.1823529411764706
+   }
+  }
+ }
+}
