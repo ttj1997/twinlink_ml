@@ -129,3 +129,14 @@ def test_readings():
     assert conv.reading(_rows(13, 13, flip=True), _family())["reading"] == "K3"
     # K2 boundary: at most half (13 -> 6 is K2, 13 -> 7 is not)
     assert conv.reading(_rows(13, 7), _family())["reading"] == "K1"
+
+
+def test_gate_ignores_the_wall_clock_metric_only():
+    old, new = _pair(150, 150)
+    for r in old:
+        r["metrics"]["inference_us_per_window"] = 90.0
+    for r in new:
+        r["metrics"]["inference_us_per_window"] = 80.0
+    assert conv.gate(old, new)["passed"]
+    new[0]["metrics"]["rmse_run_median_physical/energy_target/h1"] = 1.1
+    assert not conv.gate(old, new)["passed"]

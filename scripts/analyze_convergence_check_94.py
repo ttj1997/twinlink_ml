@@ -54,6 +54,13 @@ first min(E200, E600) epochs equals the Befund 94 history (relative tolerance 1e
 before 200 in Befund 94 stops at the same epoch; where all three heads of a network stopped before 200, all
 its metrics equal Befund 94 (relative 1e-6). There is no learning-rate schedule, so these must hold.
 
+Correction after attempt 1 (2026-10-19, disclosed; attempt 1 kept as
+``convergence_check_94_conv600_main.json``): the metric comparison of the gate included the wall-clock
+timing metric ``inference_us_per_window``, which is a time measurement and not a function of the trained
+weights; all 24 failures of attempt 1 were this metric, every history and every error metric agreed. It is
+excluded from the comparison (``TIMING_METRICS``); no tolerance, cell, family or reading was changed.
+Attempt 2 is written as ``convergence_check_94_conv600_main_attempt2.json`` (``--artifact-suffix``).
+
 Readings (fixed here; evaluated on the 16 primary cells per pair, uncorrected verdicts unless stated):
 
 * "Against the order" = GRU worse than LSTM, Transformer better than LSTM, Transformer better than GRU.
@@ -102,6 +109,7 @@ from analyze_rerun import correction, rank_cells, series
 
 ALPHA = 0.05
 REL_TOL = 1e-6
+TIMING_METRICS = frozenset({"inference_us_per_window"})  # wall clock, not reproducible
 OLD_EPOCHS, NEW_EPOCHS = 200, 600
 LAST = 20
 SEEDS = (1, 2, 3, 4, 5)
@@ -246,6 +254,7 @@ def gate(old: Records, new: Records) -> dict[str, Any]:
         for k, v in r["metrics"].items():
             if (
                 isinstance(v, int | float)
+                and k not in TIMING_METRICS
                 and k in reference
                 and not _close(float(v), float(reference[k]))
             ):
@@ -557,6 +566,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-name", required=True)
     parser.add_argument("--old-prefix", default="rerun_full")
+    parser.add_argument(
+        "--artifact-suffix", default="", help="e.g. _attempt2; artifacts are never overwritten"
+    )
     arguments = parser.parse_args()
     require_clean_tree()
     prefix = f"conv600_{arguments.run_name}"
@@ -571,7 +583,7 @@ def main() -> int:
             "job_wall_s": {k: v["wall_s"] for k, v in timing["jobs"].items()},
         }
     write_artifact(
-        f"convergence_check_94_{prefix}",
+        f"convergence_check_94_{prefix}{arguments.artifact_suffix}",
         {
             "_provenance": provenance(),
             "prefix": prefix,
