@@ -1,0 +1,152 @@
+{
+ "provenance": {
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "git/commit": "e4923ec26bee5fa5ab8c99187a0e4d989bc8cc49",
+  "git/commit_available": true,
+  "git/dirty": false,
+  "git/diff_digest": null,
+  "git/diff_digest_available": true,
+  "torch/num_threads": 8,
+  "env/mkl_num_threads": null,
+  "env/omp_num_threads": null,
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "version/numpy": "2.5.3",
+  "version/scipy": "1.18.1",
+  "version/torch": "2.14.0+cpu"
+ },
+ "workers": 8,
+ "net_max_epochs": 600,
+ "sessions": [
+  {
+   "started": "2026-10-19 15:25:53",
+   "wall_min": 452.5405097916674,
+   "jobs_run": 30
+  }
+ ],
+ "jobs": {
+  "N_transformer_n16_seed1": {
+   "wall_s": 9510.25901540002,
+   "finished": "2026-10-19 18:04:23"
+  },
+  "N_transformer_n16_seed2": {
+   "wall_s": 10545.372180000006,
+   "finished": "2026-10-19 18:21:38"
+  },
+  "N_transformer_n16_seed3": {
+   "wall_s": 13680.486162999994,
+   "finished": "2026-10-19 19:13:53"
+  },
+  "N_lstm_n64_seed1": {
+   "wall_s": 1155.0290432000184,
+   "finished": "2026-10-19 19:33:08"
+  },
+  "N_lstm_n64_seed2": {
+   "wall_s": 1650.0390952000162,
+   "finished": "2026-10-19 20:00:38"
+  },
+  "N_transformer_n16_seed5": {
+   "wall_s": 6825.419059599983,
+   "finished": "2026-10-19 20:15:23"
+  },
+  "N_lstm_n64_seed3": {
+   "wall_s": 1590.1125940000056,
+   "finished": "2026-10-19 20:27:08"
+  },
+  "N_lstm_n64_seed4": {
+   "wall_s": 1140.0975169999874,
+   "finished": "2026-10-19 20:34:23"
+  },
+  "N_transformer_n64_seed5": {
+   "wall_s": 18856.11030390003,
+   "finished": "2026-10-19 20:40:08"
+  },
+  "N_transformer_n64_seed1": {
+   "wall_s": 18946.252733299974,
+   "finished": "2026-10-19 20:41:38"
+  },
+  "N_gru_n64_seed1": {
+   "wall_s": 1110.146510999999,
+   "finished": "2026-10-19 20:52:53"
+  },
+  "N_lstm_n64_seed5": {
+   "wall_s": 1560.2773664999986,
+   "finished": "2026-10-19 20:53:08"
+  },
+  "N_transformer_n64_seed3": {
+   "wall_s": 19981.405949499982,
+   "finished": "2026-10-19 20:58:53"
+  },
+  "N_gru_n64_seed2": {
+   "wall_s": 1395.251527299988,
+   "finished": "2026-10-19 21:03:23"
+  },
+  "N_gru_n64_seed3": {
+   "wall_s": 1365.262533799978,
+   "finished": "2026-10-19 21:04:24"
+  },
+  "N_gru_n64_seed5": {
+   "wall_s": 945.1819753999589,
+   "finished": "2026-10-19 21:08:54"
+  },
+  "N_gru_n64_seed4": {
+   "wall_s": 1095.3049823000329,
+   "finished": "2026-10-19 21:11:09"
+  },
+  "N_gru_n16_seed1": {
+   "wall_s": 780.2540418000426,
+   "finished": "2026-10-19 21:11:54"
+  },
+  "N_gru_n16_seed2": {
+   "wall_s": 645.2602909000125,
+   "finished": "2026-10-19 21:14:09"
+  },
+  "N_gru_n16_seed3": {
+   "wall_s": 720.303291899967,
+   "finished": "2026-10-19 21:16:24"
+  },
+  "N_gru_n16_seed4": {
+   "wall_s": 600.3011518000276,
+   "finished": "2026-10-19 21:18:54"
+  },
+  "N_gru_n16_seed5": {
+   "wall_s": 600.320358099998,
+   "finished": "2026-10-19 21:21:09"
+  },
+  "N_lstm_n16_seed1": {
+   "wall_s": 660.3103333999752,
+   "finished": "2026-10-19 21:22:54"
+  },
+  "N_lstm_n16_seed2": {
+   "wall_s": 660.2486624000012,
+   "finished": "2026-10-19 21:25:09"
+  },
+  "N_lstm_n16_seed3": {
+   "wall_s": 570.1907213000231,
+   "finished": "2026-10-19 21:25:54"
+  },
+  "N_transformer_n64_seed4": {
+   "wall_s": 21632.146507900034,
+   "finished": "2026-10-19 21:26:24"
+  },
+  "N_lstm_n16_seed4": {
+   "wall_s": 600.1568469000049,
+   "finished": "2026-10-19 21:28:54"
+  },
+  "N_lstm_n16_seed5": {
+   "wall_s": 615.1202200999833,
+   "finished": "2026-10-19 21:31:24"
+  },
+  "N_transformer_n16_seed4": {
+   "wall_s": 13486.830442800012,
+   "finished": "2026-10-19 21:49:09"
+  },
+  "N_transformer_n64_seed2": {
+   "wall_s": 27152.3737541,
+   "finished": "2026-10-19 22:58:24"
+  }
+ }
+}
