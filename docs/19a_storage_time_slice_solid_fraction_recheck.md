@@ -20,8 +20,8 @@ Confidentiality: roles only, as in docs/19. Raw exports only through `TWINLINK_P
 **Question.** Befund 99 reconstructs the exhaust humidity of plant A from the spray rate with the
 solid fraction 0.3 (placeholder, band 0.2-0.5). The operating-point study (branch
 `plant-a-operating-point`, `docs/23_plant_a_operating_point.md` section 5) finds this value
-inadmissible by the dryer energy balance of the same two days: it needs at least 0.575 (product 1)
-and 0.625 (product 2), and 0.634 is consistent with both days. Does any Befund 99 number move?
+inadmissible by the dryer energy balance of the same two days: the balance needs a larger value
+(product-specific minima kept locally), and 0.634 is consistent with both days. Does any Befund 99 number move?
 
 **Answer.** The gate, every number of docs/19 sections 1, 5 and the scenario table, and the base
 savings of R1-R4 are unchanged at 0.60, 0.634 and 0.70.
@@ -46,8 +46,9 @@ post-hoc references R3/R4 of `scripts/analyze_storage_timeslice_sensitivity.py`.
 code, main grid (2240 scenarios), capacities, levels, gate definitions, decomposition scenarios
 and variants. Only the following differ:
 
-* **Solid fraction:** set to `x_s` in every scenario, one artifact per value. 0.60 is admissible
-  on product 1 only; it is reported anyway, as asked.
+* **Solid fraction:** set to `x_s` in every scenario, one artifact per value. 0.60 lies at the lower
+  end of the band 0.60-0.70 and is not admissible for every product (product-specific minima kept
+  locally); it is reported anyway, as asked.
 * **Dropped variants:** `solid_fraction=0.2/0.5` (the three runs replace them). The gate therefore
   has 11 520 cells instead of 11 540.
 * **Realism check of the gate:** Befund 99 bands for every placeholder except the solid fraction.
@@ -67,12 +68,15 @@ and variants. Only the following differ:
 
 ## 3. Exhaust state of plant A (reconstructed; day means)
 
-| `x_s` | product 1: `Y_out` kg/kg, capped share, exhaust A kW* | product 2: `Y_out`, capped share, exhaust A kW* | admissible (docs/23) |
-|---|---|---|---|
-| 0.3 (Befund 99) | 0.0191, 0.00, 825 | 0.0353, **1.00**, 917 | neither day |
-| 0.60 | 0.0126, 0.00, 626 | 0.0273, 0.00, 693 | product 1 only |
-| 0.634 | 0.0119, 0.00, 604 | 0.0255, 0.00, 642 | both |
-| 0.70 | 0.0105, 0.00, 569 | 0.0221, 0.00, 545 | both |
+| `x_s` | product 1: `Y_out` kg/kg, capped share, exhaust A kW* | product 2: `Y_out`, capped share, exhaust A kW* |
+|---|---|---|
+| 0.3 (Befund 99) | 0.0191, 0.00, 825 | 0.0353, **1.00**, 917 |
+| 0.60 | 0.0126, 0.00, 626 | 0.0273, 0.00, 693 |
+| 0.634 | 0.0119, 0.00, 604 | 0.0255, 0.00, 642 |
+| 0.70 | 0.0105, 0.00, 569 | 0.0221, 0.00, 545 |
+
+Which of these values the dryer energy balance admits per product is kept locally (band 0.60-0.70,
+common value 0.634).
 
 \* Mean heat of the exhaust of plant A down to `T_kalt` = 15 degC. The exhaust of plant C by volume
 (two lines, flat profile, same state assumed) drops correspondingly: 999 / 1203 kW at 0.3 against
@@ -84,7 +88,7 @@ Values at `x_s` = 0.3 (Befund 99) -> 0.60 / 0.634 / 0.70. Savings are at C = 5 M
 (percentage points of `E_direct` in brackets).
 
 | item (docs/19 section) | 0.3 | 0.60 | 0.634 | 0.70 |
-|---|---|---|---|---|
+|---|---|---|
 | gate reading; cells with `G >= 5 %`; cells with both (5) | L2; 1420; 0 | L2; 1420; 0 | L2; 1420; 0 | L2; 1420; 0 |
 | per-group readings and maxima (site, horizon, day, mode), closest (5) | as docs/19 | unchanged | unchanged | unchanged |
 | main grid: scenarios with a cell >= 5 % (1, 6) | 339 (15.1 %), all product 2 | 339 | 339 | 339 |
@@ -134,7 +138,7 @@ are in site-C, flat-mode, cold-weather scenarios.
   0.634) or rank 6 (0.70). Question 4 to the partner (volume flow and annual figure read
   together) keeps its place.
 * The pre-registered gate rows and the post-hoc R3/R4 references show the same picture. The
-  results do not depend on whether 0.60 (admissible on product 1 only) is counted.
+  results do not depend on whether 0.60 (lower end of the band, not admissible for every product) is counted.
 
 ## 6. Side observation (Befund 99 text against its own artifact; not caused by this re-check)
 
@@ -147,7 +151,7 @@ them changes a reading. It is reported here for a possible dated addendum; nothi
 ## 7. Suggestions for the managing session (not done here)
 
 1. Befund 99 needs no correction of its readings. A dated addendum could note:
-   - the admissible solid fraction (>= 0.575 / 0.625, docs/23) and this re-check;
+   - the admissible solid fraction (band 0.60-0.70, common value 0.634; product-specific minima kept locally; docs/23) and this re-check;
    - that product 2 is not capped at saturation with an admissible value;
    - the moved sensitivity numbers (R1 annual figure +84 to +175 instead of +398; R3 `dT_min`
      10 K +51 to +114 instead of +247);
