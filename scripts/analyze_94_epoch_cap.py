@@ -1,4 +1,4 @@
-r"""How often does the training in arm N reach the epoch cap? (addendum to Befund 94)
+r"""Epoch-cap counts of the training in arm N (addendum to Befund 94).
 
 Pure re-analysis of the committed records ``rerun_full_N.jsonl``; no training, no new data.  Rule fixed
 here, before the run:
