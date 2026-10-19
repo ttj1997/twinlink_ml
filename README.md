@@ -101,6 +101,46 @@ the product-2 day. In the full network of the two pre-registered references the 
 process air absorbs the compressor heat directly, the network replaces the storage. Every number
 carries its scenario; none is a statement about the plant.
 
+**Storage test, re-check with an admissible solid fraction (addendum to Befund 99).** The solid
+fraction 0.3 of Befund 99 is inadmissible by the dryer energy balance of the two measured days
+(operating-point study, Befund 103). Repeated at 0.60, 0.634 and 0.70 (band 0.60-0.70, common value
+0.634; placeholders; product-specific minima kept locally): the gate still reads L2, 339 of 2240
+main-grid scenarios still have a cell above 5 %, all on the product-2 day; the caveat that the
+product-2 exhaust was capped at saturation in every step no longer applies. Two sensitivity
+numbers move (exhaust of plant C by annual figure +398 -> +84 to +175 kWh/d; `dT_min` 10 K +247 ->
++51 to +114 kWh/d); no reading changes.
+
+**Site pinch (Befund 100; scenario grid on placeholders, not a plant statement).** Largest usable
+waste heat of the site: in the reference scenario R1 the minimum fossil heat is 655 kW against 1092
+kW today, a saving of 436 kW (3821 MWh/a, 853 t CO2/a, 7.4 % of the site's 11 500 t/a); over the
+grid 62-3564 kW (median 993 kW). The pinch lies at the inlet of the warmest waste-heat stream; a
+network at 70/40 degC reaches a median 0.97 of the target saving. The solid fraction does not move
+the site result (change of the saving -15 to +36 kW between 0.3 and 0.634).
+
+**Heat pump on low-temperature waste heat (Befund 101; scenario band on placeholders).** Stage A:
+every scenario of the main grid saves, by CO2 and by cost, as a booster across the pinch on top of
+direct recovery (median 244 t CO2/a at 1000 kW with the solid fraction 0.634, 265 t/a with 0.3).
+Stage B (heat pump plus storage under a time-varying signal): the gate reads **L1 formally** (114 of
+4480 realistic cells with a gap of at least 2 points between the programme with foresight and the
+best rule without, largest 9.2 points). A constant value of stored heat tuned per cell in hindsight
+(declared post hoc) closes most of it: 18 of the 114 cells remain, all in the assumed shift mode
+(largest gap 2.7 points). L1 says that foresight beats these three rules somewhere, **not that RL is
+needed**: a tuned or schedule-aware rule or a day-ahead MPC closes most of it, and the surviving
+cells rest on the assumed compressor night profile.
+
+**Exhaust recirculation of one line (Befund 102; laboratory line with placeholder physics).** At
+unchanged set points there is no headroom (admissible recirculation 0.002 at 17 of 25 contexts). With
+re-optimised set points the moisture limit is paid for with inlet temperature: the best recirculation
+per context (envelope, declared post hoc) saves 17.0 % CO2 in the median (maximum 29.1 %), and
+recirculation makes the line's own heat recovery possible instead of competing with it (12.6 kW
+median). The placeholder kinetics are the top of the sensitivity ranking; no plant statement.
+
+**Operating point of plant A (Befund 103; upper bound under placeholders and proxy constraints, no
+operating recommendation).** Another process-air flow and supply temperature would save at most 758 kg
+CO2/d (14.6 %) on product 1 and 90 kg CO2/d (2.8 %) on product 2 at the reference placeholders. The
+result is decided by the minimum air flow, the fan law and the waste-heat side; the proxies do not
+replace a product-moisture measurement.
+
 **One-step bandit (Befund 93, follow-up of Befund 68).** A residual action and a separated
 moisture cost lift SAC from a negative to a clearly positive closed-regret fraction, but no cell
 meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of
