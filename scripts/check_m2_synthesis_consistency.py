@@ -492,11 +492,7 @@ def main() -> int:
     matched = ("mlstm_cm", "slstm_cm", "slstm_l1_cm", "mixed_cm", "mamba_cm")
     report.truth(
         "no capacity-matched variant is better than GRU or LSTM",
-        all(
-            med[v][c] >= min(med["lstm"][c], med["gru"][c])
-            for v in matched
-            for c in med["lstm"]
-        ),
+        all(med[v][c] >= min(med["lstm"][c], med["gru"][c]) for v in matched for c in med["lstm"]),
         "median of every capacity-matched variant in every cell is not below the better of GRU and LSTM",
         "sx3_capacity_matched.json (medians)",
     )
@@ -545,10 +541,7 @@ def main() -> int:
     )
     report.truth(
         "their best epoch lies in the last 20 epochs",
-        all(
-            cap64[n]["at_cap_and_best_in_last"] == cap64[n]["at_cap"]
-            for n in cap_networks
-        ),
+        all(cap64[n]["at_cap_and_best_in_last"] == cap64[n]["at_cap"] for n in cap_networks),
         "at 64 runs every head that reaches the cap has its best epoch in the last 20 epochs",
         cap_source,
     )
