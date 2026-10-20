@@ -86,7 +86,12 @@ class Solvers:
 
     def mpc(self) -> DynamicOptimizer:
         """A fresh receding-horizon optimiser for R3 (one per scenario: own warm start)."""
-        return DynamicOptimizer(self.study, self.process, self.study.control.mpc_intervals)
+        # MX, not SX: one optimiser per scenario, and the inlined SX Hessian of the 2 h problem
+        # exhausted the memory with eight scenarios per worker (attempt 1 of the main run,
+        # std::bad_alloc); MX was as fast in the timing probe (docs/24 section 4).
+        return DynamicOptimizer(
+            self.study, self.process, self.study.control.mpc_intervals, expression="MX"
+        )
 
 
 @dataclass(frozen=True)
