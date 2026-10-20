@@ -1,4 +1,4 @@
-r"""Consistency check of ``docs/08_synthese_m2.md`` (version 5d): every number of the summary, of
+r"""Consistency check of ``docs/08_synthese_m2.md`` (version 5e): every number of the summary, of
 sections 1-8 and of appendices A-E against its committed artifact or configuration.
 
 No new run, no simulation: pure re-reading of committed artifacts and configuration files. Three parts:
@@ -24,6 +24,14 @@ Version 5b (review 4, finding 22): the exemptions "600 s", "month 21" and "1 bar
 the configuration and the plan row instead of a bare grep; "0.80 m/s" against the configuration;
 "Holm (5 %)" against ``analyze_rerun.ALPHA`` (the analysis of Befund 94); number words are covered;
 the loose tolerances are replaced by claims with the rounding of the written number.
+
+Version 5e: EFFECT LABELS. Every occurrence of an effect label of the text ("large and consistent", "remains large",
+"large at the budget", "moderate") must lie inside a fragment registered with ``Report.effect``, which checks the
+label against the threshold of the document ("large": ratio of the medians at least 1.5 or at most 1/1.5, and for
+"consistent" all five seeds on that side; ``below_large``: the ratio is inside the thresholds; ``large_median``:
+an aggregate statement by the median ratio of its cells, all cells consistent; ``definition``: the rule itself).
+An unregistered occurrence or a failed check fails the run. Run against version 5d it found exactly one
+sentence (both Transformer cells at 16 runs called large at both budgets; the energy cell at 600 epochs is 1.43).
 
 Version 5d: claims for the convergence check of Befund 104 (artifact
 ``convergence_check_94_conv600_main_attempt2`` and its compressed records) are added.
@@ -63,7 +71,7 @@ from analyze_rerun import ALPHA as RERUN_ALPHA
 
 SYNTHESIS = REPO_ROOT / "docs" / "08_synthese_m2.md"
 CONFIG = REPO_ROOT / "conf" / "process" / "greybox_gab_placeholder.yaml"
-ARTIFACT_NAME = "check_m2_synthesis_consistency_v5d"
+ARTIFACT_NAME = "check_m2_synthesis_consistency_v5e"
 MICRO = "µ"
 WORDS = {
     "one": 1,
@@ -116,6 +124,7 @@ class Report:
         self.text = text
         self.results: list[dict[str, Any]] = []
         self.fragments: list[str] = []
+        self.effect_fragments: list[str] = []
 
     def claim(self, fragment: str, pairs: list[tuple[str, float]], source: str) -> None:
         """``pairs``: (number as written in the text, value computed from the artifact)."""
@@ -135,6 +144,52 @@ class Report:
                     "fragment_in_text": present,
                 }
             )
+
+    def effect(
+        self,
+        fragment: str,
+        mode: str,
+        observations: list[dict[str, float]],
+        threshold: float,
+        n_seeds: int,
+        source: str,
+    ) -> None:
+        """Check an effect label of the text ("large and consistent", "remains large") against the threshold.
+
+        ``observations``: one dict per cell (``ratio``: ratio of the medians, candidate over reference;
+        ``seeds``: seeds on the side of the effect) or, for ``mode`` ``large_median``, the median ratio as one
+        observation plus the cells for the consistency.  Rule of the synthesis (section 3, glossary): a cell is
+        large if its ratio is at least ``threshold`` (or at most ``1 / threshold``) and consistent if all
+        seeds are on that side.
+        """
+        frag = normalise(fragment)
+        present = frag in self.text
+        self.effect_fragments.append(frag)
+
+        def is_large(ratio: float) -> bool:
+            return ratio >= threshold or ratio <= 1.0 / threshold
+
+        failures = []
+        for obs in observations:
+            if mode == "definition":
+                break
+            ok = is_large(obs["ratio"]) if mode != "below_large" else not is_large(obs["ratio"])
+            if mode in ("large_cells", "large_median") and obs.get("seeds") is not None:
+                ok = ok and int(obs["seeds"]) == n_seeds
+            if not ok:
+                failures.append(obs)
+        self.results.append(
+            {
+                "fragment": frag,
+                "effect_label": mode,
+                "observations": observations,
+                "threshold": threshold,
+                "failures": failures,
+                "source": source,
+                "status": "confirmed" if (present and not failures) else "DEVIATING",
+                "fragment_in_text": present,
+            }
+        )
 
     def truth(self, fragment: str, holds: bool, what: str, source: str) -> None:
         frag = normalise(fragment)
@@ -625,7 +680,7 @@ def main() -> int:
     t_energy = conv_cell("transformer", "lstm", 16, "excited", "energy_target", 1)
     t_bed = conv_cell("transformer", "lstm", 16, "excited", "bed_temperature_celsius", 36)
     report.claim(
-        "At 16 runs, two cells of the Transformer against the LSTM (excited test set, energy and bed temperature) are large and consistent across all seeds, at the Holm threshold: resolved after Holm at the budget of Befund 94 (ratios 1.72 and 1.65), not after Holm in the convergence check of Befund 104 (1.43 and 1.55); all five seeds are worse in both",
+        "At 16 runs, two cells of the Transformer against the LSTM (excited test set, energy and bed temperature) are consistent across all seeds and at the Holm threshold: large at the budget of Befund 94 (ratios 1.72 and 1.65, resolved after Holm); in the convergence check of Befund 104 the bed-temperature cell remains large (1.55) and the energy cell is below the threshold for large (1.43), and neither is resolved after Holm; all five seeds are worse in all four cases",
         [
             ("16", changed[0]["key"][1]),
             ("two", len(changed)),
@@ -634,11 +689,12 @@ def main() -> int:
             ("1.43", t_energy["ratio_of_medians_600"]),
             ("1.55", t_bed["ratio_of_medians_600"]),
             ("five", len(seeds_n)),
+            ("four", 4),
         ],
         conv_source,
     )
     report.truth(
-        "all five seeds are worse in both",
+        "all five seeds are worse in all four cases",
         all(
             c[f"seeds_candidate_worse_{e}"] == len(seeds_n)
             for c in (t_energy, t_bed)
@@ -675,6 +731,146 @@ def main() -> int:
         "GRU against LSTM: no cell worse, no cell resolved after Holm at 200 or 600 epochs",
         conv_source,
     )
+    # ---- effect labels (rule of section 3 and the glossary): each label against the threshold ---------
+    thr = effects["large_ratio_threshold"]
+    n_s = len(seeds_n)
+    effect_source = "befund98_addendum_effect_sizes_rerun_full.json (cells, large_ratio_threshold)"
+    ecells = effects["N"]["cells"]
+
+    def seeds_on_side(c: dict[str, Any]) -> int:
+        worse = int(c["seeds_candidate_worse"])
+        return worse if c["ratio_of_medians"] >= 1.0 else n_s - worse
+
+    def obs(c: dict[str, Any]) -> dict[str, float]:
+        return {"ratio": c["ratio_of_medians"], "seeds": seeds_on_side(c)}
+
+    def aggregate(cells: list[dict[str, Any]]) -> list[dict[str, float]]:
+        ratios = sorted(c["ratio_of_medians"] for c in cells)
+        return [{"ratio": statistics.median(ratios), "seeds": min(seeds_on_side(c) for c in cells)}]
+
+    xl_cells = [c for c in ecells if c["candidate"] == "xlstm"]
+    tm_moist_large = [
+        c
+        for c in ecells
+        if c["candidate"] == "transformer"
+        and c["channel"].startswith("product_moisture")
+        and c["class"] == "large_consistent_unresolved"
+    ]
+    report.effect(
+        "against the Transformer this is large and consistent on the moisture",
+        "large_cells",
+        [obs(c) for c in tm_moist_large],
+        thr,
+        n_s,
+        effect_source,
+    )
+    report.effect(
+        "only an uncorrected tendency on energy and bed temperature",
+        "below_large",
+        [
+            {"ratio": effects["N"]["summary"]["transformer"][ch]["ratio_median"]}
+            for ch in ("energy_target", "bed_temperature_celsius")
+        ],
+        thr,
+        n_s,
+        effect_source,
+    )
+    report.effect(
+        "large and consistent across all seeds but not resolved under Holm with five seeds",
+        "large_median",
+        aggregate(xl_cells),
+        thr,
+        n_s,
+        effect_source,
+    )
+    report.effect(
+        "The xLSTM deficit is large and consistent across all seeds, not resolved under Holm with five seeds and a family of 336 tests",
+        "large_median",
+        aggregate(xl_cells),
+        thr,
+        n_s,
+        effect_source,
+    )
+    report.effect(
+        "is called **large and consistent across all seeds, not resolved under Holm with five seeds and a family of 336 tests**",
+        "definition",
+        [],
+        thr,
+        n_s,
+        "definition of the rule (section 3)",
+    )
+    report.effect(
+        "large and consistent on the moisture (11 of 16 cells, median ratio 1.67)",
+        "large_cells",
+        [obs(c) for c in tm_moist_large],
+        thr,
+        n_s,
+        effect_source,
+    )
+    report.effect(
+        "**Large and consistent (not resolved under Holm).** Median ratio at least 1.5 (or at most 1/1.5) with all seeds on that side",
+        "definition",
+        [],
+        thr,
+        n_s,
+        "definition of the rule (glossary)",
+    )
+    two_cells = [
+        {
+            "ratio": t_energy["ratio_of_medians_200"],
+            "seeds": t_energy["seeds_candidate_worse_200"],
+            "cell": "energy, 200 epochs",
+        },
+        {
+            "ratio": t_bed["ratio_of_medians_200"],
+            "seeds": t_bed["seeds_candidate_worse_200"],
+            "cell": "bed temperature, 200 epochs",
+        },
+        {
+            "ratio": t_energy["ratio_of_medians_600"],
+            "seeds": t_energy["seeds_candidate_worse_600"],
+            "cell": "energy, 600 epochs",
+        },
+        {
+            "ratio": t_bed["ratio_of_medians_600"],
+            "seeds": t_bed["seeds_candidate_worse_600"],
+            "cell": "bed temperature, 600 epochs",
+        },
+    ]
+    conv_effect_source = "convergence_check_94_conv600_main_attempt2.json (cells)"
+    report.effect(
+        "large at the budget of Befund 94 (ratios 1.72 and 1.65, resolved after Holm)",
+        "large_cells",
+        two_cells[:2],
+        thr,
+        n_s,
+        conv_effect_source,
+    )
+    report.effect(
+        "the bed-temperature cell remains large (1.55)",
+        "large_cells",
+        [two_cells[3]],
+        thr,
+        n_s,
+        conv_effect_source,
+    )
+    report.effect(
+        "the energy cell is below the threshold for large (1.43)",
+        "below_large",
+        [two_cells[2]],
+        thr,
+        n_s,
+        conv_effect_source,
+    )
+    report.truth(
+        "consistent across all seeds and at the Holm threshold",
+        all(c["seeds"] == n_s for c in two_cells)
+        and [cc["holm_200"] for cc in changed] == ["candidate worse"] * 2
+        and [cc["holm_600"] for cc in changed] == ["unresolved"] * 2,
+        "both cells: all five seeds worse at both budgets; worse after Holm at 200 epochs, not resolved at 600",
+        conv_effect_source,
+    )
+
     fam = next(f for f in seeds83["families"] if f["family"] == "b63_67")
     mamba_cm = [
         c for c in fam["cells"] if c["candidate"] == "mamba_cm" and c["reference"] == "lstm"
@@ -1876,6 +2072,33 @@ def main() -> int:
         present = normalise(literal) in text
         exempt_results.append(
             {"exemption": literal, "in_text": present, "verified": bool(verified), "reason": reason}
+        )
+
+    # ---- effect labels: every occurrence is backed by a check against the thresholds ---------------
+    label_rx = re.compile(r"large and consistent|remains large|large at the budget|moderate", re.I)
+    unchecked_labels: list[str] = []
+    for start_head, end_head in (
+        ("## Summary", "## Changes from version 5"),
+        ("## 1. Question and frame", "## Appendix F"),
+    ):
+        region = text[text.index(start_head) : text.index(end_head)]
+        spans = []
+        for frag in report.effect_fragments:
+            at = region.find(frag)
+            while at != -1:
+                spans.append((at, at + len(frag)))
+                at = region.find(frag, at + 1)
+        for m in label_rx.finditer(region):
+            if not any(a <= m.start() and m.end() <= b for a, b in spans):
+                unchecked_labels.append(region[max(0, m.start() - 60) : m.end() + 40])
+    for context_text in unchecked_labels:
+        report.results.append(
+            {
+                "fragment": context_text,
+                "effect_label": "unchecked",
+                "status": "DEVIATING",
+                "source": "effect-label rule",
+            }
         )
 
     # ---- coverage ----------------------------------------------------------------------
