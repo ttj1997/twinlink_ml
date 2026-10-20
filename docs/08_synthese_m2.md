@@ -2,7 +2,7 @@
 
 > Milestone M2 (TUHH-B, AP1): "Methodology of simulation and ML modelling documented
 > (procedures, tools, templates; reduction of the training-data need)"
-> (`docs/01_projektsteckbrief.md`). **Version 5e**, state 2026-10-20, draft for review by the
+> (`docs/01_projektsteckbrief.md`). **Version 5f**, state 2026-10-20, draft for review by the
 > project lead, revised after review 4 (`docs/reviews/2026-10-19/review4_synthesis_v5.md`) and its
 > follow-up check 4b (`docs/reviews/2026-10-19/review4b_followup.md`), with the convergence check
 > of Befund 104.
@@ -28,7 +28,8 @@ tendency on energy and bed temperature. GRU is recommended as the default on pra
 (fewer parameters, lower latency), not as a performance rank: after Holm no GRU-against-LSTM cell
 is resolved. Mamba and the baselines are
 resolved behind LSTM after Holm in part of the cells, and the deficit of the xLSTM (mLSTM-only
-variant) is large and consistent across all seeds but not resolved under Holm with five seeds. The
+variant) is large and consistent across all seeds but not resolved under Holm with five seeds (median
+ratio 3.3; 40 of 48 cells individually at least 1.5; all seeds worse in all 48 cells). The
 networks differ in size by a factor of about seven; on the old data, at equal capacity the sLSTM and the
 mixed variant largely close the gap to the LSTM on energy and bed temperature but not on the moisture,
 and no capacity-matched variant is better than GRU or LSTM; a larger Mamba stays behind.
@@ -44,6 +45,13 @@ on excited data (old data, Befund 55), and plant records contain little dynamics
 excitation experiment at the plant. Inference is far below the sample time of 25 s for every method. Open: a validation against
 plant data (the moisture is not measured at the plant), the placeholder parameters, and more seeds
 where the paired spread is large.
+
+## Changes from version 5e (xLSTM cell distribution, 2026-10-20)
+
+- **xLSTM** (summary and section 3): "large and consistent across all seeds" now carries its cell
+  distribution: median ratio 3.3, 40 of 48 cells individually at least 1.5 (the other 8 between 1.05
+  and 1.5), all seeds worse in all 48 cells. No new effect level is introduced and no threshold is changed.
+- Version 5f is the version frozen for dispatch (`docs/12` section H).
 
 ## Changes from version 5d (effect-size wording, 2026-10-20)
 
@@ -259,7 +267,8 @@ ranking.**
 39 (Transformer), 38 (xLSTM) and 44 (Mamba) of 48 cells without correction, never better. After Holm
 the deficit is resolved in 14 of 48 cells for Mamba, in 2 of 48 for the Transformer and in 2 of 48
 for xLSTM. **The xLSTM deficit is large and consistent across all seeds, not resolved under Holm with
-five seeds and a family of 336 tests:** every seed is worse in all 48 cells, the median ratio is 3.3;
+five seeds and a family of 336 tests:** every seed is worse in all 48 cells, the median ratio is 3.3 and 40 of the 48 cells individually have a ratio of at least 1.5 (the other 8 lie
+between 1.05 and 1.5);
 on the energy target at horizon 36 the xLSTM median is 10.4 to 24.5 times the LSTM's in all 8 cells
 (both test sets, all budgets) with every seed worse, and none of these cells survives Holm. At
 $n_{\mathrm{train}}$ = 64 the xLSTM median on the energy target is also 3.4 (excited) and 2.3

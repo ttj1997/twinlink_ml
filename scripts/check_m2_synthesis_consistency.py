@@ -1,4 +1,4 @@
-r"""Consistency check of ``docs/08_synthese_m2.md`` (version 5e): every number of the summary, of
+r"""Consistency check of ``docs/08_synthese_m2.md`` (version 5f): every number of the summary, of
 sections 1-8 and of appendices A-E against its committed artifact or configuration.
 
 No new run, no simulation: pure re-reading of committed artifacts and configuration files. Three parts:
@@ -24,6 +24,9 @@ Version 5b (review 4, finding 22): the exemptions "600 s", "month 21" and "1 bar
 the configuration and the plan row instead of a bare grep; "0.80 m/s" against the configuration;
 "Holm (5 %)" against ``analyze_rerun.ALPHA`` (the analysis of Befund 94); number words are covered;
 the loose tolerances are replaced by claims with the rounding of the written number.
+
+Version 5f: the cell distribution of the xLSTM statement (40 of 48 cells at least 1.5, the rest above 1) is
+checked against the effect-size artifact; no new effect level and no new threshold.
 
 Version 5e: EFFECT LABELS. Every occurrence of an effect label of the text ("large and consistent", "remains large",
 "large at the budget", "moderate") must lie inside a fragment registered with ``Report.effect``, which checks the
@@ -71,7 +74,7 @@ from analyze_rerun import ALPHA as RERUN_ALPHA
 
 SYNTHESIS = REPO_ROOT / "docs" / "08_synthese_m2.md"
 CONFIG = REPO_ROOT / "conf" / "process" / "greybox_gab_placeholder.yaml"
-ARTIFACT_NAME = "check_m2_synthesis_consistency_v5e"
+ARTIFACT_NAME = "check_m2_synthesis_consistency_v5f"
 MICRO = "µ"
 WORDS = {
     "one": 1,
@@ -781,6 +784,45 @@ def main() -> int:
         aggregate(xl_cells),
         thr,
         n_s,
+        effect_source,
+    )
+    xl_ratios = [c["ratio_of_medians"] for c in xl_cells]
+    xl_large = sum(r >= thr for r in xl_ratios)
+    xl_small = [r for r in xl_ratios if r < thr]
+    xl_all_worse = all(c["seeds_candidate_worse"] == n_s for c in xl_cells)
+    report.claim(
+        "(median ratio 3.3; 40 of 48 cells individually at least 1.5; all seeds worse in all 48 cells)",
+        [
+            ("3.3", statistics.median(xl_ratios)),
+            ("40", xl_large),
+            ("48", len(xl_cells)),
+            ("1.5", thr),
+            ("48", len(xl_cells)),
+        ],
+        effect_source,
+    )
+    report.truth(
+        "all seeds worse in all 48 cells",
+        xl_all_worse and len(xl_cells) == 48,
+        "xLSTM against LSTM: all five seeds worse in all 48 cells",
+        effect_source,
+    )
+    report.claim(
+        "40 of the 48 cells individually have a ratio of at least 1.5 (the other 8 lie between 1.05 and 1.5)",
+        [
+            ("40", xl_large),
+            ("48", len(xl_cells)),
+            ("1.5", thr),
+            ("8", len(xl_small)),
+            ("1.05", min(xl_small)),
+            ("1.5", thr),
+        ],
+        effect_source,
+    )
+    report.truth(
+        "the other 8 lie between 1.05 and 1.5",
+        all(1.0 < r < thr for r in xl_small),
+        "the cells below the threshold of 1.5 are worse than the LSTM (ratio above 1)",
         effect_source,
     )
     report.effect(

@@ -54,7 +54,8 @@ corrected data basis (preset version 2, Befund 94, gate passed) reproduces the e
 - **Transformer, xLSTM, Mamba, ARX, static regression, persistence** are resolvably worse than
   the LSTM in the large majority of cells (uncorrected); xLSTM on moisture stays unresolved in 7 of
   16 cells. *After Holm (2026-10-16): Mamba and the baselines are resolved behind the LSTM in part of the cells. The xLSTM deficit
-  is large and consistent across all seeds, not resolved under Holm with five seeds and a family of
+  is large and consistent across all seeds (median ratio 3.3; 40 of 48 cells individually at least
+  1.5; all seeds worse in all 48 cells), not resolved under Holm with five seeds and a family of
   336 tests (the Transformer deficit on moisture likewise); only small or inconsistent cells are called
   an uncorrected tendency (Befund 98, `docs/08` version 5b).*
 - **The middle of the order** (Transformer, xLSTM) changes between "unresolved" and "worse" from
