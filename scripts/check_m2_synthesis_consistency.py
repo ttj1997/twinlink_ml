@@ -1,4 +1,4 @@
-r"""Consistency check of ``docs/08_synthese_m2.md`` (version 5c): every number of the summary, of
+r"""Consistency check of ``docs/08_synthese_m2.md`` (version 5d): every number of the summary, of
 sections 1-8 and of appendices A-E against its committed artifact or configuration.
 
 No new run, no simulation: pure re-reading of committed artifacts and configuration files. Three parts:
@@ -25,6 +25,9 @@ the configuration and the plan row instead of a bare grep; "0.80 m/s" against th
 "Holm (5 %)" against ``analyze_rerun.ALPHA`` (the analysis of Befund 94); number words are covered;
 the loose tolerances are replaced by claims with the rounding of the written number.
 
+Version 5d: claims for the convergence check of Befund 104 (artifact
+``convergence_check_94_conv600_main_attempt2`` and its compressed records) are added.
+
 Version 5c (review 4b): the claims for the epoch cap (addendum to Befund 94, artifact
 ``befund94_addendum_epoch_cap_rerun_full``), for the sample time of the YAML configuration (5 s against
 the 25 s of ``DataSpec``) and for the statement that no capacity-matched variant is better than GRU or LSTM
@@ -39,6 +42,7 @@ Call::
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
 import re
 import statistics
@@ -59,7 +63,7 @@ from analyze_rerun import ALPHA as RERUN_ALPHA
 
 SYNTHESIS = REPO_ROOT / "docs" / "08_synthese_m2.md"
 CONFIG = REPO_ROOT / "conf" / "process" / "greybox_gab_placeholder.yaml"
-ARTIFACT_NAME = "check_m2_synthesis_consistency_v5c"
+ARTIFACT_NAME = "check_m2_synthesis_consistency_v5d"
 MICRO = "µ"
 WORDS = {
     "one": 1,
@@ -558,6 +562,118 @@ def main() -> int:
             ("4", cap_all["xlstm"]["at_cap"]),
         ],
         cap_source,
+    )
+    conv = load("convergence_check_94_conv600_main_attempt2")
+    conv_source = "convergence_check_94_conv600_main_attempt2.json, conv600_main_N.jsonl.gz"
+    with gzip.open(RUNS_DIR / "conv600_main_N.jsonl.gz", "rt", encoding="utf-8") as handle:
+        conv_records = [json.loads(line) for line in handle if line.strip()]
+    cap600 = {int(r["params"]["model/net_max_epochs"]) for r in conv_records}
+    conv_sizes = sorted({int(r["params"]["n_train"]) for r in conv_records})
+    conv_rows = conv["epochs"]["rows"]
+    report.claim(
+        "(600 epochs, same data and seeds; GRU, LSTM and Transformer at 16 and 64 runs) lets every head stop regularly (none of 90 head-trainings reaches 600 epochs)",
+        [
+            ("600", max(cap600)),
+            ("16", conv_sizes[0]),
+            ("64", conv_sizes[-1]),
+            ("90", len(conv_rows)),
+            ("600", max(cap600)),
+        ],
+        conv_source,
+    )
+    report.truth(
+        "lets every head stop regularly",
+        len(cap600) == 1 and all(r["epochs_600"] < max(cap600) for r in conv_rows),
+        "no head-training of the convergence check reaches the cap of 600 epochs",
+        conv_source,
+    )
+    changed = conv["reading"]["primary_holm_verdicts_changed"]
+    report.claim(
+        "two Holm verdicts at the threshold change (Transformer against LSTM at 16 runs, section 3)",
+        [("two", len(changed)), ("16", changed[0]["key"][1])],
+        conv_source,
+    )
+    report.truth(
+        "two Holm verdicts at the threshold change",
+        all(
+            c["key"][0] == "transformer"
+            and c["holm_200"] == "candidate worse"
+            and c["holm_600"] == "unresolved"
+            for c in changed
+        ),
+        "both changed verdicts are Transformer against LSTM, worse after Holm at 200 epochs, not resolved at 600",
+        conv_source,
+    )
+
+    def conv_cell(
+        candidate: str, reference: str, n: int, test: str, channel: str, horizon: int
+    ) -> dict[str, Any]:
+        return next(
+            c
+            for c in conv["cells"]
+            if (
+                c["candidate"],
+                c["reference"],
+                c["n_train"],
+                c["test_set"],
+                c["channel"],
+                c["horizon"],
+            )
+            == (candidate, reference, n, test, channel, horizon)
+        )
+
+    t_energy = conv_cell("transformer", "lstm", 16, "excited", "energy_target", 1)
+    t_bed = conv_cell("transformer", "lstm", 16, "excited", "bed_temperature_celsius", 36)
+    report.claim(
+        "At 16 runs, two cells of the Transformer against the LSTM (excited test set, energy and bed temperature) are large and consistent across all seeds, at the Holm threshold: resolved after Holm at the budget of Befund 94 (ratios 1.72 and 1.65), not after Holm in the convergence check of Befund 104 (1.43 and 1.55); all five seeds are worse in both",
+        [
+            ("16", changed[0]["key"][1]),
+            ("two", len(changed)),
+            ("1.72", t_energy["ratio_of_medians_200"]),
+            ("1.65", t_bed["ratio_of_medians_200"]),
+            ("1.43", t_energy["ratio_of_medians_600"]),
+            ("1.55", t_bed["ratio_of_medians_600"]),
+            ("five", len(seeds_n)),
+        ],
+        conv_source,
+    )
+    report.truth(
+        "all five seeds are worse in both",
+        all(
+            c[f"seeds_candidate_worse_{e}"] == len(seeds_n)
+            for c in (t_energy, t_bed)
+            for e in (200, 600)
+        ),
+        "the five seeds are all worse in both cells at both budgets",
+        conv_source,
+    )
+    gl = conv["verdict_counts_primary"]
+    gru_primary = [
+        c
+        for c in conv["main_family"]["cells"]
+        if c["key"][0] == "gru" and c["key"][3] != "product_moisture_kg_per_kg"
+    ]
+    report.claim(
+        "(Befund 104; 16 and 64 runs, energy and bed temperature, 16 cells) GRU is better in 5 cells without correction at the budget of Befund 94 and in 3 with longer training, never resolved worse, and in no cell resolved under Holm",
+        [
+            ("16", conv_sizes[0]),
+            ("64", conv_sizes[-1]),
+            ("16", gl["200"]["gru_vs_lstm"]["cells"]),
+            ("5", gl["200"]["gru_vs_lstm"]["better"]),
+            ("3", gl["600"]["gru_vs_lstm"]["better"]),
+        ],
+        conv_source,
+    )
+    report.truth(
+        "never resolved worse, and in no cell resolved under Holm",
+        gl["200"]["gru_vs_lstm"]["worse"] == 0
+        and gl["600"]["gru_vs_lstm"]["worse"] == 0
+        and len(gru_primary) == 16
+        and all(
+            c["holm_200"] == "unresolved" and c["holm_600"] == "unresolved" for c in gru_primary
+        ),
+        "GRU against LSTM: no cell worse, no cell resolved after Holm at 200 or 600 epochs",
+        conv_source,
     )
     fam = next(f for f in seeds83["families"] if f["family"] == "b63_67")
     mamba_cm = [

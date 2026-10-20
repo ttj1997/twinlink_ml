@@ -2,9 +2,10 @@
 
 > Milestone M2 (TUHH-B, AP1): "Methodology of simulation and ML modelling documented
 > (procedures, tools, templates; reduction of the training-data need)"
-> (`docs/01_projektsteckbrief.md`). **Version 5c**, state 2026-10-19, draft for review by the
+> (`docs/01_projektsteckbrief.md`). **Version 5d**, state 2026-10-20, draft for review by the
 > project lead, revised after review 4 (`docs/reviews/2026-10-19/review4_synthesis_v5.md`) and its
-> follow-up check 4b (`docs/reviews/2026-10-19/review4b_followup.md`).
+> follow-up check 4b (`docs/reviews/2026-10-19/review4b_followup.md`), with the convergence check
+> of Befund 104.
 > Every number in the summary, in sections 1 to 8 and in appendices A to E is traced to a finding
 > in `docs/04_stand_ap1.md` and a committed artifact (appendix F) and is checked against that
 > artifact or configuration by `scripts/check_m2_synthesis_consistency.py`, or listed there as not
@@ -43,6 +44,16 @@ on excited data (old data, Befund 55), and plant records contain little dynamics
 excitation experiment at the plant. Inference is far below the sample time of 25 s for every method. Open: a validation against
 plant data (the moisture is not measured at the plant), the placeholder parameters, and more seeds
 where the paired spread is large.
+
+## Changes from version 5c (convergence check, 2026-10-20)
+
+- **Fixed training budget** (section 7): Befund 94 remains the main result; Befund 104 is the
+  robustness check with a larger budget (every head stops regularly, order and effect sizes
+  unchanged, two Holm verdicts at the threshold change).
+- **Section 3:** the Transformer against the LSTM at 16 runs on energy and bed temperature (large and
+  consistent across all seeds, at the Holm threshold) and the GRU against the LSTM in the convergence
+  check (better in some cells without correction, never resolved worse, none resolved under Holm).
+- **Appendix F:** row for the artifact of Befund 104. The summary is unchanged (it names no budget).
 
 ## Changes from version 5b (review 4b, 2026-10-19)
 
@@ -226,7 +237,9 @@ better than LSTM in 5 of 16 and 9 of 16 cells without correction and never worse
 mostly at horizon 1: 7 of the 9 cells); the effect is small (median ratio of the medians 0.94 on
 energy and 0.98 on bed temperature). **After Holm correction, no GRU-versus-LSTM cell is resolved in
 any channel** (also not when the family is restricted to the GRU cells, a post-hoc sensitivity;
-Befund 98, addendum to Befund 94): an uncorrected tendency. GRU is recommended as the default on
+Befund 98, addendum to Befund 94): an uncorrected tendency. In the convergence check (Befund 104; 16 and 64 runs, energy and bed
+temperature, 16 cells) GRU is better in 5 cells without correction at the budget of Befund 94 and in 3
+with longer training, never resolved worse, and in no cell resolved under Holm. GRU is recommended as the default on
 practical grounds: never resolved worse, about 25 % fewer parameters (42,819 against 57,027, Befund
 28), lower single-window latency (Befund 97; LSTM is faster in batch). **This is not a performance
 ranking.**
@@ -244,7 +257,10 @@ not resolved. The optimisation of the xLSTM diverges on the energy target (Befun
 moisture its seed spread is large and it stays unresolved in 7 of 16 cells (uncorrected). The
 **Transformer** deficit is large and consistent on the moisture (11 of 16 cells, median ratio 1.67)
 and small on energy and bed temperature (median ratio 1.26 and 1.16): there it is an uncorrected
-tendency. **Mamba** is resolved behind LSTM in 14 of 48 cells after Holm (median ratio 3.2).
+tendency. At 16 runs, two cells of the Transformer against the LSTM (excited test set, energy and bed
+temperature) are large and consistent across all seeds, at the Holm threshold: resolved after Holm at
+the budget of Befund 94 (ratios 1.72 and 1.65), not after Holm in the convergence check of Befund 104
+(1.43 and 1.55); all five seeds are worse in both. **Mamba** is resolved behind LSTM in 14 of 48 cells after Holm (median ratio 3.2).
 Baselines against LSTM, resolved worse after Holm: static regression in 21 of 48 cells, persistence
 in 19, ARX in 12; persistence is better than LSTM in one cell (energy, uncorrected).
 
@@ -392,7 +408,11 @@ sensor against plant data is still open.
   it at 64 runs: Transformer 10 of 15, Mamba 9 of 15, LSTM 5 of 15, GRU 4 of 15, xLSTM 2 of 15 (addendum
   to Befund 94); their best epoch lies in the last 20 epochs, so those curves had not flattened. The
   comparison is made at this budget and every rank statement holds for it, not for networks trained to
-  convergence.
+  convergence; Befund 94 is the main result at this budget. The convergence check of Befund 104
+  (600 epochs, same data and seeds; GRU, LSTM and Transformer at 16 and 64 runs) lets every head stop
+  regularly (none of 90 head-trainings reaches 600 epochs) and leaves the order and the effect sizes
+  unchanged; two Holm verdicts at the threshold change (Transformer against LSTM at 16 runs, section 3).
+  The xLSTM, Mamba and the baselines were not retrained.
 - **Five seeds.** Large differences are resolved; on the moisture of the constant-run holdout and for
   the Transformer more seeds are needed (section 2); the family-wise correction is conservative.
 - **A single timing run** on a single machine (Befund 97); the networks used for the timing were
@@ -597,6 +617,7 @@ artifact in the current history · script that writes it · checked by
 | Hybrid simulator share (4, 6) | 253,136 of 256,123 µs, 98.8 % | 97 | `a1_inference_time_v2_idle.json` | 3ce113a | `measure_joint_timing.py` | yes |
 | Run-level against window-wise split (2, 5) | 29-68 % | 39 | `extra_trees_split_comparison.jsonl` | 7384455 | `run_extra_trees_split_comparison.py` | yes |
 | Data need (6, D) | ratios to 64 runs, absolute errors, 12 of 12 / 2 after Holm, baselines | 94 addendum | `befund94_addendum_seeds_data_need_rerun_full.json` | 198afc1 | `analyze_94_addendum_seeds_data_need.py` | yes |
+| Convergence check at a larger budget (3, 7) | no head reaches the new cap; GRU against LSTM 5 and 3 cells better uncorrected; two Holm verdicts of the Transformer at 16 runs drop out | 104 | `convergence_check_94_conv600_main_attempt2.json`, `conv600_main_N.jsonl.gz` | 294c9ea, ec0fb6a | `analyze_convergence_check_94.py`, `run_convergence_check_94.py` | yes |
 | Epoch cap (3, 7, B) | heads at the cap of 200 epochs: 44 / 33 / 32 / 22 / 4 of 60 (Transformer, GRU, LSTM, Mamba, xLSTM); at 64 runs 10 / 9 / 5 / 4 / 2 of 15 | 94 addendum | `befund94_addendum_epoch_cap_rerun_full.json` | 6930205 | `analyze_94_epoch_cap.py` | yes |
 | Constant-trained model against excited (6) | factor 2 to 3 | 55 with addendum | `befund55_addendum_ratio_range.json` | 6ef5501 | `analyze_55_addendum_ratio_range.py` | yes |
 | Plant data variation (6) | 0.12-2.01 % | 56a | raw plant data not in the repository | - | - | no: raw data are never in the repository |

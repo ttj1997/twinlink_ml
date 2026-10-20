@@ -39,7 +39,9 @@ epochs with early stopping), not for the architectures in general. The networks 
 (`docs/08`, section 3, Befund 67); at equal capacity (Befund 67, old data) the sLSTM and the
 mixed variant largely close the gap to the LSTM on energy and bed temperature but not on the moisture,
 no capacity-matched variant is better than GRU or LSTM, and a larger Mamba stays behind. The fixed
-training budget (200 epochs) is reached by part of the heads of every network (addendum to Befund 94). Verdicts are paired over five seeds
+training budget (200 epochs) is reached by part of the heads of every network (addendum to Befund 94). A convergence check with 600 instead of 200 epochs (Befund 104; GRU, LSTM and Transformer at 16
+and 64 runs) lets every head stop regularly and leaves the order and the effect sizes unchanged; two
+Holm verdicts at the threshold change (Transformer against LSTM at 16 runs). Verdicts are paired over five seeds
 (Befund 83, 94), per cell and not corrected for multiplicity: after Holm only about a quarter of
 the rank cells remain (old data 82 of 336, new data 70 of 336, Befund 94). The re-run on the
 corrected data basis (preset version 2, Befund 94, gate passed) reproduces the ends of the order:
