@@ -1,7 +1,6 @@
 # 24 -- Dynamic headroom in continuous operation (headroom test before further RL work)
 
-Status: design and code committed before the first run; results in section 8 (filled after the
-run, numbers only from the artifacts named there). Branch `dynamic-headroom`; the finding number
+Status: run and evaluated (section 8; numbers only from the artifacts named there). Reading: L0. Branch `dynamic-headroom`; the finding number
 is assigned on merge.
 
 ## 1. Question and decision rule
@@ -160,8 +159,95 @@ on the nominal truth against the nominal margins.
 
 ## 8. Results
 
-Pending (filled from `artifacts/runs/dynamic_headroom_v1.json.gz` and
-`artifacts/runs/dynamic_headroom_v1_analysis.json`).
+Artifacts: `artifacts/runs/dynamic_headroom_v2.json.gz` (driver commit `5a38798`, clean tree) and
+`artifacts/runs/dynamic_headroom_v2_analysis.json` (analysis script committed in `d30a83f`, before
+the first run). All numbers below are from these two files.
+
+**Attempt 1 (disclosed).** `dynamic_headroom_v1` (commit `d30a83f`) aborted after 5.5 h in the
+verification step of the R3 search of the family "observed": one SX MPC solver per scenario,
+eight per worker, exhausted the memory (`std::bad_alloc`). The R3 optimiser was switched to MX
+(same model and problem, `5a38798`) and the run restarted from scratch; attempt 1 left only its
+gitignored evaluation cache and no artifact.
+
+### 8.1 Required margins (kg/kg, family-wide, path condition at every 5 s sample)
+
+| family | R0 | R1 | R3 | R2 |
+|---|---|---|---|---|
+| observed | 0.04355 | 0.00664 | 0.00270 | 0.00021 |
+| stress | 0.07129 | 0.01680 | 0.01224 | 0.00013 |
+
+All searches converged; largest violation at the returned margins 5.2e-5 (R3, observed) and
+6.4e-5 (R2, stress), below the tolerance 1e-4. No solver failure, no R2 fallback in the families
+observed and stress; R3 needed 32 (observed) and 51 (stress) IPOPT iterations per solve in the
+median of the scenario means.
+
+### 8.2 Energy gaps (median, range over scenarios)
+
+| family | g13 = (E_R1 - E_R3)/E_R1 | g12 = (E_R1 - E_R2)/E_R1 | g10 = (E_R0 - E_R1)/E_R0 |
+|---|---|---|---|
+| observed (105) | **0.55 %** (0.05 .. 1.50 %) | 1.51 % (1.02 .. 2.44 %) | 8.93 % (0.69 .. 25.23 %) |
+| stress (80) | 0.71 % (-0.69 .. 1.71 %) | 3.89 % (3.28 .. 6.29 %) | 14.39 % (7.72 .. 33.80 %) |
+
+CO2 (gas-fired heater): g13 0.50 % (-0.19 .. 2.33 %), g12 1.46 % (-0.99 .. 3.75 %) in observed.
+Median energy per 24 h scenario, observed: R0 29.72, R1 26.18, R3 25.95, R2 25.70 kWh.
+
+**Pre-registered reading: L0** (pooled median g13 = 0.55 % < 2 %). No observed type falls in another
+class; even the upper bound with perfect preview (g12) stays below 2 % in the median.
+
+### 8.3 Decomposition (observed, medians)
+
+| type | g13 | margin share | trajectory share | g12 |
+|---|---|---|---|---|
+| ambient | 0.59 % | 0.94 % | -0.33 % | 1.53 % |
+| throughput | 0.64 % | 0.91 % | -0.25 % | 1.55 % |
+| solid_fraction | 0.59 % | 0.92 % | -0.34 % | 1.56 % |
+| inlet_temperature_slow | 0.60 % | 0.91 % | -0.31 % | 1.48 % |
+| inlet_temperature_fast | 0.19 % | 0.93 % | -0.75 % | 1.46 % |
+| pooled | 0.55 % | 0.92 % | -0.35 % | 1.51 % (margin 1.49 %, trajectory 0.06 %) |
+
+The whole gap is margin: R3 needs a smaller margin than R1 (0.0027 against 0.0066) and that is worth
+0.92 %; at equal margin R3's trajectory costs 0.35 % more than the quasi-stationary one (its 2 h
+prediction holds the current disturbance constant). In `inlet_temperature_fast` (fluctuation below
+the 5-min grid) the margin share is the same 0.93 %, the trajectory share is -0.75 %, the net gap
+0.19 %. The preview optimum's gap is margin as well (1.49 of 1.51 %); with perfect knowledge its
+trajectory gains only 0.06 %. Stress: margin share 1.11 %, trajectory share -0.37 %.
+
+### 8.4 Product change (per changeover, margins of the family observed, 6 h scenario)
+
+| direction (5 each) | dE R2-R1 | dE R3-R1 | time above the new limit after the change: R1 / R2 / R3 (median) |
+|---|---|---|---|
+| moisture target 0.15 -> 0.12 | -0.081 kWh (-1.23 %) | +0.025 kWh (+0.35 %) | 50.3 / 0.3 / 1.3 min |
+| moisture target 0.12 -> 0.15 | -0.173 kWh (-2.60 %) | -0.115 kWh (-1.88 %) | 0 / 0 / 0 |
+| solid fraction 0.30 -> 0.25 | -0.118 kWh (-1.97 %) | -0.059 kWh (-0.88 %) | 0 / 0 / 0 |
+| solid fraction 0.25 -> 0.30 | -0.125 kWh (-1.70 %) | -0.051 kWh (-0.67 %) | 0 / 0 / 0 |
+
+Tightening the target: R1 (steady optimum for the new target from the moment of the change) needs
+37-55 min to reach the new specification, peak exceedance 0.027 kg/kg; R3 dries the bed within
+0.9-1.8 min (up to the gas-velocity bound 2.5 m/s) at +0.35 % energy; R2 dries ahead of the
+change and still exceeds the new limit by 0.0010-0.0027 kg/kg for 20-25 s right after it (the
+soft-constraint weight makes a one-node violation cheap). In two of five scenarios "0.25 -> 0.30"
+R2 used the R1 schedule (its own optimum was rated 0.07-0.11 % worse in the model; safeguard of
+section 4). Product change is reported per changeover; its frequency is unknown.
+
+### 8.5 Robustness (20 isotherm draws, 10 scenarios, none rejected)
+
+R1 per-draw margins 0.00215-0.00664; 95 % margin (19 of 20) 0.00566. R3 holds in all 20 draws at its
+nominal margin 0.00270, so its 95 % margin is the nominal one. Energy cost on the nominal truth
+against the family-wide nominal margins: R1 -0.23 % (-0.32 .. -0.21 %), R3 0.00 %. **Candidate
+"robust control": not open** under the pre-registered rule.
+
+Caveat (design, found in the evaluation): the R1 per-draw search started at 0 on the 10-scenario
+subset, R3's at its family-wide nominal margin. The negative R1 cost therefore only says that this
+subset needs less than the family-wide margin, not that the spread is free. What the data support:
+in the placeholder band, the isotherm spread needs no margin beyond the family-wide nominal ones
+(R1 in 19 of 20 draws, R3 in 20 of 20). What they do not give: the margin the spread costs relative
+to the subset's own nominal requirement (not computed).
+
+### 8.6 Run time
+
+Main run 29.4 h on 14 workers (observed 8.9 h, of which R3 search 6.5 h; stress 12.6 h, R3 search
+10.1 h; product change 0.2 h; robustness 7.8 h, R3 k-of-n search 6.7 h), plus 5.5 h of the aborted
+attempt 1. R3 costs about 1-1.3 s per MPC solve (288 per 24 h scenario).
 
 ## 9. Open placeholders and limitations
 
@@ -169,6 +255,10 @@ Placeholders: quality limit 0.15; u_min 0.80; start margin 0.01; second product 
 all scenario amplitudes (observed ones derived from plant data, relative only); GAB band of the
 robustness variant; gas-heater efficiency 0.80; soft-constraint weight; the whole process config
 (placeholder status).
+
+Open from the evaluation: the robustness cost relative to the subset's own nominal margin
+(section 8.5); the soft-constraint weight (placeholder) decides how long R2 tolerates a one-node
+exceedance at a product change (section 8.4).
 
 Limitations: one lab line with a 4-state model (no particle-size dynamics in the moisture or
 energy balance); controllers see the true state (no estimator, no measurement noise); family-wide
