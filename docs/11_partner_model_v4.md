@@ -881,7 +881,7 @@ One switch back to `partner` from all-`physical`:
 
 ## 12. Delivery 4.1_2: one line in Dyssol, five data sets, plausibility checks (feedback to the partner)
 
-Branch `partner-v41-2` (not merged, not pushed). Lab book: Befund NN (number to be assigned by the managing session). **Question:** does the reproduction of 4.1_1 (sections 7 and 11) carry over to the new version 4.1_2, do the partner's own Excel and Dyssol figures of five data sets agree with each other and with an independent rebuild, are they physically plausible, and what changes with a physical exchanger and medium?
+Branch `partner-v41-2` (merged into `master` on 2026-10-22). Lab book: Befund 106. **Question:** does the reproduction of 4.1_1 (sections 7 and 11) carry over to the new version 4.1_2, do the partner's own Excel and Dyssol figures of five data sets agree with each other and with an independent rebuild, are they physically plausible, and what changes with a physical exchanger and medium?
 
 **Files** (confidential, in `local/` of the main checkout, never copied into the worktree, never committed; read through `TWINLINK_LOCAL_DIR`): `local/partner/Model v4.1_2.xlsx` (the name has a space, not an underscore; the code accepts both), `local/partner/Comparison.xlsx` (sheets Dryer, Heater, Heat recovery, Combined; five data sets each, an Excel and a Dyssol value per result), `local/partner/Simulation.dflw` (HDF5 file of the stationary Dyssol flowsheet of one line). **The old version 4.1_1 is not in `local/partner/`**; it is the workbook of section 7, `local/Model v4.1.xlsx` (left where it is). 4.1_2 is derived from it (same sheets, same formula layout; 12.1).
 
