@@ -1,8 +1,8 @@
 # 25 -- Global sensitivity analysis (Sobol indices) of the steady-state models
 
-Status: design fixed before the run (sections 1-6); results in sections 7-9 (written after the
-run, numbers only from the artifact named there). Branch `sensitivity`; finding number open (lab
-book, assigned by the managing session).
+Status: run and evaluated. Design fixed before the run (sections 1-6, commit `ac7befe`); results in
+sections 7-9 (numbers only from `artifacts/runs/sobol_steady_v1.json`). Branch `sensitivity`;
+finding number open (lab book "Befund NN", assigned by the managing session).
 
 ## 1. Question and use
 
@@ -149,3 +149,188 @@ the optimal command is. With 14 workers about 25 runs/s, so 2^12 for E, O and R 
 (the request allowed a smaller budget, e.g. 2^9).
 
 Driver: `scripts/run_sensitivity.py` (committed before the run, clean tree, resumable cache).
+
+## 7. Results
+
+Artifact: `artifacts/runs/sobol_steady_v1.json` (driver commit `ac7befe`, clean tree,
+`git/dirty=False`; per-run records in the gitignored cache `_sobol_steady_v1_cache.jsonl`). All
+numbers below are from this file. "w" = full width of the 95 % interval. Indices of design E are
+relative to the variance caused by the epistemic inputs at the nominal operating point.
+
+### 7.1 Convergence (pre-registered criterion)
+
+**The pre-registered criterion is not met at 2^12**: of 80 cases (output x design x variant with
+at least one dominant input) 5 meet it, all in design J of P1. The S1 intervals are the binding
+part; even an output that depends on one input only (P1 unpressurised, heater duty: S1 = ST =
+1.000) has w(S1) = 0.073 and w(ST) = 0.061 at N = 4096. With the criterion on ST alone (not
+pre-registered, for orientation only) 19 of 80 would pass. The point estimates do not move with
+the doubling, and the widths fall like 1/sqrt(N), e.g. P2 E, (b), critical moisture:
+
+| N | S1 (w) | ST (w) |
+|---|---|---|
+| 1024 | 0.515 (0.112) | 0.517 (0.085) |
+| 2048 | 0.516 (0.077) | 0.518 (0.060) |
+| 4096 | 0.516 (0.058) | 0.518 (0.042) |
+
+Reading (post hoc, labelled as such): the ranking of the dominant inputs is resolved at 2^12
+wherever it is stated below (intervals of ST separated); the absolute index values carry the
+stated widths. Meeting the criterion for indices near 1 would need about 2^14 (P2 design E: about
+4 h on 14 workers at the measured rate); not run (decision open).
+
+### 7.2 P2 (lab line), design E: epistemic inputs at the nominal operating point
+
+| output | mean (std) | dominant inputs, ST (w) |
+|---|---|---|
+| (a) energy at the fixed point | 1.239 (0.0055) kW | heat loss 0.987 (0.061) |
+| (a) CO2 at the fixed point | 0.311 (0.022) kg/h | gas-heater efficiency 0.996 (0.060) |
+| (a) moisture at the fixed point | 0.119 (0.026) kg/kg | critical moisture 0.497 (0.045), nu_max 0.422 (0.036) |
+| (b) energy at the optimum | 1.156 (0.088) kW | critical moisture 0.518 (0.042), nu_max 0.388 (0.032); heat loss 0.097 (0.009) |
+| (b) CO2 at the optimum | 0.290 (0.030) kg/h | gas-heater efficiency 0.467 (0.040), critical moisture 0.277 (0.025), nu_max 0.208 (0.018) |
+| (c) optimal inlet temperature | 88.4 (7.67) degC | critical moisture 0.614 (0.075), nu_max 0.446 (0.061), heat loss 0.107 (0.022) |
+| (c) optimal gas velocity | 0.808 (0.051) m/s | critical moisture 0.895 (0.236), nu_max 0.716 (0.223), heat loss 0.501 (0.196), GAB monolayer 0.120 (0.098) |
+| (d) saving, all valid | 0.067 (0.070) | critical moisture 0.536 (0.043), nu_max 0.401 (0.033) |
+| (d) saving, fixed point feasible | 0.093 (0.056) | critical moisture 0.681 (0.067), nu_max 0.415 (0.050) |
+
+* The **drying kinetics decide** (b), (c) and (d): critical moisture and nu_max together carry
+  at least 0.90 of the variance of (b) (sum of S1, a lower bound of the pair's closed index), 0.85
+  of the inlet temperature (c), 0.93 of (d). Heat loss is third (ST 0.07-0.11).
+* **The isotherm hardly matters here**: the five GAB parameters sum to ST <= 0.001 for (b) and
+  <= 0.029 for the inlet temperature (c); only the gas velocity (c), which leaves its lower bound
+  0.80 m/s in a few samples (std 0.051 m/s), shows the monolayer moisture at ST 0.120 (w 0.098),
+  almost entirely as interaction (S1 0.004). At the RTO moisture (about 0.14 kg/kg) the
+  equilibrium moisture (about 0.03) is small against the span X_cr - X_eq.
+* **cp_vapour**: ST 0.000 for every output (range 1.86-1.906 kJ/(kg K)).
+* **Built-in check**: the gas-heater efficiency, absent from the RTO objective, has ST 0.000 for
+  (b) energy, (c) and (d); it dominates only the CO2 outputs.
+* The optimal gas velocity is a threshold output (mostly at its bound): its indices are
+  interaction-dominated (S1 << ST) and the widest of the study.
+
+**(d) and the 8.9 %.** At the nominal point the steady saving is 9.67 %. Over the epistemic
+ranges its mean is 6.7 % (std 7.0 %) on all valid samples, 9.3 % (std 5.6 %) where the fixed point
+holds the limit; it depends on the drying kinetics (critical moisture ST 0.536, nu_max 0.401),
+i.e. on how much moisture margin the R0 margin really buys. In design O (operative inputs, nominal
+parameters) it depends on throughput (ST 0.561) and solid fraction (ST 0.411) -- the drying load
+-- not on the weather (ST <= 0.081).
+
+### 7.3 P2: where the fixed operating point exceeds the quality limit
+
+In design E the fixed point (inlet temperature 94.97 degC, 0.80 m/s, planned for X = 0.106) exceeds
+0.15 kg/kg in **13.1 % of the base samples** (8192 rows A and B; no fixed-point sample invalid in
+E). Attribution:
+
+| input | share of violations per fifth of its range (low -> high) | ST of the violation indicator (w) |
+|---|---|---|
+| nu_max | 0.430, 0.181, 0.046, 0.000, 0.000 | 0.748 (0.093) |
+| critical moisture | 0.000, 0.007, 0.073, 0.211, 0.365 | 0.690 (0.097) |
+| heat loss UA | 0.046, 0.092, 0.123, 0.165, 0.231 | 0.321 (0.069) |
+| GAB, efficiency, cp_vapour | 0.12-0.14 in every fifth (flat) | <= 0.037 |
+
+**No input alone** makes the fixed point infeasible: at its range end with the others nominal the
+largest moisture is 0.146 kg/kg (critical moisture 0.30) and 0.141 (nu_max 0.40). Violations come
+from combinations of slow drying (low nu_max, high critical moisture) and a large heat loss
+(indicator: S1 0.245 / 0.190 / 0.041 against ST 0.748 / 0.690 / 0.321). Operatively (design O) the
+throughput alone (1.8 kg/h: X = 0.161) and the solid fraction alone (0.20: X = 0.152) violate it;
+there the violation indicator has the mean 0.129 on the valid blocks (A and B rows; valid block
+share 0.861), and another 3.8 % of the rows (932) lie beyond the critical moisture (counted
+invalid, see 7.6), which also exceeds the limit.
+
+### 7.4 P1 (one line, data set 5), design E
+
+| output | unpressurised (main), ST | pressurised (additional), ST |
+|---|---|---|
+| (a) heater duty | approach 1.000 | approach 0.925, heat loss 0.071 |
+| (a) fuel (= CO2) | efficiency 0.932, approach 0.069 | efficiency 0.662, approach 0.314 |
+| (e) recovered heat | approach 1.000 | approach 0.926, heat loss 0.071 |
+| (e) dew-point distance | approach 0.644, heat loss 0.337 | approach 0.992 |
+
+Unpressurised, the 95 degC medium limit binds in every sample (28 672 of 28 672): the recovered
+heat is then fixed by the gas side, `C_gas (95 - dT_min - T_fresh)`, and depends on nothing but
+the approach; the exhaust temperature (heat loss, product moisture) moves only the dew-point
+distance. Pressurised, the approach binds in every sample. The equilibrium moisture of the product
+and cp_vapour reach at most ST 0.02 (equilibrium moisture, dew-point distance, unpressurised). No invalid sample in P1 (all checks pass; no
+saturation-limited dryer). The fan is not modelled in P1.
+
+### 7.5 Ranking checks
+
+**Design J (operative inputs varied as well): does the epistemic ranking of E change? No** for
+(b), (c), (d) of P2 and for every P1 output -- also at the prefix 2^9 of P2. The only change: the
+P2 violation indicator swaps critical moisture and nu_max (within the intervals). In J the weather
+and the drying load dominate the absolute variance of P2 ((b): ambient temperature ST 0.384,
+throughput 0.277, solid fraction 0.197; critical moisture 0.084, nu_max 0.066), so the epistemic
+indices of J are smaller than in E; the order is the same.
+
+**Design R (ranges of the three dominant epistemic inputs doubled).** P2: critical moisture
+0.15-0.375 kg/kg (clipped at the quality limit), nu_max 0.2-1.0, heat loss 0-6 W/K. **The order of
+the first two changes** for (b), (c) inlet temperature and (d, all): nu_max moves ahead of the
+critical moisture ((b): nu_max 0.638 (w 0.053), critical moisture 0.281 (0.026); (c) inlet
+temperature: 0.654 / 0.401), a resolved swap; heat loss stays third, the set of dominant inputs is
+unchanged, the GAB parameters stay below 0.01 for (b). The order between the two drying-kinetics
+parameters therefore depends on their placeholder ranges; that the two of them decide does not.
+P1: approach 1-27.5 K, efficiency 0.6-1.0, heat loss 0-4.5 W/K; no change of ranking.
+
+### 7.6 Invalid samples (counted, not dropped)
+
+| variant / design | runs | rows with a reason | reasons |
+|---|---|---|---|
+| P1 (both variants, all designs) | 126 976 per variant | 0 | - |
+| P2 E | 49 152 | 4 (0.01 %) | exact solver failed at the optimal command (4) |
+| P2 R | 49 152 | 2835 (5.77 %) | fixed point beyond the critical moisture (2829), solver at the optimum (6) |
+| P2 O | 24 576 | 1020 (4.15 %) | fixed point beyond the critical moisture (932), solver at the optimum (89) |
+| P2 J (2^10) | 16 384 | 1033 (6.30 %) | fixed point beyond the critical moisture (865), solver at the optimum (168) |
+
+The solver failures at the optimum in design O all lie at an optimal inlet temperature at its
+lower bound 60 degC (hot ambient, gas velocity above 0.80 m/s; 89 of 89): there the exact
+solver's bed-temperature bracket is the limit, not the optimum (not investigated further). Valid
+block shares are stated per output in the artifact; for (d, fixed point feasible) they are 0.624
+(E), 0.524 (O), 0.226 (R).
+
+### 7.7 Run time
+
+2.57 h on 14 workers: P2 E 61.7 min, R 45.4 min, O 22.6 min, J 20.1 min; P1 all designs of both
+variants together 3.5 min. Per run (in the pool): P1 about 2 ms, P2 0.8-1.0 s (two exact steady
+states, the IPOPT rebuild and solve).
+
+## 8. Ranking for the data request ("which question is worth how much")
+
+P2, design E, epistemic inputs by ST for (b) and (c), with the standard deviation of the output
+that remains in expectation once the input is known exactly (`std x sqrt(1 - S1)`, independent
+inputs). (b) std 0.0875 kW (mean 1.156 kW); (c) inlet temperature std 7.67 K.
+
+| rank | input | ST (b) | ST (c) T_in | (b) std after | (c) std after | question |
+|---|---|---|---|---|---|---|
+| 1 | critical moisture | 0.518 | 0.614 | 0.061 kW | 5.40 K | lab: drying curve of the material |
+| 2 | nu_max | 0.388 | 0.446 | 0.069 kW | 6.22 K | lab: exhaust humidity of the lab line (drying experiments) |
+| 3 | heat loss UA | 0.097 | 0.107 | 0.083 kW | 7.56 K | partner: insulation / heat balance of the dryer |
+| 4 | GAB (five parameters together) | <= 0.001 | <= 0.029 | 0.087 kW | 7.65 K (monolayer) | lab: sorption isotherm (Befund 34) |
+| - | gas-heater efficiency | 0.000 | 0.000 | - | - | partner: burner data -- **decides CO2** (ST 0.467 of (b) CO2), not the operating point |
+| - | cp_vapour | 0.000 | 0.000 | - | - | literature / partner item 8 of docs/11 12.7 |
+
+Questions grouped: **drying kinetics** (critical moisture and nu_max, one series of drying
+experiments on the lab line) -- sum of S1 0.901 for (b) and 0.846 for (c): knowing both would
+leave at most about a third of the std of (b) and 40 % of that of (c) (from the lower bound of the
+closed index). **Heat loss** -- about 0.1. **Isotherm** -- below 0.03 for (b) and (c); with the
+RTO margin the sorption measurement is the least valuable of the three for the operating point (it
+would matter for a product dried close to equilibrium, not studied). **Heater efficiency** --
+worth asking for the CO2 booking only. Design R qualifies rank 1 against rank 2: their order
+depends on the placeholder ranges, so both belong in the same request.
+
+P1 (main: unpressurised; data set 5): **approach / exchanger characteristic** decides the recovered
+heat (ST 1.000) and the dew-point distance (0.644); **heater efficiency** decides the fuel (0.932;
+pressurised 0.662 next to the approach 0.314). Questions: exchanger design to the partner /
+integration partner; burner efficiency to the partner. Heat loss matters for the dew-point
+distance only (0.337).
+
+## 9. Limitations and open points
+
+* All ranges are placeholders; indices are range-dependent (design R: the order of the two
+  drying-kinetics parameters swaps when their ranges are doubled).
+* Independent uniform inputs; correlations not modelled.
+* The pre-registered convergence criterion is not met at 2^12 (7.1); the stated rankings are
+  resolved, the absolute indices carry widths of up to 0.08 (0.24 for the optimal gas velocity).
+* Indices on valid blocks only: up to 6 % invalid rows in P2 O, R, J; (d, fixed point feasible) is
+  a conditional analysis by construction.
+* Operative ranges are the operating envelope (stress bands), not running operation; with the
+  observed amplitudes throughput and solid fraction would be nearly without effect.
+* One operating point per model (P1 data set 5; P2 the lab line at its nominal point for E); the
+  lab line's 4-state model and placeholder process config (docs/24 section 9) apply.
+* P1 has no fan; P2's energy is the model's total power (electric heater 0.98) as in docs/24.
