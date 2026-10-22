@@ -153,6 +153,8 @@ CO2/d (14.6 %) on product 1 and 90 kg CO2/d (2.8 %) on product 2 at the referenc
 result is decided by the minimum air flow, the fan law and the waste-heat side; the proxies do not
 replace a product-moisture measurement.
 
+**Dynamic headroom of the laboratory line (Befund 105; placeholders, full knowledge of the state).** Tracking the operating point is worth about 9 % energy in the median (fixed point against a quasi-stationary optimiser, 8.9 %); the dynamics add under 1 % (MPC without disturbance preview 0.55 %, perfect preview 1.51 %, almost entirely through a smaller margin). Reading L0: dynamic control does not pay in continuous operation, the RL line for the granulator in continuous operation is closed. Partial observability was not tested.
+
 **One-step bandit (Befund 93, follow-up of Befund 68).** A residual action and a separated
 moisture cost lift SAC from a negative to a clearly positive closed-regret fraction, but no cell
 meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of

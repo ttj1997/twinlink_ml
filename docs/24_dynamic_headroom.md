@@ -1,7 +1,7 @@
 # 24 -- Dynamic headroom in continuous operation (headroom test before further RL work)
 
 Status: run and evaluated (section 8; numbers only from the artifacts named there). Reading: L0. Branch `dynamic-headroom`; the finding number
-is assigned on merge.
+is 105 (lab book).
 
 ## 1. Question and decision rule
 
