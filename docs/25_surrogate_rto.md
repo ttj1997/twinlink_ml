@@ -1,7 +1,8 @@
 # 25 -- Surrogate-based steady RTO with few true evaluations
 
-Status: design (sections 1-6); results in section 7 once run. Branch `surrogate-rto`; the finding
-number is assigned by the managing session (lab book: "Befund NN").
+Status: run and evaluated (sections 7-9; numbers only from the artifacts named there). Reading:
+**S2 for both problems**, adaptive design decisive. Branch `surrogate-rto`; the finding number is
+assigned by the managing session (lab book: "Befund NN").
 
 ## 1. Question and decision rule
 
@@ -143,3 +144,158 @@ feasible states), `eta_c` (an infeasible state counts as zero captured headroom)
 condensate at the points found, seconds per true evaluation against seconds per surrogate
 prediction. Median and range over the 5 seeds. `DataSpec.new_study` does not apply (no time-series
 data are generated).
+
+## 7. Results
+
+Run `surrogate_rto_v1` (scripts of commit `47114ad`, clean tree; 72 tasks, 4832 s on 14 workers;
+artifact `artifacts/runs/surrogate_rto_v1.json.gz`, 4.98 MB). Analysis
+`artifacts/runs/surrogate_rto_v1_analysis.json` (commit `60e35d3`, clean tree; a first analysis
+run with the run artifact still untracked recorded `git/dirty=True` and was discarded unused).
+Figures `docs/figures/surrogate_rto_v1_{P1,P2}_{eta,regret_mean,infeasible}.png`. **Test set: the
+50 test states of each problem**; median [min, max] over 5 seeds.
+
+### 7.1 Reference
+
+| | P1 | P2 |
+|---|---|---|
+| `u*` feasible | 50/50 | 50/50 |
+| convergence of `u*` | 12 of 12 polished starts at the best value in every state; second run within 1.2e-11 relative | at least 4 of 6 IPOPT starts at the best value (median 6); candidate optimiser within -1.9e-7 .. -8.7e-8 relative (the IPOPT tolerance; `u*` taken from it in all 50) |
+| `u0` (robust) | 109.18 degC, 54.62 kg/h, 10 kg/h | 114.87 degC, 0.80 m/s |
+| median `E*` / `E0` | 1.4096 / 1.7205 kW | 1.2123 / 1.4930 kW |
+| **headroom `H`** (`E0 -> E*`) | **22.26 %** (states 0.60 .. 52.97 %) | **24.24 %** (states 0.00 .. 61.94 %) |
+| `eta >= 0.9` equals pooled regret <= | 2.23 % | 2.42 % |
+| R0-style `u0` | 65.54 degC, 137.61 kg/h, 10 kg/h (margin 1.52 on dew point and fluidisation), headroom 70.35 % | 114.85 degC, 0.80 m/s (margin 0.0753 kg/kg on the moisture), headroom 24.22 % |
+| median CO2 at `u*` / `u0` | 0.3028 / 0.3651 kg/h | 0.3062 / 0.3717 kg/h |
+
+`u0` is determined on the 50 test states and knows their disturbance envelope; this favours the
+baseline, `eta` is conservative. On P2 the robust and the R0-style point coincide; on P1 the shared
+margin of the R0-style point would triple the headroom.
+
+**P1 structure at the optimum.** In all 50 states the dew-point margin at the dryer exhaust and the
+fluidisation minimum are active, the product and medium limits are not. **The true optimum recovers
+no heat** (0.0 kW in every state, medium flow at its lower bound 10 kg/h): with the true approach of
+20 K per exchanger the exhaust at dew point + 10 K is too cold for the circuit. The condensate in the
+recovery exchanger is therefore 0 at every `u*` and in the median of every variant; `u0` recovers up
+to 0.23 kW. The third decision (medium flow) does not matter at the true optimum.
+
+### 7.2 Learning curves and reading
+
+Cells: `eta` median; infeasibility rate median; pooled regret median. Selected variants; the full
+tables (with ranges) are in the analysis artifact and the figures.
+
+P1:
+
+| variant | N = 32 | 64 | 128 | 256 |
+|---|---|---|---|---|
+| M2a, kappa 2 | 0.875; 0.04; 2.8 % | **0.985 [0.964, 0.987]; 0.02; 0.3 %** | 0.994; 0.00; 0.1 % | 0.998; 0.00; 0.1 % |
+| M2a, kappa 1 | 0.950; 0.24; 1.1 % | 0.990; 0.12; 0.2 % | **0.997; 0.04; 0.1 %** | 0.999; 0.00; 0.0 % |
+| M2, kappa 0 | 0.766; 0.88; 6.3 % | 0.811; 0.76; 6.4 % | 0.888; 0.70; 3.7 % | 0.922; 0.62; 2.2 % |
+| M2, kappa 2 | 0.625; 0.26; 8.3 % | 0.724; 0.36; 7.6 % | 0.823; 0.16; 4.2 % | 0.859; 0.16; 3.3 % |
+| M3, kappa 2 | 0.563; 0.32; 10.9 % | 0.636; 0.36; 8.7 % | 0.782; 0.14; 4.7 % | 0.858; 0.02; 3.2 % |
+| M1, kappa 2 | -2.294; 0.06; 73 % | 0.183; 0.04; 18 % | 0.516; 0.06; 11 % | 0.531; 0.04; 11 % |
+| M4 | 0.877; 0.00; 2.7 % | 0.864; 0.00; 3.0 % | 0.880; 0.00; 2.7 % | 0.878; 0.00; 2.7 % |
+
+P2:
+
+| variant | N = 32 | 64 | 128 | 256 |
+|---|---|---|---|---|
+| M2a, kappa 2 | 0.158; 0.10; 23 % | 0.613; 0.02; 10 % | 0.844; 0.00; 3.8 % | **0.918 [0.639, 0.981]; 0.00; 2.0 %** |
+| M2a, kappa 1 | 0.267; 0.12; 20 % | 0.660; 0.10; 9.1 % | 0.798; 0.08; 5.1 % | **0.931 [0.663, 0.980]; 0.04; 1.6 %** |
+| M2, kappa 2 | 0.440; 0.22; 17 % | 0.370; 0.24; 15 % | 0.417; 0.08; 11 % | 0.640; 0.34; 9.4 % |
+| M3, kappa 0 | 0.776; 0.70; 6.4 % | 0.895; 0.64; 2.4 % | 0.943; 0.88; 1.6 % | 0.959; 0.86; 1.0 % |
+| M3, kappa 2 | 0.700; 0.50; 10 % | 0.837; 0.48; 4.3 % | 0.910; 0.46; 2.0 % | 0.928; 0.40; 1.6 % |
+| M1, kappa 1 | -1.493; 0.02; 60 % | -1.136; 0.00; 52 % | -0.732; 0.00; 42 % | -0.824; 0.00; 44 % |
+| M4 | --; 1.00; -- | --; 1.00; -- | --; 1.00; -- | --; 1.00; -- |
+
+`eta` and regret are over the feasible states only; where almost every state is infeasible they rest
+on a handful of states (e.g. M1 kappa 0 on P1, 96-100 % infeasible).
+
+**Pre-registered reading: S2 for both problems.** P1: smallest `N_min` 64 (M2a, kappa 2), M2a kappa 1
+from 128; P2: `N_min` 256 (M2a, kappa 1 and 2). No Sobol variant (M1-M4) succeeds at any N on either
+problem, so **adaptive design is decisive** in the pre-registered sense. In regret percent: on P1 the
+best variant is at 0.3 % pooled regret with 2 % infeasible states from N = 64 (gate 2.23 %), on P2 at
+1.6-2.0 % with 0-4 % infeasible states only at N = 256 (gate 2.42 %).
+
+Why the Sobol models fail the gate: they land on the wrong side of either energy or feasibility.
+Without a margin (kappa 0) M2 and M3 reach small regrets on the feasible states but are infeasible in
+48-86 % of the states even at N = 256 (P2 M3: 1.0 % regret, 86 % infeasible); with kappa 2 the
+infeasibility falls (P1 M3: 2 %) but `eta` stays below 0.9 (0.858). M1's quadratic cannot represent
+the switches of the active set; its LOO margin makes it feasible on P2 from N = 64 at an energy far
+above `u0` (`eta` -0.82).
+
+### 7.3 Adaptive against Sobol (paired t-test over the 5 seeds, metric `1 - eta_c`)
+
+P1: M2a better than M2 at the same kappa, resolved, at N = 32-256 for kappa 2 (p 0.004, < 0.001,
+0.001, < 0.001), at 32, 128, 256 for kappa 0 and at 32, 64 for kappa 1. P2: resolved only at
+N = 256 (all kappas, p 0.028 / 0.001 / 0.001) and 128 (kappa 1, p 0.027); at N = 16-32 the adaptive
+arm is worse in the mean (not resolved): with 8 start points the GP's predicted optima are poor and
+the sequential points cluster where it is wrong. 18 comparisons per problem, no multiplicity
+correction.
+
+### 7.4 M4 against the black-box models
+
+**This holds for the hidden shift of this study (P1 exchanger approach 10 -> 20 K; P2 GAB monolayer
+factor 1.0 -> 1.2), not in general.**
+
+* **P1:** `eta` 0.86-0.89 from N = 8 on, flat (error floor), feasible in every state from N = 16;
+  pooled regret 2.5-3.2 %, just above the gate. The fit does not find the true parameters but
+  compensates the hidden approach (seed 0: heater efficiency 0.72-0.74 instead of 0.85, heat loss
+  3.5-4.2 instead of 2.0 W/K). **Overtaken first at N = 64, by M2a kappa 2 only** (stays overtaken
+  up to 256); no Sobol black-box variant is resolved better than M4 up to N = 256.
+* **P2:** the two fitted parameters are recovered almost exactly (seed 0: `nu_max` 0.444-0.450
+  against 0.45, `UA` 2.60-2.66 against 2.6 W/K) and the energy is almost optimal (pooled regret
+  0.1-0.2 % where feasible), but the hidden GAB shift leaves the product **0.0011-0.0013 kg/kg
+  (median, seed 0) above the limit**, at most 0.0019 kg/kg: infeasible in every state of every seed
+  from N = 32 (N = 16: median 1.0, one seed feasible; tolerance 1e-4 kg/kg). M4 has no kappa variant (as requested). Overtaken first at N = 32 (M2 and
+  M3 at every kappa) and stays overtaken -- **by feasibility, not by energy** (`eta_c` of M4 is 0).
+* 72 paired tests per problem, no multiplicity correction.
+
+### 7.5 Effect of kappa
+
+The margin buys feasibility with energy. P1, N = 256: M2 infeasible 0.62 / 0.34 / 0.16 at kappa
+0 / 1 / 2, `eta` 0.922 / 0.899 / 0.859; M3 0.48 / 0.08 / 0.02, `eta` 0.907 / 0.898 / 0.858. M1's fixed
+margin (LOO RMSE) is either too small (P1 kappa 1: 58 % infeasible at N = 256) or far too large (P2:
+`eta` -0.82 at kappa 1, -3.55 at kappa 2). With adaptive design kappa 1-2 costs little energy once
+the GP is accurate near the optimum (P1, N = 256: `eta` 0.999 / 0.998).
+
+### 7.6 Maximum violation
+
+P1: normalised by 10 K, the dew-point violation saturates at 1.0 (exhaust saturated, the dryer's
+saturation limit binds): the typical failure of the black-box models is an inlet temperature too
+low for the air flow. P2: maximum violations up to about 2 kg/kg of moisture (normalised 100-200)
+where a model picks a cold, slow point at which the true model's bed floods (far above the critical
+moisture 0.2 kg/kg, outside the model's plausible range); there the size of the violation is no
+physical statement, the infeasibility rate is the measure.
+
+### 7.7 Run time
+
+Median seconds per true evaluation: P1 5.98e-3 (line with counter-current circuit), P2 2.17e-2
+(Newton, bisection fallback in the hot corner). Surrogate prediction, one point / per point in a
+batch of 512 (P1): M1 7.5e-5 / 3.2e-7 s, M2 3.7e-3 / 3.4e-5 s, M3 1.8e-3 / 5.6e-6 s. Fit (median):
+M2 2.9 s, M3 2.5 s, M4 2.0 s (P1) and 75 s (P2, one CasADi build per parameter value). Both true
+models here are cheap; what an expensive Dyssol model would cost is the number of true evaluations,
+the axis of the learning curves.
+
+## 8. Reading and consequences
+
+* **S2 on both problems: steady RTO with a surrogate is feasible but not data-efficient** -- 64 (P1)
+  and 256 (P2) true evaluations, and only with adaptive design and a GP margin of kappa 1-2. With an
+  expensive Dyssol model this is costly; adaptive design is decisive (no space-filling design passes
+  the gate up to 256).
+* **M4** reaches a usable operating point from 8 runs on both problems but stops at an error floor
+  set by the hidden parameter: on P1 just above the gate (2.5-3.2 % regret), on P2 a systematic
+  moisture violation of about 0.001-0.002 kg/kg (at most 0.0019). A back-off of that size on M4 might pass; not
+  tested here (no post-hoc variant).
+* P1's true optimum uses no heat recovery at the true approach of 20 K: whether this line recovers
+  heat at all hinges on the exchanger approach (docs/11), not on the surrogate.
+
+## 9. Caveats
+
+* Model against model, no plant data; all ranges and limits are placeholders (sections 2, 3).
+* The hidden shifts are one value at the band edge per problem; error floor and overtake point of M4
+  hold for them only.
+* `u0` knows the test envelope (conservative `eta`); with a small headroom `eta` would be sensitive,
+  hence regret and `eta` side by side.
+* The P1 medium limit cannot bind (capped by the physical mode); P1's third decision is irrelevant
+  at the true optimum.
+* The optional amortised arm (`w -> u*`) was not run.
