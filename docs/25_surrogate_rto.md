@@ -3,7 +3,7 @@
 Status: run and evaluated (sections 7-9; numbers only from the artifacts named there). Reading:
 **S2 for both problems**, adaptive design decisive. Section 10: post-hoc declared variant M4b
 (added 2026-10-22, not part of the reading). Branch `surrogate-rto`; the finding number is
-assigned by the managing session (lab book: "Befund NN").
+107 (lab book).
 
 ## 1. Question and decision rule
 

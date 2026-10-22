@@ -155,6 +155,8 @@ replace a product-moisture measurement.
 
 **Dynamic headroom of the laboratory line (Befund 105; placeholders, full knowledge of the state).** Tracking the operating point is worth about 9 % energy in the median (fixed point against a quasi-stationary optimiser, 8.9 %); the dynamics add under 1 % (MPC without disturbance preview 0.55 %, perfect preview 1.51 %, almost entirely through a smaller margin). Reading L0: dynamic control does not pay in continuous operation, the RL line for the granulator in continuous operation is closed. Partial observability was not tested.
 
+**Surrogate-based steady RTO with few true evaluations (Befund 107; models of the lab line and of a heat-recovery line, placeholders).** Only a Gaussian process with adaptive design passes the pre-registered gate: from 64 true evaluations on the line model and from 256 on the grey-box model (reading S2); space-filling designs do not. A grey-box fit with a margin is economical in data where the model error shifts the constraints uniformly (feasible from 8 evaluations on one problem, a post-hoc declared variant), but not where compensating parameters hide a shift of the optimum; fitted parameters then are physically wrong and not measured values.
+
 **One-step bandit (Befund 93, follow-up of Befund 68).** A residual action and a separated
 moisture cost lift SAC from a negative to a clearly positive closed-regret fraction, but no cell
 meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of
