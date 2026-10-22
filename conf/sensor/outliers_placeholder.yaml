@@ -1,0 +1,30 @@
+# Outlier robustness study (docs/27_outlier_robustness.md)
+#
+# STATUS: placeholder -- every number below is a study setting fixed beforehand by the project
+# lead (task of 2026-10-22), not a calibrated sensor property. The only plant-side anchor is the
+# outlier share of the predecessor project's lab data (17-34 % of the raw points per batch were
+# removed as outliers, docs/04, "Das Sensormodell ist zu gutmuetig"); the error distribution, its
+# scale, the burst length and the filter settings have NO source and are placeholders.
+#
+# The outlier process acts on top of the existing sensor model (PT1 + Gaussian noise of
+# MeasurementConfig, unchanged) and only on the channel named below. It is applied to the
+# measurements returned by remeasure (no new simulation).
+
+version: 1
+
+channel: product_moisture_kg_per_kg   # only the moisture channel (operating mode INLINE)
+
+outliers:
+  rates: [0.0, 0.05, 0.25]            # study setting; 0.25 = the realistic case (lab data 17-34 %)
+  t_degrees_of_freedom: 3.0           # placeholder: Student-t error, 3 degrees of freedom
+  scale_factor: 10.0                  # placeholder: t scale = 10 x std of the existing Gaussian
+                                      # measurement noise at that sample
+                                      # (relative_noise_std x |PT1 output|)
+  mean_burst_length_steps: 10.0       # placeholder: bursts with geometric length, mean 10 steps
+                                      # (250 s at 25 s sample time); one constant offset per burst
+
+hampel:
+  window: 8                           # placeholder: 8 past values incl. the current one; fixed,
+                                      # not tuned on test data
+  threshold: 3.0                      # placeholder: 3 x scaled MAD (1.4826 x MAD)
+  side_check_windows: [4, 16]         # side check, GRU at p = 0.25 only
