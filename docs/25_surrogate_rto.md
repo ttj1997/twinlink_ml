@@ -1,7 +1,8 @@
 # 25 -- Surrogate-based steady RTO with few true evaluations
 
 Status: run and evaluated (sections 7-9; numbers only from the artifacts named there). Reading:
-**S2 for both problems**, adaptive design decisive. Branch `surrogate-rto`; the finding number is
+**S2 for both problems**, adaptive design decisive. Section 10: post-hoc declared variant M4b
+(added 2026-10-22, not part of the reading). Branch `surrogate-rto`; the finding number is
 assigned by the managing session (lab book: "Befund NN").
 
 ## 1. Question and decision rule
@@ -299,3 +300,62 @@ the axis of the learning curves.
 * The P1 medium limit cannot bind (capped by the physical mode); P1's third decision is irrelevant
   at the true optimum.
 * The optional amortised arm (`w -> u*`) was not run.
+
+## 10. Post hoc, declared: M4b, M4 with a back-off from the training residuals (added 2026-10-22)
+
+**Not part of the pre-registered reading; S2 (section 8) stays the main result.** Added after run v1
+had shown M4 infeasible on P2. Rule (decision of the project lead, fixed in the docstring of
+`scripts/analyze_surrogate_rto.py` and committed in `ba840dd` before the run): M4 unchanged, plus
+per constraint a back-off `b_N = kappa * RMS(g_true - g_model)` over the N training runs at the
+fitted parameters, `kappa in {1, 2}`; the fitted model is optimised with `g_model + b_N <= 0`. Only
+the training runs enter `b_N`. Both problems, every constraint, same N, seeds, test states and the
+same gate per kappa. Run `surrogate_rto_v2` (`--arms M4b`, commit `ba840dd`, clean tree, 10 tasks,
+3377 s on 10 workers; own artifact `artifacts/runs/surrogate_rto_v2.json.gz`, 1.26 MB); analysis of
+v1 and v2 together `artifacts/runs/surrogate_rto_v2_analysis.json` (commit `d85dbda`, clean tree;
+the main reading, the overtake points and every v1 number are unchanged). Kappa 0 of the arm
+reproduces M4 of v1 exactly (largest difference of `eta_c` 0.0). Figures with M4b:
+`docs/figures/surrogate_rto_v2_{P1,P2}_{eta,regret_mean,infeasible}.png` (M4's `eta` line ends where
+it becomes infeasible in every state). **Holds for the hidden shift of this study only.**
+
+`eta`; infeasibility rate; pooled regret (median [min, max] over seeds where given):
+
+| problem, variant | N = 8 | 16 | 32 | 64 | 128 | 256 |
+|---|---|---|---|---|---|---|
+| P1 M4 | 0.855; 0.00; 3.2 % | 0.887; 0.00; 2.5 % | 0.877; 0.00; 2.8 % | 0.864; 0.00; 3.0 % | 0.880; 0.00; 2.7 % | 0.878; 0.00; 2.7 % |
+| P1 M4b kappa 1 | 0.696; 0.00; 6.8 % | 0.735; 0.00; 5.9 % | 0.725; 0.00; 6.1 % | 0.711; 0.00; 6.4 % | 0.711; 0.00; 6.4 % | 0.738; 0.00; 5.8 % |
+| P1 M4b kappa 2 | 0.526; 0.00; 10.5 % | 0.591; 0.00; 9.1 % | 0.570; 0.00; 9.6 % | 0.549; 0.00; 10.1 % | 0.581; 0.00; 9.3 % | 0.593; 0.00; 9.1 % |
+| P2 M4 | 0.995; 0.10; 0.13 % | 0.993; 1.00; 0.17 % | --; 1.00; -- | --; 1.00; -- | --; 1.00; -- | --; 1.00; -- |
+| P2 M4b kappa 1 | **0.977 [0.949, 0.995]; 0.00; 0.55 %** | 0.986; 0.00; 0.34 % | 0.989; 0.00; 0.27 % | 0.989; 0.00; 0.27 % | 0.989; 0.00; 0.26 % | 0.989 [0.989, 0.990]; 0.00; 0.26 % |
+| P2 M4b kappa 2 | **0.959 [0.934, 0.976]; 0.00; 0.99 %** | 0.962; 0.00; 0.92 % | 0.965; 0.00; 0.86 % | 0.965; 0.00; 0.85 % | 0.966; 0.00; 0.83 % | 0.966 [0.965, 0.966]; 0.00; 0.83 % |
+
+(P1 M4b kappa 1 at N = 8: one seed 26 % infeasible; every other M4b cell has 0 % in every seed.)
+
+**Gate applied to M4b alone (post hoc):** P2: `N_min` 8 for kappa 1 and 2 -- what the reading would
+call S1 for this variant. P1: no N passes (`eta` 0.53-0.74) -- S3 for this variant. Paired against
+M4 (`1 - eta_c`): P2 better at N = 16-256 (p 0.019, 0.020 at N = 16; < 0.001 from 32), not resolved at
+8; P1 worse at N = 16-256 (p <= 0.001), not resolved at 8.
+
+**`b_N` against the actual deviation `g_true - g_model` at M4b's own decisions on the test states**
+(descriptive; median over seeds of `b_N` and of the median / maximum over the 50 states):
+
+* **P2, moisture (kg/kg):** kappa 1: `b_N` 0.0019 (N = 8), 0.0022 (16), 0.0023 (32-256); actual
+  deviation median 0.0010-0.0012 from N = 16 (-0.0004 at N = 8), maximum 0.0019. `b_N` covers the
+  deviation in every state (share above `b_N`: 0). Kappa 2: `b_N` 0.0038-0.0047, about twice what is
+  needed. Without back-off (kappa 0) the deviation is the same size (median 0.0012, maximum 0.0018 from
+  N = 16), i.e. the infeasibility of M4 in v1 is this model error of about 0.001-0.002 kg/kg at the
+  limit, and the training RMS of kappa 1 happens to be of that size. Bed temperature: kappa 1 `b_N`
+  0.018-0.068 K against a maximum deviation of 0.022-0.056 K (exceeded in up to 20 % of the states);
+  the bed limit is inactive (about 30 K away), so this has no effect.
+* **P1:** at the two active constraints the truth is on the SAFE side of the fitted model: the
+  dew-point margin and the fluidisation deviate by -1.8 to -2.2 K and -0.29 to -0.36 m3/h (median
+  over the states, kappa 1), while `b_N` (kappa 1) is +1.8 to +2.2 K and +0.62 to +0.74 m3/h. The RMS is blind to the sign: the
+  back-off tightens constraints the model already gets wrong in the safe direction and costs only
+  energy (regret 5.8-6.8 % at kappa 1 against 2.5-3.2 % for M4). The product-temperature deviation
+  (+1.6 to +2.0 K) exceeds `b_N` in about half of the states, and the medium deviation (+10 K, the
+  hidden approach) in 56 %, but both limits are inactive (about 30 K away).
+
+**Reading of the addendum (post hoc, no claim beyond it):** a symmetric back-off from the training
+RMS repairs M4 where its error at the limit is in the unsafe direction and of the size of the
+training residual (P2, moisture), and harms it where the error is in the safe direction (P1). Whether
+that holds for other hidden shifts is open. As declared, an underestimate or overestimate of `b_N`
+is a result here and no reason for a further variant.
