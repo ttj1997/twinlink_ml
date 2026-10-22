@@ -1,0 +1,307 @@
+# Global sensitivity analysis (Sobol indices) of the steady-state models
+# (docs/25_sensitivity_sobol.md)
+#
+# STATUS: placeholder -- every RANGE below is a placeholder with its reason; none is a measured
+# value. Nominal values are those of the models as they stand (P1: data set 5 of delivery 4.1_2,
+# docs/11 section 12; P2: the lab line of the dynamic headroom study, docs/24). The models are
+# only read, never changed.
+#
+# Inputs are INDEPENDENT and UNIFORM on [low, high] (scale "log": uniform in the logarithm).
+# Correlations between inputs are NOT modelled (e.g. the GAB parameters of one material, or
+# ambient temperature and humidity, are in reality correlated); see docs/25 section 2.
+#
+# Two groups: "epistemic" (unknown model parameters) and "operative" (disturbances). Design E
+# varies the epistemic group with the operative group at its nominal values, design O the other
+# way round, design J both (check only), design R = design E with the range of the three
+# dominant epistemic parameters doubled (range robustness).
+
+version: 1
+
+criteria:
+  # Fixed before the first run (docs/25 section 4).
+  dominant_total_index: 0.10        # "dominant": total index >= 0.1
+  max_ci_width: 0.05                # "converged": full width of the 95 % CI < 0.05 for S1 and ST
+  confidence_level: 0.95            # of every dominant parameter at the largest base sample
+  bootstrap_resamples: 1000
+  bootstrap_seed: 20261023
+  robustness_top_k: 3               # dominant epistemic parameters whose range is doubled
+  # Range robustness (design R): the range is doubled about its centre and clipped to the input's
+  # "hard" bounds (physical limits; the critical moisture is kept above the quality limit 0.15).
+
+designs:
+  # base sample N (Saltelli/Sobol', no second order: N (D + 2) model runs); convergence by
+  # nested prefixes N/4, N/2, N of one scrambled Sobol' sequence (doubling).
+  E: {base_log2: 12, seed: 20261101}
+  O: {base_log2: 12, seed: 20261102}
+  J: {base_log2: 12, seed: 20261103, base_log2_p2: 10}  # P2: smaller budget (decision 2026-10-22)
+  R: {base_log2: 12, seed: 20261104}
+
+p1:
+  # One line of delivery 4.1_2 (flowsheet.line.Line), physical mode, data set 5 of the comparison
+  # workbook (Combined; inputs from artifacts/runs/partner_v41_2_comparison.json). Main variant:
+  # unpressurised medium (<= 95 degC); additional: pressurised (decision 2026-10-22).
+  mode_main: physical_unpressurised_95
+  modes:
+    physical_unpressurised_95: {htm_max_celsius: 95.0}
+    physical_pressurised: {htm_max_celsius: null}
+  air_kg_per_h: 150.0               # dry gas, data set 5
+  air_temperature_celsius: 250.0    # heater set point = dryer inlet, data set 5
+  spray_temperature_celsius: 20.0   # data set 5
+  medium_kg_per_h: 30.0             # data set 5
+  medium_cp_j_per_kg_k: 4185.0      # 4.1_2 Inputs!I12
+  lower_heating_value_j_per_kg: 55.0e6   # data set 5
+  nominal_air_humidity_kg_per_kg: 0.012  # data set 5; nominal RH follows from it at 20 degC
+  material_from: artifacts/runs/partner_v41_2_comparison.json   # parameters.material_si
+  gas_co2_kg_per_kwh: 0.201         # carrier_energy (Befund 60), on the lower heating value
+  inputs:
+    heater_efficiency:
+      group: epistemic
+      nominal: 0.70
+      low: 0.70
+      high: 0.90
+      unit: "-"
+      hard: [0.0, 1.0]
+      rationale: >-
+        The five data sets of the partner use 70, 80 and 90 %; the range spans them. A direct-fired
+        gas heater rarely lies below 70 %; nominal (data set 5) is the lower end.
+      question: heater
+    dt_min_k:
+      group: epistemic
+      nominal: 10.0
+      low: 5.0
+      high: 20.0
+      unit: K
+      hard: [1.0, .inf]
+      rationale: >-
+        Minimum approach per counter-current exchanger, main convention 10 K (docs/11 section 11);
+        5 K (large, expensive exchangers) to 20 K (compact ones) as the usual design band of
+        liquid-coupled gas exchangers. Stands for the exchanger characteristic (area, UA), which
+        is not known.
+      question: exchanger
+    heat_loss_ua_w_per_k:
+      group: epistemic
+      nominal: 0.0
+      low: 0.0
+      high: 3.0
+      unit: W/K
+      hard: [0.0, .inf]
+      rationale: >-
+        The partner model has no heat loss (0). Upper end: about 5 % of the heater duty of data set
+        5 (0.4 kW at the 158 degC exhaust, 138 K above ambient). Insulation of the plant unknown.
+      question: heat_loss
+    equilibrium_moisture_kg_per_kg:
+      group: epistemic
+      nominal: 0.002
+      low: 0.002
+      high: 0.030
+      unit: kg/kg
+      hard: [0.0, .inf]
+      rationale: >-
+        Product moisture of the dryer block. From the partner sheet (2 g/kg) to the lab level of the
+        GAB anchor (0.030 kg/kg at 50 % RH, 62 degC; Befund 34). No sorption measurement of the
+        material exists.
+      question: isotherm
+    cp_vapour_j_per_kg_k:
+      group: epistemic
+      nominal: 1906.0
+      low: 1860.0
+      high: 1906.0
+      unit: J/(kg K)
+      rationale: Repository value 1.86 against the partner's 1.906 kJ/(kg K) (docs/11 12.7 item 8).
+      question: cp_vapour
+    ambient_temperature_celsius:
+      group: operative
+      nominal: 20.0
+      low: 5.0
+      high: 35.0
+      unit: degC
+      rationale: Weather box of the lab line (DisturbanceRange), also the fresh-gas temperature.
+    ambient_relative_humidity:
+      group: operative
+      nominal: null       # follows from nominal_air_humidity_kg_per_kg at the nominal temperature
+      low: 0.25
+      high: 0.85
+      unit: "-"
+      rationale: Weather box of the lab line (DisturbanceRange); converted with IAPWS-IF97 at 1 atm.
+    spray_kg_per_h:
+      group: operative
+      nominal: 10.0
+      low: 8.0
+      high: 12.0
+      unit: kg/h
+      rationale: >-
+        Throughput +-20 % (stress band of docs/24; the observed amplitude +-1.5 % is far smaller).
+        Operating envelope, not running operation (decision 2026-10-22).
+    solid_fraction:
+      group: operative
+      nominal: 0.50
+      low: 0.40
+      high: 0.60
+      unit: "-"
+      rationale: >-
+        Relative +-20 % (stress band as for P2; the observed relative amplitude is +-7.7 %).
+
+p2:
+  # Steady-state grey-box model of the lab line (conf/process/greybox_gab_placeholder.yaml with the
+  # study settings of conf/headroom/dynamic_headroom.yaml): exact steady state at a fixed command
+  # (simulation.steady_state), steady optimum = the RTO solver of the headroom study
+  # (headroom.controllers.SteadyStateOptimizer).
+  headroom_config: conf/headroom/dynamic_headroom.yaml
+  # Margins of the family "observed" (Befund 105, artifacts/runs/dynamic_headroom_v2.json.gz,
+  # docs/24 8.1): the fixed operating point is the steady optimum at the nominal disturbance and
+  # nominal parameters with the R0 margin; the optimum per sample uses the R1 margin
+  # (decision 2026-10-22).
+  margin_fixed_kg_per_kg: 0.04355
+  margin_optimum_kg_per_kg: 0.00664
+  violation_tolerance_kg_per_kg: 1.0e-4    # operating_point.TOLERANCE_MOISTURE_KG_PER_KG
+  steady_state_max_iterations: 30          # search precision of Befund 52
+  steady_state_tolerance: 1.0e-7
+  # Upper end of the inner (moisture) bracket of the exact solver; the lower end keeps the
+  # solver's own rule. The default upper end max(10 X_cr, 1) = 2 kg/kg is too narrow at the low
+  # end of the outer temperature bracket (cold bed, T_amb + 10) for wet operation (spray up to
+  # 1.8 kg/h at solid fraction 0.20: without evaporation the water balance turns negative only
+  # above about 4 kg/kg); the bisection then aborted although the steady state exists (smoke run
+  # before the study, also at optimal commands with X = 0.143). 20 kg/kg is five times that.
+  steady_state_moisture_bracket_high_kg_per_kg: 20.0
+  consistency_tolerance_kg_per_kg: 1.0e-4  # |X(IPOPT) - X(exact solver)| at the optimum
+  inputs:
+    gab_monolayer_moisture_kg_per_kg:
+      group: epistemic
+      nominal: 0.020
+      low: 0.016
+      high: 0.024
+      unit: kg/kg
+      rationale: x0.8-1.2, the GAB band of the robustness variant of docs/24 (placeholder).
+      question: isotherm
+    gab_c_constant_at_reference_temperature:
+      group: epistemic
+      nominal: 25.0
+      low: 12.5
+      high: 50.0
+      scale: log
+      unit: "-"
+      rationale: x0.5-2 log-uniform, as in docs/24 (the C constant spans orders of magnitude).
+      question: isotherm
+    gab_k_constant_at_reference_temperature:
+      group: epistemic
+      nominal: 0.75
+      low: 0.70
+      high: 0.80
+      unit: "-"
+      hard: [0.0, 0.95]
+      rationale: 0.70-0.80 as in docs/24 (K < 1 required; typical of granular solids).
+      question: isotherm
+    gab_c_enthalpy_j_per_mol:
+      group: epistemic
+      nominal: 6000.0
+      low: 3000.0
+      high: 9000.0
+      unit: J/mol
+      hard: [0.0, .inf]
+      rationale: x0.5-1.5, as in docs/24 (temperature dependence of the isotherm unknown).
+      question: isotherm
+    gab_k_enthalpy_j_per_mol:
+      group: epistemic
+      nominal: 500.0
+      low: 250.0
+      high: 750.0
+      unit: J/mol
+      hard: [0.0, .inf]
+      rationale: x0.5-1.5, as in docs/24.
+      question: isotherm
+    max_saturation_degree:
+      group: epistemic
+      nominal: 0.60
+      low: 0.40
+      high: 0.80
+      unit: "-"
+      hard: [0.0, 1.0]
+      rationale: nu_max; literature band 0.4-0.8 for fluidised beds (comment of the process config).
+      question: drying_kinetics
+    critical_moisture_kg_per_kg:
+      group: epistemic
+      nominal: 0.200
+      low: 0.150
+      high: 0.300
+      unit: kg/kg
+      hard: [0.15, .inf]
+      rationale: >-
+        Lab level 0.200. Lower end at the quality limit 0.15 (below it the limit would lie in the
+        constant-rate period); upper end near the wettest lab measurement (0.29 kg/kg dry,
+        greybox_lab_moisture.yaml). Draws below the isotherm maximum are counted as invalid.
+      question: drying_kinetics
+    heat_loss_ua_w_per_k:
+      group: epistemic
+      nominal: 2.0
+      low: 0.0
+      high: 4.0
+      unit: W/K
+      hard: [0.0, .inf]
+      rationale: Placeholder 2 W/K ("insulated lab plant assumed"); 0 (adiabatic) to twice.
+      question: heat_loss
+    gas_heater_efficiency:
+      group: epistemic
+      nominal: 0.80
+      low: 0.70
+      high: 0.90
+      unit: "-"
+      hard: [0.0, 1.0]
+      rationale: >-
+        Gas-fired heater of the CO2 booking (placeholder 0.80, Befund 60); 0.70-0.90 as the partner
+        data sets. Enters only the CO2 outputs: the RTO objective is the model's total power
+        (electric heater 0.98, as in docs/24), so (b)-(d) cannot depend on it (built-in check).
+      question: heater
+    cp_vapour_j_per_kg_k:
+      group: epistemic
+      nominal: 1860.0
+      low: 1860.0
+      high: 1906.0
+      unit: J/(kg K)
+      rationale: Repository value 1.86 against the partner's 1.906 kJ/(kg K).
+      question: cp_vapour
+    ambient_temperature_celsius:
+      group: operative
+      nominal: 20.0
+      low: 5.0
+      high: 35.0
+      unit: degC
+      rationale: Weather box of the lab line (DisturbanceRange).
+    ambient_relative_humidity:
+      group: operative
+      nominal: 0.50
+      low: 0.25
+      high: 0.85
+      unit: "-"
+      rationale: Weather box of the lab line (DisturbanceRange).
+    spray_rate_kg_per_h:
+      group: operative
+      nominal: 1.5
+      low: 1.2
+      high: 1.8
+      unit: kg/h
+      rationale: >-
+        Throughput +-20 % (stress band of docs/24; observed +-1.5 %). Operating envelope, not
+        running operation.
+    suspension_solid_fraction:
+      group: operative
+      nominal: 0.30
+      low: 0.20
+      high: 0.40
+      unit: "-"
+      rationale: >-
+        DisturbanceRange of the lab line = stress band of docs/24 (observed: 0.30 +- 7.7 %).
+
+questions:
+  # Open questions / measurements each parameter maps to (docs/25 section 7).
+  isotherm: >-
+    Lab measurement: sorption isotherm of the material at 2-3 temperatures (GAB fit); Befund 34
+  drying_kinetics: >-
+    Lab measurement: drying curve (critical moisture) and exhaust humidity of the lab line (nu_max)
+  heater: >-
+    Application partner: type and efficiency of the air heater (burner data, gas meter)
+  exchanger: >-
+    Application partner / integration partner: exchanger design (area, UA or guaranteed approach)
+  heat_loss: >-
+    Application partner: insulation and wall temperatures of dryer and ducts (or a heat balance)
+  cp_vapour: >-
+    Application partner: source of cp_vapour 1.906 (docs/11 12.7 item 8; literature suffices)
