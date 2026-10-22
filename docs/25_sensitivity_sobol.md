@@ -174,8 +174,9 @@ the doubling, and the widths fall like 1/sqrt(N), e.g. P2 E, (b), critical moist
 
 Reading (post hoc, labelled as such): the ranking of the dominant inputs is resolved at 2^12
 wherever it is stated below (intervals of ST separated); the absolute index values carry the
-stated widths. Meeting the criterion for indices near 1 would need about 2^14 (P2 design E: about
-4 h on 14 workers at the measured rate); not run (decision open).
+stated widths. Meeting the criterion for indices near 1 would need about 2^14. **Run afterwards
+as a declared precision extension of design E (section 7.8): criterion met for 19 of 20 outputs at
+2^14.**
 
 ### 7.2 P2 (lab line), design E: epistemic inputs at the nominal operating point
 
@@ -290,6 +291,57 @@ block shares are stated per output in the artifact; for (d, fixed point feasible
 variants together 3.5 min. Per run (in the pool): P1 about 2 ms, P2 0.8-1.0 s (two exact steady
 states, the IPOPT rebuild and solve).
 
+### 7.8 Precision extension of design E to 2^14 (added 2026-10-22)
+
+Declared before its run in the driver docstring (commit `834f1d8`): the same design E with base
+sample 2^14 and the same seed, a precision extension of the same pre-registered test, **not a new
+test**; 2^12 and 2^14 side by side; no further doubling. Artifact
+`artifacts/runs/sobol_steady_e14.json` (driver `834f1d8`, clean tree, `git/dirty=False`), all three
+variants, design E only. **Determinism:** its prefix N = 4096 reproduces every S1, ST and width of
+`sobol_steady_v1` exactly (largest difference 0.0).
+
+**Criterion at 2^14: met for 19 of 20 outputs** with a dominant input (all P1 outputs of both
+variants, every P2 output except one). **Not met: P2 (c) optimal gas velocity** -- critical
+moisture S1 w 0.067 and ST w 0.122, nu_max ST w 0.109, heat loss ST w 0.095 (all above 0.05); its
+first-order intervals of nu_max and heat loss (w 0.049, 0.027) pass. This output sits at its bound
+0.80 m/s in most samples (std 0.051 m/s) and is interaction-dominated; its indices are the least
+precise of the study. Not doubled further (as declared).
+
+**Dominance classification (ST >= 0.1): one change.** The GAB monolayer moisture for the optimal gas
+velocity drops from ST 0.120 (w 0.098) at 2^12 to 0.095 (w 0.043) at 2^14 (2^13: 0.105) -- at
+2^12 its interval already straddled 0.1. No other input changes class. Closest to the threshold:
+heat loss for the optimal inlet temperature, 0.107 (w 0.022) -> 0.105 (w 0.011), interval
+0.099-0.110, stays dominant; heat loss for (b), 0.097 -> 0.097 (interval 0.095-0.099 at 2^14),
+stays below.
+
+Side by side (P2, the decision outputs; ST with full width w):
+
+| output | input | 2^12 ST (w) | 2^14 ST (w) | 2^12 S1 (w) | 2^14 S1 (w) |
+|---|---|---|---|---|---|
+| (b) energy at the optimum | critical moisture | 0.518 (0.042) | 0.519 (0.021) | 0.516 (0.058) | 0.517 (0.028) |
+| | nu_max | 0.388 (0.032) | 0.387 (0.016) | 0.386 (0.051) | 0.385 (0.024) |
+| (c) inlet temperature | critical moisture | 0.614 (0.075) | 0.616 (0.038) | 0.504 (0.076) | 0.502 (0.037) |
+| | nu_max | 0.446 (0.061) | 0.446 (0.030) | 0.342 (0.056) | 0.350 (0.028) |
+| | heat loss | 0.107 (0.022) | 0.105 (0.011) | 0.028 (0.031) | 0.025 (0.014) |
+| (c) gas velocity | critical moisture | 0.895 (0.236) | 0.908 (0.122) | 0.136 (0.141) | 0.137 (0.067) |
+| | nu_max | 0.716 (0.223) | 0.721 (0.109) | -0.003 (0.072) | 0.042 (0.049) |
+| | heat loss | 0.501 (0.196) | 0.480 (0.095) | 0.024 (0.071) | 0.006 (0.027) |
+| | GAB monolayer | 0.120 (0.098) | 0.095 (0.043) | 0.004 (0.070) | 0.004 (0.022) |
+| (d) saving, all valid | critical moisture | 0.536 (0.043) | 0.536 (0.022) | 0.533 (0.058) | 0.534 (0.029) |
+| | nu_max | 0.401 (0.033) | 0.401 (0.017) | 0.399 (0.052) | 0.399 (0.024) |
+| (a) violation indicator | nu_max | 0.748 (0.093) | 0.761 (0.049) | 0.245 (0.084) | 0.246 (0.044) |
+| | critical moisture | 0.690 (0.097) | 0.682 (0.047) | 0.190 (0.081) | 0.181 (0.038) |
+| | heat loss | 0.321 (0.069) | 0.324 (0.037) | 0.041 (0.050) | 0.033 (0.025) |
+
+P1: point estimates unchanged to the third decimal, widths halved (e.g. unpressurised fuel, heater
+efficiency ST 0.932, w 0.060 -> 0.029; dew-point distance, approach 0.644, w 0.050 -> 0.024).
+Every ranking and every reading of sections 7.2-7.5 and 8 stands; the only correction is the
+monolayer moisture for the gas velocity (no longer dominant, and therefore no isotherm parameter is
+dominant for any P2 output at 2^14).
+
+Invalid at 2^14: P1 none; P2 21 of 196 608 runs (0.01 %, exact solver at the optimal command).
+Run time 3.68 h on 14 workers (P2 218.2 min, P1 2.1 min).
+
 ## 8. Ranking for the data request ("which question is worth how much")
 
 P2, design E, epistemic inputs by ST for (b) and (c), with the standard deviation of the output
@@ -325,8 +377,9 @@ distance only (0.337).
 * All ranges are placeholders; indices are range-dependent (design R: the order of the two
   drying-kinetics parameters swaps when their ranges are doubled).
 * Independent uniform inputs; correlations not modelled.
-* The pre-registered convergence criterion is not met at 2^12 (7.1); the stated rankings are
-  resolved, the absolute indices carry widths of up to 0.08 (0.24 for the optimal gas velocity).
+* The pre-registered convergence criterion is not met at 2^12 (7.1); with the precision extension
+  to 2^14 of design E it is met for 19 of 20 outputs, not for the optimal gas velocity (7.8).
+  Designs O, J and R stay at 2^12 (P2 J 2^10) and carry the widths stated there.
 * Indices on valid blocks only: up to 6 % invalid rows in P2 O, R, J; (d, fixed point feasible) is
   a conditional analysis by construction.
 * Operative ranges are the operating envelope (stress bands), not running operation; with the
