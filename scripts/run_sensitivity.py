@@ -27,6 +27,15 @@ Pre-registered (fixed in this docstring and the YAML before the first run)
   recovered heat, dew-point distance) get their range doubled about its centre (log scale for
   log inputs), clipped to the hard bounds of the YAML.
 
+Precision extension (declared 2026-10-22, before its run)
+---------------------------------------------------------
+``--designs E --base-log2 E=14`` (artifact ``sobol_steady_e14``) repeats design E with base sample
+2^14 and the same seed: the 2^12 design of ``sobol_steady_v1`` is its prefix (the indices at
+N = 4096 must reproduce v1). It is a precision extension of the same pre-registered test, not a
+new test: same criteria, 2^12 and 2^14 reported side by side, and any input whose classification
+"dominant" (ST >= 0.1) changes is named. If the criterion is not met at 2^14 either, the base
+sample is not doubled again; the inputs and indices that miss it are reported.
+
 Designs
 -------
 E  epistemic inputs varied, operative inputs nominal (main design of the data request)
@@ -452,6 +461,14 @@ def main() -> int:
         help="cap every base sample at 2**cap (smoke run only; needs --out-dir outside runs)",
     )
     parser.add_argument(
+        "--base-log2",
+        action="append",
+        default=[],
+        metavar="DESIGN=K",
+        help="base sample 2**K for DESIGN instead of the YAML (precision extension, e.g. E=14; "
+        "recorded in the artifact; same seed, so the YAML's design is a prefix of it)",
+    )
+    parser.add_argument(
         "--out-dir",
         default=str(RUNS_DIR),
         help="output directory; anything but artifacts/runs is a smoke run (no clean-tree check)",
@@ -462,6 +479,16 @@ def main() -> int:
     smoke = out_dir != RUNS_DIR.resolve()
     if args.base_log2_cap is not None and not smoke:
         raise SystemExit("--base-log2-cap is for smoke runs only")
+    override: dict[str, int] = {}
+    for item in args.base_log2:
+        design, _, k = item.partition("=")
+        if design not in config.designs or not k.isdigit():
+            raise SystemExit(
+                f"--base-log2 expects DESIGN=K with a design of the YAML, got {item!r}"
+            )
+        if int(k) < config.designs[design].base_log2:
+            raise SystemExit("--base-log2 may only enlarge a design (precision extension)")
+        override[design] = int(k)
     variants = [v for v in args.variants.split(",") if v]
     designs = [d for d in DESIGN_ORDER if d in args.designs.split(",")]
     if "R" in designs and "E" not in designs:
@@ -482,10 +509,11 @@ def main() -> int:
         "config_fingerprint": config.fingerprint,
         "src_tree": git("rev-parse", "HEAD:src"),
         "cap": args.base_log2_cap,
+        "base_log2_override": override,
     }
 
     def base_log2(design: str, model: str) -> int:
-        b = config.designs[design].base_log2_for(model)
+        b = override.get(design, config.designs[design].base_log2_for(model))
         return b if args.base_log2_cap is None else min(b, args.base_log2_cap)
 
     started = time.time()
@@ -495,6 +523,8 @@ def main() -> int:
         "study_config": config.raw,
         "study_config_fingerprint": config.fingerprint,
         "smoke": smoke,
+        "designs_run": designs,
+        "base_log2_override": override,
         "workers": args.workers,
         "packages": {p: metadata.version(p) for p in ("SALib", "casadi", "numpy", "scipy")},
         "correlations": "not modelled: all inputs independent and uniform (see the YAML)",
