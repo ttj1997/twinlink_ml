@@ -45,9 +45,11 @@ SIZES = (16, 64)
 SEEDS = (1, 2, 3, 4, 5)
 MAX_WORKERS = 8
 FILTER_WINDOW = 8
-# core-hours per job from the probe run of 2026-10-22 (only used for the order and the estimate;
-# the estimate actually used is printed by --estimate and recorded in docs/27)
-COST_H = {"small": 0.45, ("transformer", 16): 1.6, ("transformer", 64): 5.0, "side": 0.25}
+# core-hours per job from the probe of 2026-10-22 (Transformer n16 seed 1: 200 epochs in 2457 s,
+# 12.3 s per epoch; GRU n16 206 s, LSTM n64 337 s; setup about 1.5 min) and, for the Transformer at
+# n64, about 4 x the n16 epoch time with the epoch counts of Befund 94 (median about 130, cap 200).
+# Only used for the order and the estimate; the estimate actually used is recorded in docs/27.
+COST_H = {"small": 0.4, ("transformer", 16): 0.6, ("transformer", 64): 2.2, "side": 0.15}
 
 
 @dataclass(frozen=True)

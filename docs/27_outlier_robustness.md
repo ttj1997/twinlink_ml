@@ -137,7 +137,38 @@ first run; tests `tests/test_outlier_robustness_scripts.py`). Short form:
 
 ## 6. Budget and run
 
-(filled in before the start: probe, estimate, cuts.)
+**Probe (2026-10-22, 16:55-17:36, worktree state before commit `8d4407a`, outputs outside the
+repository, not artifacts).** Seed 1, while another computation occupied the machine (16
+processes, until about 19:00): persistence and ARX (`n_train` 16, 64), GRU `n_train` 16, LSTM
+`n_train` 64, Transformer `n_train` 16 at `p0_none_none`, and GRU `n_train` 16 at
+`p0.25_independent_hampel8`. Wall times: GRU 206 s, LSTM 337 s, Transformer 2457 s (200 epochs,
+12.3 s per epoch), setup (data of both pools) 25 s plus about 1 min start-up. At `p = 0` every
+probed value of the metric against the measurement equals the Befund 94 record (persistence, ARX,
+GRU, LSTM, Transformer; both test sets, h 1 and 36), with the same moisture-head epochs -- the gate
+G3 in small. At `p0.25_independent_hampel8` the realised outlier share of the pool was 0.253 and
+the filter replaced 9.1 % of the samples.
+
+**Estimate** (cost per job in `run_outlier_robustness.py`, `COST_H`: GRU/LSTM/baselines job 0.4 h,
+Transformer 0.6 h at `n_train` 16 and 2.2 h at 64, side-check job 0.15 h per budget; list
+scheduling over 8 workers):
+
+| plan | jobs | conditions | core-hours | wall, 8 workers |
+|---|---|---|---|---|
+| full design | 170 | 14 (10 + 4 side) | 166.0 | 20.9 h |
+| cut 1: bursts only at `p = 0.25` | 140 | 12 | 134.0 | 16.9 h |
+| cut 1 + cut 2: no window side check | 120 | 8 | 128.0 | 16.2 h |
+
+**Cuts (budget rule).** The estimate is above 12 h, so (1) the bursts are restricted to
+`p = 0.25` (`p0.05_burst_*` dropped) and, still above 12 h, (2) the window side check (GRU, windows
+4 and 16) is dropped. After both cuts the estimate is still 16.2 h; no further cut is authorised
+(decision 14), so the remaining plan runs completely, in tiers: tier 1 (`p0_none_none`,
+`p0.25_independent_none`, `p0.25_independent_hampel8`, `p0.25_burst_none`,
+`p0.25_burst_hampel8`; about 80 core-hours) first, then tier 2 (`p0_none_hampel8`,
+`p0.05_independent_none`, `p0.05_independent_hampel8`).
+
+Command: `tools/run_here.sh scripts/run_outlier_robustness.py --run-name main --workers 8
+--bursts-only-at-025 --skip-window-check` (resumable with `--resume`). The working tree stays
+untouched during the run (every job records `git/dirty`).
 
 ## 7. Results
 
