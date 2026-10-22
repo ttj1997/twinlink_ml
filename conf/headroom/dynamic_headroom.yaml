@@ -1,0 +1,82 @@
+# Dynamic headroom study (docs/24_dynamic_headroom.md)
+#
+# STATUS: placeholder -- every number below is a study setting or a placeholder, none is a
+# measured plant value. Values marked "derived from plant data, placeholder" are RELATIVE
+# amplitudes only (no raw values, channel names or apparatus numbers enter the repository).
+#
+# Line: the lab line of the bandit studies (Befund 52/93/96): GAB placeholder config, nozzle
+# pressure fixed at the Befund 52 fixed point, quality limit 0.15 kg/kg as a PATH condition.
+# The solid fraction keeps the lab line's own band around 0.30 (decision of the project lead,
+# 2026-10-20): with a plant-like 0.60-0.70 the 0.15 limit does not bind on this line (steady
+# moisture 0.07-0.11 kg/kg at the inlet-temperature minimum), see docs/24 section 2.
+
+version: 1
+process_config: conf/process/greybox_gab_placeholder.yaml
+
+line:
+  product_moisture_limit_kg_per_kg: 0.15     # placeholder (main case of Befund 93/96)
+  gas_velocity_minimum_m_per_s: 0.80         # placeholder (ActionBound minimum, unchanged)
+  nozzle_pressure_bar: 1.002634656115166     # Befund 52 fixed point (as the bandit env)
+  bed_temperature_limit_celsius: 80.0        # Befund 52 placeholder (operating_point)
+  nominal_spray_rate_kg_per_h: 1.5           # ActionBound nominal = throughput
+  nominal_solid_fraction: 0.30               # DisturbanceRange nominal
+  start_margin_kg_per_kg: 0.01               # placeholder: common initial steady state at
+                                             # limit - 0.01, so no controller starts violated
+
+control:
+  interval_s: 300.0                  # piecewise-constant set points (all controllers)
+  optimizer_step_s: 30.0             # RK4 step of the optimisation model; path condition
+                                     # enforced at every step
+  mpc_horizon_s: 7200.0              # R3 horizon (>= 2 h)
+  violation_tolerance_kg_per_kg: 1.0e-4   # operating_point.TOLERANCE_MOISTURE_KG_PER_KG
+  soft_constraint_weight_kwh: 10.0   # L1 slack weight per node and kg/kg (exact penalty)
+  margin_upper_kg_per_kg: 0.05       # bisection bracket [0, upper]
+  margin_tolerance_kg_per_kg: 2.5e-4 # bisection stops when the bracket is narrower
+  gas_heater_efficiency: 0.80        # CO2 booking, carrier_energy (placeholder, Befund 60)
+
+scenarios:
+  seed: 20261020
+  duration_s: 86400.0
+  sample_time_s: 5.0                 # truth model sample time (config numerics, unchanged)
+  ambient:
+    # Day profiles centred on the 5 x 5 grid of the bandit weather box (Befund 52 grid:
+    # ambient temperature and relative humidity between the DisturbanceRange limits).
+    grid_points_per_axis: 5
+    diurnal_amplitude_fraction: 0.35 # DiurnalDisturbanceDesign default
+    drift_amplitude_fraction: 0.10   # DiurnalDisturbanceDesign default
+    drift_correlation_time_s: 3600.0 # DiurnalDisturbanceDesign default
+  per_type: 20                       # scenarios per type (ambient: all 25 grid points)
+  observed:
+    # derived from plant data, placeholder (relative amplitudes only)
+    throughput_relative_amplitude: 0.015
+    throughput_hold_time_s: [3600.0, 14400.0]
+    solid_fraction_relative_half_band: 0.0769   # 0.60-0.70 band, relative half width
+    solid_fraction_std_fraction_of_half_band: 0.5
+    solid_fraction_correlation_time_s: 10800.0
+    inlet_temperature_slow: {std_k: 0.35, correlation_time_s: 10800.0}
+    inlet_temperature_fast: {std_k: 1.5, correlation_time_s: 240.0}
+  stress:
+    # upper estimate only (amplitudes of the original study request)
+    throughput_levels: [-0.20, -0.10, 0.0, 0.10, 0.20]
+    throughput_hold_time_s: [3600.0, 14400.0]
+    solid_fraction_band: [0.20, 0.40]           # whole DisturbanceRange of the lab line
+    solid_fraction_hold_time_s: [3600.0, 14400.0]
+    inlet_temperature_std_factor: 2.0
+  product_change:
+    duration_s: 21600.0
+    change_time_s: 7200.0
+    moisture_limit_b_kg_per_kg: 0.12  # placeholder: second product, tighter target
+    solid_fraction_b: 0.25            # placeholder: second product, wetter feed
+    per_direction: 5
+
+robustness:
+  draws: 20
+  seed: 20261021
+  # GAB parameters of the TRUTH model, drawn by LHS; the controllers keep the nominal model.
+  # Plausible band = placeholder (no sorption measurement of the material exists).
+  monolayer_factor: [0.8, 1.2]
+  c_constant_factor_log: [0.5, 2.0]
+  k_constant: [0.70, 0.80]
+  enthalpy_factor: [0.5, 1.5]
+  holding_share: 0.95
+  scenario_indices: [0, 12]          # of each observed type (12 = grid centre for "ambient")
