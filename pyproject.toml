@@ -22,7 +22,9 @@ torch = ["torch>=2.4"]
 sklearn = ["scikit-learn>=1.4"]
 # Nur fuer twinlink_ml.plant_data (Einlesen der .xlsx-Anlagenexporte des
 # Anwendungspartners) -- kein anderes Modul im Paket liest Excel-Dateien.
-plant-data = ["openpyxl>=3.1"]
+# Partner files: openpyxl also reads the partner workbooks (partner_v4, partner_v4_1); h5py only
+# for the Dyssol flowsheet file (partner_v4_1.comparison.load_dyssol_steady_state; tests skip without it).
+plant-data = ["openpyxl>=3.1", "h5py>=3.10"]
 train = [
     "torch>=2.4",
     "lightning>=2.4",

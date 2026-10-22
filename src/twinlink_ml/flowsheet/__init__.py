@@ -16,7 +16,9 @@ counter-current heat network, carrier energy). This package puts both behind one
 * :mod:`.auxiliary` -- fan and pump power (output), CO2 with the carrier factors,
 * :mod:`.bed_state` -- dryer 2 in the laboratory model (physical product moisture),
 * :mod:`.flowsheet` -- ``Flowsheet``; :mod:`.sheet` -- scenarios in the cell layout of the workbook,
-* :mod:`.decomposition` -- switch-by-switch walk from ``"partner"`` to ``"physical"``.
+* :mod:`.decomposition` -- switch-by-switch walk from ``"partner"`` to ``"physical"``,
+* :mod:`.line` -- one dryer line (the stationary Dyssol flowsheet of the delivery 4.1_2),
+* :mod:`.validators` -- plausibility checks (exhaust saturation, product mass, medium boiling).
 """
 
 from .base import SWITCH_NAMES, PhysicalParameters, Switches, Unit

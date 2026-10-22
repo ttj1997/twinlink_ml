@@ -142,6 +142,12 @@ def exhaust_profile(
     t_nodes = np.concatenate([[t_out, knee], knee + (floor - knee) * fractions])
     y_s = saturation_humidity(t_nodes)
     q_nodes = cap * (t_out - t_nodes) + m * np.maximum(y - y_s, 0.0) * latent_heat(T_KALT_CELSIUS)
+    if q_nodes[0] > 0.0:
+        # an exhaust at or above saturation by this correlation (e.g. saturated by IAPWS-IF97 in
+        # the dryer's saturation limit) releases latent heat at its own temperature first; the
+        # curve has to start at q = 0. Never the case for an unsaturated exhaust.
+        q_nodes = np.concatenate([[0.0], q_nodes])
+        t_nodes = np.concatenate([[t_out], t_nodes])
     return Profile(np.maximum.accumulate(np.maximum(q_nodes, 0.0)), t_nodes)
 
 

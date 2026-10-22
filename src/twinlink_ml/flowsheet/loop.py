@@ -65,6 +65,11 @@ class StageModel:
     """``half``: ``dt_min_k`` is the approach through the circuit, ``dt_min_k / 2`` per exchanger;
     ``each``: ``dt_min_k`` per exchanger."""
     nodes: int = PROFILE_NODES
+    htm_max_celsius: float | None = None
+    """Counter-current circuit only: highest temperature the medium may reach (an unpressurised
+    liquid circuit); ``None``: no limit. The medium leaves the recovery exchanger at
+    ``T2 = T_h,in + dt + Q max(1/B, 1/C)``, so the limit caps ``Q`` in closed form (binding
+    ``"medium_limit"``)."""
 
 
 @dataclass(frozen=True)
@@ -178,6 +183,10 @@ def run_stage(model: StageModel, inp: LoopInputs) -> StageOut:
     else:
         dt = dt_total / 2.0 if model.split == "half" else dt_total
         q, binding = solve_stage(profile, cg, t_h, target, b, dt, dt)
+        if model.htm_max_celsius is not None:
+            q_limit = max(model.htm_max_celsius - t_h - dt, 0.0) / max(1.0 / b, 1.0 / cg)
+            if q_limit < q:
+                q, binding = q_limit, "medium_limit"
         htm_cold = t_h + dt + max(0.0, q * (1.0 / cg - 1.0 / b))
         htm_hot = htm_cold + q / b
         b_arg = b
