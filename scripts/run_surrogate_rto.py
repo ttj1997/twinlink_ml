@@ -20,6 +20,9 @@ Tasks (all independent, run in a process pool, heaviest first):
 ``M4/<P>/seed``
     grey-box fit of the fitted parameters at every N (the hidden one stays nominal), optimised on
     the fitted physics model, scored.
+``M4b/<P>/seed`` (only with ``--arms M4b``; post hoc, declared, docs/25 section 10)
+    M4 plus a back-off per constraint, ``kappa x`` RMS of the training residuals of the fitted
+    model, kappa from ``models.m4b.kappas`` (0 reproduces M4). Run as its own artifact.
 ``M2a/<P>/kappa/seed``
     GP with adaptive design (8 Sobol start points, then sequential at the predicted optima of new
     training disturbances), the GP at every N scored.
@@ -104,6 +107,9 @@ def _run(task: tuple[Any, ...]) -> dict[str, Any]:
             out = blackbox_arm(family, kind, task[2], config, tw, log)
         elif kind == "M4":
             out = greybox_arm(family, task[2], config, tw, log)
+        elif kind == "M4b":
+            kappas = tuple(float(k) for k in config.raw["models"]["m4b"]["kappas"])
+            out = greybox_arm(family, task[2], config, tw, log, backoff_kappas=kappas)
         elif kind == "M2a":
             out = adaptive_arm(family, task[2], task[3], config, tw, log)
         else:
@@ -116,7 +122,11 @@ def _run(task: tuple[Any, ...]) -> dict[str, Any]:
     }
 
 
-def _tasks(config: SurrogateStudyConfig, problems: list[str]) -> list[tuple[Any, ...]]:
+def _tasks(
+    config: SurrogateStudyConfig, problems: list[str], arms: list[str]
+) -> list[tuple[Any, ...]]:
+    if arms != ["pre-registered"]:
+        return [(a, p, s) for a in arms for p in problems for s in config.seeds]
     tasks: list[tuple[Any, ...]] = []
     for p in problems:
         tasks += [("M4", p, s) for s in config.seeds]
@@ -132,6 +142,12 @@ def main() -> None:
     ap.add_argument("--name", required=True)
     ap.add_argument("--problems", nargs="+", default=["P1", "P2"])
     ap.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2) - 2))
+    ap.add_argument(
+        "--arms",
+        nargs="+",
+        default=["pre-registered"],
+        help="'pre-registered' (all tasks of v1) or arms run per problem and seed, e.g. M4b",
+    )
     ap.add_argument("--resume", action="store_true")
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--smoke-out", type=Path)
@@ -151,7 +167,12 @@ def main() -> None:
             raise SystemExit(f"{out_path} exists -- artifacts are never overwritten")
         cache_path = RUNS_DIR / f"_{args.name}_cache.jsonl"
         prov = provenance()
-    header = {"commit": git("rev-parse", "HEAD"), "config": config.fingerprint, "smoke": args.smoke}
+    header = {
+        "commit": git("rev-parse", "HEAD"),
+        "config": config.fingerprint,
+        "smoke": args.smoke,
+        "arms": args.arms,
+    }
 
     done: dict[str, dict[str, Any]] = {}
     if cache_path.exists():
@@ -169,7 +190,7 @@ def main() -> None:
         cache_path.parent.mkdir(parents=True, exist_ok=True)
         cache_path.write_text(json.dumps({"header": header}) + "\n", encoding="utf-8")
 
-    tasks = [t for t in _tasks(config, args.problems) if json.dumps(list(t)) not in done]
+    tasks = [t for t in _tasks(config, args.problems, args.arms) if json.dumps(list(t)) not in done]
     print(f"{len(tasks)} tasks, {args.workers} workers")
     t0 = time.perf_counter()
     with ProcessPoolExecutor(args.workers, initializer=_init, initargs=(args.smoke,)) as pool:
@@ -207,6 +228,7 @@ def main() -> None:
             for k, f in families.items()
             if k in args.problems
         },
+        "arms": args.arms,
         "wall_seconds": time.perf_counter() - t0,
         "records": sorted(done.values(), key=lambda r: json.dumps(r["task"])),
     }

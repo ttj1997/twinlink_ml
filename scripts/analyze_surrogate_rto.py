@@ -68,6 +68,28 @@ Additional reports (no gate)
   P1 condensate in the recovery exchanger.
 * Reference quality: ``u*`` convergence (starts at the best value, check run) and the margin of
   ``u0``.
+
+Addendum (2026-10-22, written after run v1, before run v2): POST HOC, DECLARED variant M4b
+------------------------------------------------------------------------------------------------
+Added after the results of ``surrogate_rto_v1`` were known (there M4 is infeasible on P2 by about
+0.001 kg/kg). It is reported separately as "post hoc, declared"; **the pre-registered reading
+above, computed from the v1 variants only, is the main result of the study and is not
+rewritten.**
+
+* Rule (decision of the project lead, 2026-10-22): M4 unchanged (same fit, same optimiser), plus a
+  back-off per constraint ``b_N = kappa * RMS(g_true - g_model)``, the RMS over the N training runs
+  at the fitted parameters, ``kappa in {1, 2}``; the fitted model is optimised with
+  ``g_model + b_N <= 0``. Only the N training runs enter ``b_N``; no information from the test
+  states, no second rule. Applied to both problems and every constraint.
+* Same N, seeds, test states, metrics and the same reading S1-S3 (gate per kappa: median ``eta``
+  >= 0.9 and median infeasibility <= 5 %, ``N_min`` as above), applied to M4b on its own.
+* Kappa 0 of the M4b arm reproduces M4 of v1 (a check, not a variant).
+* Reported in addition, descriptive only, without effect on the rule: ``b_N`` per N against the
+  actual deviation ``g_true - g_model`` of the fitted model at its own decisions on the test
+  states (per constraint, median and maximum over the states; for P2 the moisture). If ``b_N``
+  underestimates the error at the limit, that is a result, not a reason for another variant.
+* Holds for the hidden shift of this study only.
+* Input: the v1 artifact plus the v2 artifact via ``--extra``; output named by ``--name``.
 """
 
 from __future__ import annotations
@@ -101,6 +123,11 @@ CONFIDENCE = 0.95
 
 def _variant(model: str, kappa: float) -> str:
     return "M4" if model == "M4" else f"{model}/k{kappa:g}"
+
+
+def _posthoc(var: str) -> bool:
+    """Variants added after run v1 (post hoc, declared; never part of the main reading)."""
+    return var.startswith("M4b")
 
 
 def load(path: Path) -> dict[str, Any]:
@@ -174,6 +201,7 @@ def summarise(art: dict[str, Any], problem: str) -> dict[str, Any]:
     scales = np.array([c["scale"] for c in cons])
     per: dict[tuple[str, int], dict[int, dict[str, float]]] = defaultdict(dict)
     times: dict[str, list[float]] = defaultdict(list)
+    backoff: dict[tuple[str, int], list[dict[str, Any]]] = defaultdict(list)
     for rec in art["records"]:
         if rec["task"][0] == "reference" or rec["task"][1] != problem:
             continue
@@ -182,6 +210,20 @@ def summarise(art: dict[str, Any], problem: str) -> dict[str, Any]:
             m = metrics(row, ref, scales)
             m["true_evaluations"] = row["true_evaluations"]
             per[(var, row["N"])][row["seed"]] = m
+            if "backoff" in row:
+                dev = np.array(row["score"]["constraints"]) - np.array(
+                    row["model_constraints_at_decisions"]
+                )
+                bn = np.array(row["backoff"])
+                backoff[(var, row["N"])].append(
+                    {
+                        "seed": row["seed"],
+                        "backoff": bn,
+                        "dev_max": dev.max(axis=0),
+                        "dev_median": np.median(dev, axis=0),
+                        "share_dev_above_backoff": np.mean(dev > bn, axis=0),
+                    }
+                )
             times["truth_s_per_eval"].append(row["truth_s_per_eval"])
             if "predict_single_s" in row:
                 times[f"{row['model']}_predict_single_s"].append(row["predict_single_s"])
@@ -210,9 +252,11 @@ def summarise(art: dict[str, Any], problem: str) -> dict[str, Any]:
         ok = [table[var][n]["success"] for n in budgets]
         n_first[var] = next((n for n, o in zip(budgets, ok, strict=True) if o), None)
         n_min[var] = next((n for i, n in enumerate(budgets) if all(ok[i:])), None)
-    reading = _reading(n_min, budgets)
-    overtake = _overtake(per, variants, budgets)
-    adaptive = _adaptive(per, variants, budgets)
+    pre = [v for v in variants if not _posthoc(v)]
+    reading = _reading({v: n_min[v] for v in pre}, budgets)
+    overtake = _overtake(per, pre, budgets)
+    adaptive = _adaptive(per, pre, budgets)
+    posthoc = _posthoc_report(per, variants, budgets, n_min, n_first, backoff, cons)
     return {
         "reference": _reference_report(ref),
         "budgets": budgets,
@@ -222,7 +266,54 @@ def summarise(art: dict[str, Any], problem: str) -> dict[str, Any]:
         "reading": reading,
         "overtake": overtake,
         "adaptive": adaptive,
+        "posthoc": posthoc,
         "times": {k: {"median": float(np.median(v)), "n": len(v)} for k, v in times.items()},
+    }
+
+
+def _posthoc_report(
+    per: Any,
+    variants: list[str],
+    budgets: list[int],
+    n_min: dict[str, int | None],
+    n_first: dict[str, int | None],
+    backoff: dict[tuple[str, int], list[dict[str, Any]]],
+    cons: list[dict[str, Any]],
+) -> dict[str, Any] | None:
+    """M4b (post hoc, declared): gate per kappa, reproduction of M4, b_N against the deviation."""
+    post = [v for v in variants if _posthoc(v) and not v.endswith("/k0")]
+    if not post:
+        return None
+    reproduction = None
+    if ("M4b/k0", budgets[0]) in per:
+        reproduction = float(
+            max(
+                abs(per[("M4b/k0", n)][s]["eta_c"] - per[("M4", n)][s]["eta_c"])
+                for n in budgets
+                for s in per[("M4", n)]
+            )
+        )
+    tests = []
+    for v in post:
+        for n in budgets:
+            t = _paired(per, v, "M4", n)
+            if t is not None:
+                tests.append({"N": n, **t})
+    report = {}
+    for (v, n), rows in sorted(backoff.items()):
+        report[f"{v}@{n}"] = {
+            key: np.median([r[key] for r in rows], axis=0).tolist()
+            for key in ("backoff", "dev_max", "dev_median", "share_dev_above_backoff")
+        }
+    return {
+        "label": "post hoc, declared",
+        "n_min": {v: n_min[v] for v in post},
+        "n_first": {v: n_first[v] for v in post},
+        "case_if_alone": _reading({v: n_min[v] for v in post}, budgets)["case"],
+        "reproduction_k0_vs_M4_max_abs_eta_c": reproduction,
+        "vs_M4": tests,
+        "backoff": report,
+        "constraints": [c["name"] for c in cons],
     }
 
 
@@ -425,6 +516,27 @@ def _print(problem: str, s: dict[str, Any]) -> None:
             f"d={a['mean_difference']:+.4f} p={a['p_value']:.3f} "
             f"better={a['resolved_better']} worse={a['resolved_worse']}"
         )
+    ph = s.get("posthoc")
+    if ph:
+        print(f"\n--- M4b ({ph['label']}; not part of the reading above) ---")
+        for v in ph["n_min"]:
+            print(f"  {v}: N_min {ph['n_min'][v]} (first success {ph['n_first'][v]})")
+        print(f"  case if M4b alone: {ph['case_if_alone']}")
+        print(f"  kappa 0 vs M4, max |d eta_c|: {ph['reproduction_k0_vs_M4_max_abs_eta_c']}")
+        for t in ph["vs_M4"]:
+            print(
+                f"  {t['candidate']} vs M4 N={t['N']}: d={t['mean_difference']:+.4f} "
+                f"p={t['p_value']:.3f} better={t['resolved_better']} worse={t['resolved_worse']}"
+            )
+        print(
+            f"  b_N against g_true - g_model at the decisions (median over seeds), {ph['constraints']}:"
+        )
+        for key, rep in ph["backoff"].items():
+            print(
+                f"  {key}: b_N {np.round(rep['backoff'], 5).tolist()} | dev median "
+                f"{np.round(rep['dev_median'], 5).tolist()} max {np.round(rep['dev_max'], 5).tolist()}"
+                f" | share dev > b_N {np.round(rep['share_dev_above_backoff'], 2).tolist()}"
+            )
     print("times (median):", {k: f"{v['median']:.2e}" for k, v in sorted(s["times"].items())})
 
 
@@ -446,7 +558,7 @@ def _figures(name: str, problem: str, s: dict[str, Any]) -> list[str]:
         fig, axes = plt.subplots(1, 3, figsize=(13, 4), sharey=True)
         for ax, kappa in zip(axes, ("k0", "k1", "k2"), strict=True):
             for var, rows in sorted(s["table"].items()):
-                if var != "M4" and not var.endswith(kappa):
+                if var == "M4b/k0" or (var != "M4" and not var.endswith(kappa)):
                     continue
                 ns = [n for n in s["budgets"] if n in rows]
                 med = [rows[n][key]["median"] for n in ns]
@@ -472,18 +584,47 @@ def _figures(name: str, problem: str, s: dict[str, Any]) -> list[str]:
     return written
 
 
+def _check_compatible(art: dict[str, Any], extra: dict[str, Any]) -> None:
+    """Same settings apart from the block of the added arm (test states, designs, problems)."""
+
+    def strip(cfg: dict[str, Any]) -> dict[str, Any]:
+        out: dict[str, Any] = json.loads(json.dumps(cfg))
+        out["models"].pop("m4b", None)
+        return out
+
+    if strip(art["config"]) != strip(extra["config"]):
+        raise SystemExit("the extra artifact was run with other settings")
+    if any(r["task"][0] == "reference" for r in extra["records"]):
+        raise SystemExit("the extra artifact must not carry its own reference")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("artifact", type=Path)
     ap.add_argument("--no-write", action="store_true", help="print only (smoke runs)")
+    ap.add_argument("--extra", type=Path, nargs="*", default=[], help="artifacts of added arms")
+    ap.add_argument("--name", help="output name (default: the artifact's)")
     args = ap.parse_args()
     art = load(args.artifact)
-    name = args.artifact.name.removesuffix(".json.gz")
+    name = args.name or args.artifact.name.removesuffix(".json.gz")
+    extras = []
+    for path in args.extra:
+        extra = load(path)
+        _check_compatible(art, extra)
+        art["records"] = art["records"] + extra["records"]
+        extras.append(
+            {
+                "artifact": path.name,
+                "provenance": extra["provenance"],
+                "config_fingerprint": extra["config_fingerprint"],
+            }
+        )
     out: dict[str, Any] = {
         "provenance": None if args.no_write else provenance(),
         "artifact": args.artifact.name,
         "provenance_of_artifact": art["provenance"],
         "config_fingerprint": art["config_fingerprint"],
+        "extra_artifacts": extras,
         "problems": {},
     }
     for problem in sorted(art["problems"]):

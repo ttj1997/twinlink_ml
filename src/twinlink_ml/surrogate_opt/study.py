@@ -412,9 +412,16 @@ def fit_greybox(
 
 def greybox_arm(
     family: ProblemFamily, seed: int, config: SurrogateStudyConfig, test_w: np.ndarray,
-    log: Callable[[str], None] = print,
+    log: Callable[[str], None] = print, *, backoff_kappas: Sequence[float] | None = None,
 ) -> list[dict[str, Any]]:  # fmt: skip
-    """M4 at every budget for one seed (kappa 0 only)."""
+    """M4 at every budget for one seed.
+
+    ``backoff_kappas=None``: M4 as pre-registered (kappa 0, no back-off). Otherwise M4b, the
+    post-hoc declared variant (docs/25 section 10): per constraint the back-off
+    ``b_N = kappa * RMS(g_true - g_model)`` over the N training runs at the fitted parameters,
+    the model optimised with ``g_model + b_N <= 0``, one row per kappa (kappa 0 reproduces M4).
+    Only training data enter ``b_N``.
+    """
     truth, scorer = family.truth(), family.truth()
     n_max = max(config.budgets)
     budget = BudgetedTruth(truth, n_max)
@@ -427,24 +434,41 @@ def greybox_arm(
         fit = fit_greybox(family, u[:n], w[:n], y[:n], int(config.model("m4")["max_nfev"]))
         fit_s = time.perf_counter() - t0
         model = family.model(fit["theta"])
-        t0 = time.perf_counter()
-        opts = [
-            optimize_problem(model, tw, config, "model", seed=seed * 1000 + i)
-            for i, tw in enumerate(test_w)
-        ]
-        dec = np.array([o["u"] for o in opts])
-        t1 = time.perf_counter()
-        model.outputs(dec[:8], test_w[:8])
-        model_s = (time.perf_counter() - t1) / 8
-        rows.append({
-            "model": "M4", "kappa": 0.0, "seed": seed, "N": n, "true_evaluations": n,
-            "u_hat": dec, "model_feasible": [bool(o["feasible"]) for o in opts],
-            "score": score(scorer, test_w, dec), "fit": fit, "fit_s": fit_s,
-            "optimize_s": time.perf_counter() - t0,
-            "truth_s_per_eval": budget.seconds / budget.calls,
-            "disjoint_min_distance": disjoint, "predict_single_s": model_s,
-        })  # fmt: skip
-        log(f"{truth.name} M4 seed {seed} N {n} theta {np.round(fit['theta'], 4)} done")
+        residual = y[:n, 1:] - model.outputs(u[:n], w[:n])[:, 1:]
+        rms = np.sqrt(np.mean(residual**2, axis=0))
+        for kappa in backoff_kappas if backoff_kappas is not None else (0.0,):
+            backoff = kappa * rms
+            t0 = time.perf_counter()
+            opts = [
+                optimize_problem(
+                    model,
+                    tw,
+                    config,
+                    "model",
+                    seed=seed * 1000 + i,
+                    margin=backoff / model.scales,
+                )
+                for i, tw in enumerate(test_w)
+            ]
+            dec = np.array([o["u"] for o in opts])
+            t1 = time.perf_counter()
+            model_y = model.outputs(dec, test_w)
+            model_s = (time.perf_counter() - t1) / len(dec)
+            row = {
+                "model": "M4" if backoff_kappas is None else "M4b", "kappa": kappa,
+                "seed": seed, "N": n, "true_evaluations": n, "u_hat": dec,
+                "model_feasible": [bool(o["feasible"]) for o in opts],
+                "score": score(scorer, test_w, dec), "fit": fit, "fit_s": fit_s,
+                "optimize_s": time.perf_counter() - t0,
+                "truth_s_per_eval": budget.seconds / budget.calls,
+                "disjoint_min_distance": disjoint, "predict_single_s": model_s,
+            }  # fmt: skip
+            if backoff_kappas is not None:
+                row["training_residual_rms"] = rms
+                row["backoff"] = backoff
+                row["model_constraints_at_decisions"] = model_y[:, 1:]
+            rows.append(row)
+            log(f"{truth.name} {row['model']} kappa {kappa} seed {seed} N {n} done")
     return rows
 
 

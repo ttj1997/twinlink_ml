@@ -297,3 +297,20 @@ def test_p2_bisection_fallback_finds_the_newton_root() -> None:
     # a hot, fast point where Newton fails from every start: the fallback still closes both balances
     hot = truth.evaluate(np.array([118.2, 2.43]), np.array([23.8, 0.285, 1.245, 0.275]))
     assert hot.side["bed_temperature_celsius"] > 80.0  # infeasible, but evaluated
+
+
+def test_m4b_backoff_is_kappa_times_training_rms_and_kappa_zero_is_m4() -> None:
+    cfg = _config()
+    hidden = QuadraticFamily({"h0": 0.55})
+    tw = make_test_states(hidden, cfg)
+    plain = greybox_arm(hidden, 0, cfg, tw, log=lambda _: None)
+    backed = greybox_arm(hidden, 0, cfg, tw, log=lambda _: None, backoff_kappas=(0.0, 1.0, 2.0))
+    assert [r["model"] for r in backed] == ["M4b"] * 6
+    for n in cfg.budgets:
+        rows = {r["kappa"]: r for r in backed if r["N"] == n}
+        m4 = next(r for r in plain if r["N"] == n)
+        np.testing.assert_allclose(rows[0.0]["u_hat"], m4["u_hat"])
+        # the constraint residual of the hidden h0 is 0.55 - 0.40 = 0.15 at every training run
+        np.testing.assert_allclose(rows[1.0]["training_residual_rms"], [0.15], atol=1e-6)
+        np.testing.assert_allclose(rows[2.0]["backoff"], 2.0 * rows[1.0]["backoff"])
+        assert all(rows[1.0]["score"]["feasible"])  # a back-off of 0.15 covers the bias exactly

@@ -51,6 +51,9 @@ models:
     max_iter: 5000
   m4:                              # grey-box fit: least squares on all outputs
     max_nfev: 200
+  m4b:                             # POST HOC, DECLARED (added 2026-10-22 after run v1, docs/25 s. 10):
+    kappas: [0.0, 1.0, 2.0]        # back-off kappa x RMS of the training residuals per constraint;
+                                   # 1 and 2 are the variant, 0 reproduces M4 (check against v1)
 
 p1:
   # Line heater -> dryer -> recovery (twinlink_ml.flowsheet.line), physical mode:
