@@ -43,6 +43,11 @@ rl = [
 optimal-control = [
     "casadi>=3.8,<3.9",
 ]
+# Only for twinlink_ml.surrogate_opt (surrogate-based steady RTO, docs/25): Gaussian process (M2)
+# and MLP ensemble (M3). No other module of the study imports sklearn; its tests skip without it.
+surrogate = [
+    "scikit-learn>=1.4",
+]
 dev = [
     "pytest>=8.0,<9",
     "pytest-cov>=5.0",

@@ -1,0 +1,121 @@
+# Surrogate-based steady RTO with few true evaluations (docs/25_surrogate_rto.md)
+#
+# STATUS: placeholder -- every number below is a study setting or a placeholder without a
+# measured source, unless a source is named. Operating ranges are lab-line ranges (inlet
+# 60-120 degC), NOT the 200-300 degC of the partner data sets.
+#
+# Reading (pre-registered): docstring of scripts/analyze_surrogate_rto.py.
+
+version: 1
+
+seeds: [0, 1, 2, 3, 4]            # design scrambling AND model initialisation
+budgets: [8, 16, 32, 64, 128, 256]  # true evaluations N (Sobol, powers of two, nested per seed)
+kappas: [0.0, 1.0, 2.0]           # conservative variants g + kappa * sigma <= 0 (M1-M3)
+
+test_states:
+  count: 50
+  seed: 20261022                  # Sobol over the disturbance box, own sequence (not a design)
+
+adaptive:                          # M2 only
+  initial: 8                       # Sobol start points (the first 8 of the seed's design)
+  max_batch: 8                     # points per GP refit: min(max_batch, N // 2, next budget - N)
+  pool_seed_offset: 1000           # training disturbance pool: Sobol scramble seed + offset
+
+optimizer:
+  surrogate: {candidates: 512, polish: 4}
+  model: {candidates: 512, polish: 4}          # M4 on P1 (fitted line model)
+  truth: {candidates: 2048, polish: 12}        # u* on P1 and the u* cross-check on P2
+  truth_check: {candidates: 4096, polish: 16, seed: 7}   # second, independent u* run (P1)
+  feasibility_tolerance: 1.0e-6                # normalised, model feasibility in the optimiser
+  r1_starts: [[90.0, 0.8], [60.0, 0.8], [120.0, 0.8], [60.0, 2.5], [120.0, 2.5], [90.0, 1.65]]
+
+margin:                            # fixed operating point u0 (as R0, docs/24 section 5)
+  upper: 1.0                       # normalised margin (g / scale), bracket [0, upper]
+  max_upper: 8.0
+  tolerance: 0.005
+
+models:
+  m1:                              # quadratic response surface, ridge, alpha by LOO
+    alphas_log10: [-10.0, 2.0, 49]
+  m2:                              # GP, Matern, ARD, one GP per target
+    nu: 2.5
+    length_scale_bounds: [0.01, 100.0]
+    noise_level: 1.0e-8            # white noise for conditioning (the truth is noise-free)
+    noise_bounds: [1.0e-12, 1.0e-3]
+    restarts: 2
+  m3:                              # MLP ensemble, multi-output, standardised targets
+    members: 5
+    hidden: [32, 32]
+    activation: tanh
+    alpha: 1.0e-3
+    max_iter: 5000
+  m4:                              # grey-box fit: least squares on all outputs
+    max_nfev: 200
+
+p1:
+  # Line heater -> dryer -> recovery (twinlink_ml.flowsheet.line), physical mode:
+  # counter-current, dT_min per exchanger, saturation limit on, unpressurised medium.
+  decisions:
+    inlet_temperature_celsius: [60.0, 120.0]   # upper bound = T_max (lab action box, placeholder)
+    air_kg_per_h: [30.0, 200.0]                # dry air
+    medium_kg_per_h: [10.0, 150.0]
+  disturbances:
+    ambient_temperature_celsius: [5.0, 35.0]   # lab DisturbanceRange
+    ambient_relative_humidity: [0.25, 0.85]    # lab DisturbanceRange (RELATIVE humidity)
+    spray_rate_kg_per_h: [1.2, 1.8]            # 1.5 kg/h +- 20 % (stress levels of docs/24)
+    solid_fraction: [0.20, 0.40]               # lab band around 0.30
+  nominal_disturbance: [20.0, 0.50, 1.5, 0.30]
+  material:                         # synthetic (tests/test_flowsheet_validators.py), no source
+    cp_gas_j_per_kg_k: 1006.0
+    lower_heating_value_j_per_kg: 50.0e6
+    cp_liquid_j_per_kg_k: 4185.0
+    cp_solid_j_per_kg_k: 1000.0
+    cp_vapour_j_per_kg_k: 1906.0
+    equilibrium_moisture_kg_per_kg: 0.002
+    enthalpy_of_evaporation_j_per_kg: 2.5e6
+  spray_temperature_celsius: 20.0
+  medium_cp_j_per_kg_k: 4185.0
+  constraints:
+    dew_point_margin_k: 10.0         # at the DRYER exhaust (ducts, filter); placeholder
+    fluidisation_min_m3_per_h: 51.0  # 0.8 m/s x 0.0177 m2 (lab u_min and cross-section, both placeholders)
+    product_max_celsius: 80.0        # = bed-temperature limit of the lab line (Befund 52 placeholder)
+    medium_max_celsius: 95.0         # unpressurised medium; the physical mode caps it by construction
+  tolerances:                        # largest true g that still counts as feasible
+    dew_point_margin: 0.05
+    fluidisation: 0.05
+    product_temperature: 0.05
+    medium_temperature: 0.05
+  parameters:
+    # fitted by M4
+    - {name: heater_efficiency, nominal: 0.80, truth: 0.85, lower: 0.5, upper: 1.0, fitted: true,
+       source: "placeholder: nominal = synthetic test material, shift +0.05 without a source"}
+    - {name: heat_loss_ua_w_per_k, nominal: 0.0, truth: 2.0, lower: 0.0, upper: 10.0, fitted: true,
+       source: "partner model has none (0); truth = laboratory placeholder 2 W/K (flowsheet PhysicalParameters, docs/11 9.6)"}
+    # hidden: stays nominal in M4
+    # truth = upper edge of the band DT_MIN_K = (20, 10, 5) K of the Befund-90 sensitivity
+    # (scripts/report_heat_recovery_comparison.py; tests/test_surrogate_opt.py checks the match)
+    - {name: dt_min_k, nominal: 10.0, truth: 20.0, lower: 2.0, upper: 30.0, fitted: false,
+       source: "main convention 10 K per exchanger (docs/11 section 11); truth = upper edge of the Befund-90 band 5-20 K"}
+
+p2:
+  # Steady grey-box model of the lab line, solver of the RTO R1 (docs/24).
+  headroom_config: conf/headroom/dynamic_headroom.yaml
+  disturbances:
+    ambient_temperature_celsius: [5.0, 35.0]
+    ambient_relative_humidity: [0.25, 0.85]
+    spray_rate_kg_per_h: [1.2, 1.8]            # 1.5 kg/h +- 20 %
+    solid_fraction: [0.20, 0.40]               # lab band around 0.30 (decision of 2026-10-20)
+  nominal_disturbance: [20.0, 0.50, 1.5, 0.30]
+  tolerances:
+    moisture: 1.0e-4                 # operating_point.TOLERANCE_MOISTURE_KG_PER_KG (as docs/24)
+    bed_temperature: 0.05
+  parameters:
+    - {name: max_saturation_degree, nominal: 0.60, truth: 0.45, lower: 0.2, upper: 1.0, fitted: true,
+       source: "nu_max placeholder 0.60; truth x0.75 = plant variant P1 of the A1 transfer study (simulation.plant_variants)"}
+    - {name: heat_loss_ua_w_per_k, nominal: 2.0, truth: 2.6, lower: 0.0, upper: 20.0, fitted: true,
+       source: "placeholder 2 W/K; truth x1.30 = plant variant P1 of the A1 transfer study"}
+    # hidden; truth READ from the robustness band of the headroom config (upper edge), so the
+    # shift stays the one of the docs/24 sensitivity study
+    - {name: gab_monolayer_factor, nominal: 1.0, truth_from: "robustness.monolayer_factor[1]",
+       lower: 0.5, upper: 2.0, fitted: false,
+       source: "hidden; upper edge of the docs/24 robustness band; largest effect of the five GAB parameters (docs/25)"}
