@@ -159,6 +159,8 @@ replace a product-moisture measurement.
 
 **Global sensitivity of the steady-state models (Befund 108; placeholder ranges, independent inputs).** For the laboratory line the drying kinetics (critical moisture, `nu_max`) decide the energy at the optimum, the operating point and the saving of the quasi-stationary optimiser, the sorption isotherm hardly matters; for the heat-recovery line the exchanger approach and the heater efficiency decide. The pre-registered convergence criterion is met for 19 of 20 outputs at 2^14 samples (not for the optimal gas velocity).
 
+**Robustness of the architecture ranking against sensor outliers (Befund 109; outlier parameters are placeholders).** Outliers in the moisture signal (independent at 5 % and 25 %, in bursts at 25 %) raise every model's error several times but reverse no Holm verdict and put no baseline ahead of a network; a causal Hampel filter keeps the ranking without restoring the error level and is not made mandatory (to be decided with real sensor data in AP 2).
+
 **One-step bandit (Befund 93, follow-up of Befund 68).** A residual action and a separated
 moisture cost lift SAC from a negative to a clearly positive closed-regret fraction, but no cell
 meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of

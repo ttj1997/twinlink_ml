@@ -4,8 +4,8 @@ Status: run and evaluated. Design fixed and committed before the run (sections 1
 results in sections 6-8 (numbers only from the artifacts named there). Pre-registered readings:
 **independent outliers R1, bursts R2** -- the R2 hinges on one cell that sharpens, not reverses,
 the reference (section 7.4). Branch `outlier-robustness`
-(from `origin/master` 4b0ab66), not merged, not pushed; the finding number is assigned by the
-managing session (lab book entry "Befund NN").
+(from `origin/master` 4b0ab66), merged into `master` on 2026-10-23; the finding number is 109
+(lab book).
 
 ## 1. Question
 
