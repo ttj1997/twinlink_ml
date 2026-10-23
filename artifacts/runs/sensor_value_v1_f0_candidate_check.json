@@ -1,0 +1,61 @@
+{
+ "provenance": {
+  "git/commit": "c73b14941b7ab3e77e9ff270cc1505c774cbb376",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used"
+ },
+ "source": {
+  "artifact": "sensor_value_v1.json.gz",
+  "artifact_sha256": "8083e6c9d4c00564ee94c2491ce0f27f973f2169bdacf4656db476abbb4e4431",
+  "cache_header": {
+   "commit": "a0cb2b72f5d6ac8f3af0f08a4d41fc39045d7c5e",
+   "sensor_value_fingerprint": "734320f5c5f18c27",
+   "study_fingerprint": "663ad10af77eedc7",
+   "process_fingerprint": "4e924b1878d20849",
+   "soft_sensor": {
+    "record": "artifacts/runs/sensor_value_soft_sensor_v1.json",
+    "record_sha256": "c3a88aa40569fb713054339cba2e05c4215b92b7385e8d2ac2a21ce3316916a7",
+    "checkpoints": {
+     "F3:1": "artifacts/checkpoints/sensor_value/sensor_value_soft_sensor_v1_seed1.pt",
+     "F3:2": "artifacts/checkpoints/sensor_value/sensor_value_soft_sensor_v1_seed2.pt",
+     "F3:3": "artifacts/checkpoints/sensor_value/sensor_value_soft_sensor_v1_seed3.pt"
+    }
+   },
+   "smoke": null,
+   "variants": [
+    "F0",
+    "F1",
+    "F2",
+    "F3:1",
+    "F3:2",
+    "F3:3"
+   ]
+  }
+ },
+ "f0_first_candidate": 0.0478515625,
+ "f0_raised_margin": 0.059375,
+ "holding_at_first_candidate": 379,
+ "value_vs_F1_at_first_candidate": {
+  "median": 0.09470381123115779,
+  "min": -0.06727501012695274,
+  "max": 0.3737910329981669
+ },
+ "value_vs_F1_at_raised_margin": {
+  "median": 0.13400760437110693,
+  "min": -0.020945197937501468,
+  "max": 0.4193006943232172
+ },
+ "f0_energy_raised_over_first": {
+  "median": 0.0368938601470844,
+  "min": 0.027815184121120273,
+  "max": 0.050110618934054774
+ }
+}
