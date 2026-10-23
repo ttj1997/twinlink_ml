@@ -1125,3 +1125,196 @@ Reading.
 * Check (a2) is exact only for a liquid fed at the adiabatic saturation temperature (12.6); check (a) uses IAPWS-IF97, the release curve the laboratory correlation (differences of at most about 0.2 % below 100 degC).
 * The identification of the Dyssol streams relies on the stream names of the file and on vapour being the smaller gas compound; the compound keys of the file carry no names.
 * All numbers are deterministic; no confidence statement.
+
+## 13. Six-case network with new, asymmetric inputs: Excel, Dyssol, physical mode, optimum (feedback to the partner)
+
+Branch `partner-6cases`. Lab book: Befund NN (number open; assigned on merge). **Question:** the partner's workbook of the six cases (two dryers, two sinks, two circuits) comes with new inputs in which the two lines differ strongly, and with a Dyssol run of all six cases. Is the workbook reproduced exactly as in section 12, do Excel and Dyssol agree case by case, does Dyssol's case 2 use swapped medium flows (a hypothesis to check, not to assume), what do the validators of section 12.5 find, how do the six cases rank with counter-current exchangers and a medium limit, and how far are they from the best any network of circuits could do?
+
+**Files** (confidential, in `local/partner/` of the main checkout, read through `TWINLINK_LOCAL_DIR`, never copied, never committed): `TwinLink Excel.xlsx` (the six-case workbook; sheets `Inputs`, `Balance`, `Scenarios`, `Balances` as in 4.1_2), `Dyssol_Excel simulation_results.xlsx` (the name has an underscore before `simulation` and none before `results`; the code accepts the spelling with a space as well). For the diffs `Model v4.1_2.xlsx` and `Comparison.xlsx` of section 12.
+
+Code: `src/twinlink_ml/partner_v4_1/simulation_sheet.py` (reader of the sheet `Simulation`), `src/twinlink_ml/flowsheet/pinch_target.py` (stream segments for the problem table from the units of `flowsheet`; the problem table itself, `heatnetwork/pinch.py`, is used unchanged), two options of `FlowsheetConfig`, `saturation_limit` and `htm_max_celsius` (both off by default; they pass the line's physical mode of section 12.6 to the six scenarios; every earlier result unchanged, tested). Tests `tests/test_partner_6cases.py` (synthetic reader, pinch bound against a hand calculation, the two options; the partner-file tests are skipped without `local/`). Script `scripts/report_partner_6cases.py` (commit `9b98755`; readings fixed in its docstring before the run), artifact `artifacts/runs/partner_6cases_comparison.json` (`git/dirty=False`). Model against model; no plant data.
+
+### 13.1 The workbook (artifact `workbook`)
+
+**Formulas:** no formula cell of `Scenarios`, `Balances` or `Balance` differs from `Model v4.1_2.xlsx` (0 cells). **Inputs** against 4.1_2 (sheet units):
+
+| Cell | Meaning | 4.1_2 | new |
+|---|---|---|---|
+| `E3`, `E4`, `E5` | dryer 1 (spray tower): air kg/h, g/kg, degC | 150, 12, 250 | 120, 6, 300 |
+| `E6`, `E7` | dryer 1: spray kg/h, solid fraction | 10, 0.5 | 12, 0.4 |
+| `E10`, `E12` | dryer 2 (fluidised bed): air kg/h, degC | 120, 300 | 100, 150 |
+| `E15` | dryer 2: spray degC | 15 | 20 |
+| `E20` | circuit 1 (exhaust 1), kg/h | 30 | 40 |
+| `I5`, `I6` | calorific value kJ/kg, heater efficiency % | 55 000, 70 | 45 000, 80 |
+
+Unchanged: the properties of 4.1_2 (`cp` gas 1.006, vapour 1.906, liquid and medium 4.185, solid 1.0 kJ/(kg K), evaporation enthalpy 2500 kJ/kg, equilibrium moisture 2 g/kg), dryer 1 spray at 20 degC, dryer 2 at 6 g/kg with 3 kg/h of spray at 0.4, ambient 20 degC, 1 atm, circuit 2 at 30 kg/h.
+
+**Reproduction with the switch set of 4.1_2** (`gas_formula` corrected, everything else as built): all 230 numeric cells of `Scenarios`, largest relative difference 1.9e-15; `Balances` (88 cells) and `Balance` (16) exact (0.0). With the old switch set only rows 26, 39, 41 differ (Excel / ours = 0.00818, i.e. the formula of 4.1_1 would give 122.3 times the gas). **As expected, the reproduction is exactly that of 4.1_2.**
+
+The two exhausts (partner mode): dryer 1 137.59 degC with 65.92 g/kg, dryer 2 102.86 degC with 23.98 g/kg. **Exhaust 1 is now the hot one** (in 4.1_1 exhaust 2 was; the intermediate version of section 8 had the same order as here), so cases 5 and 6 (exhaust 1 first) are the hot-first orders of section 8.2.
+
+### 13.2 The results workbook (artifact `results_workbook`)
+
+Its sheets `Dryer`, `Heater`, `Heat recovery`, `Combined` are equal to `Comparison.xlsx` of section 12 (all inputs and results; section 12 stands for them). The input block of the sheet `Simulation` (process 1 and 2: fresh gas, medium flow, dryer, spray, heater) agrees with the workbook in every value (0 differing).
+
+**The index 1/2 of the result rows does not follow one rule.** Product temperature and exhaust temperature are per dryer/exhaust, fuel per heater (sink). The energy row and the medium-temperature row are per exhaust in cases 1, 3, 4 and 6, but in **case 2 the energy row is per sink** (index 1 = the stage of sink 1 = exhaust 2) and in **case 5 the energy and medium rows are swapped** (index 1 = exhaust 2). The comparison assigns the index to a source by the Excel values (identity or swap, the one within rounding); with that assignment every Excel value is within rounding. The Dyssol column uses the same assignment.
+
+### 13.3 The six cases: Excel and Dyssol against the partner mode (artifact `cases`)
+
+Partner mode = the switch set of 4.1_2 (equal outlet temperatures, no saturation limit, corrected gas formula). "Within rounding" = at most half a unit of the last reported digit; the total fuel row of the sheet is a sum of two rounded values and gets the sum of the two halves. A star marks a value outside.
+
+| Case | Quantity | Ours | Excel | Dyssol | Ours - Dyssol |
+|---|---|---|---|---|---|
+| 1 | recovered, exhaust 1 / 2, kW | 1.517 / 0.843 | 1.52 / 0.84 | 1.52 / 0.85 | -0.003 / -0.007 * |
+| 1 | medium hot -> cold, circuit 1, degC | 97.37 -> 64.74 | 97 -> 65 | 98 -> 65 | -0.63 * / -0.26 |
+| 1 | medium hot -> cold, circuit 2, degC | 74.00 -> 49.83 | 74 -> 50 | 74 -> 50 | +0.00 / -0.17 |
+| 1 | fuel heater 1 / 2, kg/h | 0.798 / 0.283 | 0.8 / 0.28 | 0.795 / 0.282 | +0.003 * / +0.001 * |
+| 2 | recovered, exhaust 1 / 2, kW | 1.410 / 0.897 | 1.41 / 0.9 | 1.31 / 0.975 | +0.100 * / -0.078 * |
+| 2 | medium hot -> cold, circuit 1, degC | 100.21 -> 69.89 | 100 -> 70 | 104 -> 66 | -3.79 * / +3.89 * |
+| 2 | medium hot -> cold, circuit 2, degC | 72.16 -> 46.44 | 72 -> 46 | 70 -> 49 | +2.16 * / -2.56 * |
+| 2 | fuel heater 1 / 2, kg/h | 0.860 / 0.226 | 0.86 / 0.23 | 0.85 / 0.24 | +0.010 * / -0.014 * |
+| 3 | recovered, exhaust 1 / 2, kW | 1.176 / 0.897 | 1.18 / 0.9 | 1.18 / 0.9 | -0.004 / -0.003 |
+| 3 | medium hot -> cold, circuit 1, degC | 106.41 -> 81.12 | 106 -> 81 | 107 -> 81 | -0.59 * / +0.12 |
+| 3 | medium hot -> cold, circuit 2, degC | 72.16 -> 46.44 | 72 -> 46 | 72 -> 47 | +0.16 / -0.56 * |
+| 3 | fuel heater 1 / 2, kg/h | 0.742 / 0.367 | 0.74 / 0.37 | 0.74 / 0.37 | +0.002 / -0.003 |
+| 4 | recovered, exhaust 1 / 2, kW | 1.052 / 0.843 | 1.05 / 0.84 | 1.06 / 0.85 | -0.008 * / -0.007 * |
+| 4 | medium hot -> cold, circuit 1, degC | 109.69 -> 87.06 | 110 -> 87 | 110 -> 87 | -0.31 / +0.06 |
+| 4 | medium hot -> cold, circuit 2, degC | 74.00 -> 49.83 | 74 -> 50 | 74 -> 50 | +0.00 / -0.17 |
+| 4 | fuel heater 1 / 2, kg/h | 0.950 / 0.178 | 0.95 / 0.18 | 0.95 / 0.18 | -0.000 / -0.002 |
+| 5 | recovered, exhaust 1 / 2, kW | 1.517 / 0.413 | 1.52 / 0.41 | 1.52 / 0.41 | -0.003 / +0.003 |
+| 5 | medium hot -> cold, circuit 1, degC | 97.37 -> 64.74 | 97 -> 65 | 98 -> 65 | -0.63 * / -0.26 |
+| 5 | medium hot -> cold, circuit 2, degC | 88.74 -> 76.90 | 89 -> 77 | 88 -> 77 | +0.74 * / -0.10 |
+| 5 | fuel heater 1 / 2, kg/h | 0.757 / 0.367 | 0.76 / 0.37 | 0.75 / 0.37 | +0.007 * / -0.003 |
+| 6 | recovered, exhaust 1 / 2, kW | 1.410 / 0.335 | 1.41 / 0.34 | 1.42 / 0.34 | -0.010 * / -0.005 |
+| 6 | medium hot -> cold, circuit 1, degC | 100.21 -> 69.89 | 100 -> 70 | 101 -> 70 | -0.79 * / -0.11 |
+| 6 | medium hot -> cold, circuit 2, degC | 91.38 -> 81.76 | 91 -> 82 | 92 -> 82 | -0.62 * / -0.24 |
+| 6 | fuel heater 1 / 2, kg/h | 0.950 / 0.193 | 0.95 / 0.19 | 0.95 / 0.19 | -0.000 / +0.003 |
+
+Product temperatures (dryer 1 / 2): ours 137.59 / 102.86 degC, Excel 138 / 103 in every case, Dyssol 138 / 103 except **case 2: dryer 2 at 102 degC** (outside). Exhaust temperatures after the stage equal the medium-hot temperatures (equal outlet) in Excel and ours everywhere, in Dyssol except twice: case 2, exhaust 1 (103.6 against a medium at 104 degC) and case 5, exhaust 2 (89 against 88 degC).
+
+Total fuel, kg/h (sum of the two heaters):
+
+| Case | Ours | Excel | Dyssol |
+|---|---|---|---|
+| 1 | 1.0810 | 1.08 | 1.077 * |
+| 2 | 1.0863 | 1.09 | 1.09 |
+| 3 | 1.1097 | 1.11 | 1.11 |
+| 4 | 1.1275 | 1.13 | 1.13 |
+| 5 | 1.1240 | 1.13 | 1.12 |
+| 6 | 1.1425 | 1.14 | 1.14 |
+
+Reading.
+
+1. **Excel is reproduced within rounding in 72 of 72 values** (and the total in 6 of 6) once the index of the rows is read as in 13.2.
+2. **Excel's total row hides one order.** It sums the rounded heater values: cases 4 and 5 both show 1.13 kg/h, while the unrounded totals are 1.1275 and 1.1240 kg/h (case 5 better by 0.0035 kg/h). Dyssol shows 1.13 and 1.12.
+3. **Dyssol agrees within rounding in 42 of 72 values.** Case 2 carries 11 of the 30 outside (13.4). Of the other 19, twelve are temperatures: eight of the circuit of exhaust 1 and of the exhaust after it, 0.59 to 0.79 K **warmer** in Dyssol (cases 1, 3, 5, 6), three of circuit 2 warmer as well (case 6 hot side and exhaust +0.62 K, case 3 cold side +0.56 K), one colder (case 5, circuit 2 hot side 88 against 88.74 degC, the second stage behind exhaust 1). Four are recovered heats 0.007 to 0.010 kW **higher** in Dyssol (case 1 exhaust 2, case 4 both, case 6 exhaust 1), three are fuels (case 1 0.795 / 0.282 against 0.798 / 0.283; case 5 heater 1 0.75 against 0.757 kg/h). This is the pattern of section 12.4: **Dyssol's dryer exhaust is warmer than the equations** (there 0.46 K at identical inputs); a warmer exhaust recovers a little more and leaves its circuit warmer, and a second stage behind it gets a warmer gas and recovers a little less.
+
+### 13.4 Case 2: Dyssol uses the swapped medium flows (artifact `case_2_hypothesis`)
+
+In case 2 exhaust 1 feeds sink 2 and exhaust 2 feeds sink 1. The workbook's circuit flow belongs to the exhaust (`Inputs!E20` = 40 kg/h with exhaust 1, `E21` = 30 kg/h with exhaust 2; the code of section 7 says so, and Excel's values follow it). **Hypothesis:** Dyssol attaches the flows to the process, i.e. 40 kg/h in the circuit of exhaust 2 and 30 kg/h in that of exhaust 1.
+
+| Quantity (case 2) | Ours, workbook flows (40 / 30) | Ours, swapped (30 / 40) | Dyssol |
+|---|---|---|---|
+| recovered, exhaust 1 (-> sink 2), kW | 1.410 | 1.298 | 1.31 |
+| recovered, exhaust 2 (-> sink 1), kW | 0.897 | 0.972 | 0.975 |
+| circuit 1, medium hot -> cold, degC | 100.21 -> 69.89 | 103.17 -> 65.94 | 104 -> 66 |
+| circuit 2, medium hot -> cold, degC | 72.16 -> 46.44 | 69.58 -> 48.67 | 70 -> 49 |
+| exhaust 1 after the stage, degC | 100.21 | 103.17 | 103.6 |
+| fuel heater 1 / 2, kg/h | 0.860 / 0.226 | 0.852 / 0.238 | 0.85 / 0.24 |
+| Dyssol values within rounding (of 12) | 1 | 7 | |
+
+* **Dyssol's own balances.** The medium side of Dyssol's reported numbers, `B (T_hot - T_cold)`: circuit 1 (104 -> 66 degC) gives 1.767 kW with 40 kg/h and **1.325 kW with 30 kg/h** (reported 1.31; the rounding of the two temperatures allows 0.035 kW); circuit 2 (70 -> 49 degC) gives 0.732 kW with 30 kg/h and **0.977 kW with 40 kg/h** (reported 0.975). Dyssol's numbers close only with the swapped flows. Excel's numbers of the same case close with the workbook's flows (1.395 and 0.907 kW for 1.41 and 0.9).
+* **Only case 2.** With the swapped flows the other five cases fit Dyssol worse (2 to 4 of 12 within rounding against 7 to 10 with the workbook's flows); attaching the flow to the sink in every case (cases 3 and 5 both circuits 40 kg/h, 4 and 6 both 30 kg/h) fits cases 3 to 6 worse as well (6, 6, 7, 3 of 12 against 9, 10, 8, 7). Cases 1, 3, 4, 5, 6 of Dyssol use the flows per exhaust, as the workbook does.
+* **What is left.** With the swapped flows five values of case 2 remain outside: exhaust 1 after the stage (103.17 against 103.6 degC), its medium (103.17 against 104), the two recovered heats (-0.003 and -0.012 kW) and dryer 2's product temperature (102.86 against 102 degC). The first four are the warmer Dyssol dryer of 13.3: an exhaust of dryer 1 0.61 K warmer (138.20 degC; an equivalent, not a cause; still 138 degC rounded, as Dyssol reports) gives 103.60 degC after the stage, medium 103.60 -> 66.18 degC and 1.305 kW, and then only 0.975 kW of exhaust 2 (ours 0.972) and the product temperature of dryer 2 remain outside. **Dyssol's 102 degC for dryer 2 in case 2** does not depend on the medium flows; in the other five cases Dyssol reports 103 degC for the same dryer inputs.
+* **Verdict** (the reading of the script's docstring): confirmed over the ten values that depend on the medium flows (each within rounding or nearer with the swapped flows) together with the medium-side balance; **not** confirmed in the strict reading over all twelve values, because of dryer 2's product temperature. The split into flow-dependent values was written after a dry run of the script (no artifact) had shown that temperature; both readings are in the artifact. **The hypothesis holds: Dyssol's case 2 has 40 kg/h in the circuit of exhaust 2 and 30 kg/h in that of exhaust 1**, which gives 0.97 / 1.30 kW and 103.2 -> 65.9 degC (rounded 103 -> 66; Dyssol 104 -> 66, the 0.8 K being the warmer Dyssol dryer).
+
+### 13.5 Plausibility checks (artifact `validators`)
+
+The checks of section 12.5 on every case. **Dryers** (ours, all three modes; and the product temperatures Excel and Dyssol report, with the humidity of our mass balance, since the sheet reports no product mass): (a1) far below saturation (exhausts above 100 degC), (a2) 83.1 K above the adiabatic saturation temperature of dryer 1's inlet air (54.47 degC) and 61.8 K above that of dryer 2 (41.09 degC), (b) product 4.810 and 1.202 kg/h against 4.800 and 1.200 kg/h of solid: **no hit**; the saturation limit does not bind in either dryer. (The sheet has no product mass, so (b) cannot be applied to Excel or Dyssol.)
+
+**Medium above 100 degC** (check (c), circuit at 1 atm, boiling point 99.974 degC; required pressure = saturation pressure, no margin), always in the circuit of exhaust 1:
+
+| Case | Excel | Dyssol | Ours, partner mode | Ours, physical pressurised |
+|---|---|---|---|---|
+| 1 | 97 | 98 | 97.37 | 113.43 degC, 1.61 bar |
+| 2 | 100 degC, 1.01 bar | 104 degC, 1.17 bar | 100.21 degC, 1.02 bar | 115.50 degC, 1.72 bar |
+| 3 | 106 degC, 1.25 bar | 107 degC, 1.30 bar | 106.41 degC, 1.27 bar | 121.10 degC, 2.06 bar |
+| 4 | 110 degC, 1.43 bar | 110 degC, 1.43 bar | 109.69 degC, 1.42 bar | 122.23 degC, 2.13 bar |
+| 5 | 97 | 98 | 97.37 | 113.43 degC, 1.61 bar |
+| 6 | 100 degC, 1.01 bar | 101 degC, 1.05 bar | 100.21 degC, 1.02 bar | 115.50 degC, 1.72 bar |
+
+**The partner model needs a pressurised circuit in four of six cases** (2, 3, 4, 6; 1.01 to 1.43 bar absolute), Excel and Dyssol alike; Excel's 100 degC (rounded) is 0.2 K above the boiling point. The counter-current calculation without a limit needs it in every case (1.61 to 2.13 bar; in cases 5 and 6 the circuit of exhaust 2 carries no heat and the same temperature as circuit 1). With the swapped flows of Dyssol's case 2 the partner model's circuit 1 reaches 103.17 degC (1.13 bar).
+
+### 13.6 Physical mode: gas per case and ranking (artifact `physical_mode`)
+
+As in section 12.6: counter-current exchangers of unlimited area, 10 K per exchanger, saturation limit on, condensing release curve, properties and medium flows of the workbook; medium (i) **unpressurised**, at most 95 degC; (ii) **pressurised**, no limit. Fuel in kg/h (corrected formula, both heaters), saving against case 0 (no recovery: 1.3170 kg/h in every mode).
+
+| Case | Partner: fuel | recovered kW | saving | Unpressurised 95: fuel | recovered kW | saving | Pressurised: fuel | recovered kW | saving |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | 1.0810 | 2.360 | 17.9 % | 0.9430 | 3.740 | 28.4 % | 0.8805 | 4.365 | 33.1 % |
+| 2 | 1.0863 | 2.307 | 17.5 % | 0.9539 | 3.631 | 27.6 % | 0.8960 | 4.210 | 32.0 % |
+| 3 | 1.1097 | 2.073 | 15.7 % | 1.0966 | 2.204 | 16.7 % | 1.0080 | 3.090 | 23.5 % |
+| 4 | 1.1275 | 1.895 | 14.4 % | 1.1333 | 1.837 | 13.9 % | 1.0564 | 2.607 | 19.8 % |
+| 5 | 1.1240 | 1.930 | 14.7 % | 1.0966 | 2.204 | 16.7 % | 1.0341 | 2.829 | 21.5 % |
+| 6 | 1.1425 | 1.745 | 13.3 % | 1.1333 | 1.837 | 13.9 % | 1.0754 | 2.416 | 18.3 % |
+
+Ranking (lowest fuel first) and the gaps between neighbours, kg/h:
+
+| Mode | Ranking | Gaps |
+|---|---|---|
+| partner | 1 < 2 < 3 < 5 < 4 < 6 | 0.0053, 0.0234, 0.0143, 0.0035, 0.0150 |
+| physical, unpressurised 95 | 1 < 2 < 3 = 5 < 4 = 6 | 0.0109, 0.1426, 0, 0.0367, 0 |
+| physical, pressurised | 1 < 2 < 3 < 5 < 4 < 6 | 0.0155, 0.1120, 0.0260, 0.0223, 0.0190 |
+
+Reading.
+
+1. **Case 1 stays first in every mode**, case 2 second; the gap between them grows from 0.0053 kg/h (partner) to 0.0109 (unpressurised) and 0.0155 kg/h (pressurised), i.e. 0.5 %, 1.2 % and 1.8 % of case 1's fuel. Behind them there is a large step: 0.023 kg/h to case 3 in the partner model, 0.143 and 0.112 kg/h with counter-current exchangers. The two one-to-one matches (1, 2) are far ahead of the four cascades (3 to 6) once the exchangers are counter-current: a cascade puts both exhausts on one sink and leaves the other sink without recovery.
+2. **Rank changes** (against the partner mode): **unpressurised, cases 3 and 5 become equal, and so do cases 4 and 6** (partner: 3 < 5 by 0.0143, 4 < 6 by 0.0150 kg/h). The cause is the medium limit: in each cascade the sink's gas reaches the cap of 85 degC (95 - 10 K), whichever exhaust comes first, so the stage order no longer matters; in cases 5 and 6 the second stage (exhaust 2) then recovers nothing (`no_driving_force`). **Pressurised: no rank change** (same order as the partner model, every gap larger). No pair reverses in either mode.
+3. **The partner model underestimates the saving of the one-to-one matches most** (case 1: 17.9 % against 28.4 % / 33.1 %), and of the cascades least (case 4 unpressurised: 13.9 % against 14.4 % in the partner model, i.e. counter-current with the limit is *worse* there; case 6 likewise better only by 0.7 points). With the limit, case 4's second stage is capped at 85 degC gas while the partner model heats the gas to 87.06 degC with a medium at 109.69 degC (which itself needs 1.42 bar, 13.5).
+4. **Where the medium limit binds** (unpressurised): the stage of exhaust 1 in every case (`medium_limit`, gas to 85.0 degC); the stage of exhaust 2 binds by the approach (case 1: gas 20 -> 74.3 degC) or carries nothing (cases 5, 6). Pressurised: every stage with heat binds by the approach; the exhaust of dryer 1 leaves at 62.6 degC (case 1) to 109.2 degC (case 4). No condensation in any stage of any mode (dew points 45.24 and 27.91 degC; outlets at least 62.6 and 41.5 degC).
+
+### 13.7 Optimum of any network (artifact `pinch`)
+
+The bound is the problem table of the repository (`heatnetwork/pinch.compute_pinch_target`, unchanged) over the two exhausts (hot, down their condensing release curve, the partner's properties) and the two process gases (cold, 20 degC to their set points 300 and 150 degC), with the same exchanger assumptions as 13.6: a circuit is two exchangers of 10 K each in series, so exhaust and gas meet at least 20 K apart; unpressurised, the gas can take recovered heat only up to 85 degC and the rest of its demand is burner duty in any case. Any number of exchangers, splits and medium flows are allowed; it is a lower bound, not a design.
+
+| Medium | Least burner duty, kW | Most recovered, kW | Least fuel, kg/h |
+|---|---|---|---|
+| unpressurised 95 | 9.129 | 4.041 | 0.9129 |
+| pressurised | 7.952 | 5.218 | 0.7952 |
+
+Total demand without recovery 13.170 kW (1.3170 kg/h) in both. Distance of each case to the optimum, fuel in kg/h (in % of the least fuel), and the share of the possible saving (case 0 to optimum) that the case reaches:
+
+| Case | Unpressurised: above optimum | share of saving | Pressurised: above optimum | share of saving |
+|---|---|---|---|---|
+| 1 | +0.0302 (3.3 %) | 92.5 % | +0.0854 (10.7 %) | 83.6 % |
+| 2 | +0.0411 (4.5 %) | 89.8 % | +0.1008 (12.7 %) | 80.7 % |
+| 3 | +0.1837 (20.1 %) | 54.5 % | +0.2129 (26.8 %) | 59.2 % |
+| 4 | +0.2204 (24.1 %) | 45.5 % | +0.2612 (32.8 %) | 49.9 % |
+| 5 | +0.1837 (20.1 %) | 54.5 % | +0.2389 (30.0 %) | 54.2 % |
+| 6 | +0.2204 (24.1 %) | 45.5 % | +0.2802 (35.2 %) | 46.3 % |
+
+Reading.
+
+1. **Unpressurised, the bound is set by the medium limit alone**: the problem table needs no burner duty below 85 degC (the two exhausts can cover both gases up to the cap), so the optimum is "both gases recovered to 85 degC". Case 1 misses it by 0.30 kW because sink 2 only reaches 74.3 degC (exhaust 2 at 102.86 degC with its 30 kg/h circuit); a network that lets exhaust 1 also top up sink 2 would close it.
+2. **Pressurised, the pinch is at exhaust 2's inlet** (102.86 degC hot, 82.86 degC cold): case 1 recovers 4.365 kW of a possible 5.218 kW (0.85 kW, 0.085 kg/h fuel short). The rest of the gap lies in the one-to-one match with fixed medium flows: in case 1 exhaust 1 leaves at 62.6 degC and exhaust 2 at 50.3 degC, the optimum uses both exhausts for both gases below the pinch and exhaust 1 alone above it.
+3. **The best of the six cases is the nearest to the optimum in both variants**, at 3.3 % (unpressurised) and 10.7 % (pressurised) of the least fuel; the cascades are 20 to 35 % above it. The distances are larger than any gap inside the ranking except the step from 2 to 3.
+
+### 13.8 For the partner (feedback; questions in the order of their weight)
+
+1. **Case 2 in Dyssol uses swapped medium flows**: 40 kg/h in the circuit of exhaust 2 and 30 kg/h in that of exhaust 1 (the workbook: 40 kg/h with exhaust 1). Dyssol's own reported temperatures close the medium balance only with the swapped flows (1.325 and 0.977 kW for the stated 1.31 and 0.975 kW). The other five cases use the workbook's assignment. Is the flow attached to the process (sink) in the Dyssol flowsheet of case 2, and which assignment is intended?
+2. **Dryer 2's product temperature in Dyssol's case 2** (102 degC) differs from the other five cases (103 degC) with identical dryer inputs. Is case 2 an older or differently configured run?
+3. **Medium above 100 degC**: cases 2, 3, 4 and 6 need a pressurised circuit already in the partner model (100 to 110 degC, 1.01 to 1.43 bar absolute); with counter-current exchangers all six cases would (up to 122 degC, 2.13 bar). Which medium and pressure are intended? Unpressurised (95 degC) the ranking of the cascades collapses into ties (13.6).
+4. **Labels of the result rows** of the sheet `Simulation`: the energy row is per sink in case 2 and the energy and medium rows are swapped in case 5 (index 1 = exhaust 2). A fixed rule (e.g. always per exhaust) would avoid misreading.
+5. **Total fuel row** sums rounded heater values (cases 4 and 5 both 1.13 kg/h, unrounded 1.1275 and 1.1240): please give the total from unrounded values, or more digits, when the totals are used to rank.
+6. **Dyssol's dryer is warmer than the equations** (13.3; section 12.7 item 4): +0.6 to +0.8 K in the temperatures of the circuit of exhaust 1. Same open question as in section 12.
+7. **Case 1 is best and stays best** with counter-current exchangers and a medium limit; it reaches 92.5 % (unpressurised) and 83.6 % (pressurised) of the saving the best network of circuits could reach. Is a network in which one exhaust feeds both sinks (beyond the six drawings) of interest?
+
+### 13.9 Caveats
+
+* Model against model, no plant data. The partner's table values are rounded (0 to 3 decimals); "within rounding" is a statement about the last reported digit.
+* Placeholders as in section 12.8: `dT_min` 10 K per exchanger, 95 degC for the unpressurised medium, 1 atm for check (c), `T_kalt` 15 degC of the condensing release curve; the required pressure is the saturation pressure without margin.
+* The physical mode keeps the partner's properties (`cp_vapour` 1.906, decision of section 12), the medium flows of the workbook and the dryer block of the equation document (no heat loss, equilibrium moisture; the saturation limit does not bind here).
+* The pinch bound allows any network (splits, any number of exchangers, any medium flows); it shows how far the six drawings are from the best, not that the best is buildable with two circuits.
+* The assignment of the sheet's row index to a source is inferred from the Excel values (13.2); the Dyssol column is read with the same assignment.
+* The offset of 0.61 K for Dyssol's exhaust 1 in case 2 is a single-parameter equivalent, not a cause.
+* All numbers are deterministic; no confidence statement. Ranks are orders of totals of one calculation.
