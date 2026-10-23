@@ -48,6 +48,11 @@ optimal-control = [
 surrogate = [
     "scikit-learn>=1.4",
 ]
+# Only for twinlink_ml.sensitivity (Sobol study, docs/26): Saltelli design and Sobol estimators.
+# No other module imports SALib; its tests skip without it.
+sensitivity = [
+    "SALib>=1.5,<1.7",
+]
 dev = [
     "pytest>=8.0,<9",
     "pytest-cov>=5.0",
@@ -150,7 +155,7 @@ plugins = []
 files = ["src", "tests"]
 
 [[tool.mypy.overrides]]
-module = ["yaml.*", "torch.*", "mlflow.*", "matplotlib.*", "scipy.*", "sklearn.*", "openpyxl.*"]
+module = ["yaml.*", "torch.*", "mlflow.*", "matplotlib.*", "scipy.*", "sklearn.*", "openpyxl.*", "SALib.*"]
 ignore_missing_imports = true
 #   Alle sind optionale Abhängigkeiten und werden erst im Funktionsaufruf
 #   importiert. Ohne diesen Eintrag scheitert `mypy src` auf einer Maschine, auf

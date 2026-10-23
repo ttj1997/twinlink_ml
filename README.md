@@ -157,6 +157,8 @@ replace a product-moisture measurement.
 
 **Surrogate-based steady RTO with few true evaluations (Befund 107; models of the lab line and of a heat-recovery line, placeholders).** Only a Gaussian process with adaptive design passes the pre-registered gate: from 64 true evaluations on the line model and from 256 on the grey-box model (reading S2); space-filling designs do not. A grey-box fit with a margin is economical in data where the model error shifts the constraints uniformly (feasible from 8 evaluations on one problem, a post-hoc declared variant), but not where compensating parameters hide a shift of the optimum; fitted parameters then are physically wrong and not measured values.
 
+**Global sensitivity of the steady-state models (Befund 108; placeholder ranges, independent inputs).** For the laboratory line the drying kinetics (critical moisture, `nu_max`) decide the energy at the optimum, the operating point and the saving of the quasi-stationary optimiser, the sorption isotherm hardly matters; for the heat-recovery line the exchanger approach and the heater efficiency decide. The pre-registered convergence criterion is met for 19 of 20 outputs at 2^14 samples (not for the optimal gas velocity).
+
 **One-step bandit (Befund 93, follow-up of Befund 68).** A residual action and a separated
 moisture cost lift SAC from a negative to a clearly positive closed-regret fraction, but no cell
 meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of

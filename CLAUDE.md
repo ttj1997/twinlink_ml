@@ -35,8 +35,9 @@ lab book (`04_stand_ap1.md`), process setup, and synthesis documents.
 - Never overwrite existing artifacts; use a new name.
 - The config-fingerprint regression tests must stay green.
 - Environment: one `.venv` in the main checkout with every extra of `pyproject.toml`
-  (`pip install -e ".[torch,sklearn,plant-data,train,rl,optimal-control,surrogate,dev]"`, includes gymnasium and,
-  with `optimal-control`, CasADi 3.8.1 for `src/twinlink_ml/headroom/`; `plant-data` carries openpyxl and h5py,
+  (`pip install -e ".[torch,sklearn,plant-data,train,rl,optimal-control,surrogate,sensitivity,dev]"`, includes gymnasium and,
+  with `optimal-control`, CasADi 3.8.1 for `src/twinlink_ml/headroom/`; `sensitivity` carries SALib for
+  `src/twinlink_ml/sensitivity/`; `plant-data` carries openpyxl and h5py,
   the latter for the Dyssol file of the partner model). Use it, not
   the system interpreter (its editable install points at an old, unrelated checkout).
   Check: `python -c "import twinlink_ml; print(twinlink_ml.__file__)"` shows this repo's `src/`.
