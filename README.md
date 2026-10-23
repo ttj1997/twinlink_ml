@@ -161,6 +161,8 @@ replace a product-moisture measurement.
 
 **Robustness of the architecture ranking against sensor outliers (Befund 109; outlier parameters are placeholders).** Outliers in the moisture signal (independent at 5 % and 25 %, in bursts at 25 %) raise every model's error several times but reverse no Holm verdict and put no baseline ahead of a network; a causal Hampel filter keeps the ranking without restoring the error level and is not made mandatory (to be decided with real sensor data in AP 2).
 
+**Six-case network of the partner model (Befund 110; model against model, inputs of the colleague, not plant-near).** Own heat recovery per process (case 1) is ahead in every mode and reaches 92.5 % (unpressurised) and 83.6 % (pressurised) of the possible saving; the exchanger physics acts more strongly than the interconnection (saving 17.9 % in the partner model against 28.4 % and 33.1 % with counter-current exchangers).
+
 **One-step bandit (Befund 93, follow-up of Befund 68).** A residual action and a separated
 moisture cost lift SAC from a negative to a clearly positive closed-regret fraction, but no cell
 meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of
