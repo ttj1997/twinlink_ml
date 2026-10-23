@@ -1,0 +1,1067 @@
+{
+ "variants": [
+  "F0",
+  "F1",
+  "F2",
+  "F3:1",
+  "F3:2",
+  "F3:3"
+ ],
+ "criteria": {
+  "ii": {
+   "per_variant": {
+    "F0": {
+     "margin": 0.059375,
+     "converged": true,
+     "k_required": 380,
+     "holding": 382,
+     "tried": [
+      [
+       0.0478515625,
+       379
+      ],
+      [
+       0.059375,
+       382
+      ]
+     ],
+     "max_violation": 0.011364141754215074,
+     "violating_pairs": 18,
+     "failures": 0,
+     "energy_kwh": {
+      "median": 29.764603369291436,
+      "min": 26.16331496243498,
+      "max": 36.20786720756225
+     },
+     "bias_mean": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "feedback_error_rmse": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "relative_energy_kwh_vs_F1": {
+      "median": 0.13361933915926127,
+      "min": -0.02191321749553954,
+      "max": 0.41878050859951554
+     },
+     "relative_co2_kg_vs_F1": {
+      "median": 0.12991097244921723,
+      "min": -0.01964863553924945,
+      "max": 0.3906145886237231
+     }
+    },
+    "F1": {
+     "margin": 0.004687500000000001,
+     "converged": true,
+     "k_required": 380,
+     "holding": 384,
+     "tried": [
+      [
+       0.004687500000000001,
+       384
+      ]
+     ],
+     "max_violation": 0.003246994083874355,
+     "violating_pairs": 16,
+     "failures": 0,
+     "energy_kwh": {
+      "median": 26.217289440264,
+      "min": 18.46737241323954,
+      "max": 36.810744775038614
+     },
+     "bias_mean": {
+      "median": 0.010164488906279568,
+      "min": -0.049351951163054436,
+      "max": 0.060681786690189816
+     },
+     "feedback_error_rmse": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "relative_energy_kwh_vs_F1": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "relative_co2_kg_vs_F1": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     }
+    },
+    "F2": {
+     "margin": 0.0044921875000000005,
+     "converged": true,
+     "k_required": 380,
+     "holding": 382,
+     "tried": [
+      [
+       0.0044921875000000005,
+       382
+      ]
+     ],
+     "max_violation": 0.004546999695202697,
+     "violating_pairs": 18,
+     "failures": 0,
+     "energy_kwh": {
+      "median": 26.210117037586624,
+      "min": 18.455363057604615,
+      "max": 36.793098740569675
+     },
+     "bias_mean": {
+      "median": 0.010169941271125523,
+      "min": -0.04968094675228307,
+      "max": 0.060719648608104415
+     },
+     "feedback_error_rmse": {
+      "median": 0.006073843232252565,
+      "min": 0.005061677865629754,
+      "max": 0.014876382557809263
+     },
+     "outlier_share": {
+      "median": 0.25,
+      "min": 0.22893518518518519,
+      "max": 0.26805555555555555
+     },
+     "relative_energy_kwh_vs_F1": {
+      "median": -0.00045449391888724433,
+      "min": -0.0034692382994485627,
+      "max": 0.00039768931092099
+     },
+     "relative_co2_kg_vs_F1": {
+      "median": -0.0004385020940356754,
+      "min": -0.0014905959895903376,
+      "max": 0.03359355604401748
+     }
+    },
+    "F3:1": {
+     "margin": 0.0763671875,
+     "converged": true,
+     "k_required": 380,
+     "holding": 380,
+     "tried": [
+      [
+       0.0763671875,
+       380
+      ]
+     ],
+     "max_violation": 0.05415436105285737,
+     "violating_pairs": 20,
+     "failures": 0,
+     "energy_kwh": {
+      "median": 31.47551665978628,
+      "min": 26.721014810406146,
+      "max": 34.59890180527087
+     },
+     "bias_mean": {
+      "median": -0.011612196443199552,
+      "min": -0.041620056858734225,
+      "max": 0.010768117943966125
+     },
+     "feedback_error_rmse": {
+      "median": 0.017608538165112757,
+      "min": 0.000987692770545898,
+      "max": 0.12349518526423131
+     },
+     "relative_energy_kwh_vs_F1": {
+      "median": 0.1761731413847495,
+      "min": -0.08394014683852291,
+      "max": 0.44883018120340257
+     },
+     "relative_co2_kg_vs_F1": {
+      "median": 0.1664229997959502,
+      "min": -0.08250433306444105,
+      "max": 0.4076399178597583
+     }
+    },
+    "F3:2": {
+     "margin": 0.07578125000000001,
+     "converged": true,
+     "k_required": 380,
+     "holding": 380,
+     "tried": [
+      [
+       0.07578125000000001,
+       380
+      ]
+     ],
+     "max_violation": 0.029394191790472313,
+     "violating_pairs": 20,
+     "failures": 0,
+     "energy_kwh": {
+      "median": 30.009007469872344,
+      "min": 25.79585833584281,
+      "max": 37.579759691503895
+     },
+     "bias_mean": {
+      "median": -0.020223028164817122,
+      "min": -0.02578139985974512,
+      "max": -0.0046447514457255
+     },
+     "feedback_error_rmse": {
+      "median": 0.027978103912144937,
+      "min": 0.0005510211373403174,
+      "max": 0.0910917676992537
+     },
+     "relative_energy_kwh_vs_F1": {
+      "median": 0.12581665444348245,
+      "min": -0.038405280604998926,
+      "max": 0.4380689934774282
+     },
+     "relative_co2_kg_vs_F1": {
+      "median": 0.11727917807807509,
+      "min": -0.03757428007105734,
+      "max": 0.41595368151787926
+     }
+    },
+    "F3:3": {
+     "margin": 0.08261718750000001,
+     "converged": true,
+     "k_required": 380,
+     "holding": 381,
+     "tried": [
+      [
+       0.08261718750000001,
+       381
+      ]
+     ],
+     "max_violation": 0.029399133858750898,
+     "violating_pairs": 19,
+     "failures": 0,
+     "energy_kwh": {
+      "median": 29.54161142119542,
+      "min": 25.736420640163864,
+      "max": 37.546784417464906
+     },
+     "bias_mean": {
+      "median": -0.027576547790324944,
+      "min": -0.02890282746610943,
+      "max": -0.011741096877742635
+     },
+     "feedback_error_rmse": {
+      "median": 0.03475119505696617,
+      "min": 0.0009900452945392592,
+      "max": 0.09547412127955204
+     },
+     "relative_energy_kwh_vs_F1": {
+      "median": 0.1207433039661181,
+      "min": -0.030869453312814654,
+      "max": 0.4101326389893081
+     },
+     "relative_co2_kg_vs_F1": {
+      "median": 0.11511358919006087,
+      "min": -0.03032500465229604,
+      "max": 0.3907078196846199
+     }
+    }
+   },
+   "value_F0_minus_F2": {
+    "energy_vs_F1": {
+     "median": 0.13400760437110693,
+     "min": -0.020945197937501468,
+     "max": 0.4193006943232172
+    },
+    "co2_vs_F1": {
+     "median": 0.13043142693979026,
+     "min": -0.01876630838068372,
+     "max": 0.3904823045597886
+    },
+    "energy_vs_F0": {
+     "median": 0.1182211675235448,
+     "min": -0.021414457604538736,
+     "max": 0.2955630903673279
+    },
+    "energy_vs_F2": {
+     "median": 0.13407122479895273,
+     "min": -0.020965492944715863,
+     "max": 0.41957354352918413
+    }
+   },
+   "soft_sensor": {
+    "per_seed": {
+     "F3:1": {
+      "converged": true,
+      "W_F3_minus_F2_vs_F1": {
+       "median": 0.1772030467811172,
+       "min": -0.08346077499813291,
+       "max": 0.4494078199558238
+      },
+      "F0_minus_F3_vs_F1": {
+       "median": -0.026810522802588978,
+       "min": -0.14552894306279443,
+       "max": 0.0847019650279035
+      },
+      "captured_share": -0.20006717475780453,
+      "position": "at F0 or worse",
+      "margin": 0.0763671875
+     },
+     "F3:2": {
+      "converged": true,
+      "W_F3_minus_F2_vs_F1": {
+       "median": 0.12645782952671042,
+       "min": -0.038139515920984225,
+       "max": 0.43793763115228757
+      },
+      "F0_minus_F3_vs_F1": {
+       "median": 0.01673430577045451,
+       "min": -0.04839840014091604,
+       "max": 0.03711859463658872
+      },
+      "captured_share": 0.1248757923028923,
+      "position": "between F0 and F2",
+      "margin": 0.07578125000000001
+     },
+     "F3:3": {
+      "converged": true,
+      "W_F3_minus_F2_vs_F1": {
+       "median": 0.12099708852329394,
+       "min": -0.031240946025253433,
+       "max": 0.41000127666416747
+      },
+      "F0_minus_F3_vs_F1": {
+       "median": 0.016189316244421832,
+       "min": -0.04723507974491097,
+       "max": 0.023548916431150993
+      },
+      "captured_share": 0.12080893707784522,
+      "position": "between F0 and F2",
+      "margin": 0.08261718750000001
+     }
+    },
+    "W_median_over_seeds": {
+     "median": 0.12645782952671042,
+     "min": 0.12099708852329394,
+     "max": 0.1772030467811172
+    },
+    "captured_share_over_seeds": {
+     "median": 0.12080893707784522,
+     "min": -0.20006717475780453,
+     "max": 0.1248757923028923
+    }
+   },
+   "reading": "V2"
+  },
+  "i": {
+   "per_variant": {
+    "F0": {
+     "margin": 0.06640625,
+     "converged": true,
+     "k_required": 400,
+     "holding": 400,
+     "tried": [
+      [
+       0.06640625,
+       400
+      ]
+     ],
+     "max_violation": 0.0,
+     "violating_pairs": 0,
+     "failures": 0,
+     "energy_kwh": {
+      "median": 30.588033075012603,
+      "min": 26.89663576111787,
+      "max": 37.005409272639014
+     },
+     "bias_mean": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "feedback_error_rmse": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "relative_energy_kwh_vs_F1": {
+      "median": 0.15846957489352576,
+      "min": 0.0011363935117005841,
+      "max": 0.45286393268203584
+     },
+     "relative_co2_kg_vs_F1": {
+      "median": 0.1536430380787881,
+      "min": 0.001117861811440024,
+      "max": 0.426292315841873
+     }
+    },
+    "F1": {
+     "margin": 0.005859375,
+     "converged": true,
+     "k_required": 400,
+     "holding": 400,
+     "tried": [
+      [
+       0.005859375,
+       400
+      ]
+     ],
+     "max_violation": 4.2580580642881394e-05,
+     "violating_pairs": 0,
+     "failures": 0,
+     "energy_kwh": {
+      "median": 26.284134278172786,
+      "min": 18.538142478723106,
+      "max": 36.890874610562726
+     },
+     "bias_mean": {
+      "median": 0.010077129137750721,
+      "min": -0.048925285966663595,
+      "max": 0.06019217603873364
+     },
+     "feedback_error_rmse": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "relative_energy_kwh_vs_F1": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "relative_co2_kg_vs_F1": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     }
+    },
+    "F2": {
+     "margin": 0.006640625000000001,
+     "converged": true,
+     "k_required": 400,
+     "holding": 400,
+     "tried": [
+      [
+       0.006640625000000001,
+       400
+      ]
+     ],
+     "max_violation": 3.267970157561084e-05,
+     "violating_pairs": 0,
+     "failures": 0,
+     "energy_kwh": {
+      "median": 26.332931876969585,
+      "min": 18.58551206766336,
+      "max": 36.94026634016832
+     },
+     "bias_mean": {
+      "median": 0.010009852948308346,
+      "min": -0.04889507511749157,
+      "max": 0.05982252628112514
+     },
+     "feedback_error_rmse": {
+      "median": 0.0059841717271987204,
+      "min": 0.004986923941415008,
+      "max": 0.014655354559953756
+     },
+     "outlier_share": {
+      "median": 0.25,
+      "min": 0.22893518518518519,
+      "max": 0.26805555555555555
+     },
+     "relative_energy_kwh_vs_F1": {
+      "median": 0.001792739024941925,
+      "min": 0.0010607504857533812,
+      "max": 0.0037503919267709573
+     },
+     "relative_co2_kg_vs_F1": {
+      "median": 0.0017517703664448048,
+      "min": 0.0010362309125862001,
+      "max": 0.0038151736893452526
+     }
+    },
+    "F3:1": {
+     "margin": 0.08867187500000001,
+     "converged": true,
+     "k_required": 400,
+     "holding": 400,
+     "tried": [
+      [
+       0.08867187500000001,
+       400
+      ]
+     ],
+     "max_violation": 0.0,
+     "violating_pairs": 0,
+     "failures": 0,
+     "energy_kwh": {
+      "median": 36.5304240059669,
+      "min": 30.514688520948773,
+      "max": 39.03487154055535
+     },
+     "bias_mean": {
+      "median": 0.004598322949259239,
+      "min": -0.01936975067249248,
+      "max": 0.023185027368041084
+     },
+     "feedback_error_rmse": {
+      "median": 0.012091192924806222,
+      "min": 0.0005714523005144279,
+      "max": 0.07738800086319572
+     },
+     "relative_energy_kwh_vs_F1": {
+      "median": 0.3364660607223505,
+      "min": 0.010705774820968683,
+      "max": 0.6852930549673644
+     },
+     "relative_co2_kg_vs_F1": {
+      "median": 0.3190673329787257,
+      "min": 0.010534991935501115,
+      "max": 0.674020057692936
+     }
+    },
+    "F3:2": {
+     "margin": 0.082421875,
+     "converged": true,
+     "k_required": 400,
+     "holding": 400,
+     "tried": [
+      [
+       0.082421875,
+       400
+      ]
+     ],
+     "max_violation": 0.0,
+     "violating_pairs": 0,
+     "failures": 0,
+     "energy_kwh": {
+      "median": 31.35133642274287,
+      "min": 27.432809342373634,
+      "max": 38.900341708254125
+     },
+     "bias_mean": {
+      "median": -0.01164272245875604,
+      "min": -0.018351030531611256,
+      "max": -0.0012979809588296862
+     },
+     "feedback_error_rmse": {
+      "median": 0.018800503652908338,
+      "min": 0.00023239490144805734,
+      "max": 0.0783522934806677
+     },
+     "relative_energy_kwh_vs_F1": {
+      "median": 0.17616784584910372,
+      "min": -0.0032600566860990776,
+      "max": 0.4993141993609116
+     },
+     "relative_co2_kg_vs_F1": {
+      "median": 0.1695188784722751,
+      "min": -0.0032036215561623838,
+      "max": 0.4704638600967481
+     }
+    },
+    "F3:3": {
+     "margin": 0.08828125,
+     "converged": true,
+     "k_required": 400,
+     "holding": 400,
+     "tried": [
+      [
+       0.08828125,
+       400
+      ]
+     ],
+     "max_violation": 0.0,
+     "violating_pairs": 0,
+     "failures": 0,
+     "energy_kwh": {
+      "median": 31.37472570990725,
+      "min": 27.761314766662117,
+      "max": 38.86421392249698
+     },
+     "bias_mean": {
+      "median": -0.015387850412284567,
+      "min": -0.019163028401372555,
+      "max": -0.007397569675857468
+     },
+     "feedback_error_rmse": {
+      "median": 0.022251980043175586,
+      "min": 0.00042607083333621765,
+      "max": 0.07571403997498148
+     },
+     "relative_energy_kwh_vs_F1": {
+      "median": 0.18643568141643285,
+      "min": 0.013384344286286876,
+      "max": 0.5039688320902929
+     },
+     "relative_co2_kg_vs_F1": {
+      "median": 0.18208972641147103,
+      "min": 0.01315994078619731,
+      "max": 0.4771631108645886
+     }
+    }
+   },
+   "value_F0_minus_F2": {
+    "energy_vs_F1": {
+     "median": 0.15665549163847436,
+     "min": -0.0002024668467756394,
+     "max": 0.45019605671408974
+    },
+    "co2_vs_F1": {
+     "median": 0.15208040920076865,
+     "min": -0.0001997076660008653,
+     "max": 0.4227509038673142
+    },
+    "energy_vs_F0": {
+     "median": 0.13521643867267127,
+     "min": -0.00020223702593154518,
+     "max": 0.3098920335691572
+    },
+    "energy_vs_F2": {
+     "median": 0.156358706242392,
+     "min": -0.00020219613438667198,
+     "max": 0.44904862520553457
+    }
+   },
+   "soft_sensor": {
+    "per_seed": {
+     "F3:1": {
+      "converged": true,
+      "W_F3_minus_F2_vs_F1": {
+       "median": 0.33419571352582633,
+       "min": 0.009366914462492514,
+       "max": 0.6833143449529849
+      },
+      "F0_minus_F3_vs_F1": {
+       "median": -0.14716090220955985,
+       "min": -0.3998567423238434,
+       "max": -0.009569381309268153
+      },
+      "captured_share": -0.9393919145150309,
+      "position": "at F0 or worse",
+      "margin": 0.08867187500000001
+     },
+     "F3:2": {
+      "converged": true,
+      "W_F3_minus_F2_vs_F1": {
+       "median": 0.17443876024208876,
+       "min": -0.004920522180533041,
+       "max": 0.49579503614105563
+      },
+      "F0_minus_F3_vs_F1": {
+       "median": -0.01878230236605746,
+       "min": -0.06663830623199687,
+       "max": 0.00958618027950899
+      },
+      "captured_share": -0.11989558852748544,
+      "position": "at F0 or worse",
+      "margin": 0.082421875
+     },
+     "F3:3": {
+      "converged": true,
+      "W_F3_minus_F2_vs_F1": {
+       "median": 0.18473653562060263,
+       "min": 0.011723878791852958,
+       "max": 0.5004496688704368
+      },
+      "F0_minus_F3_vs_F1": {
+       "median": -0.02816884765363985,
+       "min": -0.0653678153134185,
+       "max": -0.00912877304817621
+      },
+      "captured_share": -0.17981398136138893,
+      "position": "at F0 or worse",
+      "margin": 0.08828125
+     }
+    },
+    "W_median_over_seeds": {
+     "median": 0.18473653562060263,
+     "min": 0.17443876024208876,
+     "max": 0.33419571352582633
+    },
+    "captured_share_over_seeds": {
+     "median": -0.17981398136138893,
+     "min": -0.9393919145150309,
+     "max": -0.11989558852748544
+    }
+   },
+   "reading": "V2"
+  }
+ },
+ "reading": "V2",
+ "drivers_F0": {
+  "per_draw_margin": [
+   0.0,
+   0.013671875,
+   0.0027343750000000003,
+   0.06640625,
+   0.0421875,
+   0.026367187500000003,
+   0.0,
+   0.0306640625,
+   0.021875000000000002,
+   0.0013671875000000001,
+   0.0,
+   0.0478515625,
+   0.019921875000000006,
+   0.014453125,
+   0.0,
+   0.043359375000000006,
+   0.015625,
+   0.009960937500000003,
+   0.0,
+   0.04160156250000001
+  ],
+  "draws_without_margin_up_to_cap": 0,
+  "spearman": {
+   "critical_moisture_kg_per_kg": 0.7242632080348966,
+   "max_saturation_degree": -0.5969868283802287,
+   "gab_monolayer_moisture_kg_per_kg": 0.2621287342887806,
+   "gab_c_constant_at_reference_temperature": -0.15909547456833506,
+   "gab_k_constant_at_reference_temperature": 0.11667001468344569,
+   "gab_c_enthalpy_j_per_mol": 0.35607082403389273,
+   "gab_k_enthalpy_j_per_mol": 0.143943524609446
+  },
+  "variance_explained": {
+   "drying_kinetics": {
+    "r2": 0.9144167086428809,
+    "r2_adjusted": 0.9043480861302787
+   },
+   "isotherm": {
+    "r2": 0.2435770610350957,
+    "r2_adjusted": -0.026573988595227194
+   },
+   "all": {
+    "r2": 0.9297424123309965,
+    "r2_adjusted": 0.8887588195240779
+   }
+  },
+  "ranking": [
+   {
+    "draw": 3,
+    "margin": 0.06640625,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.27801570799201725,
+     "max_saturation_degree": 0.4128382157534361,
+     "gab_monolayer_moisture_kg_per_kg": 0.021569097019732,
+     "gab_c_constant_at_reference_temperature": 45.551053374096476,
+     "gab_k_constant_at_reference_temperature": 0.7344488731585443,
+     "gab_c_enthalpy_j_per_mol": 8984.840339049697,
+     "gab_k_enthalpy_j_per_mol": 634.4732046127319
+    },
+    "steady_model_error_F1_bias": 0.05894705223031606
+   },
+   {
+    "draw": 11,
+    "margin": 0.0478515625,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.28163568712770937,
+     "max_saturation_degree": 0.5292717654258013,
+     "gab_monolayer_moisture_kg_per_kg": 0.016324751108884813,
+     "gab_c_constant_at_reference_temperature": 29.14531360211434,
+     "gab_k_constant_at_reference_temperature": 0.7906183205544949,
+     "gab_c_enthalpy_j_per_mol": 6425.747757777572,
+     "gab_k_enthalpy_j_per_mol": 500.48339553177357
+    },
+    "steady_model_error_F1_bias": 0.041599737738526474
+   },
+   {
+    "draw": 15,
+    "margin": 0.043359375000000006,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.2269308883231133,
+     "max_saturation_degree": 0.4572374608367682,
+     "gab_monolayer_moisture_kg_per_kg": 0.023986499197781085,
+     "gab_c_constant_at_reference_temperature": 15.243716629982687,
+     "gab_k_constant_at_reference_temperature": 0.7575560858473182,
+     "gab_c_enthalpy_j_per_mol": 7285.649919882417,
+     "gab_k_enthalpy_j_per_mol": 679.9561297520995
+    },
+    "steady_model_error_F1_bias": 0.03700302812139933
+   },
+   {
+    "draw": 4,
+    "margin": 0.0421875,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.29485361063852905,
+     "max_saturation_degree": 0.6232500363141299,
+     "gab_monolayer_moisture_kg_per_kg": 0.02213619561493397,
+     "gab_c_constant_at_reference_temperature": 39.202485570186056,
+     "gab_k_constant_at_reference_temperature": 0.7430833889171481,
+     "gab_c_enthalpy_j_per_mol": 6766.537019982934,
+     "gab_k_enthalpy_j_per_mol": 314.8848945274949
+    },
+    "steady_model_error_F1_bias": 0.03589585929785463
+   },
+   {
+    "draw": 19,
+    "margin": 0.04160156250000001,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.26592134675011037,
+     "max_saturation_degree": 0.5531375501304865,
+     "gab_monolayer_moisture_kg_per_kg": 0.022945471175014973,
+     "gab_c_constant_at_reference_temperature": 13.174872866793889,
+     "gab_k_constant_at_reference_temperature": 0.7092516724951565,
+     "gab_c_enthalpy_j_per_mol": 3618.4734888374805,
+     "gab_k_enthalpy_j_per_mol": 257.4831279926002
+    },
+    "steady_model_error_F1_bias": 0.035245409300317054
+   },
+   {
+    "draw": 7,
+    "margin": 0.0306640625,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.25875083296559753,
+     "max_saturation_degree": 0.5971512321382761,
+     "gab_monolayer_moisture_kg_per_kg": 0.018242576718330385,
+     "gab_c_constant_at_reference_temperature": 19.939246899534083,
+     "gab_k_constant_at_reference_temperature": 0.7174255513586104,
+     "gab_c_enthalpy_j_per_mol": 8148.433053866029,
+     "gab_k_enthalpy_j_per_mol": 548.3838813379407
+    },
+    "steady_model_error_F1_bias": 0.025319590270739656
+   },
+   {
+    "draw": 5,
+    "margin": 0.026367187500000003,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.20584326395764946,
+     "max_saturation_degree": 0.48333702832460407,
+     "gab_monolayer_moisture_kg_per_kg": 0.016890413984656336,
+     "gab_c_constant_at_reference_temperature": 12.987163114692622,
+     "gab_k_constant_at_reference_temperature": 0.776987826731056,
+     "gab_c_enthalpy_j_per_mol": 3089.793501421809,
+     "gab_k_enthalpy_j_per_mol": 714.6186684258282
+    },
+    "steady_model_error_F1_bias": 0.021028679967826643
+   },
+   {
+    "draw": 8,
+    "margin": 0.021875000000000002,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.2519690638873726,
+     "max_saturation_degree": 0.6538568947464227,
+     "gab_monolayer_moisture_kg_per_kg": 0.020312116071581843,
+     "gab_c_constant_at_reference_temperature": 14.350192175175176,
+     "gab_k_constant_at_reference_temperature": 0.7645213856361807,
+     "gab_c_enthalpy_j_per_mol": 8465.739687904716,
+     "gab_k_enthalpy_j_per_mol": 362.808657810092
+    },
+    "steady_model_error_F1_bias": 0.016601290154254784
+   },
+   {
+    "draw": 12,
+    "margin": 0.019921875000000006,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.2706434271298349,
+     "max_saturation_degree": 0.7319199126213789,
+     "gab_monolayer_moisture_kg_per_kg": 0.019876205645501615,
+     "gab_c_constant_at_reference_temperature": 29.980764450281065,
+     "gab_k_constant_at_reference_temperature": 0.7818372220732273,
+     "gab_c_enthalpy_j_per_mol": 7822.680244222283,
+     "gab_k_enthalpy_j_per_mol": 448.96244537085295
+    },
+    "steady_model_error_F1_bias": 0.014448565923560728
+   },
+   {
+    "draw": 16,
+    "margin": 0.015625,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.2317216511350125,
+     "max_saturation_degree": 0.6293824512511492,
+     "gab_monolayer_moisture_kg_per_kg": 0.018932835780084135,
+     "gab_c_constant_at_reference_temperature": 26.766726860188335,
+     "gab_k_constant_at_reference_temperature": 0.7333863155916333,
+     "gab_c_enthalpy_j_per_mol": 5284.915868192911,
+     "gab_k_enthalpy_j_per_mol": 613.5980631224811
+    },
+    "steady_model_error_F1_bias": 0.01083910274562509
+   },
+   {
+    "draw": 13,
+    "margin": 0.014453125,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.20953706195577979,
+     "max_saturation_degree": 0.5747649021446706,
+     "gab_monolayer_moisture_kg_per_kg": 0.021130380623042583,
+     "gab_c_constant_at_reference_temperature": 23.626838720453293,
+     "gab_k_constant_at_reference_temperature": 0.7479939177632332,
+     "gab_c_enthalpy_j_per_mol": 5593.225238844752,
+     "gab_k_enthalpy_j_per_mol": 580.1129215396941
+    },
+    "steady_model_error_F1_bias": 0.00963563796060082
+   },
+   {
+    "draw": 1,
+    "margin": 0.013671875,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.18555299383588134,
+     "max_saturation_degree": 0.5051749132573605,
+     "gab_monolayer_moisture_kg_per_kg": 0.023298278711736203,
+     "gab_c_constant_at_reference_temperature": 35.35448999289567,
+     "gab_k_constant_at_reference_temperature": 0.769425715599209,
+     "gab_c_enthalpy_j_per_mol": 3917.3800069838762,
+     "gab_k_enthalpy_j_per_mol": 597.6416519843042
+    },
+    "steady_model_error_F1_bias": 0.009129498892133546
+   },
+   {
+    "draw": 17,
+    "margin": 0.009960937500000003,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.1705111268442124,
+     "max_saturation_degree": 0.46481161564588547,
+     "gab_monolayer_moisture_kg_per_kg": 0.020187039367854594,
+     "gab_c_constant_at_reference_temperature": 20.186401236460753,
+     "gab_k_constant_at_reference_temperature": 0.799276081006974,
+     "gab_c_enthalpy_j_per_mol": 7549.549989402294,
+     "gab_k_enthalpy_j_per_mol": 482.32597671449184
+    },
+    "steady_model_error_F1_bias": 0.005924654882982692
+   },
+   {
+    "draw": 2,
+    "margin": 0.0027343750000000003,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.21680406164377927,
+     "max_saturation_degree": 0.6804920352995396,
+     "gab_monolayer_moisture_kg_per_kg": 0.01931493825465441,
+     "gab_c_constant_at_reference_temperature": 17.190575374386526,
+     "gab_k_constant_at_reference_temperature": 0.7950896566733718,
+     "gab_c_enthalpy_j_per_mol": 5161.560969427228,
+     "gab_k_enthalpy_j_per_mol": 265.6499235890806
+    },
+    "steady_model_error_F1_bias": -0.002716495309853011
+   },
+   {
+    "draw": 9,
+    "margin": 0.0013671875000000001,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.1538068769965321,
+     "max_saturation_degree": 0.4402546048164368,
+     "gab_monolayer_moisture_kg_per_kg": 0.018557758942246438,
+     "gab_c_constant_at_reference_temperature": 38.01182323875519,
+     "gab_k_constant_at_reference_temperature": 0.7056413708254694,
+     "gab_c_enthalpy_j_per_mol": 4742.075415328145,
+     "gab_k_enthalpy_j_per_mol": 728.7055919878185
+    },
+    "steady_model_error_F1_bias": -0.002092220433649635
+   },
+   {
+    "draw": 6,
+    "margin": 0.0,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.16047420068643986,
+     "max_saturation_degree": 0.7087523311376572,
+     "gab_monolayer_moisture_kg_per_kg": 0.02099691954255104,
+     "gab_c_constant_at_reference_temperature": 25.292915301627865,
+     "gab_k_constant_at_reference_temperature": 0.753029815107584,
+     "gab_c_enthalpy_j_per_mol": 5831.081701442599,
+     "gab_k_enthalpy_j_per_mol": 414.3003788776696
+    },
+    "steady_model_error_F1_bias": -0.045509105137024275
+   },
+   {
+    "draw": 14,
+    "margin": 0.0,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.17531053530983626,
+     "max_saturation_degree": 0.6485683552920819,
+     "gab_monolayer_moisture_kg_per_kg": 0.017240793861448764,
+     "gab_c_constant_at_reference_temperature": 46.0295992840879,
+     "gab_k_constant_at_reference_temperature": 0.721890879329294,
+     "gab_c_enthalpy_j_per_mol": 3509.2913042753935,
+     "gab_k_enthalpy_j_per_mol": 283.15633395686746
+    },
+    "steady_model_error_F1_bias": -0.025553969531744537
+   },
+   {
+    "draw": 10,
+    "margin": 0.0,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.19266653470695017,
+     "max_saturation_degree": 0.7641562387347222,
+     "gab_monolayer_moisture_kg_per_kg": 0.0225705184340477,
+     "gab_c_constant_at_reference_temperature": 18.488919393805997,
+     "gab_k_constant_at_reference_temperature": 0.7299408175982535,
+     "gab_c_enthalpy_j_per_mol": 4155.2256513386965,
+     "gab_k_enthalpy_j_per_mol": 400.19000647589564
+    },
+    "steady_model_error_F1_bias": -0.02746241547693108
+   },
+   {
+    "draw": 0,
+    "margin": 0.0,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.23720539477653801,
+     "max_saturation_degree": 0.7890343423932791,
+     "gab_monolayer_moisture_kg_per_kg": 0.0175525571629405,
+     "gab_c_constant_at_reference_temperature": 22.42024825734501,
+     "gab_k_constant_at_reference_temperature": 0.7105091720819473,
+     "gab_c_enthalpy_j_per_mol": 6100.005766376853,
+     "gab_k_enthalpy_j_per_mol": 494.42286416888237
+    },
+    "steady_model_error_F1_bias": -0.009040993303757808
+   },
+   {
+    "draw": 18,
+    "margin": 0.0,
+    "values": {
+     "critical_moisture_kg_per_kg": 0.21426778798922896,
+     "max_saturation_degree": 0.7401777029037476,
+     "gab_monolayer_moisture_kg_per_kg": 0.01619979826360941,
+     "gab_c_constant_at_reference_temperature": 41.51488659762397,
+     "gab_k_constant_at_reference_temperature": 0.7738078225404025,
+     "gab_c_enthalpy_j_per_mol": 7336.215443909168,
+     "gab_k_enthalpy_j_per_mol": 654.4054839760065
+    },
+    "steady_model_error_F1_bias": -0.014063188934911606
+   }
+  ]
+ },
+ "runtime_s": 41594.45544266701,
+ "stage_runtime_s": {
+  "warm_up": 99.8345377445221,
+  "search": 34220.37506604195,
+  "verify": 7272.8072299957275
+ },
+ "seconds_per_pair_and_job": {
+  "F0": {
+   "median": 10.347271142499812,
+   "n_jobs": 216
+  },
+  "F1": {
+   "median": 21.43462958947394,
+   "n_jobs": 240
+  },
+  "F2": {
+   "median": 20.60079149500016,
+   "n_jobs": 240
+  },
+  "F3:1": {
+   "median": 21.01045304999934,
+   "n_jobs": 260
+  },
+  "F3:2": {
+   "median": 20.950741537500292,
+   "n_jobs": 260
+  },
+  "F3:3": {
+   "median": 20.938499222499377,
+   "n_jobs": 260
+  }
+ },
+ "source": {
+  "name": "sensor_value_v1",
+  "provenance": {
+   "git/commit": "a0cb2b72f5d6ac8f3af0f08a4d41fc39045d7c5e",
+   "git/dirty": false,
+   "python": "3.14.2",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "code/package_dir": "src/twinlink_ml",
+   "code/interpreter": ".venv/Scripts/python.exe",
+   "code/root_checked": true,
+   "preset/new_study_version": 2,
+   "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+   "heatnetwork/approach_check": "not used",
+   "heatnetwork/fingerprint": "not used",
+   "git/dirty_ignored_paths": [
+    "C:\\twinlink_work\\sval\\artifacts\\runs\\_sensor_value_v1_cache.jsonl",
+    "C:\\twinlink_work\\sval\\artifacts\\runs\\sensor_value_v1.json.gz"
+   ]
+  }
+ }
+}
