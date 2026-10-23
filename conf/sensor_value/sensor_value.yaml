@@ -1,0 +1,58 @@
+# Energetic value of an inline moisture measurement (docs/28_sensor_value.md)
+#
+# STATUS: placeholder -- every number below is a study setting or a placeholder, none is a
+# measured plant value. Fixed before the first run (task of 2026-10-23, unattended run).
+#
+# Process ("truth"): the dynamic grey-box model of the headroom study (Befund 105, lab line,
+# conf/headroom/dynamic_headroom.yaml, read), with the drying-kinetics and GAB parameters of the
+# TRUTH drawn from the bands of conf/sensitivity/sobol_steady.yaml (read, not copied). The
+# controller keeps the nominal model: quasi-stationary RTO as R1 with a zeroth-order bias
+# correction  X_model + b <= limit - margin,  b = first-order filtered (feedback - model output).
+
+version: 1
+headroom_config: conf/headroom/dynamic_headroom.yaml     # truth line, scenarios, R1, numerics
+sensitivity_config: conf/sensitivity/sobol_steady.yaml   # parameter bands (model p2)
+outlier_config: conf/sensor/outliers_placeholder.yaml    # outlier settings of Befund 109
+
+draws:
+  n: 20
+  seed: 20261024             # scrambled Sobol' sequence (scipy.stats.qmc.Sobol), fixed seed
+  sequence_length: 32        # 2**5 points drawn; the first n VALID ones in order are used
+  parameters:                # names of the p2 inputs of sobol_steady.yaml (bands read from there)
+    - critical_moisture_kg_per_kg
+    - max_saturation_degree
+    - gab_monolayer_moisture_kg_per_kg
+    - gab_c_constant_at_reference_temperature
+    - gab_k_constant_at_reference_temperature
+    - gab_c_enthalpy_j_per_mol
+    - gab_k_enthalpy_j_per_mol
+
+scenarios:
+  family: observed           # Befund 105
+  per_type: 4                # indices round(linspace(0, n_type - 1, per_type)) of every type
+
+loop:
+  warm_up_s: 21600.0         # truth at the initial command before the pre-roll (as Befund 105)
+  pre_roll_s: 21600.0        # controller in the loop at the first disturbance sample; neither
+                             # energy nor violations of the pre-roll are counted
+  measurement_interval_s: 25.0   # feedback grid (sample time of the sensor data of Befunde 94/109)
+  bias_filter_time_constant_s: 1800.0   # PLACEHOLDER (30 min), fixed before the run, not tuned
+
+feedback:
+  F2:
+    outlier_rate: 0.25       # independent outliers (Befund 109 setting), no Hampel filter
+                             # (decision on Befund 109); t dof and scale from outlier_config
+  F3:
+    training_seeds: [1, 2, 3]   # master seeds of the Befund 94 pools (arm N, preset version 2)
+    n_train: 64
+    architecture: gru
+    max_epochs: 200
+
+margin:
+  holding_share: 0.95        # criterion (ii): at least 95 % of the pairs (draw, scenario) hold
+  lower_kg_per_kg: 0.0       # margins are reserves, never negative (bracket as Befund 105)
+  # upper end, cap and tolerance: control.margin_upper_kg_per_kg, MAX 0.12, tolerance as Befund 105
+  max_upper_kg_per_kg: 0.12
+
+seeds:
+  noise: 20261025            # per-pair sensor noise and outliers (common random numbers)
