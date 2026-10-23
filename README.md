@@ -96,6 +96,8 @@ model are rebuilt as a flowsheet (`src/twinlink_ml/flowsheet/`) with seven switc
 assumption; with all switches on `partner` it reproduces all 230 checked cells of the sheet
 (largest relative difference 2.0e-15). Model against model, no plant data.
 
+**Delivery 4.1_2 of the partner model (Befund 106; model against model).** The reproduction of 4.1_1 carries over with one switch (all 230 cells of the sheet); five data sets are reproduced within rounding except one case in which the partner's own Excel is not consistent with itself; the validators find the expected violations (one dryer above saturation, a Dyssol product below the solid feed, a medium above the boiling point in two combined data sets) and one more (Heat recovery 5); with counter-current exchangers the 95 degC medium limit binds on the gas side.
+
 **Storage of plant A (Befunde 91, 92).** The storage model (S1) bounds the volume only (about
 30 m3 at most) and leaves the compressor heat unmeasured; it serves as a scenario band, not as a
 predictor. The pre-registered gate of the shifting potential (S2) reads L1 by the letter; a
