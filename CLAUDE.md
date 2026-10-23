@@ -27,6 +27,11 @@ lab book (`04_stand_ap1.md`), process setup, and synthesis documents.
 - Push only the commit on which the full suite has run. Commits that change documentation
   only (docs/, CLAUDE.md; no files under src/, tests/ or scripts/) may be pushed after ruff
   and the denylist test. If master has moved in the meantime: check again, do not push.
+- Edits by script: chain every step with `&&` (or set -e) so that a failing edit stops the
+  sequence. After any scripted edit to docs, verify each expected change with grep (the new
+  heading, the finding number, the decision paragraph, the docs/12 row, the README paragraph)
+  and report the grep result. A change counts as done only when its grep check passes. Never
+  report a merge as complete from the exit status of later commands.
 
 ## Provenance
 
