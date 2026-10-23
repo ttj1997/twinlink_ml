@@ -68,6 +68,16 @@ class FlowsheetConfig:
     """State of the laboratory model; required when ``product_moisture`` is ``"physical"``."""
     pinned_exhausts: Mapping[int, tuple[float, float]] | None = None
     """``{dryer: (T degC, Y kg/kg)}`` replaces that dryer's computed exhaust (see module doc)."""
+    saturation_limit: bool = False
+    """Cap both dryers' exhausts at saturation (:class:`~.dryer.DryerConfig`); off in the partner
+    model. Not a switch: the line's physical mode (:class:`~.line.LineMode`) on six scenarios."""
+    htm_max_celsius: float | None = None
+    """Highest medium temperature of every circuit (counter-current only,
+    :class:`~.loop.StageModel`); ``None``: no limit (pressurised)."""
+
+    def __post_init__(self) -> None:
+        if self.htm_max_celsius is not None and self.switches.exchanger != "physical":
+            raise ValueError("a medium limit needs the counter-current exchanger")
 
 
 @dataclass(frozen=True)
@@ -183,6 +193,7 @@ class Flowsheet:
             profile,
             ph.dt_min_k if kind == "counter_current" else 0.0,
             "each" if ph.convention == "per_exchanger" else "half",
+            htm_max_celsius=self.config.htm_max_celsius,
         )
 
     def dryer_unit(self, dryer_no: int) -> DryerBlock:
@@ -206,6 +217,7 @@ class Flowsheet:
                     ("product_moisture", sw.product_moisture),
                 ),
                 name=f"dryer {dryer_no}",
+                saturation_limit=self.config.saturation_limit,
             )
         )
 
