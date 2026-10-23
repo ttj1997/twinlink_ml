@@ -191,7 +191,7 @@ def verdict(
     """Dominant inputs (``ST >= dominant_total_index``) and the convergence verdict.
 
     Converged: the full CI width of S1 AND of ST is below ``max_ci_width`` for every dominant
-    input (pre-registered, docs/25 section 4). No dominant input: converged is ``None``.
+    input (pre-registered, docs/26 section 4). No dominant input: converged is ``None``.
     """
     dominant = [
         n
@@ -227,7 +227,7 @@ def rank_change(
 ) -> dict[str, Any]:
     """Whether the ranking by total index of ``subset`` changes from ``reference`` to ``other``.
 
-    Rule (pre-registered, docs/25 section 4): compare the first ``K`` places, ``K`` = the number
+    Rule (pre-registered, docs/26 section 4): compare the first ``K`` places, ``K`` = the number
     of inputs of ``subset`` dominant in ``reference``, at least ``top_k``. Changed = the ordered
     list of the first ``K`` places differs. Affected = every input whose place within the first
     ``K`` differs or that enters or leaves them. A swap is "resolved" if the CIs of the two

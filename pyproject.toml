@@ -43,7 +43,7 @@ rl = [
 optimal-control = [
     "casadi>=3.8,<3.9",
 ]
-# Only for twinlink_ml.sensitivity (Sobol study, docs/25): Saltelli design and Sobol estimators.
+# Only for twinlink_ml.sensitivity (Sobol study, docs/26): Saltelli design and Sobol estimators.
 # No other module imports SALib; its tests skip without it.
 sensitivity = [
     "SALib>=1.5,<1.7",

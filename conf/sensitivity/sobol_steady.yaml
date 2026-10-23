@@ -1,5 +1,5 @@
 # Global sensitivity analysis (Sobol indices) of the steady-state models
-# (docs/25_sensitivity_sobol.md)
+# (docs/26_sensitivity_sobol.md)
 #
 # STATUS: placeholder -- every RANGE below is a placeholder with its reason; none is a measured
 # value. Nominal values are those of the models as they stand (P1: data set 5 of delivery 4.1_2,
@@ -8,7 +8,7 @@
 #
 # Inputs are INDEPENDENT and UNIFORM on [low, high] (scale "log": uniform in the logarithm).
 # Correlations between inputs are NOT modelled (e.g. the GAB parameters of one material, or
-# ambient temperature and humidity, are in reality correlated); see docs/25 section 2.
+# ambient temperature and humidity, are in reality correlated); see docs/26 section 2.
 #
 # Two groups: "epistemic" (unknown model parameters) and "operative" (disturbances). Design E
 # varies the epistemic group with the operative group at its nominal values, design O the other
@@ -18,7 +18,7 @@
 version: 1
 
 criteria:
-  # Fixed before the first run (docs/25 section 4).
+  # Fixed before the first run (docs/26 section 4).
   dominant_total_index: 0.10        # "dominant": total index >= 0.1
   max_ci_width: 0.05                # "converged": full width of the 95 % CI < 0.05 for S1 and ST
   confidence_level: 0.95            # of every dominant parameter at the largest base sample
@@ -292,7 +292,7 @@ p2:
         DisturbanceRange of the lab line = stress band of docs/24 (observed: 0.30 +- 7.7 %).
 
 questions:
-  # Open questions / measurements each parameter maps to (docs/25 section 7).
+  # Open questions / measurements each parameter maps to (docs/26 section 7).
   isotherm: >-
     Lab measurement: sorption isotherm of the material at 2-3 temperatures (GAB fit); Befund 34
   drying_kinetics: >-

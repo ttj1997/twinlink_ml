@@ -1,4 +1,4 @@
-"""Global sensitivity analysis (Sobol indices) of the steady-state models (docs/25).
+"""Global sensitivity analysis (Sobol indices) of the steady-state models (docs/26).
 
 ``SALib`` is an optional dependency (extra ``sensitivity``); :mod:`.sobol` imports it lazily, the
 P2 model needs ``casadi`` (extra ``optimal-control``).

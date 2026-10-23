@@ -1,6 +1,6 @@
 """Global sensitivity analysis (Sobol indices) of the steady-state models P1 and P2.
 
-Study document: ``docs/25_sensitivity_sobol.md``; inputs, ranges (placeholders with reasons),
+Study document: ``docs/26_sensitivity_sobol.md``; inputs, ranges (placeholders with reasons),
 designs and criteria: ``conf/sensitivity/sobol_steady.yaml``; models:
 ``twinlink_ml.sensitivity.models`` (both only read).
 
@@ -519,7 +519,7 @@ def main() -> int:
     started = time.time()
     payload: dict[str, Any] = {
         "provenance": prov,
-        "study": "global sensitivity analysis, steady-state models (docs/25_sensitivity_sobol.md)",
+        "study": "global sensitivity analysis, steady-state models (docs/26_sensitivity_sobol.md)",
         "study_config": config.raw,
         "study_config_fingerprint": config.fingerprint,
         "smoke": smoke,

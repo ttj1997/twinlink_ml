@@ -1,4 +1,4 @@
-"""Sobol study package (docs/25).
+"""Sobol study package (docs/26).
 
 Estimator on the Ishigami function, counting of invalid samples, verdict and ranking rules,
 configuration, and the two model wrappers at their nominal points.

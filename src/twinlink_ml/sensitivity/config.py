@@ -84,7 +84,7 @@ class InputSpec:
 
 @dataclass(frozen=True, slots=True)
 class Criteria:
-    """Pre-registered verdict thresholds (docs/25 section 4)."""
+    """Pre-registered verdict thresholds (docs/26 section 4)."""
 
     dominant_total_index: float
     max_ci_width: float
