@@ -1,7 +1,8 @@
 # 28 -- Energetic value of an inline moisture measurement under model mismatch
 
-Status: design fixed and committed before the runs (sections 1-6); runs and results in sections
-7-9 (numbers only from the artifacts named there). Branch `sensor-value` (from `origin/master`
+Status: run and evaluated. Design fixed and committed before the runs (sections 1-6); runs and
+results in sections 7-9 (numbers only from the artifacts named there). Pre-registered reading:
+**V2** (median value of the measurement 13.4 % of the energy). Branch `sensor-value` (from `origin/master`
 cfb9314); the finding number is assigned by the managing session (lab book entry "Befund NN").
 
 ## 1. Question
@@ -150,4 +151,132 @@ close to F2 (1 - s, median W), per seed and over the seeds.
 
 ## 7. Runs
 
-(Filled after the runs.)
+Artifacts (all `git/dirty=False`):
+
+* `artifacts/runs/sensor_value_soft_sensor_v1.json` -- training of the three soft sensors (script
+  commit `e2f8ab1`; checkpoints in `artifacts/checkpoints/sensor_value/`, gitignored, SHA-256 in
+  the record and checked by the main run). Training 3.9 min.
+* `artifacts/runs/sensor_value_v1.json.gz` -- main run (driver commit `a0cb2b7`), 693.6 min wall
+  (2026-10-23 14:04 to 2026-10-24 01:37), 14 workers: warm-up 1.7 min, per-pair searches 9.5 h,
+  verification 2.0 h; 1476 jobs of 20 or fewer pairs (search and verification).
+* `artifacts/runs/sensor_value_v1_analysis.json` -- pre-registered analysis (script committed in
+  `e2f8ab1`, before every run).
+* `artifacts/runs/sensor_value_v1_f0_candidate_check.json` -- check of the raise rule of section 8.2
+  (script `scripts/check_sensor_value_f0_candidate.py`, committed in `c73b149` before its run, reads
+  the verification runs kept in the gitignored cache of the main run).
+
+**Budget (rule of the request).** Probe before the start (2026-10-23, scratch, not an artifact):
+one full-length job (one draw, 20 pairs, 6 h pre-roll + 24 h) per variant at margin 0.01: F0
+164 s, F1 308 s, F2 320 s, F3 257 s. Extrapolated with about ten bisection rounds per pair and two
+verifications: about 150 core-hours, 11-12 h on 14 workers, below 30 h -- **no cut** (20 draws,
+20 scenarios). Actual 11.6 h.
+
+**Probe finding before the start (disclosed, design unchanged).** On the nominal truth (no
+mismatch) the soft sensor's bias settled at -0.08 to -0.15 kg/kg in a short closed-loop probe
+(three scenarios, margin 0.01, scratch): it underestimates the moisture at the operating point of
+this line. The windows are those of the pipeline (test), so this is the estimator, not the
+interface. The pre-specified design (h = 1 estimate, no tuning) was kept.
+
+## 8. Results
+
+### 8.1 Margins (kg/kg, path condition at every 5 s sample of 24 h, 400 pairs)
+
+| variant | (ii) >= 95 % (main) | pairs holding | max violation at (ii) | (i) all | per-pair median |
+|---|---|---|---|---|---|
+| F0 none | 0.05938 | 382 | 0.0114 | 0.06641 | 0.01172 |
+| F1 ideal | 0.00469 | 384 | 0.0032 | 0.00586 | 0.00039 |
+| F2 inline sensor | 0.00449 | 382 | 0.0045 | 0.00664 | 0.00107 |
+| F3 soft sensor, seed 1 | 0.07637 | 380 | 0.0542 | 0.08867 | 0.06133 |
+| F3 seed 2 | 0.07578 | 380 | 0.0294 | 0.08242 | 0.05566 |
+| F3 seed 3 | 0.08262 | 381 | 0.0294 | 0.08828 | 0.07227 |
+
+Every pair converged below the cap 0.12; no solver failure in any run; no draw was rejected by the
+isotherm check. F2's realised outlier share per pair 0.229-0.268. F1 and F2 need about the R1
+margin of Befund 105 (0.0066) or less; F2's (ii) margin lies below F1's by less than the bisection
+tolerance. F0 needs about thirteen times the F1 margin, F3 more than F0.
+
+### 8.2 Energy relative to F1 (per pair, median and range over the 400 pairs)
+
+| variant | criterion (ii) energy | (ii) CO2 | criterion (i) energy |
+|---|---|---|---|
+| F0 | +13.36 % (-2.19 .. +41.88 %) | +12.99 % | +15.85 % (+0.11 .. +45.29 %) |
+| F2 | -0.05 % (-0.35 .. +0.04 %) | -0.04 % | +0.18 % (+0.11 .. +0.38 %) |
+| F3 seed 1 | +17.62 % (-8.39 .. +44.88 %) | +16.64 % | +33.65 % (+1.07 .. +68.53 %) |
+| F3 seed 2 | +12.58 % (-3.84 .. +43.81 %) | +11.73 % | +17.62 % (-0.33 .. +49.93 %) |
+| F3 seed 3 | +12.07 % (-3.09 .. +41.01 %) | +11.51 % | +18.64 % (+1.34 .. +50.40 %) |
+
+Median energy per 24 h scenario at (ii): F1 26.22 kWh, F2 26.21, F0 29.77, F3 29.54-31.48 kWh.
+
+**Value of the measurement** `V = (E_F0 - E_F2) / E_F1`, criterion (ii): **median 13.40 %**
+(-2.10 .. +41.93 %); CO2 13.04 %; normalised by E_F0 11.82 %, by E_F2 13.41 %. Criterion (i):
+15.67 % (-0.02 .. +45.02 %). The same in every scenario type (medians 13.35-13.45 %): the value
+does not come from the disturbances but from the unknown parameters. Per draw (median over its
+scenarios) it ranges from -1.53 % (draw 3, the wettest truth, whose pairs F0 partly leaves violated)
+to 27.39 % (draw 6, a drier truth: F0 must keep the family-wide margin, F1/F2 relax the bound by the
+measured negative bias).
+
+**Pre-registered reading: V2** (median V = 13.40 % > 5 %).
+
+**Check of the raise rule.** At its first (ii) candidate 0.04785 F0 held in 379 pairs, one short of
+380 (a non-monotone pair); the driver raised it to the next per-pair margin 0.05938 (382 hold). This
+raises F0's energy by 3.69 % in the median (2.78-5.01 %) and therefore V. At the first candidate V
+would be **9.47 %** in the median (-6.73 .. +37.38 %): still V2. (`..._f0_candidate_check.json`.)
+
+### 8.3 Soft sensor (F3) against F0 and F2, criterion (ii)
+
+| seed | W = (E_F3 - E_F2)/E_F1, median (range) | (E_F0 - E_F3)/E_F1, median | captured share s | position |
+|---|---|---|---|---|
+| 1 | 17.72 % (-8.35 .. 44.94 %) | -2.68 % | -0.20 | at F0 or worse |
+| 2 | 12.65 % (-3.81 .. 43.79 %) | +1.67 % | 0.12 | between F0 and F2 |
+| 3 | 12.10 % (-3.12 .. 41.00 %) | +1.62 % | 0.12 | between F0 and F2 |
+
+Over the seeds: median W 12.65 % (12.10-17.72 %), captured share 0.12 (-0.20 .. 0.12). Two of three
+seeds lie formally between F0 and F2, but at 12 % of the way from F0; one is worse than F0; under
+criterion (i) all three are worse than F0 (s -0.94, -0.12, -0.18). Feedback error of F3 against the
+true moisture (RMSE over the 24 h per pair) median 0.027 kg/kg (0.0006-0.123). The soft sensor does
+not replace the measurement here: it saves at most about an eighth of what the inline sensor saves,
+and only with two of three training seeds.
+
+### 8.4 Which draws drive the F0 margin
+
+Per-draw F0 margin (largest over its 20 scenarios): 0 in five draws, up to 0.0664 (draw 3:
+critical moisture 0.278, nu_max 0.413). Spearman correlation with the parameters: critical moisture
++0.72, nu_max -0.60; GAB parameters between -0.16 and +0.36. Variance explained (OLS on the unit
+coordinates): **drying kinetics (critical moisture, nu_max) R^2 0.91** (adjusted 0.90); isotherm
+(five GAB parameters) 0.24 (adjusted -0.03); all seven 0.93 (adjusted 0.89). The five draws with
+the largest margins (3, 11, 15, 4, 19) all have a critical moisture of 0.23-0.30 and nu_max of
+0.41-0.62. The steady model error (mean F1 bias at the end of the pre-roll per draw) spans -0.046 to
++0.059 kg/kg. This is the ranking of Befund 108 (drying kinetics first, isotherm last), now for the
+margin of a feedback-free controller.
+
+## 9. Placeholders, caveats, open points
+
+**Placeholders.** Quality limit 0.15; filter time constant 30 min; sensor model (PT1 10 s, 0.005)
+and outlier settings (p = 0.25, t3, scale 10); parameter bands of the Sobol config (in particular
+critical moisture 0.15-0.30 and nu_max 0.4-0.8); scenario amplitudes of Befund 105; the whole process
+config; gas-heater efficiency 0.80; start margin 0.01; pre-roll 6 h (study setting).
+
+**Caveats.**
+
+1. **The value is a value against an unknown parameter band.** F0 must hold the limit for the
+   whole band with one margin; the size of V scales with the width of the band of the drying
+   kinetics, which is a placeholder. A drying experiment that narrows critical moisture and nu_max
+   (the data request of Befund 108) lowers V directly. V is the value of the measurement for a plant
+   whose drying kinetics are known only to that band.
+2. **F0 is a static correction only.** No integral action, no adaptation; a learning or adaptive
+   controller without a moisture measurement has to infer the mismatch from other channels, which
+   this study does not test.
+3. **The soft sensor is structurally blind to the mismatch** (section 6, item 9): the moisture head
+   of the composite network sees only commands and disturbances, and it underestimates the moisture
+   of this line's operating point by several 0.01 kg/kg already on the nominal model. F3 therefore
+   says nothing about a soft sensor that uses the measured bed temperature or exhaust state; such
+   a variant (or an observer on the grey-box model) is the obvious next test, not run.
+4. **Non-monotone pairs.** F0's (ii) candidate failed by one pair; the raise rule inflates V by
+   about 4 points (section 8.2); both values are V2.
+5. One lab line with the 4-state model; 20 draws and 20 scenarios; one realisation of the sensor
+   noise per pair; F2's (ii) margin below F1's lies within the bisection tolerance; the per-pair
+   margins assume monotonicity (checked by the verification at both criteria).
+
+**Open.** Whether the moisture limit binds on the plant (Befund 105, section 2) and whether the
+product moisture is measured inline there (question to the application partner); a soft-sensor or
+observer variant with the measured bed temperature; V for a narrower band after drying experiments.
