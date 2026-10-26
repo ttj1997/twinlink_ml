@@ -12,6 +12,11 @@ Estimate at the end of 25 s block ``j``: the h = 1 prediction of a window whose 
 blocks ``j - L .. j - 1`` and whose single future step is block ``j`` (the GRU decoder is causal,
 so a one-step future gives the same first output as the full horizon; tested). The exogenous values
 of the block are already realised when the estimate is formed.
+
+Follow-up study (docs/29, F5): a checkpoint may name measured process responses
+(``data/measured_input_names`` in its data spec, ``WindowConfig.measured_input_names``); they follow
+the seven exogenous channels in the inputs, in that order. Checkpoints without the entry (F3) are
+read exactly as before.
 """
 
 from __future__ import annotations
@@ -43,7 +48,8 @@ class SoftSensor:
     """A trained moisture head with its scalers."""
 
     def __init__(self, model: Any, metadata: dict[str, Any]) -> None:
-        if tuple(metadata["exogenous_names"]) != SOFT_SENSOR_EXOGENOUS:
+        measured = tuple(metadata["data_spec"].get("data/measured_input_names") or ())
+        if tuple(metadata["exogenous_names"]) != SOFT_SENSOR_EXOGENOUS + measured:
             raise ValueError(f"unexpected exogenous channels {metadata['exogenous_names']}")
         if tuple(metadata["target_names"]) != (_TARGET,):
             raise ValueError("the soft sensor must be the moisture head alone")
@@ -54,7 +60,8 @@ class SoftSensor:
         self.metadata = metadata
         self._input_scaler = metadata["input_scaler"]
         self._target_scaler = metadata["target_scaler"]
-        self._n_exogenous = len(SOFT_SENSOR_EXOGENOUS)
+        self.measured_input_names = measured
+        self._n_exogenous = len(SOFT_SENSOR_EXOGENOUS) + len(measured)
         self.history_length = int(metadata["data_spec"]["data/history_length"])
 
     @classmethod
@@ -66,7 +73,9 @@ class SoftSensor:
         return cls(model, metadata)
 
     def estimate(self, histories: np.ndarray, current: np.ndarray) -> np.ndarray:
-        """Moisture estimates ``(m,)`` from exogenous histories ``(m, L, 7)`` and blocks ``(m, 7)``.
+        """Moisture estimates ``(m,)`` from exogenous histories ``(m, L, n)`` and blocks ``(m, n)``.
+
+        ``n`` = 7 exogenous channels plus the measured responses of the checkpoint (if any).
 
         The moisture channel of the history is the standardised training mean (0), as in the
         windows of the ``SOFT_SENSOR`` mode.

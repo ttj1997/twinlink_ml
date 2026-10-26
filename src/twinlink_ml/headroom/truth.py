@@ -103,6 +103,7 @@ class TruthPlant:
         n = len(scenarios)
         self._moisture = np.empty((n, n_samples))
         self._bed_t = np.empty((n, n_samples))
+        self._outlet_y = np.empty((n, n_samples))
         self._energy = np.zeros((n, self.n_intervals))
         self._electric = np.zeros((n, self.n_intervals))
         self._gas = np.zeros((n, self.n_intervals))
@@ -152,6 +153,7 @@ class TruthPlant:
             diag = result.diagnostics
             self._moisture[:, index] = diag["particle_moisture_kg_per_kg"]
             self._bed_t[:, index] = self.state[:, 3]
+            self._outlet_y[:, index] = diag["outlet_humidity_kg_per_kg"]
             hours = self._dt / _SECONDS_PER_HOUR
             self._energy[:, self.k] += np.asarray(diag["power_total_kw"]) * hours
             electric = (
@@ -168,6 +170,20 @@ class TruthPlant:
     def moisture_so_far(self) -> np.ndarray:
         """Product moisture of the simulated samples, ``(n, k * samples_per_interval)``."""
         return self._moisture[:, : self.k * self._spi]
+
+    @property
+    def bed_temperature_so_far(self) -> np.ndarray:
+        """Bed temperature of the simulated samples, degC, same shape as ``moisture_so_far``."""
+        return self._bed_t[:, : self.k * self._spi]
+
+    @property
+    def outlet_humidity_so_far(self) -> np.ndarray:
+        """Exhaust humidity of the simulated samples, kg/kg dry air.
+
+        The model's ``outlet_humidity_kg_per_kg`` at the end of each sample, same shape as
+        ``moisture_so_far``.
+        """
+        return self._outlet_y[:, : self.k * self._spi]
 
     def result(self) -> TruthResult:
         """Record of the finished run."""

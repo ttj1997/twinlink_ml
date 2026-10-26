@@ -177,6 +177,16 @@ class WindowConfig:
         beiden Fällen die realisierte Aktion: sie ist vergangen und an der Anlage
         beobachtbar. Ohne aktive Projektion (``requested_actions is None``) sind beide
         Reihen identisch und die Option wirkungslos.
+    measured_input_names
+        Measured process responses that enter the model as additional known inputs (follow-up
+        sensor-value study, docs/29): output channels of the trajectory, taken from
+        ``Trajectory.measurements`` (the sensor model, never the noise-free outputs), appended
+        after the disturbances in ``history_inputs`` and ``future_exogenous`` and in
+        ``exogenous_names``. A response at step ``t`` is measured when the estimate of step ``t``
+        is formed, so in ``future_exogenous`` it is a realised value, not a forecast; this suits a
+        soft sensor (estimate of the current target), not a multi-step forecast. Must not contain a
+        target. Default ``()``: no extra input, behaviour bit for bit as before the option
+        (test).
     """
 
     history_length: int
@@ -186,6 +196,7 @@ class WindowConfig:
     target_source: TargetSource = "measurement"
     observed_target_names: tuple[str, ...] | None = None
     future_actions: FutureActions = "realised"
+    measured_input_names: tuple[str, ...] = ()
 
     @property
     def observed_targets(self) -> tuple[str, ...]:
@@ -221,6 +232,11 @@ class WindowConfig:
                     f"observed_target_names enthält Namen, die keine Zielgrößen sind: "
                     f"{sorted(unknown)}"
                 )
+        leaked = set(self.measured_input_names) & set(self.target_names)
+        if leaked:
+            raise ValueError(f"measured_input_names must not contain targets: {sorted(leaked)}")
+        if len(set(self.measured_input_names)) != len(self.measured_input_names):
+            raise ValueError("measured_input_names contains duplicates")
 
 
 def future_actions_of(trajectory: Trajectory, config: WindowConfig) -> FloatArray:
@@ -417,6 +433,16 @@ class TrajectoryWindowDataset(SequenceDataset):
         future_exogenous = np.concatenate(
             [future_actions_of(trajectory, config)[rows], trajectory.disturbances[rows]], axis=-1
         )
+        if config.measured_input_names:
+            missing_inputs = set(config.measured_input_names) - set(output_names)
+            if missing_inputs:
+                raise ValueError(f"unknown measured inputs: {sorted(missing_inputs)}")
+            measured_cols = np.asarray(
+                [output_names.index(name) for name in config.measured_input_names], dtype=np.intp
+            )
+            measured_inputs = trajectory.measurements[rows][..., measured_cols]
+            exogenous = np.concatenate([exogenous, measured_inputs], axis=-1)
+            future_exogenous = np.concatenate([future_exogenous, measured_inputs], axis=-1)
         observed = (
             trajectory.measurements[rows][..., target_cols]
             if config.target_source == "measurement"
@@ -462,8 +488,10 @@ class TrajectoryWindowDataset(SequenceDataset):
             axis=-1,
         )
 
-        exogenous_names = tuple(trajectory.metadata.get("action_names", ())) + tuple(
-            trajectory.metadata.get("disturbance_names", ())
+        exogenous_names = (
+            tuple(trajectory.metadata.get("action_names", ()))
+            + tuple(trajectory.metadata.get("disturbance_names", ()))
+            + config.measured_input_names
         )
         return cls(
             _config=config,

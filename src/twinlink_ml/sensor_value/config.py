@@ -18,11 +18,17 @@ import yaml
 
 __all__ = [
     "DEFAULT_CONFIG_PATH",
+    "FOLLOW_UP_CONFIG_PATH",
     "DrawSettings",
     "FeedbackSettings",
+    "FollowUpConfig",
+    "LabSampleSettings",
     "LoopSettings",
     "MarginSettings",
+    "ResponseSoftSensorSettings",
+    "ResponseSoftSensorVariant",
     "SensorValueConfig",
+    "load_follow_up_config",
     "load_sensor_value_config",
 ]
 
@@ -124,5 +130,100 @@ def load_sensor_value_config(path: Path | str = DEFAULT_CONFIG_PATH) -> SensorVa
             max_upper_kg_per_kg=float(margin["max_upper_kg_per_kg"]),
         ),
         noise_seed=int(raw["seeds"]["noise"]),
+        raw=raw,
+    )
+
+
+# ------------------------------------------------------------------------ follow-up study (docs/29)
+
+FOLLOW_UP_CONFIG_PATH = REPO_ROOT / "conf" / "sensor_value" / "sensor_value_2.yaml"
+
+
+@dataclass(frozen=True, slots=True)
+class LabSampleSettings:
+    """F4: periodic laboratory sample."""
+
+    sampling_intervals_h: tuple[float, ...]
+    delay_s: float
+    error_std_kg_per_kg: float
+    gain: float
+
+
+@dataclass(frozen=True, slots=True)
+class ResponseSoftSensorVariant:
+    """One F5 training variant: data source and measured inputs."""
+
+    label: str
+    data: str
+    inputs: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class ResponseSoftSensorSettings:
+    """F5: GRU soft sensors with measured process responses."""
+
+    training_seeds: tuple[int, ...]
+    n_train: int
+    architecture: str
+    max_epochs: int
+    variants: tuple[ResponseSoftSensorVariant, ...]
+    randomisation_seed: int
+    randomisation_sequence_length: int
+
+
+@dataclass(frozen=True, slots=True)
+class FollowUpConfig:
+    """Settings of the follow-up study; the shared settings are those of ``base``."""
+
+    version: int
+    base: SensorValueConfig
+    base_path: Path
+    predecessor_run: str
+    control_pairs: int
+    lab: LabSampleSettings
+    soft: ResponseSoftSensorSettings
+    budget_limit_h: float
+    raw: dict[str, Any] = field(compare=False, repr=False)
+
+    @property
+    def fingerprint(self) -> str:
+        """Hash of this YAML and of the base config's fingerprint."""
+        payload = {"follow_up": self.raw, "base": self.base.fingerprint}
+        return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()[:16]
+
+
+def load_follow_up_config(path: Path | str = FOLLOW_UP_CONFIG_PATH) -> FollowUpConfig:
+    """Read the follow-up YAML and the base config it names."""
+    raw = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
+    base_path = REPO_ROOT / raw["base_config"]
+    lab, soft = raw["F4"], raw["F5"]
+    variants = tuple(
+        ResponseSoftSensorVariant(label=str(k), data=str(v["data"]), inputs=tuple(v["inputs"]))
+        for k, v in soft["variants"].items()
+    )
+    if any(v.data not in ("nominal", "randomised") for v in variants):
+        raise ValueError("F5 data must be 'nominal' or 'randomised'")
+    return FollowUpConfig(
+        version=int(raw["version"]),
+        base=load_sensor_value_config(base_path),
+        base_path=base_path,
+        predecessor_run=str(raw["predecessor"]["run"]),
+        control_pairs=int(raw["predecessor"]["control_pairs"]),
+        lab=LabSampleSettings(
+            sampling_intervals_h=tuple(float(h) for h in lab["sampling_intervals_h"]),
+            delay_s=float(lab["delay_s"]),
+            error_std_kg_per_kg=float(lab["error_std_kg_per_kg"]),
+            gain=float(lab["gain"]),
+        ),
+        soft=ResponseSoftSensorSettings(
+            training_seeds=tuple(int(s) for s in soft["training_seeds"]),
+            n_train=int(soft["n_train"]),
+            architecture=str(soft["architecture"]),
+            max_epochs=int(soft["max_epochs"]),
+            variants=variants,
+            randomisation_seed=int(soft["randomisation"]["seed"]),
+            randomisation_sequence_length=int(soft["randomisation"]["sequence_length"]),
+        ),
+        budget_limit_h=float(raw["budget"]["limit_h"]),
         raw=raw,
     )

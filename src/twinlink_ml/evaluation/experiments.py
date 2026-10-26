@@ -433,6 +433,7 @@ def build_datasets(
     n_train: int,
     *,
     policy: ValidationPolicy = ValidationPolicy.FIXED_POOL,
+    window: WindowConfig | None = None,
 ) -> tuple[TrajectoryWindowDataset, TrajectoryWindowDataset | None, TrajectoryWindowDataset]:
     """Datensätze für eine Lernkurven-Stützstelle.
 
@@ -440,9 +441,12 @@ def build_datasets(
     geschätzt und an ``val`` und ``test`` weitergegeben. Werden sie einmal über den vollen
     Pool berechnet, hat das Modell an der kleinsten Stützstelle Information aus allen
     Läufen -- das hebt genau das linke Ende der Lernkurve.
+
+    ``window``: window configuration instead of ``data.spec.window`` (default ``None``: that one),
+    e.g. with ``measured_input_names`` (docs/29).
     """
     split = data.split.subset(n_train)
-    window = data.spec.window
+    window = data.spec.window if window is None else window
     train = TrajectoryWindowDataset.from_trajectory(data.trajectory, split, SplitName.TRAIN, window)
     test = TrajectoryWindowDataset.from_trajectory(
         data.trajectory, split, SplitName.TEST, window, scalers=train.scalers
