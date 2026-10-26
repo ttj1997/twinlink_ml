@@ -32,6 +32,11 @@ lab book (`04_stand_ap1.md`), process setup, and synthesis documents.
   heading, the finding number, the decision paragraph, the docs/12 row, the README paragraph)
   and report the grep result. A change counts as done only when its grep check passes. Never
   report a merge as complete from the exit status of later commands.
+- Before removing a worktree: list ignored and untracked content (`git status --ignored
+  --porcelain`) and copy everything that is not reproducible in seconds (checkpoints, job logs,
+  caches of long runs, unversioned reports) to `C:/twinlink_runs/<branch>/` (reports to
+  `local/reports/`). Report the list and the copy target. Remove the worktree only after the
+  copy is verified (file count and total size match).
 
 ## Provenance
 
