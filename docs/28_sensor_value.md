@@ -3,7 +3,7 @@
 Status: run and evaluated. Design fixed and committed before the runs (sections 1-6); runs and
 results in sections 7-9 (numbers only from the artifacts named there). Pre-registered reading:
 **V2** (median value of the measurement 13.4 % of the energy). Branch `sensor-value` (from `origin/master`
-cfb9314); the finding number is assigned by the managing session (lab book entry "Befund NN").
+cfb9314); the finding number is 111 (lab book).
 
 ## 1. Question
 

@@ -165,6 +165,8 @@ replace a product-moisture measurement.
 
 **Six-case network of the partner model (Befund 110; model against model, inputs of the colleague, not plant-near).** Own heat recovery per process (case 1) is ahead in every mode and reaches 92.5 % (unpressurised) and 83.6 % (pressurised) of the possible saving; the exchanger physics acts more strongly than the interconnection (saving 17.9 % in the partner model against 28.4 % and 33.1 % with counter-current exchangers).
 
+**Value of an inline moisture measurement (Befund 111; placeholder band of the drying kinetics, laboratory line).** What is measured is the value of a moisture feedback against no feedback: without it the bias-corrected optimiser needs a margin of 0.059 instead of 0.0045 kg/kg and 13.4 % more energy in the median (reading V2); the margin without feedback is explained to 91 % by the drying kinetics (critical moisture, `nu_max`), so narrowing them by drying experiments lowers this value directly. Not measured is the added value of an inline measurement against periodic laboratory samples, and a soft sensor with measured process responses; the soft sensor of the existing pipeline (commands and disturbances only) is structurally blind to the mismatch. A bias correction with a 30-minute filter makes outliers harmless.
+
 **One-step bandit (Befund 93, follow-up of Befund 68).** A residual action and a separated
 moisture cost lift SAC from a negative to a clearly positive closed-regret fraction, but no cell
 meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of
