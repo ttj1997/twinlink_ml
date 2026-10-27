@@ -147,3 +147,94 @@ minimum and maximum, and per test month.
     a step whose next observation leaves the training months. Every job was re-run under the new
     name `storage_price_v2` from scratch (rules included); the v1 checkpoints and log are kept outside
     the repository (`C:/twinlink_runs/storage-price/storage_price_v1_aborted/`) and are not used.
+
+## 7. Runs
+
+* **`storage_price_v1`** (commit 3931f9c): aborted, not an artifact (section 6 item 17).
+* **`storage_price_v2`**: driver `scripts/run_storage_price.py` on commit 1cc411e (`git/dirty=False`),
+  6 workers, all 13 jobs (7 rule/MPC cases, SAC and TD3 x seeds 0, 1, 2), runtime 5384 s.
+  Artifact `artifacts/runs/storage_price_v2.json.gz` (0.07 MB, commit 73f1586). Full suite on 3931f9c
+  and on 1cc411e: 1330 passed, 30 skipped.
+* **Budget:** probe of 15 000 steps per algorithm on 3931f9c (`local/probe/`, copied into the
+  record), **measured under parallel load** (6 workers): SAC 0.0243 s/step, TD3 0.0130 s/step,
+  estimated total 2.81 h <= 30 h, so **no cut** (both algorithms, 3 seeds). Actual training time per
+  job 3500-3513 s (TD3) and 5042-5153 s (SAC).
+* **Timing re-measured** with `scripts/measure_storage_price_timing.py` in one process, one thread,
+  controllers one after the other, from the committed checkpoints (artifact
+  `storage_price_v2_timing.json`, commit 9e66de2); the machine CPU load is sampled before and after
+  every controller (0-29 %, other processes of the machine). Every controller reproduces its test cost
+  of the run exactly (largest relative difference 0).
+* **Analysis** `scripts/analyze_storage_price.py` (reading as committed in 3931f9c), artifact
+  `storage_price_v2_analysis.json` (commit d421a05).
+* Checkpoints (126 files, 458 622 747 bytes) in `artifacts/checkpoints/storage_price/storage_price_v2/`
+  (gitignored), copied to `C:/twinlink_runs/storage-price/storage_price_v2/` (count and size checked).
+
+## 8. Results (test months Feb, May, Aug, Nov; sums of the four month runs)
+
+Tuning on the training months: `kappa` = 0.76, `q` = 0.40, neither at a grid edge.
+
+| controller | cost EUR | vs R0 | CO2 vs R0 | gap to M1 | power / content violations | ms per decision, one process (median) |
+|---|---|---|---|---|---|---|
+| N0 | 77411 | +22.28 % | +54.05 % | +25.04 % | 0 / 0 | 0.0003 |
+| P0 | 65327 | +3.19 % | +1.57 % | +5.52 % | 0 / 0 | 0.088 |
+| R0 | 63308 | 0 | 0 | +2.26 % | 0 / 0 | 0.089 |
+| **R1** | **62313** | **-1.57 %** | **-4.79 %** | **+0.65 %** | 0 / 0 | 0.088 |
+| M1 36 h | 61908 | -2.21 % | -5.34 % | 0 | 0 / 0 | 1.64 |
+| M2 36 h | 62020 | -2.03 % | -5.31 % | +0.18 % | 0 / 0 | 1.66 |
+| M1 24 h | 61909 | -2.21 % | -5.34 % | +0.00 % | 0 / 0 | 1.43 |
+| M2 24 h | 62035 | -2.01 % | -5.30 % | +0.20 % | 0 / 0 | 1.43 |
+| P* | 61902 | -2.22 % | -5.34 % | -0.01 % | 0 / 0 | (one programme per month) |
+| SAC, median [range] | 65287 [64760, 65694] | +3.13 % | +6.31 % | +5.46 % [+4.61, +6.11] | 0 / 1953, 1721, 2209 | 0.108-0.109 |
+| TD3, median [range] | 65191 [65128, 65554] | +2.98 % | +4.81 % | +5.30 % [+5.20, +5.89] | 0 / 1639, 1984, 1598 | 0.078-0.079 |
+
+Content violations of RL = hours (of 2904) in which the action would have over- or under-run the
+storage content and was cut by the projection (power limits hold by construction). In the run under
+parallel load the medians were R0 0.186, R1 0.201, M1 36 h 2.94, M2 36 h 2.85, SAC 0.110, TD3 0.117 ms
+(`decide_ms_median_under_load` in the analysis; marked there as measured under parallel load).
+
+**Pre-registered reading: H0.** `gap(R1, M1)` = +0.65 % <= 2 %: the schedule-aware price rule
+suffices; neither MPC nor RL is justified for this case. Every condition on its own: C0 holds;
+C1a fails (`gap(R1, M2)` = +0.47 %, not > 2 %); C1b fails (`gap(RL, M2)` = +5.11 %, RL = TD3); C2
+holds (RL is +5.11 % behind M2 and +4.62 % behind R1). The reading is the same for SAC and TD3, for
+the seed minimum and maximum of each, and **in every test month**:
+
+| month | gap(R1, M1) | gap(R1, M2) | gap(RL, M2) | gap(RL, R1) | reading |
+|---|---|---|---|---|---|
+| Feb | +0.62 % | +0.49 % | +5.38 % | +4.87 % | H0 |
+| May | +0.88 % | +0.74 % | +7.37 % | +6.59 % | H0 |
+| Aug | +0.87 % | +0.61 % | +6.29 % | +5.65 % | H0 |
+| Nov | +0.31 % | +0.12 % | +2.29 % | +2.17 % | H0 |
+
+* **MPC.** M1 is +0.010 % above the hindsight optimum P*; the 24 h horizon gives the same cost as
+  36 h to within 15 EUR (M1 61909 / 61908, M2 62035 / 62020 EUR). The realistic forecast costs M2 +0.18 % (36 h) against M1. R0 (constant rule, Befund 101)
+  is +2.26 % above M1: the power limits and the hourly price leave a gap for the constant rule that
+  the schedule-aware rule closes to +0.65 %.
+* **RL.** Both algorithms end above R0 (+2.98 % / +3.13 % in the median) and close to the pump
+  without storage P0 (65327 EUR against medians 65191 and 65287 EUR); every seed of both algorithms
+  is behind R0. RL is also behind on its own training months (in-sample cost of the final policies
+  128615-130952 EUR against R0 125994 and R1 124142 EUR), so this is an optimisation gap, not a
+  generalisation gap. The learning curves still fall slowly at the end (e.g. SAC seed 0 test
+  65896 EUR at 300 000 and 65694 EUR at 400 000 steps); the budget of 400 000 steps was fixed in the
+  config before the run. The raw RL actions hit the content limits in 1598-2209 of the 2904 test hours.
+* **CO2** follows cost (CO2 price in `c_U`): R1 -4.79 %, M1 -5.34 % against R0; RL +4.81 % / +6.31 %.
+* **Variants** (rules and MPC): C0 holds in every variant; `gap(R1, M1)` ranges from +0.22 %
+  (adder 0.12 EUR/kWh) to +1.33 % (capacity 1 MWh), `gap(R0, M1)` from +0.53 % to +2.26 %.
+
+## 9. Caveats
+
+* **Scenario on placeholders** (section 2): one plant structure, one year of prices (2024), a
+  constant tariff adder, a deterministic production plan without load-forecast error. A larger gap of
+  R1 needs a case where shifting pays more per kWh than here (capacity 1 MWh: +1.33 %).
+* **H0 is decided by rules and MPC alone**, and these are deterministic: the smoke test before the
+  run (section 6 item 16) produced the same numbers, i.e. C0 was visible before the main run. The
+  reading and its thresholds were committed before that smoke test and were not changed.
+* **RL is not tuned** (library defaults, one reward scale, one network size, 400 000 steps, final
+  policy). The result says that RL with this budget does not reach the rules, not that it cannot;
+  under H0 there is no gap above R1 larger than +0.65 % for any controller to win.
+* **Information:** R1, M2 and RL get the same price information (known until midnight, then today's
+  prices); the real day-ahead auction publishes tomorrow's prices around midday, which this study does
+  not use (it would favour M2 and RL over persistence, not R1 over M1).
+* **Timing:** one-process values on a shared machine (CPU load sampled 0-29 %); per-decision time
+  excludes the hindsight programme of P*, which is not an online controller. All controllers decide
+  within a few milliseconds, far below the hourly step.
+* **Aborted run v1** (section 6 item 17) not used; its checkpoints are kept only for traceability.
