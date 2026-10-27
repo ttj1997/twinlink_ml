@@ -1,0 +1,1778 @@
+{
+ "provenance": {
+  "git/commit": "a792cbde19c158e1772e1c7dd1f4a13ab3a61bba",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "input": {
+  "run": "artifacts/runs/joint_recovery_v1.json.gz",
+  "run_commit": "798d61b2816c91d4ac672171d48544f1b1efc289",
+  "run_dirty": false,
+  "base": "artifacts/runs/surrogate_rto_v1.json.gz"
+ },
+ "test_set": "50 test states of P1 (Befund 107)",
+ "G1": {
+  "test_w_max_abs": 0.0,
+  "u_star_max_abs": 0.0,
+  "u0_max_abs": 0.0,
+  "energy_star_max_abs_kw": 0.0,
+  "tolerance": 1e-09,
+  "passed": true
+ },
+ "G2_passed": true,
+ "G3_infeasible_total": 0,
+ "readings": {
+  "5K/unpressurised": "J0",
+  "5K/pressurised": "J0",
+  "10K/unpressurised": "J0",
+  "10K/pressurised": "J0",
+  "20K/unpressurised": "J0",
+  "20K/pressurised": "J0"
+ },
+ "recovery_unused_from_dt_min_k": {
+  "unpressurised": 20.0,
+  "pressurised": 20.0
+ },
+ "condensation_states_S2": {
+  "5K/unpressurised": 25,
+  "5K/pressurised": 25,
+  "10K/unpressurised": 3,
+  "10K/pressurised": 3,
+  "20K/unpressurised": 0,
+  "20K/pressurised": 0
+ },
+ "medium_variant_max_energy_difference_kw": {
+  "5K": {
+   "S0": 0.0,
+   "S1": 2.6514568318702914e-11,
+   "S2": 1.7375776373285134e-07,
+   "S3": 8.43746956746827e-07
+  },
+  "10K": {
+   "S0": 0.0,
+   "S1": 2.0410562129313803e-11,
+   "S2": 3.728739641495338e-07,
+   "S3": 5.949440939900796e-11
+  },
+  "20K": {
+   "S0": 0.0,
+   "S1": 0.0,
+   "S2": 0.0,
+   "S3": 7.910738730743105e-11
+  }
+ },
+ "timing": {
+  "measured_under_parallel_load": true,
+  "workers": 6,
+  "wall_seconds": 3309.229704900001,
+  "task_seconds_sum": 14544.81700129999
+ },
+ "combos": {
+  "5K/unpressurised": {
+   "dt_min_k": 5.0,
+   "medium": "unpressurised",
+   "u0": [
+    109.1827112656159,
+    54.62023117391217,
+    13.310440946798897
+   ],
+   "V_J": {
+    "median": 8.437550252809075e-09,
+    "min": -2.988643203727382e-10,
+    "max": 1.4106722539840986e-07
+   },
+   "reading": "J0",
+   "V_J_classes": {
+    "J0": 50
+   },
+   "energy_kw": {
+    "S0": {
+     "median": 1.4089302345122157,
+     "min": 1.0353224228430986,
+     "max": 1.89214328137525
+    },
+    "S1": {
+     "median": 1.2095169666814245,
+     "min": 0.9691926695891829,
+     "max": 1.510150746950349
+    },
+    "S2": {
+     "median": 1.209516938420205,
+     "min": 0.9691926283193966,
+     "max": 1.5101507468922968
+    },
+    "S3": {
+     "median": 1.2610562835788173,
+     "min": 1.051253441951341,
+     "max": 1.512009726447337
+    }
+   },
+   "co2_kg_per_h": {
+    "S0": {
+     "median": 0.30257555927536806,
+     "min": 0.22836119960347256,
+     "max": 0.39900130630963493
+    },
+    "S1": {
+     "median": 0.2629438514136698,
+     "min": 0.21470563952467364,
+     "max": 0.3222906000970599
+    },
+    "S2": {
+     "median": 0.26294385104861717,
+     "min": 0.21470562918736733,
+     "max": 0.3222906000826949
+    },
+    "S3": {
+     "median": 0.27283656984607946,
+     "min": 0.2311207672081494,
+     "max": 0.32261635949202033
+    }
+   },
+   "V_J_co2": {
+    "median": 9.384566681181125e-09,
+    "min": -5.015853666076862e-10,
+    "max": 1.7995010946018137e-07
+   },
+   "sequential_recovery_value": {
+    "median": 0.13747127673063458,
+    "min": 0.0,
+    "max": 0.24302698259035324
+   },
+   "robust_point_price": {
+    "median": 0.04094193385124382,
+    "min": 0.001230989395506296,
+    "max": 0.09552592388734887
+   },
+   "per_strategy": {
+    "S0": {
+     "recovered_kw": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "recovery_used_states": 0,
+     "exhaust_before_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "exhaust_after_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "condensation_states": 0,
+     "medium_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "bypass_states": 50,
+     "medium_hot_max_celsius": null,
+     "inlet_temperature_celsius": {
+      "median": 89.08304600495772,
+      "min": 67.49609839249602,
+      "max": 111.98967645693614
+     },
+     "air_kg_per_h": {
+      "median": 54.93111281675276,
+      "min": 51.878706218474704,
+      "max": 57.57824022240851
+     },
+     "active": {
+      "dew_point_margin": 50,
+      "fluidisation": 50
+     },
+     "infeasible_states": 0
+    },
+    "S1": {
+     "recovered_kw": {
+      "median": 0.163155398710307,
+      "min": 0.0,
+      "max": 0.3365421996616153
+     },
+     "recovery_used_states": 47,
+     "exhaust_before_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "exhaust_after_celsius": {
+      "median": 31.347930308174366,
+      "min": 19.86104573237697,
+      "max": 44.920499199581336
+     },
+     "condensate_kg_per_h": {
+      "median": 0.002243786199827272,
+      "min": 0.0,
+      "max": 0.19567909343670783
+     },
+     "condensation_states": 25,
+     "medium_kg_per_h": {
+      "median": 13.417494085440982,
+      "min": 0.0,
+      "max": 13.916691477362845
+     },
+     "bypass_states": 3,
+     "medium_hot_max_celsius": 44.38860749039944,
+     "inlet_temperature_celsius": {
+      "median": 89.08304600495772,
+      "min": 67.49609839249602,
+      "max": 111.98967645693614
+     },
+     "air_kg_per_h": {
+      "median": 54.93111281675276,
+      "min": 51.878706218474704,
+      "max": 57.57824022240851
+     },
+     "active": {
+      "dew_point_margin": 50,
+      "fluidisation": 50
+     },
+     "infeasible_states": 0
+    },
+    "S2": {
+     "recovered_kw": {
+      "median": 0.1631553315160853,
+      "min": 0.0,
+      "max": 0.3365421996761658
+     },
+     "recovery_used_states": 47,
+     "exhaust_before_celsius": {
+      "median": 40.47028092587357,
+      "min": 31.564066832917163,
+      "max": 49.38860645010231
+     },
+     "exhaust_after_celsius": {
+      "median": 31.347931466273735,
+      "min": 19.861045786906452,
+      "max": 44.920499181945864
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0022438147566092564,
+      "min": 0.0,
+      "max": 0.19567909343626552
+     },
+     "condensation_states": 25,
+     "medium_kg_per_h": {
+      "median": 13.41749372081924,
+      "min": 0.0,
+      "max": 13.916694156705955
+     },
+     "bypass_states": 3,
+     "medium_hot_max_celsius": 44.38860645010027,
+     "inlet_temperature_celsius": {
+      "median": 89.08304477523805,
+      "min": 67.49609580517463,
+      "max": 111.98967646828291
+     },
+     "air_kg_per_h": {
+      "median": 54.93111100650532,
+      "min": 51.87870473804454,
+      "max": 57.57823979964988
+     },
+     "active": {
+      "dew_point_margin": 50,
+      "fluidisation": 50
+     },
+     "infeasible_states": 0
+    },
+    "S3": {
+     "recovered_kw": {
+      "median": 0.40615115610668834,
+      "min": 0.10827576654657961,
+      "max": 0.7692047729794947
+     },
+     "recovery_used_states": 50,
+     "exhaust_before_celsius": {
+      "median": 56.82662597323166,
+      "min": 41.784612850859,
+      "max": 68.7200613431243
+     },
+     "exhaust_after_celsius": {
+      "median": 31.736036137447805,
+      "min": 20.66450689698252,
+      "max": 45.24596256574336
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.18910924964850281
+     },
+     "condensation_states": 23,
+     "medium_kg_per_h": {
+      "median": 13.314128506988332,
+      "min": 13.173226882145933,
+      "max": 13.76275402527753
+     },
+     "bypass_states": 0,
+     "medium_hot_max_celsius": 63.720061343122325,
+     "inlet_temperature_celsius": {
+      "median": 109.1827112656159,
+      "min": 109.1827112656159,
+      "max": 109.1827112656159
+     },
+     "air_kg_per_h": {
+      "median": 54.62023117391217,
+      "min": 54.62023117391217,
+      "max": 54.62023117391217
+     },
+     "active": {
+      "dew_point_margin": 1,
+      "fluidisation": 1
+     },
+     "infeasible_states": 0
+    }
+   },
+   "checks_failed": {},
+   "check_max_relative_excess": {
+    "S2_over_S1": 2.988643203727382e-10,
+    "S1_over_S0": 0.0,
+    "S2_over_S3": -0.0012294759236822128
+   },
+   "G2_passed": true,
+   "G3_infeasible": {
+    "S0": 0,
+    "S1": 0,
+    "S2": 0,
+    "S3": 0
+   },
+   "geometric_bound_k": {
+    "median": 10.20476957122701,
+    "min": 4.271559693913879,
+    "max": 15.774777161510272
+   },
+   "recovery_unused_all_states_S2": false,
+   "optimality_rtol": 1e-06
+  },
+  "5K/pressurised": {
+   "dt_min_k": 5.0,
+   "medium": "pressurised",
+   "u0": [
+    109.18320550609974,
+    54.6201678124588,
+    13.310562601713457
+   ],
+   "V_J": {
+    "median": 4.0211264743766055e-09,
+    "min": -3.6816318234146325e-10,
+    "max": 5.140951961165325e-08
+   },
+   "reading": "J0",
+   "V_J_classes": {
+    "J0": 50
+   },
+   "energy_kw": {
+    "S0": {
+     "median": 1.4089302345122157,
+     "min": 1.0353224228430986,
+     "max": 1.89214328137525
+    },
+    "S1": {
+     "median": 1.2095169666787278,
+     "min": 0.9691926695891829,
+     "max": 1.5101507469503062
+    },
+    "S2": {
+     "median": 1.2095169584587353,
+     "min": 0.9691926332401145,
+     "max": 1.5101507471787419
+    },
+    "S3": {
+     "median": 1.2610571072777343,
+     "min": 1.0512542355439902,
+     "max": 1.5120105628693814
+    }
+   },
+   "co2_kg_per_h": {
+    "S0": {
+     "median": 0.30257555927536806,
+     "min": 0.22836119960347256,
+     "max": 0.39900130630963493
+    },
+    "S1": {
+     "median": 0.2629438514136698,
+     "min": 0.21470563952467364,
+     "max": 0.3222906000970442
+    },
+    "S2": {
+     "median": 0.262943849049821,
+     "min": 0.2147056304269085,
+     "max": 0.32229060018017996
+    },
+    "S3": {
+     "median": 0.2728367100334377,
+     "min": 0.23112090385171727,
+     "max": 0.322616506133958
+    }
+   },
+   "V_J_co2": {
+    "median": 4.294237015699321e-09,
+    "min": -6.199972255868639e-10,
+    "max": 5.796131971761364e-08
+   },
+   "sequential_recovery_value": {
+    "median": 0.13747127673319393,
+    "min": 0.0,
+    "max": 0.24302698258986058
+   },
+   "robust_point_price": {
+    "median": 0.04094261590895145,
+    "min": 0.0012315430721827165,
+    "max": 0.09552670684696464
+   },
+   "per_strategy": {
+    "S0": {
+     "recovered_kw": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "recovery_used_states": 0,
+     "exhaust_before_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "exhaust_after_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "condensation_states": 0,
+     "medium_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "bypass_states": 50,
+     "medium_hot_max_celsius": null,
+     "inlet_temperature_celsius": {
+      "median": 89.08304600495772,
+      "min": 67.49609839249602,
+      "max": 111.98967645693614
+     },
+     "air_kg_per_h": {
+      "median": 54.93111281675276,
+      "min": 51.878706218474704,
+      "max": 57.57824022240851
+     },
+     "active": {
+      "dew_point_margin": 50,
+      "fluidisation": 50
+     },
+     "infeasible_states": 0
+    },
+    "S1": {
+     "recovered_kw": {
+      "median": 0.1631553987101597,
+      "min": 0.0,
+      "max": 0.3365421996616153
+     },
+     "recovery_used_states": 47,
+     "exhaust_before_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "exhaust_after_celsius": {
+      "median": 31.347930308161366,
+      "min": 19.86104573237697,
+      "max": 44.920499199581336
+     },
+     "condensate_kg_per_h": {
+      "median": 0.002243786199827272,
+      "min": 0.0,
+      "max": 0.19567909343670783
+     },
+     "condensation_states": 25,
+     "medium_kg_per_h": {
+      "median": 13.41749411594912,
+      "min": 0.0,
+      "max": 13.916691540090444
+     },
+     "bypass_states": 3,
+     "medium_hot_max_celsius": 44.38860749039944,
+     "inlet_temperature_celsius": {
+      "median": 89.08304600495772,
+      "min": 67.49609839249602,
+      "max": 111.98967645693614
+     },
+     "air_kg_per_h": {
+      "median": 54.93111281675276,
+      "min": 51.878706218474704,
+      "max": 57.57824022240851
+     },
+     "active": {
+      "dew_point_margin": 50,
+      "fluidisation": 50
+     },
+     "infeasible_states": 0
+    },
+    "S2": {
+     "recovered_kw": {
+      "median": 0.16315529535223983,
+      "min": 0.0,
+      "max": 0.3365421996761653
+     },
+     "recovery_used_states": 47,
+     "exhaust_before_celsius": {
+      "median": 40.47027928851988,
+      "min": 31.56407754870007,
+      "max": 49.38860706648932
+     },
+     "exhaust_after_celsius": {
+      "median": 31.347931085498896,
+      "min": 19.861047095329408,
+      "max": 44.92049919709423
+     },
+     "condensate_kg_per_h": {
+      "median": 0.002243803127240016,
+      "min": 0.0,
+      "max": 0.1956790934362674
+     },
+     "condensation_states": 25,
+     "medium_kg_per_h": {
+      "median": 13.417497810770211,
+      "min": 0.0,
+      "max": 13.916689415030273
+     },
+     "bypass_states": 3,
+     "medium_hot_max_celsius": 44.38860706648542,
+     "inlet_temperature_celsius": {
+      "median": 89.08304600723503,
+      "min": 67.4961126121842,
+      "max": 111.98966976796069
+     },
+     "air_kg_per_h": {
+      "median": 54.931109145170716,
+      "min": 51.878705800047356,
+      "max": 57.57823273607583
+     },
+     "active": {
+      "dew_point_margin": 50,
+      "fluidisation": 50
+     },
+     "infeasible_states": 0
+    },
+    "S3": {
+     "recovered_kw": {
+      "median": 0.40615637806505983,
+      "min": 0.10828139556476074,
+      "max": 0.7692097234812781
+     },
+     "recovery_used_states": 50,
+     "exhaust_before_celsius": {
+      "median": 56.82699538185485,
+      "min": 41.784963817739474,
+      "max": 68.72044652538817
+     },
+     "exhaust_after_celsius": {
+      "median": 31.73604993250872,
+      "min": 20.664522012606746,
+      "max": 45.245976551521565
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.18910908997656842
+     },
+     "condensation_states": 23,
+     "medium_kg_per_h": {
+      "median": 13.31411297963556,
+      "min": 13.173211665368255,
+      "max": 13.762738018893199
+     },
+     "bypass_states": 0,
+     "medium_hot_max_celsius": 63.720446525384915,
+     "inlet_temperature_celsius": {
+      "median": 109.18320550609974,
+      "min": 109.18320550609974,
+      "max": 109.18320550609974
+     },
+     "air_kg_per_h": {
+      "median": 54.6201678124588,
+      "min": 54.6201678124588,
+      "max": 54.6201678124588
+     },
+     "active": {
+      "dew_point_margin": 1,
+      "fluidisation": 1
+     },
+     "infeasible_states": 0
+    }
+   },
+   "checks_failed": {},
+   "check_max_relative_excess": {
+    "S2_over_S1": 3.6816318234146325e-10,
+    "S1_over_S0": 0.0,
+    "S2_over_S3": -0.0012300282394258624
+   },
+   "G2_passed": true,
+   "G3_infeasible": {
+    "S0": 0,
+    "S1": 0,
+    "S2": 0,
+    "S3": 0
+   },
+   "geometric_bound_k": {
+    "median": 10.20476957122701,
+    "min": 4.271559693913879,
+    "max": 15.774777161510272
+   },
+   "recovery_unused_all_states_S2": false,
+   "optimality_rtol": 1e-06
+  },
+  "10K/unpressurised": {
+   "dt_min_k": 10.0,
+   "medium": "unpressurised",
+   "u0": [
+    109.18271127033853,
+    54.62023117236302,
+    13.310425409162761
+   ],
+   "V_J": {
+    "median": 2.9032678770473084e-11,
+    "min": -7.527008203156761e-11,
+    "max": 2.5200754596802687e-07
+   },
+   "reading": "J0",
+   "V_J_classes": {
+    "J0": 50
+   },
+   "energy_kw": {
+    "S0": {
+     "median": 1.4089302345122157,
+     "min": 1.0353224228430986,
+     "max": 1.89214328137525
+    },
+    "S1": {
+     "median": 1.34851680210591,
+     "min": 1.0353224228430986,
+     "max": 1.691410471021498
+    },
+    "S2": {
+     "median": 1.3485167911151592,
+     "min": 1.0353224228430986,
+     "max": 1.6914104711488107
+    },
+    "S3": {
+     "median": 1.443196547549237,
+     "min": 1.2361723596350207,
+     "max": 1.6928015831833587
+    }
+   },
+   "co2_kg_per_h": {
+    "S0": {
+     "median": 0.30257555927536806,
+     "min": 0.22836119960347256,
+     "max": 0.39900130630963493
+    },
+    "S1": {
+     "median": 0.2907571552448454,
+     "min": 0.22836119960347256,
+     "max": 0.35873735164550535
+    },
+    "S2": {
+     "median": 0.29075715259258816,
+     "min": 0.22836119960347256,
+     "max": 0.3587373516916854
+    },
+    "S3": {
+     "median": 0.30959165893250173,
+     "min": 0.26835520827776366,
+     "max": 0.3589690123425298
+    }
+   },
+   "V_J_co2": {
+    "median": 3.477263221673844e-11,
+    "min": -1.287294438796679e-10,
+    "max": 2.8697805427995135e-07
+   },
+   "sequential_recovery_value": {
+    "median": 0.004808591903139911,
+    "min": 0.0,
+    "max": 0.1226564237640052
+   },
+   "robust_point_price": {
+    "median": 0.04201185093845593,
+    "min": 0.0008224567946556202,
+    "max": 0.2731886631530864
+   },
+   "per_strategy": {
+    "S0": {
+     "recovered_kw": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "recovery_used_states": 0,
+     "exhaust_before_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "exhaust_after_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "condensation_states": 0,
+     "medium_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "bypass_states": 50,
+     "medium_hot_max_celsius": null,
+     "inlet_temperature_celsius": {
+      "median": 89.08304600495772,
+      "min": 67.49609839249602,
+      "max": 111.98967645693614
+     },
+     "air_kg_per_h": {
+      "median": 54.93111281675276,
+      "min": 51.878706218474704,
+      "max": 57.57824022240851
+     },
+     "active": {
+      "dew_point_margin": 50,
+      "fluidisation": 50
+     },
+     "infeasible_states": 0
+    },
+    "S1": {
+     "recovered_kw": {
+      "median": 0.006420584381146675,
+      "min": 0.0,
+      "max": 0.1803708957835809
+     },
+     "recovery_used_states": 28,
+     "exhaust_before_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "exhaust_after_celsius": {
+      "median": 37.915626496225684,
+      "min": 25.64554469950359,
+      "max": 49.38860749040345
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.020490277004626627
+     },
+     "condensation_states": 3,
+     "medium_kg_per_h": {
+      "median": 13.279910956011179,
+      "min": 0.0,
+      "max": 13.916691353148746
+     },
+     "bypass_states": 22,
+     "medium_hot_max_celsius": 37.31300374331663,
+     "inlet_temperature_celsius": {
+      "median": 89.08304600495772,
+      "min": 67.49609839249602,
+      "max": 111.98967645693614
+     },
+     "air_kg_per_h": {
+      "median": 54.93111281675276,
+      "min": 51.878706218474704,
+      "max": 57.57824022240851
+     },
+     "active": {
+      "dew_point_margin": 50,
+      "fluidisation": 50
+     },
+     "infeasible_states": 0
+    },
+    "S2": {
+     "recovered_kw": {
+      "median": 0.006420584387487159,
+      "min": 0.0,
+      "max": 0.18037088967569195
+     },
+     "recovery_used_states": 28,
+     "exhaust_before_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.56408320420424,
+      "max": 49.38860749040345
+     },
+     "exhaust_after_celsius": {
+      "median": 37.915626488021886,
+      "min": 25.645544699271447,
+      "max": 49.38860749040345
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.020490278761592512
+     },
+     "condensation_states": 3,
+     "medium_kg_per_h": {
+      "median": 13.279910675394808,
+      "min": 0.0,
+      "max": 13.916688149249284
+     },
+     "bypass_states": 22,
+     "medium_hot_max_celsius": 37.31300374241422,
+     "inlet_temperature_celsius": {
+      "median": 89.08304709493787,
+      "min": 67.4961223374614,
+      "max": 111.98967646844446
+     },
+     "air_kg_per_h": {
+      "median": 54.93111281675276,
+      "min": 51.878706218474704,
+      "max": 57.57822763806372
+     },
+     "active": {
+      "dew_point_margin": 50,
+      "fluidisation": 50
+     },
+     "infeasible_states": 0
+    },
+    "S3": {
+     "recovered_kw": {
+      "median": 0.25109777777981235,
+      "min": 0.0,
+      "max": 0.6157345597271947
+     },
+     "recovery_used_states": 49,
+     "exhaust_before_celsius": {
+      "median": 56.82662597599063,
+      "min": 41.78461285323031,
+      "max": 68.72006134620285
+     },
+     "exhaust_after_celsius": {
+      "median": 40.78079640147241,
+      "min": 26.369769291950288,
+      "max": 54.87970331847838
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.01595183707053504
+     },
+     "condensation_states": 3,
+     "medium_kg_per_h": {
+      "median": 13.299195370698257,
+      "min": 0.0,
+      "max": 13.762754017874801
+     },
+     "bypass_states": 1,
+     "medium_hot_max_celsius": 58.72006134620116,
+     "inlet_temperature_celsius": {
+      "median": 109.18271127033853,
+      "min": 109.18271127033853,
+      "max": 109.18271127033853
+     },
+     "air_kg_per_h": {
+      "median": 54.62023117236302,
+      "min": 54.62023117236302,
+      "max": 54.62023117236302
+     },
+     "active": {
+      "dew_point_margin": 1,
+      "fluidisation": 1
+     },
+     "infeasible_states": 0
+    }
+   },
+   "checks_failed": {},
+   "check_max_relative_excess": {
+    "S2_over_S1": 7.527008203156761e-11,
+    "S1_over_S0": 0.0,
+    "S2_over_S3": -0.0008217809153580656
+   },
+   "G2_passed": true,
+   "G3_infeasible": {
+    "S0": 0,
+    "S1": 0,
+    "S2": 0,
+    "S3": 0
+   },
+   "geometric_bound_k": {
+    "median": 10.20476957122701,
+    "min": 4.271559693913879,
+    "max": 15.774777161510272
+   },
+   "recovery_unused_all_states_S2": false,
+   "optimality_rtol": 1e-06
+  },
+  "10K/pressurised": {
+   "dt_min_k": 10.0,
+   "medium": "pressurised",
+   "u0": [
+    109.18271127033948,
+    54.620231172361414,
+    13.31042538542358
+   ],
+   "V_J": {
+    "median": 1.3039267880960403e-11,
+    "min": -4.0714765335190314e-11,
+    "max": 2.610439452513697e-07
+   },
+   "reading": "J0",
+   "V_J_classes": {
+    "J0": 50
+   },
+   "energy_kw": {
+    "S0": {
+     "median": 1.4089302345122157,
+     "min": 1.0353224228430986,
+     "max": 1.89214328137525
+    },
+    "S1": {
+     "median": 1.34851680210591,
+     "min": 1.0353224228430986,
+     "max": 1.691410471021498
+    },
+    "S2": {
+     "median": 1.348516802093245,
+     "min": 1.0353224228430986,
+     "max": 1.6914104710136328
+    },
+    "S3": {
+     "median": 1.443196547543112,
+     "min": 1.236172359694515,
+     "max": 1.6928015831759928
+    }
+   },
+   "co2_kg_per_h": {
+    "S0": {
+     "median": 0.30257555927536806,
+     "min": 0.22836119960347256,
+     "max": 0.39900130630963493
+    },
+    "S1": {
+     "median": 0.2907571552448454,
+     "min": 0.22836119960347256,
+     "max": 0.35873735164550535
+    },
+    "S2": {
+     "median": 0.29075715524504153,
+     "min": 0.22836119960347256,
+     "max": 0.3587373516422115
+    },
+    "S3": {
+     "median": 0.3095916589323877,
+     "min": 0.268355208299542,
+     "max": 0.35896901233982675
+    }
+   },
+   "V_J_co2": {
+    "median": 7.107448176504098e-12,
+    "min": -6.876390360602741e-11,
+    "max": 2.9558026821762783e-07
+   },
+   "sequential_recovery_value": {
+    "median": 0.004808591903139911,
+    "min": 0.0,
+    "max": 0.1226564237640052
+   },
+   "robust_point_price": {
+    "median": 0.04201189130831863,
+    "min": 0.0008224568702866769,
+    "max": 0.27318866316759266
+   },
+   "per_strategy": {
+    "S0": {
+     "recovered_kw": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "recovery_used_states": 0,
+     "exhaust_before_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "exhaust_after_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "condensation_states": 0,
+     "medium_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "bypass_states": 50,
+     "medium_hot_max_celsius": null,
+     "inlet_temperature_celsius": {
+      "median": 89.08304600495772,
+      "min": 67.49609839249602,
+      "max": 111.98967645693614
+     },
+     "air_kg_per_h": {
+      "median": 54.93111281675276,
+      "min": 51.878706218474704,
+      "max": 57.57824022240851
+     },
+     "active": {
+      "dew_point_margin": 50,
+      "fluidisation": 50
+     },
+     "infeasible_states": 0
+    },
+    "S1": {
+     "recovered_kw": {
+      "median": 0.006420584381146675,
+      "min": 0.0,
+      "max": 0.1803708957835809
+     },
+     "recovery_used_states": 28,
+     "exhaust_before_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "exhaust_after_celsius": {
+      "median": 37.915626496225684,
+      "min": 25.64554469950359,
+      "max": 49.38860749040345
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.020490277004626627
+     },
+     "condensation_states": 3,
+     "medium_kg_per_h": {
+      "median": 13.279910956011179,
+      "min": 0.0,
+      "max": 13.916691353148746
+     },
+     "bypass_states": 22,
+     "medium_hot_max_celsius": 37.31300374331663,
+     "inlet_temperature_celsius": {
+      "median": 89.08304600495772,
+      "min": 67.49609839249602,
+      "max": 111.98967645693614
+     },
+     "air_kg_per_h": {
+      "median": 54.93111281675276,
+      "min": 51.878706218474704,
+      "max": 57.57824022240851
+     },
+     "active": {
+      "dew_point_margin": 50,
+      "fluidisation": 50
+     },
+     "infeasible_states": 0
+    },
+    "S2": {
+     "recovered_kw": {
+      "median": 0.0064206333622835576,
+      "min": 0.0,
+      "max": 0.18037089575081944
+     },
+     "recovery_used_states": 28,
+     "exhaust_before_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.56411307208486,
+      "max": 49.38860749040345
+     },
+     "exhaust_after_celsius": {
+      "median": 37.91562660872751,
+      "min": 25.645544699514822,
+      "max": 49.38860749040345
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.020490277018365206
+     },
+     "condensation_states": 3,
+     "medium_kg_per_h": {
+      "median": 13.279911090109884,
+      "min": 0.0,
+      "max": 13.916681563856496
+     },
+     "bypass_states": 22,
+     "medium_hot_max_celsius": 37.312999413302606,
+     "inlet_temperature_celsius": {
+      "median": 89.08304600721485,
+      "min": 67.49617374157913,
+      "max": 111.98968347623784
+     },
+     "air_kg_per_h": {
+      "median": 54.93111281675276,
+      "min": 51.878706218474704,
+      "max": 57.57820064564269
+     },
+     "active": {
+      "dew_point_margin": 50,
+      "fluidisation": 50
+     },
+     "infeasible_states": 0
+    },
+    "S3": {
+     "recovered_kw": {
+      "median": 0.2510977777798076,
+      "min": 0.0,
+      "max": 0.6157345597271249
+     },
+     "recovery_used_states": 49,
+     "exhaust_before_celsius": {
+      "median": 56.82662597599013,
+      "min": 41.78461285322944,
+      "max": 68.72006134620264
+     },
+     "exhaust_after_celsius": {
+      "median": 40.78079640147182,
+      "min": 26.36976929195327,
+      "max": 54.879703318477844
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.015951837070559204
+     },
+     "condensation_states": 3,
+     "medium_kg_per_h": {
+      "median": 13.299195615900814,
+      "min": 0.0,
+      "max": 13.762754151550578
+     },
+     "bypass_states": 1,
+     "medium_hot_max_celsius": 58.72006134620145,
+     "inlet_temperature_celsius": {
+      "median": 109.18271127033948,
+      "min": 109.18271127033948,
+      "max": 109.18271127033948
+     },
+     "air_kg_per_h": {
+      "median": 54.620231172361414,
+      "min": 54.620231172361414,
+      "max": 54.620231172361414
+     },
+     "active": {
+      "dew_point_margin": 1,
+      "fluidisation": 1
+     },
+     "infeasible_states": 0
+    }
+   },
+   "checks_failed": {},
+   "check_max_relative_excess": {
+    "S2_over_S1": 4.0714765335190314e-11,
+    "S1_over_S0": 0.0,
+    "S2_over_S3": -0.000821780990864869
+   },
+   "G2_passed": true,
+   "G3_infeasible": {
+    "S0": 0,
+    "S1": 0,
+    "S2": 0,
+    "S3": 0
+   },
+   "geometric_bound_k": {
+    "median": 10.20476957122701,
+    "min": 4.271559693913879,
+    "max": 15.774777161510272
+   },
+   "recovery_unused_all_states_S2": false,
+   "optimality_rtol": 1e-06
+  },
+  "20K/unpressurised": {
+   "dt_min_k": 20.0,
+   "medium": "unpressurised",
+   "u0": [
+    109.18271127005477,
+    54.620231172238576,
+    10.0
+   ],
+   "V_J": {
+    "median": 0.0,
+    "min": 0.0,
+    "max": 0.0
+   },
+   "reading": "J0",
+   "V_J_classes": {
+    "J0": 50
+   },
+   "energy_kw": {
+    "S0": {
+     "median": 1.4089302345122157,
+     "min": 1.0353224228430986,
+     "max": 1.89214328137525
+    },
+    "S1": {
+     "median": 1.4089302345122157,
+     "min": 1.0353224228430986,
+     "max": 1.89214328137525
+    },
+    "S2": {
+     "median": 1.4089302345122157,
+     "min": 1.0353224228430986,
+     "max": 1.89214328137525
+    },
+    "S3": {
+     "median": 1.7065986913541815,
+     "min": 1.5098404722932948,
+     "max": 1.9378720293592326
+    }
+   },
+   "co2_kg_per_h": {
+    "S0": {
+     "median": 0.30257555927536806,
+     "min": 0.22836119960347256,
+     "max": 0.39900130630963493
+    },
+    "S1": {
+     "median": 0.30257555927536806,
+     "min": 0.22836119960347256,
+     "max": 0.39900130630963493
+    },
+    "S2": {
+     "median": 0.30257555927536806,
+     "min": 0.22836119960347256,
+     "max": 0.39900130630963493
+    },
+    "S3": {
+     "median": 0.3625230430190387,
+     "min": 0.3241706719549639,
+     "max": 0.4080694839825094
+    }
+   },
+   "V_J_co2": {
+    "median": 0.0,
+    "min": 0.0,
+    "max": 0.0
+   },
+   "sequential_recovery_value": {
+    "median": 0.0,
+    "min": 0.0,
+    "max": 0.0
+   },
+   "robust_point_price": {
+    "median": 0.21007231672518878,
+    "min": 0.006045922423739598,
+    "max": 0.5300926433300723
+   },
+   "per_strategy": {
+    "S0": {
+     "recovered_kw": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "recovery_used_states": 0,
+     "exhaust_before_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "exhaust_after_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "condensation_states": 0,
+     "medium_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "bypass_states": 50,
+     "medium_hot_max_celsius": null,
+     "inlet_temperature_celsius": {
+      "median": 89.08304600495772,
+      "min": 67.49609839249602,
+      "max": 111.98967645693614
+     },
+     "air_kg_per_h": {
+      "median": 54.93111281675276,
+      "min": 51.878706218474704,
+      "max": 57.57824022240851
+     },
+     "active": {
+      "dew_point_margin": 50,
+      "fluidisation": 50
+     },
+     "infeasible_states": 0
+    },
+    "S1": {
+     "recovered_kw": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "recovery_used_states": 0,
+     "exhaust_before_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "exhaust_after_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "condensation_states": 0,
+     "medium_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "bypass_states": 50,
+     "medium_hot_max_celsius": null,
+     "inlet_temperature_celsius": {
+      "median": 89.08304600495772,
+      "min": 67.49609839249602,
+      "max": 111.98967645693614
+     },
+     "air_kg_per_h": {
+      "median": 54.93111281675276,
+      "min": 51.878706218474704,
+      "max": 57.57824022240851
+     },
+     "active": {
+      "dew_point_margin": 50,
+      "fluidisation": 50
+     },
+     "infeasible_states": 0
+    },
+    "S2": {
+     "recovered_kw": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "recovery_used_states": 0,
+     "exhaust_before_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "exhaust_after_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "condensation_states": 0,
+     "medium_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "bypass_states": 50,
+     "medium_hot_max_celsius": null,
+     "inlet_temperature_celsius": {
+      "median": 89.08304600495772,
+      "min": 67.49609839249602,
+      "max": 111.98967645693614
+     },
+     "air_kg_per_h": {
+      "median": 54.93111281675276,
+      "min": 51.878706218474704,
+      "max": 57.57824022240851
+     },
+     "active": {
+      "dew_point_margin": 50,
+      "fluidisation": 50
+     },
+     "infeasible_states": 0
+    },
+    "S3": {
+     "recovered_kw": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.30879413316853227
+     },
+     "recovery_used_states": 19,
+     "exhaust_before_celsius": {
+      "median": 56.826625975647175,
+      "min": 41.784612852861414,
+      "max": 68.7200613458791
+     },
+     "exhaust_after_celsius": {
+      "median": 53.06794660064996,
+      "min": 41.784612852861414,
+      "max": 67.31567225021652
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "condensation_states": 0,
+     "medium_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 13.49182193495803
+     },
+     "bypass_states": 31,
+     "medium_hot_max_celsius": 48.7200613458788,
+     "inlet_temperature_celsius": {
+      "median": 109.18271127005477,
+      "min": 109.18271127005477,
+      "max": 109.18271127005477
+     },
+     "air_kg_per_h": {
+      "median": 54.620231172238576,
+      "min": 54.620231172238576,
+      "max": 54.620231172238576
+     },
+     "active": {
+      "dew_point_margin": 1,
+      "fluidisation": 1
+     },
+     "infeasible_states": 0
+    }
+   },
+   "checks_failed": {},
+   "check_max_relative_excess": {
+    "S2_over_S1": 0.0,
+    "S1_over_S0": 0.0,
+    "S2_over_S3": -0.006009588915358773
+   },
+   "G2_passed": true,
+   "G3_infeasible": {
+    "S0": 0,
+    "S1": 0,
+    "S2": 0,
+    "S3": 0
+   },
+   "geometric_bound_k": {
+    "median": 10.20476957122701,
+    "min": 4.271559693913879,
+    "max": 15.774777161510272
+   },
+   "recovery_unused_all_states_S2": true,
+   "optimality_rtol": 1e-06
+  },
+  "20K/pressurised": {
+   "dt_min_k": 20.0,
+   "medium": "pressurised",
+   "u0": [
+    109.18271127033826,
+    54.62023117235985,
+    10.000000000000233
+   ],
+   "V_J": {
+    "median": 0.0,
+    "min": 0.0,
+    "max": 0.0
+   },
+   "reading": "J0",
+   "V_J_classes": {
+    "J0": 50
+   },
+   "energy_kw": {
+    "S0": {
+     "median": 1.4089302345122157,
+     "min": 1.0353224228430986,
+     "max": 1.89214328137525
+    },
+    "S1": {
+     "median": 1.4089302345122157,
+     "min": 1.0353224228430986,
+     "max": 1.89214328137525
+    },
+    "S2": {
+     "median": 1.4089302345122157,
+     "min": 1.0353224228430986,
+     "max": 1.89214328137525
+    },
+    "S3": {
+     "median": 1.7065986913631443,
+     "min": 1.5098404723019394,
+     "max": 1.9378720293655631
+    }
+   },
+   "co2_kg_per_h": {
+    "S0": {
+     "median": 0.30257555927536806,
+     "min": 0.22836119960347256,
+     "max": 0.39900130630963493
+    },
+    "S1": {
+     "median": 0.30257555927536806,
+     "min": 0.22836119960347256,
+     "max": 0.39900130630963493
+    },
+    "S2": {
+     "median": 0.30257555927536806,
+     "min": 0.22836119960347256,
+     "max": 0.39900130630963493
+    },
+    "S3": {
+     "median": 0.3625230430202804,
+     "min": 0.3241706719567497,
+     "max": 0.40806948398437654
+    }
+   },
+   "V_J_co2": {
+    "median": 0.0,
+    "min": 0.0,
+    "max": 0.0
+   },
+   "sequential_recovery_value": {
+    "median": 0.0,
+    "min": 0.0,
+    "max": 0.0
+   },
+   "robust_point_price": {
+    "median": 0.21007231672620758,
+    "min": 0.0060459224291790755,
+    "max": 0.5300926433384089
+   },
+   "per_strategy": {
+    "S0": {
+     "recovered_kw": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "recovery_used_states": 0,
+     "exhaust_before_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "exhaust_after_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "condensation_states": 0,
+     "medium_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "bypass_states": 50,
+     "medium_hot_max_celsius": null,
+     "inlet_temperature_celsius": {
+      "median": 89.08304600495772,
+      "min": 67.49609839249602,
+      "max": 111.98967645693614
+     },
+     "air_kg_per_h": {
+      "median": 54.93111281675276,
+      "min": 51.878706218474704,
+      "max": 57.57824022240851
+     },
+     "active": {
+      "dew_point_margin": 50,
+      "fluidisation": 50
+     },
+     "infeasible_states": 0
+    },
+    "S1": {
+     "recovered_kw": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "recovery_used_states": 0,
+     "exhaust_before_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "exhaust_after_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "condensation_states": 0,
+     "medium_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "bypass_states": 50,
+     "medium_hot_max_celsius": null,
+     "inlet_temperature_celsius": {
+      "median": 89.08304600495772,
+      "min": 67.49609839249602,
+      "max": 111.98967645693614
+     },
+     "air_kg_per_h": {
+      "median": 54.93111281675276,
+      "min": 51.878706218474704,
+      "max": 57.57824022240851
+     },
+     "active": {
+      "dew_point_margin": 50,
+      "fluidisation": 50
+     },
+     "infeasible_states": 0
+    },
+    "S2": {
+     "recovered_kw": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "recovery_used_states": 0,
+     "exhaust_before_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "exhaust_after_celsius": {
+      "median": 40.47028251700838,
+      "min": 31.564069297019127,
+      "max": 49.38860749040345
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "condensation_states": 0,
+     "medium_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "bypass_states": 50,
+     "medium_hot_max_celsius": null,
+     "inlet_temperature_celsius": {
+      "median": 89.08304600495772,
+      "min": 67.49609839249602,
+      "max": 111.98967645693614
+     },
+     "air_kg_per_h": {
+      "median": 54.93111281675276,
+      "min": 51.878706218474704,
+      "max": 57.57824022240851
+     },
+     "active": {
+      "dew_point_margin": 50,
+      "fluidisation": 50
+     },
+     "infeasible_states": 0
+    },
+    "S3": {
+     "recovered_kw": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.3087941331742092
+     },
+     "recovery_used_states": 19,
+     "exhaust_before_celsius": {
+      "median": 56.82662597598782,
+      "min": 41.78461285322678,
+      "max": 68.7200613462006
+     },
+     "exhaust_after_celsius": {
+      "median": 53.067946600659276,
+      "min": 41.78461285322678,
+      "max": 67.31567225054009
+     },
+     "condensate_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+     },
+     "condensation_states": 0,
+     "medium_kg_per_h": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 13.49182303167194
+     },
+     "bypass_states": 31,
+     "medium_hot_max_celsius": 48.720061346195706,
+     "inlet_temperature_celsius": {
+      "median": 109.18271127033826,
+      "min": 109.18271127033826,
+      "max": 109.18271127033826
+     },
+     "air_kg_per_h": {
+      "median": 54.62023117235985,
+      "min": 54.62023117235985,
+      "max": 54.62023117235985
+     },
+     "active": {
+      "dew_point_margin": 1,
+      "fluidisation": 1
+     },
+     "infeasible_states": 0
+    }
+   },
+   "checks_failed": {},
+   "check_max_relative_excess": {
+    "S2_over_S1": 0.0,
+    "S1_over_S0": 0.0,
+    "S2_over_S3": -0.006009588920733069
+   },
+   "G2_passed": true,
+   "G3_infeasible": {
+    "S0": 0,
+    "S1": 0,
+    "S2": 0,
+    "S3": 0
+   },
+   "geometric_bound_k": {
+    "median": 10.20476957122701,
+    "min": 4.271559693913879,
+    "max": 15.774777161510272
+   },
+   "recovery_unused_all_states_S2": true,
+   "optimality_rtol": 1e-06
+  }
+ }
+}
