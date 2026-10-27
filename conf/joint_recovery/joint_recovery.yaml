@@ -1,0 +1,28 @@
+# Operating point and heat recovery: jointly or one after the other? (docs/NN_joint_recovery.md)
+#
+# STATUS: study settings. The model, its operating ranges, constraints, parameters, optimiser
+# settings of the true optimum and the 50 test states are READ from base_config (P1 of
+# Befund 107), not copied; every placeholder there stays a placeholder here.
+#
+# Reading (pre-registered): docstring of scripts/analyze_joint_recovery.py.
+
+version: 1
+base_config: conf/surrogate_opt/surrogate_rto.yaml   # block p1, test_states, optimizer.truth/truth_check
+
+factors:
+  dt_min_k: [5.0, 10.0, 20.0]       # minimum approach per exchanger; 20 K = truth of Befund 107
+  media:                             # medium of the recovery circuit
+    unpressurised: {pressurised: false}   # <= medium_max_celsius of base_config (95 degC)
+    pressurised: {pressurised: true}      # no upper limit; saturation pressure reported
+
+# One-dimensional search over the medium flow (S1, S3): candidates of minimize_box plus an
+# independent check run; the better of the two and the bypass (medium flow 0) is taken.
+medium_optimizer:
+  main: {candidates: 256, polish: 4, seed: 0}
+  check: {candidates: 512, polish: 4, seed: 7}
+
+thresholds:
+  recovery_used_kw: 1.0e-3          # recovered heat above 1 W counts as "recovery used"
+  condensate_kg_per_h: 1.0e-6       # condensate above 1 mg/h counts as "condensation"
+  active_normalised: 1.0e-3         # g / scale >= -1e-3: active (= surrogate_opt ACTIVE_TOLERANCE)
+  optimality_rtol: 1.0e-6           # S2 <= S1 (1 + rtol) etc. counts as passed
