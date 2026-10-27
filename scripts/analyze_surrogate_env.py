@@ -396,7 +396,7 @@ def main() -> int:
 
     reproduction = reproduction_u0_sac(plan["rl_seeds"])
     payload = {
-        "provenance": prov,
+        "_provenance": prov,
         "plan": plan,
         "test_set": "25 Befund-52 grid points; truth = grey-box steady state against the limit 0.15",
         "placeholders": "quality limit 0.15 kg/kg; gas velocity lower bound 0.80 m/s; margin m; "
