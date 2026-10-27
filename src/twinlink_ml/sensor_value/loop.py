@@ -29,6 +29,12 @@ Per pair
   Exogenous block means for the soft sensor: realised commands (rate limited exactly as in the
   truth plant, checked at every interval end), the realised inlet temperature including the
   scenario's offset, spray rate and nozzle pressure as applied, ambient air and solid fraction.
+* **Feedback interface** (follow-up study, docs/29): each feedback object updates its own bias
+  estimator (:meth:`~.feedback.Feedback.bias_filter`) through :meth:`~.feedback.Feedback.feed`;
+  for F0-F3 that is the update of the original study, arithmetic unchanged (digest test). F5 also
+  receives the true process responses at the block ends (bed temperature, exhaust temperature =
+  bed temperature minus the duct loss of the truth config, exhaust humidity of the truth model),
+  which it measures itself with the sensor model.
 
 A failed steady optimisation holds the previous command and is counted (as Befund 105).
 """
@@ -50,7 +56,7 @@ from twinlink_ml.headroom.study import Solvers, initial_conditions, warm_up
 from twinlink_ml.headroom.truth import TruthPlant
 from twinlink_ml.simulation import ProcessConfig
 
-from .feedback import BiasFilter, Feedback
+from .feedback import Feedback
 
 __all__ = [
     "BiasCorrectedController",
@@ -215,7 +221,8 @@ def run_pairs(
     controllers = [
         BiasCorrectedController(s, float(m)) for s, m in zip(pair_solvers, margins, strict=True)
     ]
-    filters = [BiasFilter(bias_time_constant_s, measurement_interval_s) for _ in range(n)]
+    filters = [f.bias_filter(bias_time_constant_s, measurement_interval_s) for f in feedbacks]
+    duct_loss = truth_config.exhaust.outlet_duct_heat_loss_k
     actions = truth_config.actions
     rates = np.array(
         [
@@ -282,11 +289,14 @@ def run_pairs(
                     continue
                 x_true = true_moisture[i, ends]
                 x_model = model_moisture[i, ends]
-                y = feedback.values(x_true, block_exo[i])
-                for value, x_hat in zip(y, x_model, strict=True):
-                    filters[i].update(value - x_hat)
+                responses = None
+                if feedback.needs_responses:
+                    bed = plant.bed_temperature_so_far[i, start : start + spi][ends]
+                    outlet = plant.outlet_humidity_so_far[i, start : start + spi][ends]
+                    responses = np.stack([bed, bed - duct_loss, outlet], axis=-1)
+                errors = feedback.feed(filters[i], x_true, x_model, block_exo[i], responses)
                 if k >= k_pre:
-                    errors_fb[i].extend((y - x_true).tolist())
+                    errors_fb[i].extend(errors.tolist())
                     model_err[i].extend((x_model - x_true).tolist())
         last = new
     result = plant.result()
@@ -335,6 +345,10 @@ def run_pairs(
         outliers = getattr(feedbacks[i], "outliers_drawn", None)
         if outliers is not None:
             record.extra["outlier_share"] = outliers / max(feedbacks[i].samples, 1)  # type: ignore[attr-defined]
+        for counter in ("samples_taken", "results_arrived"):  # F4
+            value = getattr(feedbacks[i], counter, None)
+            if value is not None:
+                record.extra[counter] = int(value)
         if keep_arrays:
             record.extra["energy_kwh_per_interval"] = energy[i].tolist()
             record.extra["moisture_max_per_interval"] = (

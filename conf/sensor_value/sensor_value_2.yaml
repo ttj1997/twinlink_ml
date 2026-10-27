@@ -1,0 +1,50 @@
+# Follow-up of the sensor-value study: periodic laboratory samples and soft sensors with measured
+# process responses (docs/29_sensor_value_2.md)
+#
+# STATUS: placeholder -- every number below is a study setting or a placeholder, none is a
+# measured plant value. Fixed before the first run (task of 2026-10-26, unattended run), not tuned.
+#
+# Everything shared with the predecessor (Befund 111, docs/28) is READ from its config
+# (base_config): the 20 parameter draws of the truth, the 20 scenarios, the controller (R1 with
+# the zeroth-order bias correction), warm-up and pre-roll of 6 h, the feedback grid of 25 s, the
+# bias filter of F1-F3/F5 (tau 30 min), the margin bisection and criteria (i) and (ii), the noise
+# seed. The reference variants F0, F1 and F2 are taken over from the predecessor's artifact.
+
+version: 1
+base_config: conf/sensor_value/sensor_value.yaml
+
+predecessor:
+  run: sensor_value_v1                     # artifacts/runs/<run>.json.gz: F0, F1, F2 taken over
+  control_pairs: 10                        # recomputed for F0, F1, F2 at the predecessor's (ii)
+                                           # margins; pairs round(linspace(0, 399, 10)) of the
+                                           # draw-major pair order
+
+F4:                                        # periodic laboratory sample
+  sampling_intervals_h: [1, 4, 8]
+  delay_s: 1800.0                          # analysis delay 30 min
+  error_std_kg_per_kg: 0.003               # PLACEHOLDER: Gaussian error of the lab analysis
+  gain: 0.5                                # b <- b + gain (y_sample - corrected model prediction)
+
+F5:                                        # GRU soft sensor with measured process responses
+  training_seeds: [1, 2, 3]                # master seeds of the Befund 94 pools (arm N, preset 2)
+  n_train: 64
+  architecture: gru
+  max_epochs: 200
+  variants:
+    nom:                                   # training data of the nominal model only
+      data: nominal
+      inputs: [bed_temperature_celsius, exhaust_temperature_celsius, exhaust_absolute_humidity_kg_per_kg]
+    DR:                                    # domain randomisation (one parameter draw per run)
+      data: randomised
+      inputs: [bed_temperature_celsius, exhaust_temperature_celsius, exhaust_absolute_humidity_kg_per_kg]
+    DRoY:                                  # as DR, without the exhaust humidity
+      data: randomised
+      inputs: [bed_temperature_celsius, exhaust_temperature_celsius]
+  randomisation:
+    seed: 20261026                         # scrambled Sobol' over the same seven parameters and
+                                           # bands as the test draws (seed 20261024), other seed
+    sequence_length: 256                   # 2**8 points; the first pool_size (128) VALID ones in
+                                           # order, one per run of the pool
+
+budget:
+  limit_h: 30.0                            # over this: first drop F4 1 h, then F5 seeds to 2

@@ -1,0 +1,81 @@
+{
+ "provenance": {
+  "git/commit": "091fcd4245fb6c399e007c9257fde791408cf60a",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used"
+ },
+ "study": "step 0 of docs/29: retraining of the F3 soft sensors of Befund 111",
+ "original": "sensor_value_soft_sensor_v1",
+ "retrained": "sensor_value_soft_sensor_v1_retrain",
+ "commits": {
+  "original": "e2f8ab1d51f706339eed00148455582e81a06bc5",
+  "retrained": "8f5db3e25d0cd04a9260c01250da446cfd5761ad"
+ },
+ "training_code_diff_between_commits": "none",
+ "excluded_by_construction": [
+  "checkpoint",
+  "checkpoint_sha256",
+  "fit_s",
+  "total_s"
+ ],
+ "top_level_differences": [],
+ "seeds": [
+  {
+   "seed": 1,
+   "compared_fields": 184,
+   "differing_fields": 0,
+   "identical": true,
+   "max_abs_difference": 0.0,
+   "differing": [],
+   "checkpoint_sha256": {
+    "original": "6c915772763e1647a7eca44bdbf4b0e29cba8b256a3a993ced9e38901535efe7",
+    "retrained": "24fac61c9a94cb32ee2df9ea543e4e43f9d21dbcdd7cddfc70810eb9c676d293"
+   },
+   "fit_s": {
+    "original": 122.36983090000285,
+    "retrained": 108.70625029999064
+   }
+  },
+  {
+   "seed": 2,
+   "compared_fields": 206,
+   "differing_fields": 0,
+   "identical": true,
+   "max_abs_difference": 0.0,
+   "differing": [],
+   "checkpoint_sha256": {
+    "original": "a4d70a79ceda62e4178966b3355947557df7c690839bc486719a9f58a6377b69",
+    "retrained": "e0668bd6457277fc026fe0c3f46604130ad9520194f0f40c9fad8daa6544243d"
+   },
+   "fit_s": {
+    "original": 140.21391869999934,
+    "retrained": 127.44742250000127
+   }
+  },
+  {
+   "seed": 3,
+   "compared_fields": 212,
+   "differing_fields": 0,
+   "identical": true,
+   "max_abs_difference": 0.0,
+   "differing": [],
+   "checkpoint_sha256": {
+    "original": "ddcf5210603cd0396a3a4157e272e9839117ae01af356f2c9a60dae696a9699b",
+    "retrained": "a8eab75301d612174c655aba3a7e6ac950e399e742b4d5111df3029cb4b1d7fb"
+   },
+   "fit_s": {
+    "original": 143.38963689999946,
+    "retrained": 131.26692700001877
+   }
+  }
+ ],
+ "all_identical": true
+}
