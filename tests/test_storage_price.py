@@ -264,6 +264,15 @@ def test_env_episodes_stay_in_training_months(case) -> None:  # type: ignore[no-
         assert int(start) not in test
         assert int(start) + 167 not in test
         assert prices.clock.month[start] == prices.clock.month[start + 167]
+        # the observation after the last step (bootstrap target) stays in the same training month
+        assert int(start) + 168 not in test
+        assert prices.clock.month[start] == prices.clock.month[start + 168]
+    # the last start of the year (December) runs to its end without leaving the year
+    env.reset(seed=0)
+    env.t, env.k = int(env.starts.max()), 0
+    for _ in range(168):
+        _, _, _, truncated, _ = env.step(np.zeros(2, dtype=np.float32))
+    assert truncated and env.t == len(prices.clock.month) - 1
 
 
 def test_variants_override_the_main_case() -> None:

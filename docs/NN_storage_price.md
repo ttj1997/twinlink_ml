@@ -136,3 +136,14 @@ minimum and maximum, and per test month.
     reading in `scripts/analyze_storage_price.py` was written before the smoke test; its thresholds
     are those of the task; neither the config nor the reading was changed after these numbers were
     seen. The artifacts of section 7 are new runs of the committed scripts.
+17. **Aborted first run `storage_price_v1` (commit 3931f9c, not an artifact).** It stopped after
+    about 1.5 h with an IndexError in the training environment: the last episode start of December
+    ended at the last hour of the year, and the observation after the last step (the bootstrap
+    target) was read one hour beyond it. The same off-by-one meant that for episodes ending at the
+    end of January, April, July or October the bootstrap target was the first hour of the following
+    test month, i.e. it carried that day's true day-ahead prices -- information from the test
+    period. Fix (commit after 3931f9c, test `test_env_episodes_stay_in_training_months` extended):
+    the last start of a month is `episode_h` hours before its last hour, and the environment refuses
+    a step whose next observation leaves the training months. Every job was re-run under the new
+    name `storage_price_v2` from scratch (rules included); the v1 checkpoints and log are kept outside
+    the repository (`C:/twinlink_runs/storage-price/storage_price_v1_aborted/`) and are not used.

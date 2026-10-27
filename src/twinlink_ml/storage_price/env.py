@@ -20,7 +20,10 @@ discharges ``|a_1| P_d``; the power limits therefore hold by construction, the c
 enforced by the projection of :func:`~twinlink_ml.storage_price.evaluate.project` (counted there).
 Reward ``-dt (c_U U + c_el Q / COP) / reward_scale``. An episode covers ``episode_h`` consecutive
 hours inside ONE training month from a content drawn uniformly in ``[0, C]`` and ends truncated
-(time limit, so the agents bootstrap; nothing terminates).
+(time limit, so the agents bootstrap; nothing terminates). The observation returned with the last
+step (the bootstrap target) is that of hour ``start + episode_h``, so this hour must lie inside the
+same month too: the last start of a month is ``episode_h`` hours before its last hour (otherwise the
+target of a January episode would carry the day-ahead prices of 1 February, a test month).
 """
 
 from __future__ import annotations
@@ -101,7 +104,7 @@ class StoragePriceEnv(gym.Env[NDArray[np.float32], NDArray[np.float32]]):
         starts: list[int] = []
         for m in months:
             h = month_hours(clock, m)
-            starts.extend(int(x) for x in h[: len(h) - episode_h + 1])
+            starts.extend(int(x) for x in h[: len(h) - episode_h])
         if not starts:
             raise ValueError("no episode fits into the training months")
         self.starts = np.asarray(starts, dtype=np.int64)
@@ -150,6 +153,8 @@ class StoragePriceEnv(gym.Env[NDArray[np.float32], NDArray[np.float32]]):
         self.t += 1
         self.k += 1
         truncated = self.k >= self.episode_h
+        if self.t not in self.allowed:
+            raise RuntimeError("the observation after the step lies outside the training months")
         return self._obs(), -cost / self.reward_scale, False, truncated, {"cost_eur": cost}
 
 
