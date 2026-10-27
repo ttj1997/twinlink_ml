@@ -1,0 +1,217 @@
+{
+ "provenance": {
+  "git/commit": "73f158605a46691ca90343208ff0880aaf796d5e",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used",
+  "git/dirty_ignored_paths": [
+   "C:\\twinlink_work\\sprice\\artifacts\\runs\\storage_price_v2_timing.json"
+  ]
+ },
+ "artifact": "storage_price_v2",
+ "note": "single process, one thread (BLAS, torch), controllers one after the other; machine CPU load sampled before and after every controller (other studies may run)",
+ "controllers": {
+  "N0": {
+   "decide_ms_median": 0.000300002284348011,
+   "decide_ms_mean": 0.00031508941494030787,
+   "decide_ms_p95_max_month": 0.0005999972927384079,
+   "decide_ms_max": 0.006599999323952943,
+   "decisions": 2904,
+   "wall_s": 0.015722399999503978,
+   "machine_cpu_percent_before_after": [
+    0.0,
+    18.0
+   ],
+   "largest_relative_cost_difference_to_run": 0.0
+  },
+  "P0": {
+   "decide_ms_median": 0.0884000000951346,
+   "decide_ms_mean": 0.09229277136997582,
+   "decide_ms_p95_max_month": 0.14509999891743064,
+   "decide_ms_max": 3.086199998506345,
+   "decisions": 2904,
+   "wall_s": 0.3236133999962476,
+   "machine_cpu_percent_before_after": [
+    27.0,
+    5.0
+   ],
+   "largest_relative_cost_difference_to_run": 0.0
+  },
+  "R0": {
+   "decide_ms_median": 0.0885500012373086,
+   "decide_ms_mean": 0.0899863449154785,
+   "decide_ms_p95_max_month": 0.09229999704984948,
+   "decide_ms_max": 0.23430000146618113,
+   "decisions": 2904,
+   "wall_s": 0.3141477999961353,
+   "machine_cpu_percent_before_after": [
+    1.0,
+    0.0
+   ],
+   "largest_relative_cost_difference_to_run": 0.0
+  },
+  "R1": {
+   "decide_ms_median": 0.0882500025909394,
+   "decide_ms_mean": 0.09299322676906831,
+   "decide_ms_p95_max_month": 0.1537749994895421,
+   "decide_ms_max": 0.22280000121099874,
+   "decisions": 2904,
+   "wall_s": 0.32516909999685595,
+   "machine_cpu_percent_before_after": [
+    3.0,
+    2.0
+   ],
+   "largest_relative_cost_difference_to_run": 0.0
+  },
+  "M1_36h": {
+   "decide_ms_median": 1.6417500009993091,
+   "decide_ms_mean": 1.728991018039744,
+   "decide_ms_p95_max_month": 2.026730000216048,
+   "decide_ms_max": 187.18030000309227,
+   "decisions": 2904,
+   "wall_s": 5.048966800000926,
+   "machine_cpu_percent_before_after": [
+    0.0,
+    27.0
+   ],
+   "largest_relative_cost_difference_to_run": 0.0
+  },
+  "M2_36h": {
+   "decide_ms_median": 1.6591999992670026,
+   "decide_ms_mean": 1.669641428238406,
+   "decide_ms_p95_max_month": 1.8850250053219497,
+   "decide_ms_max": 2.536200001486577,
+   "decisions": 2904,
+   "wall_s": 4.884326700004749,
+   "machine_cpu_percent_before_after": [
+    29.0,
+    7.0
+   ],
+   "largest_relative_cost_difference_to_run": 0.0
+  },
+  "M1_24h": {
+   "decide_ms_median": 1.4345749987114687,
+   "decide_ms_mean": 1.4634033235598916,
+   "decide_ms_p95_max_month": 2.0479000013438053,
+   "decide_ms_max": 2.457099995808676,
+   "decisions": 2904,
+   "wall_s": 4.284400899996399,
+   "machine_cpu_percent_before_after": [
+    11.0,
+    21.0
+   ],
+   "largest_relative_cost_difference_to_run": 0.0
+  },
+  "M2_24h": {
+   "decide_ms_median": 1.4281500025390415,
+   "decide_ms_mean": 1.4770938824799524,
+   "decide_ms_p95_max_month": 2.0410899953276385,
+   "decide_ms_max": 2.326999994693324,
+   "decisions": 2904,
+   "wall_s": 4.32758830000239,
+   "machine_cpu_percent_before_after": [
+    8.0,
+    10.0
+   ],
+   "largest_relative_cost_difference_to_run": 0.0
+  },
+  "P*": {
+   "decide_ms_median": 0.000400003045797348,
+   "decide_ms_mean": 0.0004449402161964196,
+   "decide_ms_p95_max_month": 0.000500003807246685,
+   "decide_ms_max": 0.004399997123982757,
+   "decisions": 2904,
+   "wall_s": 0.08287839999684365,
+   "machine_cpu_percent_before_after": [
+    0.0,
+    8.0
+   ],
+   "largest_relative_cost_difference_to_run": 0.0
+  },
+  "SAC_s0": {
+   "decide_ms_median": 0.10804999692481942,
+   "decide_ms_mean": 0.24670100521448665,
+   "decide_ms_p95_max_month": 0.12777500160154887,
+   "decide_ms_max": 373.74800000543473,
+   "decisions": 2904,
+   "wall_s": 0.7209727999943425,
+   "machine_cpu_percent_before_after": [
+    9.0,
+    2.0
+   ],
+   "largest_relative_cost_difference_to_run": 0.0
+  },
+  "SAC_s1": {
+   "decide_ms_median": 0.10785000449686777,
+   "decide_ms_mean": 0.11173038129145955,
+   "decide_ms_p95_max_month": 0.14698499981022906,
+   "decide_ms_max": 0.4867000025114976,
+   "decisions": 2904,
+   "wall_s": 0.34514100000524195,
+   "machine_cpu_percent_before_after": [
+    5.0,
+    3.0
+   ],
+   "largest_relative_cost_difference_to_run": 0.0
+  },
+  "SAC_s2": {
+   "decide_ms_median": 0.10889999975915998,
+   "decide_ms_mean": 0.11708686895315758,
+   "decide_ms_p95_max_month": 0.20170000061625615,
+   "decide_ms_max": 0.5457000006572343,
+   "decisions": 2904,
+   "wall_s": 0.36144749999948544,
+   "machine_cpu_percent_before_after": [
+    18.0,
+    14.0
+   ],
+   "largest_relative_cost_difference_to_run": 0.0
+  },
+  "TD3_s0": {
+   "decide_ms_median": 0.07904999802121893,
+   "decide_ms_mean": 0.08202662143857714,
+   "decide_ms_p95_max_month": 0.11764999908336904,
+   "decide_ms_max": 0.3922000032616779,
+   "decisions": 2904,
+   "wall_s": 0.25701459999982035,
+   "machine_cpu_percent_before_after": [
+    3.0,
+    4.0
+   ],
+   "largest_relative_cost_difference_to_run": 0.0
+  },
+  "TD3_s1": {
+   "decide_ms_median": 0.07809999806340784,
+   "decide_ms_mean": 0.08274194705716464,
+   "decide_ms_p95_max_month": 0.11960000119870529,
+   "decide_ms_max": 0.36869999894406646,
+   "decisions": 2904,
+   "wall_s": 0.25923450000118464,
+   "machine_cpu_percent_before_after": [
+    4.0,
+    3.0
+   ],
+   "largest_relative_cost_difference_to_run": 0.0
+  },
+  "TD3_s2": {
+   "decide_ms_median": 0.079024999649846,
+   "decide_ms_mean": 0.09423871144856677,
+   "decide_ms_p95_max_month": 0.1666999960434623,
+   "decide_ms_max": 0.41200000123353675,
+   "decisions": 2904,
+   "wall_s": 0.2953674000018509,
+   "machine_cpu_percent_before_after": [
+    5.0,
+    25.0
+   ],
+   "largest_relative_cost_difference_to_run": 0.0
+  }
+ }
+}
