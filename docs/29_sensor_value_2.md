@@ -3,7 +3,7 @@
 Status: design fixed and committed before the runs (sections 1-6); runs and results in sections
 7-9, added after the runs (numbers only from the artifacts named there). Follow-up of Befund 111
 (`docs/28_sensor_value.md`). Branch `sensor-value-2` (from `origin/master` 8f5db3e); the finding
-number is assigned by the managing session (lab book entry "Befund NN").
+number is 112 (lab book).
 
 ## 1. Question
 
