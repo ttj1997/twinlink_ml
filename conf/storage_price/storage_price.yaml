@@ -1,0 +1,139 @@
+# Heat pump and storage under an hourly electricity price: rule, MPC or RL? (docs/NN_storage_price.md)
+#
+# STATUS: placeholder -- every number below is a study setting or a PLACEHOLDER with a reason, none
+# is a measured plant value. Structure as plant A of Befund 99 (waste-heat source -> storage ->
+# preheater; residual demand by gas), with the heat-pump model of Befund 101 (COP = min(quality x
+# Carnot, cop_max), isothermal exchangers in the problem table) and the storage model of Befund 99
+# (s+ = (1 - lambda dt) s + (q_c - q_d) dt), both only read. New here: power limits of the storage,
+# an hourly day-ahead price over one year, rolling horizons. No plant, company or product names.
+
+version: 1
+
+prices:
+  # Hourly day-ahead prices of the bidding zone DE-LU, calendar year 2024 (8784 h; 2024 is the
+  # last complete year with a native hourly day-ahead product -- from 2025-10-01 the coupled
+  # day-ahead market trades 15-minute products, which would need an averaging rule).
+  # Source: Energy-Charts API (Fraunhofer ISE), data "Bundesnetzagentur | SMARD.de", licence
+  # CC BY 4.0, retrieved 2026-10-27. The raw file stays in local/ (gitignored); the run checks its
+  # SHA-256 and records it.
+  source: "Energy-Charts API (api.energy-charts.info), Bundesnetzagentur | SMARD.de, CC BY 4.0"
+  url: "https://api.energy-charts.info/price?bzn=DE-LU&start=2024-01-01T00:00%2B01:00&end=2024-12-31T23:59%2B01:00"
+  retrieved: "2026-10-27"
+  raw_file: local/prices/energy_charts_price_DE-LU_2024.json
+  sha256: 50e26375364124d9e863beea8f459966806d7a5ac33e5282680c02cf7f92e863
+  year: 2024
+  # One fixed clock UTC+1 (CET) all year: every day has 24 h, "midnight" is 00:00 CET (01:00 CEST
+  # in summer). Daylight saving is ignored (caveat in docs).
+  clock_utc_offset_h: 1
+  # Electricity price of the plant = day-ahead price + constant adder (grid fees, levies,
+  # electricity tax after the reliefs of an industrial consumer). PLACEHOLDER 0.08 EUR/kWh, band
+  # 0.05-0.12: order of magnitude of the non-energy share of German industrial tariffs; with the
+  # 2024 mean day-ahead price (0.079 EUR/kWh) the mean is 0.159 EUR/kWh, i.e. the electricity
+  # price 0.16 EUR/kWh of Befund 101 (heatpump.config.Economics).
+  adder_eur_per_kwh: 0.08
+
+split:
+  # Training / tuning on 8 months, test on 4 disjoint months, one per quarter (every season is in
+  # both sets; a contiguous test block would test one season only). Nothing of a test month is
+  # used for tuning, training or model selection.
+  test_months: [2, 5, 8, 11]
+
+plant:
+  # Problem table convention of Befund 99/101: shifted temperatures, dT_min/2 per stream.
+  minimum_pinch_k: 20.0                # repository default of the heat-network module (band 10-30)
+  # Preheater (cold stream): process air from the intake (ambient) to the preheater outlet. Only
+  # the preheater is inside the system boundary; the main heater above it does not depend on the
+  # dispatch and is left out (so a relative cost is a cost of the controllable part).
+  air_cp_kw_per_k: 10.0                # PLACEHOLDER: about 30 000 Nm3/h of air (1.29 kg/Nm3,
+                                       # cp 1.0 kJ/kgK); order of a plant line (the line-C
+                                       # placeholder of Befund 99 is 20 000 Nm3/h), band 5-20
+  preheater_outlet_celsius: 80.0       # PLACEHOLDER: highest air temperature the condenser at
+                                       # 90 degC reaches with dT_min = 20 K (90 - 10); band 60-80
+  # Waste-heat source (hot stream): low-temperature waste heat below the preheater target
+  # (cooling-water return / exhaust heat-recovery loop) -- the case where the pump pays across the
+  # pinch (Befund 101).
+  waste_heat_kw: 1000.0                # PLACEHOLDER at nominal production; compressor-heat band
+                                       # of Befund 99 is 400-1200 kW; sized so that the evaporator
+                                       # at full pump load plus the direct preheating below 30 degC
+                                       # are covered on weekdays (about 850 kW in January)
+  waste_heat_in_celsius: 50.0          # PLACEHOLDER (band 40-60)
+  waste_heat_out_celsius: 35.0         # PLACEHOLDER (band 25-40)
+  # Production plan (known to every controller): weekdays nominal, Saturday and Sunday at a
+  # reduced rate; air flow and waste heat follow the same factor. Plant A of Befund 99 runs 24/7.
+  weekend_factor: 0.6                  # PLACEHOLDER (band 0.3-1.0)
+
+climate:
+  # Intake temperature: deterministic climate normal, no weather noise (load forecasts are not the
+  # question here). Monthly means: order of magnitude of the German area mean 1991-2020 (DWD),
+  # rounded, not checked against one table; daily cosine with the maximum at 15:00. PLACEHOLDER.
+  monthly_mean_celsius: [1.0, 1.5, 4.5, 9.0, 13.0, 16.5, 18.5, 18.0, 14.0, 9.5, 5.0, 2.0]
+  daily_amplitude_k: 4.0
+  hour_of_maximum: 15.0
+
+heat_pump:
+  # Befund 101 model (heatpump.config.HeatPumpSpec defaults: quality 0.50, lift 20-60 K, condensing
+  # <= 90 degC, cop_max 8, approach dT_min/2). Design pair 30 -> 90 degC: the evaporator takes the
+  # upper part of the waste heat (50 -> 40 degC), the condenser serves the air up to 80 degC; lift
+  # 60 K, COP = 0.5 x 363.15 / 60 = 3.03.
+  evaporating_celsius: 30.0
+  condensing_celsius: 90.0
+  size_kw: 800.0                       # PLACEHOLDER: heating capacity; above the nominal preheater
+                                       # demand above the waste-heat range (about 550 kW), so the
+                                       # pump has spare capacity to charge (Befund 101 grid 0-1500)
+
+storage:
+  # Befund 99 storage at one level, approach dT_min on both sides (specification of Befund 99):
+  # charging stream at T_S + 10 (shifted), discharging stream at T_S - 10 (serves air up to 55 degC).
+  level_celsius: 75.0                  # PLACEHOLDER: highest level the condenser at 90 degC can
+                                       # charge with this approach is 80; band 40-80 of Befund 101
+  capacity_kwh: 2000.0                 # PLACEHOLDER: about 4 h of the nominal storage-servable
+                                       # demand; a hot-water tank of about 50 m3 at 35 K swing;
+                                       # Befund 101 grid 0.5-5 MWh
+  charge_max_kw: 300.0                 # PLACEHOLDER: power limit of the charging exchanger (about
+                                       # the storage-servable demand at nominal production, 250 kW)
+  discharge_max_kw: 300.0              # PLACEHOLDER: power limit of the discharging exchanger
+  loss_per_h: 0.002                    # PLACEHOLDER: 0.2 %/h (about 4.7 %/d) of the content;
+                                       # Befund 99 band 0-1 %/h
+
+economics:
+  # heatpump.config.Economics defaults (Befund 101); gas price constant.
+  gas_eur_per_kwh: 0.040               # PLACEHOLDER, fuel without CO2 price, band 0.025-0.060
+  co2_eur_per_t: 55.0                  # CO2 price on gas (today)
+  heater_efficiency: 0.85              # PLACEHOLDER, band 0.75-0.95
+  electricity_co2_kg_per_kwh: 0.366    # repository factor (evaluation.net_energy)
+  gas_co2_kg_per_kwh: 0.201            # repository factor (evaluation.net_energy)
+
+controllers:
+  # Every controller starts each evaluated month with an empty storage; the content left at the
+  # end of a month is credited at the value of average pump heat, mean electricity price of the
+  # TRAINING months / COP (a constant; the MPC uses the same constant as terminal value).
+  stored_value_epsilon: 1.0e-6         # as heatpump.storage (_EPS_VALUE)
+  r0_kappa_grid: {start: 0.0, stop: 1.0, step: 0.02}     # R0: value of stored heat kappa * c_U
+  r1_quantile_grid: {start: 0.05, stop: 0.95, step: 0.05} # R1: q of the next 24 h
+  r1_window_h: 24
+  mpc_horizons_h: [36, 24]             # first = primary (the readings use it), second reported
+  violation_tolerance_relative: 1.0e-6 # of the respective limit
+
+rl:
+  algorithms: [SAC, TD3]
+  seeds: [0, 1, 2]
+  total_steps: 400000                  # environment steps per run (budget rule in the driver)
+  episode_h: 168                       # one week, inside one training month, then truncated
+  eval_every_steps: 20000              # learning curve: deterministic month runs, train and test
+  gamma: 0.99
+  learning_rate: 3.0e-4
+  batch_size: 256
+  buffer_size: 1000000
+  learning_starts: 5000
+  net_arch: [256, 256]
+  td3_action_noise_std: 0.1
+  reward_scale_eur: 30.0               # reward = -cost of the hour / scale (about c_U x 500 kW)
+
+variants:
+  # One-at-a-time sensitivity around the main case; rules and MPC only (no RL), secondary.
+  - {name: capacity_1000, storage: {capacity_kwh: 1000.0}}
+  - {name: capacity_4000, storage: {capacity_kwh: 4000.0}}
+  - {name: power_150, storage: {charge_max_kw: 150.0, discharge_max_kw: 150.0}}
+  - {name: pump_600, heat_pump: {size_kw: 600.0}}
+  - {name: loss_0.005, storage: {loss_per_h: 0.005}}
+  - {name: adder_0.12, prices: {adder_eur_per_kwh: 0.12}}
