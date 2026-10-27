@@ -407,6 +407,7 @@ def main() -> int:
         "learning_curves": curves,
         "reproduction_u0_sac_befund96": reproduction,
         "fixed_point_status_counts": status_counts(rto, plan),
+        "error_map_descriptive": error_map_summary(),
     }
     write_artifact(args.name, payload)
     for controller, entry in reading.items():
@@ -473,6 +474,49 @@ def status_counts(rto: dict[str, Any], plan: dict[str, Any]) -> dict[str, Any]:
             out["error_map"][f"{model['env']}/seed{model['replicate_master_seed']}"] = model[
                 "status_counts"
             ]
+    return out
+
+
+def error_map_summary() -> dict[str, Any]:
+    """Descriptive summary of ``surrogate_env_error_map_v1`` (added after the runs; not in the reading).
+
+    Per learned model, over the 7 x 7 residual box at the 25 points where the prediction is valid
+    and the truth solved: mean signed error and RMSE (predicted - true) of each head, and the share
+    of grid points the model calls feasible against ``0.15 - k m`` (k = 5, 1) while the truth
+    violates 0.15 (moisture of the constraint; bed temperature 80 degC).
+    """
+    path = RUNS / "surrogate_env_error_map_v1.json"
+    if not path.exists():
+        return {}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    truth = data["truth"]
+    solved = np.array([not t["solve_failed"] for t in truth])
+    true = {
+        k: np.array([t[k] for t in truth], dtype=float)
+        for k in ("energy_kw", "moisture_kg_per_kg", "bed_temperature_celsius")
+    }
+    limit = rr.LIMIT_KG_PER_KG
+    truly_infeasible = (true["moisture_kg_per_kg"] > limit + 1e-4) | (
+        true["bed_temperature_celsius"] > 80.0
+    )
+    out: dict[str, Any] = {"n_grid_points": len(truth), "n_truth_solved": int(solved.sum())}
+    for model in data["models"]:
+        valid = np.array(model["valid"], dtype=bool) & solved
+        entry: dict[str, Any] = {"n_used": int(valid.sum())}
+        for key in true:
+            error = np.array(model[key], dtype=float)[valid] - true[key][valid]
+            entry[f"bias/{key}"] = float(error.mean())
+            entry[f"rmse/{key}"] = float(np.sqrt(np.mean(error**2)))
+        constraint = np.array(model["moisture_for_constraint_kg_per_kg"], dtype=float)
+        bed = np.array(model["bed_temperature_celsius"], dtype=float)
+        for factor in (5, 1):
+            model_feasible = (constraint <= limit - factor * rr.MARGIN_M + 1e-4) & (bed <= 80.0)
+            hit = valid & model_feasible
+            entry[f"k{factor}/n_model_feasible"] = int(hit.sum())
+            entry[f"k{factor}/share_truly_infeasible"] = (
+                float((hit & truly_infeasible).sum() / hit.sum()) if hit.sum() else float("nan")
+            )
+        out[f"{model['env']}/seed{model['replicate_master_seed']}"] = entry
     return out
 
 
