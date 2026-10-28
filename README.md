@@ -171,6 +171,8 @@ replace a product-moisture measurement.
 
 **Learned sequence models as the environment for control (Befund 113; one-step problem of Befund 96, placeholders).** With the margin 5 m, RL (SAC, TD3) trained on the composite GRU of the architecture pipeline and the optimiser on it stay feasible on the grey-box model (reading G0), but the margin carries it: the GRU underestimate the moisture systematically (0.005-0.008 kg/kg), the optimisation seeks these errors out, and at the margin m the optimiser violates the limit in 39 of 75 cases on one of the models. An ensemble reduces this and does not replace the margin. RL does not exploit the model more than the optimiser; the learned environment costs about 4.6 % energy against the optimiser on the grey box with the margin m.
 
+**Joint optimisation of operating point and heat recovery (Befund 114; model against model, placeholders, one line).** Optimising one after the other suffices (reading J0 at minimum approaches of 5, 10 and 20 K and for both medium variants): the joint optimum stays at the operating point without recovery. The value of the recovery depends steeply on the minimum approach (13.75 % energy at 5 K, 0.48 % at 10 K, none at 20 K, medians): a design question, not a control question.
+
 **One-step bandit (Befund 93, follow-up of Befund 68).** A residual action and a separated
 moisture cost lift SAC from a negative to a clearly positive closed-regret fraction, but no cell
 meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of
