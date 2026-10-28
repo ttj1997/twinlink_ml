@@ -173,6 +173,8 @@ replace a product-moisture measurement.
 
 **Joint optimisation of operating point and heat recovery (Befund 114; model against model, placeholders, one line).** Optimising one after the other suffices (reading J0 at minimum approaches of 5, 10 and 20 K and for both medium variants): the joint optimum stays at the operating point without recovery. The value of the recovery depends steeply on the minimum approach (13.75 % energy at 5 K, 0.48 % at 10 K, none at 20 K, medians): a design question, not a control question.
 
+**Heat pump and storage under an hourly electricity price (Befund 115; plant structure on placeholders, real day-ahead prices DE-LU 2024).** A simple price rule suffices: it is 0.65 % above the MPC with perfect forecast (per test month +0.31 to +0.88 %), and the MPC is practically optimal (+0.010 % above hindsight). RL (SAC, TD3) ends behind the constant rule, untuned, but the reading does not depend on its quality: the whole headroom over the price rule is 0.65 %. One year of prices, tariff = day-ahead price + 0.08 EUR/kWh (placeholder).
+
 **One-step bandit (Befund 93, follow-up of Befund 68).** A residual action and a separated
 moisture cost lift SAC from a negative to a clearly positive closed-regret fraction, but no cell
 meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of
