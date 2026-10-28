@@ -1,0 +1,2885 @@
+{
+ "source": "C:\\twinlink_work\\obs\\artifacts\\runs\\observability_v1.json.gz",
+ "source_commit": "cc256fab3490861de8def2aa5592ae49da9072ac",
+ "source_dirty": false,
+ "smoke": false,
+ "operating_points": [
+  {
+   "rule": "inlet P5 at the velocity minimum",
+   "inlet_temperature_celsius": 81.4,
+   "gas_velocity_m_per_s": 0.8,
+   "name": "P1",
+   "source_counts": {
+    "pairs": 400,
+    "at_velocity_minimum": 316,
+    "low_inlet": 62
+   }
+  },
+  {
+   "rule": "inlet P25 at the velocity minimum",
+   "inlet_temperature_celsius": 88.0,
+   "gas_velocity_m_per_s": 0.8,
+   "name": "P2",
+   "source_counts": {
+    "pairs": 400,
+    "at_velocity_minimum": 316,
+    "low_inlet": 62
+   }
+  },
+  {
+   "rule": "inlet P50 at the velocity minimum",
+   "inlet_temperature_celsius": 91.9,
+   "gas_velocity_m_per_s": 0.8,
+   "name": "P3",
+   "source_counts": {
+    "pairs": 400,
+    "at_velocity_minimum": 316,
+    "low_inlet": 62
+   }
+  },
+  {
+   "rule": "inlet P75 at the velocity minimum",
+   "inlet_temperature_celsius": 95.9,
+   "gas_velocity_m_per_s": 0.8,
+   "name": "P4",
+   "source_counts": {
+    "pairs": 400,
+    "at_velocity_minimum": 316,
+    "low_inlet": 62
+   }
+  },
+  {
+   "rule": "inlet P95 at the velocity minimum",
+   "inlet_temperature_celsius": 102.3,
+   "gas_velocity_m_per_s": 0.8,
+   "name": "P5",
+   "source_counts": {
+    "pairs": 400,
+    "at_velocity_minimum": 316,
+    "low_inlet": 62
+   }
+  },
+  {
+   "rule": "velocity P50 at the inlet minimum",
+   "inlet_temperature_celsius": 60.0,
+   "gas_velocity_m_per_s": 1.56,
+   "name": "P6",
+   "source_counts": {
+    "pairs": 400,
+    "at_velocity_minimum": 316,
+    "low_inlet": 62
+   }
+  },
+  {
+   "rule": "velocity P95 at the inlet minimum",
+   "inlet_temperature_celsius": 60.0,
+   "gas_velocity_m_per_s": 1.69,
+   "name": "P7",
+   "source_counts": {
+    "pairs": 400,
+    "at_velocity_minimum": 316,
+    "low_inlet": 62
+   }
+  }
+ ],
+ "lab": {
+  "P1": {
+   "n_draws": 20,
+   "n_failed": 0,
+   "n_infeasible": 3,
+   "infeasibility_reasons": [
+    "Partikelfeuchte (0.20283 kg/kg) au\u00dferhalb des plausiblen Bereichs [0.03583, 0.1705111268442124]",
+    "Partikelfeuchte (0.24132 kg/kg) au\u00dferhalb des plausiblen Bereichs [0.02957, 0.1538068769965321]",
+    "Partikelfeuchte (0.28681 kg/kg) au\u00dferhalb des plausiblen Bereichs [0.03441, 0.27801570799201725]"
+   ],
+   "moisture_range_kg_per_kg": [
+    0.12736143266877878,
+    0.28680631067593854
+   ],
+   "moisture_spread_kg_per_kg": 0.15944487800715976,
+   "nominal_moisture_kg_per_kg": 0.16901774284503784,
+   "solid_to_air_ratio": 0.007858228840963823,
+   "variants": {
+    "Y_out": {
+     "fit": {
+      "slope": -0.0072095218074797515,
+      "intercept": 0.025456127382302927,
+      "r2": 0.9998425203066642,
+      "n": 20
+     },
+     "median_value": 0.024092295950813875,
+     "sigma_one_sensor": 0.00012046147975406938,
+     "redundancy": 1,
+     "signal_for_delta_x": 7.209521807479751e-05,
+     "snr": 0.5984918848912116,
+     "fit_feasible_only": {
+      "slope": -0.0072080158253430855,
+      "intercept": 0.02545619362246953,
+      "r2": 0.9997757607234578,
+      "n": 17
+     },
+     "snr_feasible_only": 0.5983668671561032
+    },
+    "Y_out_balance": {
+     "fit": {
+      "slope": -0.007105586072914136,
+      "intercept": 0.025469395096739185,
+      "r2": 0.9999942807852177,
+      "n": 20
+     },
+     "median_value": 0.02412163004801727,
+     "sigma_one_sensor": 0.00012060815024008634,
+     "redundancy": 1,
+     "signal_for_delta_x": 7.105586072914137e-05,
+     "snr": 0.5891464265698078,
+     "fit_feasible_only": {
+      "slope": -0.007094217684402274,
+      "intercept": 0.025467389726589993,
+      "r2": 0.9999976866567496,
+      "n": 17
+     },
+     "snr_feasible_only": 0.5882038378235884
+    },
+    "T_out": {
+     "fit": {
+      "slope": 14.158957481806802,
+      "intercept": 35.0427910574792,
+      "r2": 0.9999983490834885,
+      "n": 20
+     },
+     "median_value": 37.72886209226548,
+     "sigma_one_sensor": 0.2749303109324792,
+     "redundancy": 1,
+     "signal_for_delta_x": 0.14158957481806803,
+     "snr": 0.5150016902022904,
+     "fit_feasible_only": {
+      "slope": 14.146793034652372,
+      "intercept": 35.04493682957314,
+      "r2": 0.9999993301365986,
+      "n": 17
+     },
+     "snr_feasible_only": 0.514559234544594
+    },
+    "T_bed": {
+     "fit": {
+      "slope": 14.158957481806802,
+      "intercept": 35.0427910574792,
+      "r2": 0.9999983490834885,
+      "n": 20
+     },
+     "median_value": 37.72886209226548,
+     "sigma_one_sensor": 0.2749303109324792,
+     "redundancy": 1,
+     "signal_for_delta_x": 0.14158957481806803,
+     "snr": 0.5150016902022904,
+     "fit_feasible_only": {
+      "slope": 14.146793034652372,
+      "intercept": 35.04493682957314,
+      "r2": 0.9999993301365986,
+      "n": 17
+     },
+     "snr_feasible_only": 0.514559234544594
+    },
+    "T_bed_x6": {
+     "fit": {
+      "slope": 14.158957481806802,
+      "intercept": 35.0427910574792,
+      "r2": 0.9999983490834885,
+      "n": 20
+     },
+     "median_value": 37.72886209226548,
+     "sigma_one_sensor": 0.2749303109324792,
+     "redundancy": 6,
+     "signal_for_delta_x": 0.14158957481806803,
+     "snr": 1.26149135766651,
+     "fit_feasible_only": {
+      "slope": 14.146793034652372,
+      "intercept": 35.04493682957314,
+      "r2": 0.9999993301365986,
+      "n": 17
+     },
+     "snr_feasible_only": 1.2604075670713464
+    }
+   },
+   "analytic": {
+    "hypothesis_slope_Y": -0.007858228840963823,
+    "ratio_balance_to_hypothesis": 0.9042223402649885,
+    "ratio_diagnostic_to_hypothesis": 0.9174486965685633,
+    "agrees_balance": false,
+    "linearised_slope_Y": -0.007084141025288094,
+    "ratio_balance_to_linearised": 1.0030271909536372,
+    "linearised_slope_T_bed": 14.135996792785107,
+    "ratio_T_bed_to_linearised": 1.0016242709557923
+   }
+  },
+  "P2": {
+   "n_draws": 20,
+   "n_failed": 0,
+   "n_infeasible": 0,
+   "infeasibility_reasons": [],
+   "moisture_range_kg_per_kg": [
+    0.10185748579958262,
+    0.2263236535623855
+   ],
+   "moisture_spread_kg_per_kg": 0.12446616776280289,
+   "nominal_moisture_kg_per_kg": 0.13451929620931513,
+   "solid_to_air_ratio": 0.00797248983161336,
+   "variants": {
+    "Y_out": {
+     "fit": {
+      "slope": -0.0073213925539177774,
+      "intercept": 0.02574773477463412,
+      "r2": 0.9997364441210196,
+      "n": 20
+     },
+     "median_value": 0.024686295656872973,
+     "sigma_one_sensor": 0.00012343147828436488,
+     "redundancy": 1,
+     "signal_for_delta_x": 7.321392553917777e-05,
+     "snr": 0.5931544088818697
+    },
+    "Y_out_balance": {
+     "fit": {
+      "slope": -0.007199015650127018,
+      "intercept": 0.025759230766542605,
+      "r2": 0.9999965048657311,
+      "n": 20
+     },
+     "median_value": 0.02471611710743783,
+     "sigma_one_sensor": 0.00012358058553718913,
+     "redundancy": 1,
+     "signal_for_delta_x": 7.199015650127018e-05,
+     "snr": 0.5825361337166197
+    },
+    "T_out": {
+     "fit": {
+      "slope": 14.226058264945458,
+      "intercept": 40.038163886029515,
+      "r2": 0.9999990153672785,
+      "n": 20
+     },
+     "median_value": 42.09971427224741,
+     "sigma_one_sensor": 0.29036123802105857,
+     "redundancy": 1,
+     "signal_for_delta_x": 0.14226058264945457,
+     "snr": 0.489943436042028
+    },
+    "T_bed": {
+     "fit": {
+      "slope": 14.226058264945458,
+      "intercept": 40.038163886029515,
+      "r2": 0.9999990153672785,
+      "n": 20
+     },
+     "median_value": 42.09971427224741,
+     "sigma_one_sensor": 0.29036123802105857,
+     "redundancy": 1,
+     "signal_for_delta_x": 0.14226058264945457,
+     "snr": 0.489943436042028
+    },
+    "T_bed_x6": {
+     "fit": {
+      "slope": 14.226058264945458,
+      "intercept": 40.038163886029515,
+      "r2": 0.9999990153672785,
+      "n": 20
+     },
+     "median_value": 42.09971427224741,
+     "sigma_one_sensor": 0.29036123802105857,
+     "redundancy": 6,
+     "signal_for_delta_x": 0.14226058264945457,
+     "snr": 1.2001114211288935
+    }
+   },
+   "analytic": {
+    "hypothesis_slope_Y": -0.00797248983161336,
+    "ratio_balance_to_hypothesis": 0.9029821049856619,
+    "ratio_diagnostic_to_hypothesis": 0.9183320027435113,
+    "agrees_balance": false,
+    "linearised_slope_Y": -0.007182043249513659,
+    "ratio_balance_to_linearised": 1.0023631715966774,
+    "linearised_slope_T_bed": 14.208257498735701,
+    "ratio_T_bed_to_linearised": 1.0012528465373984
+   }
+  },
+  "P3": {
+   "n_draws": 20,
+   "n_failed": 0,
+   "n_infeasible": 0,
+   "infeasibility_reasons": [],
+   "moisture_range_kg_per_kg": [
+    0.08965253457489888,
+    0.19947640858867507
+   ],
+   "moisture_spread_kg_per_kg": 0.10982387401377619,
+   "nominal_moisture_kg_per_kg": 0.11788266910177564,
+   "solid_to_air_ratio": 0.008041039906092121,
+   "variants": {
+    "Y_out": {
+     "fit": {
+      "slope": -0.007402647540708338,
+      "intercept": 0.025921766328492822,
+      "r2": 0.9997179124181537,
+      "n": 20
+     },
+     "median_value": 0.024980216027756443,
+     "sigma_one_sensor": 0.0001249010801387822,
+     "redundancy": 1,
+     "signal_for_delta_x": 7.402647540708338e-05,
+     "snr": 0.5926808264974956
+    },
+    "Y_out_balance": {
+     "fit": {
+      "slope": -0.007257397278288037,
+      "intercept": 0.025930879654993907,
+      "r2": 0.9999972784068826,
+      "n": 20
+     },
+     "median_value": 0.025008744169506464,
+     "sigma_one_sensor": 0.00012504372084753233,
+     "redundancy": 1,
+     "signal_for_delta_x": 7.257397278288037e-05,
+     "snr": 0.5803887815476229
+    },
+    "T_out": {
+     "fit": {
+      "slope": 14.268178153129996,
+      "intercept": 42.97918771123155,
+      "r2": 0.9999992449030074,
+      "n": 20
+     },
+     "median_value": 44.79231199059487,
+     "sigma_one_sensor": 0.30026451727863174,
+     "redundancy": 1,
+     "signal_for_delta_x": 0.14268178153129996,
+     "snr": 0.4751869545707853
+    },
+    "T_bed": {
+     "fit": {
+      "slope": 14.268178153129996,
+      "intercept": 42.97918771123155,
+      "r2": 0.9999992449030074,
+      "n": 20
+     },
+     "median_value": 44.79231199059487,
+     "sigma_one_sensor": 0.30026451727863174,
+     "redundancy": 1,
+     "signal_for_delta_x": 0.14268178153129996,
+     "snr": 0.4751869545707853
+    },
+    "T_bed_x6": {
+     "fit": {
+      "slope": 14.268178153129996,
+      "intercept": 42.97918771123155,
+      "r2": 0.9999992449030074,
+      "n": 20
+     },
+     "median_value": 44.79231199059487,
+     "sigma_one_sensor": 0.30026451727863174,
+     "redundancy": 6,
+     "signal_for_delta_x": 0.14268178153129996,
+     "snr": 1.1639655711255144
+    }
+   },
+   "analytic": {
+    "hypothesis_slope_Y": -0.008041039906092121,
+    "ratio_balance_to_hypothesis": 0.9025446164978769,
+    "ratio_diagnostic_to_hypothesis": 0.9206082331589825,
+    "agrees_balance": false,
+    "linearised_slope_Y": -0.0072421395510013494,
+    "ratio_balance_to_linearised": 1.0021067982989333,
+    "linearised_slope_T_bed": 14.252377772698852,
+    "ratio_T_bed_to_linearised": 1.0011086136420977
+   }
+  },
+  "P4": {
+   "n_draws": 20,
+   "n_failed": 0,
+   "n_infeasible": 0,
+   "infeasibility_reasons": [],
+   "moisture_range_kg_per_kg": [
+    0.07895995336274342,
+    0.17531702344997577
+   ],
+   "moisture_spread_kg_per_kg": 0.09635707008723235,
+   "nominal_moisture_kg_per_kg": 0.1032233851405798,
+   "solid_to_air_ratio": 0.008111982844242993,
+   "variants": {
+    "Y_out": {
+     "fit": {
+      "slope": -0.007491550379208064,
+      "intercept": 0.02610023931588052,
+      "r2": 0.9996518306532752,
+      "n": 20
+     },
+     "median_value": 0.025264479415219372,
+     "sigma_one_sensor": 0.00012632239707609686,
+     "redundancy": 1,
+     "signal_for_delta_x": 7.491550379208064e-05,
+     "snr": 0.5930500491290661
+    },
+    "Y_out_balance": {
+     "fit": {
+      "slope": -0.007318838561657855,
+      "intercept": 0.026106943014325586,
+      "r2": 0.999997903919398,
+      "n": 20
+     },
+     "median_value": 0.025291149141973966,
+     "sigma_one_sensor": 0.00012645574570986984,
+     "redundancy": 1,
+     "signal_for_delta_x": 7.318838561657855e-05,
+     "snr": 0.578766786797464
+    },
+    "T_out": {
+     "fit": {
+      "slope": 14.31226621444215,
+      "intercept": 45.987695460347354,
+      "r2": 0.9999994277062321,
+      "n": 20
+     },
+     "median_value": 47.58315853118023,
+     "sigma_one_sensor": 0.31081171856139167,
+     "redundancy": 1,
+     "signal_for_delta_x": 0.14312266214442151,
+     "snr": 0.4604802637650609
+    },
+    "T_bed": {
+     "fit": {
+      "slope": 14.31226621444215,
+      "intercept": 45.987695460347354,
+      "r2": 0.9999994277062321,
+      "n": 20
+     },
+     "median_value": 47.58315853118023,
+     "sigma_one_sensor": 0.31081171856139167,
+     "redundancy": 1,
+     "signal_for_delta_x": 0.14312266214442151,
+     "snr": 0.4604802637650609
+    },
+    "T_bed_x6": {
+     "fit": {
+      "slope": 14.31226621444215,
+      "intercept": 45.987695460347354,
+      "r2": 0.9999994277062321,
+      "n": 20
+     },
+     "median_value": 47.58315853118023,
+     "sigma_one_sensor": 0.31081171856139167,
+     "redundancy": 6,
+     "signal_for_delta_x": 0.14312266214442151,
+     "snr": 1.127941682846609
+    }
+   },
+   "analytic": {
+    "hypothesis_slope_Y": -0.008111982844242993,
+    "ratio_balance_to_hypothesis": 0.9022255966495262,
+    "ratio_diagnostic_to_hypothesis": 0.9235165462072882,
+    "agrees_balance": false,
+    "linearised_slope_Y": -0.007305203282366544,
+    "ratio_balance_to_linearised": 1.0018665160659148,
+    "linearised_slope_T_bed": 14.298332986170495,
+    "ratio_T_bed_to_linearised": 1.0009744652250814
+   }
+  },
+  "P5": {
+   "n_draws": 20,
+   "n_failed": 0,
+   "n_infeasible": 0,
+   "infeasibility_reasons": [],
+   "moisture_range_kg_per_kg": [
+    0.064960844360859,
+    0.14277442632664847
+   ],
+   "moisture_spread_kg_per_kg": 0.07781358196578947,
+   "nominal_moisture_kg_per_kg": 0.08392352300953754,
+   "solid_to_air_ratio": 0.008226526772573177,
+   "variants": {
+    "Y_out": {
+     "fit": {
+      "slope": -0.007649093438473488,
+      "intercept": 0.02638616943010553,
+      "r2": 0.9994341881000824,
+      "n": 20
+     },
+     "median_value": 0.02569066810362218,
+     "sigma_one_sensor": 0.0001284533405181109,
+     "redundancy": 1,
+     "signal_for_delta_x": 7.649093438473488e-05,
+     "snr": 0.5954764124950901
+    },
+    "Y_out_balance": {
+     "fit": {
+      "slope": -0.007419867023323465,
+      "intercept": 0.02638841117466221,
+      "r2": 0.9999986300976984,
+      "n": 20
+     },
+     "median_value": 0.025713812268999034,
+     "sigma_one_sensor": 0.00012856906134499517,
+     "redundancy": 1,
+     "signal_for_delta_x": 7.419867023323464e-05,
+     "snr": 0.5771113941178586
+    },
+    "T_out": {
+     "fit": {
+      "slope": 14.383963622478852,
+      "intercept": 50.78506735701615,
+      "r2": 0.999999635730419,
+      "n": 20
+     },
+     "median_value": 52.09292614055164,
+     "sigma_one_sensor": 0.3283927889694355,
+     "redundancy": 1,
+     "signal_for_delta_x": 0.14383963622478851,
+     "snr": 0.43801094620922415
+    },
+    "T_bed": {
+     "fit": {
+      "slope": 14.383963622478852,
+      "intercept": 50.78506735701615,
+      "r2": 0.999999635730419,
+      "n": 20
+     },
+     "median_value": 52.09292614055164,
+     "sigma_one_sensor": 0.3283927889694355,
+     "redundancy": 1,
+     "signal_for_delta_x": 0.14383963622478851,
+     "snr": 0.43801094620922415
+    },
+    "T_bed_x6": {
+     "fit": {
+      "slope": 14.383963622478852,
+      "intercept": 50.78506735701615,
+      "r2": 0.999999635730419,
+      "n": 20
+     },
+     "median_value": 52.09292614055164,
+     "sigma_one_sensor": 0.3283927889694355,
+     "redundancy": 6,
+     "signal_for_delta_x": 0.14383963622478851,
+     "snr": 1.0729033199662488
+    }
+   },
+   "analytic": {
+    "hypothesis_slope_Y": -0.008226526772573177,
+    "ratio_balance_to_hypothesis": 0.9019440680678176,
+    "ratio_diagnostic_to_hypothesis": 0.929808368700042,
+    "agrees_balance": false,
+    "linearised_slope_Y": -0.007408536348527612,
+    "ratio_balance_to_linearised": 1.001529408004876,
+    "linearised_slope_T_bed": 14.372636068179002,
+    "ratio_T_bed_to_linearised": 1.000788133383891
+   }
+  },
+  "P6": {
+   "n_draws": 20,
+   "n_failed": 0,
+   "n_infeasible": 0,
+   "infeasibility_reasons": [],
+   "moisture_range_kg_per_kg": [
+    0.07954010098719638,
+    0.17831945749243763
+   ],
+   "moisture_spread_kg_per_kg": 0.09877935650524125,
+   "nominal_moisture_kg_per_kg": 0.10393181930384268,
+   "solid_to_air_ratio": 0.0040231430172441,
+   "variants": {
+    "Y_out": {
+     "fit": {
+      "slope": -0.003870455023976678,
+      "intercept": 0.016619525514513695,
+      "r2": 0.9997244275055921,
+      "n": 20
+     },
+     "median_value": 0.01618450775474484,
+     "sigma_one_sensor": 8.09225387737242e-05,
+     "redundancy": 1,
+     "signal_for_delta_x": 3.870455023976678e-05,
+     "snr": 0.4782913490639801
+    },
+    "Y_out_balance": {
+     "fit": {
+      "slope": -0.0037904633740659314,
+      "intercept": 0.016624052820294763,
+      "r2": 0.999999263538376,
+      "n": 20
+     },
+     "median_value": 0.01619829721999736,
+     "sigma_one_sensor": 8.099148609998681e-05,
+     "redundancy": 1,
+     "signal_for_delta_x": 3.790463374065932e-05,
+     "snr": 0.46800763346735885
+    },
+    "T_out": {
+     "fit": {
+      "slope": 8.196502815670462,
+      "intercept": 36.06609904869458,
+      "r2": 0.9999997293966156,
+      "n": 20
+     },
+     "median_value": 36.986795394865766,
+     "sigma_one_sensor": 0.2723978264222048,
+     "redundancy": 1,
+     "signal_for_delta_x": 0.08196502815670462,
+     "snr": 0.3009019169986415
+    },
+    "T_bed": {
+     "fit": {
+      "slope": 8.196502815670462,
+      "intercept": 36.06609904869458,
+      "r2": 0.9999997293966156,
+      "n": 20
+     },
+     "median_value": 36.986795394865766,
+     "sigma_one_sensor": 0.2723978264222048,
+     "redundancy": 1,
+     "signal_for_delta_x": 0.08196502815670462,
+     "snr": 0.3009019169986415
+    },
+    "T_bed_x6": {
+     "fit": {
+      "slope": 8.196502815670462,
+      "intercept": 36.06609904869458,
+      "r2": 0.9999997293966156,
+      "n": 20
+     },
+     "median_value": 36.986795394865766,
+     "sigma_one_sensor": 0.2723978264222048,
+     "redundancy": 6,
+     "signal_for_delta_x": 0.08196502815670462,
+     "snr": 0.7370561592719675
+    }
+   },
+   "analytic": {
+    "hypothesis_slope_Y": -0.0040231430172441,
+    "ratio_balance_to_hypothesis": 0.9421647099839973,
+    "ratio_diagnostic_to_hypothesis": 0.9620475850316613,
+    "agrees_balance": false,
+    "linearised_slope_Y": -0.003786207699056761,
+    "ratio_balance_to_linearised": 1.0011239940720185,
+    "linearised_slope_T_bed": 8.19092437956843,
+    "ratio_T_bed_to_linearised": 1.0006810508611148
+   }
+  },
+  "P7": {
+   "n_draws": 20,
+   "n_failed": 0,
+   "n_infeasible": 0,
+   "infeasibility_reasons": [],
+   "moisture_range_kg_per_kg": [
+    0.07017297049311819,
+    0.15590547778083294
+   ],
+   "moisture_spread_kg_per_kg": 0.08573250728771475,
+   "nominal_moisture_kg_per_kg": 0.09088191327264716,
+   "solid_to_air_ratio": 0.003730952626909057,
+   "variants": {
+    "Y_out": {
+     "fit": {
+      "slope": -0.0036149207963505647,
+      "intercept": 0.015944586165071512,
+      "r2": 0.9996387385127969,
+      "n": 20
+     },
+     "median_value": 0.0155888518876874,
+     "sigma_one_sensor": 7.7944259438437e-05,
+     "redundancy": 1,
+     "signal_for_delta_x": 3.6149207963505644e-05,
+     "snr": 0.4637828138204008
+    },
+    "Y_out_balance": {
+     "fit": {
+      "slope": -0.003528431186871141,
+      "intercept": 0.015948060079678576,
+      "r2": 0.9999995152389487,
+      "n": 20
+     },
+     "median_value": 0.015600870408374712,
+     "sigma_one_sensor": 7.800435204187357e-05,
+     "redundancy": 1,
+     "signal_for_delta_x": 3.528431186871141e-05,
+     "snr": 0.45233773430706037
+    },
+    "T_out": {
+     "fit": {
+      "slope": 7.665466623707768,
+      "intercept": 37.66426445705409,
+      "r2": 0.9999998194410732,
+      "n": 20
+     },
+     "median_value": 38.41855656633129,
+     "sigma_one_sensor": 0.2773078383602056,
+     "redundancy": 1,
+     "signal_for_delta_x": 0.07665466623707769,
+     "snr": 0.2764244483327877
+    },
+    "T_bed": {
+     "fit": {
+      "slope": 7.665466623707768,
+      "intercept": 37.66426445705409,
+      "r2": 0.9999998194410732,
+      "n": 20
+     },
+     "median_value": 38.41855656633129,
+     "sigma_one_sensor": 0.2773078383602056,
+     "redundancy": 1,
+     "signal_for_delta_x": 0.07665466623707769,
+     "snr": 0.2764244483327877
+    },
+    "T_bed_x6": {
+     "fit": {
+      "slope": 7.665466623707768,
+      "intercept": 37.66426445705409,
+      "r2": 0.9999998194410732,
+      "n": 20
+     },
+     "median_value": 38.41855656633129,
+     "sigma_one_sensor": 0.2773078383602056,
+     "redundancy": 6,
+     "signal_for_delta_x": 0.07665466623707769,
+     "snr": 0.6770988508456619
+    }
+   },
+   "analytic": {
+    "hypothesis_slope_Y": -0.003730952626909057,
+    "ratio_balance_to_hypothesis": 0.9457185710219813,
+    "ratio_diagnostic_to_hypothesis": 0.9689002133874265,
+    "agrees_balance": false,
+    "linearised_slope_Y": -0.0035251908782007657,
+    "ratio_balance_to_linearised": 1.000919186728416,
+    "linearised_slope_T_bed": 7.661170199503728,
+    "ratio_T_bed_to_linearised": 1.000560805215412
+   }
+  }
+ },
+ "plant_like": {
+  "label": "plant-like, placeholder",
+  "cases": {
+   "0.5t_per_h": {
+    "P1": {
+     "scaling": {
+      "target_ratio": 0.012897900221843884,
+      "achieved_ratio": 0.01289790022184348,
+      "spray_rate_kg_per_h": 1.7863155920315221,
+      "solid_fraction": 0.41219793149436335,
+      "water_feed_kg_per_h": 1.0499999999999996,
+      "dry_air_flow_kg_per_h": 57.088020481389776
+     },
+     "n_draws": 20,
+     "n_failed": 0,
+     "n_infeasible": 1,
+     "infeasibility_reasons": [
+      "Partikelfeuchte (0.15434 kg/kg) au\u00dferhalb des plausiblen Bereichs [0.02959, 0.1538068769965321]"
+     ],
+     "moisture_range_kg_per_kg": [
+      0.11973977480087677,
+      0.24489050904482845
+     ],
+     "moisture_spread_kg_per_kg": 0.12515073424395168,
+     "nominal_moisture_kg_per_kg": 0.15519488371232493,
+     "solid_to_air_ratio": 0.01289790022184348,
+     "variants": {
+      "Y_out": {
+       "fit": {
+        "slope": -0.011823914528479773,
+        "intercept": 0.0254577021319842,
+        "r2": 0.9998773386685607,
+        "n": 20
+       },
+       "median_value": 0.023494153370119817,
+       "sigma_one_sensor": 0.00011747076685059909,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00011823914528479773,
+       "snr": 1.0065410182873487,
+       "fit_feasible_only": {
+        "slope": -0.011834147143116123,
+        "intercept": 0.02546002003248822,
+        "r2": 0.9999258496329129,
+        "n": 19
+       },
+       "snr_feasible_only": 1.0074120958252493
+      },
+      "Y_out_balance": {
+       "fit": {
+        "slope": -0.011734615717768572,
+        "intercept": 0.02547265438319213,
+        "r2": 0.9999908533431626,
+        "n": 20
+       },
+       "median_value": 0.02352436322102403,
+       "sigma_one_sensor": 0.00011762181610512015,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00011734615717768573,
+       "snr": 0.9976563962659099,
+       "fit_feasible_only": {
+        "slope": -0.011734286715859393,
+        "intercept": 0.02547257985740198,
+        "r2": 0.9999907671715204,
+        "n": 19
+       },
+       "snr_feasible_only": 0.9976284251020499
+      },
+      "T_out": {
+       "fit": {
+        "slope": 22.947974375787037,
+        "intercept": 34.836524269895904,
+        "r2": 0.9999974864082369,
+        "n": 20
+       },
+       "median_value": 38.64724099548595,
+       "sigma_one_sensor": 0.2781011163481356,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.2294797437578704,
+       "snr": 0.8251665680859782,
+       "fit_feasible_only": {
+        "slope": 22.9476352847995,
+        "intercept": 34.836601081072594,
+        "r2": 0.9999974629507399,
+        "n": 19
+       },
+       "snr_feasible_only": 0.8251543750034048
+      },
+      "T_bed": {
+       "fit": {
+        "slope": 22.947974375787037,
+        "intercept": 34.836524269895904,
+        "r2": 0.9999974864082369,
+        "n": 20
+       },
+       "median_value": 38.64724099548595,
+       "sigma_one_sensor": 0.2781011163481356,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.2294797437578704,
+       "snr": 0.8251665680859782,
+       "fit_feasible_only": {
+        "slope": 22.9476352847995,
+        "intercept": 34.836601081072594,
+        "r2": 0.9999974629507399,
+        "n": 19
+       },
+       "snr_feasible_only": 0.8251543750034048
+      },
+      "T_bed_x6": {
+       "fit": {
+        "slope": 22.947974375787037,
+        "intercept": 34.836524269895904,
+        "r2": 0.9999974864082369,
+        "n": 20
+       },
+       "median_value": 38.64724099548595,
+       "sigma_one_sensor": 0.2781011163481356,
+       "redundancy": 6,
+       "signal_for_delta_x": 0.2294797437578704,
+       "snr": 2.0212370446142005,
+       "fit_feasible_only": {
+        "slope": 22.9476352847995,
+        "intercept": 34.836601081072594,
+        "r2": 0.9999974629507399,
+        "n": 19
+       },
+       "snr_feasible_only": 2.021207177783504
+      }
+     },
+     "analytic": {
+      "hypothesis_slope_Y": -0.01289790022184348,
+      "ratio_balance_to_hypothesis": 0.9098082258300615,
+      "ratio_diagnostic_to_hypothesis": 0.9167317412221225,
+      "agrees_balance": false,
+      "linearised_slope_Y": -0.011692827194163122,
+      "ratio_balance_to_linearised": 1.0035738596758113,
+      "linearised_slope_T_bed": 22.905155284881836,
+      "ratio_T_bed_to_linearised": 1.0018694084529287
+     }
+    },
+    "P2": {
+     "scaling": {
+      "target_ratio": 0.012897900221843884,
+      "achieved_ratio": 0.01289790022184374,
+      "spray_rate_kg_per_h": 1.776396696183177,
+      "solid_fraction": 0.4089158112846845,
+      "water_feed_kg_per_h": 1.0499999999999998,
+      "dry_air_flow_kg_per_h": 56.31898864847471
+     },
+     "n_draws": 20,
+     "n_failed": 0,
+     "n_infeasible": 0,
+     "infeasibility_reasons": [],
+     "moisture_range_kg_per_kg": [
+      0.09751408746991153,
+      0.20365823319961285
+     ],
+     "moisture_spread_kg_per_kg": 0.10614414572970132,
+     "nominal_moisture_kg_per_kg": 0.12638490694776505,
+     "solid_to_air_ratio": 0.01289790022184374,
+     "variants": {
+      "Y_out": {
+       "fit": {
+        "slope": -0.011837599608642772,
+        "intercept": 0.025744309323623683,
+        "r2": 0.999890839243383,
+        "n": 20
+       },
+       "median_value": 0.024141183514077798,
+       "sigma_one_sensor": 0.00012070591757038899,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00011837599608642773,
+       "snr": 0.9806975371973575
+      },
+      "Y_out_balance": {
+       "fit": {
+        "slope": -0.011711075855341853,
+        "intercept": 0.025754473199242445,
+        "r2": 0.9999936037677183,
+        "n": 20
+       },
+       "median_value": 0.024169408898993182,
+       "sigma_one_sensor": 0.00012084704449496592,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00011711075855341853,
+       "snr": 0.9690825211558812
+      },
+      "T_out": {
+       "fit": {
+        "slope": 22.732048436394244,
+        "intercept": 39.77896622636162,
+        "r2": 0.9999982810978973,
+        "n": 20
+       },
+       "median_value": 42.85616268096726,
+       "sigma_one_sensor": 0.29311476761404953,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.22732048436394245,
+       "snr": 0.7755340551904918
+      },
+      "T_bed": {
+       "fit": {
+        "slope": 22.732048436394244,
+        "intercept": 39.77896622636162,
+        "r2": 0.9999982810978973,
+        "n": 20
+       },
+       "median_value": 42.85616268096726,
+       "sigma_one_sensor": 0.29311476761404953,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.22732048436394245,
+       "snr": 0.7755340551904918
+      },
+      "T_bed_x6": {
+       "fit": {
+        "slope": 22.732048436394244,
+        "intercept": 39.77896622636162,
+        "r2": 0.9999982810978973,
+        "n": 20
+       },
+       "median_value": 42.85616268096726,
+       "sigma_one_sensor": 0.29311476761404953,
+       "redundancy": 6,
+       "signal_for_delta_x": 0.22732048436394245,
+       "snr": 1.8996627133681525
+      }
+     },
+     "analytic": {
+      "hypothesis_slope_Y": -0.01289790022184374,
+      "ratio_balance_to_hypothesis": 0.9079831332163747,
+      "ratio_diagnostic_to_hypothesis": 0.9177927728573017,
+      "agrees_balance": false,
+      "linearised_slope_Y": -0.011675165713970516,
+      "ratio_balance_to_linearised": 1.0030757714495107,
+      "linearised_slope_T_bed": 22.695922459450106,
+      "ratio_T_bed_to_linearised": 1.0015917386485913
+     }
+    },
+    "P3": {
+     "scaling": {
+      "target_ratio": 0.012897900221843884,
+      "achieved_ratio": 0.012897900221843884,
+      "spray_rate_kg_per_h": 1.770531332693261,
+      "solid_fraction": 0.4069576851809891,
+      "water_feed_kg_per_h": 1.0499999999999998,
+      "dry_air_flow_kg_per_h": 55.864235286373926
+     },
+     "n_draws": 20,
+     "n_failed": 0,
+     "n_infeasible": 0,
+     "infeasibility_reasons": [],
+     "moisture_range_kg_per_kg": [
+      0.08660963146131179,
+      0.18229882357420793
+     ],
+     "moisture_spread_kg_per_kg": 0.09568919211289614,
+     "nominal_moisture_kg_per_kg": 0.11204161667858425,
+     "solid_to_air_ratio": 0.012897900221843884,
+     "variants": {
+      "Y_out": {
+       "fit": {
+        "slope": -0.011850043425969146,
+        "intercept": 0.025914059291873483,
+        "r2": 0.9998745552767246,
+        "n": 20
+       },
+       "median_value": 0.024488126885548106,
+       "sigma_one_sensor": 0.00012244063442774054,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00011850043425969147,
+       "snr": 0.9678195054569534
+      },
+      "Y_out_balance": {
+       "fit": {
+        "slope": -0.011700206857946859,
+        "intercept": 0.025922102675720107,
+        "r2": 0.9999948823832137,
+        "n": 20
+       },
+       "median_value": 0.02451497588233255,
+       "sigma_one_sensor": 0.00012257487941166274,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00011700206857946859,
+       "snr": 0.9545354573551886
+      },
+      "T_out": {
+       "fit": {
+        "slope": 22.60723638046187,
+        "intercept": 42.6896725588025,
+        "r2": 0.9999986435651804,
+        "n": 20
+       },
+       "median_value": 45.40891433277941,
+       "sigma_one_sensor": 0.30257104541254853,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.2260723638046187,
+       "snr": 0.7471711759344796
+      },
+      "T_bed": {
+       "fit": {
+        "slope": 22.60723638046187,
+        "intercept": 42.6896725588025,
+        "r2": 0.9999986435651804,
+        "n": 20
+       },
+       "median_value": 45.40891433277941,
+       "sigma_one_sensor": 0.30257104541254853,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.2260723638046187,
+       "snr": 0.7471711759344796
+      },
+      "T_bed_x6": {
+       "fit": {
+        "slope": 22.60723638046187,
+        "intercept": 42.6896725588025,
+        "r2": 0.9999986435651804,
+        "n": 20
+       },
+       "median_value": 45.40891433277941,
+       "sigma_one_sensor": 0.30257104541254853,
+       "redundancy": 6,
+       "signal_for_delta_x": 0.2260723638046187,
+       "snr": 1.8301881315547528
+      }
+     },
+     "analytic": {
+      "hypothesis_slope_Y": -0.012897900221843884,
+      "ratio_balance_to_hypothesis": 0.9071404381103358,
+      "ratio_diagnostic_to_hypothesis": 0.9187575669022399,
+      "agrees_balance": false,
+      "linearised_slope_Y": -0.011667630670109359,
+      "ratio_balance_to_linearised": 1.002792013970836,
+      "linearised_slope_T_bed": 22.574835093184156,
+      "ratio_T_bed_to_linearised": 1.0014352834536318
+     }
+    },
+    "P4": {
+     "scaling": {
+      "target_ratio": 0.012897900221843884,
+      "achieved_ratio": 0.012897900221843884,
+      "spray_rate_kg_per_h": 1.7645304243622455,
+      "solid_fraction": 0.4049408355316392,
+      "water_feed_kg_per_h": 1.05,
+      "dry_air_flow_kg_per_h": 55.398972861653625
+     },
+     "n_draws": 20,
+     "n_failed": 0,
+     "n_infeasible": 0,
+     "infeasibility_reasons": [],
+     "moisture_range_kg_per_kg": [
+      0.07689018524307406,
+      0.16253544875552403
+     ],
+     "moisture_spread_kg_per_kg": 0.08564526351244997,
+     "nominal_moisture_kg_per_kg": 0.09912758517062051,
+     "solid_to_air_ratio": 0.012897900221843884,
+     "variants": {
+      "Y_out": {
+       "fit": {
+        "slope": -0.011868642013504979,
+        "intercept": 0.026088768176403584,
+        "r2": 0.9998392785939314,
+        "n": 20
+       },
+       "median_value": 0.024822473909315933,
+       "sigma_one_sensor": 0.00012411236954657968,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00011868642013504979,
+       "snr": 0.9562819610055586
+      },
+      "Y_out_balance": {
+       "fit": {
+        "slope": -0.0116911212516622,
+        "intercept": 0.0260945684644674,
+        "r2": 0.999995963311712,
+        "n": 20
+       },
+       "median_value": 0.024847803283019616,
+       "sigma_one_sensor": 0.0001242390164150981,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00011691121251662201,
+       "snr": 0.9410184971684501
+      },
+      "T_out": {
+       "fit": {
+        "slope": 22.48121084949431,
+        "intercept": 45.66788438848184,
+        "r2": 0.9999989455765406,
+        "n": 20
+       },
+       "median_value": 48.06562863334813,
+       "sigma_one_sensor": 0.31266214417158567,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.2248121084949431,
+       "snr": 0.7190256725533379
+      },
+      "T_bed": {
+       "fit": {
+        "slope": 22.48121084949431,
+        "intercept": 45.66788438848184,
+        "r2": 0.9999989455765406,
+        "n": 20
+       },
+       "median_value": 48.06562863334813,
+       "sigma_one_sensor": 0.31266214417158567,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.2248121084949431,
+       "snr": 0.7190256725533379
+      },
+      "T_bed_x6": {
+       "fit": {
+        "slope": 22.48121084949431,
+        "intercept": 45.66788438848184,
+        "r2": 0.9999989455765406,
+        "n": 20
+       },
+       "median_value": 48.06562863334813,
+       "sigma_one_sensor": 0.31266214417158567,
+       "redundancy": 6,
+       "signal_for_delta_x": 0.2248121084949431,
+       "snr": 1.7612460097171772
+      }
+     },
+     "analytic": {
+      "hypothesis_slope_Y": -0.012897900221843884,
+      "ratio_balance_to_hypothesis": 0.9064360128838737,
+      "ratio_diagnostic_to_hypothesis": 0.920199552591068,
+      "agrees_balance": false,
+      "linearised_slope_Y": -0.011661805559706084,
+      "ratio_balance_to_linearised": 1.0025138210207696,
+      "linearised_slope_T_bed": 22.45240130719288,
+      "ratio_T_bed_to_linearised": 1.0012831385786873
+     }
+    },
+    "P5": {
+     "scaling": {
+      "target_ratio": 0.012897900221843884,
+      "achieved_ratio": 0.012897900221843882,
+      "spray_rate_kg_per_h": 1.7549934741452051,
+      "solid_fraction": 0.4017071769959615,
+      "water_feed_kg_per_h": 1.0499999999999998,
+      "dry_air_flow_kg_per_h": 54.659554037426055
+     },
+     "n_draws": 20,
+     "n_failed": 0,
+     "n_infeasible": 0,
+     "infeasibility_reasons": [],
+     "moisture_range_kg_per_kg": [
+      0.0639149953117171,
+      0.13502270090299553
+     ],
+     "moisture_spread_kg_per_kg": 0.07110770559127844,
+     "nominal_moisture_kg_per_kg": 0.08170336789396371,
+     "solid_to_air_ratio": 0.012897900221843882,
+     "variants": {
+      "Y_out": {
+       "fit": {
+        "slope": -0.011913888242460707,
+        "intercept": 0.02636958392423807,
+        "r2": 0.9997339405627643,
+        "n": 20
+       },
+       "median_value": 0.025318527260112834,
+       "sigma_one_sensor": 0.00012659263630056418,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00011913888242460707,
+       "snr": 0.9411201623271361
+      },
+      "Y_out_balance": {
+       "fit": {
+        "slope": -0.011680368186691166,
+        "intercept": 0.026371167819384818,
+        "r2": 0.9999972811619846,
+        "n": 20
+       },
+       "median_value": 0.025340201329270118,
+       "sigma_one_sensor": 0.0001267010066463506,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00011680368186691166,
+       "snr": 0.9218844029624447
+      },
+      "T_out": {
+       "fit": {
+        "slope": 22.283455460569414,
+        "intercept": 50.41872556456444,
+        "r2": 0.9999993068199672,
+        "n": 20
+       },
+       "median_value": 52.38577942584006,
+       "sigma_one_sensor": 0.32955537797359524,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.22283455460569415,
+       "snr": 0.6761672529086998
+      },
+      "T_bed": {
+       "fit": {
+        "slope": 22.283455460569414,
+        "intercept": 50.41872556456444,
+        "r2": 0.9999993068199672,
+        "n": 20
+       },
+       "median_value": 52.38577942584006,
+       "sigma_one_sensor": 0.32955537797359524,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.22283455460569415,
+       "snr": 0.6761672529086998
+      },
+      "T_bed_x6": {
+       "fit": {
+        "slope": 22.283455460569414,
+        "intercept": 50.41872556456444,
+        "r2": 0.9999993068199672,
+        "n": 20
+       },
+       "median_value": 52.38577942584006,
+       "sigma_one_sensor": 0.32955537797359524,
+       "redundancy": 6,
+       "signal_for_delta_x": 0.22283455460569415,
+       "snr": 1.6562647504057393
+      }
+     },
+     "analytic": {
+      "hypothesis_slope_Y": -0.012897900221843882,
+      "ratio_balance_to_hypothesis": 0.9056023062505396,
+      "ratio_diagnostic_to_hypothesis": 0.9237075832144637,
+      "agrees_balance": false,
+      "linearised_slope_Y": -0.011655849699438626,
+      "ratio_balance_to_linearised": 1.002103534953245,
+      "linearised_slope_T_bed": 22.259836163675736,
+      "ratio_T_bed_to_linearised": 1.0010610723601021
+     }
+    },
+    "P6": {
+     "scaling": {
+      "target_ratio": 0.012897900221843884,
+      "achieved_ratio": 0.012897900221843967,
+      "spray_rate_kg_per_h": 2.4876639807530325,
+      "solid_fraction": 0.5779172717361298,
+      "water_feed_kg_per_h": 1.0499999999999998,
+      "dry_air_flow_kg_per_h": 111.46496375574341
+     },
+     "n_draws": 20,
+     "n_failed": 0,
+     "n_infeasible": 0,
+     "infeasibility_reasons": [],
+     "moisture_range_kg_per_kg": [
+      0.07280910939382806,
+      0.1433902167801741
+     ],
+     "moisture_spread_kg_per_kg": 0.07058110738634604,
+     "nominal_moisture_kg_per_kg": 0.09162229823516702,
+     "solid_to_air_ratio": 0.012897900221843967,
+     "variants": {
+      "Y_out": {
+       "fit": {
+        "slope": -0.012331215422696782,
+        "intercept": 0.016617658282619723,
+        "r2": 0.9999592562401952,
+        "n": 20
+       },
+       "median_value": 0.015408162620721946,
+       "sigma_one_sensor": 7.704081310360973e-05,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00012331215422696783,
+       "snr": 1.6006081615614471
+      },
+      "Y_out_balance": {
+       "fit": {
+        "slope": -0.012248091422488566,
+        "intercept": 0.01662125058755186,
+        "r2": 0.9999964274521776,
+        "n": 20
+       },
+       "median_value": 0.015419616549785783,
+       "sigma_one_sensor": 7.709808274892892e-05,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00012248091422488566,
+       "snr": 1.5886376140344063
+      },
+      "T_out": {
+       "fit": {
+        "slope": 25.632570327740503,
+        "intercept": 35.64859418708216,
+        "r2": 0.9999987974485561,
+        "n": 20
+       },
+       "median_value": 38.163590861351366,
+       "sigma_one_sensor": 0.2764262861701389,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.256325703277405,
+       "snr": 0.9272841119011305
+      },
+      "T_bed": {
+       "fit": {
+        "slope": 25.632570327740503,
+        "intercept": 35.64859418708216,
+        "r2": 0.9999987974485561,
+        "n": 20
+       },
+       "median_value": 38.163590861351366,
+       "sigma_one_sensor": 0.2764262861701389,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.256325703277405,
+       "snr": 0.9272841119011305
+      },
+      "T_bed_x6": {
+       "fit": {
+        "slope": 25.632570327740503,
+        "intercept": 35.64859418708216,
+        "r2": 0.9999987974485561,
+        "n": 20
+       },
+       "median_value": 38.163590861351366,
+       "sigma_one_sensor": 0.2764262861701389,
+       "redundancy": 6,
+       "signal_for_delta_x": 0.256325703277405,
+       "snr": 2.2713729207476274
+      }
+     },
+     "analytic": {
+      "hypothesis_slope_Y": -0.012897900221843967,
+      "ratio_balance_to_hypothesis": 0.9496190241683774,
+      "ratio_diagnostic_to_hypothesis": 0.9560637941525207,
+      "agrees_balance": false,
+      "linearised_slope_Y": -0.01222012340579161,
+      "ratio_balance_to_linearised": 1.0022886852913204,
+      "linearised_slope_T_bed": 25.598616016785716,
+      "ratio_T_bed_to_linearised": 1.0013264119799492
+     }
+    },
+    "P7": {
+     "scaling": {
+      "target_ratio": 0.012897900221843884,
+      "achieved_ratio": 0.012897900221843884,
+      "spray_rate_kg_per_h": 2.6010597026166735,
+      "solid_fraction": 0.5963183778735657,
+      "water_feed_kg_per_h": 1.0499999999999996,
+      "dry_air_flow_kg_per_h": 120.25676086327596
+     },
+     "n_draws": 20,
+     "n_failed": 0,
+     "n_infeasible": 0,
+     "infeasibility_reasons": [],
+     "moisture_range_kg_per_kg": [
+      0.06486763090873923,
+      0.12724634178465621
+     ],
+     "moisture_spread_kg_per_kg": 0.06237871087591698,
+     "nominal_moisture_kg_per_kg": 0.08110664635922518,
+     "solid_to_air_ratio": 0.012897900221843884,
+     "variants": {
+      "Y_out": {
+       "fit": {
+        "slope": -0.012378352497909778,
+        "intercept": 0.01594006492352196,
+        "r2": 0.9999523672576537,
+        "n": 20
+       },
+       "median_value": 0.014862025919115795,
+       "sigma_one_sensor": 7.431012959557898e-05,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.0001237835249790978,
+       "snr": 1.6657691979918468
+      },
+      "Y_out_balance": {
+       "fit": {
+        "slope": -0.012288916077077853,
+        "intercept": 0.015942743981829575,
+        "r2": 0.9999971684530652,
+        "n": 20
+       },
+       "median_value": 0.014872096567964174,
+       "sigma_one_sensor": 7.436048283982087e-05,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00012288916077077852,
+       "snr": 1.6526138088088098
+      },
+      "T_out": {
+       "fit": {
+        "slope": 25.81646736349333,
+        "intercept": 37.1889705573406,
+        "r2": 0.9999990360213885,
+        "n": 20
+       },
+       "median_value": 39.43836976357403,
+       "sigma_one_sensor": 0.2808640689732486,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.25816467363493334,
+       "snr": 0.9191801378464067
+      },
+      "T_bed": {
+       "fit": {
+        "slope": 25.81646736349333,
+        "intercept": 37.1889705573406,
+        "r2": 0.9999990360213885,
+        "n": 20
+       },
+       "median_value": 39.43836976357403,
+       "sigma_one_sensor": 0.2808640689732486,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.25816467363493334,
+       "snr": 0.9191801378464067
+      },
+      "T_bed_x6": {
+       "fit": {
+        "slope": 25.81646736349333,
+        "intercept": 37.1889705573406,
+        "r2": 0.9999990360213885,
+        "n": 20
+       },
+       "median_value": 39.43836976357403,
+       "sigma_one_sensor": 0.2808640689732486,
+       "redundancy": 6,
+       "signal_for_delta_x": 0.25816467363493334,
+       "snr": 2.251522319424801
+      }
+     },
+     "analytic": {
+      "hypothesis_slope_Y": -0.012897900221843884,
+      "ratio_balance_to_hypothesis": 0.9527842412880001,
+      "ratio_diagnostic_to_hypothesis": 0.9597184258679409,
+      "agrees_balance": true,
+      "linearised_slope_Y": -0.012263629773295448,
+      "ratio_balance_to_linearised": 1.0020618939294357,
+      "linearised_slope_T_bed": 25.785474446988434,
+      "ratio_T_bed_to_linearised": 1.0012019525399314
+     }
+    }
+   },
+   "1t_per_h": {
+    "P1": {
+     "scaling": {
+      "target_ratio": 0.025795800443687768,
+      "achieved_ratio": 0.02579580044367246,
+      "spray_rate_kg_per_h": 2.514303138056879,
+      "solid_fraction": 0.5823892576407999,
+      "water_feed_kg_per_h": 1.0499999999999996,
+      "dry_air_flow_kg_per_h": 56.765175449946675
+     },
+     "n_draws": 20,
+     "n_failed": 0,
+     "n_infeasible": 0,
+     "infeasibility_reasons": [],
+     "moisture_range_kg_per_kg": [
+      0.1054945443937709,
+      0.1923461663316381
+     ],
+     "moisture_spread_kg_per_kg": 0.08685162193786719,
+     "nominal_moisture_kg_per_kg": 0.13140317405634694,
+     "solid_to_air_ratio": 0.02579580044367246,
+     "variants": {
+      "Y_out": {
+       "fit": {
+        "slope": -0.02386188089361077,
+        "intercept": 0.025479385898482955,
+        "r2": 0.9999637642772403,
+        "n": 20
+       },
+       "median_value": 0.022162221870068305,
+       "sigma_one_sensor": 0.00011081110935034153,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.0002386188089361077,
+       "snr": 2.153383449864111
+      },
+      "Y_out_balance": {
+       "fit": {
+        "slope": -0.02376227778141405,
+        "intercept": 0.025490140075651868,
+        "r2": 0.9999839072293034,
+        "n": 20
+       },
+       "median_value": 0.02218726830299106,
+       "sigma_one_sensor": 0.0001109363415149553,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.0002376227778141405,
+       "snr": 2.1419741679700754
+      },
+      "T_out": {
+       "fit": {
+        "slope": 44.4323681125468,
+        "intercept": 34.331641068990464,
+        "r2": 0.9999960803190604,
+        "n": 20
+       },
+       "median_value": 40.50892369840613,
+       "sigma_one_sensor": 0.28464771644979386,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.444323681125468,
+       "snr": 1.5609599355554211
+      },
+      "T_bed": {
+       "fit": {
+        "slope": 44.4323681125468,
+        "intercept": 34.331641068990464,
+        "r2": 0.9999960803190604,
+        "n": 20
+       },
+       "median_value": 40.50892369840613,
+       "sigma_one_sensor": 0.28464771644979386,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.444323681125468,
+       "snr": 1.5609599355554211
+      },
+      "T_bed_x6": {
+       "fit": {
+        "slope": 44.4323681125468,
+        "intercept": 34.331641068990464,
+        "r2": 0.9999960803190604,
+        "n": 20
+       },
+       "median_value": 40.50892369840613,
+       "sigma_one_sensor": 0.28464771644979386,
+       "redundancy": 6,
+       "signal_for_delta_x": 0.444323681125468,
+       "snr": 3.823555351038494
+      }
+     },
+     "analytic": {
+      "hypothesis_slope_Y": -0.02579580044367246,
+      "ratio_balance_to_hypothesis": 0.9211684604748437,
+      "ratio_diagnostic_to_hypothesis": 0.925029674722264,
+      "agrees_balance": false,
+      "linearised_slope_Y": -0.023657999092378305,
+      "ratio_balance_to_linearised": 1.0044077560671367,
+      "linearised_slope_T_bed": 44.336255707524586,
+      "ratio_T_bed_to_linearised": 1.002167806087556
+     }
+    },
+    "P2": {
+     "scaling": {
+      "target_ratio": 0.025795800443687768,
+      "achieved_ratio": 0.02579580044368485,
+      "spray_rate_kg_per_h": 2.4965473429353793,
+      "solid_fraction": 0.5794191514247692,
+      "water_feed_kg_per_h": 1.0499999999999996,
+      "dry_air_flow_kg_per_h": 56.07685429623927
+     },
+     "n_draws": 20,
+     "n_failed": 0,
+     "n_infeasible": 0,
+     "infeasibility_reasons": [],
+     "moisture_range_kg_per_kg": [
+      0.08870702264803962,
+      0.1664684481077248
+     ],
+     "moisture_spread_kg_per_kg": 0.07776142545968517,
+     "nominal_moisture_kg_per_kg": 0.11102261013025361,
+     "solid_to_air_ratio": 0.02579580044368485,
+     "variants": {
+      "Y_out": {
+       "fit": {
+        "slope": -0.02382961226910128,
+        "intercept": 0.02574360722784774,
+        "r2": 0.9999600472473783,
+        "n": 20
+       },
+       "median_value": 0.022932570503660158,
+       "sigma_one_sensor": 0.0001146628525183008,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.0002382961226910128,
+       "snr": 2.0782329887788156
+      },
+      "Y_out_balance": {
+       "fit": {
+        "slope": -0.023694427340874034,
+        "intercept": 0.025751312128883173,
+        "r2": 0.9999874354657875,
+        "n": 20
+       },
+       "median_value": 0.022956838008291888,
+       "sigma_one_sensor": 0.00011478419004145945,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00023694427340874034,
+       "snr": 2.0642587914168082
+      },
+      "T_out": {
+       "fit": {
+        "slope": 44.01057307448872,
+        "intercept": 39.1296899108739,
+        "r2": 0.9999970001384494,
+        "n": 20
+       },
+       "median_value": 44.32126255444007,
+       "sigma_one_sensor": 0.2985119057265393,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.4401057307448872,
+       "snr": 1.4743322537629675
+      },
+      "T_bed": {
+       "fit": {
+        "slope": 44.01057307448872,
+        "intercept": 39.1296899108739,
+        "r2": 0.9999970001384494,
+        "n": 20
+       },
+       "median_value": 44.32126255444007,
+       "sigma_one_sensor": 0.2985119057265393,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.4401057307448872,
+       "snr": 1.4743322537629675
+      },
+      "T_bed_x6": {
+       "fit": {
+        "slope": 44.01057307448872,
+        "intercept": 39.1296899108739,
+        "r2": 0.9999970001384494,
+        "n": 20
+       },
+       "median_value": 44.32126255444007,
+       "sigma_one_sensor": 0.2985119057265393,
+       "redundancy": 6,
+       "signal_for_delta_x": 0.4401057307448872,
+       "snr": 3.6113617330467944
+      }
+     },
+     "analytic": {
+      "hypothesis_slope_Y": -0.02579580044368485,
+      "ratio_balance_to_hypothesis": 0.9185381702964267,
+      "ratio_diagnostic_to_hypothesis": 0.9237787492240846,
+      "agrees_balance": false,
+      "linearised_slope_Y": -0.02359929180335463,
+      "ratio_balance_to_linearised": 1.0040312878162674,
+      "linearised_slope_T_bed": 43.92429867615531,
+      "ratio_T_bed_to_linearised": 1.0019641610892753
+     }
+    },
+    "P3": {
+     "scaling": {
+      "target_ratio": 0.025795800443687768,
+      "achieved_ratio": 0.025795800443687452,
+      "spray_rate_kg_per_h": 2.485985807661451,
+      "solid_fraction": 0.5776323433689562,
+      "water_feed_kg_per_h": 1.0499999999999996,
+      "dry_air_flow_kg_per_h": 55.66742581980449
+     },
+     "n_draws": 20,
+     "n_failed": 0,
+     "n_infeasible": 0,
+     "infeasibility_reasons": [],
+     "moisture_range_kg_per_kg": [
+      0.08013308481812603,
+      0.15242314501956153
+     ],
+     "moisture_spread_kg_per_kg": 0.0722900602014355,
+     "nominal_moisture_kg_per_kg": 0.10040191802254808,
+     "solid_to_air_ratio": 0.025795800443687452,
+     "variants": {
+      "Y_out": {
+       "fit": {
+        "slope": -0.023818879151547276,
+        "intercept": 0.02590204276305076,
+        "r2": 0.9999526764188198,
+        "n": 20
+       },
+       "median_value": 0.02335441570834921,
+       "sigma_one_sensor": 0.00011677207854174605,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00023818879151547276,
+       "snr": 2.039775214160637
+      },
+      "Y_out_balance": {
+       "fit": {
+        "slope": -0.023660211332127878,
+        "intercept": 0.025908018393838144,
+        "r2": 0.9999892991753296,
+        "n": 20
+       },
+       "median_value": 0.02337785159798786,
+       "sigma_one_sensor": 0.00011688925798993929,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00023660211332127878,
+       "snr": 2.0241561747414223
+      },
+      "T_out": {
+       "fit": {
+        "slope": 43.76639341604642,
+        "intercept": 41.95424497011087,
+        "r2": 0.9999974765571901,
+        "n": 20
+       },
+       "median_value": 46.6354181525237,
+       "sigma_one_sensor": 0.307199537201016,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.43766393416046423,
+       "snr": 1.4246894319833525
+      },
+      "T_bed": {
+       "fit": {
+        "slope": 43.76639341604642,
+        "intercept": 41.95424497011087,
+        "r2": 0.9999974765571901,
+        "n": 20
+       },
+       "median_value": 46.6354181525237,
+       "sigma_one_sensor": 0.307199537201016,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.43766393416046423,
+       "snr": 1.4246894319833525
+      },
+      "T_bed_x6": {
+       "fit": {
+        "slope": 43.76639341604642,
+        "intercept": 41.95424497011087,
+        "r2": 0.9999974765571901,
+        "n": 20
+       },
+       "median_value": 46.6354181525237,
+       "sigma_one_sensor": 0.307199537201016,
+       "redundancy": 6,
+       "signal_for_delta_x": 0.43766393416046423,
+       "snr": 3.4897621502948137
+      }
+     },
+     "analytic": {
+      "hypothesis_slope_Y": -0.025795800443687452,
+      "ratio_balance_to_hypothesis": 0.9172117525012805,
+      "ratio_diagnostic_to_hypothesis": 0.923362669188893,
+      "agrees_balance": false,
+      "linearised_slope_Y": -0.023570858462904788,
+      "ratio_balance_to_linearised": 1.0037908194715823,
+      "linearised_slope_T_bed": 43.68617744740209,
+      "ratio_T_bed_to_linearised": 1.0018361864857805
+     }
+    },
+    "P4": {
+     "scaling": {
+      "target_ratio": 0.025795800443687768,
+      "achieved_ratio": 0.02579580044368777,
+      "spray_rate_kg_per_h": 2.4751259992489576,
+      "solid_fraction": 0.5757791723255271,
+      "water_feed_kg_per_h": 1.0499999999999996,
+      "dry_air_flow_kg_per_h": 55.24643448688511
+     },
+     "n_draws": 20,
+     "n_failed": 0,
+     "n_infeasible": 0,
+     "infeasibility_reasons": [],
+     "moisture_range_kg_per_kg": [
+      0.07226673081020363,
+      0.13896720090193876
+     ],
+     "moisture_spread_kg_per_kg": 0.06670047009173513,
+     "nominal_moisture_kg_per_kg": 0.0905205042020294,
+     "solid_to_air_ratio": 0.02579580044368777,
+     "variants": {
+      "Y_out": {
+       "fit": {
+        "slope": -0.023815692729262115,
+        "intercept": 0.026066141599802986,
+        "r2": 0.999940218935173,
+        "n": 20
+       },
+       "median_value": 0.023763623063953764,
+       "sigma_one_sensor": 0.00011881811531976882,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00023815692729262116,
+       "snr": 2.0043823002214958
+      },
+      "Y_out_balance": {
+       "fit": {
+        "slope": -0.02362931306413023,
+        "intercept": 0.02607015360685854,
+        "r2": 0.9999910181082219,
+        "n": 20
+       },
+       "median_value": 0.023786027384831633,
+       "sigma_one_sensor": 0.00011893013692415817,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00023629313064130232,
+       "snr": 1.986822993334201
+      },
+      "T_out": {
+       "fit": {
+        "slope": 43.51966849334852,
+        "intercept": 44.84361436239927,
+        "r2": 0.9999979095855628,
+        "n": 20
+       },
+       "median_value": 49.05119749680625,
+       "sigma_one_sensor": 0.3164656369920237,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.4351966849334852,
+       "snr": 1.3751783260577326
+      },
+      "T_bed": {
+       "fit": {
+        "slope": 43.51966849334852,
+        "intercept": 44.84361436239927,
+        "r2": 0.9999979095855628,
+        "n": 20
+       },
+       "median_value": 49.05119749680625,
+       "sigma_one_sensor": 0.3164656369920237,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.4351966849334852,
+       "snr": 1.3751783260577326
+      },
+      "T_bed_x6": {
+       "fit": {
+        "slope": 43.51966849334852,
+        "intercept": 44.84361436239927,
+        "r2": 0.9999979095855628,
+        "n": 20
+       },
+       "median_value": 49.05119749680625,
+       "sigma_one_sensor": 0.3164656369920237,
+       "redundancy": 6,
+       "signal_for_delta_x": 0.4351966849334852,
+       "snr": 3.368485204176156
+      }
+     },
+     "analytic": {
+      "hypothesis_slope_Y": -0.02579580044368777,
+      "ratio_balance_to_hypothesis": 0.9160139502440724,
+      "ratio_diagnostic_to_hypothesis": 0.923239144342575,
+      "agrees_balance": false,
+      "linearised_slope_Y": -0.023546042654033535,
+      "ratio_balance_to_linearised": 1.0035364927907506,
+      "linearised_slope_T_bed": 43.44571161668741,
+      "ratio_T_bed_to_linearised": 1.0017022825477833
+     }
+    },
+    "P5": {
+     "scaling": {
+      "target_ratio": 0.025795800443687768,
+      "achieved_ratio": 0.025795800443687768,
+      "spray_rate_kg_per_h": 2.4577460148127264,
+      "solid_fraction": 0.5727792889616354,
+      "water_feed_kg_per_h": 1.0499999999999998,
+      "dry_air_flow_kg_per_h": 54.57268201023016
+     },
+     "n_draws": 20,
+     "n_failed": 0,
+     "n_infeasible": 0,
+     "infeasibility_reasons": [],
+     "moisture_range_kg_per_kg": [
+      0.06139629866368984,
+      0.11938210160459864
+     ],
+     "moisture_spread_kg_per_kg": 0.0579858029409088,
+     "nominal_moisture_kg_per_kg": 0.07664475424184847,
+     "solid_to_air_ratio": 0.025795800443687768,
+     "variants": {
+      "Y_out": {
+       "fit": {
+        "slope": -0.023828901891752036,
+        "intercept": 0.026331557146565404,
+        "r2": 0.9999074434463535,
+        "n": 20
+       },
+       "median_value": 0.02437147565194711,
+       "sigma_one_sensor": 0.00012185737825973555,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00023828901891752036,
+       "snr": 1.9554746895146067
+      },
+      "Y_out_balance": {
+       "fit": {
+        "slope": -0.023587974530994336,
+        "intercept": 0.026331815781710587,
+        "r2": 0.9999933512389078,
+        "n": 20
+       },
+       "median_value": 0.02439055278200608,
+       "sigma_one_sensor": 0.00012195276391003041,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00023587974530994338,
+       "snr": 1.9341894168463587
+      },
+      "T_out": {
+       "fit": {
+        "slope": 43.132361496309066,
+        "intercept": 49.451621314591605,
+        "r2": 0.9999984862037685,
+        "n": 20
+       },
+       "median_value": 53.001932457554766,
+       "sigma_one_sensor": 0.33200921840497133,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.4313236149630907,
+       "snr": 1.2991314429016236
+      },
+      "T_bed": {
+       "fit": {
+        "slope": 43.132361496309066,
+        "intercept": 49.451621314591605,
+        "r2": 0.9999984862037685,
+        "n": 20
+       },
+       "median_value": 53.001932457554766,
+       "sigma_one_sensor": 0.33200921840497133,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.4313236149630907,
+       "snr": 1.2991314429016236
+      },
+      "T_bed_x6": {
+       "fit": {
+        "slope": 43.132361496309066,
+        "intercept": 49.451621314591605,
+        "r2": 0.9999984862037685,
+        "n": 20
+       },
+       "median_value": 53.001932457554766,
+       "sigma_one_sensor": 0.33200921840497133,
+       "redundancy": 6,
+       "signal_for_delta_x": 0.4313236149630907,
+       "snr": 3.1822091439146365
+      }
+     },
+     "analytic": {
+      "hypothesis_slope_Y": -0.025795800443687768,
+      "ratio_balance_to_hypothesis": 0.9144114206685264,
+      "ratio_diagnostic_to_hypothesis": 0.9237512107356595,
+      "agrees_balance": false,
+      "linearised_slope_Y": -0.023514478542593954,
+      "ratio_balance_to_linearised": 1.0031255631830087,
+      "linearised_slope_T_bed": 43.068246511810315,
+      "ratio_T_bed_to_linearised": 1.0014886834197247
+     }
+    },
+    "P6": {
+     "scaling": {
+      "target_ratio": 0.025795800443687768,
+      "achieved_ratio": 0.025795800443686775,
+      "spray_rate_kg_per_h": 3.91585167583431,
+      "solid_fraction": 0.7318590981165579,
+      "water_feed_kg_per_h": 1.0499999999999998,
+      "dry_air_flow_kg_per_h": 111.09760606539713
+     },
+     "n_draws": 20,
+     "n_failed": 0,
+     "n_infeasible": 0,
+     "infeasibility_reasons": [],
+     "moisture_range_kg_per_kg": [
+      0.06575359500989209,
+      0.11599071070173023
+     ],
+     "moisture_spread_kg_per_kg": 0.05023711569183814,
+     "nominal_moisture_kg_per_kg": 0.07986218902547029,
+     "solid_to_air_ratio": 0.025795800443686775,
+     "variants": {
+      "Y_out": {
+       "fit": {
+        "slope": -0.024782646187137384,
+        "intercept": 0.016621331495037063,
+        "r2": 0.9999806375864433,
+        "n": 20
+       },
+       "median_value": 0.014517117204519574,
+       "sigma_one_sensor": 7.258558602259788e-05,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00024782646187137387,
+       "snr": 3.414265496103024
+      },
+      "Y_out_balance": {
+       "fit": {
+        "slope": -0.024698628511223626,
+        "intercept": 0.01662413910233912,
+        "r2": 0.9999934023726557,
+        "n": 20
+       },
+       "median_value": 0.014526634699091639,
+       "sigma_one_sensor": 7.26331734954582e-05,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00024698628511223627,
+       "snr": 3.4004611560539963
+      },
+      "T_out": {
+       "fit": {
+        "slope": 49.44149320339644,
+        "intercept": 35.07762321267977,
+        "r2": 0.9999980332814296,
+        "n": 20
+       },
+       "median_value": 39.27690521003768,
+       "sigma_one_sensor": 0.28029784528596924,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.4944149320339644,
+       "snr": 1.763891304728175
+      },
+      "T_bed": {
+       "fit": {
+        "slope": 49.44149320339644,
+        "intercept": 35.07762321267977,
+        "r2": 0.9999980332814296,
+        "n": 20
+       },
+       "median_value": 39.27690521003768,
+       "sigma_one_sensor": 0.28029784528596924,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.4944149320339644,
+       "snr": 1.763891304728175
+      },
+      "T_bed_x6": {
+       "fit": {
+        "slope": 49.44149320339644,
+        "intercept": 35.07762321267977,
+        "r2": 0.9999980332814296,
+        "n": 20
+       },
+       "median_value": 39.27690521003768,
+       "sigma_one_sensor": 0.28029784528596924,
+       "redundancy": 6,
+       "signal_for_delta_x": 0.4944149320339644,
+       "snr": 4.320633658316101
+      }
+     },
+     "analytic": {
+      "hypothesis_slope_Y": -0.025795800443686775,
+      "ratio_balance_to_hypothesis": 0.9574670328661319,
+      "ratio_diagnostic_to_hypothesis": 0.9607240620906048,
+      "agrees_balance": true,
+      "linearised_slope_Y": -0.024627079660874636,
+      "ratio_balance_to_linearised": 1.0029052917087307,
+      "linearised_slope_T_bed": 49.363330469419544,
+      "ratio_T_bed_to_linearised": 1.0015834169460125
+     }
+    },
+    "P7": {
+     "scaling": {
+      "target_ratio": 0.025795800443687768,
+      "achieved_ratio": 0.025795800443687115,
+      "spray_rate_kg_per_h": 4.143722855423815,
+      "solid_fraction": 0.7466046749179592,
+      "water_feed_kg_per_h": 1.0499999999999998,
+      "dry_air_flow_kg_per_h": 119.93126021336265
+     },
+     "n_draws": 20,
+     "n_failed": 0,
+     "n_infeasible": 0,
+     "infeasibility_reasons": [],
+     "moisture_range_kg_per_kg": [
+      0.05930416567797099,
+      0.10462282200178596
+     ],
+     "moisture_spread_kg_per_kg": 0.045318656323814974,
+     "nominal_moisture_kg_per_kg": 0.07172541142097949,
+     "solid_to_air_ratio": 0.025795800443687115,
+     "variants": {
+      "Y_out": {
+       "fit": {
+        "slope": -0.024856293388413192,
+        "intercept": 0.01593983073209449,
+        "r2": 0.9999785308793724,
+        "n": 20
+       },
+       "median_value": 0.014039438964671792,
+       "sigma_one_sensor": 7.019719482335896e-05,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00024856293388413194,
+       "snr": 3.540924028511459
+      },
+      "Y_out_balance": {
+       "fit": {
+        "slope": -0.024766594077651437,
+        "intercept": 0.015941869572058117,
+        "r2": 0.999994549108413,
+        "n": 20
+       },
+       "median_value": 0.01404808607040749,
+       "sigma_one_sensor": 7.024043035203746e-05,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.00024766594077651436,
+       "snr": 3.5259741367648147
+      },
+      "T_out": {
+       "fit": {
+        "slope": 49.77389221446368,
+        "intercept": 36.56091298631733,
+        "r2": 0.9999983560339974,
+        "n": 20
+       },
+       "median_value": 40.36731129886789,
+       "sigma_one_sensor": 0.28414432167033127,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.4977389221446368,
+       "snr": 1.7517116626462848
+      },
+      "T_bed": {
+       "fit": {
+        "slope": 49.77389221446368,
+        "intercept": 36.56091298631733,
+        "r2": 0.9999983560339974,
+        "n": 20
+       },
+       "median_value": 40.36731129886789,
+       "sigma_one_sensor": 0.28414432167033127,
+       "redundancy": 1,
+       "signal_for_delta_x": 0.4977389221446368,
+       "snr": 1.7517116626462848
+      },
+      "T_bed_x6": {
+       "fit": {
+        "slope": 49.77389221446368,
+        "intercept": 36.56091298631733,
+        "r2": 0.9999983560339974,
+        "n": 20
+       },
+       "median_value": 40.36731129886789,
+       "sigma_one_sensor": 0.28414432167033127,
+       "redundancy": 6,
+       "signal_for_delta_x": 0.4977389221446368,
+       "snr": 4.290799749965741
+      }
+     },
+     "analytic": {
+      "hypothesis_slope_Y": -0.025795800443687115,
+      "ratio_balance_to_hypothesis": 0.9601017860142599,
+      "ratio_diagnostic_to_hypothesis": 0.9635790694952502,
+      "agrees_balance": true,
+      "linearised_slope_Y": -0.024700379068505182,
+      "ratio_balance_to_linearised": 1.002680728460183,
+      "linearised_slope_T_bed": 49.7008354222926,
+      "ratio_T_bed_to_linearised": 1.0014699308683714
+     }
+    }
+   }
+  }
+ },
+ "analytic_agrees_everywhere_lab": false,
+ "reading": {
+  "reading": "O2",
+  "text": "observability is given; the failure of F5 lies in training or architecture; next step would be a model-based observer (docs/12 section I, item 19)",
+  "hits": [
+   {
+    "point": "P1",
+    "variant": "T_bed_x6",
+    "snr": 1.26149135766651
+   },
+   {
+    "point": "P2",
+    "variant": "T_bed_x6",
+    "snr": 1.2001114211288935
+   },
+   {
+    "point": "P3",
+    "variant": "T_bed_x6",
+    "snr": 1.1639655711255144
+   },
+   {
+    "point": "P4",
+    "variant": "T_bed_x6",
+    "snr": 1.127941682846609
+   },
+   {
+    "point": "P5",
+    "variant": "T_bed_x6",
+    "snr": 1.0729033199662488
+   }
+  ],
+  "points_per_variant": {
+   "T_bed_x6": 5
+  },
+  "max_snr_per_variant": {
+   "Y_out": 0.5984918848912116,
+   "Y_out_balance": 0.5891464265698078,
+   "T_out": 0.5150016902022904,
+   "T_bed": 0.5150016902022904,
+   "T_bed_x6": 1.26149135766651
+  },
+  "qualifiers": [
+   "O2 only through the six-sensor redundancy"
+  ]
+ },
+ "dynamics": {
+  "selection": {
+   "slow": 3,
+   "median": 1,
+   "fast": 6
+  },
+  "settling": {
+   "slow": {
+    "spray_plus": {
+     "final_moisture_change_kg_per_kg": 0.044061573756031425,
+     "t95_s": 10355.0,
+     "max_abs_moisture_change_kg_per_kg": 0.044061573756031425
+    },
+    "spray_minus": {
+     "final_moisture_change_kg_per_kg": -0.03911831838707411,
+     "t95_s": 8275.0,
+     "max_abs_moisture_change_kg_per_kg": 0.03911831838707411
+    },
+    "inlet_plus": {
+     "final_moisture_change_kg_per_kg": -0.05106918340489219,
+     "t95_s": 7410.0,
+     "max_abs_moisture_change_kg_per_kg": 0.05106918340489219
+    },
+    "inlet_minus": {
+     "final_moisture_change_kg_per_kg": 0.06916903627237603,
+     "t95_s": 11960.0,
+     "max_abs_moisture_change_kg_per_kg": 0.06916903627237603
+    }
+   },
+   "median": {
+    "spray_plus": {
+     "final_moisture_change_kg_per_kg": 0.02859113254205714,
+     "t95_s": 6655.0,
+     "max_abs_moisture_change_kg_per_kg": 0.02859113254205714
+    },
+    "spray_minus": {
+     "final_moisture_change_kg_per_kg": -0.02458025463567534,
+     "t95_s": 5105.0,
+     "max_abs_moisture_change_kg_per_kg": 0.02458025463567534
+    },
+    "inlet_plus": {
+     "final_moisture_change_kg_per_kg": -0.03169199798361519,
+     "t95_s": 4605.0,
+     "max_abs_moisture_change_kg_per_kg": 0.03169199798361519
+    },
+    "inlet_minus": {
+     "final_moisture_change_kg_per_kg": 0.04427400634281778,
+     "t95_s": 7670.0,
+     "max_abs_moisture_change_kg_per_kg": 0.04427400634281778
+    }
+   },
+   "fast": {
+    "spray_plus": {
+     "final_moisture_change_kg_per_kg": 0.020738359149979457,
+     "t95_s": 4865.0,
+     "max_abs_moisture_change_kg_per_kg": 0.020738359149979457
+    },
+    "spray_minus": {
+     "final_moisture_change_kg_per_kg": -0.0173777689883607,
+     "t95_s": 3610.0,
+     "max_abs_moisture_change_kg_per_kg": 0.0173777689883607
+    },
+    "inlet_plus": {
+     "final_moisture_change_kg_per_kg": -0.022298751456317392,
+     "t95_s": 3275.0,
+     "max_abs_moisture_change_kg_per_kg": 0.022298751456317392
+    },
+    "inlet_minus": {
+     "final_moisture_change_kg_per_kg": 0.032112711201095726,
+     "t95_s": 5645.0,
+     "max_abs_moisture_change_kg_per_kg": 0.032112711201095726
+    }
+   }
+  },
+  "summary": {
+   "spray_plus": {
+    "Y_out": {
+     "absolute": {
+      "max_ratio": 10.387687540933138,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.65,
+      "longest_time_above_h": 24.0,
+      "longest_time_above_pair": "slow-median"
+     },
+     "deviation": {
+      "max_ratio": 4.040387410778506,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.6777777777777778,
+      "longest_time_above_h": 4.143055555555556,
+      "longest_time_above_pair": "slow-fast"
+     }
+    },
+    "Y_out_balance": {
+     "absolute": {
+      "max_ratio": 10.233883702205018,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.65,
+      "longest_time_above_h": 24.0,
+      "longest_time_above_pair": "slow-median"
+     },
+     "deviation": {
+      "max_ratio": 4.045640963152927,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.6763888888888889,
+      "longest_time_above_h": 4.111111111111111,
+      "longest_time_above_pair": "slow-fast"
+     }
+    },
+    "T_out": {
+     "absolute": {
+      "max_ratio": 8.856058390222445,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.7680555555555556,
+      "longest_time_above_h": 24.0,
+      "longest_time_above_pair": "slow-median"
+     },
+     "deviation": {
+      "max_ratio": 3.5227952850503956,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.7513888888888889,
+      "longest_time_above_h": 2.8361111111111112,
+      "longest_time_above_pair": "slow-fast"
+     }
+    },
+    "T_bed": {
+     "absolute": {
+      "max_ratio": 8.856058390222445,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.7680555555555556,
+      "longest_time_above_h": 24.0,
+      "longest_time_above_pair": "slow-median"
+     },
+     "deviation": {
+      "max_ratio": 3.5227952850503956,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.7513888888888889,
+      "longest_time_above_h": 2.8361111111111112,
+      "longest_time_above_pair": "slow-fast"
+     }
+    },
+    "T_bed_x6": {
+     "absolute": {
+      "max_ratio": 21.692824188338783,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.7680555555555556,
+      "longest_time_above_h": 24.0,
+      "longest_time_above_pair": "slow-median"
+     },
+     "deviation": {
+      "max_ratio": 8.629050916655885,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.7513888888888889,
+      "longest_time_above_h": 23.930555555555557,
+      "longest_time_above_pair": "slow-fast"
+     }
+    }
+   },
+   "spray_minus": {
+    "Y_out": {
+     "absolute": {
+      "max_ratio": 6.519445752583999,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.001388888888888889,
+      "longest_time_above_h": 23.744444444444444,
+      "longest_time_above_pair": "slow-fast"
+     },
+     "deviation": {
+      "max_ratio": 4.929201731490897,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.6236111111111111,
+      "longest_time_above_h": 3.0708333333333333,
+      "longest_time_above_pair": "slow-fast"
+     }
+    },
+    "Y_out_balance": {
+     "absolute": {
+      "max_ratio": 6.355273757286558,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.001388888888888889,
+      "longest_time_above_h": 23.559722222222224,
+      "longest_time_above_pair": "slow-fast"
+     },
+     "deviation": {
+      "max_ratio": 4.933033962302738,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.6222222222222222,
+      "longest_time_above_h": 3.047222222222222,
+      "longest_time_above_pair": "slow-fast"
+     }
+    },
+    "T_out": {
+     "absolute": {
+      "max_ratio": 5.200564523179145,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.001388888888888889,
+      "longest_time_above_h": 23.0875,
+      "longest_time_above_pair": "slow-fast"
+     },
+     "deviation": {
+      "max_ratio": 3.8100880401880675,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.6402777777777777,
+      "longest_time_above_h": 1.8736111111111111,
+      "longest_time_above_pair": "slow-fast"
+     }
+    },
+    "T_bed": {
+     "absolute": {
+      "max_ratio": 5.200564523179145,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.001388888888888889,
+      "longest_time_above_h": 23.0875,
+      "longest_time_above_pair": "slow-fast"
+     },
+     "deviation": {
+      "max_ratio": 3.8100880401880675,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.6402777777777777,
+      "longest_time_above_h": 1.8736111111111111,
+      "longest_time_above_pair": "slow-fast"
+     }
+    },
+    "T_bed_x6": {
+     "absolute": {
+      "max_ratio": 12.738729456209406,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.001388888888888889,
+      "longest_time_above_h": 24.0,
+      "longest_time_above_pair": "slow-median"
+     },
+     "deviation": {
+      "max_ratio": 9.332771573541532,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.6402777777777777,
+      "longest_time_above_h": 23.933333333333334,
+      "longest_time_above_pair": "slow-fast"
+     }
+    }
+   },
+   "inlet_plus": {
+    "Y_out": {
+     "absolute": {
+      "max_ratio": 8.450141583451886,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.013888888888888888,
+      "longest_time_above_h": 23.081944444444446,
+      "longest_time_above_pair": "slow-fast"
+     },
+     "deviation": {
+      "max_ratio": 5.80445303789926,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.5736111111111111,
+      "longest_time_above_h": 2.3472222222222223,
+      "longest_time_above_pair": "slow-fast"
+     }
+    },
+    "Y_out_balance": {
+     "absolute": {
+      "max_ratio": 8.28185209603242,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.013888888888888888,
+      "longest_time_above_h": 23.008333333333333,
+      "longest_time_above_pair": "slow-fast"
+     },
+     "deviation": {
+      "max_ratio": 5.836591833619524,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.5722222222222222,
+      "longest_time_above_h": 2.375,
+      "longest_time_above_pair": "slow-fast"
+     }
+    },
+    "T_out": {
+     "absolute": {
+      "max_ratio": 5.156555124056904,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.001388888888888889,
+      "longest_time_above_h": 22.754166666666666,
+      "longest_time_above_pair": "slow-fast"
+     },
+     "deviation": {
+      "max_ratio": 4.777576529227838,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.5888888888888889,
+      "longest_time_above_h": 1.8402777777777777,
+      "longest_time_above_pair": "slow-fast"
+     }
+    },
+    "T_bed": {
+     "absolute": {
+      "max_ratio": 5.156555124056904,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.001388888888888889,
+      "longest_time_above_h": 22.754166666666666,
+      "longest_time_above_pair": "slow-fast"
+     },
+     "deviation": {
+      "max_ratio": 4.777576529227838,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.5888888888888889,
+      "longest_time_above_h": 1.8402777777777777,
+      "longest_time_above_pair": "slow-fast"
+     }
+    },
+    "T_bed_x6": {
+     "absolute": {
+      "max_ratio": 12.630928884473423,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.001388888888888889,
+      "longest_time_above_h": 23.358333333333334,
+      "longest_time_above_pair": "slow-fast"
+     },
+     "deviation": {
+      "max_ratio": 11.702624703705245,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.5888888888888889,
+      "longest_time_above_h": 23.927777777777777,
+      "longest_time_above_pair": "slow-fast"
+     }
+    }
+   },
+   "inlet_minus": {
+    "Y_out": {
+     "absolute": {
+      "max_ratio": 12.239167645987333,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.7069444444444445,
+      "longest_time_above_h": 24.0,
+      "longest_time_above_pair": "slow-median"
+     },
+     "deviation": {
+      "max_ratio": 5.2874908132886995,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.7416666666666667,
+      "longest_time_above_h": 23.908333333333335,
+      "longest_time_above_pair": "slow-fast"
+     }
+    },
+    "Y_out_balance": {
+     "absolute": {
+      "max_ratio": 12.099213015948582,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.7069444444444445,
+      "longest_time_above_h": 24.0,
+      "longest_time_above_pair": "slow-median"
+     },
+     "deviation": {
+      "max_ratio": 5.321805890113718,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.7416666666666667,
+      "longest_time_above_h": 23.90972222222222,
+      "longest_time_above_pair": "slow-fast"
+     }
+    },
+    "T_out": {
+     "absolute": {
+      "max_ratio": 10.06511552023865,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.8527777777777777,
+      "longest_time_above_h": 24.0,
+      "longest_time_above_pair": "slow-median"
+     },
+     "deviation": {
+      "max_ratio": 4.517769683280386,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.8319444444444445,
+      "longest_time_above_h": 4.566666666666666,
+      "longest_time_above_pair": "slow-fast"
+     }
+    },
+    "T_bed": {
+     "absolute": {
+      "max_ratio": 10.06511552023865,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.8527777777777777,
+      "longest_time_above_h": 24.0,
+      "longest_time_above_pair": "slow-median"
+     },
+     "deviation": {
+      "max_ratio": 4.517769683280386,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.8319444444444445,
+      "longest_time_above_h": 4.566666666666666,
+      "longest_time_above_pair": "slow-fast"
+     }
+    },
+    "T_bed_x6": {
+     "absolute": {
+      "max_ratio": 24.654397226752344,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.8527777777777777,
+      "longest_time_above_h": 24.0,
+      "longest_time_above_pair": "slow-median"
+     },
+     "deviation": {
+      "max_ratio": 11.066230499452113,
+      "max_ratio_pair": "slow-fast",
+      "time_of_max_ratio_h": 0.8319444444444445,
+      "longest_time_above_h": 23.916666666666668,
+      "longest_time_above_pair": "slow-fast"
+     }
+    }
+   }
+  }
+ },
+ "context": {
+  "P1": {
+   "signal_for_delta_x": {
+    "Y_out": 7.209521807479751e-05,
+    "Y_out_balance": 7.105586072914137e-05,
+    "T_bed": 0.14158957481806803
+   },
+   "delta_x": 0.01,
+   "input_shifts": {
+    "inlet_temperature_plus_slow_std": {
+     "change": {
+      "inlet_temperature_celsius": 81.75
+     },
+     "delta_moisture_kg_per_kg": -0.002053067995780089,
+     "delta_Y_out": 2.9456608034529597e-05,
+     "delta_Y_out_balance": 2.912422939280873e-05,
+     "delta_T_bed": 0.23700564895072063
+    },
+    "spray_rate_plus_throughput_amplitude": {
+     "change": {
+      "spray_rate_kg_per_h": 1.5225
+     },
+     "delta_moisture_kg_per_kg": 0.005485043842623938,
+     "delta_Y_out": 0.0001878459298466327,
+     "delta_Y_out_balance": 0.00018933401143176806,
+     "delta_T_bed": -0.3973988712205738
+    },
+    "solid_fraction_plus_std": {
+     "change": {
+      "solid_fraction": 0.311535
+     },
+     "delta_moisture_kg_per_kg": -0.007171711165739614,
+     "delta_Y_out": -0.00026433484217475503,
+     "delta_Y_out_balance": -0.0002661398056977189,
+     "delta_T_bed": 0.530628179442914
+    }
+   }
+  },
+  "P2": {
+   "signal_for_delta_x": {
+    "Y_out": 7.321392553917777e-05,
+    "Y_out_balance": 7.199015650127018e-05,
+    "T_bed": 0.14226058264945457
+   },
+   "delta_x": 0.01,
+   "input_shifts": {
+    "inlet_temperature_plus_slow_std": {
+     "change": {
+      "inlet_temperature_celsius": 88.35
+     },
+     "delta_moisture_kg_per_kg": -0.0015974100220711995,
+     "delta_Y_out": 2.638914350645491e-05,
+     "delta_Y_out_balance": 2.620996332469011e-05,
+     "delta_T_bed": 0.24203027166186075
+    },
+    "spray_rate_plus_throughput_amplitude": {
+     "change": {
+      "spray_rate_kg_per_h": 1.5225
+     },
+     "delta_moisture_kg_per_kg": 0.00447257807544249,
+     "delta_Y_out": 0.00020179084866047553,
+     "delta_Y_out_balance": 0.0002027476734536779,
+     "delta_T_bed": -0.42607165593335594
+    },
+    "solid_fraction_plus_std": {
+     "change": {
+      "solid_fraction": 0.311535
+     },
+     "delta_moisture_kg_per_kg": -0.005538949455113185,
+     "delta_Y_out": -0.0002712948410395037,
+     "delta_Y_out_balance": -0.0002724740139746981,
+     "delta_T_bed": 0.538583818280415
+    }
+   }
+  },
+  "P3": {
+   "signal_for_delta_x": {
+    "Y_out": 7.402647540708338e-05,
+    "Y_out_balance": 7.257397278288037e-05,
+    "T_bed": 0.14268178153129996
+   },
+   "delta_x": 0.01,
+   "input_shifts": {
+    "inlet_temperature_plus_slow_std": {
+     "change": {
+      "inlet_temperature_celsius": 92.25
+     },
+     "delta_moisture_kg_per_kg": -0.0013742884204777372,
+     "delta_Y_out": 2.4920133414388368e-05,
+     "delta_Y_out_balance": 2.475885229951888e-05,
+     "delta_T_bed": 0.2444016083638516
+    },
+    "spray_rate_plus_throughput_amplitude": {
+     "change": {
+      "spray_rate_kg_per_h": 1.5225
+     },
+     "delta_moisture_kg_per_kg": 0.0039382455444541,
+     "delta_Y_out": 0.0002091377628415901,
+     "delta_Y_out_balance": 0.00020999945933960693,
+     "delta_T_bed": -0.44152667872725715
+    },
+    "solid_fraction_plus_std": {
+     "change": {
+      "solid_fraction": 0.311535
+     },
+     "delta_moisture_kg_per_kg": -0.004750864472165106,
+     "delta_Y_out": -0.0002749890862944436,
+     "delta_Y_out_balance": -0.0002760504002027632,
+     "delta_T_bed": 0.5428015765410237
+    }
+   }
+  },
+  "P4": {
+   "signal_for_delta_x": {
+    "Y_out": 7.491550379208064e-05,
+    "Y_out_balance": 7.318838561657855e-05,
+    "T_bed": 0.14312266214442151
+   },
+   "delta_x": 0.01,
+   "input_shifts": {
+    "inlet_temperature_plus_slow_std": {
+     "change": {
+      "inlet_temperature_celsius": 96.25
+     },
+     "delta_moisture_kg_per_kg": -0.0011794319843482504,
+     "delta_Y_out": 2.364436032702491e-05,
+     "delta_Y_out_balance": 2.347723254074799e-05,
+     "delta_T_bed": 0.24638750248158914
+    },
+    "spray_rate_plus_throughput_amplitude": {
+     "change": {
+      "spray_rate_kg_per_h": 1.5225
+     },
+     "delta_moisture_kg_per_kg": 0.0034510557377136486,
+     "delta_Y_out": 0.00021602545735098858,
+     "delta_Y_out_balance": 0.00021686122208107797,
+     "delta_T_bed": -0.4561389582644324
+    },
+    "solid_fraction_plus_std": {
+     "change": {
+      "solid_fraction": 0.311535
+     },
+     "delta_moisture_kg_per_kg": -0.00406663059595333,
+     "delta_Y_out": -0.0002785071004226987,
+     "delta_Y_out_balance": -0.0002795286134297595,
+     "delta_T_bed": 0.5466492625518242
+    }
+   }
+  },
+  "P5": {
+   "signal_for_delta_x": {
+    "Y_out": 7.649093438473488e-05,
+    "Y_out_balance": 7.419867023323464e-05,
+    "T_bed": 0.14383963622478851
+   },
+   "delta_x": 0.01,
+   "input_shifts": {
+    "inlet_temperature_plus_slow_std": {
+     "change": {
+      "inlet_temperature_celsius": 102.64999999999999
+     },
+     "delta_moisture_kg_per_kg": -0.0009293286086133334,
+     "delta_Y_out": 2.2010665855411865e-05,
+     "delta_Y_out_balance": 2.1808176122045664e-05,
+     "delta_T_bed": 0.24875108198283158
+    },
+    "spray_rate_plus_throughput_amplitude": {
+     "change": {
+      "spray_rate_kg_per_h": 1.5225
+     },
+     "delta_moisture_kg_per_kg": 0.0027956603555081005,
+     "delta_Y_out": 0.00022583313066611155,
+     "delta_Y_out_balance": 0.00022670261615932025,
+     "delta_T_bed": -0.4771004201386262
+    },
+    "solid_fraction_plus_std": {
+     "change": {
+      "solid_fraction": 0.311535
+     },
+     "delta_moisture_kg_per_kg": -0.003191443220978224,
+     "delta_Y_out": -0.00028368031954580444,
+     "delta_Y_out_balance": -0.00028471831225690414,
+     "delta_T_bed": 0.5518801830003639
+    }
+   }
+  },
+  "P6": {
+   "signal_for_delta_x": {
+    "Y_out": 3.870455023976678e-05,
+    "Y_out_balance": 3.790463374065932e-05,
+    "T_bed": 0.08196502815670462
+   },
+   "delta_x": 0.01,
+   "input_shifts": {
+    "inlet_temperature_plus_slow_std": {
+     "change": {
+      "inlet_temperature_celsius": 60.35
+     },
+     "delta_moisture_kg_per_kg": -0.0015512813226412348,
+     "delta_Y_out": 1.4655278173517777e-05,
+     "delta_Y_out_balance": 1.4584755505850366e-05,
+     "delta_T_bed": 0.28824461889746544
+    },
+    "spray_rate_plus_throughput_amplitude": {
+     "change": {
+      "spray_rate_kg_per_h": 1.5225
+     },
+     "delta_moisture_kg_per_kg": 0.0026301092600305997,
+     "delta_Y_out": 0.00011580453200866689,
+     "delta_Y_out_balance": 0.00011612054326139848,
+     "delta_T_bed": -0.26179818850209813
+    },
+    "solid_fraction_plus_std": {
+     "change": {
+      "solid_fraction": 0.311535
+     },
+     "delta_moisture_kg_per_kg": -0.003186841031349502,
+     "delta_Y_out": -0.0001479466355495257,
+     "delta_Y_out_balance": -0.00014833700147312556,
+     "delta_T_bed": 0.32077241163278813
+    }
+   }
+  },
+  "P7": {
+   "signal_for_delta_x": {
+    "Y_out": 3.6149207963505644e-05,
+    "Y_out_balance": 3.528431186871141e-05,
+    "T_bed": 0.07665466623707769
+   },
+   "delta_x": 0.01,
+   "input_shifts": {
+    "inlet_temperature_plus_slow_std": {
+     "change": {
+      "inlet_temperature_celsius": 60.35
+     },
+     "delta_moisture_kg_per_kg": -0.0013363352294973319,
+     "delta_Y_out": 1.2947014379543695e-05,
+     "delta_Y_out_balance": 1.2879287146327911e-05,
+     "delta_T_bed": 0.2937246907242752
+    },
+    "spray_rate_plus_throughput_amplitude": {
+     "change": {
+      "spray_rate_kg_per_h": 1.5225
+     },
+     "delta_moisture_kg_per_kg": 0.002187302143414782,
+     "delta_Y_out": 0.00011011260778090622,
+     "delta_Y_out_balance": 0.00011038831086885442,
+     "delta_T_bed": -0.25063350427103614
+    },
+    "solid_fraction_plus_std": {
+     "change": {
+      "solid_fraction": 0.311535
+     },
+     "delta_moisture_kg_per_kg": -0.0026053904686546836,
+     "delta_Y_out": -0.0001381238812860914,
+     "delta_Y_out_balance": -0.00013846090766576197,
+     "delta_T_bed": 0.3007964935082441
+    }
+   }
+  }
+ }
+}
