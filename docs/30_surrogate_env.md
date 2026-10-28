@@ -2,8 +2,7 @@
 
 Status: design fixed and committed before the runs (sections 1-6); runs and results in sections
 7-9, added after the runs (numbers only from the artifacts named there). Branch `surrogate-env`
-(from `origin/master` a84b764). Finding number: assigned by the managing session (lab book entry
-"Befund NN").
+(from `origin/master` a84b764). Finding number: 113 (lab book).
 
 ## 1. Question
 
