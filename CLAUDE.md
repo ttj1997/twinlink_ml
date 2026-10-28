@@ -37,6 +37,9 @@ lab book (`04_stand_ap1.md`), process setup, and synthesis documents.
   caches of long runs, unversioned reports) to `C:/twinlink_runs/<branch>/` (reports to
   `local/reports/`). Report the list and the copy target. Remove the worktree only after the
   copy is verified (file count and total size match).
+- Budget rules in study prompts refer to wall-clock time.
+- Parallel studies name their document `docs/NN_<topic>.md`; the managing session assigns the
+  number at merge.
 
 ## Provenance
 
