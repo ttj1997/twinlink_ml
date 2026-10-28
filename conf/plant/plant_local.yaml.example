@@ -42,3 +42,17 @@ operating_point_roles:
   preheater_loop_flow: [TAG_PREHEATER_LOOP_FLOW]          # m3/h
   preheater_supply_temperature: [TAG_PREHEATER_SUPPLY_T]  # water side, towards the preheater
   preheater_return_temperature: [TAG_PREHEATER_RETURN_T]  # water side, from the preheater
+
+# Roles of the plant-near study (twinlink_ml.plant_scale.data). Several tags under one role are
+# averaged, except atomising_air_flow (nozzles are summed). The six bed-temperature sensors are
+# given as two groups of three; bed_temperature (the mean of all six) is derived in code.
+plant_scale_roles:
+  ambient_temperature: [TAG_AMBIENT_T]                    # intake air, degC
+  process_air_flow: [TAG_PROCESS_AIR_FLOW]                # Nm3/h
+  supply_air_temperature: [TAG_SUPPLY_AIR_T_1, TAG_SUPPLY_AIR_T_2, TAG_SUPPLY_AIR_T_3]  # degC
+  bed_temperature_group_a: [TAG_BED_T_1, TAG_BED_T_2, TAG_BED_T_3]  # degC
+  bed_temperature_group_b: [TAG_BED_T_4, TAG_BED_T_5, TAG_BED_T_6]  # degC
+  exhaust_outlet_temperature: [TAG_EXHAUST_OUTLET_T]      # degC, at the granulator outlet
+  spray_rate: [TAG_SPRAY_RATE]                            # kg/h
+  atomising_air_flow: [TAG_NOZZLE_AIR_1, TAG_NOZZLE_AIR_2, TAG_NOZZLE_AIR_3, TAG_NOZZLE_AIR_4, TAG_NOZZLE_AIR_5, TAG_NOZZLE_AIR_6]  # Nm3/h each
+  downstream_exhaust_temperature: [TAG_DOWNSTREAM_EXHAUST_T_1, TAG_DOWNSTREAM_EXHAUST_T_2]  # degC, optional, informative only

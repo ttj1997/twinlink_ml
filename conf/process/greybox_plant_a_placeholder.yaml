@@ -1,0 +1,144 @@
+# Grey-box process model at the scale of plant A ("plant-near", docs/NN_plant_scale.md)
+#
+# STATUS: placeholder -- the MODEL STRUCTURE is the unchanged grey-box model of the lab line;
+# this file only parametrises it at plant scale. Nothing here is a measured plant value except
+# where the study replaces the nominal values per operating point with day/segment means of the
+# plant exports (inlet temperature, air flow, spray rate, ambient temperature; done in code by
+# twinlink_ml.plant_scale.model, not here). Every other value is a PLACEHOLDER:
+#
+#   * geometry: cross-section 4.9 m2 (2.5 m diameter, PLACEHOLDER without source; enters only the
+#     gas velocity, the fluidisation checks and the fan/bed pressure drop, not the steady bed
+#     temperature or moisture at a given dry-air mass flow), solid bed mass 700 kg (PLACEHOLDER,
+#     band 600-800 kg of the study request; no effect on the steady state, the product
+#     take-off holds it at the setpoint), heat-loss UA 0 (calibrated per day by the study).
+#   * material: kinetics and isotherm of the lab line (greybox_gab_placeholder.yaml) unchanged --
+#     NOT identifiable without a moisture measurement (study request; band of Befund 108 through
+#     the parameter draws of Befund 111). cp_suspension 2243 J/(kg K) = mixture of solid 1200 and
+#     water 4180 at the reference solid fraction 0.65 (placeholder); suspension density 1339
+#     kg/m3 (value of a process screen already cited in docs/23; enters only the pump power).
+#   * operation: suspension temperature 30 degC (feed-temperature placeholder of docs/23).
+#   * actions / disturbances: SAMPLING BOX only (wide enough for both measured days); the study
+#     sets the nominal values per operating point. Inlet temperature 70-100 degC = the search box
+#     of docs/23. Ambient relative humidity box down to 0: the supply air is presumably dried (dew
+#     point very low, unconfirmed); the study sets the relative humidity that gives the
+#     placeholder inlet humidity at the operating point's ambient temperature.
+#   * energy, numerics, measurement: as the lab line (the sensor model is that of Befund 116, so
+#     that the signal-to-noise ratios are comparable).
+
+provenance:
+  status: placeholder
+  description: >-
+    Plant-scale parametrisation of the grey-box model for the plant-near study (plant A,
+    2026-10-28). Structure unchanged; geometry and feed placeholders; kinetics and isotherm of the
+    lab line (GAB placeholder). Not calibrated; the study calibrates the heat-loss UA per day.
+  open_todos:
+    - "Application partner: cross-section and bed mass of the granulator, bed pressure drop"
+    - "Application partner: solid fraction of the suspension per product"
+    - "Application partner: supply-air humidity (dryer dew point)"
+    - "Application partner: positions of the bed-temperature sensors and of the exhaust sensor"
+
+geometry:
+  cross_section_area_m2: 4.9            # PLACEHOLDER (2.5 m diameter)
+  bed_mass_solid_setpoint_kg: 700.0     # PLACEHOLDER (600-800 kg)
+  heat_loss_ua_w_per_k: 0.0             # calibrated per day by the study
+
+gas:
+  pressure_pa: 101325.0
+  r_specific_dry_air_j_per_kg_k: 287.06
+  cp_dry_air_j_per_kg_k: 1006.0
+  cp_vapour_j_per_kg_k: 1860.0
+  viscosity_ref_pa_s: 1.716e-5
+  viscosity_ref_temperature_k: 273.15
+  sutherland_constant_k: 110.4
+
+material:
+  particle_density_kg_per_m3: 1500.0
+  sphericity: 0.9
+  cp_solid_j_per_kg_k: 1200.0
+  cp_water_liquid_j_per_kg_k: 4180.0
+  cp_suspension_j_per_kg_k: 2243.0      # PLACEHOLDER: 0.65 * 1200 + 0.35 * 4180
+  suspension_density_kg_per_m3: 1339.0  # screen value cited in docs/23 (pump power only)
+  critical_moisture_kg_per_kg: 0.200    # lab line, not identifiable here (Befund 108 band)
+  equilibrium_moisture_kg_per_kg: 0.030
+  max_saturation_degree: 0.60           # lab line (nu_max), not identifiable here
+  max_driving_humidity_kg_per_kg: 0.50
+  nucleus_diameter_m: 150.0e-6
+  nucleation_solid_fraction: 0.008
+  initial_diameter_m: 400.0e-6
+  sorption_isotherm_kind: gab
+  gab_monolayer_moisture_kg_per_kg: 0.020
+  gab_c_constant_at_reference_temperature: 25.0
+  gab_k_constant_at_reference_temperature: 0.75
+  gab_c_enthalpy_j_per_mol: 6000.0
+  gab_k_enthalpy_j_per_mol: 500.0
+  gab_reference_temperature_celsius: 62.0
+
+energy:
+  heater_efficiency: 0.98
+  fan_efficiency: 0.55
+  distributor_loss_coefficient: 350.0
+  pump_pressure_rise_pa: 300000.0
+  pump_efficiency: 0.40
+  atomiser_air_kg_per_s_per_bar: 1.5e-4
+  compressor_efficiency: 0.50
+  target: power_kw
+  reference_value: null
+
+operation:
+  mode: continuous
+  mass_control_time_constant_s: 600.0
+  seed_mass_flow_kg_per_h: 0.0
+  suspension_temperature_celsius: 30.0  # PLACEHOLDER (feed temperature of docs/23)
+  initial_moisture_kg_per_kg: 0.050
+  initial_bed_temperature_celsius: 55.0
+
+actions:
+  inlet_temperature_celsius:
+    minimum: 70.0
+    maximum: 100.0
+    nominal: 84.0
+    max_rate_per_s: 0.5
+  gas_velocity_m_per_s:
+    minimum: 1.0
+    maximum: 4.0
+    nominal: 2.2
+    max_rate_per_s: 0.05
+  spray_rate_kg_per_h:
+    minimum: 500.0
+    maximum: 3000.0
+    nominal: 1500.0
+    max_rate_per_s: 20.0
+  nozzle_pressure_bar:
+    minimum: 1.0
+    maximum: 4.0
+    nominal: 2.5
+    max_rate_per_s: 0.05
+
+disturbances:
+  ambient_temperature_celsius:
+    minimum: -20.0
+    maximum: 40.0
+    nominal: 10.0
+  ambient_relative_humidity:
+    minimum: 0.0
+    maximum: 0.85
+    nominal: 0.0
+  suspension_solid_fraction:
+    minimum: 0.55
+    maximum: 0.80
+    nominal: 0.65
+
+numerics:
+  sample_time_s: 5.0
+  substeps: 5
+  integrator: rk4
+  state_floor: 1.0e-9
+  enforce_action_bounds: true
+
+measurement:
+  enabled: true
+  relative_noise_std: 0.005
+  absolute_noise_std_temperature_k: 0.2
+  sensor_time_constant_s: 10.0
+
+backend: numpy
