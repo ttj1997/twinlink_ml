@@ -350,3 +350,47 @@ def test_inlet_for_limit_brackets_the_moisture_limit():
     assert search.evaluate(t, 0.8, d).moisture_kg_per_kg <= limit
     assert search.evaluate(t - 0.02, 0.8, d).moisture_kg_per_kg > limit
     assert search.inlet_for_limit(0.8, d, 1e-4) is None  # below equilibrium: never admissible
+
+
+# ----------------------------------------------------------------------------- redaction
+
+
+def _redaction_module():
+    import importlib.util
+    import sys
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(root / "scripts" / "verify"))
+    spec = importlib.util.spec_from_file_location(
+        "redact_plant_scale", root / "scripts" / "redact_plant_scale.py"
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_redaction_removes_only_the_per_segment_role_values():
+    module = _redaction_module()
+    segment = {
+        "gap_k": 7.0,
+        "gas_flow_kg_per_s": 10.0,
+        "heat_loss": {"ambient": {"surroundings_celsius": 5.0, "ua_w_per_k": 1.0}},
+        "false_air": {"room": {"surroundings_celsius": 20.0, "leak_share_of_gas": 0.1}},
+    }
+    record = {
+        "survey": {"gas_flow_kg_per_s": 1.0},
+        "balances": {"per_segment": {"day_1": [{"0.65": segment}]}, "overall": {"x": 1}},
+    }
+    redacted, count = module.redact_record(record)
+    kept = redacted["balances"]["per_segment"]["day_1"][0]["0.65"]
+    assert count == 3
+    assert kept == {
+        "gap_k": 7.0,
+        "heat_loss": {"ambient": {"ua_w_per_k": 1.0}},
+        "false_air": {"room": {"leak_share_of_gas": 0.1}},
+    }
+    assert redacted["survey"] == {"gas_flow_kg_per_s": 1.0}  # outside the scope: unchanged
+    assert record["balances"]["per_segment"]["day_1"][0]["0.65"] is segment  # input untouched
+    assert "gas_flow_kg_per_s" in segment
