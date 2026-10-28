@@ -175,6 +175,8 @@ replace a product-moisture measurement.
 
 **Heat pump and storage under an hourly electricity price (Befund 115; plant structure on placeholders, real day-ahead prices DE-LU 2024).** A simple price rule suffices: it is 0.65 % above the MPC with perfect forecast (per test month +0.31 to +0.88 %), and the MPC is practically optimal (+0.010 % above hindsight). RL (SAC, TD3) ends behind the constant rule, untuned, but the reading does not depend on its quality: the whole headroom over the price rule is 0.65 %. One year of prices, tariff = day-ahead price + 0.08 EUR/kWh (placeholder).
 
+**Observability of the bed moisture from gas-side measurements (Befund 116; laboratory line, placeholders, simulation).** Observable in principle (R^2 >= 0.999 at fixed inputs), but with one sensor per quantity every signal-to-noise ratio for a moisture change of 0.01 kg/kg is below 1 (0.28-0.60); only six redundant bed-temperature sensors reach 1.07-1.26 (reading O2, qualified). In practice unknown input offsets limit it (up to 3.9 times the signal); in the steady state water feed and bed moisture are hardly separable, transients carry information. The failure of the soft sensor of Befund 112 is therefore not fully explained. The analytic water-balance expression overestimates the slope by 5-10 % (gas density effect).
+
 **One-step bandit (Befund 93, follow-up of Befund 68).** A residual action and a separated
 moisture cost lift SAC from a negative to a clearly positive closed-regret fraction, but no cell
 meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of

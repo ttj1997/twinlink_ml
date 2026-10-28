@@ -1,0 +1,55 @@
+# Observability of the bed moisture from gas-side measurements (docs/33_observability.md)
+#
+# STATUS: placeholder -- every number below is a study setting or a placeholder, none is a
+# measured plant value. Fixed before the first run. No training; model evaluation only.
+#
+# Truth: the grey-box lab line of Befund 105/111 with the 20 parameter draws of Befund 111, read
+# from the sensor-value config (not copied). Sensor sigmas: the existing sensor model
+# (MeasurementConfig of the process config named by the headroom config).
+
+version: 1
+sensor_value_config: conf/sensor_value/sensor_value.yaml   # draws, truth line (read)
+
+operating_points:
+  # Derived from the per-pair command means of Befund 111 (F1 = ideal feedback, criterion (ii)):
+  # P1-P5: percentiles of the inlet-temperature command among the pairs at the gas-velocity
+  # minimum; P6, P7: the pairs at the inlet-temperature minimum (raised gas velocity), at the
+  # given percentiles of their gas velocity. Disturbances at the process-config nominal (spray
+  # rate 1.5 kg/h, solid fraction 0.30, ambient 20 degC / 0.50) -- identical for every draw.
+  source: artifacts/runs/sensor_value_v1.json.gz
+  variant: F1
+  criterion: ii
+  minimum_velocity_tolerance_m_per_s: 0.01
+  inlet_percentiles_at_minimum_velocity: [5, 25, 50, 75, 95]
+  low_inlet_below_celsius: 61.0
+  velocity_percentiles_at_low_inlet: [50, 95]
+  round_inlet_celsius: 1          # decimals of the derived points (readability, fixed)
+  round_velocity_m_per_s: 2
+
+snr:
+  delta_x_kg_per_kg: 0.01        # moisture difference to be resolved (request)
+  redundant_bed_sensors: 6       # bed temperature, as at the plant (request)
+  analytic_tolerance: 0.05       # relative; report threshold for "analytic expression agrees"
+
+plant_like:
+  # "anlagennah, Platzhalter": only the solid-to-air ratio is scaled. Air flow and water feed
+  # stay those of the lab line at each operating point; the dry solid feed is raised to
+  # ratio * dry-air flow by raising spray rate and solid fraction together at constant water
+  # feed. Every model parameter (geometry, material, energy, holdup) stays unchanged.
+  air_flow_nm3_per_h: 30000.0               # PLACEHOLDER (request)
+  product_dry_solid_t_per_h: [0.5, 1.0]     # PLACEHOLDER (request; read as dry solid)
+  normal_density_dry_air_kg_per_m3: 1.2922  # dry air at 0 degC, 101325 Pa (normal cubic metre)
+  ratio_iterations: 6                       # fixed-point iterations on the nominal model
+
+dynamics:
+  operating_point: P3            # the median inlet temperature at the velocity minimum
+  draws: 3                       # slowest, median and fastest kinetics, see the driver
+  kinetics_parameters: [critical_moisture_kg_per_kg, max_saturation_degree]
+  steps:                         # relative to the operating-point value, applied at t = 0
+    spray_plus: {channel: spray_rate, factor: 1.10}
+    spray_minus: {channel: spray_rate, factor: 0.90}
+    inlet_plus: {channel: inlet_temperature, factor: 1.10}
+    inlet_minus: {channel: inlet_temperature, factor: 0.90}
+  horizon_s: 86400.0             # 24 h after the step (bed residence time about 4.4 h)
+  record_every_s: 60.0           # thinning of the stored series only; statistics at 5 s
+  threshold_sigma: 2.0
