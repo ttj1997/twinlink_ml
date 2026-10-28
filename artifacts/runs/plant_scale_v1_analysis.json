@@ -1,0 +1,3285 @@
+{
+ "source": "artifacts\\runs\\plant_scale_v1.json",
+ "source_commit": "b4ce48d3b1ea1f06507e47a5c49b24c87cdaebef",
+ "source_dirty": false,
+ "analysis_commit": "256494072f3f76fccab3782acb15932667ba46c9",
+ "smoke": false,
+ "reading": {
+  "worst_cross_error_k": {
+   "C0_none": 13.836463564680543,
+   "C3_offset": 5.510182386137487,
+   "C1_heat_loss": 13.631103793726993,
+   "C2_evaporation": 11.104883263861396
+  },
+  "passing": [],
+  "reading": "P2",
+  "selected_for_step_4": "C3_offset",
+  "driver_selection_agrees": true,
+  "structure_t_out_eq_t_bed_cannot_represent": true,
+  "c0_in_sample_worst_k": 6.922080945152501,
+  "parameter_free_bound_k": {
+   "min_half_gap": 3.353006977505153,
+   "max_half_gap": 5.524524365531075
+  }
+ },
+ "calibration": {
+  "reference": {
+   "C0_none:day_1->day_2": {
+    "parameters": {
+     "heat_loss_ua_w_per_k": 314.12137874532124,
+     "solid_fraction": 0.65,
+     "freeboard_mode": "none",
+     "freeboard_value": 0.0
+    },
+    "at_bound": [],
+    "status": 2,
+    "in_sample_max_bed_k": 3.645346615897054,
+    "in_sample_max_exhaust_k": 3.7360423849099647,
+    "cross_max_bed_k": 1.9996775846227663,
+    "cross_max_exhaust_k": 9.669957483432569,
+    "cross_mean_bed_k": -0.5975951682474996,
+    "cross_mean_exhaust_k": 9.471672637169881,
+    "cross_errors": [
+     {
+      "point": "day_2_s1",
+      "error_bed_k": -0.34651158191574183,
+      "error_exhaust_k": 9.669957483432569,
+      "moisture_kg_per_kg": 0.09692265760335772
+     },
+     {
+      "point": "day_2_s2",
+      "error_bed_k": 0.13177597624292048,
+      "error_exhaust_k": 9.607875986584986,
+      "moisture_kg_per_kg": 0.09722767353375161
+     },
+     {
+      "point": "day_2_s3",
+      "error_bed_k": -0.17596748269441065,
+      "error_exhaust_k": 9.559485932222586,
+      "moisture_kg_per_kg": 0.09706038769562042
+     },
+     {
+      "point": "day_2_s4",
+      "error_bed_k": -1.9996775846227663,
+      "error_exhaust_k": 9.049371146439384,
+      "moisture_kg_per_kg": 0.09752426607568054
+     }
+    ]
+   },
+   "C0_none:day_2->day_1": {
+    "parameters": {
+     "heat_loss_ua_w_per_k": 2889.9194096345627,
+     "solid_fraction": 0.65,
+     "freeboard_mode": "none",
+     "freeboard_value": 0.0
+    },
+    "at_bound": [],
+    "status": 2,
+    "in_sample_max_bed_k": 6.922080945152501,
+    "in_sample_max_exhaust_k": 5.581559749309008,
+    "cross_max_bed_k": 13.836463564680543,
+    "cross_max_exhaust_k": 6.8021299922871705,
+    "cross_mean_bed_k": -13.451622907314688,
+    "cross_mean_exhaust_k": -6.380644329382971,
+    "cross_errors": [
+     {
+      "point": "day_1_s1",
+      "error_bed_k": -13.508143947297476,
+      "error_exhaust_k": -6.8021299922871705,
+      "moisture_kg_per_kg": 0.034698910398873295
+     },
+     {
+      "point": "day_1_s2",
+      "error_bed_k": -12.844152165907005,
+      "error_exhaust_k": -5.75942072483307,
+      "moisture_kg_per_kg": 0.03228306933661429
+     },
+     {
+      "point": "day_1_s3",
+      "error_bed_k": -13.617731951373727,
+      "error_exhaust_k": -6.349756674002862,
+      "moisture_kg_per_kg": 0.033388055138374284
+     },
+     {
+      "point": "day_1_s4",
+      "error_bed_k": -13.836463564680543,
+      "error_exhaust_k": -6.611269926408781,
+      "moisture_kg_per_kg": 0.03362307734263936
+     }
+    ]
+   },
+   "C3_offset:day_1->day_2": {
+    "parameters": {
+     "heat_loss_ua_w_per_k": 6.482090372176854e-12,
+     "solid_fraction": 0.65,
+     "freeboard_mode": "offset",
+     "freeboard_value": 5.030060617641421
+    },
+    "at_bound": [
+     "heat_loss_ua_w_per_k"
+    ],
+    "status": 1,
+    "in_sample_max_bed_k": 2.1424134278163223,
+    "in_sample_max_exhaust_k": 0.42226769521259655,
+    "cross_max_bed_k": 1.2710233378965583,
+    "cross_max_exhaust_k": 5.242788278391465,
+    "cross_mean_bed_k": 0.04870752643071974,
+    "cross_mean_exhaust_k": 5.087914714206679,
+    "cross_errors": [
+     {
+      "point": "day_2_s1",
+      "error_bed_k": 0.2563798306845797,
+      "error_exhaust_k": 5.242788278391465,
+      "moisture_kg_per_kg": 0.09462762246008083
+     },
+     {
+      "point": "day_2_s2",
+      "error_bed_k": 0.7525658522445369,
+      "error_exhaust_k": 5.198605244945185,
+      "moisture_kg_per_kg": 0.0948583541903929
+     },
+     {
+      "point": "day_2_s3",
+      "error_bed_k": 0.4569077606903207,
+      "error_exhaust_k": 5.162300557965892,
+      "moisture_kg_per_kg": 0.09464939130302241
+     },
+     {
+      "point": "day_2_s4",
+      "error_bed_k": -1.2710233378965583,
+      "error_exhaust_k": 4.747964775524174,
+      "moisture_kg_per_kg": 0.09474110219954923
+     }
+    ]
+   },
+   "C3_offset:day_2->day_1": {
+    "parameters": {
+     "heat_loss_ua_w_per_k": 2.7023096039435995e-11,
+     "solid_fraction": 0.65,
+     "freeboard_mode": "offset",
+     "freeboard_value": 10.117975308566313
+    },
+    "at_bound": [
+     "heat_loss_ua_w_per_k"
+    ],
+    "status": 3,
+    "in_sample_max_bed_k": 1.2710233378965583,
+    "in_sample_max_exhaust_k": 0.33994991540072306,
+    "cross_max_bed_k": 2.1424134278163223,
+    "cross_max_exhaust_k": 5.510182386137487,
+    "cross_mean_bed_k": -2.0409179579816445,
+    "cross_mean_exhaust_k": -5.087914688616243,
+    "cross_errors": [
+     {
+      "point": "day_1_s1",
+      "error_bed_k": -2.0982210325814776,
+      "error_exhaust_k": -5.510182386137487,
+      "moisture_kg_per_kg": 0.02146305039960339
+     },
+     {
+      "point": "day_1_s2",
+      "error_bed_k": -1.9936602683360434,
+      "error_exhaust_k": -5.026904135828424,
+      "moisture_kg_per_kg": 0.02038724925020574
+     },
+     {
+      "point": "day_1_s3",
+      "error_bed_k": -2.1424134278163223,
+      "error_exhaust_k": -4.992413459011772,
+      "moisture_kg_per_kg": 0.020556148788756445
+     },
+     {
+      "point": "day_1_s4",
+      "error_bed_k": -1.929377103192735,
+      "error_exhaust_k": -4.822158773487288,
+      "moisture_kg_per_kg": 0.020323673007254683
+     }
+    ]
+   },
+   "C1_heat_loss:day_1->day_2": {
+    "parameters": {
+     "heat_loss_ua_w_per_k": 3.0550828784328056e-11,
+     "solid_fraction": 0.65,
+     "freeboard_mode": "heat_loss",
+     "freeboard_value": 1026.1486791015782
+    },
+    "at_bound": [
+     "heat_loss_ua_w_per_k"
+    ],
+    "status": 3,
+    "in_sample_max_bed_k": 2.1424134278163223,
+    "in_sample_max_exhaust_k": 0.42886224623397595,
+    "cross_max_bed_k": 1.2710233378965583,
+    "cross_max_exhaust_k": 7.658659390609934,
+    "cross_mean_bed_k": 0.04870752643071974,
+    "cross_mean_exhaust_k": 7.313511953618724,
+    "cross_errors": [
+     {
+      "point": "day_2_s1",
+      "error_bed_k": 0.2563798306845797,
+      "error_exhaust_k": 7.658659390609934,
+      "moisture_kg_per_kg": 0.09462762246008083
+     },
+     {
+      "point": "day_2_s2",
+      "error_bed_k": 0.7525658522445369,
+      "error_exhaust_k": 7.534576561218735,
+      "moisture_kg_per_kg": 0.0948583541903929
+     },
+     {
+      "point": "day_2_s3",
+      "error_bed_k": 0.4569077606903207,
+      "error_exhaust_k": 7.447206614399079,
+      "moisture_kg_per_kg": 0.09464939130302241
+     },
+     {
+      "point": "day_2_s4",
+      "error_bed_k": -1.2710233378965583,
+      "error_exhaust_k": 6.613605248247147,
+      "moisture_kg_per_kg": 0.09474110219954923
+     }
+    ]
+   },
+   "C1_heat_loss:day_2->day_1": {
+    "parameters": {
+     "heat_loss_ua_w_per_k": 0.00014344980571177941,
+     "solid_fraction": 0.65,
+     "freeboard_mode": "heat_loss",
+     "freeboard_value": 4206.483643869879
+    },
+    "at_bound": [],
+    "status": 3,
+    "in_sample_max_bed_k": 1.2710236785337017,
+    "in_sample_max_exhaust_k": 1.5556932299266464,
+    "cross_max_bed_k": 2.1424141317900336,
+    "cross_max_exhaust_k": 13.631103793726993,
+    "cross_mean_bed_k": -2.0409186579110816,
+    "cross_mean_exhaust_k": -13.120137721203735,
+    "cross_errors": [
+     {
+      "point": "day_1_s1",
+      "error_bed_k": -2.098221732378363,
+      "error_exhaust_k": -13.579415807951392,
+      "moisture_kg_per_kg": 0.02146305105137003
+     },
+     {
+      "point": "day_1_s2",
+      "error_bed_k": -1.9936609336685933,
+      "error_exhaust_k": -12.149660810795922,
+      "moisture_kg_per_kg": 0.020387249842798383
+     },
+     {
+      "point": "day_1_s3",
+      "error_bed_k": -2.1424141317900336,
+      "error_exhaust_k": -13.120370472340632,
+      "moisture_kg_per_kg": 0.020556149420173142
+     },
+     {
+      "point": "day_1_s4",
+      "error_bed_k": -1.9293778338073366,
+      "error_exhaust_k": -13.631103793726993,
+      "moisture_kg_per_kg": 0.020323673656179153
+     }
+    ]
+   },
+   "C2_evaporation:day_1->day_2": {
+    "parameters": {
+     "heat_loss_ua_w_per_k": 856.1838301761126,
+     "solid_fraction": 0.65,
+     "freeboard_mode": "evaporation",
+     "freeboard_value": 0.37612020645045163
+    },
+    "at_bound": [],
+    "status": 3,
+    "in_sample_max_bed_k": 0.20008619165807318,
+    "in_sample_max_exhaust_k": 0.46013685285064554,
+    "cross_max_bed_k": 9.825515178028489,
+    "cross_max_exhaust_k": 2.564884092705846,
+    "cross_mean_bed_k": 9.052642913398966,
+    "cross_mean_exhaust_k": 2.268456024165534,
+    "cross_errors": [
+     {
+      "point": "day_2_s1",
+      "error_bed_k": 9.383644399735964,
+      "error_exhaust_k": 2.564884092705846,
+      "moisture_kg_per_kg": 0.04489453326979742
+     },
+     {
+      "point": "day_2_s2",
+      "error_bed_k": 9.825515178028489,
+      "error_exhaust_k": 2.451274383390121,
+      "moisture_kg_per_kg": 0.04509717976102934
+     },
+     {
+      "point": "day_2_s3",
+      "error_bed_k": 9.499465464475072,
+      "error_exhaust_k": 2.389472308171065,
+      "moisture_kg_per_kg": 0.04505313395341659
+     },
+     {
+      "point": "day_2_s4",
+      "error_bed_k": 7.501946611356338,
+      "error_exhaust_k": 1.668193312395104,
+      "moisture_kg_per_kg": 0.045571926810538343
+     }
+    ]
+   },
+   "C2_evaporation:day_2->day_1": {
+    "parameters": {
+     "heat_loss_ua_w_per_k": 2962.090873601903,
+     "solid_fraction": 0.65,
+     "freeboard_mode": "evaporation",
+     "freeboard_value": 0.22539127037230175
+    },
+    "at_bound": [],
+    "status": 3,
+    "in_sample_max_bed_k": 1.964804939649575,
+    "in_sample_max_exhaust_k": 0.9815966135244807,
+    "cross_max_bed_k": 11.104883263861396,
+    "cross_max_exhaust_k": 8.267658477915752,
+    "cross_mean_bed_k": -10.67475667768352,
+    "cross_mean_exhaust_k": -7.804532786618637,
+    "cross_errors": [
+     {
+      "point": "day_1_s1",
+      "error_bed_k": -10.664572304554461,
+      "error_exhaust_k": -8.267658477915752,
+      "moisture_kg_per_kg": 0.025243533768247062
+     },
+     {
+      "point": "day_1_s2",
+      "error_bed_k": -10.070693123246969,
+      "error_exhaust_k": -7.155155180278477,
+      "moisture_kg_per_kg": 0.023526511087737845
+     },
+     {
+      "point": "day_1_s3",
+      "error_bed_k": -10.858878019071255,
+      "error_exhaust_k": -7.766167387959072,
+      "moisture_kg_per_kg": 0.024360990021108364
+     },
+     {
+      "point": "day_1_s4",
+      "error_bed_k": -11.104883263861396,
+      "error_exhaust_k": -8.029150100321246,
+      "moisture_kg_per_kg": 0.024563205972384594
+     }
+    ]
+   }
+  },
+  "band": {
+   "C0_none:day_1->day_2": {
+    "0.6": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 3.927551621003151e-15,
+      "solid_fraction": 0.6,
+      "freeboard_mode": "none",
+      "freeboard_value": 0.0
+     },
+     "at_bound": [
+      "heat_loss_ua_w_per_k"
+     ],
+     "status": 1,
+     "in_sample_max_bed_k": 4.541309989088376,
+     "in_sample_max_exhaust_k": 2.9359454439072294,
+     "cross_max_bed_k": 5.455381242047203,
+     "cross_max_exhaust_k": 6.09576538074878,
+     "cross_mean_bed_k": -4.1304965970961405,
+     "cross_mean_exhaust_k": 5.93877120832124,
+     "cross_errors": [
+      {
+       "point": "day_2_s1",
+       "error_bed_k": -3.9207036845995304,
+       "error_exhaust_k": 6.09576538074878,
+       "moisture_kg_per_kg": 0.12704436638560423
+      },
+      {
+       "point": "day_2_s2",
+       "error_bed_k": -3.424110394940385,
+       "error_exhaust_k": 6.051989615401681,
+       "moisture_kg_per_kg": 0.1273551768982486
+      },
+      {
+       "point": "day_2_s3",
+       "error_bed_k": -3.7217910667974436,
+       "error_exhaust_k": 6.013662348119553,
+       "moisture_kg_per_kg": 0.12708158788169044
+      },
+      {
+       "point": "day_2_s4",
+       "error_bed_k": -5.455381242047203,
+       "error_exhaust_k": 5.593667489014948,
+       "moisture_kg_per_kg": 0.12723295404614987
+      }
+     ]
+    },
+    "0.634": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 154.15743013887263,
+      "solid_fraction": 0.634,
+      "freeboard_mode": "none",
+      "freeboard_value": 0.0
+     },
+     "at_bound": [],
+     "status": 2,
+     "in_sample_max_bed_k": 3.637741690498572,
+     "in_sample_max_exhaust_k": 3.776315177523358,
+     "cross_max_bed_k": 2.970874984928507,
+     "cross_max_exhaust_k": 8.63691679037661,
+     "cross_mean_bed_k": -1.60916833054414,
+     "cross_mean_exhaust_k": 8.46009947487324,
+     "cross_errors": [
+      {
+       "point": "day_2_s1",
+       "error_bed_k": -1.3795522749717009,
+       "error_exhaust_k": 8.63691679037661,
+       "moisture_kg_per_kg": 0.10533031361612188
+      },
+      {
+       "point": "day_2_s2",
+       "error_bed_k": -0.8920225844082026,
+       "error_exhaust_k": 8.584077425933863,
+       "moisture_kg_per_kg": 0.1056245124323425
+      },
+      {
+       "point": "day_2_s3",
+       "error_bed_k": -1.1942234778681495,
+       "error_exhaust_k": 8.541229937048847,
+       "moisture_kg_per_kg": 0.10541845007227835
+      },
+      {
+       "point": "day_2_s4",
+       "error_bed_k": -2.970874984928507,
+       "error_exhaust_k": 8.078173746133643,
+       "moisture_kg_per_kg": 0.10572587072735473
+      }
+     ]
+    },
+    "0.7": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 811.9026578254094,
+      "solid_fraction": 0.7,
+      "freeboard_mode": "none",
+      "freeboard_value": 0.0
+     },
+     "at_bound": [],
+     "status": 3,
+     "in_sample_max_bed_k": 3.667941735064133,
+     "in_sample_max_exhaust_k": 3.766535287194735,
+     "cross_max_bed_k": 3.24979279748063,
+     "cross_max_exhaust_k": 12.816799874347339,
+     "cross_mean_bed_k": 2.4819597588586575,
+     "cross_mean_exhaust_k": 12.551227564276038,
+     "cross_errors": [
+      {
+       "point": "day_2_s1",
+       "error_bed_k": 2.8003308089990284,
+       "error_exhaust_k": 12.816799874347339,
+       "moisture_kg_per_kg": 0.07439159878882151
+      },
+      {
+       "point": "day_2_s2",
+       "error_bed_k": 3.24979279748063,
+       "error_exhaust_k": 12.725892807822696,
+       "moisture_kg_per_kg": 0.07470506143479838
+      },
+      {
+       "point": "day_2_s3",
+       "error_bed_k": 2.9245095253168714,
+       "error_exhaust_k": 12.659962940233868,
+       "moisture_kg_per_kg": 0.07462994355725527
+      },
+      {
+       "point": "day_2_s4",
+       "error_bed_k": 0.9532059036381,
+       "error_exhaust_k": 12.00225463470025,
+       "moisture_kg_per_kg": 0.07541187117098502
+      }
+     ]
+    }
+   },
+   "C0_none:day_2->day_1": {
+    "0.6": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 511.5199047713237,
+      "solid_fraction": 0.6,
+      "freeboard_mode": "none",
+      "freeboard_value": 0.0
+     },
+     "at_bound": [],
+     "status": 2,
+     "in_sample_max_bed_k": 6.4383785084777685,
+     "in_sample_max_exhaust_k": 5.303751361512383,
+     "cross_max_bed_k": 6.838782122100881,
+     "cross_max_exhaust_k": 0.539447459168251,
+     "cross_mean_bed_k": -6.727384891207107,
+     "cross_mean_exhaust_k": 0.3435936867246099,
+     "cross_errors": [
+      {
+       "point": "day_1_s1",
+       "error_bed_k": -6.838782122100881,
+       "error_exhaust_k": -0.1327681670905747,
+       "moisture_kg_per_kg": 0.029263840303229927
+      },
+      {
+       "point": "day_1_s2",
+       "error_bed_k": -6.545283981905683,
+       "error_exhaust_k": 0.539447459168251,
+       "moisture_kg_per_kg": 0.0276107253135649
+      },
+      {
+       "point": "day_1_s3",
+       "error_bed_k": -6.829941487787828,
+       "error_exhaust_k": 0.43803378958303796,
+       "moisture_kg_per_kg": 0.027993896386618644
+      },
+      {
+       "point": "day_1_s4",
+       "error_bed_k": -6.695531973034036,
+       "error_exhaust_k": 0.5296616652377253,
+       "moisture_kg_per_kg": 0.027778102121686743
+      }
+     ]
+    },
+    "0.634": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 2136.5499906272053,
+      "solid_fraction": 0.634,
+      "freeboard_mode": "none",
+      "freeboard_value": 0.0
+     },
+     "at_bound": [],
+     "status": 3,
+     "in_sample_max_bed_k": 6.7800758365802665,
+     "in_sample_max_exhaust_k": 5.501048341655135,
+     "cross_max_bed_k": 11.834315092177036,
+     "cross_max_exhaust_k": 4.93182080327616,
+     "cross_mean_bed_k": -11.566188951750425,
+     "cross_mean_exhaust_k": -4.495210373818708,
+     "cross_errors": [
+      {
+       "point": "day_1_s1",
+       "error_bed_k": -11.637834758286466,
+       "error_exhaust_k": -4.93182080327616,
+       "moisture_kg_per_kg": 0.03329899085557031
+      },
+      {
+       "point": "day_1_s2",
+       "error_bed_k": -11.078038223289482,
+       "error_exhaust_k": -3.993306782215548,
+       "moisture_kg_per_kg": 0.03110135471726494
+      },
+      {
+       "point": "day_1_s3",
+       "error_bed_k": -11.714567733248714,
+       "error_exhaust_k": -4.446592455877848,
+       "moisture_kg_per_kg": 0.03198981372301546
+      },
+      {
+       "point": "day_1_s4",
+       "error_bed_k": -11.834315092177036,
+       "error_exhaust_k": -4.609121453905274,
+       "moisture_kg_per_kg": 0.032084248048334985
+      }
+     ]
+    },
+    "0.7": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 5196.967062876326,
+      "solid_fraction": 0.7,
+      "freeboard_mode": "none",
+      "freeboard_value": 0.0
+     },
+     "at_bound": [],
+     "status": 2,
+     "in_sample_max_bed_k": 7.306712976975206,
+     "in_sample_max_exhaust_k": 5.795826169868519,
+     "cross_max_bed_k": 18.880238732578007,
+     "cross_max_exhaust_k": 11.655045094306246,
+     "cross_mean_bed_k": -18.2012523679526,
+     "cross_mean_exhaust_k": -11.130273790020883,
+     "cross_errors": [
+      {
+       "point": "day_1_s1",
+       "error_bed_k": -18.22108035759782,
+       "error_exhaust_k": -11.515066402587514,
+       "moisture_kg_per_kg": 0.03712650413390861
+      },
+      {
+       "point": "day_1_s2",
+       "error_bed_k": -17.291958481967526,
+       "error_exhaust_k": -10.207227040893592,
+       "moisture_kg_per_kg": 0.034211519573688065
+      },
+      {
+       "point": "day_1_s3",
+       "error_bed_k": -18.411731899667046,
+       "error_exhaust_k": -11.14375662229618,
+       "moisture_kg_per_kg": 0.035866240511865044
+      },
+      {
+       "point": "day_1_s4",
+       "error_bed_k": -18.880238732578007,
+       "error_exhaust_k": -11.655045094306246,
+       "moisture_kg_per_kg": 0.03648407577244939
+      }
+     ]
+    }
+   },
+   "C3_offset:day_1->day_2": {
+    "0.6": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 1.0550079081002416e-14,
+      "solid_fraction": 0.6,
+      "freeboard_mode": "offset",
+      "freeboard_value": 2.6439733578052294
+     },
+     "at_bound": [
+      "heat_loss_ua_w_per_k"
+     ],
+     "status": 3,
+     "in_sample_max_bed_k": 4.541309989088376,
+     "in_sample_max_exhaust_k": 0.47926939188329953,
+     "cross_max_bed_k": 5.455381242047203,
+     "cross_max_exhaust_k": 3.4517920229435504,
+     "cross_mean_bed_k": -4.1304965970961405,
+     "cross_mean_exhaust_k": 3.2947978505160105,
+     "cross_errors": [
+      {
+       "point": "day_2_s1",
+       "error_bed_k": -3.9207036845995304,
+       "error_exhaust_k": 3.4517920229435504,
+       "moisture_kg_per_kg": 0.12704436638560423
+      },
+      {
+       "point": "day_2_s2",
+       "error_bed_k": -3.424110394940385,
+       "error_exhaust_k": 3.4080162575964508,
+       "moisture_kg_per_kg": 0.1273551768982486
+      },
+      {
+       "point": "day_2_s3",
+       "error_bed_k": -3.7217910667974436,
+       "error_exhaust_k": 3.369688990314323,
+       "moisture_kg_per_kg": 0.12708158788169044
+      },
+      {
+       "point": "day_2_s4",
+       "error_bed_k": -5.455381242047203,
+       "error_exhaust_k": 2.949694131209718,
+       "moisture_kg_per_kg": 0.12723295404614987
+      }
+     ]
+    },
+    "0.634": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 2.158215680124785e-13,
+      "solid_fraction": 0.634,
+      "freeboard_mode": "offset",
+      "freeboard_value": 4.2682101287144425
+     },
+     "at_bound": [
+      "heat_loss_ua_w_per_k"
+     ],
+     "status": 1,
+     "in_sample_max_bed_k": 2.9000330459603703,
+     "in_sample_max_exhaust_k": 0.4404765486626445,
+     "cross_max_bed_k": 2.628255101408861,
+     "cross_max_exhaust_k": 4.649868719645724,
+     "cross_mean_bed_k": -1.306792962221687,
+     "cross_mean_exhaust_k": 4.49426471448125,
+     "cross_errors": [
+      {
+       "point": "day_2_s1",
+       "error_bed_k": -1.0983902169881432,
+       "error_exhaust_k": 4.649868719645724,
+       "moisture_kg_per_kg": 0.10415342075995682
+      },
+      {
+       "point": "day_2_s2",
+       "error_bed_k": -0.6021184071812371,
+       "error_exhaust_k": 4.605771474446385,
+       "moisture_kg_per_kg": 0.10440809477543667
+      },
+      {
+       "point": "day_2_s3",
+       "error_bed_k": -0.8984081233085064,
+       "error_exhaust_k": 4.568835162894047,
+       "moisture_kg_per_kg": 0.10417962472413933
+      },
+      {
+       "point": "day_2_s4",
+       "error_bed_k": -2.628255101408861,
+       "error_exhaust_k": 4.152583500938846,
+       "moisture_kg_per_kg": 0.10428852089759744
+      }
+     ]
+    },
+    "0.7": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 65.77427533573666,
+      "solid_fraction": 0.7,
+      "freeboard_mode": "offset",
+      "freeboard_value": 7.069261839293392
+     },
+     "at_bound": [],
+     "status": 3,
+     "in_sample_max_bed_k": 0.11817017544676389,
+     "in_sample_max_exhaust_k": 0.3658069214999955,
+     "cross_max_bed_k": 4.941668974696924,
+     "cross_max_exhaust_k": 7.396606011371553,
+     "cross_mean_bed_k": 4.234608348881675,
+     "cross_mean_exhaust_k": 7.2346143150056665,
+     "cross_errors": [
+      {
+       "point": "day_2_s1",
+       "error_bed_k": 4.449398785316632,
+       "error_exhaust_k": 7.396606011371553,
+       "moisture_kg_per_kg": 0.06975839234505088
+      },
+      {
+       "point": "day_2_s2",
+       "error_bed_k": 4.941668974696924,
+       "error_exhaust_k": 7.3485071457456,
+       "moisture_kg_per_kg": 0.06993643968704077
+      },
+      {
+       "point": "day_2_s3",
+       "error_bed_k": 4.645086230063157,
+       "error_exhaust_k": 7.311277805686764,
+       "moisture_kg_per_kg": 0.06978755402084857
+      },
+      {
+       "point": "day_2_s4",
+       "error_bed_k": 2.9022794054499883,
+       "error_exhaust_k": 6.882066297218749,
+       "moisture_kg_per_kg": 0.06989531107350899
+      }
+     ]
+    }
+   },
+   "C3_offset:day_2->day_1": {
+    "0.6": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 4.851554399284521e-10,
+      "solid_fraction": 0.6,
+      "freeboard_mode": "offset",
+      "freeboard_value": 5.938771234256585
+     },
+     "at_bound": [
+      "heat_loss_ua_w_per_k"
+     ],
+     "status": 2,
+     "in_sample_max_bed_k": 5.455381242047203,
+     "in_sample_max_exhaust_k": 0.3451037452416372,
+     "cross_max_bed_k": 4.541309989088376,
+     "cross_max_exhaust_k": 3.7740672683346546,
+     "cross_mean_bed_k": -4.427005209178471,
+     "cross_mean_exhaust_k": -3.294797865503339,
+     "cross_errors": [
+      {
+       "point": "day_1_s1",
+       "error_bed_k": -4.541309989088376,
+       "error_exhaust_k": -3.7740672683346546,
+       "moisture_kg_per_kg": 0.02654612966986747
+      },
+      {
+       "point": "day_1_s2",
+       "error_bed_k": -4.362203489651591,
+       "error_exhaust_k": -3.2162432828342418,
+       "moisture_kg_per_kg": 0.025155932747935594
+      },
+      {
+       "point": "day_1_s3",
+       "error_bed_k": -4.515259163609386,
+       "error_exhaust_k": -3.186055120495105,
+       "moisture_kg_per_kg": 0.02536537513040571
+      },
+      {
+       "point": "day_1_s4",
+       "error_bed_k": -4.289248194364532,
+       "error_exhaust_k": -3.0028257903493554,
+       "moisture_kg_per_kg": 0.02506935775809893
+      }
+     ]
+    },
+    "0.634": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 1.5319015978915482e-11,
+      "solid_fraction": 0.634,
+      "freeboard_mode": "offset",
+      "freeboard_value": 8.762474790323585
+     },
+     "at_bound": [
+      "heat_loss_ua_w_per_k"
+     ],
+     "status": 3,
+     "in_sample_max_bed_k": 2.628255101408861,
+     "in_sample_max_exhaust_k": 0.34168116067029786,
+     "cross_max_bed_k": 2.9000330459603703,
+     "cross_max_exhaust_k": 4.934741210271788,
+     "cross_mean_bed_k": -2.802768443813779,
+     "cross_mean_exhaust_k": -4.494264656205649,
+     "cross_errors": [
+      {
+       "point": "day_1_s1",
+       "error_bed_k": -2.878280374958507,
+       "error_exhaust_k": -4.934741210271788,
+       "moisture_kg_per_kg": 0.023015626865316108
+      },
+      {
+       "point": "day_1_s2",
+       "error_bed_k": -2.749906877819086,
+       "error_exhaust_k": -4.427650227068739,
+       "moisture_kg_per_kg": 0.02184621199617709
+      },
+      {
+       "point": "day_1_s3",
+       "error_bed_k": -2.9000330459603703,
+       "error_exhaust_k": -4.394532558913092,
+       "moisture_kg_per_kg": 0.02202734277616969
+      },
+      {
+       "point": "day_1_s4",
+       "error_bed_k": -2.6828534765171526,
+       "error_exhaust_k": -4.220134628568978,
+       "moisture_kg_per_kg": 0.021775860748419973
+      }
+     ]
+    },
+    "0.7": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 1974.291132930265,
+      "solid_fraction": 0.7,
+      "freeboard_mode": "offset",
+      "freeboard_value": 10.165274788301492
+     },
+     "at_bound": [],
+     "status": 3,
+     "in_sample_max_bed_k": 1.696217120568896,
+     "in_sample_max_exhaust_k": 0.812443177808241,
+     "cross_max_bed_k": 8.570416556497435,
+     "cross_max_exhaust_k": 11.765353486629095,
+     "cross_mean_bed_k": -8.297541629205073,
+     "cross_mean_exhaust_k": -11.391837839574846,
+     "cross_errors": [
+      {
+       "point": "day_1_s1",
+       "error_bed_k": -8.306092653337906,
+       "error_exhaust_k": -11.765353486629095,
+       "moisture_kg_per_kg": 0.02468856480365389
+      },
+      {
+       "point": "day_1_s2",
+       "error_bed_k": -7.8560409299574445,
+       "error_exhaust_k": -10.936584277184998,
+       "moisture_kg_per_kg": 0.023143114531450237
+      },
+      {
+       "point": "day_1_s3",
+       "error_bed_k": -8.457616377027506,
+       "error_exhaust_k": -11.354915887958128,
+       "moisture_kg_per_kg": 0.023779456750645522
+      },
+      {
+       "point": "day_1_s4",
+       "error_bed_k": -8.570416556497435,
+       "error_exhaust_k": -11.510497706527161,
+       "moisture_kg_per_kg": 0.02384370898877819
+      }
+     ]
+    }
+   },
+   "C1_heat_loss:day_1->day_2": {
+    "0.6": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 1.1152362752536624e-14,
+      "solid_fraction": 0.6,
+      "freeboard_mode": "heat_loss",
+      "freeboard_value": 551.5112138218217
+     },
+     "at_bound": [
+      "heat_loss_ua_w_per_k"
+     ],
+     "status": 3,
+     "in_sample_max_bed_k": 4.541309989088376,
+     "in_sample_max_exhaust_k": 0.48130547771032894,
+     "cross_max_bed_k": 5.455381242047203,
+     "cross_max_exhaust_k": 4.863816542067944,
+     "cross_mean_bed_k": -4.1304965970961405,
+     "cross_mean_exhaust_k": 4.6029307475581,
+     "cross_errors": [
+      {
+       "point": "day_2_s1",
+       "error_bed_k": -3.9207036845995304,
+       "error_exhaust_k": 4.863816542067944,
+       "moisture_kg_per_kg": 0.12704436638560423
+      },
+      {
+       "point": "day_2_s2",
+       "error_bed_k": -3.424110394940385,
+       "error_exhaust_k": 4.776435470311654,
+       "moisture_kg_per_kg": 0.1273551768982486
+      },
+      {
+       "point": "day_2_s3",
+       "error_bed_k": -3.7217910667974436,
+       "error_exhaust_k": 4.710164364103399,
+       "moisture_kg_per_kg": 0.12708158788169044
+      },
+      {
+       "point": "day_2_s4",
+       "error_bed_k": -5.455381242047203,
+       "error_exhaust_k": 4.061306613749402,
+       "moisture_kg_per_kg": 0.12723295404614987
+      }
+     ]
+    },
+    "0.634": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 3.9502354052809506e-13,
+      "solid_fraction": 0.634,
+      "freeboard_mode": "heat_loss",
+      "freeboard_value": 876.8229883275753
+     },
+     "at_bound": [
+      "heat_loss_ua_w_per_k"
+     ],
+     "status": 3,
+     "in_sample_max_bed_k": 2.9000330459603703,
+     "in_sample_max_exhaust_k": 0.4451217655278157,
+     "cross_max_bed_k": 2.628255101408861,
+     "cross_max_exhaust_k": 6.772874021445212,
+     "cross_mean_bed_k": -1.306792962221687,
+     "cross_mean_exhaust_k": 6.453886738242696,
+     "cross_errors": [
+      {
+       "point": "day_2_s1",
+       "error_bed_k": -1.0983902169881432,
+       "error_exhaust_k": 6.772874021445212,
+       "moisture_kg_per_kg": 0.10415342075995682
+      },
+      {
+       "point": "day_2_s2",
+       "error_bed_k": -0.6021184071812371,
+       "error_exhaust_k": 6.66018112080458,
+       "moisture_kg_per_kg": 0.10440809477543667
+      },
+      {
+       "point": "day_2_s3",
+       "error_bed_k": -0.8984081233085064,
+       "error_exhaust_k": 6.579363058649932,
+       "moisture_kg_per_kg": 0.10417962472413933
+      },
+      {
+       "point": "day_2_s4",
+       "error_bed_k": -2.628255101408861,
+       "error_exhaust_k": 5.803128752071061,
+       "moisture_kg_per_kg": 0.10428852089759744
+      }
+     ]
+    },
+    "0.7": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 65.48517891283056,
+      "solid_fraction": 0.7,
+      "freeboard_mode": "heat_loss",
+      "freeboard_value": 1415.8732190569945
+     },
+     "at_bound": [],
+     "status": 3,
+     "in_sample_max_bed_k": 0.11671154735371658,
+     "in_sample_max_exhaust_k": 0.40818586876854823,
+     "cross_max_bed_k": 4.942361741790798,
+     "cross_max_exhaust_k": 10.413794696470056,
+     "cross_mean_bed_k": 4.235326166487717,
+     "cross_mean_exhaust_k": 9.99348861481525,
+     "cross_errors": [
+      {
+       "point": "day_2_s1",
+       "error_bed_k": 4.450073914558992,
+       "error_exhaust_k": 10.413794696470056,
+       "moisture_kg_per_kg": 0.06975655269653203
+      },
+      {
+       "point": "day_2_s2",
+       "error_bed_k": 4.942361741790798,
+       "error_exhaust_k": 10.25713032838555,
+       "moisture_kg_per_kg": 0.06993454745096983
+      },
+      {
+       "point": "day_2_s3",
+       "error_bed_k": 4.64579080464879,
+       "error_exhaust_k": 10.150782111532138,
+       "moisture_kg_per_kg": 0.06978563340229016
+      },
+      {
+       "point": "day_2_s4",
+       "error_bed_k": 2.903078204952287,
+       "error_exhaust_k": 9.152247322873258,
+       "moisture_kg_per_kg": 0.06989313052420698
+      }
+     ]
+    }
+   },
+   "C1_heat_loss:day_2->day_1": {
+    "0.6": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 3.4158736615588027e-12,
+      "solid_fraction": 0.6,
+      "freeboard_mode": "heat_loss",
+      "freeboard_value": 2655.734913637493
+     },
+     "at_bound": [
+      "heat_loss_ua_w_per_k"
+     ],
+     "status": 1,
+     "in_sample_max_bed_k": 5.455381242047203,
+     "in_sample_max_exhaust_k": 1.1474218933001836,
+     "cross_max_bed_k": 4.541309989088376,
+     "cross_max_exhaust_k": 9.538896396054817,
+     "cross_mean_bed_k": -4.427005209178471,
+     "cross_mean_exhaust_k": -9.046608771137496,
+     "cross_errors": [
+      {
+       "point": "day_1_s1",
+       "error_bed_k": -4.541309989088376,
+       "error_exhaust_k": -9.538896396054817,
+       "moisture_kg_per_kg": 0.02654612966986747
+      },
+      {
+       "point": "day_1_s2",
+       "error_bed_k": -4.362203489651591,
+       "error_exhaust_k": -8.362274581303026,
+       "moisture_kg_per_kg": 0.025155932747935594
+      },
+      {
+       "point": "day_1_s3",
+       "error_bed_k": -4.515259163609386,
+       "error_exhaust_k": -9.004824345337354,
+       "moisture_kg_per_kg": 0.02536537513040571
+      },
+      {
+       "point": "day_1_s4",
+       "error_bed_k": -4.289248194364532,
+       "error_exhaust_k": -9.280439761854787,
+       "moisture_kg_per_kg": 0.02506935775809893
+      }
+     ]
+    },
+    "0.634": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 2.914811124196258e-08,
+      "solid_fraction": 0.634,
+      "freeboard_mode": "heat_loss",
+      "freeboard_value": 3727.552587006328
+     },
+     "at_bound": [
+      "heat_loss_ua_w_per_k"
+     ],
+     "status": 2,
+     "in_sample_max_bed_k": 2.628255101476718,
+     "in_sample_max_exhaust_k": 1.4346510786452384,
+     "cross_max_bed_k": 2.900033046094009,
+     "cross_max_exhaust_k": 12.377778385223692,
+     "cross_mean_bed_k": -2.802768443942764,
+     "cross_mean_exhaust_k": -11.908965968924157,
+     "cross_errors": [
+      {
+       "point": "day_1_s1",
+       "error_bed_k": -2.878280375084188,
+       "error_exhaust_k": -12.377778385223692,
+       "moisture_kg_per_kg": 0.023015626865429795
+      },
+      {
+       "point": "day_1_s2",
+       "error_bed_k": -2.7499068779425784,
+       "error_exhaust_k": -11.023152586387155,
+       "moisture_kg_per_kg": 0.021846211996290776
+      },
+      {
+       "point": "day_1_s3",
+       "error_bed_k": -2.900033046094009,
+       "error_exhaust_k": -11.896836694292475,
+       "moisture_kg_per_kg": 0.022027342776283376
+      },
+      {
+       "point": "day_1_s4",
+       "error_bed_k": -2.68285347665028,
+       "error_exhaust_k": -12.338096209793306,
+       "moisture_kg_per_kg": 0.02177586074853366
+      }
+     ]
+    },
+    "0.7": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 1991.5194031028623,
+      "solid_fraction": 0.7,
+      "freeboard_mode": "heat_loss",
+      "freeboard_value": 4190.522957350497
+     },
+     "at_bound": [],
+     "status": 2,
+     "in_sample_max_bed_k": 1.7324264956222564,
+     "in_sample_max_exhaust_k": 1.8809183968348009,
+     "cross_max_bed_k": 8.637884266224276,
+     "cross_max_exhaust_k": 18.343275192346916,
+     "cross_mean_bed_k": -8.362333105771027,
+     "cross_mean_exhaust_k": -17.560230950078846,
+     "cross_errors": [
+      {
+       "point": "day_1_s1",
+       "error_bed_k": -8.370949901740907,
+       "error_exhaust_k": -17.986233243725167,
+       "moisture_kg_per_kg": 0.024755862574266985
+      },
+      {
+       "point": "day_1_s2",
+       "error_bed_k": -7.917754588769512,
+       "error_exhaust_k": -16.31014719544303,
+       "moisture_kg_per_kg": 0.023203609477405962
+      },
+      {
+       "point": "day_1_s3",
+       "error_bed_k": -8.522743666349413,
+       "error_exhaust_k": -17.601268168800274,
+       "moisture_kg_per_kg": 0.023844829999376316
+      },
+      {
+       "point": "day_1_s4",
+       "error_bed_k": -8.637884266224276,
+       "error_exhaust_k": -18.343275192346916,
+       "moisture_kg_per_kg": 0.023911590050005316
+      }
+     ]
+    }
+   },
+   "C2_evaporation:day_1->day_2": {
+    "0.6": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 391.3794258626387,
+      "solid_fraction": 0.6,
+      "freeboard_mode": "evaporation",
+      "freeboard_value": 0.32992678995196656
+     },
+     "at_bound": [],
+     "status": 4,
+     "in_sample_max_bed_k": 0.13422065569285735,
+     "in_sample_max_exhaust_k": 0.5136267424397047,
+     "cross_max_bed_k": 6.521054802652863,
+     "cross_max_exhaust_k": 1.4029026728372003,
+     "cross_mean_bed_k": 5.787375118890795,
+     "cross_mean_exhaust_k": -0.9284330449710332,
+     "cross_errors": [
+      {
+       "point": "day_2_s1",
+       "error_bed_k": 6.051316800156776,
+       "error_exhaust_k": -0.6984586962518549,
+       "moisture_kg_per_kg": 0.060856843020616225
+      },
+      {
+       "point": "day_2_s2",
+       "error_bed_k": 6.521054802652863,
+       "error_exhaust_k": -0.7844145857124261,
+       "moisture_kg_per_kg": 0.061068778933844214
+      },
+      {
+       "point": "day_2_s3",
+       "error_bed_k": 6.213485134086241,
+       "error_exhaust_k": -0.8279562250826515,
+       "moisture_kg_per_kg": 0.06096350750092938
+      },
+      {
+       "point": "day_2_s4",
+       "error_bed_k": 4.3636437386672995,
+       "error_exhaust_k": -1.4029026728372003,
+       "moisture_kg_per_kg": 0.06131826975402532
+      }
+     ]
+    },
+    "0.634": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 707.7735407742323,
+      "solid_fraction": 0.634,
+      "freeboard_mode": "evaporation",
+      "freeboard_value": 0.35995745659955924
+     },
+     "at_bound": [],
+     "status": 3,
+     "in_sample_max_bed_k": 0.17274793566060964,
+     "in_sample_max_exhaust_k": 0.47667348927600983,
+     "cross_max_bed_k": 8.787751213255248,
+     "cross_max_exhaust_k": 1.5406662630851358,
+     "cross_mean_bed_k": 8.027322646001318,
+     "cross_mean_exhaust_k": 1.2652927002684144,
+     "cross_errors": [
+      {
+       "point": "day_2_s1",
+       "error_bed_k": 8.337072173769371,
+       "error_exhaust_k": 1.5406662630851358,
+       "moisture_kg_per_kg": 0.04959934380050868
+      },
+      {
+       "point": "day_2_s2",
+       "error_bed_k": 8.787751213255248,
+       "error_exhaust_k": 1.4357960024551488,
+       "moisture_kg_per_kg": 0.04980702773789858
+      },
+      {
+       "point": "day_2_s3",
+       "error_bed_k": 8.467582187657726,
+       "error_exhaust_k": 1.379802270288323,
+       "moisture_kg_per_kg": 0.04974673595793888
+      },
+      {
+       "point": "day_2_s4",
+       "error_bed_k": 6.516885009322927,
+       "error_exhaust_k": 0.7049062652450502,
+       "moisture_kg_per_kg": 0.05023015381502205
+      }
+     ]
+    },
+    "0.7": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 1317.7178634059787,
+      "solid_fraction": 0.7,
+      "freeboard_mode": "evaporation",
+      "freeboard_value": 0.43778934275163844
+     },
+     "at_bound": [],
+     "status": 3,
+     "in_sample_max_bed_k": 0.28163154108102617,
+     "in_sample_max_exhaust_k": 0.4116851783425517,
+     "cross_max_bed_k": 12.94671890830557,
+     "cross_max_exhaust_k": 5.641820838992558,
+     "cross_mean_bed_k": 12.135768106566726,
+     "cross_mean_exhaust_k": 5.281175952060822,
+     "cross_errors": [
+      {
+       "point": "day_2_s1",
+       "error_bed_k": 12.53161653194887,
+       "error_exhaust_k": 5.641820838992558,
+       "moisture_kg_per_kg": 0.03210684097186345
+      },
+      {
+       "point": "day_2_s2",
+       "error_bed_k": 12.94671890830557,
+       "error_exhaust_k": 5.501658549791891,
+       "moisture_kg_per_kg": 0.03228487801843016
+      },
+      {
+       "point": "day_2_s3",
+       "error_bed_k": 12.602621648805588,
+       "error_exhaust_k": 5.422043904412625,
+       "moisture_kg_per_kg": 0.032276039536299095
+      },
+      {
+       "point": "day_2_s4",
+       "error_bed_k": 10.462115337206875,
+       "error_exhaust_k": 4.559180515046215,
+       "moisture_kg_per_kg": 0.0328276480070997
+      }
+     ]
+    }
+   },
+   "C2_evaporation:day_2->day_1": {
+    "0.6": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 970.3999784858747,
+      "solid_fraction": 0.6,
+      "freeboard_mode": "evaporation",
+      "freeboard_value": 0.19803135631313987
+     },
+     "at_bound": [],
+     "status": 3,
+     "in_sample_max_bed_k": 1.53851721025719,
+     "in_sample_max_exhaust_k": 0.554399250319932,
+     "cross_max_bed_k": 5.24225419953931,
+     "cross_max_exhaust_k": 2.7674736403681806,
+     "cross_mean_bed_k": -5.108649135145843,
+     "cross_mean_exhaust_k": -2.264480927887085,
+     "cross_errors": [
+      {
+       "point": "day_1_s1",
+       "error_bed_k": -5.138025309639595,
+       "error_exhaust_k": -2.7674736403681806,
+       "moisture_kg_per_kg": 0.022897083627555048
+      },
+      {
+       "point": "day_1_s2",
+       "error_bed_k": -4.8514354999333875,
+       "error_exhaust_k": -1.9607832749373486,
+       "moisture_kg_per_kg": 0.02158935271236828
+      },
+      {
+       "point": "day_1_s3",
+       "error_bed_k": -5.24225419953931,
+       "error_exhaust_k": -2.175653835797057,
+       "moisture_kg_per_kg": 0.021994424370205934
+      },
+      {
+       "point": "day_1_s4",
+       "error_bed_k": -5.202881531471078,
+       "error_exhaust_k": -2.1540129604457547,
+       "moisture_kg_per_kg": 0.021911555324066967
+      }
+     ]
+    },
+    "0.634": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 2330.2337848003144,
+      "solid_fraction": 0.634,
+      "freeboard_mode": "evaporation",
+      "freeboard_value": 0.2158099585238847
+     },
+     "at_bound": [],
+     "status": 3,
+     "in_sample_max_bed_k": 1.8387583201303244,
+     "in_sample_max_exhaust_k": 0.8547484528334053,
+     "cross_max_bed_k": 9.410546840259244,
+     "cross_max_exhaust_k": 6.688583683312714,
+     "cross_mean_bed_k": -9.076882930566622,
+     "cross_mean_exhaust_k": -6.214186447909935,
+     "cross_errors": [
+      {
+       "point": "day_1_s1",
+       "error_bed_k": -9.077886830151478,
+       "error_exhaust_k": -6.688583683312714,
+       "moisture_kg_per_kg": 0.024734550515205456
+      },
+      {
+       "point": "day_1_s2",
+       "error_bed_k": -8.57255112260134,
+       "error_exhaust_k": -5.664207298182802,
+       "moisture_kg_per_kg": 0.023128692346148227
+      },
+      {
+       "point": "day_1_s3",
+       "error_bed_k": -9.246546929254428,
+       "error_exhaust_k": -6.161380343838751,
+       "moisture_kg_per_kg": 0.023838848055646622
+      },
+      {
+       "point": "day_1_s4",
+       "error_bed_k": -9.410546840259244,
+       "error_exhaust_k": -6.3425744663054715,
+       "moisture_kg_per_kg": 0.02395502637804725
+      }
+     ]
+    },
+    "0.7": {
+     "parameters": {
+      "heat_loss_ua_w_per_k": 4902.028396969813,
+      "solid_fraction": 0.7,
+      "freeboard_mode": "evaporation",
+      "freeboard_value": 0.2619751108620142
+     },
+     "at_bound": [],
+     "status": 3,
+     "in_sample_max_bed_k": 2.3097323686272304,
+     "in_sample_max_exhaust_k": 1.3305238113697726,
+     "cross_max_bed_k": 15.51600426498372,
+     "cross_max_exhaust_k": 12.419507555005389,
+     "cross_mean_bed_k": -14.834186318003956,
+     "cross_mean_exhaust_k": -11.943812344472232,
+     "cross_errors": [
+      {
+       "point": "day_1_s1",
+       "error_bed_k": -14.795845483316349,
+       "error_exhaust_k": -12.37857785788374,
+       "moisture_kg_per_kg": 0.025419026314096982
+      },
+      {
+       "point": "day_1_s2",
+       "error_bed_k": -13.969102832781942,
+       "error_exhaust_k": -11.034278548574932,
+       "moisture_kg_per_kg": 0.023486952186800636
+      },
+      {
+       "point": "day_1_s3",
+       "error_bed_k": -15.055792690933814,
+       "error_exhaust_k": -11.942885416424865,
+       "moisture_kg_per_kg": 0.02461102245419511
+      },
+      {
+       "point": "day_1_s4",
+       "error_bed_k": -15.51600426498372,
+       "error_exhaust_k": -12.419507555005389,
+       "moisture_kg_per_kg": 0.025033155128738827
+      }
+     ]
+    }
+   }
+  },
+  "draws": {
+   "C0_none:day_1->day_2": {
+    "n": 20,
+    "cross_worst_min_k": 8.360150124282612,
+    "cross_worst_median_k": 10.05970338123134,
+    "cross_worst_max_k": 12.698197480611242,
+    "passing_draws": 0,
+    "ua_range_w_per_k": [
+     291.72095392726663,
+     414.3902356538391
+    ],
+    "freeboard_value_range": [
+     0.0,
+     0.0
+    ]
+   },
+   "C0_none:day_2->day_1": {
+    "n": 20,
+    "cross_worst_min_k": 10.808440419671683,
+    "cross_worst_median_k": 14.682953194230556,
+    "cross_worst_max_k": 19.928134341105263,
+    "passing_draws": 0,
+    "ua_range_w_per_k": [
+     1997.5688044023223,
+     5218.153626443041
+    ],
+    "freeboard_value_range": [
+     0.0,
+     0.0
+    ]
+   },
+   "C3_offset:day_1->day_2": {
+    "n": 20,
+    "cross_worst_min_k": 3.989088068888911,
+    "cross_worst_median_k": 5.603789092755214,
+    "cross_worst_max_k": 8.03640390636204,
+    "passing_draws": 0,
+    "ua_range_w_per_k": [
+     3.5430936344509582e-12,
+     1.3610924566773876e-10
+    ],
+    "freeboard_value_range": [
+     4.929407949978778,
+     5.469835666602109
+    ]
+   },
+   "C3_offset:day_2->day_1": {
+    "n": 20,
+    "cross_worst_min_k": 4.26106563482935,
+    "cross_worst_median_k": 6.3761288609358715,
+    "cross_worst_max_k": 12.160762822729666,
+    "passing_draws": 0,
+    "ua_range_w_per_k": [
+     3.2714906372507926e-15,
+     1667.2373276705978
+    ],
+    "freeboard_value_range": [
+     8.765945593456149,
+     10.159698327123085
+    ]
+   },
+   "C1_heat_loss:day_1->day_2": {
+    "n": 20,
+    "cross_worst_min_k": 6.471910333992859,
+    "cross_worst_median_k": 8.00784363129371,
+    "cross_worst_max_k": 10.375414778390287,
+    "passing_draws": 0,
+    "ua_range_w_per_k": [
+     1.627391549819946e-11,
+     5.741555773647574e-10
+    ],
+    "freeboard_value_range": [
+     1006.5386379765018,
+     1111.4189437913628
+    ]
+   },
+   "C1_heat_loss:day_2->day_1": {
+    "n": 20,
+    "cross_worst_min_k": 11.892581908987403,
+    "cross_worst_median_k": 14.289407068476159,
+    "cross_worst_max_k": 18.555496617009453,
+    "passing_draws": 0,
+    "ua_range_w_per_k": [
+     1.781345738968896e-13,
+     1684.1051077432762
+    ],
+    "freeboard_value_range": [
+     3728.801757605194,
+     4208.46005975513
+    ]
+   },
+   "C2_evaporation:day_1->day_2": {
+    "n": 20,
+    "cross_worst_min_k": 9.331709960513216,
+    "cross_worst_median_k": 10.01032852833324,
+    "cross_worst_max_k": 11.351536121878063,
+    "passing_draws": 0,
+    "ua_range_w_per_k": [
+     838.7333364665506,
+     912.8315899524175
+    ],
+    "freeboard_value_range": [
+     0.37600196945458575,
+     0.37632341119679946
+    ]
+   },
+   "C2_evaporation:day_2->day_1": {
+    "n": 20,
+    "cross_worst_min_k": 9.523894227464169,
+    "cross_worst_median_k": 11.612564199709716,
+    "cross_worst_max_k": 14.897089319326412,
+    "passing_draws": 0,
+    "ua_range_w_per_k": [
+     2501.849571038302,
+     4268.682431670894
+    ],
+    "freeboard_value_range": [
+     0.2252315622212073,
+     0.2254235190200281
+    ]
+   }
+  }
+ },
+ "observability": {
+  "per_case": {
+   "plant:day_1": {
+    "snr": {
+     "Y_out": 3.7616716425045444,
+     "Y_out_balance": 3.8578802312632745,
+     "T_out": 0.884940820316221,
+     "T_bed": 0.8360436829989671,
+     "T_bed_x6": 2.0478804260246406
+    },
+    "r2": {
+     "Y_out": 0.9955508955312965,
+     "Y_out_balance": 0.9999999999999997,
+     "T_out": 0.9999999655254292,
+     "T_bed": 0.9999999655254292,
+     "T_bed_x6": 0.9999999655254292
+    },
+    "n_failed": 0,
+    "n_infeasible": 0,
+    "moisture_range_kg_per_kg": [
+     0.017551469646032755,
+     0.034359420766476356
+    ],
+    "solid_to_air_ratio": 0.01422275188750851,
+    "nominal_moisture_kg_per_kg": 0.0206803217285767
+   },
+   "plant:day_2": {
+    "snr": {
+     "Y_out": 4.585865171749782,
+     "Y_out_balance": 4.557460623730689,
+     "T_out": 2.890149645167801,
+     "T_bed": 2.547664739894099,
+     "T_bed_x6": 6.240478648420969
+    },
+    "r2": {
+     "Y_out": 0.9999683427467269,
+     "Y_out_balance": 1.0,
+     "T_out": 0.9999979533236231,
+     "T_bed": 0.9999979533236231,
+     "T_bed_x6": 0.9999979533236231
+    },
+    "n_failed": 0,
+    "n_infeasible": 0,
+    "moisture_range_kg_per_kg": [
+     0.077120763416963,
+     0.13705407147177023
+    ],
+    "solid_to_air_ratio": 0.03490446647065958,
+    "nominal_moisture_kg_per_kg": 0.09471905770928402
+   },
+   "lab_as_docs33:P1": {
+    "snr": {
+     "Y_out": 0.5984918848912116,
+     "Y_out_balance": 0.5891464265698078,
+     "T_out": 0.5150016902022904,
+     "T_bed": 0.5150016902022904,
+     "T_bed_x6": 1.26149135766651
+    },
+    "r2": {
+     "Y_out": 0.9998425203066642,
+     "Y_out_balance": 0.9999942807852177,
+     "T_out": 0.9999983490834885,
+     "T_bed": 0.9999983490834885,
+     "T_bed_x6": 0.9999983490834885
+    },
+    "n_failed": 0,
+    "n_infeasible": 3,
+    "moisture_range_kg_per_kg": [
+     0.12736143266877878,
+     0.28680631067593854
+    ],
+    "solid_to_air_ratio": 0.007858228840963823,
+    "nominal_moisture_kg_per_kg": 0.16901774284503784
+   },
+   "lab_dry:P1": {
+    "snr": {
+     "Y_out": 0.843734071220158,
+     "Y_out_balance": 0.8281575192534288,
+     "T_out": 0.5182236171599237,
+     "T_bed": 0.5182236171599237,
+     "T_bed_x6": 1.2693834347012294
+    },
+    "r2": {
+     "Y_out": 0.999654768384142,
+     "Y_out_balance": 0.9999955745408065,
+     "T_out": 0.9999987189365275,
+     "T_bed": 0.9999987189365275,
+     "T_bed_x6": 0.9999987189365275
+    },
+    "n_failed": 0,
+    "n_infeasible": 0,
+    "moisture_range_kg_per_kg": [
+     0.10927118275957401,
+     0.24784854886589475
+    ],
+    "solid_to_air_ratio": 0.007758258960494887,
+    "nominal_moisture_kg_per_kg": 0.14597054942358278
+   },
+   "lab_as_docs33:P2": {
+    "snr": {
+     "Y_out": 0.5931544088818697,
+     "Y_out_balance": 0.5825361337166197,
+     "T_out": 0.489943436042028,
+     "T_bed": 0.489943436042028,
+     "T_bed_x6": 1.2001114211288935
+    },
+    "r2": {
+     "Y_out": 0.9997364441210196,
+     "Y_out_balance": 0.9999965048657311,
+     "T_out": 0.9999990153672785,
+     "T_bed": 0.9999990153672785,
+     "T_bed_x6": 0.9999990153672785
+    },
+    "n_failed": 0,
+    "n_infeasible": 0,
+    "moisture_range_kg_per_kg": [
+     0.10185748579958262,
+     0.2263236535623855
+    ],
+    "solid_to_air_ratio": 0.00797248983161336,
+    "nominal_moisture_kg_per_kg": 0.13451929620931513
+   },
+   "lab_dry:P2": {
+    "snr": {
+     "Y_out": 0.8366372912142699,
+     "Y_out_balance": 0.8168752377435581,
+     "T_out": 0.49189884051509253,
+     "T_bed": 0.49189884051509253,
+     "T_bed_x6": 1.2049011643286573
+    },
+    "r2": {
+     "Y_out": 0.9996692736203581,
+     "Y_out_balance": 0.999996988968517,
+     "T_out": 0.9999991505384411,
+     "T_bed": 0.9999991505384411,
+     "T_bed_x6": 0.9999991505384411
+    },
+    "n_failed": 0,
+    "n_infeasible": 0,
+    "moisture_range_kg_per_kg": [
+     0.08987885893579364,
+     0.20433104512167777
+    ],
+    "solid_to_air_ratio": 0.007873893977280638,
+    "nominal_moisture_kg_per_kg": 0.11932351692581958
+   },
+   "lab_as_docs33:P3": {
+    "snr": {
+     "Y_out": 0.5926808264974956,
+     "Y_out_balance": 0.5803887815476229,
+     "T_out": 0.4751869545707853,
+     "T_bed": 0.4751869545707853,
+     "T_bed_x6": 1.1639655711255144
+    },
+    "r2": {
+     "Y_out": 0.9997179124181537,
+     "Y_out_balance": 0.9999972784068826,
+     "T_out": 0.9999992449030074,
+     "T_bed": 0.9999992449030074,
+     "T_bed_x6": 0.9999992449030074
+    },
+    "n_failed": 0,
+    "n_infeasible": 0,
+    "moisture_range_kg_per_kg": [
+     0.08965253457489888,
+     0.19947640858867507
+    ],
+    "solid_to_air_ratio": 0.008041039906092121,
+    "nominal_moisture_kg_per_kg": 0.11788266910177564
+   },
+   "lab_dry:P3": {
+    "snr": {
+     "Y_out": 0.8340561367640383,
+     "Y_out_balance": 0.8114447895686502,
+     "T_out": 0.4768709013025192,
+     "T_bed": 0.4768709013025192,
+     "T_bed_x6": 1.16809038137229
+    },
+    "r2": {
+     "Y_out": 0.9996376457522709,
+     "Y_out_balance": 0.9999976182554354,
+     "T_out": 0.9999993384896498,
+     "T_bed": 0.9999993384896498,
+     "T_bed_x6": 0.9999993384896498
+    },
+    "n_failed": 0,
+    "n_infeasible": 0,
+    "moisture_range_kg_per_kg": [
+     0.08021464396712497,
+     0.18204682847217307
+    ],
+    "solid_to_air_ratio": 0.007942774939812743,
+    "nominal_moisture_kg_per_kg": 0.10596904944735941
+   },
+   "lab_as_docs33:P4": {
+    "snr": {
+     "Y_out": 0.5930500491290661,
+     "Y_out_balance": 0.578766786797464,
+     "T_out": 0.4604802637650609,
+     "T_bed": 0.4604802637650609,
+     "T_bed_x6": 1.127941682846609
+    },
+    "r2": {
+     "Y_out": 0.9996518306532752,
+     "Y_out_balance": 0.999997903919398,
+     "T_out": 0.9999994277062321,
+     "T_bed": 0.9999994277062321,
+     "T_bed_x6": 0.9999994277062321
+    },
+    "n_failed": 0,
+    "n_infeasible": 0,
+    "moisture_range_kg_per_kg": [
+     0.07895995336274342,
+     0.17531702344997577
+    ],
+    "solid_to_air_ratio": 0.008111982844242993,
+    "nominal_moisture_kg_per_kg": 0.1032233851405798
+   },
+   "lab_dry:P4": {
+    "snr": {
+     "Y_out": 0.832511022365483,
+     "Y_out_balance": 0.8066351331605994,
+     "T_out": 0.4619590772080945,
+     "T_bed": 0.4619590772080945,
+     "T_bed_x6": 1.1315640212068094
+    },
+    "r2": {
+     "Y_out": 0.9995829357436337,
+     "Y_out_balance": 0.9999981357346671,
+     "T_out": 0.9999994906052507,
+     "T_bed": 0.9999994906052507,
+     "T_bed_x6": 0.9999994906052507
+    },
+    "n_failed": 0,
+    "n_infeasible": 0,
+    "moisture_range_kg_per_kg": [
+     0.07149389352060032,
+     0.16158769335803205
+    ],
+    "solid_to_air_ratio": 0.008013773385942499,
+    "nominal_moisture_kg_per_kg": 0.09387955587626245
+   },
+   "lab_as_docs33:P5": {
+    "snr": {
+     "Y_out": 0.5954764124950901,
+     "Y_out_balance": 0.5771113941178586,
+     "T_out": 0.43801094620922415,
+     "T_bed": 0.43801094620922415,
+     "T_bed_x6": 1.0729033199662488
+    },
+    "r2": {
+     "Y_out": 0.9994341881000824,
+     "Y_out_balance": 0.9999986300976984,
+     "T_out": 0.999999635730419,
+     "T_bed": 0.999999635730419,
+     "T_bed_x6": 0.999999635730419
+    },
+    "n_failed": 0,
+    "n_infeasible": 0,
+    "moisture_range_kg_per_kg": [
+     0.064960844360859,
+     0.14277442632664847
+    ],
+    "solid_to_air_ratio": 0.008226526772573177,
+    "nominal_moisture_kg_per_kg": 0.08392352300953754
+   },
+   "lab_dry:P5": {
+    "snr": {
+     "Y_out": 0.8318050884423368,
+     "Y_out_balance": 0.8002994218496979,
+     "T_out": 0.4392523111471533,
+     "T_bed": 0.4392523111471533,
+     "T_bed_x6": 1.0759440306487569
+    },
+    "r2": {
+     "Y_out": 0.9994634613212703,
+     "Y_out_balance": 0.9999987504945037,
+     "T_out": 0.999999667599897,
+     "T_bed": 0.999999667599897,
+     "T_bed_x6": 0.999999667599897
+    },
+    "n_failed": 0,
+    "n_infeasible": 0,
+    "moisture_range_kg_per_kg": [
+     0.05966676397509258,
+     0.13335638959327795
+    ],
+    "solid_to_air_ratio": 0.00812796029530482,
+    "nominal_moisture_kg_per_kg": 0.07744644203831919
+   },
+   "lab_as_docs33:P6": {
+    "snr": {
+     "Y_out": 0.4782913490639801,
+     "Y_out_balance": 0.46800763346735885,
+     "T_out": 0.3009019169986415,
+     "T_bed": 0.3009019169986415,
+     "T_bed_x6": 0.7370561592719675
+    },
+    "r2": {
+     "Y_out": 0.9997244275055921,
+     "Y_out_balance": 0.999999263538376,
+     "T_out": 0.9999997293966156,
+     "T_bed": 0.9999997293966156,
+     "T_bed_x6": 0.9999997293966156
+    },
+    "n_failed": 0,
+    "n_infeasible": 0,
+    "moisture_range_kg_per_kg": [
+     0.07954010098719638,
+     0.17831945749243763
+    ],
+    "solid_to_air_ratio": 0.0040231430172441,
+    "nominal_moisture_kg_per_kg": 0.10393181930384268
+   },
+   "lab_dry:P6": {
+    "snr": {
+     "Y_out": 0.8662661440188064,
+     "Y_out_balance": 0.8385572307977497,
+     "T_out": 0.30182211441262646,
+     "T_bed": 0.30182211441262646,
+     "T_bed_x6": 0.7393101733988593
+    },
+    "r2": {
+     "Y_out": 0.9995949749752289,
+     "Y_out_balance": 0.9999994284725336,
+     "T_out": 0.9999997898446631,
+     "T_bed": 0.9999997898446631,
+     "T_bed_x6": 0.9999997898446631
+    },
+    "n_failed": 0,
+    "n_infeasible": 0,
+    "moisture_range_kg_per_kg": [
+     0.0660784407408874,
+     0.15188736667487623
+    ],
+    "solid_to_air_ratio": 0.003974635509757962,
+    "nominal_moisture_kg_per_kg": 0.0868218178788139
+   },
+   "lab_as_docs33:P7": {
+    "snr": {
+     "Y_out": 0.4637828138204008,
+     "Y_out_balance": 0.45233773430706037,
+     "T_out": 0.2764244483327877,
+     "T_bed": 0.2764244483327877,
+     "T_bed_x6": 0.6770988508456619
+    },
+    "r2": {
+     "Y_out": 0.9996387385127969,
+     "Y_out_balance": 0.9999995152389487,
+     "T_out": 0.9999998194410732,
+     "T_bed": 0.9999998194410732,
+     "T_bed_x6": 0.9999998194410732
+    },
+    "n_failed": 0,
+    "n_infeasible": 0,
+    "moisture_range_kg_per_kg": [
+     0.07017297049311819,
+     0.15590547778083294
+    ],
+    "solid_to_air_ratio": 0.003730952626909057,
+    "nominal_moisture_kg_per_kg": 0.09088191327264716
+   },
+   "lab_dry:P7": {
+    "snr": {
+     "Y_out": 0.8690985626033886,
+     "Y_out_balance": 0.837569187953827,
+     "T_out": 0.2771981159910547,
+     "T_bed": 0.2771981159910547,
+     "T_bed_x6": 0.6789939418389102
+    },
+    "r2": {
+     "Y_out": 0.9995227843151064,
+     "Y_out_balance": 0.9999996170059159,
+     "T_out": 0.9999998572706752,
+     "T_bed": 0.9999998572706752,
+     "T_bed_x6": 0.9999998572706752
+    },
+    "n_failed": 0,
+    "n_infeasible": 0,
+    "moisture_range_kg_per_kg": [
+     0.05869040886286291,
+     0.13378691150752714
+    ],
+    "solid_to_air_ratio": 0.003686353679470193,
+    "nominal_moisture_kg_per_kg": 0.07649312542952785
+   }
+  },
+  "reproduction_max_abs_snr_difference": {
+   "P1": 0.0,
+   "P2": 0.0,
+   "P3": 0.0,
+   "P4": 0.0,
+   "P5": 0.0,
+   "P6": 0.0,
+   "P7": 0.0
+  }
+ },
+ "headroom": {
+  "amplitudes": {
+   "spray_relative": 0.025939080020221286,
+   "ambient_k": 3.637982511520386,
+   "solid_fraction_relative": 0.0769
+  },
+  "groups": {
+   "day_1": {
+    "nominal_kinetics": {
+     "limit_kg_per_kg": 0.020680338144302368,
+     "saving_nominal": 0.06892543461092353,
+     "saving_median": 0.06892543461092353,
+     "saving_min": 0.0,
+     "saving_max": 0.1340157117886034
+    },
+    "draws": 20,
+    "draws_r0_inadmissible": 0,
+    "draws_saving_nominal": [
+     0.06627086383704654,
+     0.06831779180298064,
+     0.07152760630712952
+    ],
+    "draws_saving_median": [
+     0.06627086383704654,
+     0.06831779180298064,
+     0.07152760630712952
+    ],
+    "solver_failures": 0,
+    "r0_nominal_kinetics": {
+     "admissible": true,
+     "inlet_celsius": 100.0,
+     "velocity_m_per_s": 1.9008675712203125,
+     "moisture_kg_per_kg": 0.015713125467300415,
+     "bed_temperature_celsius": 75.62802211796198,
+     "power_kw": 964.994224680206,
+     "steady_state_feasible": true
+    },
+    "r1_at_nominal_disturbance": {
+     "admissible": true,
+     "inlet_celsius": 93.8037109375,
+     "velocity_m_per_s": 1.8567383337900918,
+     "moisture_kg_per_kg": 0.020679503679275513,
+     "bed_temperature_celsius": 69.71727160975907,
+     "power_kw": 898.4815783470916,
+     "steady_state_feasible": true
+    },
+    "today": {
+     "inlet_celsius": 84.54898960325453,
+     "velocity_m_per_s": 2.3209229172376147,
+     "moisture_kg_per_kg": 0.020680338144302368,
+     "power_kw": 1030.9610381985303,
+     "bed_temperature_celsius": 65.63772210868973
+    }
+   },
+   "day_2": {
+    "nominal_kinetics": {
+     "limit_kg_per_kg": 0.09471902251243591,
+     "saving_nominal": 0.1590504923034154,
+     "saving_median": 0.1590504923034154,
+     "saving_min": 0.0,
+     "saving_max": 0.2896776109056954
+    },
+    "draws": 20,
+    "draws_r0_inadmissible": 0,
+    "draws_saving_nominal": [
+     0.152818641706455,
+     0.16097971105130457,
+     0.17474094000564744
+    ],
+    "draws_saving_median": [
+     0.152818641706455,
+     0.16097971105130457,
+     0.17474094000564744
+    ],
+    "solver_failures": 0,
+    "r0_nominal_kinetics": {
+     "admissible": true,
+     "inlet_celsius": 100.0,
+     "velocity_m_per_s": 1.8989090819810954,
+     "moisture_kg_per_kg": 0.06760022044181824,
+     "bed_temperature_celsius": 54.46613231284236,
+     "power_kw": 941.9052453334024,
+     "steady_state_feasible": true
+    },
+    "r1_at_nominal_disturbance": {
+     "admissible": true,
+     "inlet_celsius": 98.00048828125,
+     "velocity_m_per_s": 1.6088165040885973,
+     "moisture_kg_per_kg": 0.09471789002418518,
+     "bed_temperature_celsius": 48.651075652004735,
+     "power_kw": 792.0947523599555,
+     "steady_state_feasible": true
+    },
+    "today": {
+     "inlet_celsius": 83.0977977540758,
+     "velocity_m_per_s": 2.0110206301107465,
+     "moisture_kg_per_kg": 0.09471902251243591,
+     "power_kw": 840.211279932987,
+     "bed_temperature_celsius": 44.47834666634282
+    }
+   },
+   "lab": {
+    "nominal_kinetics": {
+     "limit_kg_per_kg": 0.15,
+     "saving_nominal": 0.0547206320088846,
+     "saving_median": 0.0547206320088846,
+     "saving_min": 2.7686365417455642e-05,
+     "saving_max": 0.10315657487809628
+    },
+    "draws": 20,
+    "draws_r0_inadmissible": 0,
+    "draws_saving_nominal": [
+     0.041930786542833914,
+     0.05259505528888106,
+     0.06685989036320089
+    ],
+    "draws_saving_median": [
+     0.041930786542833914,
+     0.05259505528888106,
+     0.06685989036320089
+    ],
+    "solver_failures": 314,
+    "r0_nominal_kinetics": {
+     "admissible": true,
+     "inlet_celsius": 89.4580078125,
+     "velocity_m_per_s": 0.8,
+     "moisture_kg_per_kg": 0.12800486520874438,
+     "bed_temperature_celsius": 42.9614617403422,
+     "power_kw": 1.1649777567011417,
+     "steady_state_feasible": true
+    },
+    "r1_at_nominal_disturbance": {
+     "admissible": true,
+     "inlet_celsius": 84.83642578125,
+     "velocity_m_per_s": 0.8,
+     "moisture_kg_per_kg": 0.1499775499282315,
+     "bed_temperature_celsius": 39.77516560065851,
+     "power_kw": 1.1012294375781626,
+     "steady_state_feasible": true
+    }
+   }
+  },
+  "lab_befund108_reproduction": {
+   "saving": 0.09665057561808299,
+   "reference": 0.0967,
+   "fixed": {
+    "admissible": true,
+    "inlet_celsius": 94.9658203125,
+    "velocity_m_per_s": 0.8,
+    "moisture_kg_per_kg": 0.10644925134151033,
+    "bed_temperature_celsius": 46.80813464496168,
+    "power_kw": 1.2392213629318938,
+    "steady_state_feasible": true
+   },
+   "tracked": {
+    "admissible": true,
+    "inlet_celsius": 86.1474609375,
+    "velocity_m_per_s": 0.8,
+    "moisture_kg_per_kg": 0.14334279777672754,
+    "bed_temperature_celsius": 40.6746540441236,
+    "power_kw": 1.119449904886301,
+    "steady_state_feasible": true
+   }
+  }
+ },
+ "balances": {
+  "per_segment": {
+   "day_1": [
+    {
+     "0.65": {
+      "point": "day_1_s1",
+      "solid_fraction": 0.65,
+      "gap_k": 6.706013955010306,
+      "atomising_share_of_gas": 0.016778311712530296,
+      "q_gap_kw": 82.44954740857419,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 1361.569996245489
+       },
+       "room": {
+        "ua_w_per_k": 1878.1294178312592
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.11710773487571166
+       },
+       "room": {
+        "leak_share_of_gas": 0.16504207354124287
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.7103628782767638,
+      "atomising_air_share_of_gap": 0.1059292275623772,
+      "evaporation_share_of_water": 0.35583184251497385,
+      "bed_sensor_spread_k": 1.2730888366699133,
+      "bed_group_b_minus_group_a_k": 0.5178297254774407,
+      "coldest_bed_sensor_minus_exhaust_k": 6.133872477213544,
+      "exhaust_minus_downstream_k": 2.358569876352952
+     },
+     "0.6": {
+      "point": "day_1_s1",
+      "solid_fraction": 0.6,
+      "gap_k": 6.706013955010306,
+      "atomising_share_of_gas": 0.016778311712530296,
+      "q_gap_kw": 82.61548384633423,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 1364.3102668963188
+       },
+       "room": {
+        "ua_w_per_k": 1881.909306442447
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.11710773487571166
+       },
+       "room": {
+        "leak_share_of_gas": 0.16504207354124287
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.7103628782767638,
+      "atomising_air_share_of_gap": 0.1059292275623772,
+      "evaporation_share_of_water": 0.31197948522600133,
+      "bed_sensor_spread_k": 1.2730888366699133,
+      "bed_group_b_minus_group_a_k": 0.5178297254774407,
+      "coldest_bed_sensor_minus_exhaust_k": 6.133872477213544,
+      "exhaust_minus_downstream_k": 2.358569876352952
+     },
+     "0.634": {
+      "point": "day_1_s1",
+      "solid_fraction": 0.634,
+      "gap_k": 6.706013955010306,
+      "atomising_share_of_gas": 0.016778311712530296,
+      "q_gap_kw": 82.50264706865741,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 1362.4468828537545
+       },
+       "room": {
+        "ua_w_per_k": 1879.338982186839
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.11710773487571166
+       },
+       "room": {
+        "leak_share_of_gas": 0.16504207354124287
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.7103628782767638,
+      "atomising_air_share_of_gap": 0.1059292275623772,
+      "evaporation_share_of_water": 0.3404954989822184,
+      "bed_sensor_spread_k": 1.2730888366699133,
+      "bed_group_b_minus_group_a_k": 0.5178297254774407,
+      "coldest_bed_sensor_minus_exhaust_k": 6.133872477213544,
+      "exhaust_minus_downstream_k": 2.358569876352952
+     },
+     "0.7": {
+      "point": "day_1_s1",
+      "solid_fraction": 0.7,
+      "gap_k": 6.706013955010306,
+      "atomising_share_of_gas": 0.016778311712530296,
+      "q_gap_kw": 82.28361097081418,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 1358.8297255946593
+       },
+       "room": {
+        "ua_w_per_k": 1874.3495292200716
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.11710773487571166
+       },
+       "room": {
+        "leak_share_of_gas": 0.16504207354124287
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.7103628782767638,
+      "atomising_air_share_of_gap": 0.1059292275623772,
+      "evaporation_share_of_water": 0.4143016522336038,
+      "bed_sensor_spread_k": 1.2730888366699133,
+      "bed_group_b_minus_group_a_k": 0.5178297254774407,
+      "coldest_bed_sensor_minus_exhaust_k": 6.133872477213544,
+      "exhaust_minus_downstream_k": 2.358569876352952
+     }
+    },
+    {
+     "0.65": {
+      "point": "day_1_s2",
+      "solid_fraction": 0.65,
+      "gap_k": 7.084731441073934,
+      "atomising_share_of_gas": 0.016759764092796545,
+      "q_gap_kw": 87.0903238229246,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 1527.2673499913535
+       },
+       "room": {
+        "ua_w_per_k": 1971.3490048765045
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.13228989100732622
+       },
+       "room": {
+        "leak_share_of_gas": 0.17394249546961396
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.7175699631910113,
+      "atomising_air_share_of_gap": 0.1012840033753261,
+      "evaporation_share_of_water": 0.3887956786944795,
+      "bed_sensor_spread_k": 1.9855751037597713,
+      "bed_group_b_minus_group_a_k": 1.03214166429305,
+      "coldest_bed_sensor_minus_exhaust_k": 6.096904754638665,
+      "exhaust_minus_downstream_k": 2.1087725957234724
+     },
+     "0.6": {
+      "point": "day_1_s2",
+      "solid_fraction": 0.6,
+      "gap_k": 7.084731441073934,
+      "atomising_share_of_gas": 0.016759764092796545,
+      "q_gap_kw": 87.25978641496357,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 1530.239146081953
+       },
+       "room": {
+        "ua_w_per_k": 1975.1849064728638
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.13228989100732622
+       },
+       "room": {
+        "leak_share_of_gas": 0.17394249546961396
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.7175699631910113,
+      "atomising_air_share_of_gap": 0.1012840033753261,
+      "evaporation_share_of_water": 0.34085818141009605,
+      "bed_sensor_spread_k": 1.9855751037597713,
+      "bed_group_b_minus_group_a_k": 1.03214166429305,
+      "coldest_bed_sensor_minus_exhaust_k": 6.096904754638665,
+      "exhaust_minus_downstream_k": 2.1087725957234724
+     },
+     "0.634": {
+      "point": "day_1_s2",
+      "solid_fraction": 0.634,
+      "gap_k": 7.084731441073934,
+      "atomising_share_of_gas": 0.016759764092796545,
+      "q_gap_kw": 87.14455185237709,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 1528.2183247403455
+       },
+       "room": {
+        "ua_w_per_k": 1972.5764933873395
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.13228989100732622
+       },
+       "room": {
+        "leak_share_of_gas": 0.17394249546961396
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.7175699631910113,
+      "atomising_air_share_of_gap": 0.1012840033753261,
+      "evaporation_share_of_water": 0.372030652321799,
+      "bed_sensor_spread_k": 1.9855751037597713,
+      "bed_group_b_minus_group_a_k": 1.03214166429305,
+      "coldest_bed_sensor_minus_exhaust_k": 6.096904754638665,
+      "exhaust_minus_downstream_k": 2.1087725957234724
+     },
+     "0.7": {
+      "point": "day_1_s2",
+      "solid_fraction": 0.7,
+      "gap_k": 7.084731441073934,
+      "atomising_share_of_gas": 0.016759764092796545,
+      "q_gap_kw": 86.92086123088565,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 1524.2955539007542
+       },
+       "room": {
+        "ua_w_per_k": 1967.5131032801453
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.13228989100732622
+       },
+       "room": {
+        "leak_share_of_gas": 0.17394249546961396
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.7175699631910113,
+      "atomising_air_share_of_gap": 0.1012840033753261,
+      "evaporation_share_of_water": 0.45271234174032404,
+      "bed_sensor_spread_k": 1.9855751037597713,
+      "bed_group_b_minus_group_a_k": 1.03214166429305,
+      "coldest_bed_sensor_minus_exhaust_k": 6.096904754638665,
+      "exhaust_minus_downstream_k": 2.1087725957234724
+     }
+    },
+    {
+     "0.65": {
+      "point": "day_1_s3",
+      "solid_fraction": 0.65,
+      "gap_k": 7.267975277370866,
+      "atomising_share_of_gas": 0.016783449399696396,
+      "q_gap_kw": 89.30517954285821,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 1476.6751104700365
+       },
+       "room": {
+        "ua_w_per_k": 2026.1173857284818
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.12769655783365208
+       },
+       "room": {
+        "leak_share_of_gas": 0.1792665619577037
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.7185131274916398,
+      "atomising_air_share_of_gap": 0.09886015018911241,
+      "evaporation_share_of_water": 0.3981094520643209,
+      "bed_sensor_spread_k": 1.741048940022793,
+      "bed_group_b_minus_group_a_k": 1.0410687764485544,
+      "coldest_bed_sensor_minus_exhaust_k": 6.502869033813468,
+      "exhaust_minus_downstream_k": 2.0526913007100447
+     },
+     "0.6": {
+      "point": "day_1_s3",
+      "solid_fraction": 0.6,
+      "gap_k": 7.267975277370866,
+      "atomising_share_of_gas": 0.016783449399696396,
+      "q_gap_kw": 89.47930025668906,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 1479.5542237045372
+       },
+       "room": {
+        "ua_w_per_k": 2030.067761365304
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.12769655783365208
+       },
+       "room": {
+        "leak_share_of_gas": 0.1792665619577037
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.7185131274916398,
+      "atomising_air_share_of_gap": 0.09886015018911241,
+      "evaporation_share_of_water": 0.349024949687208,
+      "bed_sensor_spread_k": 1.741048940022793,
+      "bed_group_b_minus_group_a_k": 1.0410687764485544,
+      "coldest_bed_sensor_minus_exhaust_k": 6.502869033813468,
+      "exhaust_minus_downstream_k": 2.0526913007100447
+     },
+     "0.634": {
+      "point": "day_1_s3",
+      "solid_fraction": 0.634,
+      "gap_k": 7.267975277370866,
+      "atomising_share_of_gas": 0.016783449399696396,
+      "q_gap_kw": 89.36089817128408,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 1477.5964267050767
+       },
+       "room": {
+        "ua_w_per_k": 2027.3815059322649
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.12769655783365208
+       },
+       "room": {
+        "leak_share_of_gas": 0.1792665619577037
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.7185131274916398,
+      "atomising_air_share_of_gap": 0.09886015018911241,
+      "evaporation_share_of_water": 0.38094328729855453,
+      "bed_sensor_spread_k": 1.741048940022793,
+      "bed_group_b_minus_group_a_k": 1.0410687764485544,
+      "coldest_bed_sensor_minus_exhaust_k": 6.502869033813468,
+      "exhaust_minus_downstream_k": 2.0526913007100447
+     },
+     "0.7": {
+      "point": "day_1_s3",
+      "solid_fraction": 0.7,
+      "gap_k": 7.267975277370866,
+      "atomising_share_of_gas": 0.016783449399696396,
+      "q_gap_kw": 89.13105882902734,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 1473.7959972355357
+       },
+       "room": {
+        "ua_w_per_k": 2022.1670100916592
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.12769655783365208
+       },
+       "room": {
+        "leak_share_of_gas": 0.1792665619577037
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.7185131274916398,
+      "atomising_air_share_of_gap": 0.09886015018911241,
+      "evaporation_share_of_water": 0.46355545523380454,
+      "bed_sensor_spread_k": 1.741048940022793,
+      "bed_group_b_minus_group_a_k": 1.0410687764485544,
+      "coldest_bed_sensor_minus_exhaust_k": 6.502869033813468,
+      "exhaust_minus_downstream_k": 2.0526913007100447
+     }
+    },
+    {
+     "0.65": {
+      "point": "day_1_s4",
+      "solid_fraction": 0.65,
+      "gap_k": 7.225193638271762,
+      "atomising_share_of_gas": 0.016786482933022713,
+      "q_gap_kw": 88.8061998588828,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 1418.1567476643083
+       },
+       "room": {
+        "ua_w_per_k": 2016.4520529860267
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.12229980232577337
+       },
+       "room": {
+        "leak_share_of_gas": 0.1782811808702024
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.7176582364217915,
+      "atomising_air_share_of_gap": 0.09932719762974443,
+      "evaporation_share_of_water": 0.39814331218353255,
+      "bed_sensor_spread_k": 1.7760758717854799,
+      "bed_group_b_minus_group_a_k": 1.0038975185818089,
+      "coldest_bed_sensor_minus_exhaust_k": 6.419459851582843,
+      "exhaust_minus_downstream_k": 2.0892816543579045
+     },
+     "0.6": {
+      "point": "day_1_s4",
+      "solid_fraction": 0.6,
+      "gap_k": 7.225193638271762,
+      "atomising_share_of_gas": 0.016786482933022713,
+      "q_gap_kw": 88.97831589962757,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 1420.9052891507285
+       },
+       "room": {
+        "ua_w_per_k": 2020.3601556214635
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.12229980232577337
+       },
+       "room": {
+        "leak_share_of_gas": 0.1782811808702024
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.7176582364217915,
+      "atomising_air_share_of_gap": 0.09932719762974443,
+      "evaporation_share_of_water": 0.3490505874415146,
+      "bed_sensor_spread_k": 1.7760758717854799,
+      "bed_group_b_minus_group_a_k": 1.0038975185818089,
+      "coldest_bed_sensor_minus_exhaust_k": 6.419459851582843,
+      "exhaust_minus_downstream_k": 2.0892816543579045
+     },
+     "0.634": {
+      "point": "day_1_s4",
+      "solid_fraction": 0.634,
+      "gap_k": 7.225193638271762,
+      "atomising_share_of_gas": 0.016786482933022713,
+      "q_gap_kw": 88.86127699192113,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 1419.0362809399628
+       },
+       "room": {
+        "ua_w_per_k": 2017.7026458293665
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.12229980232577337
+       },
+       "room": {
+        "leak_share_of_gas": 0.1782811808702024
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.7176582364217915,
+      "atomising_air_share_of_gap": 0.09932719762974443,
+      "evaporation_share_of_water": 0.3809742718365973,
+      "bed_sensor_spread_k": 1.7760758717854799,
+      "bed_group_b_minus_group_a_k": 1.0038975185818089,
+      "coldest_bed_sensor_minus_exhaust_k": 6.419459851582843,
+      "exhaust_minus_downstream_k": 2.0892816543579045
+     },
+     "0.7": {
+      "point": "day_1_s4",
+      "solid_fraction": 0.7,
+      "gap_k": 7.225193638271762,
+      "atomising_share_of_gas": 0.016786482933022713,
+      "q_gap_kw": 88.63408381813802,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 1415.4082061778881
+       },
+       "room": {
+        "ua_w_per_k": 2012.54395035059
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.12229980232577337
+       },
+       "room": {
+        "leak_share_of_gas": 0.1782811808702024
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.7176582364217915,
+      "atomising_air_share_of_gap": 0.09932719762974443,
+      "evaporation_share_of_water": 0.463600278506223,
+      "bed_sensor_spread_k": 1.7760758717854799,
+      "bed_group_b_minus_group_a_k": 1.0038975185818089,
+      "coldest_bed_sensor_minus_exhaust_k": 6.419459851582843,
+      "exhaust_minus_downstream_k": 2.0892816543579045
+     }
+    }
+   ],
+   "day_2": [
+    {
+     "0.65": {
+      "point": "day_2_s1",
+      "solid_fraction": 0.65,
+      "gap_k": 10.01646906534831,
+      "atomising_share_of_gas": 0.026183582026033173,
+      "q_gap_kw": 117.18515305853445,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 4763.019339819305
+       },
+       "room": {
+        "ua_w_per_k": 6241.988849849857
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.5024871670472678
+       },
+       "room": {
+        "leak_share_of_gas": 0.7049531370672332
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.5033838441778661,
+      "atomising_air_share_of_gap": 0.05025561811190613,
+      "evaporation_share_of_water": 0.23363576251544899,
+      "bed_sensor_spread_k": 4.024165471394859,
+      "bed_group_b_minus_group_a_k": 2.6881662156846886,
+      "coldest_bed_sensor_minus_exhaust_k": 8.313590367635094,
+      "exhaust_minus_downstream_k": 0.319540341695145
+     },
+     "0.6": {
+      "point": "day_2_s1",
+      "solid_fraction": 0.6,
+      "gap_k": 10.01646906534831,
+      "atomising_share_of_gas": 0.026183582026033173,
+      "q_gap_kw": 117.73247897131562,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 4785.265536028638
+       },
+       "room": {
+        "ua_w_per_k": 6271.142732877233
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.5024871670472678
+       },
+       "room": {
+        "leak_share_of_gas": 0.7049531370672332
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.5033838441778661,
+      "atomising_air_share_of_gap": 0.05025561811190613,
+      "evaporation_share_of_water": 0.20538611062881873,
+      "bed_sensor_spread_k": 4.024165471394859,
+      "bed_group_b_minus_group_a_k": 2.6881662156846886,
+      "coldest_bed_sensor_minus_exhaust_k": 8.313590367635094,
+      "exhaust_minus_downstream_k": 0.319540341695145
+     },
+     "0.634": {
+      "point": "day_2_s1",
+      "solid_fraction": 0.634,
+      "gap_k": 10.01646906534831,
+      "atomising_share_of_gas": 0.026183582026033173,
+      "q_gap_kw": 117.36029735062444,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 4770.138122606291
+       },
+       "room": {
+        "ua_w_per_k": 6251.318092418617
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.5024871670472678
+       },
+       "room": {
+        "leak_share_of_gas": 0.7049531370672332
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.5033838441778661,
+      "atomising_air_share_of_gap": 0.05025561811190613,
+      "evaporation_share_of_water": 0.2237561028392504,
+      "bed_sensor_spread_k": 4.024165471394859,
+      "bed_group_b_minus_group_a_k": 2.6881662156846886,
+      "coldest_bed_sensor_minus_exhaust_k": 8.313590367635094,
+      "exhaust_minus_downstream_k": 0.319540341695145
+     },
+     "0.7": {
+      "point": "day_2_s1",
+      "solid_fraction": 0.7,
+      "gap_k": 10.01646906534831,
+      "atomising_share_of_gas": 0.026183582026033173,
+      "q_gap_kw": 116.63782714575329,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 4740.773143609971
+       },
+       "room": {
+        "ua_w_per_k": 6212.834966822478
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.5024871670472678
+       },
+       "room": {
+        "leak_share_of_gas": 0.7049531370672332
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.5033838441778661,
+      "atomising_air_share_of_gap": 0.05025561811190613,
+      "evaporation_share_of_water": 0.27130196503095594,
+      "bed_sensor_spread_k": 4.024165471394859,
+      "bed_group_b_minus_group_a_k": 2.6881662156846886,
+      "coldest_bed_sensor_minus_exhaust_k": 8.313590367635094,
+      "exhaust_minus_downstream_k": 0.319540341695145
+     }
+    },
+    {
+     "0.65": {
+      "point": "day_2_s2",
+      "solid_fraction": 0.65,
+      "gap_k": 9.476100010342066,
+      "atomising_share_of_gas": 0.026204661355033736,
+      "q_gap_kw": 110.79295824051432,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 4374.9499812070035
+       },
+       "room": {
+        "ua_w_per_k": 5974.1651409511305
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.45381133478233737
+       },
+       "room": {
+        "leak_share_of_gas": 0.6669059341812845
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.4896380380654229,
+      "atomising_air_share_of_gap": 0.05167083900877362,
+      "evaporation_share_of_water": 0.2208248266414887,
+      "bed_sensor_spread_k": 4.031968879699711,
+      "bed_group_b_minus_group_a_k": 2.847714699639212,
+      "coldest_bed_sensor_minus_exhaust_k": 7.868703333536779,
+      "exhaust_minus_downstream_k": 0.24302037556966383
+     },
+     "0.6": {
+      "point": "day_2_s2",
+      "solid_fraction": 0.6,
+      "gap_k": 9.476100010342066,
+      "atomising_share_of_gas": 0.026204661355033736,
+      "q_gap_kw": 111.31091304467218,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 4395.4027825104695
+       },
+       "room": {
+        "ua_w_per_k": 6002.094240279543
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.45381133478233737
+       },
+       "room": {
+        "leak_share_of_gas": 0.6669059341812845
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.4896380380654229,
+      "atomising_air_share_of_gap": 0.05167083900877362,
+      "evaporation_share_of_water": 0.19412503089913222,
+      "bed_sensor_spread_k": 4.031968879699711,
+      "bed_group_b_minus_group_a_k": 2.847714699639212,
+      "coldest_bed_sensor_minus_exhaust_k": 7.868703333536779,
+      "exhaust_minus_downstream_k": 0.24302037556966383
+     },
+     "0.634": {
+      "point": "day_2_s2",
+      "solid_fraction": 0.634,
+      "gap_k": 9.476100010342066,
+      "atomising_share_of_gas": 0.026204661355033736,
+      "q_gap_kw": 110.95870377784485,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 4381.494877624113
+       },
+       "room": {
+        "ua_w_per_k": 5983.102452736222
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.45381133478233737
+       },
+       "room": {
+        "leak_share_of_gas": 0.6669059341812845
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.4896380380654229,
+      "atomising_air_share_of_gap": 0.05167083900877362,
+      "evaporation_share_of_water": 0.21148719315782302,
+      "bed_sensor_spread_k": 4.031968879699711,
+      "bed_group_b_minus_group_a_k": 2.847714699639212,
+      "coldest_bed_sensor_minus_exhaust_k": 7.868703333536779,
+      "exhaust_minus_downstream_k": 0.24302037556966383
+     },
+     "0.7": {
+      "point": "day_2_s2",
+      "solid_fraction": 0.7,
+      "gap_k": 9.476100010342066,
+      "atomising_share_of_gas": 0.026204661355033736,
+      "q_gap_kw": 110.27500343635651,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 4354.497179903538
+       },
+       "room": {
+        "ua_w_per_k": 5946.236041622718
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.45381133478233737
+       },
+       "room": {
+        "leak_share_of_gas": 0.6669059341812845
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.4896380380654229,
+      "atomising_air_share_of_gap": 0.05167083900877362,
+      "evaporation_share_of_water": 0.25642455429796396,
+      "bed_sensor_spread_k": 4.031968879699711,
+      "bed_group_b_minus_group_a_k": 2.847714699639212,
+      "coldest_bed_sensor_minus_exhaust_k": 7.868703333536779,
+      "exhaust_minus_downstream_k": 0.24302037556966383
+     }
+    },
+    {
+     "0.65": {
+      "point": "day_2_s3",
+      "solid_fraction": 0.65,
+      "gap_k": 9.735453414916996,
+      "atomising_share_of_gas": 0.026172617682160136,
+      "q_gap_kw": 113.90056140632362,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 4364.958319691614
+       },
+       "room": {
+        "ua_w_per_k": 6076.790451011835
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.4522110543920156
+       },
+       "room": {
+        "leak_share_of_gas": 0.6810240305412416
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.4980850403622974,
+      "atomising_air_share_of_gap": 0.05116197665730847,
+      "evaporation_share_of_water": 0.22691497133841484,
+      "bed_sensor_spread_k": 4.512197812398277,
+      "bed_group_b_minus_group_a_k": 3.216334957546671,
+      "coldest_bed_sensor_minus_exhaust_k": 7.921626917521159,
+      "exhaust_minus_downstream_k": 0.30883118311563607
+     },
+     "0.6": {
+      "point": "day_2_s3",
+      "solid_fraction": 0.6,
+      "gap_k": 9.735453414916996,
+      "atomising_share_of_gas": 0.026172617682160136,
+      "q_gap_kw": 114.43290042214765,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 4385.358900578378
+       },
+       "room": {
+        "ua_w_per_k": 6105.191651217692
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.4522110543920156
+       },
+       "room": {
+        "leak_share_of_gas": 0.6810240305412416
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.4980850403622974,
+      "atomising_air_share_of_gap": 0.05116197665730847,
+      "evaporation_share_of_water": 0.1994785692800718,
+      "bed_sensor_spread_k": 4.512197812398277,
+      "bed_group_b_minus_group_a_k": 3.216334957546671,
+      "coldest_bed_sensor_minus_exhaust_k": 7.921626917521159,
+      "exhaust_minus_downstream_k": 0.30883118311563607
+     },
+     "0.634": {
+      "point": "day_2_s3",
+      "solid_fraction": 0.634,
+      "gap_k": 9.735453414916996,
+      "atomising_share_of_gas": 0.026172617682160136,
+      "q_gap_kw": 114.0709098913873,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 4371.486505575378
+       },
+       "room": {
+        "ua_w_per_k": 6085.878835077709
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.4522110543920156
+       },
+       "room": {
+        "leak_share_of_gas": 0.6810240305412416
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.4980850403622974,
+      "atomising_air_share_of_gap": 0.05116197665730847,
+      "evaporation_share_of_water": 0.21731972690271018,
+      "bed_sensor_spread_k": 4.512197812398277,
+      "bed_group_b_minus_group_a_k": 3.216334957546671,
+      "coldest_bed_sensor_minus_exhaust_k": 7.921626917521159,
+      "exhaust_minus_downstream_k": 0.30883118311563607
+     },
+     "0.7": {
+      "point": "day_2_s3",
+      "solid_fraction": 0.7,
+      "gap_k": 9.735453414916996,
+      "atomising_share_of_gas": 0.026172617682160136,
+      "q_gap_kw": 113.36822239049957,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 4344.557738804849
+       },
+       "room": {
+        "ua_w_per_k": 6048.389250805977
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.4522110543920156
+       },
+       "room": {
+        "leak_share_of_gas": 0.6810240305412416
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.4980850403622974,
+      "atomising_air_share_of_gap": 0.05116197665730847,
+      "evaporation_share_of_water": 0.2634968407495388,
+      "bed_sensor_spread_k": 4.512197812398277,
+      "bed_group_b_minus_group_a_k": 3.216334957546671,
+      "coldest_bed_sensor_minus_exhaust_k": 7.921626917521159,
+      "exhaust_minus_downstream_k": 0.30883118311563607
+     }
+    },
+    {
+     "0.65": {
+      "point": "day_2_s4",
+      "solid_fraction": 0.65,
+      "gap_k": 11.04904873106215,
+      "atomising_share_of_gas": 0.026237560404256552,
+      "q_gap_kw": 129.15788669666236,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 4041.0393321466595
+       },
+       "room": {
+        "ua_w_per_k": 6542.891297855756
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.41297602291769336
+       },
+       "room": {
+        "leak_share_of_gas": 0.7501887826680705
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.5451484561878214,
+      "atomising_air_share_of_gap": 0.049338949393466565,
+      "evaporation_share_of_water": 0.2568554013846265,
+      "bed_sensor_spread_k": 4.758381334940594,
+      "bed_group_b_minus_group_a_k": 3.5634442859225857,
+      "coldest_bed_sensor_minus_exhaust_k": 9.015342839558919,
+      "exhaust_minus_downstream_k": 0.39931122461954516
+     },
+     "0.6": {
+      "point": "day_2_s4",
+      "solid_fraction": 0.6,
+      "gap_k": 11.04904873106215,
+      "atomising_share_of_gas": 0.026237560404256552,
+      "q_gap_kw": 129.76292536240456,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 4059.9695353906636
+       },
+       "room": {
+        "ua_w_per_k": 6573.5413984589695
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.41297602291769336
+       },
+       "room": {
+        "leak_share_of_gas": 0.7501887826680705
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.5451484561878214,
+      "atomising_air_share_of_gap": 0.049338949393466565,
+      "evaporation_share_of_water": 0.22580130791739667,
+      "bed_sensor_spread_k": 4.758381334940594,
+      "bed_group_b_minus_group_a_k": 3.5634442859225857,
+      "coldest_bed_sensor_minus_exhaust_k": 9.015342839558919,
+      "exhaust_minus_downstream_k": 0.39931122461954516
+     },
+     "0.634": {
+      "point": "day_2_s4",
+      "solid_fraction": 0.634,
+      "gap_k": 11.04904873106215,
+      "atomising_share_of_gas": 0.026237560404256552,
+      "q_gap_kw": 129.35149906969986,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 4047.0969971847408
+       },
+       "room": {
+        "ua_w_per_k": 6552.699330048785
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.41297602291769336
+       },
+       "room": {
+        "leak_share_of_gas": 0.7501887826680705
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.5451484561878214,
+      "atomising_air_share_of_gap": 0.049338949393466565,
+      "evaporation_share_of_water": 0.2459949533960871,
+      "bed_sensor_spread_k": 4.758381334940594,
+      "bed_group_b_minus_group_a_k": 3.5634442859225857,
+      "coldest_bed_sensor_minus_exhaust_k": 9.015342839558919,
+      "exhaust_minus_downstream_k": 0.39931122461954516
+     },
+     "0.7": {
+      "point": "day_2_s4",
+      "solid_fraction": 0.7,
+      "gap_k": 11.04904873106215,
+      "atomising_share_of_gas": 0.026237560404256552,
+      "q_gap_kw": 128.5528480309201,
+      "heat_loss": {
+       "ambient": {
+        "ua_w_per_k": 4022.109128902655
+       },
+       "room": {
+        "ua_w_per_k": 6512.241197252543
+       }
+      },
+      "false_air": {
+       "ambient": {
+        "leak_share_of_gas": 0.41297602291769336
+       },
+       "room": {
+        "leak_share_of_gas": 0.7501887826680705
+       }
+      },
+      "atomising_air_cooling_upper_bound_k": 0.5451484561878214,
+      "atomising_air_share_of_gap": 0.049338949393466565,
+      "evaporation_share_of_water": 0.2982608593409329,
+      "bed_sensor_spread_k": 4.758381334940594,
+      "bed_group_b_minus_group_a_k": 3.5634442859225857,
+      "coldest_bed_sensor_minus_exhaust_k": 9.015342839558919,
+      "exhaust_minus_downstream_k": 0.39931122461954516
+     }
+    }
+   ]
+  },
+  "overall": {
+   "day_1": [
+    {
+     "0.65": {
+      "solid_fraction": 0.65,
+      "ua_outlet_exhaust_kw_per_k": 0.9959619140258893,
+      "ua_outlet_bed_kw_per_k": -0.9162417534787065
+     },
+     "0.6": {
+      "solid_fraction": 0.6,
+      "ua_outlet_exhaust_kw_per_k": 0.19333851593561593,
+      "ua_outlet_bed_kw_per_k": -1.6064078270939373
+     },
+     "0.634": {
+      "solid_fraction": 0.634,
+      "ua_outlet_exhaust_kw_per_k": 0.7391224266370023,
+      "ua_outlet_bed_kw_per_k": -1.1370948970355803
+     },
+     "0.7": {
+      "solid_fraction": 0.7,
+      "ua_outlet_exhaust_kw_per_k": 1.7985853121161628,
+      "ua_outlet_bed_kw_per_k": -0.22607567986347632
+     }
+    },
+    {
+     "0.65": {
+      "solid_fraction": 0.65,
+      "ua_outlet_exhaust_kw_per_k": 1.1557892200443172,
+      "ua_outlet_bed_kw_per_k": -0.8665886768046296
+     },
+     "0.6": {
+      "solid_fraction": 0.6,
+      "ua_outlet_exhaust_kw_per_k": 0.38177574402002656,
+      "ua_outlet_bed_kw_per_k": -1.527174541597207
+     },
+     "0.634": {
+      "solid_fraction": 0.634,
+      "ua_outlet_exhaust_kw_per_k": 0.9081049077165443,
+      "ua_outlet_bed_kw_per_k": -1.077976153538254
+     },
+     "0.7": {
+      "solid_fraction": 0.7,
+      "ua_outlet_exhaust_kw_per_k": 1.9298026960686059,
+      "ua_outlet_bed_kw_per_k": -0.20600281201205342
+     }
+    },
+    {
+     "0.65": {
+      "solid_fraction": 0.65,
+      "ua_outlet_exhaust_kw_per_k": 1.1697419088947016,
+      "ua_outlet_bed_kw_per_k": -0.9065080890790607
+     },
+     "0.6": {
+      "solid_fraction": 0.6,
+      "ua_outlet_exhaust_kw_per_k": 0.39095849987039444,
+      "ua_outlet_bed_kw_per_k": -1.5681967794277736
+     },
+     "0.634": {
+      "solid_fraction": 0.634,
+      "ua_outlet_exhaust_kw_per_k": 0.9205312180069232,
+      "ua_outlet_bed_kw_per_k": -1.1182484699906488
+     },
+     "0.7": {
+      "solid_fraction": 0.7,
+      "ua_outlet_exhaust_kw_per_k": 1.948525317919008,
+      "ua_outlet_bed_kw_per_k": -0.2448193987303482
+     }
+    },
+    {
+     "0.65": {
+      "solid_fraction": 0.65,
+      "ua_outlet_exhaust_kw_per_k": 1.2255269538900884,
+      "ua_outlet_bed_kw_per_k": -0.8498649036035325
+     },
+     "0.6": {
+      "solid_fraction": 0.6,
+      "ua_outlet_exhaust_kw_per_k": 0.4508513923523524,
+      "ua_outlet_bed_kw_per_k": -1.508606261038079
+     },
+     "0.634": {
+      "solid_fraction": 0.634,
+      "ua_outlet_exhaust_kw_per_k": 0.9776307741980128,
+      "ua_outlet_bed_kw_per_k": -1.0606621379825873
+     },
+     "0.7": {
+      "solid_fraction": 0.7,
+      "ua_outlet_exhaust_kw_per_k": 2.000202515427822,
+      "ua_outlet_bed_kw_per_k": -0.19112354616898755
+     }
+    }
+   ],
+   "day_2": [
+    {
+     "0.65": {
+      "solid_fraction": 0.65,
+      "ua_outlet_exhaust_kw_per_k": 2.263567504282713,
+      "ua_outlet_bed_kw_per_k": -3.699180160463063
+     },
+     "0.6": {
+      "solid_fraction": 0.6,
+      "ua_outlet_exhaust_kw_per_k": -2.7688956954316386,
+      "ua_outlet_bed_kw_per_k": -6.658869576374436
+     },
+     "0.634": {
+      "solid_fraction": 0.634,
+      "ua_outlet_exhaust_kw_per_k": 0.6531792803741185,
+      "ua_outlet_bed_kw_per_k": -4.646280773554703
+     },
+     "0.7": {
+      "solid_fraction": 0.7,
+      "ua_outlet_exhaust_kw_per_k": 7.296030703997061,
+      "ua_outlet_bed_kw_per_k": -0.7394907445516911
+     }
+    },
+    {
+     "0.65": {
+      "solid_fraction": 0.65,
+      "ua_outlet_exhaust_kw_per_k": 2.2043804702516248,
+      "ua_outlet_bed_kw_per_k": -3.5387126883092566
+     },
+     "0.6": {
+      "solid_fraction": 0.6,
+      "ua_outlet_exhaust_kw_per_k": -2.8294765481774315,
+      "ua_outlet_bed_kw_per_k": -6.56635309555164
+     },
+     "0.634": {
+      "solid_fraction": 0.634,
+      "ua_outlet_exhaust_kw_per_k": 0.5935462243543241,
+      "ua_outlet_bed_kw_per_k": -4.507557618626822
+     },
+     "0.7": {
+      "solid_fraction": 0.7,
+      "ua_outlet_exhaust_kw_per_k": 7.238237488680669,
+      "ua_outlet_bed_kw_per_k": -0.5110722810668847
+     }
+    },
+    {
+     "0.65": {
+      "solid_fraction": 0.65,
+      "ua_outlet_exhaust_kw_per_k": 2.1763186499077043,
+      "ua_outlet_bed_kw_per_k": -3.6309357610700763
+     },
+     "0.6": {
+      "solid_fraction": 0.6,
+      "ua_outlet_exhaust_kw_per_k": -2.829236219050642,
+      "ua_outlet_bed_kw_per_k": -6.616478210934124
+     },
+     "0.634": {
+      "solid_fraction": 0.634,
+      "ua_outlet_exhaust_kw_per_k": 0.5745410918410314,
+      "ua_outlet_bed_kw_per_k": -4.586309345026571
+     },
+     "0.7": {
+      "solid_fraction": 0.7,
+      "ua_outlet_exhaust_kw_per_k": 7.181873518866046,
+      "ua_outlet_bed_kw_per_k": -0.6453933112060307
+     }
+    },
+    {
+     "0.65": {
+      "solid_fraction": 0.65,
+      "ua_outlet_exhaust_kw_per_k": 1.7489408287756656,
+      "ua_outlet_bed_kw_per_k": -4.208079611375048
+     },
+     "0.6": {
+      "solid_fraction": 0.6,
+      "ua_outlet_exhaust_kw_per_k": -3.117021791192174,
+      "ua_outlet_bed_kw_per_k": -6.996658413754143
+     },
+     "0.634": {
+      "solid_fraction": 0.634,
+      "ua_outlet_exhaust_kw_per_k": 0.19183279038595524,
+      "ua_outlet_bed_kw_per_k": -5.1004248281363616
+     },
+     "0.7": {
+      "solid_fraction": 0.7,
+      "ua_outlet_exhaust_kw_per_k": 6.614903448743489,
+      "ua_outlet_bed_kw_per_k": -1.4195008089959604
+     }
+    }
+   ]
+  },
+  "consistent_solid_fraction": {
+   "exhaust": {
+    "solid_fraction": 0.6385912454073873,
+    "ua_kw_per_k": 0.9581408790831158
+   },
+   "bed": {
+    "solid_fraction": 0.7137338696838753,
+    "ua_kw_per_k": -0.033597946177129856
+   }
+  }
+ },
+ "consistent_solid_fraction": {
+  "exhaust": {
+   "solid_fraction": 0.6385912454073873,
+   "ua_kw_per_k": 0.9581408790831158
+  },
+  "bed": {
+   "solid_fraction": 0.7137338696838753,
+   "ua_kw_per_k": -0.033597946177129856
+  }
+ }
+}
