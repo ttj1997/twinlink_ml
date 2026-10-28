@@ -532,7 +532,9 @@ def main() -> int:
     parser.add_argument("--name", default="plant_scale_v1")
     parser.add_argument("--output", default=None, help="smoke runs only: path outside artifacts/")
     parser.add_argument(
-        "--smoke", action="store_true", help="2 draws, reference fits only, 1 headroom task"
+        "--smoke",
+        action="store_true",
+        help="2 draws, reference fits only, the lab-reference headroom task",
     )
     parser.add_argument("--workers", type=int, default=None)
     args = parser.parse_args()
@@ -580,7 +582,7 @@ def main() -> int:
         for cal, chk in directions:
             for x in fractions if not args.smoke else fractions[:1]:
                 tasks.append((config_path, cand, cal, chk, x, None, points))
-            for d in draws:
+            for d in draws if not args.smoke else []:
                 tasks.append((config_path, cand, cal, chk, ph.solid_fraction_reference, d, points))
     with ProcessPoolExecutor(max_workers=workers) as pool:
         fits = list(pool.map(calibration_task, tasks))
@@ -691,7 +693,7 @@ def main() -> int:
                                             h.lab_reference_margins_kg_per_kg))
     )  # fmt: skip
     if args.smoke:
-        head_tasks = [head_tasks[0]]
+        head_tasks = [head_tasks[-1]]  # the lab reference (shortest); plant tasks ran in smoke1
     with ProcessPoolExecutor(max_workers=workers) as pool:
         head_raw = list(pool.map(headroom_task, head_tasks))
     headroom = {r["label"]: {"kind": r["kind"], **r["result"]} for r in head_raw}
@@ -706,7 +708,7 @@ def main() -> int:
         else str(config_path),
         "config_fingerprint": config.fingerprint,
         "process_config": str(config.process_config.relative_to(REPO_ROOT)),
-        "process_config_fingerprint": base.fingerprint(),
+        "process_config_fingerprint": base.fingerprint,
         "role_file_sha256": sha256(roles),
         "sensor_value_fingerprint": sv.fingerprint,
         "lab_record_sha256": sha256(config.observability.lab_record),
