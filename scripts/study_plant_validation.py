@@ -1,12 +1,12 @@
 r"""NA3-NA5: erste Validierung des Grey-Box-Modells gegen ECHTE Anlagendaten.
 
 Kein Netztraining, kein RL, kein Sweep -- zwei 24h-Exporte des Anwendungspartners
-(Minutentakt, je 1441 Zeilen, Produkte "ACE"/"RID", siehe ``twinlink_ml.plant_data``)
+(Minutentakt, je 1441 Zeilen, Produkte "P1"/"P2", siehe ``twinlink_ml.plant_data``)
 gegen den exakten Beharrungszustands-Loeser (``simulation.steady_state``).
 
 Rohdaten bleiben ausserhalb des Repos (NA1, siehe ``docs/04_stand_ap1.md``): die
 beiden Pfade kommen ausschliesslich aus den Umgebungsvariablen
-``TWINLINK_PLANT_DATA_ACE`` / ``TWINLINK_PLANT_DATA_RID``, nirgends als Literal.
+``TWINLINK_PLANT_DATA_P1`` / ``TWINLINK_PLANT_DATA_P2``, nirgends als Literal.
 
 Drei Teile
 ----------
@@ -17,7 +17,7 @@ Drei Teile
 3. NA5: Beharrungszustand des Grey-Box-Modells mit Anlagenparametern je Produkt,
    Vergleich der berechneten mit der gemessenen Betttemperatur. Parameter werden NICHT
    angepasst, um die Messung zu treffen -- alle Annahmen stehen in
-   :data:`ASSUMPTIONS` mit Begruendung, unveraendert zwischen ACE und RID.
+   :data:`ASSUMPTIONS` mit Begruendung, unveraendert zwischen P1 und P2.
 
 Geometrie-Annahme (Querschnittsflaeche)
 ----------------------------------------
@@ -361,7 +361,7 @@ def _solve_steady_state_widening_bracket(
 
     Der Solver-Default (``T_amb + 10``, siehe ``steady_state.py``) haelt die aeussere
     Bisektion im Trocknungsregime -- kalibriert am Labormassstab. Bei sehr hoher
-    Spruehrate (RID: 2118 kg/h, >2x ACE) reicht dieser Abstand nicht: unterhalb einer
+    Spruehrate (P2: 2118 kg/h, >2x P1) reicht dieser Abstand nicht: unterhalb einer
     hoeheren Schwelle befeuchtet sich das Bett bei JEDER angenommenen Partikelfeuchte
     netto (keine Loesung der inneren Bisektion). Das ist eine NUMERISCHE Anpassung des
     Suchbereichs, KEINE Aenderung der Bilanzgleichungen oder eines physikalischen
@@ -496,8 +496,8 @@ def report_na5_steady_state(point: OperatingPoint) -> None:
 
 def main() -> int:
     paths = {
-        "ACE": os.environ.get("TWINLINK_PLANT_DATA_ACE"),
-        "RID": os.environ.get("TWINLINK_PLANT_DATA_RID"),
+        "P1": os.environ.get("TWINLINK_PLANT_DATA_P1"),
+        "P2": os.environ.get("TWINLINK_PLANT_DATA_P2"),
     }
     missing = [label for label, path in paths.items() if not path]
     if missing:

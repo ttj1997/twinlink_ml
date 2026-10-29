@@ -11,7 +11,7 @@ and `scripts/analyze_heat_pump_stage_b_maps.py` (pure aggregations). Artifacts (
 `gate_heat_pump_stage_b_maps.json`. Tests: `tests/test_heatpump.py`, `tests/test_heatpump_gate.py`.
 
 Confidentiality: roles only (plant A with storage A1, plant C with lines C1/C2, "the partner"); raw
-exports only through `TWINLINK_PLANT_DATA_ACE` / `TWINLINK_PLANT_DATA_RID`; channel tags only in
+exports only through `TWINLINK_PLANT_DATA_P1` / `TWINLINK_PLANT_DATA_P2`; channel tags only in
 the git-ignored role file of storage test 1.
 
 **Solid fraction (added 2026-10-16).** Sections 1-8 were computed with the solid fraction 0.3 of
@@ -382,5 +382,5 @@ plant data). Study-4 variant: `scripts/gate_heat_pump.py --name gate_heat_pump_s
 --solid-fraction 0.634 --solid-fraction-band 0.60 0.70` (script `3603fb3`, about 43 minutes on a
 shared, fully loaded machine), the follow-up scripts with `--source gate_heat_pump_sf0634` and
 `scripts/analyze_heat_pump_solid_fraction_comparison.py --name
-gate_heat_pump_solid_fraction_comparison`. The first two need `TWINLINK_PLANT_DATA_ACE` / `TWINLINK_PLANT_DATA_RID` and the
+gate_heat_pump_solid_fraction_comparison`. The first two need `TWINLINK_PLANT_DATA_P1` / `TWINLINK_PLANT_DATA_P2` and the
 git-ignored role file of storage test 1.

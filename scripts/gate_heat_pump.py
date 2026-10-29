@@ -138,7 +138,7 @@ never below the week programme; storage balance closed.
 
 Call::
 
-    TWINLINK_PLANT_DATA_ACE=... TWINLINK_PLANT_DATA_RID=... \
+    TWINLINK_PLANT_DATA_P1=... TWINLINK_PLANT_DATA_P2=... \
         tools/run_here.sh scripts/gate_heat_pump.py --name gate_heat_pump
 """
 
@@ -207,7 +207,7 @@ from twinlink_ml.storage_timeslice import (
 )
 from twinlink_ml.storage_timeslice.config import is_realistic as streams_realistic
 
-PRODUCT_ENV = {"product_1": "TWINLINK_PLANT_DATA_ACE", "product_2": "TWINLINK_PLANT_DATA_RID"}
+PRODUCT_ENV = {"product_1": "TWINLINK_PLANT_DATA_P1", "product_2": "TWINLINK_PLANT_DATA_P2"}
 ROLE_FILE = REPO_ROOT / "conf" / "plant" / "plant_local.yaml"
 DAYS_PER_YEAR = 365.0
 QUALITIES = (0.45, 0.50, 0.55)

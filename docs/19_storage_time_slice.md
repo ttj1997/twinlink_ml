@@ -12,7 +12,7 @@ gate, grids, decomposition, sensitivity), `scripts/analyze_storage_timeslice_sen
 Confidentiality: roles only (plant A with storage A1, plant C with lines C1/C2, "the partner");
 channel tags only in the git-ignored `conf/plant/plant_local.yaml` (template with placeholder tags
 in `conf/plant/plant_local.yaml.example`, key `timeslice_roles`); raw exports only through
-`TWINLINK_PLANT_DATA_ACE` / `TWINLINK_PLANT_DATA_RID`.
+`TWINLINK_PLANT_DATA_P1` / `TWINLINK_PLANT_DATA_P2`.
 
 ## 1. Question and answer in one paragraph
 
@@ -241,5 +241,5 @@ to ask, not a statement of size.
 `scripts/gate_storage_timeslice.py --name gate_storage_timeslice` (script committed before the run,
 clean tree; artifact with config fingerprints per scenario, hashes of the raw files, provenance);
 `scripts/analyze_storage_timeslice_sensitivity.py --name gate_storage_timeslice_posthoc_sensitivity`.
-Both need `TWINLINK_PLANT_DATA_ACE` / `TWINLINK_PLANT_DATA_RID` and the git-ignored role file;
+Both need `TWINLINK_PLANT_DATA_P1` / `TWINLINK_PLANT_DATA_P2` and the git-ignored role file;
 runtime about 8 minutes and 3 minutes on 14 processes.

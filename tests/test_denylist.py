@@ -8,15 +8,24 @@ dieser Test uebersprungen (er kann dort seine eigene Referenz nicht lesen).
 Suchreihenfolge fuer ``denylist.txt``: ``$TWINLINK_LOCAL_DIR`` (wie bei den Partner-Tests),
 ``<Repo>/local``, ``local/`` des Haupt-Checkouts (in einem Git-Worktree liegt ``local/``
 nur dort). Erst wenn keine der drei Stellen die Datei hat, wird uebersprungen.
+
+Zeilen mit dem Praefix ``re:`` sind regulaere Ausdruecke (gross/klein-sensitiv, je Zeile
+angewandt, z.B. ``re:(?<![A-Za-z0-9])XYZ(?![A-Za-z0-9])`` fuer ein Kuerzel mit
+Wortgrenzen). Sie gelten nicht fuer ``artifacts/`` (aufgezeichneter Text von Laeufen).
+Alle anderen Zeilen sind wie bisher Teilstrings ohne Beachtung der Gross-/Kleinschreibung.
 """
 
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 from pathlib import Path
 
 import pytest
+
+
+REGEX_PREFIX = "re:"
 
 
 def _repo_root() -> Path | None:
@@ -92,18 +101,27 @@ def test_denylist_terms_not_present_in_tracked_files() -> None:
     if not terms:
         pytest.skip("local/denylist.txt ist leer")
 
+    plain_terms = [t for t in terms if not t.startswith(REGEX_PREFIX)]
+    regex_terms = [(t, re.compile(t.removeprefix(REGEX_PREFIX))) for t in terms if t.startswith(REGEX_PREFIX)]
     hits: list[str] = []
     for file_path in _tracked_files(repo_root):
         try:
             text = file_path.read_text(encoding="utf-8")
         except (UnicodeDecodeError, OSError):
             continue  # Binaerdatei oder nicht lesbar -- kein Textinhalt zu pruefen
-        lower_lines = [line.lower() for line in text.splitlines()]
-        for term in terms:
+        rel = file_path.relative_to(repo_root)
+        lines = text.splitlines()
+        lower_lines = [line.lower() for line in lines]
+        for term in plain_terms:
             term_lower = term.lower()
             for line_no, line in enumerate(lower_lines, start=1):
                 if term_lower in line:
-                    rel = file_path.relative_to(repo_root)
+                    hits.append(f"{rel}:{line_no}: enthaelt Sperrlisten-Begriff {term!r}")
+        if rel.parts[0] == "artifacts":
+            continue
+        for term, pattern in regex_terms:
+            for line_no, line in enumerate(lines, start=1):
+                if pattern.search(line):
                     hits.append(f"{rel}:{line_no}: enthaelt Sperrlisten-Begriff {term!r}")
 
     assert not hits, "Sperrlisten-Treffer in getrackten Dateien:\n" + "\n".join(hits)

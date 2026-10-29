@@ -31,7 +31,7 @@ like for like.
 
 Call::
 
-    TWINLINK_PLANT_DATA_ACE=... TWINLINK_PLANT_DATA_RID=... \
+    TWINLINK_PLANT_DATA_P1=... TWINLINK_PLANT_DATA_P2=... \
         tools/run_here.sh scripts/recheck_storage_timeslice_solid_fraction.py \
         --solid-fraction 0.634 --name recheck_storage_timeslice_solid_fraction_0634
 

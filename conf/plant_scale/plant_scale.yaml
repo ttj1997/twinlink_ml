@@ -12,8 +12,8 @@ process_config: conf/process/greybox_plant_a_placeholder.yaml
 data:
   role_key: plant_scale_roles
   days:                                   # day label -> environment variable of the export
-    day_1: TWINLINK_PLANT_DATA_ACE        # product 1
-    day_2: TWINLINK_PLANT_DATA_RID        # product 2
+    day_1: TWINLINK_PLANT_DATA_P1        # product 1
+    day_2: TWINLINK_PLANT_DATA_P2        # product 2
   normal_density_dry_air_kg_per_m3: 1.2922  # dry air, 0 degC, 101325 Pa (as docs/33)
   block_minutes: 15                       # block means for the disturbance amplitudes
 

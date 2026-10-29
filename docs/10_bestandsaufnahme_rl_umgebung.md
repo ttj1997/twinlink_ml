@@ -67,7 +67,7 @@
   bit-identically at `T_out` of Q2, so a duct loss moves it directly.
 - **Solid fraction:** a disturbance in the lab (0.2-0.4, fixed at 0.30 in the bandit). The plant
   value 30 % is not tenable according to Befund 56 NB2, which predicts 71-73 % (unconfirmed).
-  With the corrected air flow the solver finds no steady state at RID.
+  With the corrected air flow the solver finds no steady state at P2.
 - Others: `dT_min` = 20 K (two-stage circuit partly confirmed), `eta_H`, `H_u`, bed limit
   80 degC, penalty weight 50 kW.
 

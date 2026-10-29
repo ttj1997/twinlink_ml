@@ -10,7 +10,7 @@ recommendation). Lab book: Befund 103 in `docs/04_stand_ap1.md`. Code: `src/twin
 Confidentiality: roles only (plant A with storage A1, "the partner", product 1 / product 2);
 channel tags only in the git-ignored `conf/plant/plant_local.yaml` (template with placeholder tags
 in `conf/plant/plant_local.yaml.example`, key `operating_point_roles`); raw exports only through
-`TWINLINK_PLANT_DATA_ACE` / `TWINLINK_PLANT_DATA_RID`.
+`TWINLINK_PLANT_DATA_P1` / `TWINLINK_PLANT_DATA_P2`.
 
 **The proxy constraints do not replace a product-moisture measurement. Every saving below is an
 upper bound of the lever, not an operating recommendation. Every number that is not a measurement

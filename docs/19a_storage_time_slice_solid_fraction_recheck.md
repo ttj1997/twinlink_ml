@@ -12,8 +12,8 @@ Befund 99, `docs/19_storage_time_slice.md` and their artifacts are unchanged. Br
 - **Comparison tables:** printed by `scripts/report_storage_timeslice_solid_fraction.py`, which
   reads the artifacts only.
 
-Confidentiality: roles only, as in docs/19. Raw exports only through `TWINLINK_PLANT_DATA_ACE` /
-`TWINLINK_PLANT_DATA_RID`; the raw-file hashes equal those of Befund 99, and the script checks this.
+Confidentiality: roles only, as in docs/19. Raw exports only through `TWINLINK_PLANT_DATA_P1` /
+`TWINLINK_PLANT_DATA_P2`; the raw-file hashes equal those of Befund 99, and the script checks this.
 
 ## 1. Question and answer
 

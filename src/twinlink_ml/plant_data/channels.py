@@ -3,7 +3,7 @@ r"""Messstellenzuordnung des Anwendungspartners (Anlage F-5, Granulator D 3204.
 Quelle: drei Leitsystem-Screenshots des Anwendungspartners (Granulation, Waerme-
 rueckgewinnung 1/2, Datum 05.-08.09.2025 -- ein anderer Zeitpunkt als die beiden
 validierten Exporte, siehe unten) sowie die Spaltenkoepfe der beiden 24h-Exporte
-selbst (Datei 1: Produkt "ACE", 26.03.2026; Datei 2: Produkt "RID", 11.05.2026,
+selbst (Datei 1: Produkt "P1", 26.03.2026; Datei 2: Produkt "P2", 11.05.2026,
 je 1441 Zeilen im Minutentakt). Produktnamen werden hier bewusst nicht ausgeschrieben
 (Kundendaten des Anwendungspartners, siehe NA1/``docs/04_stand_ap1.md``).
 
@@ -80,8 +80,8 @@ GRANULATOR_D3204_CHANNELS: tuple[PlantChannel, ...] = (
         exported=True,
         confirmed=True,
         note=(
-            "Messwerte plausibel fuer die Exportdaten: ACE (26.03.) 0.9-7.6 degC, "
-            "RID (11.05.) 7.7-15.3 degC -- konsistent mit den Dateidaten (frueres "
+            "Messwerte plausibel fuer die Exportdaten: P1 (26.03.) 0.9-7.6 degC, "
+            "P2 (11.05.) 7.7-15.3 degC -- konsistent mit den Dateidaten (frueres "
             "Fruehjahr vs. Mai)."
         ),
     ),
@@ -168,10 +168,10 @@ GRANULATOR_D3204_CHANNELS: tuple[PlantChannel, ...] = (
             "Position im Screenshot oberhalb der Bett-Trias bestaetigt (gleiche "
             "vertikale Zone, Zylinderteil von D 3204 oberhalb TIRSAH-320414/416). "
             "In BEIDEN Exportdateien liest diese Trias hoeher als die Bett-Trias "
-            "(ACE +0.89 K, RID +3.10 K im Mittel) -- kein Einzelfall. Anders als "
+            "(P1 +0.89 K, P2 +3.10 K im Mittel) -- kein Einzelfall. Anders als "
             "die eng zusammenliegende Bett- und Zuluft-Trias (Streuung < 0.4 K "
             "zwischen den drei Sensoren) streuen 417/418/419 selbst deutlich "
-            "untereinander (RID: 45.6/47.4/46.1 degC, Spanne 1.8 K) -- Hinweis auf "
+            "untereinander (P2: 45.6/47.4/46.1 degC, Spanne 1.8 K) -- Hinweis auf "
             "eine nicht gut durchmischte, ortsabhaengige Messung (z. B. Wandeinfluss "
             "oder unterschiedliche Einbauposition je Sensor) statt dreier Redundanzen "
             "derselben Kernstroemung. Ob Gas- oder Wandmessung, laesst sich aus dem "
@@ -288,7 +288,7 @@ GRANULATOR_D3204_CHANNELS: tuple[PlantChannel, ...] = (
         "Zerstaeuberluft, Duese 5/6",
         exported=True,
         confirmed=True,
-        note="Bei ACE inaktiv (Messwert nahe 0, leicht negativ -- Nullpunktrauschen).",
+        note="Bei P1 inaktiv (Messwert nahe 0, leicht negativ -- Nullpunktrauschen).",
     ),
     PlantChannel(
         "FIRSAL-320565",
@@ -296,7 +296,7 @@ GRANULATOR_D3204_CHANNELS: tuple[PlantChannel, ...] = (
         "Zerstaeuberluft, Duese 6/6",
         exported=True,
         confirmed=True,
-        note="Bei ACE inaktiv (Messwert nahe 0, leicht negativ -- Nullpunktrauschen).",
+        note="Bei P1 inaktiv (Messwert nahe 0, leicht negativ -- Nullpunktrauschen).",
     ),
     PlantChannel(
         "PIRSAH-320513",
