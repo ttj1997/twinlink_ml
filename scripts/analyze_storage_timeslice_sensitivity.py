@@ -17,7 +17,7 @@ points of E_direct), same code as the pre-registered study. Nothing here changes
 
 Call::
 
-    TWINLINK_PLANT_DATA_ACE=... TWINLINK_PLANT_DATA_RID=... \
+    TWINLINK_PLANT_DATA_P1=... TWINLINK_PLANT_DATA_P2=... \
         tools/run_here.sh scripts/analyze_storage_timeslice_sensitivity.py \
         --name gate_storage_timeslice_posthoc_sensitivity
 """

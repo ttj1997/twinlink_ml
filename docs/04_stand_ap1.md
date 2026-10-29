@@ -4693,7 +4693,7 @@ unverändert). LA1-Schemaänderung: Commit `27ab699`.
 
 **Erstmals seit AP1.** Alle bisherigen Befunde (1-55) validieren ausschließlich gegen den
 eigenen Simulator. Dieser Befund ist die erste Auswertung gegen zwei 24h-Exporte des
-Anwendungspartners (Minutentakt, je 1441 Zeilen, zwei Produkte -- Dateibezeichnung "ACE"/"RID",
+Anwendungspartners (Minutentakt, je 1441 Zeilen, zwei Produkte -- Dateibezeichnung "P1"/"P2",
 Produktnamen selbst nicht in diesem Dokument, siehe unten zur Vertraulichkeit) plus drei
 Leitsystem-Screenshots zur Messstellenzuordnung. Code: `twinlink_ml.plant_data`
 (Messstellen-Mapping, Commit `e3efc19`) und `scripts/study_plant_validation.py` (Auswertung,
@@ -4703,7 +4703,7 @@ Commit `88c0746`).
 Anwendungspartners, unter anderem einen Produktnamen im Leitsystem -- sie bleiben außerhalb
 des Repos. `twinlink_ml.plant_data.load_plant_export` nimmt den Dateipfad als Parameter;
 `study_plant_validation.py` liest ihn ausschließlich aus den Umgebungsvariablen
-`TWINLINK_PLANT_DATA_ACE`/`TWINLINK_PLANT_DATA_RID`. Committet sind nur abgeleitete Kennzahlen
+`TWINLINK_PLANT_DATA_P1`/`TWINLINK_PLANT_DATA_P2`. Committet sind nur abgeleitete Kennzahlen
 (dieser Befund, das Mapping-Modul, das Auswertungsskript), keine Rohdaten.
 
 **NA2 -- Messstellenzuordnung, gegen Screenshots geprüft statt übernommen.** Die vorgeschlagene
@@ -4731,10 +4731,10 @@ Anwendungspartner, nicht durch weitere Interpretation der Screenshots.
 
 **NA3 -- Temperaturprofil über die Apparathöhe nicht monoton, Ursache nicht abschließend
 geklärt.** `TRZSAH-320417/418/419` ("höhere Position") liegt in BEIDEN Betriebspunkten über der
-Betttemperatur, nicht nur bei RID: ACE +0,89 K, RID +3,10 K (Mittel über 24 h). Kein Einzelfall
+Betttemperatur, nicht nur bei P2: P1 +0,89 K, P2 +3,10 K (Mittel über 24 h). Kein Einzelfall
 also, sondern ein reproduzierbares Muster. Auffällig: anders als die eng zusammenliegenden
 Bett- und Zuluft-Triaden (Streuung zwischen den drei Sensoren typisch < 0,4 K) streut die obere
-Trias selbst deutlich -- bei RID 1,78 K Median-Spannweite zwischen den drei Sensoren
+Trias selbst deutlich -- bei P2 1,78 K Median-Spannweite zwischen den drei Sensoren
 (417/418/419: 45,6/47,4/46,1 °C im Mittel) gegen 0,43 K am Bett. Das spricht eher für eine
 ortsabhängige Messung (Wandeinfluss, unterschiedliche Einbautiefe je Sensor) als für drei
 Redundanzen derselben, gut durchmischten Kernströmung. Aus den Screenshots ist die Position von
@@ -4744,13 +4744,13 @@ Befund und alle folgenden bleibt `TIRSAH-320414/415/416` die Betttemperatur des 
 diesem Vorbehalt.
 
 **NA4 -- `outlet_duct_heat_loss_k`: Näherung innerhalb eines Betriebspunkts, kein
-Leitungsverlust im engen Sinn.** Bett-Abluft-Versatz: ACE 6,59±0,19 K (Min/Max 6,18/6,93 K),
-RID 8,87±0,59 K (Min/Max 7,78/9,77 K). Innerhalb einer Datei ist der Versatz praktisch konstant
+Leitungsverlust im engen Sinn.** Bett-Abluft-Versatz: P1 6,59±0,19 K (Min/Max 6,18/6,93 K),
+P2 8,87±0,59 K (Min/Max 7,78/9,77 K). Innerhalb einer Datei ist der Versatz praktisch konstant
 (Standardabweichung 3-7 % des Mittels) -- passend dazu ist auch die Anregung praktisch null,
 siehe unten. Zwischen den beiden Betriebspunkten verschiebt er sich aber um +2,3 K bei mehr als
-doppelter Sprührate (934 → 2118 kg/h); bei RID korreliert der Versatz innerhalb des Tages mit
-der Sprührate (+0,53) und (gegenläufig) mit der Umgebungstemperatur (-0,53), bei ACE ist beides
-praktisch unkorreliert (< 0,2) -- konsistent mit der ohnehin geringen Anregung bei ACE. Antwort
+doppelter Sprührate (934 → 2118 kg/h); bei P2 korreliert der Versatz innerhalb des Tages mit
+der Sprührate (+0,53) und (gegenläufig) mit der Umgebungstemperatur (-0,53), bei P1 ist beides
+praktisch unkorreliert (< 0,2) -- konsistent mit der ohnehin geringen Anregung bei P1. Antwort
 auf die Kernfrage: **eher betriebspunktabhängig als universell konstant**, ein einzelner fester
 Parameter ist also eine Näherung, kein Naturgesetz. Das passt zum bereits im Code stehenden
 Vorbehalt (`ExhaustConfig.outlet_duct_heat_loss_k`-Docstring): das Modell referenziert alle
@@ -4761,7 +4761,7 @@ die Config übernommen; das ist ein eigener, hier nicht getroffener Kalibrierung
 
 **Befund 56a (stützt Befund 55 empirisch) -- Betriebsdaten enthalten praktisch keine
 Anregung.** Variationskoeffizient der Stellgrößen INNERHALB je eines Betriebstages: Luftmenge
-0,22 %/0,27 % (ACE/RID), Zulufttemperatur 0,21 %/0,21 %, Sprührate 2,01 %/0,12 %. Alle Werte
+0,22 %/0,27 % (P1/P2), Zulufttemperatur 0,21 %/0,21 %, Sprührate 2,01 %/0,12 %. Alle Werte
 liegen zwischen 0,12 und 2,0 % -- gemessen, nicht angenommen. Zwischen den zwei Produkten sind
 die Unterschiede dagegen groß (Sprührate 934 vs. 2118 kg/h, Betttemperatur 67,3 vs. 43,3 °C).
 Das ist genau das Muster, das Befund 55 aus dem synthetischen Konstantlauf-Experiment ableitet
@@ -4776,8 +4776,8 @@ Luftmenge, Sprührate, Umgebungstemperatur) und Modellplatzhaltern/dokumentierte
 
 | | gemessen T_bett | Modell T_bett (m=600/800 kg) | Abweichung |
 |---|---|---|---|
-| ACE | 67,3 °C | 66,8 °C (beide Bettmassen identisch) | -0,4 K |
-| RID | 43,3 °C | 41,1 °C (beide Bettmassen identisch) | -2,1 K |
+| P1 | 67,3 °C | 66,8 °C (beide Bettmassen identisch) | -0,4 K |
+| P2 | 43,3 °C | 41,1 °C (beide Bettmassen identisch) | -2,1 K |
 
 Beide Betriebspunkte werden mit DEMSELBEN Parametersatz auf unter 2,5 K getroffen, beide in
 dieselbe Richtung (Modell unterschätzt leicht) -- bei n=2 kein belastbarer Trend, aber kein
@@ -4793,7 +4793,7 @@ Verdampfungsenthalpie ≈ 552 kW gegen Luftwärmestrom × gemessene Betttemperat
 
 **Fluidisierungs-Zulässigkeit schlägt in beiden Fällen fehl -- kein Befund zur Energiebilanz.**
 `solve_steady_state` markiert beide Lösungen als `feasible=False`
-(`u_gas > u_terminal(d50)`, z. B. ACE 8,22 m/s gegen 3,59 m/s). Ursache: Partikeldurchmesser/
+(`u_gas > u_terminal(d50)`, z. B. P1 8,22 m/s gegen 3,59 m/s). Ursache: Partikeldurchmesser/
 -dichte sind unveränderte Laborplatzhalter (`d50≈750 µm` aus `nucleus_diameter_m`/
 `nucleation_solid_fraction`, unabhängig von Bettmasse und Sprührate, da `seed_mass_flow_kg_per_h
 =0`) -- realistische Industriegranulate dieser Anlage sind vermutlich größer/dichter, wurden
@@ -4801,10 +4801,10 @@ aber NICHT angepasst (Auftrag: nicht an die Messung tunen). Die gute Temperatur�
 und die fehlgeschlagene Fluidisierungsprüfung sind zwei unabhängige Aussagen des Lösers; letztere
 braucht eine echte Partikelmessung (Siebanalyse/Laserbeugung), nicht Kalibrierung an T_bed.
 
-**Numerische Randnotiz (kein physikalischer Eingriff).** Für RID reicht der
+**Numerische Randnotiz (kein physikalischer Eingriff).** Für P2 reicht der
 Solver-Standardbracket (`T_amb+10=21,5 °C`) nicht: unterhalb von ~28 °C befeuchtet sich das
 Bett bei JEDER angenommenen Partikelfeuchte netto (keine Nullstelle der inneren Bisektion) --
-bei der hohen Sprührate von RID (>2× ACE) existiert dort schlicht kein Trocknungsregime. Die
+bei der hohen Sprührate von P2 (>2× P1) existiert dort schlicht kein Trocknungsregime. Die
 Lösung (41,13 °C) ist über die gesamte getestete Bracket-Untergrenze von 28 bis 40 °C identisch
 bis auf 1e-9 -- eine echte, robuste Nullstelle, kein Bracket-Rand-Artefakt. Behoben durch
 schrittweise Anhebung der UNTEREN Bracket-Grenze (`_solve_steady_state_widening_bracket`,
@@ -4840,7 +4840,7 @@ siehe `study_plant_validation.py`-Moduldocstring, nur in die (fehlschlagende)
 Fluidisierungsprüfung.
 
 **Reproduzierbarkeit.** `scripts/study_plant_validation.py`, Rohdatenpfade über
-`TWINLINK_PLANT_DATA_ACE`/`_RID`. `twinlink_ml.plant_data` Commit `e3efc19`, Auswertungsskript
+`TWINLINK_PLANT_DATA_P1`/`_P2`. `twinlink_ml.plant_data` Commit `e3efc19`, Auswertungsskript
 Commit `88c0746`.
 
 **NB1 -- Korrektur (extern angestoßen): der Betttemperatur-Treffer aus NA5 war ein
@@ -4852,9 +4852,9 @@ weniger verfügbare Luftwärme). Nachgeprüft am Code: `_gas_velocity_m_per_s`
 (`study_plant_validation.py`) wurde mit der angenommenen **relativen** Luftfeuchte
 (0,75) aufgerufen, behandelte den Wert aber als **absolute** Feuchte in kg/kg -- sowohl
 im Trocken/Feucht-Umrechnungsterm als auch in der Dichteberechnung. Das trieb den vom
-Modell abgeleiteten Trockenluftmassenstrom auf das **2,19-fache (ACE)/2,20-fache (RID)**
-des Werts, der aus Normvolumenstrom mal Normdichte folgt (ACE: 25,996 statt 11,847 kg/s;
-RID: 24,071 statt 10,949 kg/s) -- entdeckt im Rahmen der Vorbereitung der M2-Synthese,
+Modell abgeleiteten Trockenluftmassenstrom auf das **2,19-fache (P1)/2,20-fache (P2)**
+des Werts, der aus Normvolumenstrom mal Normdichte folgt (P1: 25,996 statt 11,847 kg/s;
+P2: 24,071 statt 10,949 kg/s) -- entdeckt im Rahmen der Vorbereitung der M2-Synthese,
 behoben in `study_plant_validation.py` (Commit `e06b6c7`, Regressionstest
 `tests/test_study_plant_validation.py`).
 
@@ -4864,9 +4864,9 @@ behoben in `study_plant_validation.py` (Commit `e06b6c7`, Regressionstest
 
 | Punkt | m_bed | T_bett_Modell | Abweichung zur Messung | Fluidisierung |
 |---|---|---|---|---|
-| ACE | 600 kg | 48,55 °C | **−18,71 K** | Marge oben **−0,224 m/s** (weiterhin unzulässig) |
-| ACE | 800 kg | 48,55 °C | **−18,71 K** | Marge unten +2,588 m/s, Marge oben +0,714 m/s (zulässig) |
-| RID | 600/800 kg | -- | -- | **kein Beharrungszustand gefunden** (Bisektion bis 86,5 °C erfolglos) |
+| P1 | 600 kg | 48,55 °C | **−18,71 K** | Marge oben **−0,224 m/s** (weiterhin unzulässig) |
+| P1 | 800 kg | 48,55 °C | **−18,71 K** | Marge unten +2,588 m/s, Marge oben +0,714 m/s (zulässig) |
+| P2 | 600/800 kg | -- | -- | **kein Beharrungszustand gefunden** (Bisektion bis 86,5 °C erfolglos) |
 
 Die ursprünglich berichtete Übereinstimmung (0,4/2,1 K) war ein Artefakt des um Faktor
 ~2,2 überhöhten Luftstroms -- **"validiert die Enthalpiebilanz" ist falsch und wird
@@ -4874,8 +4874,8 @@ hiermit zurückgezogen.** Mit korrektem Luftstrom trifft das Modell bei unverän
 Feststoff die gemessene Betttemperatur an keinem der beiden Punkte.
 
 **Fluidisierungsverletzung: teilweise, nicht vollständig, ein Artefakt desselben
-Fehlers.** Bei ACE/m_bed=800 kg verschwindet die Verletzung mit korrigiertem Luftstrom
-(zulässig); bei ACE/m_bed=600 kg bleibt sie knapp bestehen (−0,224 m/s); bei RID lässt
+Fehlers.** Bei P1/m_bed=800 kg verschwindet die Verletzung mit korrigiertem Luftstrom
+(zulässig); bei P1/m_bed=600 kg bleibt sie knapp bestehen (−0,224 m/s); bei P2 lässt
 sich die Frage bei 30 % Feststoff gar nicht mehr stellen, weil in diesem Regime kein
 Beharrungszustand existiert. **Keine pauschale Aussage "beide Punkte jetzt im Fenster"**
 -- das Bild ist gemischt und hängt von der (unbekannten) Bettmasse und dem (jetzt als
@@ -4890,8 +4890,8 @@ gemessene Betttemperatur:
 
 | Punkt | vorhergesagter Feststoffanteil | vorhergesagte Partikelfeuchte |
 |---|---|---|
-| ACE | **0,726** (Gitterklammer [0,725; 0,75]) | 0,0037 kg/kg |
-| RID | **0,712** (Gitterklammer [0,70; 0,725]) | 0,0112 kg/kg |
+| P1 | **0,726** (Gitterklammer [0,725; 0,75]) | 0,0037 kg/kg |
+| P2 | **0,712** (Gitterklammer [0,70; 0,725]) | 0,0112 kg/kg |
 
 Beide Produkte -- unabhängig voneinander, aus unterschiedlichen Betriebspunkten --
 sagen einen Feststoffanteil um **71-73 %** vorher, deutlich über dem bisherigen
@@ -4900,8 +4900,8 @@ war vorher unbekannt, die Betttemperatur ist der unabhängige Messwert -- ein Tr
 dieser Stelle ist keine Bestätigung des Modells, solange der reale Feststoffanteil nicht
 unabhängig bekannt ist.
 
-**Unabhängiger Konsistenzhinweis (RID, kein Beweis).** Aus dem vorhergesagten
-Feststoffanteil (0,712) und der im Leitsystem angezeigten Suspensionsdichte für RID
+**Unabhängiger Konsistenzhinweis (P2, kein Beweis).** Aus dem vorhergesagten
+Feststoffanteil (0,712) und der im Leitsystem angezeigten Suspensionsdichte für P2
 (1339 kg/m³, Screenshot) folgt über ideale Volumenadditivität
 (1/ρ_Susp = w/ρ_Feststoff + (1−w)/ρ_Wasser, ρ_Wasser=998 kg/m³) eine implizierte
 Feststoffdichte von **1554 kg/m³** -- innerhalb des für eine organische Formulierung
@@ -4929,16 +4929,16 @@ sich:
 
 | Punkt | Wandverlust (Modell-Platzhalter) | Wandverlust = 30 kW (Sensitivität) |
 |---|---|---|
-| ACE | **59,1 %** | **64,0 %** |
-| RID | **64,0 %** (implizierte Feststoffdichte 1658 kg/m³) | **66,1 %** (implizierte Feststoffdichte 1624 kg/m³) |
+| P1 | **59,1 %** | **64,0 %** |
+| P2 | **64,0 %** (implizierte Feststoffdichte 1658 kg/m³) | **66,1 %** (implizierte Feststoffdichte 1624 kg/m³) |
 
 Der Modell-Platzhalter für den Wandverlust ist selbst unbelegt (< 0,15 kW, siehe
 Abschnitt 6 der Synthese) -- die 30-kW-Spalte ist eine reine Sensitivitätsrechnung, kein
 Anspruch auf einen realistischeren Wert. Zusammen mit der bettmassebasierten R3-Zahl
-(oben) ergibt sich pro Produkt eine Spanne statt eines Einzelwerts: **ACE rund 59-73 %,
-RID rund 64-71 %** -- je nachdem, welcher Bilanzraum (Bett vs. ganzer Apparat) und
+(oben) ergibt sich pro Produkt eine Spanne statt eines Einzelwerts: **P1 rund 59-73 %,
+P2 rund 64-71 %** -- je nachdem, welcher Bilanzraum (Bett vs. ganzer Apparat) und
 welcher Wandverlust angenommen wird. Beide Enden bleiben Vorhersagen, keine
-Validierungen (siehe oben); die implizierten RID-Feststoffdichten (1554-1658 kg/m³)
+Validierungen (siehe oben); die implizierten P2-Feststoffdichten (1554-1658 kg/m³)
 liegen für die gesamte Spanne im plausiblen Bereich (1300-1800 kg/m³) und erlauben daher
 keine Eingrenzung innerhalb der Spanne. Werte am oberen Ende (>70 %) sind für eine
 sprühbare Suspension hoch zu bewerten.
@@ -5780,7 +5780,7 @@ aus `study_plant_validation.py` (siehe Reproduzierbarkeit unten) -- also inklusi
 Befund 56 (NB1) korrigierten Luftstrom-Fehlers (Faktor 2,19/2,20, relative statt absolute
 Feuchte) UND des dort unveraendert gebliebenen 30-%-Feststoffplatzhalters, der laut
 Befund 56 (NB2) mit korrigiertem Luftstrom nicht mehr haltbar ist (Vorhersage: 71-73 %).
-Mit korrigiertem Luftstrom und weiterhin 30 % Feststoff findet der Loeser bei RID **keinen
+Mit korrigiertem Luftstrom und weiterhin 30 % Feststoff findet der Loeser bei P2 **keinen
 Beharrungszustand** (Befund 56 NB1) -- das gesamte QA1-QA4-Gitter dieses Befunds haengt
 damit direkt am (jetzt als falsch erkannten) Feststoffanteil und ist nicht ohne Weiteres
 reproduzierbar. Betroffen sind insbesondere QA2 (Stellgroessengitter/Fluidisierungsausfaelle,
@@ -5806,8 +5806,8 @@ sondern auch auf den Brennstoffbedarf des Verbunds.
 Befund 52 liegt im Labormassstab (~0.03 kg/s), der Pinch-Datenfall im Anlagenmassstab
 (8 kg/s) -- die dortigen optimalen Sollwerte wurden NICHT uebernommen. Stattdessen: der
 bereits validierte NA5-Parametersatz (`scripts/study_plant_validation.py`,
-`build_plant_config`), Anker ACE-Betriebspunkt (bessere Validierung, -0.4 K gegen -2.1 K
-bei RID):
+`build_plant_config`), Anker P1-Betriebspunkt (bessere Validierung, -0.4 K gegen -2.1 K
+bei P2):
 
     T_amb=4.9 °C, T_zuluft=84.6 °C, Luftmenge=33003 Nm³/h, Spruehrate=934 kg/h,
     T_bett(gemessen)=67.3 °C, Bettmasse=800 kg (muendliche Partnerangabe, fuer T_bed
@@ -5980,7 +5980,7 @@ Beharrungszustand (Kornwachstum durch Schichtaufbau), keine Eingangsgroesse, und
 je Betriebspunkt (siehe `terminal_velocity_m_per_s` je Punkt unten, 3.43-3.68 m/s, statt
 eines fixen Werts).
 
-b) **Geschwindigkeit vs. Fluidisierungsfenster.** Leerrohrgeschwindigkeit am ACE-Ankerpunkt
+b) **Geschwindigkeit vs. Fluidisierungsfenster.** Leerrohrgeschwindigkeit am P1-Ankerpunkt
 (33003 Nm³/h, `4.0875 m²`, `T_bett=67.3 °C`): **≈2.83 m/s** (Diagnoseskript gegen
 `_gas_velocity_m_per_s`/`fluidization.py`, nicht Teil des Repos) -- Groessenordnung
 bestaetigt, keine fehlende Skalierung. Am unteren Gittergeschwindigkeitsniveau
@@ -10817,3 +10817,26 @@ Branch `observability` (from `origin/master` 9feec5c); merged into `master` on 2
 ### Addendum (2026-10-28) to Befund 112: the wording "far below the measurement noise" is too strong
 
 Addendum to Befund 112 (no existing finding changed). Decision paragraph (3) of Befund 112 says that for the laboratory line Delta Y_out ~ Delta X * m_solid / m_air is "far below the measurement noise". That is too strong. The correct statement, from Befund 116: 0.3-0.6 sigma per 0.01 kg/kg for a single sensor (SNR 0.28-0.60), and 1.07-1.26 sigma at P1-P5 for the bed temperature with six redundant sensors; see Befund 116 (`docs/33_observability.md`).
+
+
+### Befund 117 (2026-10-28): plant-near model of plant A -- the calibrated grey-box model misses the exhaust temperature of the other day by up to 5.51 K (best candidate, offset term); pre-registered reading P2 (structural finding), "T_out = T_bed cannot represent the data"; SNR and steady headroom at plant scale only under reservation
+
+Branch `plant-scale` (from local `master` be39e65); merged into `master` on 2026-10-29; entered as Befund 117. Full text, tables and the decisions taken without asking (unattended run): `docs/34_plant_scale.md`. Code `src/twinlink_ml/plant_scale/` (existing modules only read; the grey-box model is unchanged), settings `conf/plant_scale/plant_scale.yaml` and `conf/process/greybox_plant_a_placeholder.yaml`, tests `tests/test_plant_scale.py` (synthetic data only). Scripts `scripts/run_plant_scale.py`, `scripts/analyze_plant_scale.py` (reading in its docstring, commit 49ed3cf, before the run), `scripts/redact_plant_scale.py`. Artifacts `artifacts/runs/plant_scale_v1.json` (driver commit b4ce48d, 13 805 s, `git/dirty=False`; redacted, see below), `plant_scale_v1_analysis.json`. Model evaluation only, no training.
+
+**Question and design.** Does the picture of the lab studies (Befund 105, 108, 116) hold at the scale of plant A? Two exported days (one per product, one-minute samples). Four stationary 60-minute segments per day (criterion fixed beforehand: rolling std of bed, exhaust and supply temperature <= 0.3 K, process air <= 0.5 %, spray rate <= 3 %; met on every segment). Balances of the bed-exhaust gap per candidate explanation (no model). The grey-box model of the lab line at plant geometry with feed placeholders, the measured inlet temperature, spray rate and intake temperature per segment, the gas velocity matched to the measured dry-air flow, dried supply air (placeholder); kinetics not calibrated (no moisture measurement; band through the 20 draws of Befund 111). Switch of a bed-to-exhaust term outside the model code (off: bit-identical, test): C0 none, C3 offset, C1 heat loss, C2 evaporation above the bed; each with the bed heat-loss UA, at most two parameters; calibration on one day, check on the other, both directions; solid fraction 0.65 for both products. Step 4 with the selected candidate calibrated on the same day: SNR of docs/33 (same code and definition) and the steady headroom of a fixed (R0, robust over the 8 corners of the disturbance box) against a tracked operating point (R1) with amplitudes from the plant data (spray rate +-2.59 %, intake +-3.64 K, solid fraction +-7.69 % relative as placeholder).
+
+**Survey and balances.** Gap bed (mean of six sensors) minus exhaust 6.71-7.27 K (day 1) and 9.48-11.05 K (day 2); the coldest bed sensor still lies 6.10-6.50 / 7.87-9.02 K above the exhaust. To close the gap alone: heat loss UA 1.36-1.53 / 4.04-4.76 kW/K (surroundings at intake temperature; about 3x on the day with the colder bed), false air 11.7-13.2 % / 41-50 % of the gas, atomising air at most 9.9-10.6 % / 4.9-5.2 % of the gap, evaporation above the bed 36-40 % / 22-26 % of the spray water. The overall energy balance gives a negative wall conductance on every segment and at every solid fraction of the band (-0.19 to -1.61 / -0.51 to -7.00 kW/K) if the gas leaves at the bed temperature, a positive one (1.00-1.23 / 1.75-2.26 kW/K at 0.65) if it leaves at the exhaust temperature. No single cause identified.
+
+**Calibration and cross-check** (reference: solid fraction 0.65, nominal kinetics). Worst cross error (both temperatures, every segment, both directions): **C0 13.84, C3 5.51, C1 13.63, C2 11.10 K**. With C3 the bed temperature transfers within 1.27-2.14 K, the exhaust does not: offset 5.03 K (day 1) against 10.12 K (day 2); bed UA on its lower bound 0 in C3 and C1. C0 leaves 6.92 K on its own calibration day; parameter-free bound gap / 2 = 3.35-5.52 K. No candidate passes over the solid-fraction band (best: C3 4.93 K at 0.634) or in any of the 20 kinetics draws (C3 3.99-12.16 K).
+
+**Step 4 (C3, own day; reported without reading, under reservation).** SNR for Delta X = 0.01 kg/kg: plant-near exhaust humidity 3.76 / 4.59, bed temperature with six sensors 2.05 / 6.24, single temperature 0.84-0.89 / 2.55-2.89; lab line as docs/33 reproduced exactly (0.46-0.60 humidity), with dried supply air 0.83-0.87 (temperatures unchanged). Steady headroom R1 vs R0 at the nominal disturbance: **6.89 % (day 1), 15.91 % (day 2)** (20 draws 6.63-7.15 % / 15.28-17.47 %), lab line with the same relative amplitudes 5.47 % (4.19-6.69 %); Befund 108's 9.67 % recomputed with its own definition: 9.665 %. R0 sits on the 100 degC inlet bound and R1 on the air factor 0.8 on both days; the savings split by the placeholder amplitude of the solid fraction (low corners 0-4.7 %, high corners 10.8-29.0 %).
+
+**Pre-registered reading: P2 (structural finding).** No candidate reproduces bed and exhaust temperature of the other day within 2 K; T_out = T_bed cannot represent the data; the bed-exhaust term is day-specific (day = product) and none of the four candidate terms carries it across the days. The plant-near model is not usable for energy questions in this form; the results of step 4 hold only under reservation. Selection of C3 among four candidates on the same two days is a selection, not a validation.
+
+**Disclosed / caveats.** Two days, one per product (confounded); lab kinetics, isotherm and solid fraction 0.65 as placeholders; dried supply air unconfirmed; bed-sensor positions unconfirmed; the headroom depends on the docs/23 command box and on the placeholder solid-fraction amplitude. Smoke test on rounded day means before the reading was committed (all candidates missed 2 K on day 2 when calibrated on day 1). The driver wrote per-segment intake temperatures and gas flows into the balances of the repository record; they were removed before the commit by `scripts/redact_plant_scale.py` (full record git-ignored, SHA-256 in the redacted record). The log of the first suite run was briefly written outside the worktree (moved before the main run). 124 numerical warnings of the bounded Brent search (`inf` objective at inadmissible commands; only finite results better than the grid point are used); 314 solver failures in 4 of 20 lab draws, none at plant scale. What would decide: a temperature or humidity measurement directly above the bed, the leak- and atomising-air balance, the solid fraction per product, a third day.
+
+**Decision of the project lead (2026-10-29; added after the fact, the entry above is unchanged).** (1) **P2 is accepted:** T_out = T_bed does not represent plant A; the bed-exhaust gap is 5.03 and 10.12 K (offset term C3 on the two days); the energy balance closes only with the measured exhaust temperature as the gas outlet. (2) **Classification:** the two days are two different products; "day-specific" cannot be separated from "product-specific". Physically most plausible cause: a top-spray arrangement with partial evaporation in the free space above the bed, with a product-dependent share; supported by the scatter of the bed temperature sensors (a few K). Candidate C2 failed with one common share for both products. (3) **Consequences:** energy questions at the plant are computed with the measured exhaust temperature as the outlet; for moisture and kinetics questions a two-zone approach (bed + free space) is needed. The laboratory results stay untouched within their frame; transfer to the plant only with this term. (4) **Step 4 (headroom 6.89 / 15.91 %) is not citable** (box limits, placeholders). The SNR of an exhaust humidity sensor near plant scale, 3.76 / 4.59 against 0.46-0.60 in the laboratory, is a pointer for a question to the application partner, not a result.
+
+### Addendum (2026-10-29): product abbreviations in earlier entries replaced by P1 / P2
+
+Addendum (no finding and no number changed). For confidentiality the abbreviations of the two exported products were replaced repo-wide in environment-variable names and everything derived from them (identifiers, keys, labels, configuration entries and texts), also in earlier entries of this lab book and in earlier modules, scripts, tests and documents: product 1 = P1, product 2 = P2; the environment variables are `TWINLINK_PLANT_DATA_P1` and `TWINLINK_PLANT_DATA_P2`. Artifacts keep their recorded text. This is the one deviation from the append-only rule of this lab book; wording only.

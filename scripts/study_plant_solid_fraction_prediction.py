@@ -19,8 +19,8 @@ R3
     VORHERSAGE, keine Anpassung: der Feststoffanteil war vorher unbekannt, die
     Betttemperatur ist der unabhaengige Messwert.
 
-    Fuer RID zusaetzlich: aus dem vorhergesagten Feststoffanteil und der im Leitsystem
-    genannten Suspensionsdichte (1339 kg/m3, RID) die implizierte
+    Fuer P2 zusaetzlich: aus dem vorhergesagten Feststoffanteil und der im Leitsystem
+    genannten Suspensionsdichte (1339 kg/m3, P2) die implizierte
     Feststoffdichte ableiten (ideale Volumenadditivitaet, Wasserdichte bei
     Suspensionstemperatur) -- ein erster, unabhaengiger Konsistenzhinweis, kein Beweis.
 
@@ -36,7 +36,7 @@ F1 (Befund 56 NB2-Erweiterung, extern angestossen)
     aktuell 2.0 W/K, ergibt < 0.2 kW) und einer testweisen 30-kW-Annahme.
 
 Rohdaten bleiben ausserhalb des Repos (NA1) -- Pfade ausschliesslich aus
-``TWINLINK_PLANT_DATA_ACE`` / ``_RID``, wie in ``study_plant_validation.py``.
+``TWINLINK_PLANT_DATA_P1`` / ``_P2``, wie in ``study_plant_validation.py``.
 
 Aufruf::
 
@@ -75,8 +75,8 @@ DEFAULT_OUTPUT = REPO_ROOT / "artifacts" / "runs" / "study_plant_solid_fraction_
 _SOLID_FRACTION_GRID = tuple(round(0.05 + 0.025 * i, 4) for i in range(37))  # 0.05 .. 0.95
 _WATER_DENSITY_KG_PER_M3 = 998.0
 """Bei ~20 degC (Suspensionstemperatur-Annahme), fuer die Feststoffdichte-Rueckrechnung."""
-_MEASURED_SUSPENSION_DENSITY_RID_KG_PER_M3 = 1339.0
-"""Leitsystem-Anzeige, RID -- Quelle: Screenshot, nicht Teil der Exporte."""
+_MEASURED_SUSPENSION_DENSITY_P2_KG_PER_M3 = 1339.0
+"""Leitsystem-Anzeige, P2 -- Quelle: Screenshot, nicht Teil der Exporte."""
 _WALL_LOSS_SENSITIVITY_KW = 30.0
 """F1: testweise Wandverlust-Annahme, deutlich ueber dem Modell-Platzhalter (< 0.2 kW)."""
 
@@ -169,7 +169,7 @@ def _predict_solid_fraction(point: spv.OperatingPoint, *, bed_mass_kg: float) ->
     """R3: Feststoffanteil-Vorhersage per Gitter-Scan + lineare Interpolation zwischen den
     beiden Gitterpunkten, die die gemessene Betttemperatur einschliessen. Kein Newton/
     Bisektion ueber eine moeglicherweise unstetige Erreichbarkeit (manche Feststoffanteile
-    liefern gar keinen Beharrungszustand, siehe R2-Ergebnis bei RID) -- ein Gitter macht
+    liefern gar keinen Beharrungszustand, siehe R2-Ergebnis bei P2) -- ein Gitter macht
     sichtbar, WO die Kurve abbricht, statt einen Loeser dort blind suchen zu lassen."""
     scan: list[dict[str, object]] = []
     for solid_fraction in _SOLID_FRACTION_GRID:
@@ -233,7 +233,7 @@ def _predict_solid_fraction(point: spv.OperatingPoint, *, bed_mass_kg: float) ->
 def _implied_solid_density(
     solid_fraction: float,
     *,
-    suspension_density_kg_per_m3: float = _MEASURED_SUSPENSION_DENSITY_RID_KG_PER_M3,
+    suspension_density_kg_per_m3: float = _MEASURED_SUSPENSION_DENSITY_P2_KG_PER_M3,
 ) -> float:
     r"""Ideale Volumenadditivitaet: 1/rho_susp = w/rho_solid + (1-w)/rho_water,
     aufgeloest nach rho_solid."""
@@ -253,8 +253,8 @@ def main() -> int:
     arguments = parser.parse_args()
 
     paths = {
-        "ACE": os.environ.get("TWINLINK_PLANT_DATA_ACE"),
-        "RID": os.environ.get("TWINLINK_PLANT_DATA_RID"),
+        "P1": os.environ.get("TWINLINK_PLANT_DATA_P1"),
+        "P2": os.environ.get("TWINLINK_PLANT_DATA_P2"),
     }
     missing = [label for label, path in paths.items() if not path]
     if missing:
@@ -325,12 +325,12 @@ def main() -> int:
                 f"vorhergesagte Partikelfeuchte: "
                 f"{prediction['predicted_particle_moisture_kg_per_kg']:.4f} kg/kg"
             )
-            if label == "RID":
+            if label == "P2":
                 rho_solid = _implied_solid_density(prediction["predicted_solid_fraction"])
                 plausible = 1300.0 <= rho_solid <= 1800.0
                 print(
                     f"  Implizierte Feststoffdichte (aus Suspensionsdichte "
-                    f"{_MEASURED_SUSPENSION_DENSITY_RID_KG_PER_M3:.0f} kg/m3): "
+                    f"{_MEASURED_SUSPENSION_DENSITY_P2_KG_PER_M3:.0f} kg/m3): "
                     f"{rho_solid:.0f} kg/m3 -- {'PLAUSIBEL' if plausible else 'NICHT plausibel'} "
                     "fuer eine organische Formulierung (1300-1800 kg/m3)"
                 )
@@ -358,7 +358,7 @@ def main() -> int:
                 f"Verdampfung={whole['evaporation_kg_per_h']:.1f} kg/h, "
                 f"Feststoffanteil={whole['solid_fraction']:.4f} ({whole['solid_fraction'] * 100:.1f} %)"
             )
-            if label == "RID":
+            if label == "P2":
                 rho_solid = _implied_solid_density(whole["solid_fraction"])
                 whole["implied_solid_density_kg_per_m3"] = rho_solid
                 whole["implied_solid_density_plausible"] = 1300.0 <= rho_solid <= 1800.0

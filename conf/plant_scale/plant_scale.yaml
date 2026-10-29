@@ -1,0 +1,108 @@
+# Plant-near model of plant A (docs/34_plant_scale.md)
+#
+# STATUS: placeholder -- every number below is a study setting or a placeholder, none is a
+# measured plant value. Fixed before the first run on plant data. Raw exports only through the
+# environment variables named under `data`; channel tags only in the git-ignored
+# conf/plant/plant_local.yaml (key `plant_scale_roles`, template in plant_local.yaml.example).
+# Product-specific values (solid fraction per product) only in local/confidential_values.md.
+
+version: 1
+process_config: conf/process/greybox_plant_a_placeholder.yaml
+
+data:
+  role_key: plant_scale_roles
+  days:                                   # day label -> environment variable of the export
+    day_1: TWINLINK_PLANT_DATA_P1        # product 1
+    day_2: TWINLINK_PLANT_DATA_P2        # product 2
+  normal_density_dry_air_kg_per_m3: 1.2922  # dry air, 0 degC, 101325 Pa (as docs/33)
+  block_minutes: 15                       # block means for the disturbance amplitudes
+
+stationarity:
+  # A window is stationary if every listed rolling standard deviation (one-minute samples, over
+  # the window) is at or below its threshold. Fixed before looking at the segment statistics.
+  window_minutes: 60
+  thresholds:
+    bed_temperature_k: 0.30               # mean of the six bed sensors
+    exhaust_outlet_temperature_k: 0.30
+    supply_air_temperature_k: 0.30        # mean of the supply sensors
+    process_air_flow_relative: 0.005
+    spray_rate_relative: 0.03
+  segments_per_day: [2, 4]                # at least / at most; non-overlapping windows
+  minimum_gap_minutes: 60                 # between two chosen windows
+  # Selection: windows sorted by score = max over channels of (std / threshold); the best
+  # admissible windows are taken greedily. Fewer than the minimum admissible windows: the best
+  # windows by score are taken anyway and flagged "criterion not met" (reported, not dropped).
+
+placeholders:
+  solid_fraction_reference: 0.65          # docs/23 reference, same for both days (assumption)
+  solid_fraction_band: [0.60, 0.634, 0.70]  # 0.634: consistent value of docs/23 (fitted on BOTH
+                                            # days there, so not independent of the check)
+  inlet_absolute_humidity_kg_per_kg: 2.4e-5 # dried supply air, dew point about -50 degC
+                                            # (PLACEHOLDER; "very low, unconfirmed")
+  atomising_air_temperature_celsius: 25.0   # balance only (docs/23 placeholder, band 15-40)
+  room_temperature_celsius: 20.0            # balance only (docs/23 placeholder, band 10-30)
+  feed_temperature_celsius: 30.0            # = suspension temperature of the process config
+
+calibration:
+  # Calibrated on the stationary segments of one day, checked on those of the other day, both
+  # directions. Parameters per candidate (at most 2: two measured temperatures per segment).
+  # The heat-loss UA of the bed balance is in every candidate. Kinetics are NOT calibrated.
+  candidates:
+    C0_none:        {freeboard: none}          # structure as is: exhaust = bed temperature
+    C3_offset:      {freeboard: offset}        # existing exhaust.outlet_duct_heat_loss_k (K)
+    C1_heat_loss:   {freeboard: heat_loss}     # loss between bed and exhaust sensor, W/K
+    C2_evaporation: {freeboard: evaporation}   # share of the spray water evaporating above the bed
+  bounds:
+    heat_loss_ua_w_per_k: [0.0, 20000.0]
+    offset: [0.0, 30.0]
+    heat_loss: [0.0, 50000.0]
+    evaporation: [0.0, 0.9]
+  start:
+    heat_loss_ua_w_per_k: 500.0
+    offset: 5.0
+    heat_loss: 1000.0
+    evaporation: 0.2
+  tolerance_k: 2.0                         # reading P1 / P2
+  candidate_order: [C0_none, C3_offset, C1_heat_loss, C2_evaporation]  # tie-break
+  velocity_iterations: 15                  # gas velocity matching the measured dry-air flow
+  velocity_relative_tolerance: 1.0e-9
+
+observability:
+  # Same code and definition as docs/33 (twinlink_ml.observability): SNR = |dm/dX| * dX /
+  # (sigma / sqrt(n)), slope from the OLS fit over the 20 parameter draws of Befund 111.
+  sensor_value_config: conf/sensor_value/sensor_value.yaml
+  observability_config: conf/observability/observability.yaml   # lab points P1-P7
+  lab_record: artifacts/runs/observability_v1.json.gz           # lab points as run in docs/33
+  delta_x_kg_per_kg: 0.01
+  redundant_bed_sensors: 6
+
+headroom:
+  # Steady variant of R0 (fixed operating point) against R1 (tracked operating point) of
+  # Befund 105. Decision: inlet temperature and gas velocity; objective: the model's total power
+  # (as the RTO of Befund 105/108); constraints: moisture limit and bed-temperature limit.
+  inlet_temperature_celsius: [70.0, 100.0]  # plant (docs/23 search box)
+  air_factor: [0.8, 1.1]                    # plant: gas velocity relative to today's (docs/23)
+  bed_temperature_limit_celsius: 80.0       # as the lab line (placeholder)
+  # Plant moisture limit: the model moisture at today's measured operating point (per draw and
+  # day) -- proxy "today's operation sits at the quality limit" (no moisture measurement).
+  plant_limit: today
+  lab_limit_kg_per_kg: 0.15                 # lab line (docs/24)
+  lab_inlet_temperature_celsius: [60.0, 120.0]
+  lab_gas_velocity_m_per_s: [0.8, 2.5]
+  # Disturbance box (relative to nominal, from the plant data unless marked):
+  #   spray rate:   +- 2 x std / mean of the 15-minute block means, larger of the two days
+  #   ambient:      +- half the range (max - min) of the 15-minute block means, larger day
+  #   solid fraction: +- 0.0769 relative (PLACEHOLDER, half band 0.60-0.70 as the "observed"
+  #                 family of docs/24; not measured)
+  spray_sigma_factor: 2.0
+  solid_fraction_relative_half_band: 0.0769
+  # R0 holds the limit at the 8 corners of the box; savings at the 9 points (corners and centre)
+  velocity_grid_points: 9
+  inlet_tolerance_k: 0.01
+  velocity_relative_tolerance: 1.0e-4
+  # Befund 108 definition of the 9.7 % (lab, nominal disturbance): fixed = optimum with the R0
+  # margin, tracked = optimum with the R1 margin; reproduced as a check of the optimiser
+  lab_reference_margins_kg_per_kg: [0.04355, 0.00664]
+  lab_reference_saving: 0.0967              # Befund 108, docs/26 section 7 (nominal P2)
+
+workers: 14

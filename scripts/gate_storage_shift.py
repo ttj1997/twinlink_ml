@@ -62,7 +62,7 @@ at a time; ranking by the change of the R* saving in kWh/d and in percentage poi
 
 Call::
 
-    TWINLINK_PLANT_DATA_ACE=... TWINLINK_PLANT_DATA_RID=... \
+    TWINLINK_PLANT_DATA_P1=... TWINLINK_PLANT_DATA_P2=... \
         tools/run_here.sh scripts/gate_storage_shift.py --name gate_storage_shift
 """
 
@@ -103,7 +103,7 @@ from twinlink_ml.storage_a1.scheduling import (
     simulate,
 )
 
-PRODUCT_ENV = {"product_1": "TWINLINK_PLANT_DATA_ACE", "product_2": "TWINLINK_PLANT_DATA_RID"}
+PRODUCT_ENV = {"product_1": "TWINLINK_PLANT_DATA_P1", "product_2": "TWINLINK_PLANT_DATA_P2"}
 ROLE_FILE = REPO_ROOT / "conf" / "plant" / "plant_local.yaml"
 BLOCK = 5
 V0_M3 = 10.0

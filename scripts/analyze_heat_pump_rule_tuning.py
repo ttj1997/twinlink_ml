@@ -24,7 +24,7 @@ criterion, site, day and horizon (read from the artifact, nothing recomputed).
 
 Call::
 
-    TWINLINK_PLANT_DATA_ACE=... TWINLINK_PLANT_DATA_RID=... \
+    TWINLINK_PLANT_DATA_P1=... TWINLINK_PLANT_DATA_P2=... \
         tools/run_here.sh scripts/analyze_heat_pump_rule_tuning.py \
         --name gate_heat_pump_rule_tuning_posthoc
 """

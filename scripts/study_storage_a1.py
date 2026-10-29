@@ -3,10 +3,10 @@ r"""S1.2 / S1.3: identifiability, calibration, validation and daily balance of s
 Product 1 and product 2 are the two plant days. Calibration on one day, validation on the other,
 then the reverse; splits are by day only. Everything is written to one artifact (never
 overwritten). Raw data come from the environment variables of the plant-validation scripts
-(``TWINLINK_PLANT_DATA_ACE`` = product 1, ``TWINLINK_PLANT_DATA_RID`` = product 2), set at the call
+(``TWINLINK_PLANT_DATA_P1`` = product 1, ``TWINLINK_PLANT_DATA_P2`` = product 2), set at the call
 site; the channel assignment from ``conf/plant/plant_local.yaml`` (git-ignored). Call::
 
-    TWINLINK_PLANT_DATA_ACE=... TWINLINK_PLANT_DATA_RID=... \
+    TWINLINK_PLANT_DATA_P1=... TWINLINK_PLANT_DATA_P2=... \
         tools/run_here.sh scripts/study_storage_a1.py --name study_storage_a1
 
 The artifact stores derived numbers, hashes of the raw files, the config fingerprint and the
@@ -59,7 +59,7 @@ from twinlink_ml.storage_a1.identifiability import (
 )
 from twinlink_ml.storage_a1.roles import PlantDay, load_day, load_role_map
 
-PRODUCT_ENV = {"product_1": "TWINLINK_PLANT_DATA_ACE", "product_2": "TWINLINK_PLANT_DATA_RID"}
+PRODUCT_ENV = {"product_1": "TWINLINK_PLANT_DATA_P1", "product_2": "TWINLINK_PLANT_DATA_P2"}
 ROLE_FILE = REPO_ROOT / "conf" / "plant" / "plant_local.yaml"
 TOPOLOGIES: tuple[Topology, ...] = ("storage_then_exchanger", "exchanger_then_storage")
 BOUND_WINDOWS = (1, 15, 30, 60, 120)
