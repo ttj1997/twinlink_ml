@@ -57,7 +57,7 @@ entry ``solid_fraction_befund_99`` next to the band ends 0.60 / 0.70.
 
 Call::
 
-    TWINLINK_PLANT_DATA_P1=... TWINLINK_PLANT_DATA_P2=... \
+    TWINLINK_PLANT_DATA_PROD1=... TWINLINK_PLANT_DATA_PROD2=... \
         tools/run_here.sh scripts/run_site_pinch.py --name run_site_pinch
 
 Paired variant alone against an existing main artifact (added 2026-10-16 after the main run, whose
@@ -112,7 +112,7 @@ from twinlink_ml.storage_timeslice import (
     site_streams,
 )
 
-PRODUCT_ENV = {"product_1": "TWINLINK_PLANT_DATA_P1", "product_2": "TWINLINK_PLANT_DATA_P2"}
+PRODUCT_ENV = {"product_1": "TWINLINK_PLANT_DATA_PROD1", "product_2": "TWINLINK_PLANT_DATA_PROD2"}
 ROLE_FILE = REPO_ROOT / "conf" / "plant" / "plant_local.yaml"
 DAYS = ("product_1", "product_2")
 C_BASES = ("volume", "annual", "none")

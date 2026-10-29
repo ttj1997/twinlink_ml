@@ -10,8 +10,8 @@ references, sensitivity, checks; `--variant-of` for the paired variant), `script
 
 Confidentiality: roles only (plant A with storage A1, plant C with lines C1/C2 (planned), "the
 partner", compressor station, generic further lines); channel tags only in the git-ignored
-`conf/plant/plant_local.yaml`; raw exports only through `TWINLINK_PLANT_DATA_P1` /
-`TWINLINK_PLANT_DATA_P2`.
+`conf/plant/plant_local.yaml`; raw exports only through `TWINLINK_PLANT_DATA_PROD1` /
+`TWINLINK_PLANT_DATA_PROD2`.
 
 Every number below is from `run_site_pinch_sf0634` unless marked; numbers marked "derived" are
 arithmetic on artifact numbers and partner statements (stated in the text). Every result carries
@@ -332,7 +332,7 @@ per step (artifact `references.*.heat_pump`), not the annual means alone.
 ## 11. Reproducibility
 
 `tools/run_here.sh scripts/run_site_pinch.py --name run_site_pinch_sf0634` (script committed before
-the run, clean tree; needs `TWINLINK_PLANT_DATA_P1` / `TWINLINK_PLANT_DATA_P2` and the git-ignored
+the run, clean tree; needs `TWINLINK_PLANT_DATA_PROD1` / `TWINLINK_PLANT_DATA_PROD2` and the git-ignored
 role file; 2546 runs, 4.3 h on 8 processes on a shared machine);
 `... --name run_site_pinch_sf0634_variant_befund99 --variant-of run_site_pinch_sf0634` (204 runs);
 `tools/run_here.sh scripts/plot_site_pinch.py --artifact run_site_pinch_sf0634`. A first start

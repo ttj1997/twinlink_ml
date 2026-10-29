@@ -5,7 +5,7 @@
 # (existing fluidised-bed line with storage A1), plant C with lines C1/C2 (planned new plant),
 # compressor station, hall heating, process water, generic further lines, steam boiler.
 # No company, person, product or measuring-point names; the measured days of plant A are read
-# through TWINLINK_PLANT_DATA_P1 / TWINLINK_PLANT_DATA_P2 and the git-ignored role file.
+# through TWINLINK_PLANT_DATA_PROD1 / TWINLINK_PLANT_DATA_PROD2 and the git-ignored role file.
 #
 # The same table (name, value, band, source) is repeated in the docstring of
 # src/twinlink_ml/site/config.py; tests/test_site.py checks that both agree.

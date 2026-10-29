@@ -113,7 +113,7 @@ Evaluation (all labelled with the scenario)
 
 Call::
 
-    TWINLINK_PLANT_DATA_P1=... TWINLINK_PLANT_DATA_P2=... TWINLINK_LOCAL_DIR=... \
+    TWINLINK_PLANT_DATA_PROD1=... TWINLINK_PLANT_DATA_PROD2=... TWINLINK_LOCAL_DIR=... \
         tools/run_here.sh scripts/gate_storage_timeslice.py --name gate_storage_timeslice
 """
 
@@ -158,7 +158,7 @@ from twinlink_ml.storage_timeslice.gate import (
     subset_verdicts,
 )
 
-PRODUCT_ENV = {"product_1": "TWINLINK_PLANT_DATA_P1", "product_2": "TWINLINK_PLANT_DATA_P2"}
+PRODUCT_ENV = {"product_1": "TWINLINK_PLANT_DATA_PROD1", "product_2": "TWINLINK_PLANT_DATA_PROD2"}
 ROLE_FILE = REPO_ROOT / "conf" / "plant" / "plant_local.yaml"
 SITES = ("A", "C", "A+C")
 DAYS = ("product_1", "product_2")

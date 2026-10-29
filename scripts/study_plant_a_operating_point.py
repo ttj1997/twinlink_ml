@@ -74,7 +74,7 @@ Readings (fixed beforehand)
 
 Call (Git Bash, from the worktree; raw data never enter the repository)::
 
-    TWINLINK_PLANT_DATA_P1=... TWINLINK_PLANT_DATA_P2=... \
+    TWINLINK_PLANT_DATA_PROD1=... TWINLINK_PLANT_DATA_PROD2=... \
         tools/run_here.sh scripts/study_plant_a_operating_point.py
 
 Artifact: ``artifacts/runs/study_plant_a_operating_point.json`` (never overwritten; ``--name``).
@@ -128,7 +128,7 @@ from twinlink_ml.plant_a_op.study import (
     with_energy,
 )
 
-PRODUCT_ENV = {"product_1": "TWINLINK_PLANT_DATA_P1", "product_2": "TWINLINK_PLANT_DATA_P2"}
+PRODUCT_ENV = {"product_1": "TWINLINK_PLANT_DATA_PROD1", "product_2": "TWINLINK_PLANT_DATA_PROD2"}
 ROLE_FILE = REPO_ROOT / "conf" / "plant" / "plant_local.yaml"
 PRODUCTS = ("product_1", "product_2")
 CONSTRAINTS: tuple[ConstraintVariant, ...] = ("a", "b", "a_and_b")

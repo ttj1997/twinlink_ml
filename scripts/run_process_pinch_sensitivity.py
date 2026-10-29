@@ -21,9 +21,9 @@ EINEM Parametersatz fuer beide. Dieses Skript baut auf demselben Parametersatz a
 (importiert ``build_plant_config``/``OperatingPoint`` direkt aus
 ``study_plant_validation.py`` -- keine zweite Parametrisierung).
 
-Anker: der P1-Betriebspunkt (bessere Validierung, -0.4 K gegen -2.1 K bei P2). Werte
+Anker: der product 1-Betriebspunkt (bessere Validierung, -0.4 K gegen -2.1 K bei product 2). Werte
 woertlich aus Befund 56/NA5 (24h-Mittel, ``scripts/study_plant_validation.py`` gegen die
-Rohdaten unter ``TWINLINK_PLANT_DATA_P1``, siehe NA1-Vertraulichkeit -- diese
+Rohdaten unter ``TWINLINK_PLANT_DATA_PROD1``, siehe NA1-Vertraulichkeit -- diese
 aggregierten 24h-Mittelwerte sind bereits in Befund 56 committet, z. B. die Spruehraten
 934/2118 kg/h in dessen NA4-Abschnitt):
 
@@ -37,7 +37,7 @@ Quelle 1 (Spruehturm) bleibt FEST auf den Model_v3-Werten (PA2, ``lp-benchmark``
 QA2 -- Gitter ueber die drei Stellgroessen
 ---------------------------------------------
 ``build_plant_config`` setzt bereits die Anlagen-ActionConfig-Grenzen (Zulufttemperatur
-0-150 C, Gasgeschwindigkeit 0 bis max(6, 1.5*P1-Nominalwert), Spruehrate 0-3000 kg/h).
+0-150 C, Gasgeschwindigkeit 0 bis max(6, 1.5*product 1-Nominalwert), Spruehrate 0-3000 kg/h).
 Grobes Gitter: je Groesse 3 Stufen bei 25/50/75 % der Spanne [minimum, maximum] -- NICHT
 die Randwerte selbst (0 kg/h Spruehrate oder 0 m/s Gasgeschwindigkeit sind entartete
 Betriebspunkte ohne Trocknung, numerisch nicht sinnvoll). 27 Punkte gesamt.
@@ -89,13 +89,13 @@ OUT_PATH = REPO_ROOT / "artifacts" / "runs" / "run_process_pinch_sensitivity.jso
 
 GAS = GasConfig()
 
-# --- QA1: Anlagenparameter, woertlich aus Befund 56/NA5 (P1, bessere Validierung) -------
+# --- QA1: Anlagenparameter, woertlich aus Befund 56/NA5 (product 1, bessere Validierung) -------
 
-P1_AMBIENT_TEMPERATURE_C = 4.9
-P1_INLET_TEMPERATURE_C = 84.6
-P1_BED_TEMPERATURE_MEASURED_C = 67.3
-P1_PROCESS_AIR_FLOW_NM3_PER_H = 33003.0
-P1_SPRAY_RATE_KG_PER_H = 934.0
+PROD1_AMBIENT_TEMPERATURE_C = 4.9
+PROD1_INLET_TEMPERATURE_C = 84.6
+PROD1_BED_TEMPERATURE_MEASURED_C = 67.3
+PROD1_PROCESS_AIR_FLOW_NM3_PER_H = 33003.0
+PROD1_SPRAY_RATE_KG_PER_H = 934.0
 BED_MASS_SOLID_SETPOINT_KG = 800.0
 """Muendliche Partnerangabe (vs. 600 kg Anzeige A-3215) -- Befund 56: fuer T_bed identisch,
 wirkt hier nur auf Querschnittsflaeche/Gasgeschwindigkeit."""
@@ -104,14 +104,14 @@ BED_PRESSURE_DROP_PA = 1920.0
 CROSS_SECTION_AREA_M2 = BED_MASS_SOLID_SETPOINT_KG * 9.81 / BED_PRESSURE_DROP_PA
 
 _BASE_OPERATING_POINT = OperatingPoint(
-    label="P1",
-    ambient_temperature_c=P1_AMBIENT_TEMPERATURE_C,
-    inlet_temperature_c=P1_INLET_TEMPERATURE_C,
-    bed_temperature_measured_c=P1_BED_TEMPERATURE_MEASURED_C,
+    label="prod1",
+    ambient_temperature_c=PROD1_AMBIENT_TEMPERATURE_C,
+    inlet_temperature_c=PROD1_INLET_TEMPERATURE_C,
+    bed_temperature_measured_c=PROD1_BED_TEMPERATURE_MEASURED_C,
     upper_position_measured_c=0.0,  # nicht verwendet von build_plant_config
     outlet_temperature_measured_c=0.0,  # nicht verwendet von build_plant_config
-    process_air_flow_nm3_per_h=P1_PROCESS_AIR_FLOW_NM3_PER_H,
-    spray_rate_kg_per_h=P1_SPRAY_RATE_KG_PER_H,
+    process_air_flow_nm3_per_h=PROD1_PROCESS_AIR_FLOW_NM3_PER_H,
+    spray_rate_kg_per_h=PROD1_SPRAY_RATE_KG_PER_H,
 )
 
 _BASE_PLANT_CONFIG = build_plant_config(
@@ -206,12 +206,12 @@ def evaluate_grid_point(
     simulator = GreyBoxFluidBedGranulator(config)
     grid_point = OperatingPoint(
         label=f"T{inlet_temperature_c:.0f}_v{gas_velocity_m_per_s:.2f}_S{spray_rate_kg_per_h:.0f}",
-        ambient_temperature_c=P1_AMBIENT_TEMPERATURE_C,
+        ambient_temperature_c=PROD1_AMBIENT_TEMPERATURE_C,
         inlet_temperature_c=inlet_temperature_c,
-        bed_temperature_measured_c=P1_BED_TEMPERATURE_MEASURED_C,
+        bed_temperature_measured_c=PROD1_BED_TEMPERATURE_MEASURED_C,
         upper_position_measured_c=0.0,
         outlet_temperature_measured_c=0.0,
-        process_air_flow_nm3_per_h=P1_PROCESS_AIR_FLOW_NM3_PER_H,
+        process_air_flow_nm3_per_h=PROD1_PROCESS_AIR_FLOW_NM3_PER_H,
         spray_rate_kg_per_h=spray_rate_kg_per_h,
     )
 
@@ -300,12 +300,12 @@ def main() -> int:
     arguments = parser.parse_args()
 
     print("=" * 96)
-    print("QA1 -- Anlagenparameter (Befund 56/NA5, P1-Betriebspunkt)")
+    print("QA1 -- Anlagenparameter (Befund 56/NA5, product 1-Betriebspunkt)")
     print("=" * 96)
     print(
-        f"T_amb={P1_AMBIENT_TEMPERATURE_C} C, T_zuluft={P1_INLET_TEMPERATURE_C} C, "
-        f"Luftmenge={P1_PROCESS_AIR_FLOW_NM3_PER_H:.0f} Nm3/h, "
-        f"Spruehrate={P1_SPRAY_RATE_KG_PER_H:.0f} kg/h, m_bed={BED_MASS_SOLID_SETPOINT_KG:.0f} kg, "
+        f"T_amb={PROD1_AMBIENT_TEMPERATURE_C} C, T_zuluft={PROD1_INLET_TEMPERATURE_C} C, "
+        f"Luftmenge={PROD1_PROCESS_AIR_FLOW_NM3_PER_H:.0f} Nm3/h, "
+        f"Spruehrate={PROD1_SPRAY_RATE_KG_PER_H:.0f} kg/h, m_bed={BED_MASS_SOLID_SETPOINT_KG:.0f} kg, "
         f"A={CROSS_SECTION_AREA_M2:.2f} m^2"
     )
     print(
@@ -408,11 +408,11 @@ def main() -> int:
 
     all_results: dict[str, Any] = {
         "ace_operating_point": {
-            "ambient_temperature_c": P1_AMBIENT_TEMPERATURE_C,
-            "inlet_temperature_c": P1_INLET_TEMPERATURE_C,
-            "bed_temperature_measured_c": P1_BED_TEMPERATURE_MEASURED_C,
-            "process_air_flow_nm3_per_h": P1_PROCESS_AIR_FLOW_NM3_PER_H,
-            "spray_rate_kg_per_h": P1_SPRAY_RATE_KG_PER_H,
+            "ambient_temperature_c": PROD1_AMBIENT_TEMPERATURE_C,
+            "inlet_temperature_c": PROD1_INLET_TEMPERATURE_C,
+            "bed_temperature_measured_c": PROD1_BED_TEMPERATURE_MEASURED_C,
+            "process_air_flow_nm3_per_h": PROD1_PROCESS_AIR_FLOW_NM3_PER_H,
+            "spray_rate_kg_per_h": PROD1_SPRAY_RATE_KG_PER_H,
             "bed_mass_solid_setpoint_kg": BED_MASS_SOLID_SETPOINT_KG,
             "cross_section_area_m2": CROSS_SECTION_AREA_M2,
         },

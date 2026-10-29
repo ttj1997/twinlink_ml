@@ -17,7 +17,7 @@ fixed here before this script is run:
 
 Call (needs the plant exports like the gate)::
 
-    TWINLINK_PLANT_DATA_P1=... TWINLINK_PLANT_DATA_P2=... \
+    TWINLINK_PLANT_DATA_PROD1=... TWINLINK_PLANT_DATA_PROD2=... \
         tools/run_here.sh scripts/analyze_gate_storage_shift.py --name gate_storage_shift_posthoc
 """
 

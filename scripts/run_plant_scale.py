@@ -1,14 +1,14 @@
 r"""Driver of the plant-near study of plant A (docs/34_plant_scale.md). Reading: analyze_plant_scale.py.
 
 Reads ``conf/plant_scale/plant_scale.yaml`` and the plant-scale process config. Raw exports only
-through the environment variables named in the YAML (``TWINLINK_PLANT_DATA_P1`` = day 1 /
-product 1, ``TWINLINK_PLANT_DATA_P2`` = day 2 / product 2); channel roles from the git-ignored
+through the environment variables named in the YAML (``TWINLINK_PLANT_DATA_PROD1`` = day 1 /
+product 1, ``TWINLINK_PLANT_DATA_PROD2`` = day 2 / product 2); channel roles from the git-ignored
 ``conf/plant/plant_local.yaml`` (key ``plant_scale_roles``; ``--roles`` to override). Model
 evaluation only; the grey-box model is parametrised, not changed.
 
 Call (Git Bash, from the worktree)::
 
-    TWINLINK_PLANT_DATA_P1=... TWINLINK_PLANT_DATA_P2=... \
+    TWINLINK_PLANT_DATA_PROD1=... TWINLINK_PLANT_DATA_PROD2=... \
         tools/run_here.sh scripts/run_plant_scale.py --name plant_scale_v1
 
 **What goes where.** ``artifacts/runs/<name>.json`` (committed): segment windows and their

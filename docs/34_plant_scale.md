@@ -8,8 +8,8 @@ scale with placeholders; every model number below carries them (section 8).**
 
 Confidentiality as in docs/18 and docs/23: roles only, channel tags in the git-ignored
 `conf/plant/plant_local.yaml` (key `plant_scale_roles`, template with generic tags in
-`conf/plant/plant_local.yaml.example`), raw exports only through `TWINLINK_PLANT_DATA_P1` /
-`TWINLINK_PLANT_DATA_P2`; per-segment absolute values only in the git-ignored local report. Day 1 =
+`conf/plant/plant_local.yaml.example`), raw exports only through `TWINLINK_PLANT_DATA_PROD1` /
+`TWINLINK_PLANT_DATA_PROD2`; per-segment absolute values only in the git-ignored local report. Day 1 =
 product 1, day 2 = product 2 (day and product are confounded, as in docs/23).
 
 ## 1. Question

@@ -210,9 +210,9 @@ Gegenprobe mit breiterem Bracket (T_amb − 5, T_in + 5), Linie A, 1,26 m/s:
   - `scripts/study_plant_solid_fraction_prediction.py` (Z. 84) und `scripts/study_plant_validation.py` (Z. 288) verwenden `ProcessConfig()` mit kritischer Feuchte 0,020 und Gleichgewichtsfeuchte 0,003.
   - `conf/process/greybox_gab_placeholder.yaml` (Z. 8f., 83f.) hat 0,200 und 0,030 und warnt: „NICHT auf 0.020 senken“.
 - **(TP) Mit der YAML-Konfiguration:**
-  - P1 71,5 % statt 72,6 %, P2 64,9 % statt 71,2 %.
+  - product 1 71,5 % statt 72,6 %, product 2 64,9 % statt 71,2 %.
   - Die Übereinstimmung beider Produkte bei 71–73 % fällt damit weg.
-  - Die F1-Annahme „nahezu vollständige Verdampfung“ gilt für P2 nicht mehr; etwa 20 % des Sprühwassers verlassen die Anlage mit dem Produkt.
+  - Die F1-Annahme „nahezu vollständige Verdampfung“ gilt für product 2 nicht mehr; etwa 20 % des Sprühwassers verlassen die Anlage mit dem Produkt.
   - `cp_suspension` = 3500 J/(kg·K) steht fest (TODO in der YAML). Mit einer Mischungsregel ergeben sich grob 57–71 %.
 - **Umrechnungen korrekt (TP):**
   - Nm³/h × ρN (1,2922 kg/m³)
