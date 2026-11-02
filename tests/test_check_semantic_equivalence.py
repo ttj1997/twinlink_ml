@@ -190,3 +190,10 @@ def test_old_name_in_string_literal_or_non_python_file_is_detected() -> None:
 def test_listed_file_must_contain_the_old_name() -> None:
     problems = cse.validate_rename_map([_entry("kalt", "cold")], {"s.py": "x = 1\n"})
     assert any("does not occur" in p for p in problems)
+
+
+def test_the_table_itself_is_ignored_in_the_text_search() -> None:
+    sources = {"s.py": "kalt = 1\n", "rename_map.json": '{"old": "kalt"}\n'}
+    entries = [_entry("kalt", "cold")]
+    assert cse.validate_rename_map(entries, sources)
+    assert cse.validate_rename_map(entries, sources, ignore=["rename_map.json"]) == []

@@ -398,12 +398,16 @@ def _string_constants(tree: ast.AST) -> list[str]:
     ]
 
 
-def validate_rename_map(entries: list[RenameEntry], sources: Mapping[str, str]) -> list[str]:
+def validate_rename_map(
+    entries: list[RenameEntry], sources: Mapping[str, str], ignore: Iterable[str] = ()
+) -> list[str]:
     """Problems of the table against the OLD repository content ``sources`` (path -> text).
 
     ``sources`` holds every tracked text file; ``.py`` files are parsed, everything else is
-    searched for the old name as a whole word.
+    searched for the old name as a whole word. Paths in ``ignore`` (the table itself, which
+    necessarily names every old name) are left out of that search.
     """
+    sources = {p: t for p, t in sources.items() if p not in set(ignore)}
     problems: list[str] = []
     olds = [e.old for e in entries]
     news = [e.new for e in entries]
@@ -494,7 +498,9 @@ def main(argv: list[str] | None = None) -> int:
     if args.validate_map:
         if not entries:
             parser.error("--validate-map needs --rename-map")
-        problems = validate_rename_map(entries, _repository_sources(args.ref))
+        table = args.rename_map.resolve()
+        own = [table.relative_to(REPO_ROOT).as_posix()] if table.is_relative_to(REPO_ROOT) else []
+        problems = validate_rename_map(entries, _repository_sources(args.ref), ignore=own)
         for p in problems:
             print(f"MAP  {p}")
         print(f"rename table: {len(entries)} entries, {len(problems)} problems")
