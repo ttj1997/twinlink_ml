@@ -1,30 +1,29 @@
-r"""Punktweiser (fenster-/beobachtungsweiser) Split -- Kräuters Vergleichsvariante.
+r"""Point-level (window-/observation-level) split -- Kräuter's comparison variant.
 
-Bewusst **außerhalb** der :class:`~twinlink_ml.data.splits.RunSplitter`-ABC. Diese ABC
-ordnet ganze Läufe zu -- ``RunSplit`` hat als Invariante, dass kein Lauf in zwei Splits
-liegt, und ``TrajectoryWindowDataset.from_trajectory`` filtert Zeilen ausschließlich über
-Lauf-Zugehörigkeit. Ein punktweiser Split verteilt dagegen einzelne **Fenster** unabhängig
-von ihrer Lauf-Zugehörigkeit -- Fenster desselben Laufs können auf verschiedenen Seiten
-landen. Das ist eine andere Granularität, keine weitere ``RunSplitter``-Implementierung.
+Deliberately **outside** the :class:`~twinlink_ml.data.splits.RunSplitter` ABC. That ABC
+assigns whole runs -- ``RunSplit`` has the invariant that no run lies in two splits, and
+``TrajectoryWindowDataset.from_trajectory`` filters rows exclusively by run membership. A
+point-level split, by contrast, distributes individual **windows** independently of their
+run membership -- windows of the same run can end up on different sides. That is a
+different granularity, not another ``RunSplitter`` implementation.
 
-Wozu das gut ist: Kräuter, Zhou & Heinrich (ABS23) teilen ihre Trainings-/Testdaten
-zufällig über Einzelbeobachtungen auf, nicht über Chargen (siehe
-``docs/04_stand_ap1.md``, Abschnitt "Was das Paper des Vorgängers ändert"). Bei feiner
-Abtastung liegt der Nachbarpunkt einer Testbeobachtung damit fast immer im Training --
-ein Fenster-Leck, gegen das die laufweisen Splits dieses Projekts (``HashRunSplitter``,
-``IndexBlockSplitter``) gerade eine Barriere bilden. Dieses Modul baut die
-Vergleichsvariante, um den Abstand zwischen beiden Aufteilungen auf demselben Datensatz
-zu messen -- nicht, um sie als zweite reguläre Splitstrategie im Projekt zu etablieren.
+What it is good for: Kräuter, Zhou & Heinrich (ABS23) split their training/test data
+randomly over individual observations, not over batches (see
+``docs/04_stand_ap1.md``, section "Was das Paper des Vorgängers ändert"). With fine
+sampling, the neighbouring point of a test observation therefore almost always lies in the
+training data -- a window leak against which the run-level splits of this project
+(``HashRunSplitter``, ``IndexBlockSplitter``) form a barrier. This module builds the
+comparison variant in order to measure the gap between the two splits on the same data
+set -- not to establish it as a second regular split strategy in the project.
 
-Normierung: dieselbe Invariante wie bei den laufweisen Splits -- der Skalierer wird
-ausschließlich aus den als ``train`` zugeordneten Fenstern geschätzt, nie aus
-``val``/``test``. Weil ein punktweiser Split erst nach der Fensterung entsteht (er trennt
-quer über Läufe), kann der Skalierer hier nicht wie bei
-:meth:`~twinlink_ml.data.windows.TrajectoryWindowDataset.from_trajectory` vor der
-Fensterung aus dem vollen Lauf-Array geschätzt werden -- er wird stattdessen aus den
-(noch unstandardisierten) ``history_inputs``/``future_targets`` der train-Fenster
-geschätzt, eine Ebene später als im laufweisen Fall. Die Invariante selbst ("nie aus
-val/test") bleibt identisch.
+Normalisation: the same invariant as for the run-level splits -- the scaler is estimated
+exclusively from the windows assigned to ``train``, never from ``val``/``test``. Because a
+point-level split only arises after windowing (it cuts across runs), the scaler cannot be
+estimated here from the full run array before windowing as in
+:meth:`~twinlink_ml.data.windows.TrajectoryWindowDataset.from_trajectory` -- instead it is
+estimated from the (still unstandardised) ``history_inputs``/``future_targets`` of the
+train windows, one level later than in the run-level case. The invariant itself ("never
+from val/test") stays identical.
 """
 
 from __future__ import annotations
@@ -45,20 +44,20 @@ _HASH_NAMESPACE = "twinlink_ml/point_split/v1"
 
 @dataclass(frozen=True, slots=True)
 class PointSplitter:
-    """Weist einzelne Fenster train/val/test zu, unabhängig von der Lauf-Zugehörigkeit.
+    """Assigns individual windows to train/val/test, independently of run membership.
 
-    Strukturell identisch zu :class:`~twinlink_ml.data.splits.HashRunSplitter`, nur eine
-    Ebene tiefer: statt ``(run_id, seed) -> Split`` ist es ``(run_id, window_start, seed)
-    -> Split``. Jedes Fenster wird unabhängig von jedem anderen zugeordnet, ohne Kenntnis
-    des Fenster-Pools -- stabil unter Pool-Wachstum, aus demselben Grund wie dort
-    dokumentiert.
+    Structurally identical to :class:`~twinlink_ml.data.splits.HashRunSplitter`, only one
+    level deeper: instead of ``(run_id, seed) -> Split`` it is ``(run_id, window_start, seed)
+    -> Split``. Every window is assigned independently of every other, without knowledge
+    of the window pool -- stable under pool growth, for the same reason as documented
+    there.
 
     Attributes
     ----------
     seed
-        Seed der Zuordnung.
+        Seed of the assignment.
     ratios
-        Zielanteile der drei Splits, im Erwartungswert (siehe
+        Target fractions of the three splits, in expectation (see
         :class:`~twinlink_ml.data.splits.SplitRatios`).
     """
 
@@ -66,7 +65,7 @@ class PointSplitter:
     ratios: SplitRatios = field(default_factory=SplitRatios)
 
     def assign(self, run_id: str, window_start: int) -> SplitName:
-        """Split eines einzelnen Fensters, ohne Kenntnis des übrigen Fenster-Pools."""
+        """Split of a single window, without knowledge of the rest of the window pool."""
         value = stable_unit_hash(
             "point_assign", self.seed, run_id, window_start, namespace=_HASH_NAMESPACE
         )
@@ -89,20 +88,19 @@ def _assemble_raw(
     tuple[str, ...],
     tuple[str, ...],
 ]:
-    """Rohe (unstandardisierte) Kanal-Arrays über den gegebenen Lauf-Pool.
+    """Raw (unstandardised) channel arrays over the given run pool.
 
-    Spiegelt den entsprechenden Abschnitt von
-    :meth:`TrajectoryWindowDataset.from_trajectory`, aber ohne die dortige
-    Standardisierung -- die geschieht hier erst nach der Fensterung, siehe
-    Moduldocstring.
+    Mirrors the corresponding section of
+    :meth:`TrajectoryWindowDataset.from_trajectory`, but without the standardisation
+    there -- here that only happens after windowing, see the module docstring.
 
     Returns
     -------
     tuple
         ``(rows, exogenous, future_exogenous, observed, truth, exogenous_names,
-        target_names)``. ``rows`` sind die Trajektorie-Zeilen in der Reihenfolge von
-        ``run_ids``; ``future_exogenous`` folgt ``config.future_actions`` (siehe
-        :class:`WindowConfig`), ``exogenous`` ist die realisierte Reihe der Historie.
+        target_names)``. ``rows`` are the trajectory rows in the order of
+        ``run_ids``; ``future_exogenous`` follows ``config.future_actions`` (see
+        :class:`WindowConfig`), ``exogenous`` is the realised series of the history.
     """
     output_names = tuple(trajectory.metadata.get("output_names", ()))
     if not output_names:
@@ -141,9 +139,9 @@ def _assemble_raw(
 
 
 def _window_index(n_runs: int, n_steps: int, config: WindowConfig) -> np.ndarray:
-    """Fenster-Index über den vollen Lauf-Pool, ``(n_windows, 2)`` als ``(run_row, start)``.
+    """Window index over the full run pool, ``(n_windows, 2)`` as ``(run_row, start)``.
 
-    Identische Konvention zu ``TrajectoryWindowDataset._index``.
+    Same convention as ``TrajectoryWindowDataset._index``.
     """
     span = config.history_length + config.horizon
     if n_steps < span:
@@ -161,7 +159,7 @@ def _window_index(n_runs: int, n_steps: int, config: WindowConfig) -> np.ndarray
 
 
 def _slice_windows(array: np.ndarray, index: np.ndarray, offsets: np.ndarray) -> np.ndarray:
-    """``array[run, start + offsets]`` für jede Zeile von ``index``, vektorisiert."""
+    """``array[run, start + offsets]`` for every row of ``index``, vectorised."""
     runs = index[:, 0:1]
     starts = index[:, 1:2]
     time = starts + offsets[None, :]
@@ -176,19 +174,19 @@ def windowed_point_split(
     *,
     min_per_split: int = 2,
 ) -> tuple[TrajectoryWindowDataset, TrajectoryWindowDataset | None, TrajectoryWindowDataset]:
-    """Punktweise train/val/test-Datensätze über denselben Lauf-Pool bilden.
+    """Build point-level train/val/test data sets over the same run pool.
 
-    Baut **einen** Fenster-Pool über alle ``run_ids`` (im Gegensatz zum laufweisen Pfad,
-    der schon vor der Fensterung nach Split trennt), ordnet jedes Fenster einzeln über
-    :meth:`PointSplitter.assign` zu, und schätzt die Standardisierung ausschließlich aus
-    den train-Fenstern -- siehe Moduldocstring.
+    Builds **one** window pool over all ``run_ids`` (in contrast to the run-level path,
+    which separates by split before windowing), assigns every window individually via
+    :meth:`PointSplitter.assign`, and estimates the standardisation exclusively from the
+    train windows -- see the module docstring.
 
     Returns
     -------
     tuple
-        ``(train, val, test)``, alle drei :class:`TrajectoryWindowDataset`-Instanzen mit
-        identischen (gemeinsam standardisierten) Trägerarrays, aber disjunkten
-        Fenster-Indizes. ``val`` ist ``None``, wenn ``splitter.ratios.val == 0``.
+        ``(train, val, test)``, all three :class:`TrajectoryWindowDataset` instances with
+        identical (jointly standardised) backing arrays, but disjoint window indices.
+        ``val`` is ``None`` if ``splitter.ratios.val == 0``.
     """
     _, exogenous, future_exogenous, observed, truth, exogenous_names, target_names = _assemble_raw(
         trajectory, run_ids, config

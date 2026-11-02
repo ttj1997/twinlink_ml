@@ -1,46 +1,46 @@
-r"""MA3/MA4: Netto-Zielfunktion -- Bruttoverbrauch minus Rückgewinnungsgutschrift.
+r"""MA3/MA4: net objective -- gross consumption minus recovery credit.
 
-Befund 52 (``docs/04_stand_ap1.md``) optimiert bislang ausschließlich den
-Bruttoverbrauch (``simulation.energy.energy_target``, eine reine kW-Summe aus Lufterhitzer,
-Gebläse, Pumpe und Zerstäuberluft -- siehe dort) -- der bereits dort vermerkte Vorbehalt
-"Ein Prozess, kein Verbund" bleibt unquantifiziert, solange keine Rückgewinnungsgutschrift
-gegengerechnet wird. Dieses Modul schließt die Lücke, mit zwei User-Festlegungen aus MA3
-(nicht Messungen -- explizit als solche gekennzeichnet):
+Befund 52 (``docs/04_stand_ap1.md``) has so far optimised exclusively the gross
+consumption (``simulation.energy.energy_target``, a pure kW sum of air heater, blower, pump
+and atomising air -- see there) -- the caveat already noted there, "one process, not a
+network", remains unquantified as long as no recovery credit is offset against it. This
+module closes the gap, with two user specifications from MA3 (not measurements --
+explicitly labelled as such):
 
-1. **Gutschrift als Brennstoffäquivalent, nicht thermisch** (MA3b). Die zurückgewonnene
-   Wärme ``Q_rec`` (``heatnetwork``) ersetzt Erdgas im Lufterhitzer, der selbst nur mit
-   ``eta_H = HeatNetworkConfig.heater_efficiency`` arbeitet -- die eingesparte
-   Brennstoffleistung ist ``Q_rec / eta_H``, nicht ``Q_rec`` selbst
-   (:func:`fuel_equivalent_credit_kw`). ``eta_H`` wird aus ``HeatNetworkConfig``
-   übernommen, nicht neu gesetzt (EA1-Prinzip, wie überall im Projekt).
+1. **Credit as fuel equivalent, not thermal** (MA3b). The recovered heat ``Q_rec``
+   (``heatnetwork``) replaces natural gas in the air heater, which itself only works with
+   ``eta_H = HeatNetworkConfig.heater_efficiency`` -- the fuel power saved is
+   ``Q_rec / eta_H``, not ``Q_rec`` itself (:func:`fuel_equivalent_credit_kw`). ``eta_H``
+   is taken over from ``HeatNetworkConfig``, not set anew (EA1 principle, as everywhere in
+   the project).
 
-2. **Zwei Zielfunktionsvarianten, keine ersetzt die andere** (MA3a). Der Bruttoverbrauch
-   ist eine kW-Summe aus elektrischen (Gebläse, Pumpe, Zerstäuberluft) UND dem
-   Lufterhitzer-Term aus ``simulation.energy`` -- **am Einzelprozess elektrisch beheizt**
-   (``EnergyConfig.heater_efficiency=0.98``, kein ``H_u``/Brennstoffbedarf dort, anders als
-   der GAS-beheizte ``Lufterhitzer`` im Wärmeverbund/``heatnetwork``). Ob sich mehr
-   Luftdurchsatz lohnt, hängt vollständig an der Gewichtung zwischen dieser elektrischen
-   Bruttoleistung und der durch Rückgewinnung eingesparten GAS-Leistung:
+2. **Two objective variants, neither replaces the other** (MA3a). The gross consumption
+   is a kW sum of electrical terms (blower, pump, atomising air) AND the air-heater term
+   from ``simulation.energy`` -- **electrically heated in the single process**
+   (``EnergyConfig.heater_efficiency=0.98``, no ``H_u``/fuel demand there, unlike the
+   GAS-heated ``Lufterhitzer`` in the heat network/``heatnetwork``). Whether more air
+   throughput pays off depends entirely on the weighting between this electrical gross
+   power and the GAS power saved through recovery:
 
-   - ``"kw_sum"`` (:func:`net_objective_kw`): ungewichtete kW-Differenz, Status quo von
-     ``energy_target`` fortgeführt. Direkt in kW vergleichbar mit dem Bruttofall (V1).
-   - ``"co2_weighted"`` (:func:`net_objective_co2_kg_per_h`): Bruttoleistung mit
-     :data:`ELECTRICITY_CO2_KG_PER_KWH`, Gutschrift mit :data:`GAS_CO2_KG_PER_KWH`
-     gewichtet -- Strom ist je kWh 1,82-mal schlechter als Gas (Gesamtvorhabenbeschreibung,
-     Emissionsfaktoren nach Umweltbundesamt). Ergebnis in kg CO2e/h, NICHT in kW -- ein
-     eigenes Maßeinheitensystem, Regret-Prozentsätze bleiben innerhalb dieser Variante
-     vergleichbar, aber nicht kW-für-kW mit V1/V2.
+   - ``"kw_sum"`` (:func:`net_objective_kw`): unweighted kW difference, continuing the
+     status quo of ``energy_target``. Directly comparable in kW with the gross case (V1).
+   - ``"co2_weighted"`` (:func:`net_objective_co2_kg_per_h`): gross power weighted with
+     :data:`ELECTRICITY_CO2_KG_PER_KWH`, credit with :data:`GAS_CO2_KG_PER_KWH` --
+     electricity is 1.82 times worse than gas per kWh (overall project description,
+     emission factors according to the German Environment Agency). Result in kg CO2e/h,
+     NOT in kW -- a separate system of units; regret percentages remain comparable within
+     this variant, but not kW for kW with V1/V2.
 
-   Der Nutzer hat beide Varianten explizit angefordert (nicht nur die CO2-gewichtete), weil
-   sonst nicht trennbar ist, was aus der Netto-Formulierung selbst folgt und was aus der
-   Gewichtung (MA3a-Antwort, wörtlich: "Wird nur gewichtet gerechnet, ist hinterher nicht
-   trennbar, was aus der Netto-Formulierung folgt und was aus der Gewichtung").
+   The user explicitly requested both variants (not only the CO2-weighted one), because
+   otherwise it cannot be separated what follows from the net formulation itself and what
+   from the weighting (MA3a answer, verbatim: "Wird nur gewichtet gerechnet, ist hinterher
+   nicht trennbar, was aus der Netto-Formulierung folgt und was aus der Gewichtung").
 
-**Eine-Stufe-Kette, kein doppeltes ``eta_H``.** Die Kette Wärme -> Brennstoff -> CO2 geht
-in :func:`net_objective_co2_kg_per_h` genau EINMAL durch ``eta_H``
-(``fuel_equivalent_credit_kw``, dort und nirgends sonst) -- der Bruttoterm enthält keinen
-``eta_H``-Bezug (er ist elektrisch, siehe oben), die CO2-Gewichtung selbst multipliziert nur
-noch mit dem fertigen Brennstoffleistungswert. Siehe
+**One-stage chain, no double ``eta_H``.** The chain heat -> fuel -> CO2 passes through
+``eta_H`` exactly ONCE in :func:`net_objective_co2_kg_per_h`
+(``fuel_equivalent_credit_kw``, there and nowhere else) -- the gross term contains no
+``eta_H`` reference (it is electrical, see above), the CO2 weighting itself only
+multiplies the finished fuel power value. See
 ``tests/test_net_energy.py::test_co2_weighting_divides_by_heater_efficiency_exactly_once``.
 """
 
@@ -70,32 +70,32 @@ ausgeben, um Gas zu sparen) zu bestimmen, siehe Moduldocstring."""
 
 
 def fuel_equivalent_credit_kw(q_rec_kw: float, heater_efficiency: float) -> float:
-    r"""Brennstoffäquivalent der Rückgewinnung, MA3b: ``Q_rec / eta_H``, nicht ``Q_rec``.
+    r"""Fuel equivalent of the recovery, MA3b: ``Q_rec / eta_H``, not ``Q_rec``.
 
-    ``Q_rec`` ersetzt Erdgas im Lufterhitzer des Wärmeverbunds
-    (``heatnetwork.config.HeatNetworkConfig``), der selbst nur mit ``eta_H`` arbeitet --
-    dieselbe Formelstruktur wie dessen Brennstoffbedarf
-    (``heatnetwork.balance``-Moduldocstring, EA1: :math:`\dot m_{gas} = \dots /
-    (H_u\,\eta_H)`, hier ohne den Heizwert-Faktor, weil das Ergebnis eine Leistung bleibt,
-    keine Massenstromgröße).
+    ``Q_rec`` replaces natural gas in the air heater of the heat network
+    (``heatnetwork.config.HeatNetworkConfig``), which itself only works with ``eta_H`` --
+    the same formula structure as its fuel demand
+    (``heatnetwork.balance`` module docstring, EA1: :math:`\dot m_{gas} = \dots /
+    (H_u\,\eta_H)`, here without the heating-value factor, because the result remains a
+    power, not a mass flow quantity).
 
-    :param q_rec_kw: Rückgewinnbare Leistung (``heatnetwork``/MA1), beliebiger Modus.
+    :param q_rec_kw: Recoverable power (``heatnetwork``/MA1), any mode.
     :param heater_efficiency: ``HeatNetworkConfig.heater_efficiency`` (``eta_H``), in
-        (0, 1] -- Validierung liegt bei ``HeatNetworkConfig`` selbst, hier bewusst keine
-        zweite Prüfung derselben Invariante.
-    :returns: Vermiedene Brennstoffleistung in kW.
+        (0, 1] -- validation lies with ``HeatNetworkConfig`` itself, here deliberately no
+        second check of the same invariant.
+    :returns: Avoided fuel power in kW.
     """
     return q_rec_kw / heater_efficiency
 
 
 def net_objective_kw(gross_power_kw: float, q_rec_kw: float, heater_efficiency: float) -> float:
-    """Netto-Zielfunktion, Variante ``"kw_sum"`` (MA3a): ungewichtete kW-Differenz.
+    """Net objective, variant ``"kw_sum"`` (MA3a): unweighted kW difference.
 
-    :param gross_power_kw: Bruttoverbrauch (``simulation.energy.energy_target`` bei
-        ``target="power_kw"``), elektrisch.
-    :param q_rec_kw: Rückgewinnbare Leistung (``heatnetwork``), beliebiger Modus.
-    :param heater_efficiency: ``eta_H``, siehe :func:`fuel_equivalent_credit_kw`.
-    :returns: Netto-Leistung in kW -- kleiner ist besser, wie beim Bruttoverbrauch.
+    :param gross_power_kw: Gross consumption (``simulation.energy.energy_target`` with
+        ``target="power_kw"``), electrical.
+    :param q_rec_kw: Recoverable power (``heatnetwork``), any mode.
+    :param heater_efficiency: ``eta_H``, see :func:`fuel_equivalent_credit_kw`.
+    :returns: Net power in kW -- smaller is better, as for the gross consumption.
     """
     return gross_power_kw - fuel_equivalent_credit_kw(q_rec_kw, heater_efficiency)
 
@@ -108,15 +108,15 @@ def net_objective_co2_kg_per_h(
     electricity_co2_kg_per_kwh: float = ELECTRICITY_CO2_KG_PER_KWH,
     gas_co2_kg_per_kwh: float = GAS_CO2_KG_PER_KWH,
 ) -> float:
-    """Netto-Zielfunktion, Variante ``"co2_weighted"`` (MA3a): CO2-gewichtete Differenz.
+    """Net objective, variant ``"co2_weighted"`` (MA3a): CO2-weighted difference.
 
-    Bruttoleistung (elektrisch) mit ``electricity_co2_kg_per_kwh``, Brennstoffäquivalent
-    der Gutschrift (Erdgas) mit ``gas_co2_kg_per_kwh`` gewichtet -- die Kette
-    Wärme -> Brennstoff -> CO2 geht dabei genau EINMAL durch ``heater_efficiency``, siehe
-    Moduldocstring.
+    Gross power (electrical) weighted with ``electricity_co2_kg_per_kwh``, fuel equivalent
+    of the credit (natural gas) with ``gas_co2_kg_per_kwh`` -- the chain
+    heat -> fuel -> CO2 passes through ``heater_efficiency`` exactly ONCE, see the
+    module docstring.
 
-    :returns: Netto-Emissionsrate in kg CO2e/h -- ANDERE Einheit als
-        :func:`net_objective_kw`, nicht kW-für-kW vergleichbar mit dem Bruttofall.
+    :returns: Net emission rate in kg CO2e/h -- a DIFFERENT unit than
+        :func:`net_objective_kw`, not comparable kW for kW with the gross case.
     """
     credit_kw = fuel_equivalent_credit_kw(q_rec_kw, heater_efficiency)
     return gross_power_kw * electricity_co2_kg_per_kwh - credit_kw * gas_co2_kg_per_kwh

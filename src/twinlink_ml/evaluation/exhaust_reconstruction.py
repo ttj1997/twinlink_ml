@@ -1,32 +1,32 @@
-r"""End-zu-End-Güte der Abluft-Rückrechnung aus vorhergesagter T_bed/Feuchte (Befund 41g).
+r"""End-to-end quality of the exhaust air reconstruction from predicted T_bed/moisture (Befund 41g).
 
-Befund 41 hat gezeigt, dass ``simulation.exhaust.reconstruct_exhaust_state()`` bitgleich
-gegen ``solve_steady_state()`` übereinstimmt, wenn man sie mit den **wahren, simulierten**
-Werten von ``bed_temperature_celsius``/``product_moisture_kg_per_kg`` füttert. Das ist eine
-Verdrahtungsprüfung, keine Aussage zur tatsächlichen Nutzlast: die Funktion soll mit
-**vorhergesagten** Werten eines Sequenzmodells laufen. Dieses Modul schließt genau diese
-Lücke, ohne ``exhaust.py``/``evaluator.py`` selbst zu ändern -- es ruft beide unverändert
-auf und arbeitet auf der rohen, ungefensterten ``Trajectory`` (``GeneratedData.trajectory``),
-weil die für die Rückrechnung nötigen Diagnosegrößen (``dry_air_mass_flow_kg_per_s``,
-``inlet_humidity_kg_per_kg``) beim Fenstern in ``data.windows`` verworfen werden.
+Befund 41 showed that ``simulation.exhaust.reconstruct_exhaust_state()`` agrees bit for bit
+with ``solve_steady_state()`` when it is fed the **true, simulated** values of
+``bed_temperature_celsius``/``product_moisture_kg_per_kg``. That is a wiring check, not a
+statement about the actual payload: the function is meant to run with **predicted** values
+of a sequence model. This module closes exactly that gap without changing
+``exhaust.py``/``evaluator.py`` themselves -- it calls both unchanged and works on the raw,
+unwindowed ``Trajectory`` (``GeneratedData.trajectory``), because the diagnostic quantities
+needed for the reconstruction (``dry_air_mass_flow_kg_per_s``,
+``inlet_humidity_kg_per_kg``) are discarded during windowing in ``data.windows``.
 
-Massenstrom-Leck (aufgedeckt vor der ersten Kostenprobe, nicht nachträglich gefunden)
+Mass flow leak (uncovered before the first cost probe, not found afterwards)
 --------------------------------------------------------------------------------------
-``dry_air_mass_flow_kg_per_s`` ist entgegen dem ersten Anschein **nicht** rein aus
-Stellgröße (Gasgeschwindigkeit) und Störgröße ableitbar: ``greybox._rhs`` wertet die
-Luftdichte bei ``bed_temperature`` aus, nicht bei Einlass-/Umgebungstemperatur
-(``gas_density_kg_per_m3(gas, bed_temperature, ...)``, ideal durchmischtes Bett). Bei
-einem Mehrschritt-Rollout (h > 1) ist die künftige, wahre Betttemperatur im Deployment
-nicht bekannt -- genau deshalb wird sie vorhergesagt. Den wahren, aus der wahren
-zukünftigen T_bed abgeleiteten Massenstrom in die Rekonstruktions-Seite zu speisen, wäre
-ein echtes Leck und würde die End-zu-End-Metrik optimistischer machen, als ein reales
-System leisten könnte. ``inlet_absolute_humidity_kg_per_kg`` (Y_in) ist davon nicht
-betroffen -- sie hängt nur von Umgebungstemperatur/-feuchte ab (Störgrößen), nie von T_bed.
+Contrary to first appearance, ``dry_air_mass_flow_kg_per_s`` can **not** be derived purely
+from the action (gas velocity) and the disturbance: ``greybox._rhs`` evaluates the air
+density at ``bed_temperature``, not at the inlet/ambient temperature
+(``gas_density_kg_per_m3(gas, bed_temperature, ...)``, ideally mixed bed). In a multi-step
+rollout (h > 1) the future true bed temperature is not known in deployment -- that is
+exactly why it is predicted. Feeding the true mass flow derived from the true future T_bed
+into the reconstruction side would be a real leak and would make the end-to-end metric
+more optimistic than a real system could achieve. ``inlet_absolute_humidity_kg_per_kg``
+(Y_in) is not affected by this -- it depends only on ambient temperature/humidity
+(disturbances), never on T_bed.
 
-Die Korrektur (``rescale_dry_air_mass_flow_kg_per_s``) skaliert den wahren Massenstrom mit
-dem Dichteverhältnis bei vorhergesagter vs. wahrer Betttemperatur -- dieselbe Formel wie in
-``greybox._rhs``, hier nur mit vorhergesagter statt wahrer Temperatur ausgewertet, und ohne
-Umweg über Gasgeschwindigkeit/Querschnittsfläche (die kürzen sich im Verhältnis heraus).
+The correction (``rescale_dry_air_mass_flow_kg_per_s``) scales the true mass flow by the
+density ratio at predicted vs. true bed temperature -- the same formula as in
+``greybox._rhs``, here only evaluated with the predicted instead of the true temperature,
+and without the detour via gas velocity/cross-sectional area (they cancel in the ratio).
 """
 
 from __future__ import annotations
@@ -77,21 +77,21 @@ def rescale_dry_air_mass_flow_kg_per_s(
     predicted_bed_temperature_celsius: Array,
     inlet_absolute_humidity_kg_per_kg: Array,
 ) -> Array:
-    r"""Trockenluftmassenstrom auf vorhergesagte statt wahre Betttemperatur umrechnen.
+    r"""Convert the dry air mass flow to the predicted instead of the true bed temperature.
 
-    ``greybox._rhs`` berechnet ``dry_air_mass_flow_kg_per_s`` als
-    :math:`\rho(T_{bed}, Y_{in}) \cdot u_{gas} \cdot A / (1 + Y_{in})`. Gasgeschwindigkeit
-    und Querschnittsfläche sind hier unbekannt (nicht Teil der ``diagnostics``), kürzen
-    sich aber im Verhältnis zweier Massenströme bei gleicher Anregung, aber
-    unterschiedlicher Betttemperatur exakt heraus:
+    ``greybox._rhs`` computes ``dry_air_mass_flow_kg_per_s`` as
+    :math:`\rho(T_{bed}, Y_{in}) \cdot u_{gas} \cdot A / (1 + Y_{in})`. Gas velocity and
+    cross-sectional area are unknown here (not part of the ``diagnostics``), but cancel
+    exactly in the ratio of two mass flows with the same excitation but different bed
+    temperature:
 
     .. math:: \dot m_{L,tr}(T_{pred}) = \dot m_{L,tr}(T_{true})
               \cdot \frac{\rho(T_{pred}, Y_{in})}{\rho(T_{true}, Y_{in})}
 
-    Bei ``T_pred == T_true`` ist das Verhältnis exakt 1.0 (dasselbe Gleitkommaergebnis
-    geteilt durch sich selbst), die Rückgabe also bitgleich zum wahren Massenstrom --
-    keine neue Physik, nur eine Anwendung von ``thermo.gas_density_kg_per_m3`` (unverändert
-    importiert) auf eine andere Temperatur als die, mit der ``greybox._rhs`` es tut.
+    With ``T_pred == T_true`` the ratio is exactly 1.0 (the same floating-point result
+    divided by itself), so the return value is bit-identical to the true mass flow --
+    no new physics, only an application of ``thermo.gas_density_kg_per_m3`` (imported
+    unchanged) to a different temperature than the one ``greybox._rhs`` uses.
     """
     density_at_true = gas_density_kg_per_m3(
         backend, gas, true_bed_temperature_celsius, inlet_absolute_humidity_kg_per_kg
@@ -104,15 +104,15 @@ def rescale_dry_air_mass_flow_kg_per_s(
 
 @dataclass(frozen=True, slots=True)
 class ExhaustReconstructionResult:
-    """NRMSE zwischen Abluft-Rückrechnung aus Vorhersage und aus Wahrheit.
+    """NRMSE between the exhaust air reconstruction from the prediction and from the truth.
 
-    Beide Rückrechnungen laufen durch dieselbe, unveränderte
-    ``exhaust.reconstruct_exhaust_state()`` -- Referenz mit wahrem
-    ``bed_temperature_celsius``/``product_moisture_kg_per_kg`` (und wahrem
-    ``dry_air_mass_flow_kg_per_s``), Rekonstruktion mit den Werten des Sequenzmodells (und
-    dem darauf umgerechneten Massenstrom, siehe ``rescale_dry_air_mass_flow_kg_per_s``).
-    ``inlet_absolute_humidity_kg_per_kg`` ist in beiden Aufrufen wahr (echte Störgröße,
-    kein Leck).
+    Both reconstructions run through the same, unchanged
+    ``exhaust.reconstruct_exhaust_state()`` -- reference with the true
+    ``bed_temperature_celsius``/``product_moisture_kg_per_kg`` (and the true
+    ``dry_air_mass_flow_kg_per_s``), reconstruction with the values of the sequence model
+    (and the mass flow converted to them, see ``rescale_dry_air_mass_flow_kg_per_s``).
+    ``inlet_absolute_humidity_kg_per_kg`` is true in both calls (a genuine disturbance,
+    no leak).
     """
 
     horizons: tuple[int, ...]
@@ -130,7 +130,7 @@ class ExhaustReconstructionResult:
     beide sind bei diesem Verlustwert dieselbe Zahlenreihe, nur unterschiedlich benannt."""
 
     def format(self) -> str:
-        """Tabelle für Run-Logs, im selben Stil wie ``EvaluationResult.format``."""
+        """Table for run logs, in the same style as ``EvaluationResult.format``."""
         columns = "".join(f"{f'h={h}':>10}" for h in self.horizons)
         lines = [
             f"Abluft-Rückrechnung, Vorhersage vs. Wahrheit ({self.n_runs} Läufe, "
@@ -152,10 +152,10 @@ class ExhaustReconstructionResult:
         return "\n".join(lines)
 
     def as_flat_metrics(self) -> dict[str, float]:
-        """Flache Schlüssel-Wert-Paare für das Tracking.
+        """Flat key-value pairs for tracking.
 
-        ``exhaust_``-Präfix -- kollisionsfrei neben
-        ``EvaluationResult.as_flat_metrics()`` im selben ``RunRecord`` mergebar.
+        ``exhaust_`` prefix -- can be merged without collisions alongside
+        ``EvaluationResult.as_flat_metrics()`` in the same ``RunRecord``.
         """
         flat: dict[str, float] = {
             "exhaust_n_windows": float(self.n_windows),
@@ -183,23 +183,23 @@ def reconstruct_exhaust_arrays(
     horizons: tuple[int, ...] | None = None,
     batch_size: int = 4096,
 ) -> tuple[FloatArray, FloatArray, FloatArray, tuple[int, ...]]:
-    """Rohe ``(reconstructed, reference, runs, horizons)``-Arrays der Abluft-Rückrechnung.
+    """Raw ``(reconstructed, reference, runs, horizons)`` arrays of the exhaust air reconstruction.
 
-    Eigene Funktion (nicht nur ein Codeblock in :func:`evaluate_exhaust_reconstruction`),
-    damit eine weitere abgeleitete Größe -- etwa die rückgewinnbare Leistung ``Q_rec`` aus
-    Vorhersage-``T_out``/``Y_out`` (X3, ``docs/04_stand_ap1.md``) -- dieselben
-    (Vorhersage-, Wahrheits-)Arrays weiterverwenden kann, ohne den Batch-/Leck-Schutz-Code
-    oben ein zweites Mal zu schreiben. ``reconstructed``/``reference`` haben Form
-    ``(n_windows, horizon, len(EXHAUST_TARGET_NAMES))``, Spaltenreihenfolge wie
+    A separate function (not just a code block in :func:`evaluate_exhaust_reconstruction`),
+    so that a further derived quantity -- such as the recoverable power ``Q_rec`` from the
+    predicted ``T_out``/``Y_out`` (X3, ``docs/04_stand_ap1.md``) -- can reuse the same
+    (prediction, truth) arrays without writing the batch/leak-protection code above a
+    second time. ``reconstructed``/``reference`` have shape
+    ``(n_windows, horizon, len(EXHAUST_TARGET_NAMES))``, column order as in
     :data:`EXHAUST_TARGET_NAMES`.
 
-    Setzt voraus, dass ``bed_temperature_celsius`` und ``product_moisture_kg_per_kg`` in
-    ``test.target_names`` stehen (explizite Erweiterung, siehe Befund 41f -- kein globaler
-    Default). Greift für die beiden benötigten, in ``WindowBatch`` nicht vorhandenen
-    Diagnosegrößen (``dry_air_mass_flow_kg_per_s``, ``inlet_humidity_kg_per_kg``) auf die
-    ungefensterte ``data.trajectory.diagnostics`` zurück, indiziert über dieselbe
-    Split-Reihenfolge, die ``TrajectoryWindowDataset.from_trajectory`` beim Aufbau
-    verwendet (``data.split.as_mapping["test"]`` gegen ``data.trajectory.run_id``).
+    Requires ``bed_temperature_celsius`` and ``product_moisture_kg_per_kg`` to be in
+    ``test.target_names`` (explicit extension, see Befund 41f -- no global default). For
+    the two required diagnostic quantities not present in ``WindowBatch``
+    (``dry_air_mass_flow_kg_per_s``, ``inlet_humidity_kg_per_kg``) it falls back on the
+    unwindowed ``data.trajectory.diagnostics``, indexed via the same split order that
+    ``TrajectoryWindowDataset.from_trajectory`` uses during construction
+    (``data.split.as_mapping["test"]`` against ``data.trajectory.run_id``).
     """
     for name in ("bed_temperature_celsius", "product_moisture_kg_per_kg"):
         if name not in test.target_names:
@@ -260,15 +260,15 @@ def reconstruct_exhaust_arrays(
         time_index = starts[:, None] + history_length + np.arange(full_horizon)[None, :]
         trajectory_rows = rows_for_split_position[split_positions][:, None]
 
-        # Selbstpruefung: `test` MUSS aus `data.trajectory`/`data.split` gebaut worden sein --
-        # sonst passen `run_index`/`window_start` nur zufaellig in der Form, zeigen aber auf
-        # die falsche Trajektorie (z.B. Trainingspool statt Konstantlauf-Holdout-Pool
-        # uebergeben). Ohne diese Pruefung waere das Ergebnis nicht falsch geformt, nur
-        # STILL falsch -- reines Formmatching haette dieselbe Fensteranzahl/denselben
-        # Horizont fuer jeden beliebigen zweiten Pool derselben DataSpec. Vergleich gegen
-        # ``data.trajectory.outputs`` (dieselbe Groesse wie ``future_targets_truth``, nur
-        # unabhaengig ueber Trajectory-Zeile/Zeit statt ueber Fensterindex bezogen) deckt das
-        # zuverlaessig auf.
+        # Self-check: `test` MUST have been built from `data.trajectory`/`data.split` --
+        # otherwise `run_index`/`window_start` only happen to fit in shape but point to the
+        # wrong trajectory (e.g. training pool passed instead of constant-run holdout
+        # pool). Without this check the result would not be wrongly shaped, only
+        # SILENTLY wrong -- pure shape matching would give the same number of windows/the
+        # same horizon for any second pool of the same DataSpec. Comparing against
+        # ``data.trajectory.outputs`` (the same quantity as ``future_targets_truth``, only
+        # referenced independently via trajectory row/time instead of via window index)
+        # reliably exposes this.
         expected_true_bed = data.trajectory.outputs[trajectory_rows, time_index, bed_output_index]
         expected_true_moisture = data.trajectory.outputs[
             trajectory_rows, time_index, moisture_output_index
@@ -339,10 +339,10 @@ def evaluate_exhaust_reconstruction(
     horizons: tuple[int, ...] | None = None,
     batch_size: int = 4096,
 ) -> ExhaustReconstructionResult:
-    """T_gas_out/Y_gas_out/outlet_temperature_celsius: Vorhersage- gegen Wahrheits-Rückrechnung.
+    """T_gas_out/Y_gas_out/outlet_temperature_celsius: prediction vs. truth reconstruction.
 
-    Dünner Aggregations-Wrapper um :func:`reconstruct_exhaust_arrays` -- siehe dort für
-    Voraussetzungen (``test.target_names``) und den Leck-/Fehlpaarungs-Schutz.
+    Thin aggregation wrapper around :func:`reconstruct_exhaust_arrays` -- see there for the
+    prerequisites (``test.target_names``) and the leak/mismatch protection.
     """
     reconstructed_array, reference_array, run_array, resolved_horizons = reconstruct_exhaust_arrays(
         model, data, test, horizons=horizons, batch_size=batch_size

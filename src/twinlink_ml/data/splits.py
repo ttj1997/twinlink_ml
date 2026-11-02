@@ -1,36 +1,35 @@
-"""Deterministische Splits auf Lauf-Ebene (run-level splits).
+"""Deterministic splits at run level (run-level splits).
 
-Dieses Modul kennt weder Fenster noch Tensoren. Es ordnet ausschließlich Lauf-IDs den
-Mengen ``train`` / ``val`` / ``test`` zu. Die Trennung ist beabsichtigt: die
-Leakage-Regression prüft damit eine reine Mengenoperation und nicht das Zusammenspiel
-mit der Fensterung.
+This module knows neither windows nor tensors. It assigns only run IDs to the sets
+``train`` / ``val`` / ``test``. The separation is intentional: the leakage regression
+thereby checks a pure set operation and not the interplay with windowing.
 
-Zwei Invarianten
-----------------
-1. **Reproduzierbarkeit.** Die Zuordnung ist eine Funktion von (Lauf-ID, Seed,
-   Splitter-Konfiguration). Keine Abhängigkeit von Prozess-Salt (``PYTHONHASHSEED``),
-   Dict-Iterationsreihenfolge oder Importzeitpunkt.
-2. **Laufzahl-Invarianz von ``val`` und ``test``.** Lernkurven-Stützstellen entstehen
-   ausschließlich durch Verkleinern von ``train`` (:meth:`RunSplit.subset`). Sonst hat
-   die y-Achse der Lernkurve an jedem Punkt eine andere Bedeutung.
+Two invariants
+--------------
+1. **Reproducibility.** The assignment is a function of (run ID, seed, splitter
+   configuration). No dependence on process salt (``PYTHONHASHSEED``), dict iteration
+   order or import time.
+2. **Run-count invariance of ``val`` and ``test``.** Learning-curve points arise
+   exclusively by shrinking ``train`` (:meth:`RunSplit.subset`). Otherwise the y-axis of
+   the learning curve has a different meaning at every point.
 
-Drei Zuordnungsstrategien hinter einer ABC
+Three assignment strategies behind one ABC
 ------------------------------------------
-* :class:`IndexBlockSplitter` -- Default für selbst erzeugte QMC-Designs. ``train`` ist
-  ein echtes Präfix der Sobol-Folge, ``val``/``test`` sind anschließende Blöcke.
-* :class:`HashRunSplitter` -- für Läufe, deren Reihenfolge nicht unter eigener Kontrolle
-  steht (Dyssol-Lieferungen aus TUHH-A, Anwendungspartner-Historie). Stabil unter Pool-Wachstum.
-* :class:`PredefinedRunSplitter` -- für Domänenschnitte ab AP 2 (train = Grey-Box,
-  test = Dyssol oder Realdaten).
+* :class:`IndexBlockSplitter` -- default for self-generated QMC designs. ``train`` is
+  a true prefix of the Sobol sequence, ``val``/``test`` are subsequent blocks.
+* :class:`HashRunSplitter` -- for runs whose order is not under our own control
+  (Dyssol deliveries from TUHH-A, application partner history). Stable under pool growth.
+* :class:`PredefinedRunSplitter` -- for domain cuts from AP 2 on (train = grey-box,
+  test = Dyssol or real data).
 
-Zur Wahl der Stützstellen
--------------------------
-``DEFAULT_LEARNING_CURVE_SIZES`` sind Zweierpotenzen, nicht 5/10/25/50/100 wie in der
-ersten Fassung von ``05_arbeitsplan_ap1.md``. Grund: die Balance-Eigenschaft einer
-Sobol-Folge gilt nur für :math:`n = 2^k`; ``scipy.stats.qmc.Sobol.random`` warnt
-entsprechend. Ein 25-Punkt-Präfix ist eine Folge niedriger Diskrepanz, aber keine
-balancierte -- damit wäre für die eigenen Stützstellen genau das Argument verletzt, mit
-dem in Schritt 2 Latin-Hypercube verworfen wurde.
+On the choice of the learning-curve points
+------------------------------------------
+``DEFAULT_LEARNING_CURVE_SIZES`` are powers of two, not 5/10/25/50/100 as in the
+first version of ``05_arbeitsplan_ap1.md``. Reason: the balance property of a
+Sobol sequence holds only for :math:`n = 2^k`; ``scipy.stats.qmc.Sobol.random`` warns
+accordingly. A 25-point prefix is a low-discrepancy sequence, but not a balanced
+one -- for our own points this would violate exactly the argument with which
+Latin hypercube was rejected in step 2.
 """
 
 from __future__ import annotations
@@ -43,7 +42,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import TYPE_CHECKING, Final
 
-if TYPE_CHECKING:  # pragma: no cover - nur für Typprüfung
+if TYPE_CHECKING:  # pragma: no cover - for type checking only
     from ..simulation.excitation import ExcitationSchedule
 
 __all__ = [
@@ -84,24 +83,24 @@ DEFAULT_LEARNING_CURVE_SIZES: Final[tuple[int, ...]] = (8, 16, 32, 64, 128)
 
 
 class SplitError(Exception):
-    """Basisklasse für Fehler dieses Moduls."""
+    """Base class for errors of this module."""
 
 
 class SplitConfigError(SplitError):
-    """Die Splitter-Konfiguration oder der übergebene Lauf-Pool ist unzulässig."""
+    """The splitter configuration or the run pool passed in is invalid."""
 
 
 class SplitDegenerateError(SplitError):
-    """Die Zuordnung ist formal gültig, aber methodisch unbrauchbar.
+    """The assignment is formally valid but methodologically unusable.
 
-    Typischer Fall: eine leere oder einelementige Testmenge bei kleinem Pool. Bewusst
-    ein Fehler und keine Warnung -- eine Lernkurve, deren linke Stützstelle auf einem
-    einzigen Testlauf gemessen ist, ist eine Zufallsvariable und kein Messwert.
+    Typical case: an empty or single-element test set with a small pool. Deliberately
+    an error and not a warning -- a learning curve whose left point is measured on a
+    single test run is a random variable and not a measurement.
     """
 
 
 class SplitName(str, Enum):
-    """Kanonische Split-Namen. ``str``-Enum für YAML-Roundtrip ohne Konverter."""
+    """Canonical split names. ``str`` enum for YAML round trip without a converter."""
 
     TRAIN = "train"
     VAL = "val"
@@ -112,18 +111,18 @@ class SplitName(str, Enum):
 
 
 def _hash_bytes(*parts: str | int, namespace: str) -> bytes:
-    """Gemeinsamer BLAKE2b-Aufbau: Namespace, dann Teile mit Trennbyte verkettet.
+    """Common BLAKE2b construction: namespace, then parts concatenated with a separator byte.
 
-    Ohne Trenner kollidieren ``("run", "12")`` und ``("run1", "2")``. Bewusst **nicht**
-    ``hash()``: Pythons String-Hash ist pro Prozess gesalzen (``PYTHONHASHSEED``). Ein
-    damit gebauter Split ist innerhalb eines Prozesses konsistent und zwischen zwei
-    Prozessen verschieden -- der Fehler fällt in Tests nicht auf und macht jede
-    Reproduzierbarkeitsaussage ungültig. ``seed_everything`` setzt ``PYTHONHASHSEED``
-    zwar, aber erst zur Laufzeit, was den Interpreterstart nicht mehr erreicht.
+    Without a separator, ``("run", "12")`` and ``("run1", "2")`` collide. Deliberately
+    **not** ``hash()``: Python's string hash is salted per process (``PYTHONHASHSEED``). A
+    split built with it is consistent within one process and different between two
+    processes -- the error goes unnoticed in tests and invalidates every reproducibility
+    claim. ``seed_everything`` does set ``PYTHONHASHSEED``, but only at run time, which no
+    longer reaches the interpreter start.
 
-    Rückgabe roh, nicht als Zahl oder Hexstring: :func:`stable_unit_hash` und
-    :func:`_digest_of` sind dünne Wrapper, die dieselben Bytes nur unterschiedlich
-    darstellen (Einheitsintervall vs. Fingerprint-String).
+    Returned raw, not as a number or hex string: :func:`stable_unit_hash` and
+    :func:`_digest_of` are thin wrappers that merely represent the same bytes differently
+    (unit interval vs. fingerprint string).
     """
     digest = hashlib.blake2b(digest_size=_DIGEST_BYTES)
     digest.update(namespace.encode("utf-8"))
@@ -134,19 +133,19 @@ def _hash_bytes(*parts: str | int, namespace: str) -> bytes:
 
 
 def stable_unit_hash(*parts: str | int, namespace: str = HASH_NAMESPACE) -> float:
-    """Prozessunabhängiger Hash der Teile auf das Intervall :math:`[0, 1)`.
+    """Process-independent hash of the parts onto the interval :math:`[0, 1)`.
 
     Parameters
     ----------
     parts
-        Zu hashende Teile in fester Reihenfolge, siehe :func:`_hash_bytes`.
+        Parts to hash in fixed order, see :func:`_hash_bytes`.
     namespace
-        Präfix zur Versionierung der Hash-Semantik.
+        Prefix for versioning the hash semantics.
 
     Returns
     -------
     float
-        Wert in :math:`[0, 1)` aus den ersten 64 Bit des BLAKE2b-Digests.
+        Value in :math:`[0, 1)` from the first 64 bits of the BLAKE2b digest.
     """
     return int.from_bytes(_hash_bytes(*parts, namespace=namespace), "big") / _DIGEST_SCALE
 
@@ -156,19 +155,19 @@ def _digest_of(*parts: str | int) -> str:
 
 
 def design_key(run_id: str) -> str | None:
-    """Design-Anteil einer Lauf-ID im Schema ``{name}-{fingerprint}-{index:05d}``.
+    """Design part of a run ID in the scheme ``{name}-{fingerprint}-{index:05d}``.
 
-    ``MixedExcitationDesign.build`` erzeugt IDs in genau diesem Schema, und der
-    Fingerprint enthält ``n_runs``. Zwei getrennt gebaute Designs sind deshalb
-    **weder in den IDs noch im Inhalt** verschachtelt -- nur
-    ``ExcitationSchedule.subset`` ist es. Diese Funktion macht den Unterschied
-    prüfbar; :meth:`RunSplitter.split` nutzt sie als Wächter.
+    ``MixedExcitationDesign.build`` produces IDs in exactly this scheme, and the
+    fingerprint contains ``n_runs``. Two separately built designs are therefore
+    nested **neither in the IDs nor in content** -- only
+    ``ExcitationSchedule.subset`` is. This function makes the difference
+    checkable; :meth:`RunSplitter.split` uses it as a guard.
 
     Returns
     -------
     str or None
-        ``"{name}-{fingerprint}"``, oder ``None`` wenn die ID dem Schema nicht folgt
-        (fremde IDs aus Dyssol oder Anlagendaten sind erlaubt).
+        ``"{name}-{fingerprint}"``, or ``None`` if the ID does not follow the scheme
+        (foreign IDs from Dyssol or plant data are allowed).
     """
     parts = run_id.rsplit("-", 2)
     if len(parts) != 3 or not parts[2].isdigit():
@@ -176,18 +175,18 @@ def design_key(run_id: str) -> str | None:
     return f"{parts[0]}-{parts[1]}"
 
 
-# ----------------------------------------------------------------- Konfiguration
+# ----------------------------------------------------------------- Configuration
 
 
 @dataclass(frozen=True, slots=True)
 class SplitRatios:
-    """Anteile der drei Splits am Lauf-Pool.
+    """Fractions of the three splits in the run pool.
 
     Attributes
     ----------
     train, val, test
-        Anteile in :math:`[0, 1]`, Summe 1. ``val = 0`` ist zulässig (festes
-        Epochenbudget statt Early Stopping); ``train`` und ``test`` nicht.
+        Fractions in :math:`[0, 1]`, sum 1. ``val = 0`` is allowed (fixed epoch budget
+        instead of early stopping); ``train`` and ``test`` are not.
     """
 
     train: float = 0.70
@@ -205,26 +204,26 @@ class SplitRatios:
 
     @property
     def edges(self) -> tuple[float, float]:
-        """Kumulative Grenzen für die Bucket-Zuordnung: ``(train, train + val)``."""
+        """Cumulative edges for the bucket assignment: ``(train, train + val)``."""
         return self.train, self.train + self.val
 
     @property
     def digest(self) -> str:
-        """Fingerprint der Anteile."""
+        """Fingerprint of the fractions."""
         return _digest_of("ratios", f"{self.train:.12g}", f"{self.val:.12g}", f"{self.test:.12g}")
 
 
-# --------------------------------------------------------------- Ergebnisobjekte
+# ---------------------------------------------------------------- Result objects
 
 
 @dataclass(frozen=True, slots=True)
 class RunSplit:
-    """Zuordnung von Lauf-IDs zu train/val/test.
+    """Assignment of run IDs to train/val/test.
 
-    Die Reihenfolge von ``train`` ist **bedeutungstragend**: sie definiert die
-    Verschachtelung der Lernkurven-Teilmengen (:meth:`subset`). Bei einem Sobol-Design
-    ist das die Design-Reihenfolge, sodass ``train[:n]`` ein Präfix der Folge bleibt.
-    Kanonisches Sortieren würde ``train[:n]`` zu einer beliebigen Teilmenge machen.
+    The order of ``train`` **carries meaning**: it defines the nesting of the
+    learning-curve subsets (:meth:`subset`). For a Sobol design this is the design order,
+    so that ``train[:n]`` remains a prefix of the sequence. Canonical sorting would turn
+    ``train[:n]`` into an arbitrary subset.
     """
 
     train: tuple[str, ...]
@@ -255,7 +254,7 @@ class RunSplit:
 
     @property
     def as_mapping(self) -> Mapping[SplitName, tuple[str, ...]]:
-        """Split-Name auf Lauf-IDs."""
+        """Split name to run IDs."""
         return {
             SplitName.TRAIN: self.train,
             SplitName.VAL: self.val,
@@ -264,20 +263,20 @@ class RunSplit:
 
     @property
     def n_runs(self) -> int:
-        """Gesamtzahl zugeordneter Läufe."""
+        """Total number of assigned runs."""
         return len(self.train) + len(self.val) + len(self.test)
 
     @property
     def all_runs(self) -> tuple[str, ...]:
-        """Alle Läufe in der Reihenfolge train, val, test."""
+        """All runs in the order train, val, test."""
         return self.train + self.val + self.test
 
     @property
     def digest(self) -> str:
-        """Fingerprint der konkreten Zuordnung für das Experiment-Tracking.
+        """Fingerprint of the concrete assignment for experiment tracking.
 
-        Über die **geordneten** Tupel, weil die Trainingsreihenfolge die
-        Lernkurven-Teilmengen bestimmt.
+        Over the **ordered** tuples, because the training order determines the
+        learning-curve subsets.
         """
         return _digest_of(
             "split",
@@ -288,16 +287,15 @@ class RunSplit:
         )
 
     def membership(self) -> Mapping[str, SplitName]:
-        """Umkehrabbildung Lauf-ID auf Split, für die Filterung im Dataset."""
+        """Inverse mapping run ID to split, for filtering in the data set."""
         return {run_id: name for name, ids in self.as_mapping.items() for run_id in ids}
 
     def subset(self, n_train: int) -> RunSplit:
-        """Stützstelle der Lernkurve mit ``n_train`` Trainingsläufen.
+        """Learning-curve point with ``n_train`` training runs.
 
-        Verkleinert **ausschließlich** ``train``. ``val`` und ``test`` bleiben
-        unverändert, damit alle Punkte der Lernkurve auf derselben Testmenge gemessen
-        werden. Namensgleich und semantikgleich zu
-        ``ExcitationSchedule.subset(n)`` -- verschachteltes Präfix.
+        Shrinks **exclusively** ``train``. ``val`` and ``test`` stay unchanged, so that
+        all points of the learning curve are measured on the same test set. Same name and
+        same semantics as ``ExcitationSchedule.subset(n)`` -- nested prefix.
         """
         if n_train < 1:
             raise SplitConfigError(f"n_train muss >= 1 sein, ist {n_train}")
@@ -315,18 +313,17 @@ class RunSplit:
 
 @dataclass(frozen=True, slots=True)
 class LearningCurvePoint:
-    """Eine Stützstelle der Lernkurve.
+    """One point of the learning curve.
 
     Attributes
     ----------
     n_train
-        Anzahl Trainingsläufe -- die x-Achse der Lernkurve.
+        Number of training runs -- the x-axis of the learning curve.
     split
-        Vollständiges Split-Objekt. Normalisierungsstatistiken werden aus
-        ``split.train`` **dieser** Stützstelle gezogen, nie aus dem Gesamt-Pool: sonst
-        hat das Modell an der kleinsten Stützstelle Information aus allen Läufen und
-        das linke Ende der Kurve ist zu optimistisch -- genau die Region, um die es in
-        AP 1 geht.
+        Complete split object. Normalisation statistics are drawn from ``split.train``
+        of **this** point, never from the overall pool: otherwise the model at the
+        smallest point has information from all runs and the left end of the curve is
+        too optimistic -- exactly the region that AP 1 is about.
     """
 
     n_train: int
@@ -339,18 +336,18 @@ def learning_curve(
     *,
     skip_oversized: bool = True,
 ) -> tuple[LearningCurvePoint, ...]:
-    """Verschachtelte Stützstellen aus einem Split erzeugen.
+    """Generate nested learning-curve points from a split.
 
     Parameters
     ----------
     split
-        Basis-Split; ``split.train`` liefert die maximale Stützstelle.
+        Base split; ``split.train`` provides the maximum point.
     sizes
-        Aufsteigende, eindeutige Anzahlen von Trainingsläufen.
+        Ascending, unique numbers of training runs.
     skip_oversized
-        ``True``: zu große Stützstellen werden weggelassen. ``False``: Fehler. Für den
-        Endbericht ``False`` setzen, damit eine unbemerkt verkürzte Kurve nicht als
-        vollständig durchgeht.
+        ``True``: points that are too large are omitted. ``False``: error. Set ``False``
+        for the final report, so that an unnoticed truncated curve does not pass as
+        complete.
     """
     requested = [int(size) for size in sizes]
     if requested != sorted(set(requested)):
@@ -373,11 +370,11 @@ def learning_curve(
 
 
 class RunSplitter(ABC):
-    """Abstrakte Basisklasse für die Zuordnung von Läufen zu Splits.
+    """Abstract base class for the assignment of runs to splits.
 
-    Open-Closed: eine neue Strategie (Domänenschnitt Grey-Box auf Dyssol in AP 2,
-    zeitliche Trennung bei Anlagenhistorie) darf keine Änderung an Trainings- oder
-    Evaluationscode erfordern.
+    Open-closed: a new strategy (domain cut grey-box to Dyssol in AP 2, temporal
+    separation for plant history) must not require any change to training or
+    evaluation code.
     """
 
     min_per_split: int = 2
@@ -388,12 +385,12 @@ class RunSplitter(ABC):
 
     @abstractmethod
     def split(self, run_ids: Sequence[str]) -> RunSplit:
-        """Läufe zuordnen. ``run_ids`` in Design-Reihenfolge, ohne Duplikate."""
+        """Assign runs. ``run_ids`` in design order, without duplicates."""
 
     @property
     @abstractmethod
     def config_digest(self) -> str:
-        """Fingerprint der Splitter-Konfiguration inklusive Seed."""
+        """Fingerprint of the splitter configuration including the seed."""
 
     def _check_input(self, run_ids: Sequence[str]) -> tuple[str, ...]:
         ids = tuple(run_ids)
@@ -438,19 +435,19 @@ class RunSplitter(ABC):
 
 @dataclass(frozen=True, slots=True)
 class IndexBlockSplitter(RunSplitter):
-    """Zusammenhängende Blöcke in Design-Reihenfolge -- Default für eigene QMC-Designs.
+    """Contiguous blocks in design order -- default for our own QMC designs.
 
-    ``train = ids[0:n_train]``, dann ``val``, dann ``test``. Das Trainings-Präfix bleibt
-    ein Präfix der Sobol-Folge, ``subset(n)`` erbt die Verschachtelung, Val- und
-    Testblock sind ebenfalls raumfüllend.
+    ``train = ids[0:n_train]``, then ``val``, then ``test``. The training prefix stays
+    a prefix of the Sobol sequence, ``subset(n)`` inherits the nesting, and the val and
+    test blocks are space-filling as well.
 
-    Warum nicht Hashing für diesen Fall: ein hash-gefiltertes Sobol-Präfix ist keine
-    Folge niedriger Diskrepanz mehr -- die Ausdünnung ist nicht die, für die die
-    Diskrepanzschranke gilt. Der Fehler, der in Schritt 2 aus dem Sampler entfernt
-    wurde, käme über den Splitter zurück.
+    Why not hashing for this case: a hash-filtered Sobol prefix is no longer a
+    low-discrepancy sequence -- the thinning is not the one for which the discrepancy
+    bound holds. The error that was removed from the sampler in step 2 would come back
+    via the splitter.
 
-    Blockgrößen sollten Zweierpotenzen sein, damit auch ``val`` und ``test`` auf
-    Sobol-Balance-Grenzen liegen.
+    Block sizes should be powers of two, so that ``val`` and ``test`` also lie on
+    Sobol balance boundaries.
     """
 
     n_train: int
@@ -468,16 +465,16 @@ class IndexBlockSplitter(RunSplitter):
 
     @property
     def required_pool_size(self) -> int:
-        """Anzahl Läufe, die das Design liefern muss."""
+        """Number of runs the design must supply."""
         return self.n_train + self.n_val + self.n_test
 
     @property
     def config_digest(self) -> str:
-        """Fingerprint der Blockgrößen."""
+        """Fingerprint of the block sizes."""
         return _digest_of("IndexBlockSplitter", self.n_train, self.n_val, self.n_test)
 
     def split(self, run_ids: Sequence[str]) -> RunSplit:
-        """Blöcke schneiden."""
+        """Cut the blocks."""
         ids = self._check_input(run_ids)
         need = self.required_pool_size
         if len(ids) < need:
@@ -495,17 +492,16 @@ class IndexBlockSplitter(RunSplitter):
 
 @dataclass(frozen=True, slots=True)
 class HashRunSplitter(RunSplitter):
-    """Unabhängige Bucket-Zuordnung je Lauf -- für fremdbestimmte Lauf-Pools.
+    """Independent bucket assignment per run -- for externally determined run pools.
 
-    Jeder Lauf wird allein aus seiner ID und dem Seed zugeordnet, ohne Kenntnis des
-    Pools. Damit ist die Zuordnung **stabil unter Pool-Wachstum**: kommen
-    Dyssol-Lieferungen nach, ändert sich die Zuordnung keines bestehenden Laufs. Bei
-    "mischen und schneiden" wandern Läufe zwischen den Splits, sobald der Pool wächst --
-    ein Testlauf von gestern wird zum Trainingslauf von heute und alle bisher
-    berichteten Testfehler sind ungültig.
+    Every run is assigned from its ID and the seed alone, without knowledge of the
+    pool. The assignment is therefore **stable under pool growth**: when further Dyssol
+    deliveries arrive, the assignment of no existing run changes. With "shuffle and
+    cut", runs migrate between the splits as soon as the pool grows -- yesterday's test
+    run becomes today's training run and all test errors reported so far are invalid.
 
-    Preis: die Anteile gelten nur im Erwartungswert. Die realisierten Größen streuen
-    binomial und können bei kleinem Pool degenerieren.
+    Price: the fractions hold only in expectation. The realised sizes scatter
+    binomially and can degenerate with a small pool.
     """
 
     seed: int
@@ -515,11 +511,11 @@ class HashRunSplitter(RunSplitter):
 
     @property
     def config_digest(self) -> str:
-        """Fingerprint aus Seed und Anteilen."""
+        """Fingerprint from seed and fractions."""
         return _digest_of("HashRunSplitter", self.seed, self.ratios.digest)
 
     def assign(self, run_id: str) -> SplitName:
-        """Split eines einzelnen Laufs, ohne Kenntnis des übrigen Pools."""
+        """Split of a single run, without knowledge of the rest of the pool."""
         value = stable_unit_hash("assign", self.seed, run_id)
         train_edge, val_edge = self.ratios.edges
         if value < train_edge:
@@ -529,7 +525,7 @@ class HashRunSplitter(RunSplitter):
         return SplitName.TEST
 
     def split(self, run_ids: Sequence[str]) -> RunSplit:
-        """Alle Läufe einzeln zuordnen."""
+        """Assign all runs individually."""
         ids = self._check_input(run_ids)
         buckets: dict[SplitName, list[str]] = {name: [] for name in SplitName}
         for run_id in ids:
@@ -541,12 +537,12 @@ class HashRunSplitter(RunSplitter):
 
 @dataclass(frozen=True, slots=True)
 class PredefinedRunSplitter(RunSplitter):
-    """Explizit vorgegebene Zuordnung -- für Domänenschnitte ab AP 2.
+    """Explicitly specified assignment -- for domain cuts from AP 2 on.
 
-    Anwendungsfall: ``train`` aus dem Grey-Box-Modell, ``test`` aus Dyssol oder aus
-    Anlagendaten. Das ist kein Zufallsschnitt, sondern ein Domänenwechsel (domain
-    shift); eine hashbasierte Zuordnung würde ihn gerade zerstören. Bewusst jetzt
-    vorgesehen, damit später nicht am Trainingscode geschraubt wird.
+    Use case: ``train`` from the grey-box model, ``test`` from Dyssol or from plant
+    data. That is not a random cut but a domain change (domain shift); a hash-based
+    assignment would destroy exactly that. Deliberately provided now, so that the
+    training code does not have to be tinkered with later.
     """
 
     label: str
@@ -558,11 +554,11 @@ class PredefinedRunSplitter(RunSplitter):
 
     @property
     def config_digest(self) -> str:
-        """Fingerprint aus dem Label des Schnitts."""
+        """Fingerprint from the label of the cut."""
         return _digest_of("PredefinedRunSplitter", self.label)
 
     def split(self, run_ids: Sequence[str]) -> RunSplit:
-        """Vorgabe gegen den Pool prüfen und übernehmen."""
+        """Check the specification against the pool and adopt it."""
         ids = set(self._check_input(run_ids))
         declared = set(self.train_ids) | set(self.val_ids) | set(self.test_ids)
         missing = declared - ids
@@ -577,27 +573,26 @@ class PredefinedRunSplitter(RunSplitter):
         return self._finalize(self.train_ids, self.val_ids, self.test_ids)
 
 
-# ------------------------------------------------ Anbindung an das Anregungsdesign
+# ------------------------------------------------ Coupling to the excitation design
 
 
 def split_schedule(schedule: ExcitationSchedule, splitter: RunSplitter) -> RunSplit:
-    """Split aus einem :class:`~twinlink_ml.simulation.excitation.ExcitationSchedule`.
+    """Split from an :class:`~twinlink_ml.simulation.excitation.ExcitationSchedule`.
 
-    Dünne Adapterfunktion: ``schedule.run_id`` ist bereits in Design-Reihenfolge und
-    trägt den Design-Fingerprint, sodass der Split-Fingerprint allein die Daten
-    identifiziert.
+    Thin adapter function: ``schedule.run_id`` is already in design order and carries
+    the design fingerprint, so that the split fingerprint alone identifies the data.
     """
     return splitter.split(schedule.run_id)
 
 
 def signal_kind_strata(schedule: ExcitationSchedule, channel: int) -> Mapping[str, str]:
-    """Signalart je Lauf für einen Stellgrößenkanal, als Schichtungsmerkmal.
+    """Signal kind per run for one action channel, as a stratification feature.
 
-    Signalart wird pro Lauf **und pro Kanal** unabhängig gezogen. Es gibt daher kein
-    einziges Stratum pro Lauf; die Abdeckung ist kanalweise zu prüfen. Relevant, weil
-    bei einer Rampe die Schleppabweichung direkt proportional zur Zeitkonstante ist --
-    ein Testblock ohne Rampen misst den Mehrschritt-Rollout-Fehler am uninformativsten
-    Signaltyp.
+    The signal kind is drawn independently per run **and per channel**. There is
+    therefore no single stratum per run; coverage has to be checked channel by channel.
+    Relevant because for a ramp the tracking lag is directly proportional to the time
+    constant -- a test block without ramps measures the multi-step rollout error on the
+    least informative signal type.
     """
     kinds = schedule.signal_kinds
     if kinds and not 0 <= channel < len(kinds[0]):
@@ -605,11 +600,11 @@ def signal_kind_strata(schedule: ExcitationSchedule, channel: int) -> Mapping[st
     return {run_id: kinds[index][channel] for index, run_id in enumerate(schedule.run_id)}
 
 
-# ---------------------------------------------------------------------- Diagnose
+# ------------------------------------------------------------------- Diagnostics
 
 
 def realized_ratios(split: RunSplit) -> Mapping[SplitName, float]:
-    """Tatsächlich realisierte Anteile; bei :class:`HashRunSplitter` nicht die Sollwerte."""
+    """Actually realised fractions; for :class:`HashRunSplitter` not the target values."""
     total = split.n_runs
     return {name: len(ids) / total for name, ids in split.as_mapping.items()}
 
@@ -617,11 +612,11 @@ def realized_ratios(split: RunSplit) -> Mapping[SplitName, float]:
 def stratum_coverage(
     split: RunSplit, strata: Mapping[str, str]
 ) -> Mapping[SplitName, Mapping[str, int]]:
-    """Abdeckung eines Schichtungsmerkmals je Split.
+    """Coverage of a stratification feature per split.
 
-    Exakte Stratifizierung bräuchte Pool-Wissen und gäbe damit die Stabilität von
-    :class:`HashRunSplitter` auf. Empfehlung: hier diagnostizieren, bei Lücke den Seed
-    dokumentiert wechseln, den Mechanismus nicht verkomplizieren.
+    Exact stratification would need knowledge of the pool and would thereby give up the
+    stability of :class:`HashRunSplitter`. Recommendation: diagnose here, on a gap change
+    the seed in a documented way, do not complicate the mechanism.
     """
     missing = set(split.all_runs) - set(strata)
     if missing:
@@ -633,7 +628,7 @@ def stratum_coverage(
 
 
 def split_report(split: RunSplit, strata: Mapping[str, str] | None = None) -> str:
-    """Kurzbericht für das Run-Log. Nur Text, keine Nebenwirkungen."""
+    """Short report for the run log. Text only, no side effects."""
     ratios = realized_ratios(split)
     lines = [
         f"Split-Fingerprint : {split.digest}",
