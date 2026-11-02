@@ -355,18 +355,18 @@ def compute_ka2_for_boundary(
         if feasible:
             e_oracle_b = rb["energy_target"]
             e_oracle_ref = rr["energy_target"]
-            e_fest = fp["energy_target"]
+            e_fixed = fp["energy_target"]
             cost_abs = e_oracle_b - e_oracle_ref
             entry.update(
                 {
                     "energy_oracle_boundary_kw": e_oracle_b,
                     "energy_oracle_reference_kw": e_oracle_ref,
-                    "energy_fixed_kw": e_fest,
+                    "energy_fixed_kw": e_fixed,
                     "cost_abs_kw": cost_abs,
                     "cost_rel_pct": 100.0 * cost_abs / e_oracle_ref,
                     "remaining_fraction": (
-                        (e_fest - e_oracle_b) / (e_fest - e_oracle_ref)
-                        if abs(e_fest - e_oracle_ref) > 1e-12
+                        (e_fixed - e_oracle_b) / (e_fixed - e_oracle_ref)
+                        if abs(e_fixed - e_oracle_ref) > 1e-12
                         else None
                     ),
                 }

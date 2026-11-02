@@ -33,7 +33,7 @@ def anchor() -> dict[str, Any]:
     return data
 
 
-def test_default_config_reproduces_va2_bitgleich(anchor: dict[str, Any]) -> None:
+def test_default_config_reproduces_va2_bit_identical(anchor: dict[str, Any]) -> None:
     """Reproduction mode (default, ``reward_centering=None``) stays bit-identical to VA2."""
     env = OperatingPointBanditEnv()
     for point in anchor["grid_results"]:

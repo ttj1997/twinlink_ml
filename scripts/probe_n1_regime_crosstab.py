@@ -127,13 +127,13 @@ def _regime_masks(bed_temperature: np.ndarray) -> dict[str, np.ndarray]:
     }
 
 
-def _regime_fractions(heiss_count: int, kalt_count: int, total: int) -> dict[str, float]:
-    heiss_fraction = heiss_count / total
-    kalt_fraction = kalt_count / total
+def _regime_fractions(hot_count: int, cold_count: int, total: int) -> dict[str, float]:
+    hot_fraction = hot_count / total
+    cold_fraction = cold_count / total
     return {
-        "heiss": heiss_fraction,
-        "kalt": kalt_fraction,
-        "transition": 1.0 - heiss_fraction - kalt_fraction,
+        "heiss": hot_fraction,
+        "kalt": cold_fraction,
+        "transition": 1.0 - hot_fraction - cold_fraction,
     }
 
 
@@ -179,21 +179,21 @@ def _population_report(
     holdout_masks: dict[str, np.ndarray], train_pools: dict[int, dict]
 ) -> dict[str, dict[str, float]]:
     holdout_total = next(iter(holdout_masks.values())).size
-    holdout_heiss = int(np.sum(holdout_masks["heiss"]))
-    holdout_kalt = int(np.sum(holdout_masks["kalt"]))
+    holdout_hot = int(np.sum(holdout_masks["heiss"]))
+    holdout_cold = int(np.sum(holdout_masks["kalt"]))
 
     train_total = 0
-    train_heiss = 0
-    train_kalt = 0
+    train_hot = 0
+    train_cold = 0
     for pool in train_pools.values():
         masks = pool["masks"]
         train_total += masks["heiss"].size
-        train_heiss += int(np.sum(masks["heiss"]))
-        train_kalt += int(np.sum(masks["kalt"]))
+        train_hot += int(np.sum(masks["heiss"]))
+        train_cold += int(np.sum(masks["kalt"]))
 
     return {
-        "holdout": _regime_fractions(holdout_heiss, holdout_kalt, holdout_total),
-        "train_pool": _regime_fractions(train_heiss, train_kalt, train_total),
+        "holdout": _regime_fractions(holdout_hot, holdout_cold, holdout_total),
+        "train_pool": _regime_fractions(train_hot, train_cold, train_total),
     }
 
 

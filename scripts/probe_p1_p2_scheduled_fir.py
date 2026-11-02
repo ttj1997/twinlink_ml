@@ -345,7 +345,7 @@ def main() -> None:
     n_features_pooled = _n_features_plain(n_actions, K_MAIN)
     print(f"POOLED/LOKAL (aus N1, unveraendert): k={K_MAIN}, n_features={n_features_pooled}")
 
-    def _design_geplant(
+    def _design_scheduled(
         actions: np.ndarray,
         outputs: np.ndarray,
         k: int,
@@ -357,7 +357,7 @@ def main() -> None:
     geplant = _pooled_variant_crosstab(
         "geplant",
         K_MAIN,
-        _design_geplant,
+        _design_scheduled,
         channels,
         holdout_actions,
         holdout_outputs,
@@ -391,13 +391,13 @@ def main() -> None:
         print(f"-- {channel}{tag} --")
         for regime in REGIMES:
             pooled_cell = baseline[channel][f"fit_pooled__eval_{regime}"]
-            lokal_cell = baseline[channel][f"fit_{regime}__eval_{regime}"]
-            geplant_cell = geplant[channel][regime]
+            local_cell = baseline[channel][f"fit_{regime}__eval_{regime}"]
+            scheduled_cell = geplant[channel][regime]
             control_cell = control[channel][regime]
             cells_by_label = (
                 ("POOLED", pooled_cell),
-                ("LOKAL", lokal_cell),
-                ("GEPLANT", geplant_cell),
+                ("LOKAL", local_cell),
+                ("GEPLANT", scheduled_cell),
                 ("CONTROL", control_cell),
             )
             parts = [
@@ -406,27 +406,27 @@ def main() -> None:
             ]
             print(f"  eval={regime:<5s} " + " | ".join(parts))
 
-    moisture_heiss_pooled = baseline["product_moisture_kg_per_kg"]["fit_pooled__eval_heiss"][
+    moisture_hot_pooled = baseline["product_moisture_kg_per_kg"]["fit_pooled__eval_heiss"][
         "residual_var_median"
     ]
-    moisture_heiss_lokal = baseline["product_moisture_kg_per_kg"]["fit_heiss__eval_heiss"][
+    moisture_hot_local = baseline["product_moisture_kg_per_kg"]["fit_heiss__eval_heiss"][
         "residual_var_median"
     ]
-    moisture_heiss_geplant = geplant["product_moisture_kg_per_kg"]["heiss"]["residual_var_median"]
-    gap = moisture_heiss_pooled - moisture_heiss_lokal
-    closed = moisture_heiss_pooled - moisture_heiss_geplant
+    moisture_hot_scheduled = geplant["product_moisture_kg_per_kg"]["heiss"]["residual_var_median"]
+    gap = moisture_hot_pooled - moisture_hot_local
+    closed = moisture_hot_pooled - moisture_hot_scheduled
     fraction_closed = closed / gap if gap != 0.0 else float("nan")
     print(
         "Kernfrage product_moisture_kg_per_kg (HEISS-Holdout): "
-        f"POOLED ResidVar={moisture_heiss_pooled:.6g}, LOKAL={moisture_heiss_lokal:.6g}, "
-        f"GEPLANT={moisture_heiss_geplant:.6g}, Luecke geschlossen={fraction_closed:.4%}"
+        f"POOLED ResidVar={moisture_hot_pooled:.6g}, LOKAL={moisture_hot_local:.6g}, "
+        f"GEPLANT={moisture_hot_scheduled:.6g}, Luecke geschlossen={fraction_closed:.4%}"
     )
 
     print("-- Q1: Konditionierung der Trainings-Entwurfsmatrizen (gepoolte Maske, je Seed) --")
     k_by_variant = {"pooled": K_MAIN, "geplant": K_MAIN, "control": k_control}
     conditioning = (
         _conditioning_report("pooled", K_MAIN, _design_plain, train_pools)
-        + _conditioning_report("geplant", K_MAIN, _design_geplant, train_pools)
+        + _conditioning_report("geplant", K_MAIN, _design_scheduled, train_pools)
         + _conditioning_report("control", k_control, _design_plain, train_pools)
     )
     for entry in conditioning:
@@ -450,10 +450,10 @@ def main() -> None:
         train_pools,
         standardize=True,
     )
-    standardized_geplant = _pooled_variant_crosstab(
+    standardized_scheduled = _pooled_variant_crosstab(
         "geplant_standardized",
         K_MAIN,
-        _design_geplant,
+        _design_scheduled,
         channels,
         holdout_actions,
         holdout_outputs,
@@ -479,7 +479,7 @@ def main() -> None:
         for regime in REGIMES:
             cells_by_label = (
                 ("POOLED_STD", standardized_pooled[channel][regime]),
-                ("GEPLANT_STD", standardized_geplant[channel][regime]),
+                ("GEPLANT_STD", standardized_scheduled[channel][regime]),
                 ("CONTROL_STD", standardized_control[channel][regime]),
             )
             parts = [
@@ -488,26 +488,26 @@ def main() -> None:
             ]
             print(f"  eval={regime:<5s} " + " | ".join(parts))
 
-    moisture_heiss_pooled_std = standardized_pooled["product_moisture_kg_per_kg"]["heiss"][
+    moisture_hot_pooled_std = standardized_pooled["product_moisture_kg_per_kg"]["heiss"][
         "r2_median"
     ]
-    moisture_heiss_geplant_std = standardized_geplant["product_moisture_kg_per_kg"]["heiss"][
+    moisture_hot_scheduled_std = standardized_scheduled["product_moisture_kg_per_kg"]["heiss"][
         "r2_median"
     ]
-    moisture_heiss_control_std = standardized_control["product_moisture_kg_per_kg"]["heiss"][
+    moisture_hot_control_std = standardized_control["product_moisture_kg_per_kg"]["heiss"][
         "r2_median"
     ]
-    moisture_heiss_pooled_r2 = baseline["product_moisture_kg_per_kg"]["fit_pooled__eval_heiss"][
+    moisture_hot_pooled_r2 = baseline["product_moisture_kg_per_kg"]["fit_pooled__eval_heiss"][
         "r2_median"
     ]
-    moisture_heiss_geplant_r2 = geplant["product_moisture_kg_per_kg"]["heiss"]["r2_median"]
-    moisture_heiss_control_r2 = control["product_moisture_kg_per_kg"]["heiss"]["r2_median"]
+    moisture_hot_scheduled_r2 = geplant["product_moisture_kg_per_kg"]["heiss"]["r2_median"]
+    moisture_hot_control_r2 = control["product_moisture_kg_per_kg"]["heiss"]["r2_median"]
     print(
         "Kernfrage Q1 product_moisture_kg_per_kg (HEISS-Holdout), R2 unstandardisiert -> "
         "standardisiert: "
-        f"POOLED {moisture_heiss_pooled_r2:+.3f} -> {moisture_heiss_pooled_std:+.3f}, "
-        f"GEPLANT {moisture_heiss_geplant_r2:+.3f} -> {moisture_heiss_geplant_std:+.3f}, "
-        f"CONTROL {moisture_heiss_control_r2:+.3f} -> {moisture_heiss_control_std:+.3f}"
+        f"POOLED {moisture_hot_pooled_r2:+.3f} -> {moisture_hot_pooled_std:+.3f}, "
+        f"GEPLANT {moisture_hot_scheduled_r2:+.3f} -> {moisture_hot_scheduled_std:+.3f}, "
+        f"CONTROL {moisture_hot_control_r2:+.3f} -> {moisture_hot_control_std:+.3f}"
     )
 
     result = {
@@ -527,7 +527,7 @@ def main() -> None:
         "conditioning": conditioning,
         "standardized_control_check": {
             "pooled": standardized_pooled,
-            "geplant": standardized_geplant,
+            "geplant": standardized_scheduled,
             "control": standardized_control,
         },
         "_elapsed_s": time.monotonic() - t0,

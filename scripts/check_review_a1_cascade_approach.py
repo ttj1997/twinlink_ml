@@ -133,29 +133,29 @@ class SourceProfile:
 
 
 def source_profiles(
-    network: Any, t_kalt: float, kind: str
+    network: Any, t_cold: float, kind: str
 ) -> tuple[dict[str, SourceProfile], float]:
     """Model or physical profile of every source of the network; returns them and ``dh_v(T_kalt)``."""
     gas = network.gas
-    latent = float(latent_heat_j_per_kg(_BACKEND, _BACKEND.asarray(t_kalt)))
-    y_s_kalt = float(saturation_humidity_kg_per_kg(_BACKEND, gas, _BACKEND.asarray(t_kalt)))
+    latent = float(latent_heat_j_per_kg(_BACKEND, _BACKEND.asarray(t_cold)))
+    y_s_cold = float(saturation_humidity_kg_per_kg(_BACKEND, gas, _BACKEND.asarray(t_cold)))
     out = {}
     for source in network.sources:
         m = source.dry_air_mass_flow_kg_per_s
         y = source.outlet_humidity_kg_per_kg
         cap = m * (gas.cp_dry_air_j_per_kg_k + y * gas.cp_vapour_j_per_kg_k)
         t_in = source.outlet_temperature_celsius
-        if not t_in > t_kalt:
-            raise SystemExit(f"source {source.name} at {t_in} degC is not above T_kalt {t_kalt}")
+        if not t_in > t_cold:
+            raise SystemExit(f"source {source.name} at {t_in} degC is not above T_kalt {t_cold}")
         if kind == "model":
-            q_sens = cap * (t_in - t_kalt)
-            q_lat = max(y - y_s_kalt, 0.0) * m * latent
+            q_sens = cap * (t_in - t_cold)
+            q_lat = max(y - y_s_cold, 0.0) * m * latent
             q = [0.0, q_sens] + ([q_sens + q_lat] if q_lat > 0.0 else [])
-            t = [t_in, t_kalt] + ([t_kalt] if q_lat > 0.0 else [])
+            t = [t_in, t_cold] + ([t_cold] if q_lat > 0.0 else [])
             q_arr, t_arr = np.asarray(q), np.asarray(t)
         else:
-            n = math.ceil((t_in - t_kalt) / PROFILE_STEP_K) + 1
-            t_arr = np.linspace(t_in, t_kalt, n)
+            n = math.ceil((t_in - t_cold) / PROFILE_STEP_K) + 1
+            t_arr = np.linspace(t_in, t_cold, n)
             y_s = np.asarray(saturation_humidity_kg_per_kg(_BACKEND, gas, _BACKEND.asarray(t_arr)))
             q_arr = cap * (t_in - t_arr) + m * np.maximum(y - y_s, 0.0) * latent
         out[source.name] = SourceProfile(source.name, cap, t_in, q_arr, t_arr)
