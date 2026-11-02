@@ -1,19 +1,19 @@
-r"""Verschaltung Quelle -> Senke: welche Quelle speist welche Senke, in welcher Reihenfolge.
+r"""Wiring source -> sink: which source feeds which sink, in which order.
 
-Zwei Implementierungen liegen von Anfang an vor (:class:`FixedRouting`,
-:class:`MatrixRouting`) -- dieselbe Schwelle, die ``sorption.SorptionIsotherm`` bereits über
-zwei Implementierungen zieht (``docs/03_code_konventionen.md``): eine ABC ist hier keine
-Vorratsabstraktion, sondern folgt der bestehenden Konvention.
+Two implementations exist from the start (:class:`FixedRouting`,
+:class:`MatrixRouting`) -- the same threshold that ``sorption.SorptionIsotherm`` already draws
+over two implementations (``docs/03_code_konventionen.md``): an ABC here is not a
+stockpile abstraction but follows the existing convention.
 
-Kein LP, kein Optimierer (EA6) -- ``MatrixRouting`` nimmt eine bereits entschiedene
-Zuordnungsmatrix entgegen (später der RL-Aktionsraum), sie entscheidet nichts selbst.
+No LP, no optimizer (EA6) -- ``MatrixRouting`` takes an already decided
+assignment matrix (later the RL action space); it decides nothing itself.
 
-Trennung von Topologie und Physik: eine Route entscheidet nur, WELCHE ``(Quelle, Senke)``-Paare
-existieren, nicht in welcher Reihenfolge ÜBER QUELLEN HINWEG sie abgearbeitet werden -- das ist
-die physikalische Regel aus EA2, Korrektur 3 (Niedertemperaturquellen zuerst) und lebt in
-:func:`resolve_cascade_order`, von beiden Implementierungen unten aufgerufen statt je Klasse
-neu umgesetzt. ``balance.evaluate_cascade`` kennt diese Regel nicht mehr -- sie bekommt die
-schon korrekt geordnete Stufenliste übergeben (Dependency Injection).
+Separation of topology and physics: a route only decides WHICH ``(Quelle, Senke)`` pairs
+exist, not in which order ACROSS SOURCES they are processed -- that is
+the physical rule from EA2, correction 3 (low-temperature sources first) and lives in
+:func:`resolve_cascade_order`, called by both implementations below instead of being
+re-implemented per class. ``balance.evaluate_cascade`` no longer knows this rule -- it receives
+the already correctly ordered stage list (dependency injection).
 """
 
 from __future__ import annotations
@@ -37,13 +37,13 @@ FloatArray = NDArray[np.float64]
 
 
 def resolve_cascade_order(network: HeatNetworkConfig) -> tuple[str, ...]:
-    """Bearbeitungsreihenfolge der Quellennamen, Niedertemperatur zuerst (EA2, Korrektur 3).
+    """Processing order of the source names, low temperature first (EA2, correction 3).
 
-    ``network.cascade_order`` gewinnt, wenn gesetzt (bereits als Permutation der
-    Quellennamen validiert, siehe ``HeatNetworkConfig.__post_init__``). Sonst: aufsteigend
-    nach ``outlet_temperature_celsius`` sortiert, stabil -- bei gleicher Temperatur bleibt
-    die in ``network.sources`` gegebene Reihenfolge erhalten, statt eine willkürliche
-    weitere Sortierung (z. B. nach Namen) einzuführen.
+    ``network.cascade_order`` wins if set (already validated as a permutation of the
+    source names, see ``HeatNetworkConfig.__post_init__``). Otherwise: sorted ascending
+    by ``outlet_temperature_celsius``, stable -- at equal temperature the order
+    given in ``network.sources`` is kept, instead of introducing an arbitrary
+    further sorting (e.g. by name).
     """
     if network.cascade_order:
         return network.cascade_order
@@ -52,31 +52,31 @@ def resolve_cascade_order(network: HeatNetworkConfig) -> tuple[str, ...]:
 
 
 class HeatNetworkRouting(ABC):
-    """Ordnet Quellen und Senken zu geordneten Kaskadenstufen.
+    """Arranges sources and sinks into ordered cascade stages.
 
-    :meth:`route` liefert eine geordnete Liste von ``(Quellenname, Senkenname)``-Paaren --
-    genau die Eingabe, die :func:`twinlink_ml.heatnetwork.balance.evaluate_cascade` als
-    ``stages`` erwartet. Die Reihenfolge im Rückgabewert ist bereits die tatsächliche
-    Abarbeitungsreihenfolge (Niedertemperaturquellen zuerst, EA2 Korrektur 3) -- eine
-    Implementierung darf diese Regel nicht umgehen, deshalb rufen beide Implementierungen
-    unten :func:`resolve_cascade_order` auf, statt sie zu duplizieren oder zu ignorieren.
+    :meth:`route` returns an ordered list of ``(Quellenname, Senkenname)`` pairs --
+    exactly the input that :func:`twinlink_ml.heatnetwork.balance.evaluate_cascade` expects as
+    ``stages``. The order in the return value is already the actual
+    processing order (low-temperature sources first, EA2 correction 3) -- an
+    implementation must not bypass this rule, which is why both implementations
+    below call :func:`resolve_cascade_order` instead of duplicating or ignoring it.
     """
 
     @abstractmethod
     def route(self, network: HeatNetworkConfig) -> tuple[tuple[str, str], ...]:
-        """Geordnete ``(Quellenname, Senkenname)``-Stufenliste für ``network``."""
+        """Ordered ``(Quellenname, Senkenname)`` stage list for ``network``."""
         ...
 
 
 @dataclass(frozen=True, slots=True)
 class FixedRouting(HeatNetworkRouting):
-    """Feste, konfigurierbare Verschaltung -- die Topologie steht in ``connections``.
+    """Fixed, configurable wiring -- the topology is in ``connections``.
 
-    :param connections: ``(Quellenname, Senkenname)``-Paare, in beliebiger Reihenfolge
-        angegeben (die tatsächliche Abarbeitungsreihenfolge legt trotzdem
-        :func:`resolve_cascade_order` fest, siehe :meth:`route`). Eine Quelle darf in
-        mehreren Paaren erscheinen (kaskadiert über mehrere Senken, Korrektur 2); eine
-        Senke ebenso (kaskadiert über mehrere Quellen).
+    :param connections: ``(Quellenname, Senkenname)`` pairs, given in any order
+        (the actual processing order is nevertheless set by
+        :func:`resolve_cascade_order`, see :meth:`route`). A source may appear in
+        several pairs (cascaded over several sinks, correction 2); a
+        sink likewise (cascaded over several sources).
     """
 
     connections: tuple[tuple[str, str], ...]
@@ -96,15 +96,15 @@ class FixedRouting(HeatNetworkRouting):
 
 @dataclass(frozen=True, slots=True)
 class MatrixRouting(HeatNetworkRouting):
-    """Verschaltung aus einer Zuordnungsmatrix -- der spätere RL-Aktionsraum.
+    """Wiring from an assignment matrix -- the later RL action space.
 
-    :param assignment: Form ``(n_sources, n_sinks)``, Zeilen/Spalten in der Reihenfolge von
-        ``network.sources``/``network.sinks``. Ein Eintrag über ``threshold`` aktiviert die
-        Verbindung (Quelle i, Senke j); der Zahlenwert selbst dient nur als
-        Prioritätskriterium zwischen mehreren Senken derselben Quelle (siehe
-        :meth:`route`), nicht als Anteil/Split -- ein Split-Modell ist nicht Teil dieses
-        Auftrags (EA6).
-    :param threshold: Untergrenze, ab der ein Matrixeintrag als aktive Verbindung zählt.
+    :param assignment: shape ``(n_sources, n_sinks)``, rows/columns in the order of
+        ``network.sources``/``network.sinks``. An entry above ``threshold`` activates the
+        connection (source i, sink j); the numerical value itself serves only as a
+        priority criterion between several sinks of the same source (see
+        :meth:`route`), not as a fraction/split -- a split model is not part of this
+        task (EA6).
+    :param threshold: lower bound from which a matrix entry counts as an active connection.
     """
 
     assignment: FloatArray

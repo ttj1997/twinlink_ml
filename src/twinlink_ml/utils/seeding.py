@@ -1,16 +1,16 @@
-"""Zentrales Seed-Handling -- eine Stelle für Python, NumPy, PyTorch, CUDA.
+"""Central seed handling -- one place for Python, NumPy, PyTorch, CUDA.
 
-Warum das ab Schritt 1 dasteht und nicht später: sobald an mehreren Stellen im Code
-``np.random.seed`` oder ``torch.manual_seed`` auftauchen, ist die Frage "war Lauf X
-reproduzierbar" nicht mehr beantwortbar. Für Lernkurven mit 3-5 Seeds pro Punkt ist die
-Antwort auf diese Frage die Grundlage der Aussage.
+Why this is in place from step 1 and not later: as soon as ``np.random.seed`` or
+``torch.manual_seed`` appear in several places in the code, the question "was run X
+reproducible" can no longer be answered. For learning curves with 3-5 seeds per point the
+answer to this question is the basis of the statement.
 
-Wichtig für die Auswertung: der Seed betrifft im Prozessmodell **nur** das Sensormodell
-und das Anregungs-Sampling. Das Grey-Box-Modell selbst ist deterministisch. Streuung in
-den Lernkurven kommt damit aus drei trennbaren Quellen -- Datensatz-Realisierung
-(``data_seed``), Sensorrauschen (``noise_seed``) und Initialisierung/Batch-Reihenfolge
-des Netzes (``model_seed``). Wer alle drei mit einem Seed koppelt, kann später nicht
-sagen, ob die Streuung aus den Daten oder aus dem Training kommt.
+Important for the evaluation: in the process model the seed affects **only** the sensor model
+and the excitation sampling. The grey-box model itself is deterministic. Spread in
+the learning curves thus comes from three separable sources -- dataset realisation
+(``data_seed``), sensor noise (``noise_seed``) and initialisation/batch order
+of the network (``model_seed``). Whoever couples all three to one seed cannot later
+say whether the spread comes from the data or from the training.
 """
 
 from __future__ import annotations
@@ -33,22 +33,22 @@ __all__ = [
 
 
 def _derive(*parts: str | int) -> int:
-    """32-Bit-Seed aus beliebigen Bestandteilen.
+    """32-bit seed from arbitrary components.
 
-    SHA-256 statt einer linearen Transformation, damit benachbarte Master-Seeds keine
-    korrelierten Teilseeds erzeugen.
+    SHA-256 instead of a linear transformation, so that neighbouring master seeds do not
+    produce correlated sub-seeds.
     """
     payload = ":".join(str(part) for part in parts).encode()
     return int.from_bytes(hashlib.sha256(payload).digest()[:4], "big")
 
 
 class VarianceSource(str, Enum):
-    """Zufallsquelle, deren Streuung in einer Studie variiert wird.
+    """Random source whose spread is varied in a study.
 
-    ``JOINT`` variiert alle drei gemeinsam über einen Master-Seed. Das ist die
-    konservative, also ehrlichste Angabe und die Voreinstellung der Lernkurven. Die
-    Einzelquellen beantworten die Frage, die ``JOINT`` offen lässt: kommt eine Differenz
-    zwischen zwei Architekturen aus dem Training oder aus der Datensatz-Realisierung?
+    ``JOINT`` varies all three together via one master seed. This is the
+    conservative, hence most honest figure and the default of the learning curves. The
+    individual sources answer the question that ``JOINT`` leaves open: does a difference
+    between two architectures come from the training or from the dataset realisation?
     """
 
     DATA = "data"
@@ -58,11 +58,11 @@ class VarianceSource(str, Enum):
 
     @property
     def is_parameter_free_relevant(self) -> bool:
-        """Ob ein parameterfreies Modell auf dieser Achse überhaupt streuen kann.
+        """Whether a parameter-free model can spread at all on this axis.
 
-        Persistenz hat keine Parameter: ihre Streuung über ``MODEL`` ist exakt Null, über
-        ``DATA`` und ``NOISE`` dagegen reine Realisierung des Datensatzes. Genau deshalb
-        ist sie das Maß für das Auflösungsvermögen -- siehe
+        Persistence has no parameters: its spread over ``MODEL`` is exactly zero, while over
+        ``DATA`` and ``NOISE`` it is pure realisation of the dataset. Exactly for this reason
+        it is the measure of the resolving power -- see
         :mod:`twinlink_ml.evaluation.resolution`.
         """
         return self in {VarianceSource.DATA, VarianceSource.NOISE, VarianceSource.JOINT}
@@ -70,7 +70,7 @@ class VarianceSource(str, Enum):
 
 @dataclass(frozen=True, slots=True)
 class SeedBundle:
-    """Getrennte Seeds für die drei unabhängigen Zufallsquellen."""
+    """Separate seeds for the three independent random sources."""
 
     data_seed: int
     noise_seed: int
@@ -78,7 +78,7 @@ class SeedBundle:
 
     @classmethod
     def from_master(cls, master_seed: int) -> SeedBundle:
-        """Deterministische Ableitung dreier Seeds aus einem Master-Seed."""
+        """Deterministic derivation of three seeds from one master seed."""
         return cls(
             data_seed=_derive(master_seed, "data"),
             noise_seed=_derive(master_seed, "noise"),
@@ -86,17 +86,17 @@ class SeedBundle:
         )
 
     def generator(self, role: str) -> np.random.Generator:
-        """NumPy-Generator für eine Rolle. Bevorzugt gegenüber globalem Zustand."""
+        """NumPy generator for a role. Preferred over global state."""
         seeds = {"data": self.data_seed, "noise": self.noise_seed, "model": self.model_seed}
         if role not in seeds:
             raise ValueError(f"Unbekannte Rolle {role!r}, erlaubt: {sorted(seeds)}")
         return np.random.default_rng(seeds[role])
 
     def replace(self, source: VarianceSource, value: int) -> SeedBundle:
-        """Bundle mit einem ausgetauschten Teilseed.
+        """Bundle with one sub-seed exchanged.
 
-        ``JOINT`` ist hier nicht zulässig -- ein gemeinsamer Master-Seed ist kein
-        Teilseed, sondern erzeugt über :meth:`from_master` gleich alle drei.
+        ``JOINT`` is not permitted here -- a joint master seed is not a
+        sub-seed but produces all three at once via :meth:`from_master`.
         """
         field = {
             VarianceSource.DATA: "data_seed",
@@ -108,7 +108,7 @@ class SeedBundle:
         return dataclasses.replace(self, **{field: value})
 
     def as_parameters(self) -> dict[str, int]:
-        """Für das Run-Log."""
+        """For the run log."""
         return {
             "seed/data": self.data_seed,
             "seed/noise": self.noise_seed,
@@ -118,25 +118,25 @@ class SeedBundle:
 
 @dataclass(frozen=True, slots=True)
 class SeedPlan:
-    """Welche Seeds eine Studie fährt, aufgeschlüsselt nach Zufallsquelle.
+    """Which seeds a study runs, broken down by random source.
 
-    Konstruktion **eine Quelle auf einmal** (one-factor-at-a-time): Replikat :math:`k`
-    einer Achse benutzt den Teilseed von Master-Seed :math:`m_k` und für die beiden
-    anderen Achsen die des Referenz-Master-Seeds :math:`m_0`.
+    Construction **one source at a time** (one-factor-at-a-time): replicate :math:`k`
+    of an axis uses the sub-seed of master seed :math:`m_k` and, for the two
+    other axes, those of the reference master seed :math:`m_0`.
 
-    Zwei Eigenschaften, die dadurch entstehen und beide gebraucht werden:
+    Two properties that arise from this and are both needed:
 
-    * Die Teilseeds der Achse ``DATA`` sind **dieselben** wie die von ``JOINT``. Damit
-      lässt sich der simulierte Lauf-Pool zwischen den Achsen wiederverwenden -- das
-      Grey-Box-Modell ist deterministisch, ein Pool hängt nur am ``data_seed``.
-    * Replikat :math:`k = 0` ist auf allen Achsen identisch (das Referenz-Bundle). Es
-      wird nur einmal gerechnet und in jede Achse eingehängt.
+    * The sub-seeds of the axis ``DATA`` are **the same** as those of ``JOINT``. This
+      allows the simulated run pool to be reused between the axes -- the
+      grey-box model is deterministic, a pool depends only on the ``data_seed``.
+    * Replicate :math:`k = 0` is identical on all axes (the reference bundle). It
+      is computed only once and hooked into every axis.
 
-    Die Zerlegung ist damit **nicht** eine Varianzanalyse mit Interaktionen: gemessen
-    werden Haupteffekte. Ob das zulässig ist, prüft
+    The decomposition is thus **not** an analysis of variance with interactions: what is
+    measured are main effects. Whether this is admissible is checked by
     :meth:`~twinlink_ml.evaluation.resolution.VarianceDecomposition.additivity_ratio`
-    gegen die gemeinsame Streuung -- deshalb wird ``JOINT`` mitgefahren und nicht als
-    Summe der Einzelachsen behauptet.
+    against the joint spread -- which is why ``JOINT`` is run as well and not claimed as
+    the sum of the individual axes.
     """
 
     master_seeds: tuple[int, ...] = (1, 2, 3)
@@ -149,16 +149,16 @@ class SeedPlan:
 
     @property
     def n_replicates(self) -> int:
-        """Anzahl Replikate je Achse."""
+        """Number of replicates per axis."""
         return len(self.master_seeds)
 
     @property
     def reference(self) -> SeedBundle:
-        """Referenz-Bundle, Replikat 0 aller Achsen."""
+        """Reference bundle, replicate 0 of all axes."""
         return SeedBundle.from_master(self.master_seeds[0])
 
     def bundle(self, source: VarianceSource, replicate: int) -> SeedBundle:
-        """Seed-Bundle für Achse und Replikatindex."""
+        """Seed bundle for axis and replicate index."""
         if not 0 <= replicate < self.n_replicates:
             raise ValueError(f"replicate {replicate} außerhalb 0..{self.n_replicates - 1}")
         variant = SeedBundle.from_master(self.master_seeds[replicate])
@@ -172,28 +172,28 @@ class SeedPlan:
         return self.reference.replace(source, field)
 
     def bundles(self, source: VarianceSource) -> tuple[SeedBundle, ...]:
-        """Alle Bundles einer Achse, Replikat 0 zuerst."""
+        """All bundles of an axis, replicate 0 first."""
         return tuple(self.bundle(source, k) for k in range(self.n_replicates))
 
     def data_seeds(self, sources: tuple[VarianceSource, ...]) -> tuple[int, ...]:
-        """Alle vorkommenden ``data_seed``-Werte -- die Anzahl teurer Simulationen."""
+        """All occurring ``data_seed`` values -- the number of expensive simulations."""
         seen = {bundle.data_seed for source in sources for bundle in self.bundles(source)}
         return tuple(sorted(seen))
 
     def as_parameters(self) -> dict[str, object]:
-        """Für das Run-Log."""
+        """For the run log."""
         return {"seedplan/master_seeds": list(self.master_seeds)}
 
 
 def seed_everything(seed: int, *, deterministic_torch: bool = True) -> SeedBundle:
-    """Setzt alle globalen Zufallsquellen und liefert das abgeleitete Seed-Bundle.
+    """Sets all global random sources and returns the derived seed bundle.
 
-    :param deterministic_torch: aktiviert deterministische CUDA-Kernel. Kostet
-        Rechenzeit und lässt manche Operationen fehlschlagen -- für die Lernkurven in
-        AP 1 ist der Preis richtig investiert, für lange RL-Läufe später abzuwägen.
+    :param deterministic_torch: enables deterministic CUDA kernels. Costs
+        compute time and makes some operations fail -- for the learning curves in
+        AP 1 the price is well invested, for long RL runs later to be weighed up.
     """
     random.seed(seed)
-    np.random.seed(seed % (2**32))  # noqa: NPY002 - globaler Zustand ist hier der Zweck
+    np.random.seed(seed % (2**32))  # noqa: NPY002 - global state is the purpose here
     os.environ["PYTHONHASHSEED"] = str(seed)
 
     try:

@@ -1,33 +1,33 @@
-r"""Checkpoint-Persistenz für Torch-Modelle (Schritt 6, Teil 2).
+r"""Checkpoint persistence for torch models (step 6, part 2).
 
-Bisher gab es keine gespeicherten Gewichte -- jedes Ergebnis brauchte volles Neutraining.
-Dieses Modul speichert und lädt :class:`~twinlink_ml.models.torch_sequence.TorchSequenceModel`
-und :class:`~twinlink_ml.models.composite.CompositeSequenceModel` (Befund 26: ein Netz je
-Zielgröße) so, dass ein Lauf später exakt reproduzierbar neu geladen werden kann -- Gewichte,
-Skalierer und Provenienz in einer Datei, referenziert aus dem JSONL-Log über
+Previously there were no saved weights -- every result needed full retraining.
+This module saves and loads :class:`~twinlink_ml.models.torch_sequence.TorchSequenceModel`
+and :class:`~twinlink_ml.models.composite.CompositeSequenceModel` (Befund 26: one network per
+target) so that a run can later be reloaded exactly reproducibly -- weights,
+scalers and provenance in one file, referenced from the JSONL log via
 ``checkpoint/path``.
 
-Schema Version 1
+Schema version 1
 -----------------
-Ein ``torch.save``-Dict je ``run_uid`` unter ``artifacts/checkpoints/<run_uid>.pt``.
-Composite-Modelle speichern ein State-Dict je Teilmodell (``submodel_state_dicts``); die
-Skalierer stehen **einmal fürs Ganze** im Dict, weil alle Teilmodelle ihre Sicht
-deterministisch über :meth:`Standardizer.select` vom selben Basis-Paar ableiten (siehe
-``composite.py``-Moduldocstring) -- sie redundant je Teilmodell zu speichern würde nichts
-zusätzliches ausdrücken.
+One ``torch.save`` dict per ``run_uid`` under ``artifacts/checkpoints/<run_uid>.pt``.
+Composite models save one state dict per submodel (``submodel_state_dicts``); the
+scalers are stored **once for the whole** in the dict, because all submodels derive their view
+deterministically via :meth:`Standardizer.select` from the same base pair (see the
+``composite.py`` module docstring) -- storing them redundantly per submodel would express
+nothing additional.
 
-``target_names``/``exogenous_names``/``n_exogenous`` kommen vom Trainings-Datensatz des
-Laufs, nicht aus dem Modell selbst -- das Modell kennt sie erst nach
-``fit()``/``load_checkpoint()``, der Aufrufer (der den Trainings-Datensatz gerade gebaut
-hat) kennt sie vorher. ``exogenous_names`` wird beim Laden nicht gebraucht (die
-Netzarchitektur hängt nur von der Kanal**zahl** ab), steht aber im Checkpoint, damit sich
-ein späterer Aufrufer ohne die zugehörige JSONL-Zeile vergewissern kann, dass sein
-Eingangskanal-Schema zum trainierten Modell passt.
+``target_names``/``exogenous_names``/``n_exogenous`` come from the training dataset of the
+run, not from the model itself -- the model only knows them after
+``fit()``/``load_checkpoint()``, the caller (which has just built the training dataset)
+knows them beforehand. ``exogenous_names`` is not needed when loading (the
+network architecture depends only on the channel **count**), but is stored in the checkpoint
+so that a later caller without the corresponding JSONL line can make sure that its
+input channel schema matches the trained model.
 
-``torch.load(..., weights_only=False)``: bewusst, nicht der sicherere Default. Diese
-Checkpoints sind ausschließlich lokal erzeugte, eigene Artefakte (kein Download, kein
-Transport über eine Vertrauensgrenze) -- ``weights_only=True`` würde die eingebettete
-Provenienz (Tupel, Dicts, Strings) zurückweisen, die kein Tensor ist.
+``torch.load(..., weights_only=False)``: deliberately, not the safer default. These
+checkpoints are exclusively locally generated, own artifacts (no download, no
+transport across a trust boundary) -- ``weights_only=True`` would reject the embedded
+provenance (tuples, dicts, strings), which is not a tensor.
 """
 
 from __future__ import annotations
@@ -65,11 +65,11 @@ def _scaler_from_payload(payload: Mapping[str, Any]) -> Standardizer:
 
 
 def checkpoint_path(directory: Path, run_uid: str) -> Path:
-    """Kanonischer Pfad ``<directory>/<run_uid>.pt``.
+    """Canonical path ``<directory>/<run_uid>.pt``.
 
-    Legt ``directory`` mit ``exist_ok=True`` an -- mehrere Prozesse (Schritt 3, paralleler
-    Sweep) können das gleichzeitig versuchen, ohne dass einer davon mit ``FileExistsError``
-    abbricht.
+    Creates ``directory`` with ``exist_ok=True`` -- several processes (step 3, parallel
+    sweep) can attempt this at the same time without one of them aborting with
+    ``FileExistsError``.
     """
     directory.mkdir(parents=True, exist_ok=True)
     return directory / f"{run_uid}.pt"
@@ -91,7 +91,7 @@ def save_checkpoint(
     seed_bundle_params: Mapping[str, Any],
     git_commit: str,
 ) -> None:
-    """Modell, Skalierer und Provenienz in einer ``.pt``-Datei sichern."""
+    """Save model, scalers and provenance in one ``.pt`` file."""
     import torch
 
     is_composite = isinstance(model, CompositeSequenceModel)
@@ -122,11 +122,11 @@ def save_checkpoint(
 def load_checkpoint(
     path: Path,
 ) -> tuple[TorchSequenceModel | CompositeSequenceModel, dict[str, Any]]:
-    """Modell aus einer ``.pt``-Datei rekonstruieren.
+    """Reconstruct a model from a ``.pt`` file.
 
-    Rückgabe: ``(Modell, Metadaten)`` -- Metadaten enthält alles aus dem gespeicherten
-    Dict außer den Gewichten selbst, plus die rekonstruierten ``Standardizer``-Objekte
-    unter ``input_scaler``/``target_scaler``.
+    Returns: ``(Modell, Metadaten)`` -- the metadata contains everything from the saved
+    dict except the weights themselves, plus the reconstructed ``Standardizer`` objects
+    under ``input_scaler``/``target_scaler``.
     """
     import torch
 
