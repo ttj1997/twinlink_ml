@@ -1,161 +1,161 @@
-# Arbeitsplan ML-Start (TUHH-B-AP 1)
+# Work plan ML start (TUHH-B-AP 1)
 
-> Fassung 5. Reihenfolge bewusst gewählt: erst der durchgehende Strang von Daten bis
-> Metrik, dann die interessanten Architekturen. Nicht umgekehrt.
+> Version 5. Order chosen deliberately: first the continuous thread from data to
+> metric, then the interesting architectures. Not the other way round.
 >
-> Stand: 13.08.2026 · Schritte 1–5 erledigt, Schritt 6 zur Hälfte. Umsetzungsstand und
-> Messwerte: `04_stand_ap1.md`. Prozessannahmen: `02_prozess_setup.md` (Fassung 3, der
-> frühere Nachtrag ist eingearbeitet).
+> Status: 13.08.2026 · steps 1–5 done, step 6 half done. Implementation status and
+> measured values: `04_stand_ap1.md`. Process assumptions: `02_prozess_setup.md` (version 3, the
+> earlier addendum is incorporated).
 
-## Leitidee
+## Guiding idea
 
-Der Wert von AP 1 liegt nicht darin, xLSTM zum Laufen zu bringen, sondern in einem
-**belastbaren Vergleichsrahmen**. Jede Kennzahl, die entscheidet, ob ein Vergleich
-aussagekräftig ist, wird berechnet und mitprotokolliert, nicht angenommen. Bisher haben die
-Schritte widerlegt, was vorher plausibel aussah:
+The value of AP 1 does not lie in getting xLSTM to run, but in a
+**robust comparison framework**. Every figure that decides whether a comparison is
+meaningful is computed and logged, not assumed. So far the
+steps have refuted what looked plausible beforehand:
 
-| Schritt | widerlegte Annahme |
+| Step | refuted assumption |
 |---|---|
-| 1 | „es gibt eine dominante Zeitkonstante" |
-| 1 | „`dE` ist eine dynamische Zielgröße" (R² statisch 0.97) |
-| 2 | „ein PRBS regt alle Kanäle breitbandig an" (Ratenbegrenzung dominiert) |
-| 3 | „gepoolter NRMSE ist eine neutrale Metrik" (Faktor 31 bei der Feuchte) |
-| 4 | „mehr Trainingsläufe helfen" (linearer ARX sättigt bei 16) |
-| 4 | „Δt fein ist besser" (Rollout-Fehler bei konstantem Horizont fast invariant) |
-| 5 | „drei Seeds reichen für einen Architekturvergleich" (Auflösung 10–15 %) |
-| 5 | „`d50` ist eine Zielgröße" (zu 84 % Rauschgrenze) |
-| 5 | „die Feuchte scheitert am Rauschen" (auch rauschfrei schlägt Persistenz den ARX) |
-| 6 | „die Feuchte braucht Nichtlinearität" (das NARX ist schlechter als der lineare ARX) |
-| 6 | „der laufweise NRMSE ist *die* Primärmetrik" (gilt nur bei Inline-Messung) |
-| 6 | „mehr Historie hilft" (Sprung zwischen 1 und 2 Schritten, danach flach) |
-| 6 | „der ARX sättigt, also sättigt die Aufgabe" (die NARX-Kurve läuft bei n=64 weiter) |
+| 1 | "there is one dominant time constant" |
+| 1 | "`dE` is a dynamic target" (R² static 0.97) |
+| 2 | "a PRBS excites all channels broadband" (rate limiting dominates) |
+| 3 | "pooled NRMSE is a neutral metric" (factor 31 for the moisture) |
+| 4 | "more training runs help" (linear ARX saturates at 16) |
+| 4 | "fine Δt is better" (rollout error at constant horizon almost invariant) |
+| 5 | "three seeds are enough for an architecture comparison" (resolution 10–15 %) |
+| 5 | "`d50` is a target" (84 % noise floor) |
+| 5 | "the moisture fails because of the noise" (even noise-free, persistence beats the ARX) |
+| 6 | "the moisture needs nonlinearity" (the NARX is worse than the linear ARX) |
+| 6 | "the run-level NRMSE is *the* primary metric" (holds only with inline measurement) |
+| 6 | "more history helps" (jump between 1 and 2 steps, flat afterwards) |
+| 6 | "the ARX saturates, so the task saturates" (the NARX curve keeps going at n=64) |
 
-Die letzten vier verschieben den Fokus erneut: **die offene Aufgabe ist die
-Fehlerakkumulation im Rollout, nicht die Funktionsklasse und nicht die Fensterlänge.**
-
----
-
-## Schritte 1 bis 5 — **erledigt**
-
-**1 Grey-Box-Prozessmodell.** Vier Zustände, ideal durchmischtes Bett, Gasphase
-quasistationär.
-
-**2 Anregungsdesign.** Sprungfolgen, PRBS als echte m-Sequenz, Rampen, Konstantläufe
-(gleichmäßig verteilt). Sobol statt Latin-Hypercube, Stützstellen als Zweierpotenzen,
-Ratenbegrenzung als Pflichtbestandteil, gestreute Anfangszustände. Regel: Maximaldesign
-genau einmal bauen, alles Weitere über `subset()`.
-
-**3 Vertikaler Durchstich.** Datengenerierung → Fensterung → Splits → Modell → Evaluation →
-Ergebnis-Log. Dreiblock-Fenster, `RunSplitter`-ABC, rollout-zentriertes `SequenceModel`,
-`ExperimentLogger` mit Fingerprints. Δt = 25 s als Standard, nach Rechenkosten gewählt.
-
-**4 Baselines.** Persistenz, statische quadratische Regression, linearer ARX(4,2) mit
-`j = 0`-Term. Ergebnis: `energy_target` ist bei 0.172 zu schlagen, `product_moisture` bei
-0.794 — und letzteres schafft der lineare ARX nicht.
-
-**5 Evaluationsprotokoll.** Varianzzerlegung nach Quelle (`SeedPlan`), Auflösungsvermögen
-(13.2 % / 9.7 % / 14.5 % mit drei Seeds), modellfreie Rauschgrenze (`NoiseFloor`), beide
-Validierungs-Betriebsarten, Lernkurven-Notebook. Nebenertrag: das Sensormodell ist vom
-Integrator entkoppelt (`remeasure`), Rauschvarianten kosten 0.005 s statt 0.78 s.
+The last four shift the focus again: **the open problem is error
+accumulation in the rollout, not the function class and not the window length.**
 
 ---
 
-## Schritt 6 – Architektur-Slots (Teil 1 erledigt, Teil 2 offen)
+## Steps 1 to 5 — **done**
 
-### Teil 1 — der Rahmen, gemessen
+**1 Grey-box process model.** Four states, ideally mixed bed, gas phase
+quasi-stationary.
 
-- **Beobachtbarkeit als Versuchsfaktor.** `ObservationMode.INLINE` und `SOFT_SENSOR`;
-  Maskierung in der Fensterung, nicht im Modell. Parameterfreie Referenz ist Persistenz
-  bzw. Mittelwertvorhersage, Primärmetrik laufweiser Median bzw. gepoolt.
-- **Architektur-Registrierung** (`models/registry.py`) mit Verfügbarkeitsprüfung; nicht
-  implementierte Slots sind deklariert und melden, was fehlt.
-- **Verdikte** (`architecture_verdicts`): eine Differenz erscheint nur zusammen mit der
-  Auflösungsschwelle und als fertig formulierter Satz.
-- **`RandomFeatureNARX`** — nichtlinear, ohne PyTorch, mit echtem Modell-Seed. Ändert
-  gegenüber dem linearen ARX **genau eine** Sache: die Basisfunktion. Damit ist bei einem
-  Gewinn des GRU trennbar, ob er aus Nichtlinearität, gelerntem Zustand oder dem
-  Rollout-Training kommt.
-- **`torch_sequence.py`** mit austauschbarem Kern (GRU / LSTM) hinter *einem* Trainer.
+**2 Excitation design.** Step sequences, PRBS as a true m-sequence, ramps, constant runs
+(evenly distributed). Sobol instead of Latin hypercube, support points as powers of two,
+rate limiting as a mandatory component, scattered initial states. Rule: build the maximum design
+exactly once, everything else via `subset()`.
 
-### Teil 2 — was noch fehlt, und in welcher Reihenfolge
+**3 Vertical slice.** Data generation → windowing → splits → model → evaluation →
+result log. Three-block windows, `RunSplitter` ABC, rollout-centred `SequenceModel`,
+`ExperimentLogger` with fingerprints. Δt = 25 s as standard, chosen by computational cost.
 
-**Vor dem ersten neuronalen Lauf, ohne Ausnahme:**
+**4 Baselines.** Persistence, static quadratic regression, linear ARX(4,2) with
+`j = 0` term. Result: `energy_target` has to be beaten at 0.172, `product_moisture` at
+0.794 — and the linear ARX does not manage the latter.
 
-1. **Sechs übersprungene Torch-Tests grün bekommen.** Darunter die Zusicherung
-   „nullinitialisierter Kopf = Persistenz, exakt" und „GRU und LSTM teilen den Trainer".
-2. **Lernkurven bis 128 und 256** für ARX und NARX. Die NARX-Kurve läuft bei n = 64 noch;
-   ohne diese Punkte wird eine Sättigung berichtet, die nur die lineare Baseline betrifft.
-3. **Δt-Vorstudie wiederholen** mit korrigiertem Feuchteniveau (τ_schnell ≈ 35 s statt
-   13.7 s). Δt = 60 s ist damit nicht mehr ausgeschlossen, und die Sequenzlänge aller
-   Architekturen hängt davon ab.
-4. **Seed-Budget und Relevanzgrenze festlegen.** Drei Seeds lösen 10–15 % auf; für 5 % sind
-   12–26 nötig. Die Relevanzgrenze ist getrennt zu setzen — im Soft-Sensor-Betrieb sind
-   5 % über der Mittelwertvorhersage statistisch nachweisbar und fachlich bedeutungslos.
+**5 Evaluation protocol.** Variance decomposition by source (`SeedPlan`), resolving power
+(13.2 % / 9.7 % / 14.5 % with three seeds), model-free noise floor (`NoiseFloor`), both
+validation operating modes, learning-curve notebook. Side benefit: the sensor model is decoupled from
+the integrator (`remeasure`), noise variants cost 0.005 s instead of 0.78 s.
 
-**Dann die Architekturen**, in dieser Reihenfolge und mit diesem Zweck:
+---
 
-| Slot | Was sie beantworten soll |
+## Step 6 – architecture slots (part 1 done, part 2 open)
+
+### Part 1 — the framework, measured
+
+- **Observability as an experimental factor.** `ObservationMode.INLINE` and `SOFT_SENSOR`;
+  masking in the windowing, not in the model. Parameter-free reference is persistence
+  or mean prediction, primary metric run-level median or pooled, respectively.
+- **Architecture registration** (`models/registry.py`) with availability check; slots not
+  implemented are declared and report what is missing.
+- **Verdicts** (`architecture_verdicts`): a difference appears only together with the
+  resolution threshold and as a ready-formulated sentence.
+- **`RandomFeatureNARX`** — nonlinear, without PyTorch, with a real model seed. Changes
+  **exactly one** thing compared with the linear ARX: the basis function. This makes it possible, if the
+  GRU wins, to separate whether the gain comes from nonlinearity, learned state or
+  rollout training.
+- **`torch_sequence.py`** with an exchangeable core (GRU / LSTM) behind *one* trainer.
+
+### Part 2 — what is still missing, and in which order
+
+**Before the first neural run, without exception:**
+
+1. **Get six skipped torch tests green.** Among them the assertions
+   "zero-initialized head = persistence, exact" and "GRU and LSTM share the trainer".
+2. **Learning curves up to 128 and 256** for ARX and NARX. The NARX curve is still going at n = 64;
+   without these points a saturation is reported that only concerns the linear baseline.
+3. **Repeat the Δt pre-study** with corrected moisture level (τ_fast ≈ 35 s instead of
+   13.7 s). Δt = 60 s is thus no longer ruled out, and the sequence length of all
+   architectures depends on it.
+4. **Fix the seed budget and the relevance limit.** Three seeds resolve 10–15 %; for 5 %,
+   12–26 are needed. The relevance limit has to be set separately — in soft-sensor operation,
+   5 % above the mean prediction is statistically detectable and practically meaningless.
+
+**Then the architectures**, in this order and with this purpose:
+
+| Slot | What it is meant to answer |
 |---|---|
-| GRU | Bringt Rollout-Training gegenüber Ein-Schritt-Anpassung etwas? Das ist die Hauptfrage. |
-| LSTM | Hilft ein zweiter, additiv fortgeschriebener Speicher bei wenigen Läufen, oder ist die zusätzliche Kapazität ein Risiko? |
-| xLSTM (mLSTM-lastig) | Hilft die matrixwertige Speicherzelle bei der langsamen Mode? Erst mLSTM, sLSTM nur bei Bedarf (im Paper xLSTM[7:1]). |
-| Mamba | Ist ein selektiver Zustandsraum bei drei Dekaden Steifigkeit besser als ein Tor-Mechanismus? Als reine PyTorch-Referenz schreiben, nicht über `mamba-ssm` (CUDA-Kernel). **Umgesetzt (Befund 38):** O(1)-Kerneigenschaft bestätigt (Schrittzeit flach über 68 Schritte), aber 5.2-9.7x teurer als GRU/LSTM je nach Vergleichsmethode (Composite-Inferenz 365 µs/Fenster) und erst nach drei Stabilitäts-Fix-Zyklen lauffähig (RMSNorm behebt einen NaN-Kollaps durch unbeschränkt wachsenden Rollout-Eingang; Weight-Decay-Ausschluss für `A_log`/`D` ohne messbaren Effekt bei `n_train=16`). Im reduzierten Einzeldatenpunkt (1 Seed, `n_train=16`) bei `product_moisture_kg_per_kg` (h=36) schlechter als reine Persistenz. |
-| Transformer | Kontrollgruppe ohne rekurrenten Zustand. **Umgesetzt (Befund 37):** bei H=36 (Befund 35, nicht mehr die 24 Schritte von Befund 23) ist die quadratische Attention **nicht** unkritisch -- kein KV-Caching im Decoder-Loop, 14-18x teurer als GRU/LSTM bei Training und Inferenz gleichermaßen, in einem reduzierten Einzeldatenpunkt (1 Seed, `n_train=16`) zugleich schlechter im NRMSE als GRU/LSTM. |
+| GRU | Does rollout training bring anything over one-step fitting? This is the main question. |
+| LSTM | Does a second, additively updated memory help with few runs, or is the additional capacity a risk? |
+| xLSTM (mLSTM-heavy) | Does the matrix-valued memory cell help with the slow mode? mLSTM first, sLSTM only if needed (in the paper xLSTM[7:1]). |
+| Mamba | Is a selective state space better than a gating mechanism given three decades of stiffness? Write as a pure PyTorch reference, not via `mamba-ssm` (CUDA kernel). **Implemented (Befund 38):** O(1) core property confirmed (step time flat over 68 steps), but 5.2-9.7x more expensive than GRU/LSTM depending on the comparison method (composite inference 365 µs/window) and only runnable after three stability-fix cycles (RMSNorm fixes a NaN collapse caused by an unboundedly growing rollout input; weight-decay exclusion for `A_log`/`D` without measurable effect at `n_train=16`). In the reduced single data point (1 seed, `n_train=16`) worse than pure persistence for `product_moisture_kg_per_kg` (h=36). |
+| Transformer | Control group without recurrent state. **Implemented (Befund 37):** at H=36 (Befund 35, no longer the 24 steps of Befund 23) the quadratic attention is **not** uncritical -- no KV caching in the decoder loop, 14-18x more expensive than GRU/LSTM in training and inference alike, and in a reduced single data point (1 seed, `n_train=16`) at the same time worse in NRMSE than GRU/LSTM. |
 
-**Zielgröße: `product_moisture_kg_per_kg` im Mehrschritt-Rollout.** `energy_target` läuft
-als Kontrollgröße mit, `d50_um` ist gestrichen (zu 84 % Rauschgrenze). Begründung nach
-Schritt 6, Teil 1 geschärft: bei der Feuchte scheitern Persistenz-Unterbietung **und**
-Nichtlinearität, der ARX-Rollout akkumuliert Fehler statt sie zu dämpfen. Das ist die
-Lücke, für die Rollout-Training existiert.
+**Target: `product_moisture_kg_per_kg` in the multi-step rollout.** `energy_target` runs
+along as a control quantity, `d50_um` is dropped (84 % noise floor). Rationale sharpened after
+step 6, part 1: for the moisture, undercutting persistence **and**
+nonlinearity both fail; the ARX rollout accumulates errors instead of damping them. That is the
+gap for which rollout training exists.
 
-**Vorgaben für alle Architekturen:**
+**Requirements for all architectures:**
 
-- **Residual-Parametrisierung an einem Anker.** Der Kopf sagt Δy vorher; Nullgewichte
-  entsprechen exakt der parameterfreien Baseline. **Präzisierung aus Befund 21:** wo es
-  keinen Anker gibt (Soft-Sensor-Betrieb), ist der Kopf **direkt** zu parametrisieren —
-  sonst ist die Vorhersage ein Integrator ohne Rückführung und driftet über den Horizont.
-- **Kein Teacher Forcing als Standard.** Primärmetrik ist der Rollout; Parameter für ein
-  Curriculum vorhanden, Voreinstellung 0.0.
-- **Sequenzlänge ist eine Modellentscheidung, keine Hyperparameterfrage.** Bei Δt = 25 s
-  und 600 s Horizont sind es 24 Schritte; die langsame Mode (16 000 s) liegt strukturell
-  außerhalb und wird über die Streuung der Anfangsbedingungen abgedeckt. Befund 23 zeigt,
-  dass die Baselines von mehr als zwei Verzögerungen nicht profitieren — ob ein Modell, das
-  32 Schritte *lesen kann*, davon profitiert, ist eine der offenen Fragen von Teil 2.
-- Physik-Constraints: Nichtnegativität und Wertebereiche als Output-Projektion, Monotonie
-  (∂dE/∂T_in > 0, ∂dE/∂u_gas > 0) über monotone Netze / ICNN.
-
----
-
-## Was bewusst noch NICHT gemacht wird
-
-- **Kein RL.** Erst müssen stabile Mehrschritt-Rollouts stehen. Bei der Feuchte ist der
-  beste Rollout auch rauschfrei und auch nichtlinear schlechter als Persistenz — ein
-  RL-Agent auf diesem Surrogat würde Modellartefakte ausnutzen. Frühestens ab Monat 5–6.
-- **Keine PSD-Aussagen aus dem Grey-Box-Modell.**
-- **`p_nozzle` im RL nicht freigeben**, solange die Kopplung Tropfengröße → Benetzung →
-  Wachstum fehlt. Der Laborbereich ist außerdem enger als der Platzhalter (1.0–1.8 bar
-  gegen 1.0–4.0), was den scheinbaren Spielraum weiter verkleinert.
-- **Kein blind geschriebener Architekturcode.** xLSTM und Mamba wurden erst geschrieben,
-  nachdem geprüft war, dass sie auf dieser Maschine ausgeführt werden können (beide
-  inzwischen umgesetzt, Befund 38 für Mamba).
-- **Keine weitere Literatur.** Die offenen Fragen sind empirisch.
+- **Residual parametrization at an anchor.** The head predicts Δy; zero weights
+  correspond exactly to the parameter-free baseline. **Refinement from Befund 21:** where there is
+  no anchor (soft-sensor operation), the head is to be parametrized **directly** —
+  otherwise the prediction is an integrator without feedback and drifts over the horizon.
+- **No teacher forcing as standard.** Primary metric is the rollout; parameters for a
+  curriculum are present, default 0.0.
+- **Sequence length is a model decision, not a hyperparameter question.** At Δt = 25 s
+  and 600 s horizon it is 24 steps; the slow mode (16,000 s) lies structurally
+  outside and is covered by the scatter of the initial conditions. Befund 23 shows
+  that the baselines do not profit from more than two lags — whether a model that
+  *can read* 32 steps profits from them is one of the open questions of part 2.
+- Physics constraints: non-negativity and value ranges as output projection, monotonicity
+  (∂dE/∂T_in > 0, ∂dE/∂u_gas > 0) via monotonic networks / ICNN.
 
 ---
 
-## Welche Lücken welchen Schritt blockieren
+## What is deliberately NOT done yet
 
-| Lücke | Blockiert | Umgehung bis dahin |
+- **No RL.** Stable multi-step rollouts must be in place first. For the moisture, the
+  best rollout is worse than persistence even noise-free and even nonlinear — an
+  RL agent on this surrogate would exploit model artifacts. Month 5–6 at the earliest.
+- **No PSD statements from the grey-box model.**
+- **Do not release `p_nozzle` in RL** as long as the coupling droplet size → wetting →
+  growth is missing. The lab range is moreover narrower than the placeholder (1.0–1.8 bar
+  vs. 1.0–4.0), which shrinks the apparent leeway further.
+- **No architecture code written blind.** xLSTM and Mamba were only written
+  after it had been checked that they can be executed on this machine (both
+  implemented by now, Befund 38 for Mamba).
+- **No further literature.** The open questions are empirical.
+
+---
+
+## Which gaps block which step
+
+| Gap | Blocks | Workaround until then |
 |---|---|---|
-| Max. Änderungsraten der Stellgrößen | Sequenzlänge | Platzhalter; Δt-Vorstudie zeigt geringe Sensitivität |
-| **Inline-Messbarkeit der Feuchte bei Anwendungspartner** | **welches Ergebnis gilt** | beide Betriebsarten implementiert und berichtet |
-| **Sorptionsisotherme** | Zeitkonstanten, damit Δt und Sequenzlänge | Sensitivitätsrechnung liegt vor (`02_prozess_setup.md`) |
-| Zeitkonstante des Lufterhitzers | dynamischer Anteil von `dE` | Feuchte als Hauptziel |
-| Definition von `dE` | Gültigkeit der Monotonie-Constraints | beide Varianten implementiert |
-| Rechenzeit pro Dyssol-Lauf | Endpunkt der Lernkurven | Referenzwert aus dem Vorprojekt: ~69 h für 128 Läufe |
-| Rauschniveau der Anlagensensoren | ~~Sättigungshöhe~~ | Rangfolge über zwei Größenordnungen stabil; **offen ist der Ausreißerprozess** |
-| **PyTorch in der Entwicklungsumgebung** | **Schritt 6, Teil 2 vollständig** | NARX trägt den Vergleich bis dahin |
+| Max. rates of change of the actions | Sequence length | Placeholder; Δt pre-study shows low sensitivity |
+| **Inline measurability of the moisture at application partner** | **which result holds** | both operating modes implemented and reported |
+| **Sorption isotherm** | Time constants, hence Δt and sequence length | Sensitivity calculation available (`02_prozess_setup.md`) |
+| Time constant of the air heater | Dynamic share of `dE` | Moisture as the main target |
+| Definition of `dE` | Validity of the monotonicity constraints | both variants implemented |
+| Computing time per Dyssol run | End point of the learning curves | Reference value from the previous project: ~69 h for 128 runs |
+| Noise level of the plant sensors | ~~Saturation height~~ | Ranking stable over two orders of magnitude; **the outlier process is open** |
+| **PyTorch in the development environment** | **Step 6, part 2 in full** | NARX carries the comparison until then |
 
-**Fazit:** Ein Schritt ist jetzt echt blockiert — Teil 2 von Schritt 6 braucht eine Maschine
-mit PyTorch. Alles andere läuft. Platzhalter sind zulässig, solange sie explizit und
-versioniert sind, aber zwei von ihnen (Feuchteniveau, Sorptionsisotherme) bestimmen die
-Versuchsplanung mit und sind jetzt als falsch erkannt, nicht nur als unbekannt.
+**Conclusion:** One step is now genuinely blocked — part 2 of step 6 needs a machine
+with PyTorch. Everything else runs. Placeholders are permissible as long as they are explicit and
+versioned, but two of them (moisture level, sorption isotherm) co-determine the
+experiment planning and are now recognized as wrong, not just as unknown.

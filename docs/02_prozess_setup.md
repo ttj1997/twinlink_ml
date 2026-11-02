@@ -1,366 +1,366 @@
-# Prozess-Setup: Wirbelschichtsprühgranulation
+# Process setup: fluidized-bed spray granulation
 
-> **Diese Datei ist die wichtigste im Projektwissen.** Ohne konkrete Wertebereiche und
-> Zeitkonstanten bleibt jede Modellierung generisch.
+> **This file is the most important one in the project knowledge.** Without concrete value ranges and
+> time constants, any modelling remains generic.
 >
-> Stand: 13.08.2026 · Fassung 3. **Der bisherige Nachtrag ist in diese Datei eingearbeitet
-> und damit hinfällig** — eine Datei mit drei Anhängen wird nicht gelesen, sondern
-> überflogen. Der Umsetzungsstand des ML-Teils steht in `04_stand_ap1.md`.
+> Status: 13.08.2026 · version 3. **The previous addendum is incorporated into this file
+> and thus obsolete** — a file with three appendices is not read but
+> skimmed. The implementation status of the ML part is in `04_stand_ap1.md`.
 >
-> Neu in dieser Fassung: die Werte der SPE-Laboranlage aus Kräuter, Zhou & Heinrich
-> (ABS23, TwinGuide) — die erste Quelle im Projekt, die keine Platzhalter enthält.
+> New in this version: the values of the SPE lab plant from Kräuter, Zhou & Heinrich
+> (ABS23, TwinGuide) — the first source in the project that contains no placeholders.
 
-## Status der Zahlenwerte — Legende
+## Status of the numerical values — legend
 
-| Marke | Bedeutung |
+| Mark | Meaning |
 |---|---|
-| `MESS` | gemessen oder von einem Partner bestätigt |
-| `LAB` | **neu**: gemessen an der SPE-Laboranlage im Vorprojekt TwinGuide, aber am **Trockner** und mit MCC-Pellets, nicht an der Granulation und nicht bei Anwendungspartner |
-| `PLH` | Platzhalter, für den Architekturvergleich brauchbar, für Absolutaussagen **nicht** |
-| `MODELL` | aus dem Grey-Box-Modell berechnet — gültig unter den `PLH`-Annahmen |
-| `TODO` | fehlt vollständig |
+| `MESS` | measured or confirmed by a partner |
+| `LAB` | **new**: measured on the SPE lab plant in the previous project TwinGuide, but on the **dryer** and with MCC pellets, not on the granulation and not at application partner |
+| `PLH` | placeholder, usable for the architecture comparison, **not** for absolute statements |
+| `MODELL` | computed from the grey-box model — valid under the `PLH` assumptions |
+| `TODO` | missing completely |
 
-`LAB` ist zwischen `MESS` und `PLH` einzuordnen und ausdrücklich **nicht** dasselbe wie
-`MESS`: die Werte stammen aus einem Trocknungsprozess ohne Feststoffaufbau, mit
-Cellets® 200 als inertem Bettmaterial, im Chargenbetrieb und im Labormaßstab. Für
-Größenordnungen, Wertebereiche und Zeitraster sind sie belastbar; für die Granulation bei
-Anwendungspartner sind sie eine Analogie.
+`LAB` ranks between `MESS` and `PLH` and is explicitly **not** the same as
+`MESS`: the values come from a drying process without solids build-up, with
+Cellets® 200 as inert bed material, in batch operation and at lab scale. For
+orders of magnitude, value ranges and time grids they are robust; for the granulation at
+application partner they are an analogy.
 
-Die maßgebliche, versionierte Fassung aller Werte ist
-`conf/process/greybox_placeholder.yaml`. Diese Datei ist die fachliche Begründung dazu.
+The authoritative, versioned version of all values is
+`conf/process/greybox_placeholder.yaml`. This file is the technical rationale for it.
 
 ---
 
-## Prioritätenliste der offenen Zahlen
+## Priority list of the open numbers
 
-Reihenfolge nach Wirkung auf die Versuchsplanung. Gegenüber Fassung 2 sind drei Punkte
-erledigt und zwei neu.
+Order by effect on the experiment planning. Compared with version 2, three items are
+done and two are new.
 
-| # | Fehlende Zahl | Wer | Warum sie zuerst kommt |
+| # | Missing number | Who | Why it comes first |
 |---|---|---|---|
-| 1 | **Maximale Änderungsraten der Stellgrößen** | Anwendungspartner, SPE | Sie legen die realisierbare Anregungsbandbreite fest. Mit den `PLH`-Werten ist die Ratenbegrenzung dauerhaft aktiv: das Signaldesign wird durch die Aktordynamik ersetzt. |
-| 2 | **Inline-Messbarkeit der Produktfeuchte bei Anwendungspartner** | Anwendungspartner | **Neu auf Platz 2.** Der Architekturvergleich zentriert sich auf die Feuchte; ob sie gemessen wird, entscheidet, ob es eine Vorhersage- oder eine Soft-Sensor-Aufgabe ist. Beide sind implementiert (siehe unten), aber sie haben verschiedene Baselines, verschiedene Primärmetriken und verschiedene Ergebnisse. Im SPE-Labor ist die Messung vorhanden (`LAB`, Mikrowellenresonanz). |
-| 3 | **Sorptionsisotherme des tatsächlichen Stoffsystems** | SPE | **Aufgewertet.** Im Vorprojekt war die falsche Isotherme (Cellets® 500 statt 200) die *Hauptursache* dafür, dass die Dyssol-Vorhersage der Feuchte unbrauchbar war. Das ist keine Feinjustierung, sondern der Unterschied zwischen R² = 0.16 und brauchbar. |
-| 4 | **Zeitkonstante des Lufterhitzers** | Anwendungspartner, SPE | Damit läge die Aktordynamik im Prozessmodell statt in der Anregung. Ohne sie ist `dE` zu 97 % durch eine statische Abbildung erklärt. |
-| 5 | **Definition von `dE`** | Verbund | Momentanleistung [kW] oder spezifischer Verbrauch [kWh/kg]? Die Monotonie-Constraints gelten universell nur für die Momentanleistung. |
-| 6 | Rauschniveau der Anlagensensoren | Anwendungspartner | **Abgestuft.** Die Rangfolge der Modelle ist über zwei Größenordnungen des Rauschniveaus stabil (Rauschstudie aus Schritt 5, siehe `04_stand_ap1.md`, Abschnitt „Das Sensormodell ist zu gutmütig"). Entscheidend bleibt sie nur für `d_50`. |
-| 7 | Betriebsart und Austragsintervalle | Anwendungspartner, SPE | Kontinuierlich mit Füllstandsregelung oder getakteter Austrag? Im SPE-Labor: **Chargenbetrieb** (`LAB`). Ändert eine Zeitkonstante des Systems. |
-| 8 | Zyklon- und Rückführungsverhalten | Anwendungspartner | Im Standard-Anregungsdesign liegt `u_gas` in 13 % der Abtastschritte über `u_t` des mittleren Korns. |
+| 1 | **Maximum rates of change of the actions** | Anwendungspartner, SPE | They fix the achievable excitation bandwidth. With the `PLH` values the rate limiting is permanently active: the signal design is replaced by the actuator dynamics. |
+| 2 | **Inline measurability of the product moisture at application partner** | Anwendungspartner | **New at rank 2.** The architecture comparison centres on the moisture; whether it is measured decides whether it is a prediction task or a soft-sensor task. Both are implemented (see below), but they have different baselines, different primary metrics and different results. In the SPE lab the measurement exists (`LAB`, microwave resonance). |
+| 3 | **Sorption isotherm of the actual material system** | SPE | **Upgraded.** In the previous project the wrong isotherm (Cellets® 500 instead of 200) was the *main cause* of the Dyssol prediction of the moisture being unusable. This is not fine-tuning but the difference between R² = 0.16 and usable. |
+| 4 | **Time constant of the air heater** | Anwendungspartner, SPE | With it, the actuator dynamics would sit in the process model instead of in the excitation. Without it, `dE` is 97 % explained by a static mapping. |
+| 5 | **Definition of `dE`** | Consortium | Instantaneous power [kW] or specific consumption [kWh/kg]? The monotonicity constraints hold universally only for the instantaneous power. |
+| 6 | Noise level of the plant sensors | Anwendungspartner | **Downgraded.** The ranking of the models is stable over two orders of magnitude of the noise level (noise study from step 5, see `04_stand_ap1.md`, section "Das Sensormodell ist zu gutmütig"). It remains decisive only for `d_50`. |
+| 7 | Operating mode and discharge intervals | Anwendungspartner, SPE | Continuous with level control or cyclic discharge? In the SPE lab: **batch operation** (`LAB`). Changes one time constant of the system. |
+| 8 | Cyclone and recirculation behaviour | Anwendungspartner | In the standard excitation design `u_gas` lies above `u_t` of the mean grain in 13 % of the sampling steps. |
 | 9 | Lower limit of the product moisture | Anwendungspartner | New (Befund 77, `09_entwurf_modellbasierte_optimierung.md`). The coupling gain of the two-line optimum requires one line to dry its product to 0.043-0.080 kg/kg against the upper limit 0.144 kg/kg. If a lower limit exists, the mechanism may fall away. |
 | 10 | Condensing heat recovery from the humid exhaust | Anwendungspartner | New (Befund 77). The gain requires a condensing recovery; the apparatus (condensate drain, exchanger material, fouling, pressure loss) is not modelled. Is it feasible in the plant, and at what cost? |
 | 11 | Achievable approach temperature (`dT_min`) of the heat exchangers at the site, including an intermediate circuit | Anwendungspartner | New (Befund 81). The coupling gain of the two lines depends on it: at `dT_min` 20 K none (0 of 6 warm, humid scenarios, the joint optimum equals the line optimum), at 10 K a small, scenario-dependent one (1 of 6 W scenarios above 1.0 kg CO2e/h; up to 3.6 kg CO2e/h at mild, humid air). 20 K is a placeholder of the network model. |
 | 12 | Measured values of the real heat-recovery circuit: inlet and outlet temperatures and flow of the heat transfer medium, storage temperatures (and which medium, at what pressure) | Anwendungspartner | New (Befund NN, `11_partner_model_v4.md`, section 10). The only basis for a real validation of the recovery: the partner model and an independent counter-current calculation differ by a factor of about 1.5 to 2.2 in the recovered heat at the sheet's flows, and without measurements neither can be called right. The medium leaves the recovery exchanger above 100 degC in the partner model. |
 
-**Erledigt gegenüber Fassung 2:** Zeitschrittweite der Anlagendaten (2 s, `LAB`),
-Rechenzeit pro Dyssol-Lauf (siehe unten, `LAB`), Frage nach der geregelten Größe bei
-`u_gas` (Volumenstrom, `LAB`).
+**Done compared with version 2:** time step of the plant data (2 s, `LAB`),
+computing time per Dyssol run (see below, `LAB`), question about the controlled quantity for
+`u_gas` (volume flow, `LAB`).
 
 ---
 
-## Variablenstruktur
+## Variable structure
 
-### Stellgrößen (Actions, vom Regler manipulierbar)
+### Actions (manipulated by the controller)
 
-| Symbol | Größe | Einheit | Min | Max | Betriebspunkt | Max. Änderungsrate | Status |
+| Symbol | Quantity | Unit | Min | Max | Operating point | Max. rate of change | Status |
 |---|---|---|---|---|---|---|---|
-| `T_in` | Zulufttemperatur | °C | 60 | 120 | 90 | 0.5 K/s | `PLH`; Labor 50…100 °C (`LAB`) / Rate `TODO` |
-| `u_gas` | Gasgeschwindigkeit | m/s | 0.8 | 2.5 | 1.6 | 0.05 m/s² | `PLH`; Labor 1.26…1.88 m/s (`LAB`) / Rate `TODO` |
-| `m_spray` | Sprührate | kg/h | 0.4 | 3.0 | 1.5 | 0.02 (kg/h)/s | `PLH`; Labor 0.6…3.9 kg/h (`LAB`) / Rate `TODO` |
-| `p_nozzle` | Düsendruck | bar | 1.0 | 4.0 | 2.5 | 0.05 bar/s | `PLH`; Labor 1.0…1.8 bar (`LAB`) / Rate `TODO` |
+| `T_in` | Inlet air temperature | °C | 60 | 120 | 90 | 0.5 K/s | `PLH`; lab 50…100 °C (`LAB`) / rate `TODO` |
+| `u_gas` | Gas velocity | m/s | 0.8 | 2.5 | 1.6 | 0.05 m/s² | `PLH`; lab 1.26…1.88 m/s (`LAB`) / rate `TODO` |
+| `m_spray` | Spray rate | kg/h | 0.4 | 3.0 | 1.5 | 0.02 (kg/h)/s | `PLH`; lab 0.6…3.9 kg/h (`LAB`) / rate `TODO` |
+| `p_nozzle` | Nozzle pressure | bar | 1.0 | 4.0 | 2.5 | 0.05 bar/s | `PLH`; lab 1.0…1.8 bar (`LAB`) / rate `TODO` |
 
-**Die Platzhalterbereiche sind durch die Laborwerte bestätigt** — mit einer Ausnahme: der
-Düsendruck wird im Labor nur zwischen 1.0 und 1.8 bar gefahren, nicht bis 4.0. Das ist
-mehr als eine Bereichskorrektur: da `p_nozzle` im Grey-Box-Modell reine Kostenwirkung ohne
-Prozessnutzen hat, vergrößert ein zu weiter Bereich künstlich den Spielraum, den ein
-RL-Agent dort zu holen glaubt.
+**The placeholder ranges are confirmed by the lab values** — with one exception: the
+nozzle pressure is run in the lab only between 1.0 and 1.8 bar, not up to 4.0. This is
+more than a range correction: since `p_nozzle` in the grey-box model has a pure cost effect without
+process benefit, a range that is too wide artificially enlarges the leeway that an
+RL agent believes it can exploit there.
 
-**Zu `u_gas`: die Anlage regelt den Volumenstrom, nicht die Geschwindigkeit** (`LAB`).
-Damit ist der offene Punkt aus Fassung 2 entschieden, und die Konsequenz ist unangenehm:
-bei konstantem Volumenstrom ändert sich mit `T_in` die Gasdichte und damit der
-Luft**massen**strom — also die Kopplung zu `dE` und zur Trocknungskapazität. Im Modell ist
-`u_gas` die Leerrohrgeschwindigkeit bei Bettbedingungen; für den Abgleich mit Anlagendaten
-ist die Umrechnung über die Zustandsgleichung nötig, und sie ist **nicht** eine Konstante.
-Umrechnung im Labormaßstab (0.0177 m² angenommen): 80 m³/h → 1.26 m/s, 120 m³/h →
-1.88 m/s. Der Nominalwert 1.6 m/s des Platzhalters liegt mitten darin.
+**On `u_gas`: the plant controls the volume flow, not the velocity** (`LAB`).
+This settles the open item from version 2, and the consequence is unpleasant:
+at constant volume flow, the gas density changes with `T_in` and with it the
+air **mass** flow — i.e. the coupling to `dE` and to the drying capacity. In the model,
+`u_gas` is the superficial velocity at bed conditions; for the comparison with plant data
+the conversion via the equation of state is necessary, and it is **not** a constant.
+Conversion at lab scale (0.0177 m² assumed): 80 m³/h → 1.26 m/s, 120 m³/h →
+1.88 m/s. The nominal value 1.6 m/s of the placeholder lies right in between.
 
-**Ratenbegrenzung, unverändert:** aus `t_switch = Amplitude / max. Änderungsrate` folgt die
-minimal realisierbare Umschaltzeit je Kanal. Bezogen auf die schnellste Prozessmode
-(`tau_fast`, siehe Abschnitt Zeitkonstanten) kann nur `u_gas` sie überhaupt anregen. **Die
-effektiv schnellste beobachtbare Zeitskala wird von den Aktoren gesetzt, nicht vom
-Prozess.**
+**Rate limiting, unchanged:** from `t_switch = Amplitude / max. Änderungsrate` follows the
+minimum achievable switching time per channel. Relative to the fastest process mode
+(`tau_fast`, see section time constants), only `u_gas` can excite it at all. **The
+effectively fastest observable time scale is set by the actuators, not by the
+process.**
 
-**Harte Betriebsgrenzen (Safety-Constraints für RL)**
+**Hard operating limits (safety constraints for RL)**
 
-Fluidisierungsfenster `u_mf < u_gas < u_t`, Wen-Yu bzw. Haider-Levenspiel,
-`rho_p = 1500 kg/m³` (`PLH`), Sphärizität 0.9, 60 °C — Status `MODELL`:
+Fluidization window `u_mf < u_gas < u_t`, Wen-Yu and Haider-Levenspiel, respectively,
+`rho_p = 1500 kg/m³` (`PLH`), sphericity 0.9, 60 °C — status `MODELL`:
 
 | `d_50` | `u_mf` | `u_t` |
 |---|---|---|
-| 150 µm (Keime) | 0.010 m/s | 0.62 m/s |
-| 400 µm (Startbett) | 0.070 m/s | 2.10 m/s |
-| 750 µm (Zielkorn) | 0.222 m/s | 3.57 m/s |
+| 150 µm (nuclei) | 0.010 m/s | 0.62 m/s |
+| 400 µm (start bed) | 0.070 m/s | 2.10 m/s |
+| 750 µm (target grain) | 0.222 m/s | 3.57 m/s |
 | 1000 µm | 0.350 m/s | 4.36 m/s |
 
-**Das Fenster ist zustandsabhängig.** Zwischen 400 und 750 µm wächst `u_mf` um Faktor 3;
-ein fester unterer Grenzwert führt am Chargenende zum Zusammenbruch der Fluidisierung.
-Für RL: die Action-Bounds sind eine Funktion des Zustands.
+**The window is state-dependent.** Between 400 and 750 µm, `u_mf` grows by a factor of 3;
+a fixed lower limit leads to the collapse of fluidization at the end of the batch.
+For RL: the action bounds are a function of the state.
 
-Weitere Grenzen: Abluftfeuchte ≤ Sättigungsfeuchte (strukturell erfüllt),
-Partikelfeuchte ≥ Gleichgewichtsfeuchte, max. Bettfeuchte vor Agglomerationsrisiko
-`TODO`. Im Labor wurde die Überfeuchtungsgrenze **absichtlich überschritten** (Charge 4:
-niedrige Betttemperatur, niedriger Luftstrom, hohe Sprührate → 22 % Feuchte, `LAB`) — es
-gibt also einen gemessenen Referenzpunkt für den Zusammenbruch, wenn auch nur einen.
+Further limits: exhaust air humidity ≤ saturation humidity (structurally satisfied),
+particle moisture ≥ equilibrium moisture, max. bed moisture before agglomeration risk
+`TODO`. In the lab the over-wetting limit was **deliberately exceeded** (batch 4:
+low bed temperature, low air flow, high spray rate → 22 % moisture, `LAB`) — so there
+is a measured reference point for the collapse, if only one.
 
-### Störgrößen (exogen, messbar aber nicht steuerbar)
+### Disturbances (exogenous, measurable but not controllable)
 
-| Symbol | Größe | Einheit | Bereich | Nominal | Status |
+| Symbol | Quantity | Unit | Range | Nominal | Status |
 |---|---|---|---|---|---|
-| `T_amb` | Umgebungstemperatur | °C | 5 … 35 | 20 | `PLH`; Labor 20.5 … 24.5 (`LAB`) |
-| `phi_amb` | Umgebungsfeuchte (rel.) | – | 0.25 … 0.85 | 0.50 | `PLH`; Labor 0.08 … 0.70 (`LAB`) |
-| `w_solid` | Suspensionsfeststoffanteil | – | 0.20 … 0.40 | 0.30 | `PLH` (Labor: reines Wasser, also 0) |
+| `T_amb` | Ambient temperature | °C | 5 … 35 | 20 | `PLH`; lab 20.5 … 24.5 (`LAB`) |
+| `phi_amb` | Ambient humidity (rel.) | – | 0.25 … 0.85 | 0.50 | `PLH`; lab 0.08 … 0.70 (`LAB`) |
+| `w_solid` | Suspension solid fraction | – | 0.20 … 0.40 | 0.30 | `PLH` (lab: pure water, so 0) |
 
-**Der Labor-Bereich der Umgebungsfeuchte ist weiter als der Platzhalter** (bis 0.08 herab).
-Das ist relevant, weil `phi_amb` über die Zulufttrockenheit direkt in die
-Trocknungskapazität eingeht — der Platzhalter unterschätzt die Streuung der wichtigsten
-Störgröße.
+**The lab range of the ambient humidity is wider than the placeholder** (down to 0.08).
+This is relevant because `phi_amb` enters the drying capacity directly via the dryness of the
+inlet air — the placeholder underestimates the scatter of the most important
+disturbance.
 
-**Der Tag/Nacht-Indikator bleibt draußen.** Er ist keine physikalische Eingangsgröße; er
-wirkt ausschließlich über `T_amb` und `phi_amb`. Als Modellinput wäre er ein Kanal ohne
-kausale Wirkung, den ein Netz als Abkürzung missbraucht.
+**The day/night indicator stays out.** It is not a physical input quantity; it
+acts exclusively via `T_amb` and `phi_amb`. As a model input it would be a channel without
+causal effect that a network misuses as a shortcut.
 
-**Zustandsgrößen, nicht Störgrößen:** `d_50`, `T_part`, `X_part`. Eine Störgröße wird dem
-Modell als Eingang gegeben, eine Zustandsgröße muss es propagieren. Wer Zustandsgrößen
-einspeist, baut ein Modell, das an der Anlage vollständige Zustandsmessung braucht.
+**State variables, not disturbances:** `d_50`, `T_part`, `X_part`. A disturbance is given to the
+model as an input; a state variable has to be propagated by it. Whoever feeds in state variables
+builds a model that needs full state measurement at the plant.
 
-| Zustandsgröße | Bereich Platzhalter | Bereich Labor (`LAB`) | Bemerkung |
+| State variable | Placeholder range | Lab range (`LAB`) | Remark |
 |---|---|---|---|
-| `d_50` | 250 … 900 µm (Startstreuung) | Cellets® 200, konstant | im Labor ohne Wachstum |
-| `T_part` | 35 … 80 °C | 33.6 … 92.4 °C | Platzhalter zu eng |
-| `X_part` | 0.003 … 0.020 kg/kg | **0.033 … 0.29 kg/kg** | **Platzhalter um Faktor 10 zu trocken** |
+| `d_50` | 250 … 900 µm (initial scatter) | Cellets® 200, constant | in the lab without growth |
+| `T_part` | 35 … 80 °C | 33.6 … 92.4 °C | placeholder too narrow |
+| `X_part` | 0.003 … 0.020 kg/kg | **0.033 … 0.29 kg/kg** | **placeholder too dry by a factor of 10** |
 
-### Der Feuchtebereich ist der wichtigste Korrekturbedarf
+### The moisture range is the most important correction
 
-Im Labor liegt die Partikelfeuchte zwischen 3.2 und 22.5 % bezogen auf die **feuchte**
-Masse, also 0.033 bis 0.29 kg/kg trocken (`LAB`). Der Platzhalter im Modell reicht von
-0.003 bis 0.020 kg/kg — **eine Größenordnung zu trocken.** Cellets® sind mikrokristalline
-Cellulose und stark sorptiv; ein Granulat aus dem Anwendungspartner-Sortiment kann trockener sein.
-Die Zahl ist deshalb nicht ungeprüft zu übernehmen, aber die Richtung ist eindeutig.
+In the lab the particle moisture lies between 3.2 and 22.5 % relative to the **wet**
+mass, i.e. 0.033 to 0.29 kg/kg dry (`LAB`). The placeholder in the model ranges from
+0.003 to 0.020 kg/kg — **an order of magnitude too dry.** Cellets® are microcrystalline
+cellulose and strongly sorptive; granules from the application partner's product range may be drier.
+The number is therefore not to be adopted unchecked, but the direction is unambiguous.
 
-**Das ist keine kosmetische Korrektur, sondern verschiebt die Zeitkonstanten.** Nachgerechnet
-am selben Betriebspunkt, mit `X_cr` und `X_eq` proportional angehoben (Status `MODELL`):
+**This is not a cosmetic correction; it shifts the time constants.** Recomputed
+at the same operating point, with `X_cr` and `X_eq` raised proportionally (status `MODELL`):
 
-| Fall | `X_cr` / `X_eq` / `X_0` | τ schnell | τ zweite Mode | Steifigkeit |
+| Case | `X_cr` / `X_eq` / `X_0` | τ fast | τ second mode | Stiffness |
 |---|---|---|---|---|
-| Platzhalter | 0.020 / 0.003 / 0.005 | **13.7 s** | **85 s** | 1171 |
-| Laborniveau | 0.20 / 0.03 / 0.05 | 36.8 s | 371 s | 435 |
-| Laborniveau, hoch | 0.29 / 0.033 / 0.08 | 33.3 s | 600 s | 480 |
+| Placeholder | 0.020 / 0.003 / 0.005 | **13.7 s** | **85 s** | 1171 |
+| Lab level | 0.20 / 0.03 / 0.05 | 36.8 s | 371 s | 435 |
+| Lab level, high | 0.29 / 0.033 / 0.08 | 33.3 s | 600 s | 480 |
 
-Die schnellste Mode wird um Faktor 2.5 **langsamer** und die zweite um Faktor 4 bis 7. Der
-Grund ist physikalisch und nicht numerisch: bei 0.5 % Feuchte arbeitet das Bett tief im
-zweiten Trocknungsabschnitt (`nu` ≈ 0.06, die Trocknungskapazität der Luft übersteigt den
-Wassereintrag um mehr als eine Größenordnung), bei 5 % nicht mehr. **Die in Fassung 2
-berichtete Zeitkonstante von 9.5 s ist damit ein Artefakt eines zu trockenen
-Platzhalters**, und mit ihr die Aussage „Δt = 60 s scheitert an der Feuchte-Mode".
+The fastest mode becomes **slower** by a factor of 2.5 and the second by a factor of 4 to 7. The
+reason is physical and not numerical: at 0.5 % moisture the bed operates deep in the
+second drying period (`nu` ≈ 0.06, the drying capacity of the air exceeds the
+water input by more than an order of magnitude), at 5 % no longer. **The time constant of 9.5 s
+reported in version 2 is thus an artifact of a placeholder that is too
+dry**, and with it the statement "Δt = 60 s fails because of the moisture mode".
 
-Konsequenzen, die vor der nächsten Δt-Entscheidung zu ziehen sind:
+Consequences to be drawn before the next Δt decision:
 
-- Δt = 60 s ist bei realistischem Feuchteniveau **nicht** mehr disqualifiziert: 10 Schritte
-  auf τ ≈ 35 s sind vertretbar. Das halbiert die Sequenzlänge gegenüber Δt = 25 s.
-- Die Steifigkeit fällt von 1171 auf ~450. Der Abstand zwischen schnellster und langsamster
-  Mode bleibt drei Dekaden, aber die Spreizung innerhalb der schnellen Moden schrumpft.
-- **Die Δt-Vorstudie ist mit korrigierter Sorptionsisotherme zu wiederholen.** Sie ist
-  billig (drei Läufe je Δt), und ihr Ergebnis bestimmt die Sequenzlänge aller
-  Architekturen.
+- At a realistic moisture level, Δt = 60 s is **no longer** disqualified: 10 steps
+  per τ ≈ 35 s are acceptable. This halves the sequence length compared with Δt = 25 s.
+- The stiffness falls from 1171 to ~450. The gap between the fastest and the slowest
+  mode remains three decades, but the spread within the fast modes shrinks.
+- **The Δt pre-study is to be repeated with a corrected sorption isotherm.** It is
+  cheap (three runs per Δt), and its result determines the sequence length of all
+  architectures.
 
-### Zielgröße(n)
+### Target(s)
 
-| Symbol | Größe | Einheit | Status | Anmerkung |
+| Symbol | Quantity | Unit | Status | Note |
 |---|---|---|---|---|
-| `dE` | Energieverbrauch | kW **oder** kWh/kg | Definition `TODO` | primäre Zielgröße des Antrags |
-| `X_prod` | Produktfeuchte | kg/kg | Zielgröße des Architekturvergleichs | im Modell = Bettfeuchte |
-| `PSD` | Partikelgrößenverteilung | – | ab AP 2; Ziel 10 % | **mit dem Grey-Box-Modell nicht adressierbar** |
-| `d_50` | mittlere Korngröße | µm | **aus dem Vergleich genommen** | frühe Messung ergab ~84 % Rauschanteil an der Streuung (**nicht reproduzierbar**: die Originalzahl stand in einer inzwischen umnummerierten Fassung von `04_stand_ap1.md`, Nummerierung 1–15 dort nicht mehr erhalten, siehe Befund 26 Teil 4, und ist nicht mehr eindeutig einer Stelle zuordenbar). Mit an dieser Sitzung reproduzierten Zahlen unabhängig bestätigt: FIR-R²_holdout durchgehend negativ (−0.042 bei k=1 bis −0.123 bei k=43, `artifacts/runs/probe_e2_e3_e4_lag_depth.json`), LSTM-Seed-Spannweite bei h=1 ≈0 (Kollaps auf Mittelwertsprädiktor, `artifacts/runs/probe_f3_f4_arch_holdout_inference.json`) -- siehe `experiments.py::DataSpec.target_names`-Docstring |
+| `dE` | Energy consumption | kW **or** kWh/kg | Definition `TODO` | primary target of the proposal |
+| `X_prod` | Product moisture | kg/kg | Target of the architecture comparison | in the model = bed moisture |
+| `PSD` | Particle size distribution | – | from AP 2; target 10 % | **cannot be addressed with the grey-box model** |
+| `d_50` | Mean grain size | µm | **removed from the comparison** | early measurement gave ~84 % noise share of the scatter (**not reproducible**: the original number was in a since renumbered version of `04_stand_ap1.md`, numbering 1–15 no longer preserved there, see Befund 26 part 4, and can no longer be assigned unambiguously to one place). Independently confirmed with numbers reproduced in this session: FIR R²_holdout negative throughout (−0.042 at k=1 to −0.123 at k=43, `artifacts/runs/probe_e2_e3_e4_lag_depth.json`), LSTM seed range at h=1 ≈0 (collapse to a mean predictor, `artifacts/runs/probe_f3_f4_arch_holdout_inference.json`) -- see the `experiments.py::DataSpec.target_names` docstring |
 
-**Vorhersageaufgabe:** Zielgröße bei `t+1` aus Stell-, Stör- und Zielgrößen der Schritte
-`0..t` — **falls** die Zielgröße gemessen wird. Andernfalls aus Stell- und Störgrößen
-allein; das ist die Soft-Sensor-Aufgabe, siehe unten.
+**Prediction task:** target at `t+1` from actions, disturbances and targets of steps
+`0..t` — **if** the target is measured. Otherwise from actions and disturbances
+alone; that is the soft-sensor task, see below.
 
-**Statischer Varianzanteil** — Bestimmtheitsmaß einer quadratischen Regression auf die
-*aktuellen* Stell- und Störgrößen ohne Historie. Die Kennzahl ist **keine
-Prozesseigenschaft**, sondern eine Eigenschaft von Prozess *und* Anregungsdesign, und
-immer mit dem Design zu berichten (Status `MODELL`):
+**Static variance share** — coefficient of determination of a quadratic regression on the
+*current* actions and disturbances without history. The figure is **not a
+process property** but a property of the process *and* the excitation design, and
+is always to be reported with the design (status `MODELL`):
 
-| Größe | R² mit Streuung (Standarddesign, Platzhalter-Config) | R² GAB, reproduziert (fp `82f65f576a2e5253`, Seeds 20260812/13/14, n_runs=32, Median) |
+| Quantity | R² with scatter (standard design, placeholder config) | R² GAB, reproduced (fp `82f65f576a2e5253`, seeds 20260812/13/14, n_runs=32, median) |
 |---|---|---|
-| `dE` (Momentanleistung) | 0.974 | 0.972 |
-| Betttemperatur | 0.843 | 0.768 |
-| Produktfeuchte | 0.274 | 0.508 |
+| `dE` (instantaneous power) | 0.974 | 0.972 |
+| Bed temperature | 0.843 | 0.768 |
+| Product moisture | 0.274 | 0.508 |
 | `d_50` | **0.100** | 0.144 |
 
-Vormalige Spalte "R² ohne Streuung der Anfangszustände" entfernt -- mit `report_baselines.py`
-in der bisherigen Fassung nicht erzeugbar (kein Schalter für
-`randomise_initial_conditions`, siehe Skript-Docstring dort) und die Provenienz der
-Originalzahlen nicht rekonstruierbar. Historische Werte, nicht als falsch markiert,
-sondern als nicht reproduzierbar: `dE` 0.987, Betttemperatur 0.87, Produktfeuchte 0.43,
+Former column "R² without scatter of the initial states" removed -- cannot be produced with `report_baselines.py`
+in its previous version (no switch for
+`randomise_initial_conditions`, see the script docstring there) and the provenance of the
+original numbers cannot be reconstructed. Historical values, not marked as wrong
+but as not reproducible: `dE` 0.987, bed temperature 0.87, product moisture 0.43,
 `d_50` 0.72.
 
-**Die dynamischen Größen sind die Qualitätsgrößen, nicht der Energieverbrauch.** Die
-Heizleistung ist algebraisch in `(T_in, u_gas, T_amb)`; der Prozesszustand wirkt nur über
-Gasdichte und Bettdruckverlust. Folgen: der Architekturvergleich braucht mindestens eine
-Qualitätsgröße, und die Pflicht-Baselines brauchen eine **statische Regression** — für
-`dE` ist Persistenz die falsche Referenz.
+**The dynamic quantities are the quality quantities, not the energy consumption.** The
+heating power is algebraic in `(T_in, u_gas, T_amb)`; the process state acts only via
+gas density and bed pressure drop. Consequences: the architecture comparison needs at least one
+quality quantity, and the mandatory baselines need a **static regression** — for
+`dE`, persistence is the wrong reference.
 
 ---
 
-## Beobachtbarkeit: zwei Betriebsarten, nicht eine
+## Observability: two operating modes, not one
 
-Neu in dieser Fassung, weil es die Aufgabe ändert und nicht nur ihre Umsetzung.
+New in this version, because it changes the task and not just its implementation.
 
-| | Inline gemessen | Soft Sensor |
+| | Measured inline | Soft sensor |
 |---|---|---|
-| Historie enthält vergangene Zielwerte | ja | nein |
-| Niveau des Laufs | steht in der Historie | Teil der Aufgabe |
-| parameterfreie Baseline | Persistenz | Mittelwertvorhersage |
-| Primärmetrik | NRMSE laufweiser Median | **NRMSE gepoolt** |
+| History contains past target values | yes | no |
+| Level of the run | is in the history | part of the task |
+| Parameter-free baseline | persistence | mean prediction |
+| Primary metric | NRMSE run-level median | **NRMSE pooled** |
 
-**Warum die Primärmetrik wechselt.** Der Befund aus Schritt 3 lautete: der gepoolte NRMSE
-ist zu klein, weil die gepoolte Streuung die Niveauunterschiede zwischen den Läufen
-enthält, „und die muss kein Modell vorhersagen, sie stehen in der Fensterhistorie". Der
-zweite Halbsatz ist eine **Voraussetzung**: er gilt nur bei Inline-Messung. Ohne sie ist
-das Niveau Teil der Aufgabe, und die laufweise Normierung wird zusätzlich instabil — bei
-einem Lauf mit kleiner Eigenstreuung geht der Nenner gegen Null. Gemessen: eine
-parameterfreie Mittelwertvorhersage erreicht laufweise Mediane über 3 mit
-Seed-Spannweiten über 19, gepoolt dagegen sauber 1.01.
+**Why the primary metric changes.** The finding from step 3 was: the pooled NRMSE
+is too small because the pooled scatter contains the level differences between the runs,
+"and no model has to predict those, they are in the window history". The
+second half-sentence is a **precondition**: it holds only with inline measurement. Without it,
+the level is part of the task, and the run-level normalization additionally becomes unstable — for
+a run with small intrinsic scatter the denominator goes to zero. Measured: a
+parameter-free mean prediction reaches run-level medians above 3 with
+seed ranges above 19, whereas pooled it is a clean 1.01.
 
-**Stand der Messbarkeit.** Im SPE-Labor wird die Partikelfeuchte inline über
-**Mikrowellenresonanz** gemessen (TEWS MW4200, Sensor SPW-043-020-C), kalibriert gegen
-thermogravimetrische Referenzproben (`LAB`). Für die Anwendungspartner-Anlage ist es offen — und
-das ist Priorität 2 der Gesamtliste.
+**State of measurability.** In the SPE lab the particle moisture is measured inline via
+**microwave resonance** (TEWS MW4200, sensor SPW-043-020-C), calibrated against
+thermogravimetric reference samples (`LAB`). For the application partner's plant it is open — and
+that is priority 2 of the overall list.
 
-| Größe | In Dyssol | Labor SPE | Anwendungspartner-Anlage |
+| Quantity | In Dyssol | SPE lab | Application partner's plant |
 |---|---|---|---|
-| Abluftfeuchte | ja | **ja** (`LAB`) | `TODO` |
-| Ablufttemperatur | ja | **ja** (`LAB`) | `TODO` |
-| Zulufttemperatur nach Erhitzer | ja | **ja** (`LAB`) | `TODO` |
-| Partikeltemperatur im Bett | ja | **ja** (`LAB`) | `TODO` |
-| Partikelfeuchte (inline) | ja | **ja, Mikrowellenresonanz** (`LAB`) | `TODO` **dringend** |
-| Druckverlust Filter / Expansionsraum | ja | **ja** (`LAB`) | `TODO` |
-| Volumenströme Fluidisierung und Zerstäubung | ja | **ja** (`LAB`) | `TODO` |
-| PSD (inline) | ja | nein (offline CAMSIZER) | `TODO` |
-| Stromverbrauch je Aggregat | ja | `TODO` | `TODO` |
+| Exhaust air humidity | yes | **yes** (`LAB`) | `TODO` |
+| Exhaust air temperature | yes | **yes** (`LAB`) | `TODO` |
+| Inlet air temperature after heater | yes | **yes** (`LAB`) | `TODO` |
+| Particle temperature in the bed | yes | **yes** (`LAB`) | `TODO` |
+| Particle moisture (inline) | yes | **yes, microwave resonance** (`LAB`) | `TODO` **urgent** |
+| Pressure drop filter / expansion chamber | yes | **yes** (`LAB`) | `TODO` |
+| Volume flows fluidization and atomization | yes | **yes** (`LAB`) | `TODO` |
+| PSD (inline) | yes | no (offline CAMSIZER) | `TODO` |
+| Power consumption per unit | yes | `TODO` | `TODO` |
 
-Elf Inline-Kanäle im Labor (`LAB`) — das ist mehr, als das Grey-Box-Modell derzeit als
-Eingang anbietet, und deutlich mehr als die vier Stell- plus drei Störgrößen der aktuellen
-Konfiguration. Für AP 2 heißt das: der Merkmalsraum an der realen Anlage ist reicher, nicht
-ärmer.
+Eleven inline channels in the lab (`LAB`) — that is more than the grey-box model currently offers as
+input, and considerably more than the four actions plus three disturbances of the current
+configuration. For AP 2 this means: the feature space at the real plant is richer, not
+poorer.
 
 ---
 
-## Zeitliche Auflösung
+## Temporal resolution
 
-| Parameter | Wert | Status |
+| Parameter | Value | Status |
 |---|---|---|
-| Zeitschrittweite Anlagendaten (SPE-Labor) | **2 s** | `LAB` |
-| Zeitschrittweite Anlagendaten (Anwendungspartner) | `TODO` | |
-| Zeitschrittweite Dyssol | `TODO` | von TUHH-A erfragen |
-| Typische Chargendauer (SPE-Labor) | **1.5 … 3.9 h**, im Mittel 1.8 h | `LAB` |
-| Simulationshorizont im ML-Modell | 8 h pro Lauf | `PLH` — **zu lang, siehe unten** |
-| Rechenzeit Dyssol (Trocknermodell, 10 Chargen ≈ 18 h Prozesszeit) | **17 500 s**, also ~0.27 s Rechenzeit pro Sekunde Prozesszeit | `LAB` |
-| Abtastzeit ML-Pipeline | 25 s | `MODELL`, zu überprüfen |
+| Time step of plant data (SPE lab) | **2 s** | `LAB` |
+| Time step of plant data (application partner) | `TODO` | |
+| Time step of Dyssol | `TODO` | to be asked from TUHH-A |
+| Typical batch duration (SPE lab) | **1.5 … 3.9 h**, on average 1.8 h | `LAB` |
+| Simulation horizon in the ML model | 8 h per run | `PLH` — **too long, see below** |
+| Computing time Dyssol (dryer model, 10 batches ≈ 18 h process time) | **17,500 s**, i.e. ~0.27 s computing time per second of process time | `LAB` |
+| Sampling time ML pipeline | 25 s | `MODELL`, to be checked |
 
-**Die angesetzte Laufdauer ist zu lang.** 8 h je Lauf gegen 1.8 h im Labor ist Faktor 4.4.
-Das ist nicht nur eine Kostenfrage: die langsame Mode (Verweilzeit des Feststoffs,
-~16 000 s ≈ 4.4 h) **passt gar nicht in eine Laborcharge**. In AP 2 ist Kornwachstum über
-eine Charge damit ein angeschnittener Übergangsvorgang und kein Beharrungszustand — und
-die Streuung der Anfangsbedingungen zwischen den Läufen, mit der die langsame Mode im
-Anregungsdesign abgedeckt wird, ist dort nicht Kür, sondern die einzige Quelle dieser
-Information.
+**The assumed run duration is too long.** 8 h per run against 1.8 h in the lab is a factor of 4.4.
+This is not only a question of cost: the slow mode (residence time of the solids,
+~16,000 s ≈ 4.4 h) **does not fit into a lab batch at all**. In AP 2, grain growth over
+a batch is thus a truncated transient and not a steady state — and
+the scatter of the initial conditions between the runs, with which the slow mode is covered in the
+excitation design, is not an optional extra there but the only source of this
+information.
 
-**Die Dyssol-Rechenzeit begrenzt den Endpunkt der Lernkurven.** Aus 0.27 s Rechenzeit pro
-Sekunde Prozesszeit folgt für 128 Läufe à 2 h Prozesszeit rund **69 h auf einem Kern** —
-und das für ein Trocknermodell ohne Feststoffaufbau und ohne PSD. Das Granulationsmodell
-wird langsamer sein. Zum Vergleich: das Grey-Box-Modell erzeugt 128 Läufe in etwa 40 s,
-also rund Faktor 6000 schneller. Damit ist die Reihenfolge des Arbeitsplans bestätigt — die
-Methodik gehört auf das Grey-Box-Modell, und Dyssol-Läufe sind ein knappes Gut, dessen
-Sampling-Design **vor** der Produktion festzulegen ist.
+**The Dyssol computing time limits the end point of the learning curves.** From 0.27 s computing time per
+second of process time follows, for 128 runs of 2 h process time each, about **69 h on one core** —
+and that for a dryer model without solids build-up and without PSD. The granulation model
+will be slower. For comparison: the grey-box model generates 128 runs in about 40 s,
+i.e. roughly a factor of 6000 faster. This confirms the order of the work plan — the
+methodology belongs on the grey-box model, and Dyssol runs are a scarce resource whose
+sampling design is to be fixed **before** production.
 
-**Es gibt keine „dominante Zeitkonstante"** (Status `MODELL`, Platzhalter-Feuchteniveau —
-siehe die Korrektur oben):
+**There is no "dominant time constant"** (status `MODELL`, placeholder moisture level —
+see the correction above):
 
-| Mode | τ | physikalische Ursache |
+| Mode | τ | Physical cause |
 |---|---|---|
-| Partikelfeuchte + Betttemperatur (gekoppeltes Paar, siehe Anmerkung) | 13.7 s (Platzhalter) / ~35 s (Laborniveau) / 30.23 s & 359.93 s (GAB, Eigenwerte) | Trocknungskapazität der Luft und Wärmekapazität des Betts -- unter GAB nicht mehr sauber trennbar |
-| Massenregelung | 600 s | Füllstandsregelung (Konfigurationswert, kein Prozess) |
-| Partikelanzahl / Kornwachstum | 16 000 s | Verweilzeit des Feststoffs |
+| Particle moisture + bed temperature (coupled pair, see note) | 13.7 s (placeholder) / ~35 s (lab level) / 30.23 s & 359.93 s (GAB, eigenvalues) | Drying capacity of the air and heat capacity of the bed -- no longer cleanly separable under GAB |
+| Mass control | 600 s | Level control (configuration value, not a process) |
+| Particle number / grain growth | 16,000 s | Residence time of the solids |
 
-**Anmerkung GAB.** Unter der GAB-Sorptionsisotherme (Befund 34) existiert keine
-wohldefinierte einzelne thermische Zeitkonstante des Betts: die geschlossene Form
-τ_T = 84.75 s (`τ_T = C/(ṁ_L·c_pL + UA)`) liegt zwischen den beiden Eigenwerten
-τ₁ = 30.23 s und τ₂ = 359.93 s und trifft keinen von beiden -- Feuchte- und
-Temperaturdynamik sind unter GAB gekoppelt. Die Aufteilung "Partikelfeuchte" /
-"Betttemperatur" als getrennte Zeilen ist deshalb nur für die Platzhalter-/Laborwerte
-(konstante Gleichgewichtsfeuchte) gültig, nicht für GAB
+**Note on GAB.** Under the GAB sorption isotherm (Befund 34) there is no
+well-defined single thermal time constant of the bed: the closed form
+τ_T = 84.75 s (`τ_T = C/(ṁ_L·c_pL + UA)`) lies between the two eigenvalues
+τ₁ = 30.23 s and τ₂ = 359.93 s and matches neither of them -- moisture and
+temperature dynamics are coupled under GAB. The split into "particle moisture" /
+"bed temperature" as separate rows is therefore valid only for the placeholder/lab values
+(constant equilibrium moisture), not for GAB
 (`artifacts/runs/probe_a2_a3_static_variance_time_constants.json`).
 
-**Die Sequenzlänge ist die Entscheidung, welche Mode modelliert wird, keine
-Hyperparameterfrage.** Die langsame Mode ist innerhalb eines Laufs nicht durch die
-Stellgrößen anregbar (monotones Wachstum ohne Rückführung); sie wird über die Streuung der
-Anfangsbedingungen abgedeckt.
+**The sequence length is the decision which mode is modelled, not a
+hyperparameter question.** The slow mode cannot be excited within a run by the
+actions (monotonic growth without feedback); it is covered by the scatter of the
+initial conditions.
 
-**Zur Wahl von Δt** (Status `MODELL`, konstanter physikalischer Horizont von 600 s, Fenster
-800 s, linearer ARX, laufweiser Median):
+**On the choice of Δt** (status `MODELL`, constant physical horizon of 600 s, window
+800 s, linear ARX, run-level median):
 
-| Δt | Schritte pro Fenster | Persistenz h=1 (`dE`) | Rollout 600 s `dE` | Rollout 600 s `X_prod` |
+| Δt | Steps per window | Persistence h=1 (`dE`) | Rollout 600 s `dE` | Rollout 600 s `X_prod` |
 |---|---|---|---|---|
 | 5 s | 160 | 0.069 | 0.177 | 0.727 |
 | **25 s** | **32** | 0.259 | **0.192** | **0.688** |
 | 60 s | 13 | 0.362 | 0.162 | 1.404 |
 
-Der **Ein-Schritt**-Fehler steigt monoton mit Δt, der **Rollout**-Fehler über denselben
-physikalischen Horizont ist fast invariant. **Δt ist nach Rechenkosten und Sequenzlänge zu
-wählen, nicht nach Genauigkeit.** Der Ausschluss von Δt = 60 s stützte sich auf die
-Feuchte-Mode von 9.5 s und ist mit dem korrigierten Feuchteniveau neu zu prüfen.
+The **one-step** error rises monotonically with Δt; the **rollout** error over the same
+physical horizon is almost invariant. **Δt is to be chosen by computational cost and sequence length,
+not by accuracy.** The exclusion of Δt = 60 s was based on the
+moisture mode of 9.5 s and is to be re-checked with the corrected moisture level.
 
-Methodisch für alle künftigen Δt-Vergleiche: Fenster- und Horizontlänge in **Sekunden**
-konstant halten und die Schrittzahlen umrechnen.
+Methodologically, for all future Δt comparisons: keep window and horizon length constant in **seconds**
+and convert the step counts.
 
 ---
 
-## Anlagengeometrie
+## Plant geometry
 
-| Parameter | Wert | Status |
+| Parameter | Value | Status |
 |---|---|---|
-| Anlage im SPE-Labor | ProCell® 5 LabSystem, Prozesskammer GF3 (Glatt) | `LAB` |
-| Querschnittsfläche Wirbelschichtkammer | 0.0177 m² (150 mm) angenommen | `PLH` |
-| Bettmasse (Feststoff, trocken) | 2.0 kg | `PLH`; Labor 1 oder 2 kg (`LAB`) |
-| Wärmeverlust `UA` | 2.0 W/K | `PLH` |
-| Betriebsart | kontinuierlich mit Füllstandsregelung | `PLH`; Labor **Charge** (`LAB`) |
-| Düsentyp | Zweistoffdüse, **Top-Spray** | `LAB` (Kennlinie weiter `TODO`) |
-| Bettmaterial im Labor | Cellets® 200, MCC, inert und wasserunlöslich | `LAB` |
-| Maßstab Anwendungspartner-Produktionsanlage | `TODO` | |
+| Plant in the SPE lab | ProCell® 5 LabSystem, process chamber GF3 (Glatt) | `LAB` |
+| Cross-sectional area of the fluidized-bed chamber | 0.0177 m² (150 mm) assumed | `PLH` |
+| Bed mass (solids, dry) | 2.0 kg | `PLH`; lab 1 or 2 kg (`LAB`) |
+| Heat loss `UA` | 2.0 W/K | `PLH` |
+| Operating mode | continuous with level control | `PLH`; lab **batch** (`LAB`) |
+| Nozzle type | two-fluid nozzle, **top spray** | `LAB` (characteristic still `TODO`) |
+| Bed material in the lab | Cellets® 200, MCC, inert and water-insoluble | `LAB` |
+| Scale of the application partner's production plant | `TODO` | |
 
-Die angenommene Bettmasse trifft den Laborwert. Die **Betriebsart trifft nicht**: das Modell
-führt eine kontinuierliche Füllstandsregelung mit τ = 600 s, das Labor fährt Chargen. Für
-AP 2 ist die Füllstandsregelung abzuschalten oder als Chargenbetrieb zu parametrisieren —
-sonst enthält das Modell eine Zeitkonstante, die es im Validierungsversuch nicht gibt.
+The assumed bed mass matches the lab value. The **operating mode does not match**: the model
+runs a continuous level control with τ = 600 s, the lab runs batches. For
+AP 2 the level control is to be switched off or parametrized as batch operation —
+otherwise the model contains a time constant that does not exist in the validation experiment.
 
 ---
 
-## Physikalische Zusammenhänge für das Grey-Box-Modell
+## Physical relations for the grey-box model
 
-**Zustandsvektor** — vier Zustände, ideal durchmischtes Bett, Gasphase quasistationär:
+**State vector** — four states, ideally mixed bed, gas phase quasi-stationary:
 
     x = [m_s, m_w, N, T_bed]
 
-`d_50` ist **kein** Zustand, sondern folgt algebraisch aus
-`d_50 = (6 m_s / (pi rho_p N))^(1/3)`. Damit bleiben Massen- und Zahlenbilanz linear und im
-Integrator exakt erhalten.
+`d_50` is **not** a state but follows algebraically from
+`d_50 = (6 m_s / (pi rho_p N))^(1/3)`. Thus mass and number balances remain linear and are
+conserved exactly in the integrator.
 
-**Gasphase quasistationär:** Verweilzeit ≈ 0.2 s, drei Größenordnungen unter der
-thermischen Zeitkonstante. Die Abluftfeuchte wird algebraisch bestimmt — das entfernt die
-steifste Mode und erlaubt explizites RK4.
+**Gas phase quasi-stationary:** residence time ≈ 0.2 s, three orders of magnitude below the
+thermal time constant. The exhaust air humidity is determined algebraically — this removes the
+stiffest mode and allows explicit RK4.
 
-**Enthalpiebilanz** für die Betttemperatur, alle abfließenden Ströme auf `T_bed` referenziert:
+**Enthalpy balance** for the bed temperature, all outgoing streams referenced to `T_bed`:
 
     (m_s c_ps + m_w c_pw) dT_bed/dt
       = ṁ_L (c_pL + Y_in c_pD)(T_in - T_bed)
@@ -368,129 +368,129 @@ steifste Mode und erlaubt explizites RK4.
         - ṁ_evap Δh_v(T_bed)
         - UA (T_bed - T_amb)
 
-**Kein zusätzliches Verzögerungsglied für das Bett.** Die thermische Zeitkonstante folgt
-bereits aus der Bilanz zu `tau_T = C / (ṁ_L c_pL + UA)`. Ein Filter darauf zählt sie
-doppelt. Das PT1 gehört ins **Sensormodell** (`PLH` 10 s).
+**No additional lag element for the bed.** The thermal time constant already follows
+from the balance as `tau_T = C / (ṁ_L c_pL + UA)`. A filter on top counts it
+twice. The PT1 belongs in the **sensor model** (`PLH` 10 s).
 
-**Zum Sensormodell, neu aus dem Labor:** die Rohdaten der Mikrowellenresonanz-Messung
-enthielten je Charge 17 bis 34 % Ausreißer und wurden mit einem Savitzky-Golay-Filter
-dritter Ordnung über 100 Abtastschritte geglättet (`LAB`) — bei Δt = 2 s also über 200 s.
-Zwei Folgerungen, beide unangenehm:
+**On the sensor model, new from the lab:** the raw data of the microwave resonance measurement
+contained 17 to 34 % outliers per batch and were smoothed with a third-order Savitzky-Golay filter
+over 100 sampling steps (`LAB`) — at Δt = 2 s, i.e. over 200 s.
+Two conclusions, both unpleasant:
 
-1. **Das Platzhalter-Sensormodell ist zu gutmütig.** 0.5 % relatives Rauschen und ein PT1
-   mit 10 s beschreiben nicht ein Signal, aus dem ein Viertel der Punkte als Ausreißer
-   entfernt werden muss. Ein realistisches Modell braucht einen **Ausreißerprozess**
-   (schwerschwänzig, nicht gaußisch) neben dem additiven Rauschen. Das ist ein
-   Modellierungsauftrag, kein Parameterwert.
-2. **Ein zentriertes Glättungsfenster über 200 s ist nicht kausal.** Es benutzt Messwerte
-   aus der Zukunft. Für eine Offline-Analyse ist das legitim, für einen Online-Soft-Sensor
-   oder einen Regler nicht — und in einem Datensatz mit zufällig gemischten Beobachtungen
-   erzeugt es zusätzlich Informationsfluss zwischen Trainings- und Testmenge. Wenn geglättet
-   werden muss, dann **kausal** (einseitig), und die Filterlänge gehört als Versuchsfaktor
-   ins Protokoll, nicht in die Vorverarbeitung.
+1. **The placeholder sensor model is too benign.** 0.5 % relative noise and a PT1
+   with 10 s do not describe a signal from which a quarter of the points have to be removed as
+   outliers. A realistic model needs an **outlier process**
+   (heavy-tailed, not Gaussian) alongside the additive noise. This is a
+   modelling task, not a parameter value.
+2. **A centred smoothing window over 200 s is not causal.** It uses measured values
+   from the future. For an offline analysis this is legitimate, for an online soft sensor
+   or a controller it is not — and in a data set with randomly mixed observations
+   it additionally creates information flow between training and test set. If smoothing
+   is necessary, then **causally** (one-sided), and the filter length belongs in the protocol as an
+   experimental factor, not in the preprocessing.
 
-**Trocknungskinetik** über die normierte Trocknungskurve:
+**Drying kinetics** via the normalized drying curve:
 
     ṁ_evap = nu_max * eta * ṁ_L * (Y_s(T_bed) - Y_in),    eta = clip((X_p - X_eq)/(X_cr - X_eq), 0, 1)
 
-`nu_max` ≈ 0.6 (`PLH`, Literatur 0.4 … 0.8). **Der Kondensationszweig ist nicht optional:**
-ist die Zuluft feuchter als die Sättigung bei Betttemperatur, kehrt sich der Stofftransport
-um. Ohne ihn liefert das Modell bei kaltem Bett stillschweigend übersättigte Abluft — genau
-der Betriebspunkt, in den ein untrainierter RL-Agent zuerst läuft.
+`nu_max` ≈ 0.6 (`PLH`, literature 0.4 … 0.8). **The condensation branch is not optional:**
+if the inlet air is more humid than saturation at bed temperature, the mass transfer
+reverses. Without it, the model silently delivers supersaturated exhaust air for a cold bed — exactly
+the operating point into which an untrained RL agent runs first.
 
-**Layering-Wachstum** — im gewählten Zustandsraum eine Folgerung, kein Postulat:
+**Layering growth** — in the chosen state space a consequence, not a postulate:
 
     dd_50/dt = ṁ_spray w_solid d_50 / (3 m_s) = 2 V̇_fest / A_Partikel
 
-**Beharrungsdurchmesser** `d_50,ss = d_nuc * b_nuc^(-1/3)`, mit `d_nuc` = 150 µm und
-`b_nuc` = 0.008 (`PLH`) → 750 µm. Der Nukleationsanteil ist damit **kein freier
-Fitparameter**.
+**Steady-state diameter** `d_50,ss = d_nuc * b_nuc^(-1/3)`, with `d_nuc` = 150 µm and
+`b_nuc` = 0.008 (`PLH`) → 750 µm. The nucleation share is thus **not a free
+fit parameter**.
 
-**Harte Grenzen (als Output-Projektion umsetzbar)**
-- Abluftfeuchte ≤ Sättigungsfeuchte — **strukturell** erfüllt, nicht per Projektion.
-- Partikelfeuchte ≥ Gleichgewichtsfeuchte — strukturell über `eta → 0`, **aber** bei heißer
-  Zuluft vom Integrator verletzbar; Projektion als Sicherheitsnetz nötig.
-- `dE` ≥ 0, physikalische Wertebereiche aller Größen.
+**Hard limits (implementable as output projection)**
+- Exhaust air humidity ≤ saturation humidity — satisfied **structurally**, not by projection.
+- Particle moisture ≥ equilibrium moisture — structurally via `eta → 0`, **but** with hot
+  inlet air violable by the integrator; projection needed as a safety net.
+- `dE` ≥ 0, physical value ranges of all quantities.
 
-**Monotonie (architektonisch erzwingbar)**: ∂`dE`/∂`T_in` > 0, ∂`dE`/∂`u_gas` > 0. Im
-Grey-Box-Modell strukturell erfüllt. **Vorbehalt:** gilt universell nur für die
-*Momentanleistung*; beim spezifischen Verbrauch hängt sie daran, dass der
-Produktmassenstrom nicht von `T_in` abhängt — was entfällt, sobald eine Qualitätsgrenze die
-Sprührate begrenzt.
+**Monotonicity (architecturally enforceable)**: ∂`dE`/∂`T_in` > 0, ∂`dE`/∂`u_gas` > 0. In the
+grey-box model structurally satisfied. **Caveat:** holds universally only for the
+*instantaneous power*; for the specific consumption it depends on the
+product mass flow not depending on `T_in` — which no longer holds as soon as a quality limit
+restricts the spray rate.
 
-**Bemerkenswert:** oberhalb `u_mf` ist der Bettdruckverlust **unabhängig** von der
-Gasgeschwindigkeit — er hängt nur an der Bettmasse. Die Abhängigkeit der Ventilatorleistung
-von `u_gas` kommt aus Volumenstrom und Anströmboden, nicht aus dem Bett.
+**Remarkable:** above `u_mf` the bed pressure drop is **independent** of the
+gas velocity — it depends only on the bed mass. The dependence of the fan power
+on `u_gas` comes from the volume flow and the distributor plate, not from the bed.
 
-**Bewusst nicht im Modell:** PSD (nur zwei Momente), Agglomeration, Abrieb, Bruch,
-Elutriation, Tropfengrößenverteilung, räumliche Gradienten, **Ausreißerprozess der
-Sensorik**. Folge für `p_nozzle`: reine Kostenwirkung ohne Prozessnutzen — im RL fixieren
-oder mit Qualitätsstrafe versehen.
+**Deliberately not in the model:** PSD (only two moments), agglomeration, attrition, breakage,
+elutriation, droplet size distribution, spatial gradients, **outlier process of the
+sensors**. Consequence for `p_nozzle`: pure cost effect without process benefit — fix it in RL
+or attach a quality penalty.
 
 ---
 
-## Anregungsdesign für die Datengenerierung
+## Excitation design for data generation
 
-Der Antrag sieht für TUHH-A-AP 3 vor, Parameter „im Rahmen ihrer zu erwartenden realen
-Schwankungsbreite" zu variieren. Das ist für Validierung geeignet, regt die Dynamik für
-Lernaufgaben aber **zu schwach** an. Umgesetzt:
+The proposal provides for TUHH-A-AP 3 to vary parameters "within their expected real
+range of fluctuation". That is suitable for validation, but excites the dynamics **too weakly** for
+learning tasks. Implemented:
 
-- **Sprungfolgen** mit zufälligen Amplituden und Verweilzeiten
-- **PRBS** als echte m-Sequenz über ein Schieberegister — nicht als Bernoulli-Münze
-- **Rampen** unterschiedlicher Steigung — die Schleppabweichung ist direkt proportional
-  zur Zeitkonstante
-- **Konstantläufe** als Referenz für Beharrungszustände, **gleichmäßig über die
-  Design-Reihenfolge verteilt** (als Block am Anfang enthielt `subset(8)` 37 % statt 10 %)
-- **Quasi-Monte-Carlo über den Störgrößenraum**, mit Tagesgang und OU-Drift
-- **Streuung der Anfangszustände** über den Betriebsbereich
+- **Step sequences** with random amplitudes and dwell times
+- **PRBS** as a true m-sequence via a shift register — not as a Bernoulli coin
+- **Ramps** of different slopes — the tracking error is directly proportional
+  to the time constant
+- **Constant runs** as reference for steady states, **evenly distributed over the
+  design order** (as a block at the beginning, `subset(8)` contained 37 % instead of 10 %)
+- **Quasi-Monte Carlo over the disturbance space**, with daily cycle and OU drift
+- **Scatter of the initial states** over the operating range
 
-**Sobol statt Latin-Hypercube**, und **Stützstellen nur als Zweierpotenzen**
-(8/16/32/64/128): die Balance-Eigenschaft einer Sobol-Folge gilt nur für `n = 2^k`, und
-nur verschachtelte Designs trennen Datenmenge von Abdeckungsqualität.
+**Sobol instead of Latin hypercube**, and **support points only as powers of two**
+(8/16/32/64/128): the balance property of a Sobol sequence holds only for `n = 2^k`, and
+only nested designs separate data quantity from coverage quality.
 
-**Ratenbegrenzung ist Pflichtbestandteil.** Solange die Heizerdynamik im Prozessmodell
-fehlt, ist sie der einzige Ort, an dem Aktordynamik repräsentiert ist. Preis: das Spektrum
-ist nicht mehr flach. Realisierte Bandbreite gegen die Eckfrequenz der schnellen Mode:
+**Rate limiting is a mandatory component.** As long as the heater dynamics are missing from the process model,
+it is the only place where actuator dynamics are represented. Price: the spectrum
+is no longer flat. Achieved bandwidth relative to the corner frequency of the fast mode:
 `T_in` 0.16, `u_gas` 1.00, `m_spray` 0.23, `p_nozzle` 0.53.
 
-**Anfangszustände werden mitgestreut.** Startet jeder Lauf bei `d_50` = 400 µm und wächst
-monoton, ist `d_50` innerhalb eines Laufs praktisch eine Funktion des Zeitindex — Modelle
-mit Positionsinformation leiten die langsame Mode dann aus der Schrittzahl ab.
+**Initial states are scattered as well.** If every run starts at `d_50` = 400 µm and grows
+monotonically, `d_50` within a run is practically a function of the time index — models
+with position information then derive the slow mode from the step count.
 
-**Kollinearität:** Signalart und Amplitudenstufe werden pro Lauf **und pro Kanal**
-unabhängig gezogen. Fahren alle Kanäle dieselbe Sprungfolge, sind ∂`dE`/∂`T_in` und
-∂`dE`/∂`u_gas` nicht trennbar — genau die Ableitungen, die die Monotonie-Constraints
-erzwingen sollen. Realisierte maximale Korrelation: 0.23.
+**Collinearity:** signal type and amplitude level are drawn independently per run **and per channel**.
+If all channels run the same step sequence, ∂`dE`/∂`T_in` and
+∂`dE`/∂`u_gas` cannot be separated — exactly the derivatives that the monotonicity constraints
+are meant to enforce. Achieved maximum correlation: 0.23.
 
-**Zum Vergleich das Labor-Versuchsdesign** (`LAB`): 10 Chargen, fünf Parameter auf zwei bis
-fünf Stufen, überwiegend Konstantfahrten, eine Charge mit Sprührate in fünf Stufen. Das ist
-ein klassisches DoE zur Grenzensuche und für Lernkurven **zu schwach angeregt** — die
-Stellgrößen nehmen über alle Chargen nur wenige verschiedene Werte an, was sie zu schwachen
-Prädiktoren macht. Für AP 2 heißt das: das Versuchsdesign der Laborvalidierung ist
-gegenüber dem Vorprojekt zu erweitern, nicht zu übernehmen. **Das ist die konkrete,
-billige Maßnahme, die sich aus dem Vergleich der beiden Designs ergibt.**
+**For comparison, the lab experimental design** (`LAB`): 10 batches, five parameters at two to
+five levels, predominantly constant runs, one batch with spray rate in five levels. That is
+a classical DoE for finding limits and **too weakly excited** for learning curves — the
+actions take only a few different values over all batches, which makes them weak
+predictors. For AP 2 this means: the experimental design of the lab validation is
+to be extended relative to the previous project, not adopted. **This is the concrete,
+cheap measure that follows from the comparison of the two designs.**
 
 ---
 
-## Offene Fragen an TUHH-A
+## Open questions to TUHH-A
 
-1. **Variablenliste als Interface-Vertrag**: exakte Namen, Einheiten, Klassifikation
-   (Stell-/Stör-/Zustands-/Ausgangsgröße). Die Trennung Stör- vs. Zustandsgröße ist
-   inhaltlich wichtig.
-2. **Zeitschrittweite und typischer Simulationshorizont.** Referenzpunkt aus dem
-   Vorprojekt: 2 s Anlagendaten, 1.8 h Chargendauer.
-3. **Realistische Stellgrößenbereiche inkl. Fluidisierungsgrenzen** und maximale
-   Änderungsraten.
-4. **Rechenzeit pro Simulationslauf.** Referenzpunkt aus dem Vorprojekt: 0.27 s Rechenzeit
-   pro Sekunde Prozesszeit für das Trocknermodell. Gilt das für die Granulation auch nur
-   näherungsweise, ist ein 128-Lauf-Datensatz eine Angelegenheit von Tagen, nicht Stunden.
-5. Welche Prozesseinheiten statisch, welche transient.
-6. **Sorptionsisotherme im Materialsystem von Dyssol.** Im Vorprojekt war die falsche
-   Isotherme die Hauptursache der Abweichung. Welche ist im neuen Modell hinterlegt, und
-   für welches Material?
-7. Erstes (ruhig unvalidiertes) Fließschema `.dflw` des Einzelgranulators.
-8. **Werden Zeitkonstanten in Dyssol so aufgelöst, dass ein Vergleich mit den
-   Grey-Box-Werten möglich ist?** Das ist das quantitative Kriterium für die Kalibrierung —
-   stimmen die Zeitkonstanten, stimmt die für Sequenzmodelle relevante Dynamik. Zu
-   vergleichen sind die Werte beim **realistischen** Feuchteniveau, nicht die der
-   Platzhalter.
+1. **Variable list as interface contract**: exact names, units, classification
+   (action/disturbance/state/output). The separation disturbance vs. state variable is
+   important in substance.
+2. **Time step and typical simulation horizon.** Reference point from the
+   previous project: 2 s plant data, 1.8 h batch duration.
+3. **Realistic action ranges incl. fluidization limits** and maximum
+   rates of change.
+4. **Computing time per simulation run.** Reference point from the previous project: 0.27 s computing time
+   per second of process time for the dryer model. If this holds for the granulation even only
+   approximately, a 128-run data set is a matter of days, not hours.
+5. Which process units are static, which transient.
+6. **Sorption isotherm in the material system of Dyssol.** In the previous project the wrong
+   isotherm was the main cause of the deviation. Which one is stored in the new model, and
+   for which material?
+7. First (possibly unvalidated) flowsheet `.dflw` of the single granulator.
+8. **Are time constants resolved in Dyssol such that a comparison with the
+   grey-box values is possible?** That is the quantitative criterion for the calibration —
+   if the time constants agree, the dynamics relevant for sequence models agree. To be
+   compared are the values at the **realistic** moisture level, not those of the
+   placeholders.
