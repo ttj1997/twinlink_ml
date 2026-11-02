@@ -1,24 +1,24 @@
-r"""Schritt-A-Diagnose (Session zu Befund 37): Kostenquelle des Transformer-Kerns.
+r"""Step A diagnosis (session on Befund 37): cost source of the Transformer core.
 
-Woher kommt der ~14x-Trainingskostenfaktor des Transformer-Kerns gegenueber GRU (Befund
-36)? Zwei guenstige Messungen, KEIN Volltraining (siehe Auftrag):
+Where does the ~14x training cost factor of the Transformer core relative to GRU come from
+(Befund 36)? Two cheap measurements, NO full training (see the task):
 
-A1) Fwd+Bwd-Aufschluesselung auf einem frisch instanziierten (nicht trainierten) Netz:
-    Encoder-Durchlauf (einmalig pro Batch) getrennt von der Zeit des gesamten
-    36-Schritte-Decoder-Loops, plus Einzelschrittzeiten (Schritt 1 vs. Schritt 30) --
-    Beleg fuer/gegen O(H^2) durch die fehlende KV-Cache-Wiederverwendung im Decoder-Loop
-    (``torch_sequence._build_transformer_network``, ``decoder_embeds`` waechst kumulativ,
-    ``self.decoder(decoder_sequence, memory)`` laeuft komplett neu pro Schritt).
+A1) Fwd+Bwd breakdown on a freshly instantiated (untrained) network:
+    encoder pass (once per batch) separated from the time of the whole
+    36-step decoder loop, plus single-step times (step 1 vs. step 30) --
+    evidence for/against O(H^2) due to the missing KV cache reuse in the decoder loop
+    (``torch_sequence._build_transformer_network``, ``decoder_embeds`` grows cumulatively,
+    ``self.decoder(decoder_sequence, memory)`` runs completely anew per step).
 
-A2) Inferenzvergleich mit ``RolloutEvaluator`` (dieselbe Funktion wie in Befund 36),
-    1-2 Trainingsepochen (nicht 200, das Modell muss nur lauffaehig sein), direkt gegen
-    den bereits geloggten GRU-Wert aus ``artifacts/runs/arch_gab_constant_holdout.jsonl``
+A2) Inference comparison with ``RolloutEvaluator`` (the same function as in Befund 36),
+    1-2 training epochs (not 200, the model only has to be runnable), directly against
+    the already logged GRU value from ``artifacts/runs/arch_gab_constant_holdout.jsonl``
     (``model/label=gru``, ``test_set=excited``).
 
-Kleiner Datenumfang (``n_train_max=4, n_val=4, n_test=8``) -- reicht fuer korrekte
-Tensorformen und eine grobe uS/Fenster-Schaetzung, ist NICHT die Produktionsgroesse.
-Keine Aenderung an ``torch_sequence.py``/``composite.py`` -- reiner Lesezugriff auf
-bereits vorhandene Netz-Attribute (``network.input_proj``/``.encoder``/``.decoder``/``.head``).
+Small data volume (``n_train_max=4, n_val=4, n_test=8``) -- enough for correct
+tensor shapes and a rough uS/window estimate, is NOT the production size.
+No change to ``torch_sequence.py``/``composite.py`` -- pure read access to
+already existing network attributes (``network.input_proj``/``.encoder``/``.decoder``/``.head``).
 """
 
 from __future__ import annotations
@@ -47,9 +47,9 @@ torch.set_num_threads(1)
 
 
 def _small_spec() -> DataSpec:
-    """Wie ``_excited_spec`` im Konstantlauf-Holdout-Worker, aber winziger Umfang.
+    """Like ``_excited_spec`` in the constant-run holdout worker, but tiny volume.
 
-    Nur fuer korrekte Tensorformen und eine grobe Inferenzschaetzung, kein echtes Training.
+    Only for correct tensor shapes and a rough inference estimate, no real training.
     """
     return DataSpec(
         sample_time_s=25.0,
@@ -79,7 +79,7 @@ def main() -> None:
     print(f"n_exogenous={len(train.exogenous_names)}, targets={train.target_names}")
     print(f"history_length={spec.history_length}, horizon={spec.horizon}")
 
-    # ---------------------------------------------------------------- A1: Fwd+Bwd-Aufschluesselung
+    # ---------------------------------------------------------------- A1: Fwd+Bwd breakdown
     print("\n=== A1: Encoder- vs. Decoder-Loop-Zeit, frisch initialisiertes Netz ===")
     target_index = 0  # energy_target
     single = _SingleTargetView(train, target_index)
@@ -114,7 +114,7 @@ def main() -> None:
         decoded = network.decoder(decoder_sequence, memory)
         return last + network.head(decoded[:, -1, :])
 
-    # Warmup (threading/allocator, nicht Teil der Messung)
+    # Warmup (threading/allocator, not part of the measurement)
     with torch.no_grad():
         _ = encoder_forward()
 
@@ -140,7 +140,7 @@ def main() -> None:
     print(f"  Schritt 36: {step_times[-1] * 1e3:.4f} ms")
     print(f"  Verhaeltnis Schritt36/Schritt1: {step_times[-1] / step_times[0]:.2f}x")
 
-    # Volles Fwd+Bwd auf demselben Batch (Warmup, dann Messung)
+    # Full Fwd+Bwd on the same batch (warmup, then measurement)
     def full_forward_backward() -> float:
         network.zero_grad(set_to_none=True)
         start = time.perf_counter()
@@ -157,7 +157,7 @@ def main() -> None:
         f"{(encoder_time + decoder_total) * 1e3:.3f} ms"
     )
 
-    # ---------------------------------------------------------------- A2: Inferenzvergleich
+    # ---------------------------------------------------------------- A2: inference comparison
     print("\n=== A2: Inferenzvergleich gegen geloggten GRU-Wert (Befund 36) ===")
     model = CompositeTransformerSequenceModel(
         TorchSequenceConfig(

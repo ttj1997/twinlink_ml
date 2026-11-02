@@ -1,7 +1,7 @@
-"""Wärmenetz-Modul: kaskadierte Wärmerückgewinnung Abluft -> Prozessluft.
+"""Heat-network module: cascaded heat recovery exhaust air -> process air.
 
-Siehe ``docs/06_waermenetz.md`` für Zweck, Abgrenzung und die drei Korrekturen gegenüber
-der Excel-Vorlage des Verbundpartners.
+See ``docs/06_waermenetz.md`` for purpose, scope and the three corrections to
+the Excel template of the consortium partner.
 """
 
 from .balance import (

@@ -1,23 +1,23 @@
-r"""SY2: Abbildungen für die M2-Synthese, ausschließlich aus committeten JSONL-Artefakten
-erzeugt -- keine Zahl von Hand, jede Abbildung regenerierbar.
+r"""SY2: figures for the M2 synthesis, generated exclusively from committed JSONL artifacts
+-- no number by hand, every figure regenerable.
 
-Vier Abbildungen, alle mit physikalischen Einheiten auf der y-Achse (nicht NRMSE) und
-Testmenge/Horizont in der Bildunterschrift (die Verwechslung der Testmengen hat im Projekt
-bereits einmal eine falsche Zahl erzeugt, Befund 51 K5):
+Four figures, all with physical units on the y axis (not NRMSE) and
+test set/horizon in the caption (confusing the test sets has already produced a wrong
+number once in the project, Befund 51 K5):
 
-  1. Lernkurven, acht Architekturen, drei Kanäle, Konstantlauf-Holdout, h=36, Median und
-     Spannweite über 5 Seeds, mit Auflösungsband (Befund 63, LSTM-Streuung als Quelle).
-  2. Dieselben auf der angeregten Testmenge.
-  3. Befund 55: angeregt gegen konstant trainiert (GRU/LSTM), Konstantlauf-Holdout,
-     gleiche Testmenge wie beim Training verschieden.
-  4. Inferenzzeit UND Parameterzahl je Architektur, nur aus der vergleichbaren
-     Datenfamilie (Befund 51+58, Thread-Einstellungen identisch), n_train=64.
+  1. Learning curves, eight architectures, three channels, constant-run holdout, h=36, median
+     and range over 5 seeds, with resolution band (Befund 63, LSTM spread as the source).
+  2. The same on the excited test set.
+  3. Befund 55: excited-trained versus constant-trained (GRU/LSTM), constant-run holdout,
+     same test set, training differs.
+  4. Inference time AND parameter count per architecture, only from the comparable
+     data family (Befund 51+58, identical thread settings), n_train=64.
 
-Farben: feste kategoriale Reihenfolge (dataviz-Skill-Referenzpalette, Slots 1-8, Light-Mode
--Hex), nie nach Rang neu vergeben -- jede Architektur behält ihre Farbe über alle vier
-Abbildungen.
+Colours: fixed categorical order (dataviz skill reference palette, slots 1-8, light-mode
+hex), never reassigned by rank -- every architecture keeps its colour across all four
+figures.
 
-Aufruf::
+Usage::
 
     python scripts/plot_m2_figures.py --output-dir docs/figures
 """
@@ -60,7 +60,7 @@ CHANNEL_TITLES = {
     "bed_temperature_celsius": "Betttemperatur",
 }
 
-# dataviz-Skill, Referenzpalette (validiert), Light-Mode-Hex, feste Zuordnung.
+# dataviz skill, reference palette (validated), light-mode hex, fixed assignment.
 ARCHITECTURE_ORDER = (
     "persistence",
     "static",
@@ -116,8 +116,8 @@ def _values(
 
 
 def _resolution_band(records: list[RunRecord], *, channel: str, test_set: str) -> dict[str, float]:
-    """Relative Auflösungsschwelle je Stützstelle, aus LSTMs eigener Seed-Streuung
-    (Begründung: Befund 63 -- Persistenz ist auf dem Konstantlauf-Holdout streuungsfrei)."""
+    """Relative resolution threshold per support point, from LSTM's own seed spread
+    (rationale: Befund 63 -- persistence has no spread on the constant-run holdout)."""
     band: dict[str, float] = {}
     for n_train in N_TRAIN_POINTS:
         values = _values(records, model="lstm", n_train=n_train, test_set=test_set, channel=channel)
@@ -170,11 +170,11 @@ def _learning_curve_figure(
                 best_at_point[n_train] = min(medians)
 
         if band:
-            # Bei kleinem n_train kann die relative Schwelle > 100 % liegen (z. B.
-            # product_moisture_kg_per_kg, n_train=16: 394 %) -- der Median selbst bleibt
-            # unveraendert berichtet (Befund 63), nur die untere Bandkante wird hier auf
-            # 5 % des Medians gedeckelt, sonst wird sie auf der log-Achse negativ und das
-            # Band faellt visuell bis zum Achsenboden durch (reines Rendering-Artefakt).
+            # At small n_train the relative threshold can exceed 100 % (e.g.
+            # product_moisture_kg_per_kg, n_train=16: 394 %) -- the median itself is still
+            # reported unchanged (Befund 63), only the lower band edge is capped here at
+            # 5 % of the median, otherwise it becomes negative on the log axis and the
+            # band visually drops through to the bottom of the axis (pure rendering artifact).
             xs = [int(n) for n in band]
             lower = [best_at_point[n] * max(1.0 - band[n], 0.05) for n in band]
             upper = [best_at_point[n] * (1.0 + band[n]) for n in band]

@@ -1,31 +1,32 @@
-r"""X3: rückgewinnbare Leistung ``Q_rec`` aus VORHERGESAGTEN Abluft-Größen (Befund 50).
+r"""X3: recoverable power ``Q_rec`` from PREDICTED exhaust air quantities (Befund 50).
 
 .. math:: \dot Q_{rec} = \dot m_L \left(T_{out} - (T_{dp}(Y_{out}) + 3\,\mathrm K)\right)
     \left(c_{p,L} + Y_{out}\, c_{p,D}\right)
 
-``T_out``/``Y_out`` sind ``outlet_temperature_celsius``/``Y_gas_out_kg_per_kg`` aus
-:func:`~twinlink_ml.evaluation.exhaust_reconstruction.reconstruct_exhaust_arrays` -- **derselbe**
-algebraische Pfad wie X1/X2 (``simulation.exhaust.reconstruct_exhaust_state``), hier nur mit
-einer weiteren, nichtlinearen Größe obendrauf. Kein neuer Rückrechnungscode: dieses Modul
-ruft ausschließlich ``reconstruct_exhaust_arrays`` und wendet die Q_rec-Formel elementweise
-auf dessen ``reconstructed``/``reference``-Arrays an -- Vorhersage-Q_rec gegen Wahrheits-Q_rec,
-exakt dieselbe Vorhersage/Wahrheit-Gegenüberstellung wie bei ``T_gas_out_celsius`` selbst.
+``T_out``/``Y_out`` are ``outlet_temperature_celsius``/``Y_gas_out_kg_per_kg`` from
+:func:`~twinlink_ml.evaluation.exhaust_reconstruction.reconstruct_exhaust_arrays` -- **the same**
+algebraic path as X1/X2 (``simulation.exhaust.reconstruct_exhaust_state``), here only with
+one further, nonlinear quantity on top. No new reconstruction code: this module calls
+exclusively ``reconstruct_exhaust_arrays`` and applies the Q_rec formula element-wise to
+its ``reconstructed``/``reference`` arrays -- predicted Q_rec against true Q_rec, exactly
+the same prediction/truth comparison as for ``T_gas_out_celsius`` itself.
 
-3-K-Marge zum Taupunkt: verhindert Kondensation im (hier nicht modellierten) Wärmeübertrager
--- ``Q_rec`` ist die bis zu dieser Grenze sensibel rückgewinnbare Leistung, nicht die
-theoretisch maximale (die würde auch die Kondensationsenthalpie unterhalb des Taupunkts
-einschließen).
+3 K margin to the dew point: prevents condensation in the heat exchanger (not modelled
+here) -- ``Q_rec`` is the power sensibly recoverable down to this limit, not the
+theoretical maximum (which would also include the condensation enthalpy below the dew
+point).
 
-Massenstrom-Vorbehalt
+Mass flow caveat
 ----------------------
-``DISTRICT_MASS_FLOW_KG_PER_S`` (8 kg/s) ist der Massenstrom des Wärmeverbundmodells, NICHT
-der simulierte Labormassenstrom (``dry_air_mass_flow_kg_per_s`` in
-``data.trajectory.diagnostics``, zwei Größenordnungen kleiner). Die kW-Zahlen aus diesem
-Modul sind eine Skalierungsrechnung -- sie beantworten "wie groß wäre der Fehler, wenn eine
-Anlage mit diesem Massenstrom liefe, bei genau diesem Temperatur-/Feuchte-Vorhersagefehler",
-keine Anlagenaussage über die tatsächliche Laborwirbelschicht.
-``REFERENCE_LINE_RECOVERABLE_HEAT_KW`` (446.6 kW) ist die rückgewinnbare Wärme der
-Wirbelschichtlinie am Standort, als Bezugsgröße für die Einordnung des absoluten Fehlers.
+``DISTRICT_MASS_FLOW_KG_PER_S`` (8 kg/s) is the mass flow of the heat network model, NOT
+the simulated lab mass flow (``dry_air_mass_flow_kg_per_s`` in
+``data.trajectory.diagnostics``, two orders of magnitude smaller). The kW numbers from this
+module are a scaling calculation -- they answer "how large would the error be if a plant
+ran with this mass flow, at exactly this temperature/humidity prediction error", not a
+plant statement about the actual lab fluidized bed.
+``REFERENCE_LINE_RECOVERABLE_HEAT_KW`` (446.6 kW) is the recoverable heat of the
+fluidized-bed line at the site, as a reference quantity for putting the absolute error
+into context.
 """
 
 from __future__ import annotations
@@ -81,12 +82,12 @@ def compute_recoverable_power_kw(
     mass_flow_kg_per_s: float = DISTRICT_MASS_FLOW_KG_PER_S,
     dew_point_margin_k: float = DEW_POINT_MARGIN_K,
 ) -> Array:
-    r"""Elementweise :math:`\dot Q_{rec}` aus Abluft-Temperatur und -Feuchte, in kW.
+    r"""Element-wise :math:`\dot Q_{rec}` from exhaust air temperature and humidity, in kW.
 
-    Reine, backend-agnostische Funktion (wie ``simulation.thermo``) -- kein Modellaufruf,
-    keine Windowing-Logik. Nimmt ``outlet_temperature_celsius``/``exhaust_humidity_kg_per_kg``
-    beliebiger Form entgegen (elementweise Operationen), typischerweise
-    ``(n_windows, horizon)`` aus :func:`~.exhaust_reconstruction.reconstruct_exhaust_arrays`.
+    Pure, backend-agnostic function (like ``simulation.thermo``) -- no model call, no
+    windowing logic. Accepts ``outlet_temperature_celsius``/``exhaust_humidity_kg_per_kg``
+    of any shape (element-wise operations), typically
+    ``(n_windows, horizon)`` from :func:`~.exhaust_reconstruction.reconstruct_exhaust_arrays`.
     """
     dew_point = dew_point_celsius(backend, gas, exhaust_humidity_kg_per_kg)
     specific_heat_humid_air = (
@@ -98,7 +99,7 @@ def compute_recoverable_power_kw(
 
 @dataclass(frozen=True, slots=True)
 class RecoverablePowerResult:
-    """NRMSE/absoluter Fehler von ``Q_rec``, Vorhersage gegen Wahrheit -- siehe Moduldocstring."""
+    """NRMSE/absolute error of ``Q_rec``, prediction against truth -- see module docstring."""
 
     horizons: tuple[int, ...]
     nrmse_by_horizon: dict[int, float]
@@ -111,7 +112,7 @@ class RecoverablePowerResult:
     reference_line_kw: float = REFERENCE_LINE_RECOVERABLE_HEAT_KW
 
     def format(self) -> str:
-        """Tabelle für Run-Logs, im selben Stil wie ``ExhaustReconstructionResult.format``."""
+        """Table for run logs, in the same style as ``ExhaustReconstructionResult.format``."""
         columns = "".join(f"{f'h={h}':>10}" for h in self.horizons)
         primary = "".join(f"{self.nrmse_run_spread[h][0]:>10.4f}" for h in self.horizons)
         physical = "".join(f"{self.rmse_run_median_kw[h]:>10.2f}" for h in self.horizons)
@@ -132,10 +133,10 @@ class RecoverablePowerResult:
         )
 
     def as_flat_metrics(self) -> dict[str, float]:
-        """Flache Schlüssel-Wert-Paare für das Tracking.
+        """Flat key-value pairs for tracking.
 
-        ``q_rec_``-Präfix -- kollisionsfrei neben
-        ``ExhaustReconstructionResult.as_flat_metrics()`` im selben ``RunRecord`` mergebar.
+        ``q_rec_`` prefix -- can be merged without collisions alongside
+        ``ExhaustReconstructionResult.as_flat_metrics()`` in the same ``RunRecord``.
         """
         flat: dict[str, float] = {
             "q_rec_n_windows": float(self.n_windows),
@@ -165,13 +166,13 @@ def evaluate_recoverable_power(
     mass_flow_kg_per_s: float = DISTRICT_MASS_FLOW_KG_PER_S,
     dew_point_margin_k: float = DEW_POINT_MARGIN_K,
 ) -> RecoverablePowerResult:
-    """``Q_rec`` aus VORHERGESAGTEN Kanälen gegen ``Q_rec`` aus Wahrheits-Kanälen.
+    """``Q_rec`` from PREDICTED channels against ``Q_rec`` from truth channels.
 
-    Baut auf :func:`~.exhaust_reconstruction.reconstruct_exhaust_arrays` auf (dieselben
-    Voraussetzungen an ``test.target_names``, derselbe Leck-/Fehlpaarungs-Schutz) und wendet
-    :func:`compute_recoverable_power_kw` elementweise auf die dort bereits rekonstruierten
-    ``outlet_temperature_celsius``/``Y_gas_out_kg_per_kg``-Spalten an -- kein zweiter
-    Rückrechnungs-Durchlauf.
+    Builds on :func:`~.exhaust_reconstruction.reconstruct_exhaust_arrays` (the same
+    prerequisites on ``test.target_names``, the same leak/mismatch protection) and applies
+    :func:`compute_recoverable_power_kw` element-wise to the
+    ``outlet_temperature_celsius``/``Y_gas_out_kg_per_kg`` columns already reconstructed
+    there -- no second reconstruction pass.
     """
     reconstructed_array, reference_array, run_array, resolved_horizons = reconstruct_exhaust_arrays(
         model, data, test, horizons=horizons, batch_size=batch_size

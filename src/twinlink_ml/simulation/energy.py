@@ -1,29 +1,29 @@
-r"""Leistungsaufnahme der Aggregate -- Erzeugung der Zielgröße ``dE``.
+r"""Power consumption of the units -- generation of the target ``dE``.
 
-Die Enthalpiebilanz aus ``02_prozess_setup.md`` verknüpft ``dE`` mit ``T_in``, ``u_gas``
-und ``m_spray``. Hier wird die *zugeführte* Seite aufgeschlüsselt, denn nur die ist
-Zielgröße einer energieoptimalen Regelung:
+The enthalpy balance from ``02_prozess_setup.md`` links ``dE`` with ``T_in``, ``u_gas``
+and ``m_spray``. Here the *supplied* side is broken down, because only that is the
+target of an energy-optimal control:
 
 .. math::
     \dot E = P_{\mathrm{Heizung}} + P_{\mathrm{Ventilator}}
              + P_{\mathrm{Pumpe}} + P_{\mathrm{Zerstäuberluft}}
 
-Monotonie
----------
-Die im Projekt geforderten Vorzeichen
-:math:`\partial \dot E/\partial T_{in} > 0` und
-:math:`\partial \dot E/\partial u_{gas} > 0` gelten hier **strukturell**: alle vier
-Terme sind nichtnegativ und in ihren jeweiligen Stellgrößen monoton steigend. Damit ist
-das Grey-Box-Modell eine belastbare Referenz, um zu prüfen, ob ein monotones Netz / ICNN
-die Constraints tatsächlich erfüllt -- und nicht nur die Trainingsdaten reproduziert.
+Monotonicity
+------------
+The signs required in the project
+:math:`\partial \dot E/\partial T_{in} > 0` and
+:math:`\partial \dot E/\partial u_{gas} > 0` hold here **structurally**: all four
+terms are non-negative and monotonically increasing in their respective actions. The
+grey-box model is thus a reliable reference for checking whether a monotonic network / ICNN
+actually satisfies the constraints -- and does not merely reproduce the training data.
 
-Wichtiger Vorbehalt für den spezifischen Verbrauch: bei
-``target = "specific_kwh_per_kg"`` ist die Monotonie in :math:`T_{in}` nur solange
-gegeben, wie der Produktmassenstrom nicht von :math:`T_{in}` abhängt. Im kontinuierlichen
-Betrieb mit Massenregelung gilt das (der Feststoffeintrag hängt an ``m_spray`` und
-``w_solid``). Sobald eine Qualitätsgrenze (Produktfeuchte) aktiv wird und die
-Sprührate begrenzt, gilt es nicht mehr. Der Constraint ist also an die
-Zielgrößendefinition gebunden, nicht universell.
+Important caveat for the specific consumption: with
+``target = "specific_kwh_per_kg"`` the monotonicity in :math:`T_{in}` holds only as long
+as the product mass flow does not depend on :math:`T_{in}`. In continuous
+operation with mass control this holds (the solid input depends on ``m_spray`` and
+``w_solid``). As soon as a quality limit (product moisture) becomes active and limits the
+spray rate, it no longer holds. The constraint is thus tied to the
+target definition, not universal.
 """
 
 from __future__ import annotations
@@ -38,7 +38,7 @@ from .thermo import kelvin
 
 @dataclass(frozen=True, slots=True)
 class PowerBreakdown:
-    """Aufschlüsselung der Leistungsaufnahme in kW. Für Diagnose und AP 3."""
+    """Breakdown of the power consumption in kW. For diagnostics and AP 3."""
 
     heater_kw: Array
     fan_kw: Array
@@ -69,33 +69,33 @@ def power_breakdown_kw(
     heater_intake_temperature_celsius: Array | None = None,
     recirculation_fraction: float | None = None,
 ) -> PowerBreakdown:
-    r"""Leistungsaufnahme aller Aggregate.
+    r"""Power consumption of all units.
 
-    Lufterhitzer
+    Air heater
         .. math:: P_{H} = \frac{\dot m_L (c_{p,L} + Y_{in} c_{p,D})
                   (T_{in} - T_{amb})}{\eta_H}
 
-    Ventilator
+    Fan
         .. math:: P_{V} = \frac{\dot V \left(\Delta p_{bed}
                   + \zeta \frac{\rho_g u^2}{2}\right)}{\eta_V},
                   \qquad \dot V = u\,A
 
-    Suspensionspumpe
+    Suspension pump
         .. math:: P_{P} = \frac{\dot m_{spray}\,\Delta p_P}{\rho_{susp}\,\eta_P}
 
-    Zerstäuberluft (isotherme Verdichtung)
+    Atomiser air (isothermal compression)
         .. math:: P_{Z} = \frac{\dot m_Z R_L T_{amb}
                   \ln(p_{nozzle}/p_{amb})}{\eta_K},
                   \qquad \dot m_Z = c_Z\, p_{nozzle}
 
-    Fallstrick beim Zerstäuberdruck: er ist im Modell fast entkoppelt von der Physik des
-    Betts (nur Leistungsterm), weil das reduzierte Modell die Tropfengrößenverteilung
-    nicht auflöst. Für den Architekturvergleich ist ``p_nozzle`` damit eine Stellgröße
-    mit reiner Kostenwirkung und ohne Nutzen -- ein optimierender Agent fährt sie sofort
-    ans Minimum. Das ist ein Modellartefakt, kein Prozessverhalten. Solange die
-    Kopplung Tropfengröße -> Benetzung -> Wachstum/Agglomeration fehlt, sollte
-    ``p_nozzle`` im RL-Teil entweder fixiert oder mit einer Qualitätsstrafe versehen
-    werden.
+    Pitfall with the atomiser pressure: in the model it is almost decoupled from the physics of
+    the bed (power term only), because the reduced model does not resolve the droplet size
+    distribution. For the architecture comparison ``p_nozzle`` is thus an action
+    with a pure cost effect and no benefit -- an optimising agent drives it immediately
+    to the minimum. That is a model artifact, not process behaviour. As long as the
+    coupling droplet size -> wetting -> growth/agglomeration is missing,
+    ``p_nozzle`` should in the RL part either be fixed or be given a quality
+    penalty.
 
     Exhaust recirculation (only when ``recirculation_fraction`` is given): the heater takes the
     mixture at ``heater_intake_temperature_celsius`` (:math:`T_{mix}`, see
@@ -173,22 +173,22 @@ def energy_target(
     total_power_kw: Array,
     reference_solid_mass_flow_kg_per_s: Array,
 ) -> Array:
-    r"""Zielgröße ``dE`` gemäß Config.
+    r"""Target ``dE`` according to the config.
 
     ``power_kw``
-        Momentanleistung in kW.
+        Instantaneous power in kW.
     ``specific_kwh_per_kg``
         .. math:: e = \frac{\dot E}{3600\,\dot m_{Produkt}} \quad [\mathrm{kWh/kg}]
 
-    Ist ``reference_value`` gesetzt, wird die Differenz zu diesem Referenzbetriebspunkt
-    gebildet -- die Lesart "ΔEnergieverbrauch" aus ``02_prozess_setup.md``. Ohne
-    Referenz ist ``dE`` der Absolutwert.
+    If ``reference_value`` is set, the difference to this reference operating point
+    is formed -- the reading "Δenergy consumption" from ``02_prozess_setup.md``. Without
+    reference ``dE`` is the absolute value.
 
-    Hinweis zur Skalierung: der spezifische Verbrauch divergiert, wenn der
-    Produktmassenstrom gegen Null geht (An-/Abfahren, Batch-Betrieb). Als Regressionsziel
-    ist er dadurch schwerer zu lernen als die Momentanleistung. Empfehlung: das
-    Sequenzmodell auf ``power_kw`` trainieren und den spezifischen Verbrauch erst in der
-    RL-Belohnung bilden, wo der Produktmassenstrom bekannt ist.
+    Note on scaling: the specific consumption diverges when the
+    product mass flow goes to zero (start-up/shutdown, batch operation). As a regression target
+    it is thus harder to learn than the instantaneous power. Recommendation: train the
+    sequence model on ``power_kw`` and form the specific consumption only in the
+    RL reward, where the product mass flow is known.
     """
     if energy.target == "power_kw":
         value = total_power_kw

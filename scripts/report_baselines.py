@@ -1,11 +1,11 @@
-"""Vertikaler Durchstich: Anregung, Rollout, Split, Fensterung, Baselines, Metrik.
+"""Vertical slice: excitation, rollout, split, windowing, baselines, metric.
 
-Aufruf::
+Usage::
 
     python scripts/report_baselines.py --n-runs 32 --sample-time 25
 
-Der Bericht ist das eigentliche Ergebnis von Schritt 4: er beantwortet, welche Hürde eine
-Architektur überhaupt überspringen muss -- getrennt je Zielgröße und je Horizont.
+The report is the actual result of step 4: it answers which hurdle an
+architecture has to clear at all -- separately per target and per horizon.
 """
 
 from __future__ import annotations
@@ -42,7 +42,7 @@ CONFIG_PATH = Path(__file__).resolve().parents[1] / "conf" / "process" / "greybo
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",
@@ -74,7 +74,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Bericht erzeugen."""
+    """Generate the report."""
     arguments = parse_arguments()
     seeds = SeedBundle.from_master(arguments.seed)
 

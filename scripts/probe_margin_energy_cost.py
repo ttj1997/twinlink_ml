@@ -132,8 +132,8 @@ dem in DA1 committeten -- reines Gleitkommarauschen erwartet, kein Toleranzbedar
 
 
 def _load_regret_module() -> ModuleType:
-    """Wie in `probe_critical_moisture_sensitivity.py`/`study_operating_point_transient.py`
-    -- siehe dort fuer die Begruendung des `sys.modules`-Eintrags vor `exec_module`."""
+    """As in `probe_critical_moisture_sensitivity.py`/`study_operating_point_transient.py`
+    -- see there for the rationale of the `sys.modules` entry before `exec_module`."""
     spec = importlib.util.spec_from_file_location(
         "study_operating_point_regret", REGRET_SCRIPT_PATH
     )
@@ -151,8 +151,8 @@ def _suppress_placeholder_warning() -> None:
 def build_variant_config(
     base: ProcessConfig, *, critical_moisture_kg_per_kg: float
 ) -> ProcessConfig:
-    """Wie in `probe_critical_moisture_sensitivity.py` -- nur `material.critical_moisture_
-    kg_per_kg` ueberschrieben, sonst unveraendert."""
+    """As in `probe_critical_moisture_sensitivity.py` -- only `material.critical_moisture_
+    kg_per_kg` overridden, otherwise unchanged."""
     material = dataclasses.replace(
         base.material, critical_moisture_kg_per_kg=critical_moisture_kg_per_kg
     )
@@ -168,8 +168,8 @@ def run_oracle_grid(
     budget: Any,
     label: str,
 ) -> list[dict[str, Any]]:
-    """KA1: NUR BB2 (instanzweise Optima je Gitterpunkt) -- kein BB3(a) (Auftrag: der feste
-    Betriebspunkt aus Befund 52/54 wird wiederverwendet, nicht neu gesucht)."""
+    """KA1: ONLY BB2 (per-instance optima per grid point) -- no BB3(a) (task: the fixed
+    operating point from Befund 52/54 is reused, not searched anew)."""
     regret_module._set_base_config(variant_config)
     bounds = regret_module.action_bounds(variant_config)
     grid_points = regret_module.build_grid(variant_config, grid_size)
@@ -355,18 +355,18 @@ def compute_ka2_for_boundary(
         if feasible:
             e_oracle_b = rb["energy_target"]
             e_oracle_ref = rr["energy_target"]
-            e_fest = fp["energy_target"]
+            e_fixed = fp["energy_target"]
             cost_abs = e_oracle_b - e_oracle_ref
             entry.update(
                 {
                     "energy_oracle_boundary_kw": e_oracle_b,
                     "energy_oracle_reference_kw": e_oracle_ref,
-                    "energy_fixed_kw": e_fest,
+                    "energy_fixed_kw": e_fixed,
                     "cost_abs_kw": cost_abs,
                     "cost_rel_pct": 100.0 * cost_abs / e_oracle_ref,
                     "remaining_fraction": (
-                        (e_fest - e_oracle_b) / (e_fest - e_oracle_ref)
-                        if abs(e_fest - e_oracle_ref) > 1e-12
+                        (e_fixed - e_oracle_b) / (e_fixed - e_oracle_ref)
+                        if abs(e_fixed - e_oracle_ref) > 1e-12
                         else None
                     ),
                 }

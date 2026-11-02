@@ -1,33 +1,33 @@
-r"""Ein (Mamba, Seed)-Job: trainieren, auf zwei Testmengen auswerten, Checkpoint sichern.
+r"""One (Mamba, seed) job: train, evaluate on two test sets, save a checkpoint.
 
-Voller Konstantlauf-Holdout-Massstab (Befund 36) fuer Mamba, statt der kostensparenden
-Einzelseed-Messung aus Befund 38 (``run_mamba_reduced_comparison.py``, ``n_train=16``,
-1 Seed). GRU/LSTM/Persistenz/static/ARX werden NICHT neu gerechnet -- die 100 Records in
-``artifacts/runs/arch_gab_constant_holdout.jsonl`` (5 Modelle x 10 Seeds x 2 Testmengen,
-Befund 36) bleiben massgeblich und werden fuer die Vergleichstabelle direkt
-wiederverwendet, kein ``--with-baselines``-Aequivalent hier.
+Full constant-run holdout scale (Befund 36) for Mamba, instead of the cost-saving
+single-seed measurement from Befund 38 (``run_mamba_reduced_comparison.py``, ``n_train=16``,
+1 seed). GRU/LSTM/persistence/static/ARX are NOT recomputed -- the 100 records in
+``artifacts/runs/arch_gab_constant_holdout.jsonl`` (5 models x 10 seeds x 2 test sets,
+Befund 36) remain authoritative and are reused directly for the comparison table,
+no ``--with-baselines`` equivalent here.
 
-Same Grundmuster wie ``run_mamba_reduced_comparison.py``: bestehende Records per
-Fingerprint/Split/Seed-Assertion verifizieren, nur die neue Architektur rechnen -- hier
-verallgemeinert auf alle 10 Seeds statt fest codierter Werte fuer Seed 1 (``expected``
-kommt je Seed aus der bereits geloggten Datei, nicht aus einem Literal).
+Same basic pattern as ``run_mamba_reduced_comparison.py``: verify existing records via
+fingerprint/split/seed assertion, compute only the new architecture -- here
+generalised to all 10 seeds instead of hard-coded values for seed 1 (``expected``
+comes per seed from the already logged file, not from a literal).
 
-``_excited_spec``/``_holdout_spec``/``HOLDOUT_SEED``/``CONFIG_PATH`` werden aus
-``run_arch_constant_holdout_worker.py`` importiert statt erneut abgetippt -- bitgleiche
-DataSpec garantiert, kein Drift-Risiko bei einer kuenftigen Aenderung dort. Import
-funktioniert, weil beide Skripte im selben ``scripts/``-Verzeichnis liegen (Python haengt
-beim Aufruf ``python scripts/x.py`` das Skriptverzeichnis vorn an ``sys.path``); die
-importierte Datei hat keinen Modul-Seiteneffekt (``main()`` steht hinter
+``_excited_spec``/``_holdout_spec``/``HOLDOUT_SEED``/``CONFIG_PATH`` are imported from
+``run_arch_constant_holdout_worker.py`` instead of retyped -- bit-identical
+DataSpec guaranteed, no drift risk with a future change there. The import
+works because both scripts live in the same ``scripts/`` directory (Python prepends
+the script directory to ``sys.path`` on the call ``python scripts/x.py``); the
+imported file has no module side effect (``main()`` sits behind
 ``if __name__ == "__main__"``).
 
-Mamba-Konfiguration: ``CompositeMambaSequenceModel()`` ohne Config-Override, also der
-finale Stand aus Befund 38 (``hidden_size=16``, ``state_size=16``, ``num_layers=1``,
-RMSNorm-Fix + Weight-Decay-Ausschluss fuer ``A_log``/``D``, ``models/mamba.py`` /
-``models/composite.py`` -- hier NICHT angefasst). Standard ``learning_rate``/
-``weight_decay``/``max_epochs=200``/``patience=20`` (Dataclass-Standard,
-``models/torch_sequence.py``), unveraendert.
+Mamba configuration: ``CompositeMambaSequenceModel()`` without config override, i.e. the
+final state from Befund 38 (``hidden_size=16``, ``state_size=16``, ``num_layers=1``,
+RMSNorm fix + weight-decay exclusion for ``A_log``/``D``, ``models/mamba.py`` /
+``models/composite.py`` -- NOT touched here). Standard ``learning_rate``/
+``weight_decay``/``max_epochs=200``/``patience=20`` (dataclass default,
+``models/torch_sequence.py``), unchanged.
 
-Aufrufbar fuer einen Einzeltest::
+Callable for a single test::
 
     python scripts/run_mamba_constant_holdout_worker.py --seed 1 \
         --output artifacts/runs/_mamba_worker_1.jsonl
@@ -64,16 +64,16 @@ unten, unveraendert gelassen (nur gelesen, nie beschrieben)."""
 
 
 def _expected_from_existing(seed: int) -> dict[str, object]:
-    """Fingerprint/Split/Seeds/target_names fuer ``seed`` aus den geloggten Records lesen.
+    """Read fingerprint/split/seeds/target_names for ``seed`` from the logged records.
 
-    Analog zum hart codierten ``EXPECTED``-Dict in ``run_mamba_reduced_comparison.py``,
-    hier aber je Seed aus der Datei gelesen statt einmalig fuer Seed 1 abgetippt --
-    dieselbe Wiederverwendungs-/Verifikationslogik fuer 10 statt 1 Seed.
+    Analogous to the hard-coded ``EXPECTED`` dict in ``run_mamba_reduced_comparison.py``,
+    but here read per seed from the file instead of typed in once for seed 1 --
+    the same reuse/verification logic for 10 seeds instead of 1.
 
-    ``data/target_names`` wird aus dem Log gelesen, nicht hartkodiert -- eine hartkodierte
-    Kanalliste wuerde bei einer kuenftigen ``DataSpec``-Aenderung denselben
-    Selbstwiderspruch erzeugen wie in ``run_xlstm_reduced_comparison.py`` (dort hartkodiert
-    gegen einen Zwei-Kanal-``_spec()``-Default geprueft, siehe dortiger Docstring).
+    ``data/target_names`` is read from the log, not hard-coded -- a hard-coded
+    channel list would, with a future ``DataSpec`` change, produce the same
+    self-contradiction as in ``run_xlstm_reduced_comparison.py`` (hard-coded there
+    and checked against a two-channel ``_spec()`` default, see the docstring there).
     """
     with EXISTING_RECORDS_PATH.open("r", encoding="utf-8") as handle:
         for raw_line in handle:
@@ -98,10 +98,10 @@ def _expected_from_existing(seed: int) -> dict[str, object]:
 
 
 def _check_expected(seed: int, expected: dict[str, object], actual: dict[str, object]) -> None:
-    """``expected`` (aus der Log-Datei) gegen ``actual`` pruefen, hart abbrechen bei Abweichung.
+    """Check ``expected`` (from the log file) against ``actual``, abort hard on a deviation.
 
-    Eigene Funktion (nicht inline in ``main()``), damit die Schemapruefung ohne vollen
-    Datengenerierungs-/Trainingslauf testbar ist -- analog zu ``_check_expected`` in
+    Separate function (not inline in ``main()``) so that the schema check is testable
+    without a full data-generation/training run -- analogous to ``_check_expected`` in
     ``run_xlstm_reduced_comparison.py``/``run_mamba_reduced_comparison.py``.
     """
     mismatches = {k: (v, actual[k]) for k, v in expected.items() if v != actual[k]}
@@ -145,7 +145,7 @@ def _check_expected(seed: int, expected: dict[str, object], actual: dict[str, ob
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--config", type=Path, default=CONFIG_PATH)
@@ -156,7 +156,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Ein Job: Datenkompatibilitaet pruefen, trainieren, zwei Testmengen auswerten."""
+    """One job: check data compatibility, train, evaluate two test sets."""
     arguments = parse_arguments()
 
     import torch

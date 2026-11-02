@@ -1,8 +1,8 @@
-"""Gemeinsame Fixtures.
+"""Shared fixtures.
 
-Die Tests laufen gegen die Platzhalter-Config, unterdrücken aber die
-:class:`PlaceholderConfigWarning` bewusst nur hier -- im Produktivcode soll sie sichtbar
-bleiben.
+The tests run against the placeholder config, but deliberately suppress the
+:class:`PlaceholderConfigWarning` only here -- in production code it is meant to stay
+visible.
 """
 
 from __future__ import annotations
@@ -32,23 +32,22 @@ CONFIG_PATH = Path(__file__).resolve().parents[1] / "conf" / "process" / "greybo
 
 @pytest.fixture(autouse=True)
 def _restore_torch_global_state():
-    """Sichert/stellt globalen Torch-Zustand je Test wieder her.
+    """Saves/restores the global Torch state per test.
 
-    Default-Dtype, Threads, Grad-Modus. Anlass: ``torch.set_default_dtype(torch.float64)``
-    in zwei Gradiententests (``test_greybox_numerics.py::test_gradient_flows_through_
-    full_rk4_step_with_gab_isotherm`` und ``::test_gradient_stays_finite_at_floor_
-    active_point``) setzt den Default-Dtype global und dauerhaft, ohne ihn
-    zurückzusetzen. Das Leck ist ordnungsabhängig und zündet in der natürlichen
-    Suite-Reihenfolge nicht -- gefährlich ist deshalb nicht der Fehlschlag (der wäre
-    sofort sichtbar), sondern ein Test, der still in float32 statt float64 grün
-    durchläuft, ohne dass es auffällt. Die Projektkonvention "Ruff/pytest vor jedem
-    Commit" läuft häufig nur auf Teilmengen (einzelne Testdateien) -- genau dort tritt
-    das Leck auf, nicht im vollen Lauf.
+    Default dtype, threads, grad mode. Occasion: ``torch.set_default_dtype(torch.float64)``
+    in two gradient tests (``test_greybox_numerics.py::test_gradient_flows_through_
+    full_rk4_step_with_gab_isotherm`` and ``::test_gradient_stays_finite_at_floor_
+    active_point``) sets the default dtype globally and permanently, without resetting
+    it. The leak is order-dependent and does not fire in the natural suite order --
+    the danger is therefore not the failure (that would be visible immediately), but a
+    test that silently passes green in float32 instead of float64 without anyone
+    noticing. The project convention "ruff/pytest before every commit" is often run only
+    on subsets (single test files) -- exactly there the leak occurs, not in the full run.
 
-    autouse, damit sie nicht pro Testdatei importiert werden muss -- ein künftiger Test,
-    der irgendwo global Torch-Zustand setzt, ist sonst automatisch wieder ein Leck.
-    ``num_threads``/Grad-Modus gleich mit gesichert, da vom selben Mechanismus betroffen
-    (globaler, prozessweiter Torch-Zustand, kein Test-lokaler).
+    autouse, so that it does not have to be imported per test file -- a future test
+    that sets global Torch state somewhere would otherwise automatically be a leak again.
+    ``num_threads``/grad mode saved along with it, since affected by the same mechanism
+    (global, process-wide Torch state, not test-local).
     """
     try:
         import torch
@@ -94,10 +93,10 @@ def build_design(
     initial_condition_design: InitialConditionDesign | bool | None = None,
     n_runs_hint: int = 8,
 ) -> MixedExcitationDesign:
-    """Standarddesign für Tests, kurze Läufe.
+    """Standard design for tests, short runs.
 
-    ``initial_condition_design=False`` schaltet die Streuung der Anfangszustände ab,
-    ``None`` verwendet die Voreinstellung des Designs.
+    ``initial_condition_design=False`` switches off the scatter of the initial states,
+    ``None`` uses the default of the design.
     """
     _ = n_runs_hint
     excitation = (
@@ -136,11 +135,11 @@ def build_design(
 def constant_excitation(
     simulator: GreyBoxFluidBedGranulator, n_steps: int, n_batch: int = 1
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Konstante Anregung im nominellen Betriebspunkt.
+    """Constant excitation at the nominal operating point.
 
-    Absichtlich hier und nicht in ``src/``: das eigentliche Anregungsdesign
-    (Sprungfolgen, PRBS, Rampen, LHS) ist Schritt 2 des Arbeitsplans. Diese Funktion ist
-    nur ein Testhilfsmittel und soll nicht zur heimlichen Vorwegnahme werden.
+    Deliberately here and not in ``src/``: the actual excitation design
+    (step sequences, PRBS, ramps, LHS) is step 2 of the work plan. This function is
+    only a test aid and is not meant to become a covert anticipation of it.
     """
     actions = np.repeat(simulator.nominal_action(n_batch)[:, None, :], n_steps, axis=1)
     disturbances = np.repeat(simulator.nominal_disturbance(n_batch)[:, None, :], n_steps, axis=1)

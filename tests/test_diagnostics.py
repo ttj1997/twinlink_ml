@@ -1,8 +1,8 @@
-"""Tests für ``steady_state_report``.
+"""Tests for ``steady_state_report``.
 
-Vor Schritt 3 gab es hierfür keine Tests -- der Bericht war dadurch nie gegen
-konkrete Zahlenwerte abgesichert, was den 610.1-µm-Fehlbefund unentdeckt ließ (siehe
-docs/04_stand_ap1.md, Befund A). Diese Datei ist neu, keine Anpassung bestehender Tests.
+Before step 3 there were no tests for this -- the report was therefore never secured against
+concrete numerical values, which let the 610.1 µm false finding go undetected (see
+docs/04_stand_ap1.md, Befund A). This file is new, not an adaptation of existing tests.
 """
 
 from __future__ import annotations
@@ -34,7 +34,7 @@ GAB_CONFIG_PATH = (
 def test_steady_state_report_matches_exact_solver_not_the_old_transient_value(
     config: ProcessConfig,
 ) -> None:
-    """Regression für Befund A: 750.0 µm, nicht die frühere 610.1 µm bei duration_s=30000."""
+    """Regression for Befund A: 750.0 µm, not the earlier 610.1 µm at duration_s=30000."""
     simulator = GreyBoxFluidBedGranulator(config)
     report = steady_state_report(simulator)
     assert report.diameter_um == pytest.approx(750.0, rel=1e-6)
@@ -62,25 +62,25 @@ def test_steady_state_report_format_shows_feasibility_and_residual(
 def test_time_constant_report_matches_transient_within_measured_noise_floor(
     config: ProcessConfig,
 ) -> None:
-    """Löser- und Transienten-Linearisierungspunkt vergleichen (Schritt 3b).
+    """Compare the solver and transient linearisation points (step 3b).
 
-    Zwei verschiedene Fließkomma-Pfade -- RK4-Integration über 6000 Schritte gegen
-    verschachtelte Bisektion -- landen auf demselben physikalischen Beharrungszustand
-    numerisch nicht bitgleich; ein bitgleiches Kriterium war hier unerfüllbar (siehe
-    docs/04_stand_ap1.md, Befund A). Gemessenes Rauschniveau der Methode liegt bei
-    ~1e-10 relativ; die Toleranz 1e-8 lässt zwei Größenordnungen Luft, damit der Test
-    nicht bei einem NumPy- oder Plattformwechsel flackert, würde aber jede
-    strukturelle Änderung (die um Größenordnungen darüber läge) weiterhin fangen.
+    Two different floating-point paths -- RK4 integration over 6000 steps against
+    nested bisection -- do not land bit-identically on the same physical steady state
+    numerically; a bit-identical criterion was unachievable here (see
+    docs/04_stand_ap1.md, Befund A). The measured noise level of the method is around
+    ~1e-10 relative; the tolerance 1e-8 leaves two orders of magnitude of headroom, so that
+    the test does not flicker on a NumPy or platform change, but would still catch any
+    structural change (which would lie orders of magnitude above that).
 
-    Ausnahme: ``tau_3_s`` (Feststoff-Regelkreis) hat als Steigung exakt
-    ``-1/mass_control_time_constant_s`` -- eine reine Config-Konstante, unabhängig vom
-    numerischen Pfad. Dafür ist Bitgleichheit die schärfere, korrekt erwartbare
-    Aussage, nicht nur eine Toleranz.
+    Exception: ``tau_3_s`` (solids control loop) has as its slope exactly
+    ``-1/mass_control_time_constant_s`` -- a pure config constant, independent of the
+    numerical path. For it, bit-identity is the sharper, correctly expectable
+    statement, not just a tolerance.
     """
     simulator = GreyBoxFluidBedGranulator(config)
 
-    # Altes Verhalten reproduziert (nicht mehr Teil von time_constant_report seit
-    # Schritt 3b): transiente Integration, dann Zeitkonstanten am Endzustand.
+    # Old behaviour reproduced (no longer part of time_constant_report since
+    # step 3b): transient integration, then time constants at the final state.
     n_steps = int(30_000.0 / simulator.sample_time_s)
     actions = np.repeat(simulator.nominal_action(1)[:, None, :], n_steps, axis=1)
     disturbances = np.repeat(simulator.nominal_disturbance(1)[:, None, :], n_steps, axis=1)
@@ -102,7 +102,7 @@ def test_time_constant_report_matches_transient_within_measured_noise_floor(
 
 
 def test_match_single_mode_requires_exactly_one_hit_within_tolerance() -> None:
-    """N2: Wertevergleich statt Rangposition -- s. ``time_constant_report``-Docstring."""
+    """N2: value comparison instead of rank position -- see ``time_constant_report`` docstring."""
     taus = [10.0, 100.0, 600.0, 16000.0]
     assert _match_single_mode(taus, 600.0, rtol=1e-6) == 2
     assert _match_single_mode(taus, 600.0 * (1.0 + 1e-9), rtol=1e-6) == 2
@@ -113,11 +113,11 @@ def test_match_single_mode_requires_exactly_one_hit_within_tolerance() -> None:
 def test_time_constant_report_identifies_structural_modes_by_value(
     config: ProcessConfig,
 ) -> None:
-    """N2: ``tau_mass_control_s``/``tau_residence_s`` treffen die Konfigurationskonstanten.
+    """N2: ``tau_mass_control_s``/``tau_residence_s`` hit the configuration constants.
 
-    Bitgleich mit ``operation.mass_control_time_constant_s`` -- dieselbe Begründung wie
-    beim bestehenden ``tau_3_s``-Bitgleichheits-Test oben (reine Konfigurationskonstante,
-    pfadunabhängig).
+    Bit-identical with ``operation.mass_control_time_constant_s`` -- the same reasoning as
+    for the existing ``tau_3_s`` bit-identity test above (pure configuration constant,
+    path-independent).
     """
     simulator = GreyBoxFluidBedGranulator(config)
     report = time_constant_report(simulator)
@@ -143,13 +143,13 @@ def test_time_constant_report_identifies_structural_modes_by_value(
 
 
 def test_time_constant_report_mode_identity_is_stable_across_rank_swap() -> None:
-    """N2-Regression: die tau_i-Rangposition der mass_control-Mode ist nicht stabil.
+    """N2 regression: the tau_i rank position of the mass_control mode is not stable.
 
-    An der GAB-Config (``greybox_gab_placeholder.yaml``, Befund 47/M1/49) liegt der
-    gekoppelte langsame Zweig bei 60 °C Eintrittstemperatur oberhalb von 600 s (Rang
-    wandert auf ``tau_3_s``), bei 90 °C unterhalb (``tau_2_s``) -- die Namen ``tau_2_s``/
-    ``tau_3_s`` sind also keine stabile Identität. Die Identifikation über den Zahlenwert
-    bleibt davon unberührt und liefert an beiden Betriebspunkten
+    At the GAB config (``greybox_gab_placeholder.yaml``, Befund 47/M1/49) the
+    coupled slow branch lies above 600 s at an inlet temperature of 60 °C (rank
+    moves to ``tau_3_s``), below it at 90 °C (``tau_2_s``) -- the names ``tau_2_s``/
+    ``tau_3_s`` are therefore not a stable identity. The identification via the numerical
+    value is unaffected by this and yields at both operating points
     ``tau_mass_control_s`` == ``mass_control_time_constant_s``.
     """
     with warnings.catch_warnings():
@@ -184,7 +184,7 @@ def test_time_constant_report_mode_identity_is_stable_across_rank_swap() -> None
 def test_time_constant_report_mode_identification_none_when_ambiguous(
     config: ProcessConfig,
 ) -> None:
-    """N2: mehrdeutiger Treffer wird nicht geraten, sondern als ``None`` mit Notiz gemeldet."""
+    """N2: an ambiguous match is not guessed but reported as ``None`` with a note."""
     simulator = GreyBoxFluidBedGranulator(config)
     report = time_constant_report(simulator, mode_match_rtol=1.0)
 

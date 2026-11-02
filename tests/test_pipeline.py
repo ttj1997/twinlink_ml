@@ -1,8 +1,8 @@
-"""Tests für Splits, Fensterung, Baselines und Evaluator (Arbeitsplan Schritte 3 und 4).
+"""Tests for splits, windowing, baselines and evaluator (work plan steps 3 and 4).
 
-Schwerpunkt sind die Fehler, die im Betrieb stumm bleiben: prozessabhängige Hashes,
-Skalierer aus dem falschen Split, Fenster über Laufgrenzen hinweg, und ein Rollout, der
-heimlich die Wahrheit statt der eigenen Vorhersage fortschreibt.
+The focus is on the errors that stay silent in operation: process-dependent hashes,
+scalers from the wrong split, windows across run boundaries, and a rollout that
+covertly carries forward the truth instead of its own prediction.
 """
 
 from __future__ import annotations
@@ -58,7 +58,7 @@ CONFIG_PATH = Path(__file__).resolve().parents[1] / "conf" / "process" / "greybo
 
 
 def make_ids(n: int, prefix: str = "mixed-deadbeef") -> tuple[str, ...]:
-    """Lauf-IDs im Schema von ``MixedExcitationDesign.build``."""
+    """Run IDs in the scheme of ``MixedExcitationDesign.build``."""
     return tuple(f"{prefix}-{i:05d}" for i in range(n))
 
 
@@ -75,10 +75,10 @@ def test_stable_unit_hash_avoids_concatenation_collision() -> None:
 
 
 def test_stable_unit_hash_independent_of_python_hash_seed() -> None:
-    """Regression gegen die Verwendung von ``hash()``.
+    """Regression against the use of ``hash()``.
 
-    ``seed_everything`` setzt ``PYTHONHASHSEED`` erst zur Laufzeit; der Interpreterstart
-    ist damit nicht erreicht. Nur dieser Subprozess-Test deckt den Fehler auf.
+    ``seed_everything`` sets ``PYTHONHASHSEED`` only at runtime; the interpreter start
+    is thus not reached. Only this subprocess test uncovers the error.
     """
     source = Path(__file__).resolve().parents[1] / "src"
     snippet = (
@@ -114,7 +114,7 @@ def test_design_key_extracts_fingerprint() -> None:
 
 
 def test_splitter_rejects_mixed_designs() -> None:
-    """Zwei separat gebaute Designs sind nicht verschachtelt -- Fehler, keine Warnung."""
+    """Two separately built designs are not nested -- an error, not a warning."""
     pool = make_ids(8, "mixed-aaaaaaaa") + make_ids(8, "mixed-bbbbbbbb")
     with pytest.raises(SplitConfigError):
         IndexBlockSplitter(n_train=8, n_val=4, n_test=4).split(pool)
@@ -190,16 +190,16 @@ def test_predefined_split_rejects_unassigned_runs() -> None:
         splitter.split(ids)
 
 
-# ------------------------------------------------------- Konstantläufe im Design
+# ------------------------------------------------------- Constant runs in the design
 
 
 def test_constant_runs_are_spread_over_the_design() -> None:
-    """Jedes Präfix muss ungefähr den Sollanteil an Konstantläufen haben.
+    """Every prefix must have approximately the target share of constant runs.
 
-    Regression gegen die alte Regel ``run < n_constant``: die legte alle Konstantläufe
-    als Block an den Anfang, wodurch die kleinste Lernkurven-Stützstelle 37 % statt 10 %
-    anregungsfreie Läufe enthielt und ein Präfix-Block-Split sie vollständig in ``train``
-    schob.
+    Regression against the old rule ``run < n_constant``: it placed all constant runs
+    as a block at the beginning, whereby the smallest learning-curve point contained
+    37 % instead of 10 % excitation-free runs and a prefix-block split pushed them entirely
+    into ``train``.
     """
     flags = _constant_run_flags(128, 0.10)
     assert 12 <= int(flags.sum()) <= 14
@@ -214,12 +214,12 @@ def test_constant_run_flags_reject_invalid_fraction() -> None:
         _constant_run_flags(8, 1.5)
 
 
-# ------------------------------------------------------------------ Fensterung
+# ------------------------------------------------------------------- Windowing
 
 
 @pytest.fixture(scope="module")
 def pipeline() -> tuple[object, object, object]:
-    """Kleiner, aber echter Datensatz: Design, Rollout, Split."""
+    """Small but real data set: design, rollout, split."""
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
         base = load_process_config(CONFIG_PATH)
@@ -290,7 +290,7 @@ def test_dataset_only_contains_runs_of_its_split(pipeline) -> None:
 
 
 def test_dataset_preserves_split_order(pipeline) -> None:
-    """Sonst stimmt ``subset(n)`` nicht mehr mit der Design-Reihenfolge überein."""
+    """Otherwise ``subset(n)`` no longer matches the design order."""
     _, split, _ = pipeline
     train, _ = _datasets(pipeline)
     assert train.run_ids == split.train
@@ -305,7 +305,7 @@ def test_windows_never_cross_run_boundaries(pipeline) -> None:
 
 
 def test_test_scaler_comes_from_training_split(pipeline) -> None:
-    """Der häufigste stille Leak nach dem Split selbst."""
+    """The most frequent silent leak after the split itself."""
     train, test = _datasets(pipeline)
     assert np.allclose(train.target_scaler.mean, test.target_scaler.mean)
     trajectory, split, _ = pipeline
@@ -351,7 +351,7 @@ def test_persistence_holds_last_observation(pipeline) -> None:
 
 
 def test_static_regression_is_horizon_independent(pipeline) -> None:
-    """Kein Zustandsgedächtnis, also darf der Fehler nicht mit dem Horizont wachsen."""
+    """No state memory, so the error must not grow with the horizon."""
     train, test = _datasets(pipeline)
     model = StaticRegressionModel()
     model.fit(train, seed=0)
@@ -363,10 +363,10 @@ def test_static_regression_is_horizon_independent(pipeline) -> None:
 
 
 def test_arx_rollout_uses_own_predictions(pipeline) -> None:
-    """Ein Rollout, der heimlich die Wahrheit fortschreibt, wäre nicht erkennbar klein.
+    """A rollout that covertly carries forward the truth would not be recognisably small.
 
-    Prüfung: werden die zukünftigen Sollwerte verändert, darf sich die Vorhersage nicht
-    ändern -- das Modell darf sie nicht gesehen haben.
+    Check: if the future set points are changed, the prediction must not
+    change -- the model must not have seen them.
     """
     train, test = _datasets(pipeline)
     model = LinearARXModel()
@@ -387,11 +387,11 @@ def test_arx_needs_sufficient_history(pipeline) -> None:
 
 
 def test_arx_beats_static_regression_on_energy(pipeline) -> None:
-    """Inhaltliche Zusicherung: es gibt einen dynamischen Anteil in ``energy_target``.
+    """Content guarantee: there is a dynamic component in ``energy_target``.
 
-    Schlägt der ARX die statische Regression **nicht**, ist die Zielgröße vollständig
-    statisch und der ganze Architekturvergleich auf ``dE`` gegenstandslos. Der Test ist
-    damit ein Wächter über die Interpretierbarkeit von AP 1, nicht über den Code.
+    If the ARX does **not** beat the static regression, the target is entirely
+    static and the whole architecture comparison on ``dE`` is moot. The test is
+    thus a guard over the interpretability of AP 1, not over the code.
     """
     train, test = _datasets(pipeline)
     evaluator = RolloutEvaluator(horizons=(1,))
@@ -457,12 +457,12 @@ def test_rmse_run_median_physical_is_present_and_positive(pipeline) -> None:
 
 
 def test_existing_nrmse_keys_unchanged_by_rmse_addition(pipeline) -> None:
-    """Regressionstest (G3).
+    """Regression test (G3).
 
-    ``rmse_run_median_physical`` darf die bestehenden NRMSE-Werte nicht verändern -- weder
-    unter ``physical_units=True`` noch ``=False``. Referenz ist dieselbe Rechnung,
-    unabhängig über die öffentliche API nachvollzogen, ohne den Umweg über die neuen
-    ``*_physical``-Zwischengrößen in ``RolloutEvaluator.evaluate``.
+    ``rmse_run_median_physical`` must not change the existing NRMSE values -- neither
+    under ``physical_units=True`` nor ``=False``. The reference is the same calculation,
+    reproduced independently via the public API, without the detour via the new
+    ``*_physical`` intermediate quantities in ``RolloutEvaluator.evaluate``.
     """
     train, test = _datasets(pipeline)
     model = LinearARXModel()
@@ -494,11 +494,11 @@ def test_existing_nrmse_keys_unchanged_by_rmse_addition(pipeline) -> None:
 
 
 def test_pooled_and_per_run_normalisation_differ_for_quality_targets(pipeline) -> None:
-    """Der Befund, der die Primärmetrik festlegt.
+    """The finding that fixes the primary metric.
 
-    Der gepoolte Nenner enthält die Niveauunterschiede zwischen den Läufen, die durch die
-    gestreuten Anfangszustände entstehen und von keinem Modell vorherzusagen sind. Bei den
-    Qualitätsgrößen ist er dadurch deutlich zu groß.
+    The pooled denominator contains the level differences between the runs that arise from
+    the scattered initial states and cannot be predicted by any model. For the
+    quality quantities it is therefore considerably too large.
     """
     train, test = _datasets(pipeline)
     model = LinearARXModel()

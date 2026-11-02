@@ -113,7 +113,7 @@ SOURCE_ARTIFACT = "m0_line_b_spray_rate"
 ARTIFACT_NAME = "m0_line_b_network"
 LINE_A_SPRAY = 1.5
 CANDIDATES = (2.0, 2.5, 3.0)
-T_KALT_C = 29.1
+T_COLD_C = 29.1
 DT_MIN_K = 20.0
 ETA_H = partner.HEATER_EFFICIENCY
 H_U_J_PER_KG = partner.FUEL_LOWER_HEATING_VALUE_J_PER_KG
@@ -224,7 +224,7 @@ def _evaluate_scenario(
         sinks=sinks,
         minimum_pinch_k=DT_MIN_K,
         recovery_mode="condensing",
-        cold_temperature_celsius=T_KALT_C,
+        cold_temperature_celsius=T_COLD_C,
         fuel_lower_heating_value_j_per_kg=H_U_J_PER_KG,
         heater_efficiency=ETA_H,
     )
@@ -324,10 +324,10 @@ def main() -> int:
                 "dew_point": r["dew_point"],
                 "dry_air_flow_lab_kg_per_s": r["m_dry"],
                 "to_t_kalt_plus_dt_min": _recoverable(
-                    base_config.gas, r["t_out"], r["y_out"], r["m_dry"], T_KALT_C + DT_MIN_K
+                    base_config.gas, r["t_out"], r["y_out"], r["m_dry"], T_COLD_C + DT_MIN_K
                 ),
                 "to_t_kalt": _recoverable(
-                    base_config.gas, r["t_out"], r["y_out"], r["m_dry"], T_KALT_C
+                    base_config.gas, r["t_out"], r["y_out"], r["m_dry"], T_COLD_C
                 ),
             }
             for r in rows
@@ -383,7 +383,7 @@ def main() -> int:
                 "line_a_nominal_dry_air_flow_kg_per_s": nominal.dry_air_mass_flow_kg_per_s,
             },
             "network": {
-                "t_kalt_celsius": T_KALT_C,
+                "t_kalt_celsius": T_COLD_C,
                 "dt_min_k": DT_MIN_K,
                 "eta_h": ETA_H,
                 "h_u_j_per_kg": H_U_J_PER_KG,

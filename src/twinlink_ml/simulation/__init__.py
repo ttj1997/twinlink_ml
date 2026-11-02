@@ -1,4 +1,4 @@
-"""Prozesssimulation: Grey-Box-Modell, später Dyssol-Adapter und Surrogate."""
+"""Process simulation: grey-box model, later Dyssol adapter and surrogates."""
 
 from .backend import ArrayBackend, NumpyBackend, TorchBackend, get_backend
 from .base import ProcessSimulator, StepResult, Trajectory

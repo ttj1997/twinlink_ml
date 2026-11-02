@@ -1,60 +1,60 @@
-r"""Auflösungsvermögen und Varianzzerlegung (Arbeitsplan Schritt 5, Punkte 1 und 2).
+r"""Resolving power and variance decomposition (work plan step 5, items 1 and 2).
 
-Die Frage, die dieses Modul beantwortet
+The question this module answers
 ---------------------------------------
-Nach Schritt 4 steht eine Lernkurve mit Median und Spannweite über drei Seeds. Was
-**nicht** dasteht, ist die Schwelle, ab der ein Unterschied zwischen zwei Architekturen
-überhaupt eine Aussage ist. Bei ``product_moisture_kg_per_kg`` liegt die Seed-Spannweite
-der Persistenz bei :math:`\pm 10\,\%` relativ, und Persistenz hat **keine Parameter**:
-diese Streuung ist reine Datensatz-Realisierung. Ein GRU, das 5 % besser ist, ist damit
-nicht besser, sondern nicht unterscheidbar.
+After step 4 there is a learning curve with median and range over three seeds. What is
+**not** there is the threshold above which a difference between two architectures is a
+statement at all. For ``product_moisture_kg_per_kg`` the seed range of persistence is
+:math:`\pm 10\,\%` relative, and persistence has **no parameters**: this spread is pure
+data set realisation. A GRU that is 5 % better is therefore not better but
+indistinguishable.
 
-Zwei Größen, die auseinandergehalten werden müssen
+Two quantities that must be kept apart
 -------------------------------------------------
-* **Streuung** :math:`\hat\sigma` -- die Schwankung eines einzelnen Ergebnisses über die
-  Replikate. Das ist die berichtete Spannweite.
-* **Auflösungsvermögen** -- die kleinste Differenz zwischen zwei Modellen, die mit
-  :math:`n` Replikaten von Null unterscheidbar ist. Sie fällt mit
-  :math:`\sqrt{2/n}` und ist deshalb *kleiner* als die Spannweite.
+* **Spread** :math:`\hat\sigma` -- the fluctuation of a single result over the
+  replicates. This is the reported range.
+* **Resolving power** -- the smallest difference between two models that can be
+  distinguished from zero with :math:`n` replicates. It falls with
+  :math:`\sqrt{2/n}` and is therefore *smaller* than the range.
 
 .. math::
    \Delta_{\min} = z_{1-\alpha/2}\,\hat\sigma\,\sqrt{\frac{2}{n}}
 
-Der Faktor :math:`\sqrt 2` steht dort, weil zwei unabhängig gestreute Größen verglichen
-werden, nicht eine gegen eine Konstante.
+The factor :math:`\sqrt 2` is there because two independently scattered quantities are
+compared, not one against a constant.
 
-Warum die Streuung aus der Spannweite und nicht aus der Standardabweichung
+Why the spread from the range and not from the standard deviation
 --------------------------------------------------------------------------
-Bei drei bis fünf Replikaten ist :math:`s` mit :math:`\mathrm{ddof}=1` selbst extrem
-streuungsbehaftet (relativer Standardfehler von :math:`s` bei :math:`n=3` rund 50 %). Der
-spannweitenbasierte Schätzer :math:`\hat\sigma = R/d_2(n)` mit den Hartley-Konstanten aus
-der Prozessregelung ist bei kleinem :math:`n` robuster und benutzt genau die Zahl, die
-ohnehin berichtet wird. Beide werden mitprotokolliert; abweichen sie stark, ist ein
-Replikat ein Ausreißer und die Zahl nicht zu glauben.
+With three to five replicates, :math:`s` with :math:`\mathrm{ddof}=1` is itself extremely
+noisy (relative standard error of :math:`s` at :math:`n=3` about 50 %). The range-based
+estimator :math:`\hat\sigma = R/d_2(n)` with the Hartley constants from process control is
+more robust at small :math:`n` and uses exactly the number that is reported anyway. Both
+are logged; if they differ strongly, one replicate is an outlier and the number is not to
+be believed.
 
-**Die Grenze der Methode, offen benannt:** mit drei Replikaten ist jede dieser Zahlen
-eine Schätzung mit einer Unsicherheit derselben Größenordnung wie sie selbst. Sie ist als
-*Größenordnung* zu lesen -- als Antwort auf "ist dieser Unterschied 3 % oder 300 %" und
-nicht als Signifikanztest. Genau deshalb liefert :meth:`SeedSpread.required_replicates`
-eine Zahl: wer eine Differenz von 5 % nachweisen will, sieht dort, dass drei Seeds dafür
-nicht genügen.
+**The limit of the method, stated openly:** with three replicates each of these numbers
+is an estimate with an uncertainty of the same order of magnitude as itself. It is to be
+read as an *order of magnitude* -- as an answer to "is this difference 3 % or 300 %" and
+not as a significance test. Precisely for this reason :meth:`SeedSpread.required_replicates`
+provides a number: anyone who wants to demonstrate a difference of 5 % sees there that
+three seeds are not enough for it.
 
-Was die Zerlegung nach Quelle leistet und was nicht
----------------------------------------------------
-Die Achsen ``DATA``, ``NOISE``, ``MODEL`` werden einzeln variiert (one-factor-at-a-time,
-siehe :class:`~twinlink_ml.utils.seeding.SeedPlan`). Das sind **Haupteffekte**, keine
-Varianzanalyse mit Interaktionen. Ob die Zerlegung trägt, prüft
-:meth:`VarianceDecomposition.additivity_ratio` gegen die gemeinsam variierte Achse:
+What the decomposition by source achieves and what it does not
+---------------------------------------------------------------
+The axes ``DATA``, ``NOISE``, ``MODEL`` are varied individually (one-factor-at-a-time,
+see :class:`~twinlink_ml.utils.seeding.SeedPlan`). These are **main effects**, not an
+analysis of variance with interactions. Whether the decomposition holds is checked by
+:meth:`VarianceDecomposition.additivity_ratio` against the jointly varied axis:
 
 .. math::
    \varrho = \frac{\sqrt{\hat\sigma_{data}^2 + \hat\sigma_{noise}^2
    + \hat\sigma_{model}^2}}{\hat\sigma_{joint}}
 
-Bei :math:`\varrho \approx 1` sind die Quellen näherungsweise unabhängig und die
-Zerlegung ist lesbar. Weicht :math:`\varrho` deutlich ab, dominieren Interaktionen (oder
-die Schätzung ist bei drei Replikaten zu grob) -- dann bleibt nur die gemeinsame Streuung
-als berichtete Zahl. Diese Prüfung ist der Grund, warum ``JOINT`` mitgefahren wird,
-anstatt die Gesamtstreuung als Summe der Einzelachsen zu behaupten.
+At :math:`\varrho \approx 1` the sources are approximately independent and the
+decomposition is readable. If :math:`\varrho` deviates clearly, interactions dominate (or
+the estimate is too coarse with three replicates) -- then only the joint spread remains
+as the reported number. This check is the reason why ``JOINT`` is run along, instead of
+claiming the total spread as the sum of the individual axes.
 """
 
 from __future__ import annotations
@@ -103,19 +103,19 @@ DEFAULT_METRIC: Final[str] = "nrmse_run_median"
 
 @dataclass(frozen=True, slots=True)
 class PointKey:
-    """Identität eines Lernkurvenpunkts jenseits der variierten Achse."""
+    """Identity of a learning-curve point beyond the varied axis."""
 
     label: str
     n_train: int
 
     def __str__(self) -> str:
-        """Kompakte Darstellung für Tabellen."""
+        """Compact representation for tables."""
         return f"{self.label} @ n={self.n_train}"
 
 
 @dataclass(frozen=True, slots=True)
 class SeedSpread:
-    """Streuung eines Ergebnisses über die Replikate einer Zufallsquelle."""
+    """Spread of a result over the replicates of one random source."""
 
     source: VarianceSource
     values: tuple[float, ...]
@@ -126,41 +126,41 @@ class SeedSpread:
 
     @property
     def n_replicates(self) -> int:
-        """Anzahl Replikate."""
+        """Number of replicates."""
         return len(self.values)
 
     @property
     def median(self) -> float:
-        """Median -- die berichtete Zahl."""
+        """Median -- the reported number."""
         return float(np.median(self.values))
 
     @property
     def minimum(self) -> float:
-        """Kleinster Wert."""
+        """Smallest value."""
         return float(np.min(self.values))
 
     @property
     def maximum(self) -> float:
-        """Größter Wert."""
+        """Largest value."""
         return float(np.max(self.values))
 
     @property
     def span(self) -> float:
-        r"""Spannweite :math:`R = \max - \min`."""
+        r"""Range :math:`R = \max - \min`."""
         return self.maximum - self.minimum
 
     @property
     def relative_span(self) -> float:
-        """Spannweite bezogen auf den Median."""
+        """Range relative to the median."""
         return self.span / self.median if self.median != 0.0 else math.nan
 
     @property
     def sigma_from_span(self) -> float:
-        """Spannweitenbasierter Streuungsschätzer :math:`R / d_2(n)`.
+        """Range-based spread estimator :math:`R / d_2(n)`.
 
-        Für :math:`n > 10` wird auf die Standardabweichung zurückgefallen -- die
-        Hartley-Konstanten sind dort nicht mehr tabelliert und der übliche Schätzer ist
-        bei dieser Replikatzahl ohnehin brauchbar.
+        For :math:`n > 10` it falls back to the standard deviation -- the Hartley
+        constants are no longer tabulated there and the usual estimator is usable anyway
+        at this number of replicates.
         """
         if self.n_replicates == 1:
             return 0.0
@@ -171,7 +171,7 @@ class SeedSpread:
 
     @property
     def sigma_from_std(self) -> float:
-        """Standardabweichung mit ``ddof=1``; nur zum Abgleich."""
+        """Standard deviation with ``ddof=1``; only for cross-checking."""
         if self.n_replicates < 2:
             return 0.0
         return float(np.std(self.values, ddof=1))
@@ -179,14 +179,14 @@ class SeedSpread:
     def minimum_detectable_difference(
         self, *, n_replicates: int | None = None, confidence: float = 0.95
     ) -> float:
-        """Kleinste nachweisbare Differenz zweier Modelle, absolut.
+        """Smallest detectable difference between two models, absolute.
 
         Parameters
         ----------
         n_replicates
-            Replikatzahl, mit der verglichen werden soll. ``None`` nimmt die eigene.
+            Number of replicates with which to compare. ``None`` takes the own one.
         confidence
-            Zweiseitiges Konfidenzniveau; erlaubt sind 0.68, 0.90, 0.95, 0.99.
+            Two-sided confidence level; allowed are 0.68, 0.90, 0.95, 0.99.
         """
         count = self.n_replicates if n_replicates is None else n_replicates
         if count < 1:
@@ -197,7 +197,7 @@ class SeedSpread:
     def relative_minimum_detectable_difference(
         self, *, n_replicates: int | None = None, confidence: float = 0.95
     ) -> float:
-        """Dasselbe, bezogen auf den Median -- die berichtbare Prozentzahl."""
+        """The same, relative to the median -- the reportable percentage."""
         absolute = self.minimum_detectable_difference(
             n_replicates=n_replicates, confidence=confidence
         )
@@ -206,13 +206,13 @@ class SeedSpread:
     def required_replicates(
         self, relative_difference: float, *, confidence: float = 0.95, maximum: int = 200
     ) -> int:
-        r"""Replikatzahl, um eine relative Differenz nachzuweisen.
+        r"""Number of replicates needed to demonstrate a relative difference.
 
         .. math:: n \ge 2\left(\frac{z\,\hat\sigma}{\delta}\right)^2
 
-        Nach oben begrenzt, weil das Ergebnis sonst als Rechenplan gelesen wird: wer bei
-        einer Zielgröße 800 Seeds braucht, hat kein Seed-Problem, sondern die falsche
-        Zielgröße oder ein zu grobes Anregungsdesign.
+        Capped from above, because otherwise the result is read as a compute plan: anyone
+        who needs 800 seeds for a target does not have a seed problem but the wrong target
+        or too coarse an excitation design.
         """
         if relative_difference <= 0.0:
             raise ValueError("relative_difference muss > 0 sein")
@@ -224,7 +224,7 @@ class SeedSpread:
         return min(math.ceil(needed), maximum)
 
     def as_metrics(self, prefix: str) -> dict[str, float]:
-        """Flache Kennzahlen für das Log."""
+        """Flat figures for the log."""
         return {
             f"{prefix}/median": self.median,
             f"{prefix}/min": self.minimum,
@@ -245,7 +245,7 @@ def _z_value(confidence: float) -> float:
 
 @dataclass(frozen=True, slots=True)
 class VarianceDecomposition:
-    """Streuung eines Punkts, aufgeschlüsselt nach Zufallsquelle."""
+    """Spread of a point, broken down by random source."""
 
     key: PointKey
     target: str
@@ -254,7 +254,7 @@ class VarianceDecomposition:
 
     @property
     def dominant_source(self) -> VarianceSource:
-        """Achse mit der größten Streuung, ``JOINT`` ausgenommen."""
+        """Axis with the largest spread, ``JOINT`` excluded."""
         candidates = {
             source: spread.sigma_from_span
             for source, spread in self.per_source.items()
@@ -266,19 +266,19 @@ class VarianceDecomposition:
 
     @property
     def additivity_ratio(self) -> float:
-        r"""Quadratische Summe der Einzelachsen über der gemeinsamen Streuung.
+        r"""Quadratic sum of the individual axes over the joint spread.
 
-        Näher an 1 heißt: die Quellen sind näherungsweise unabhängig und die Zerlegung
-        ist lesbar. ``nan``, wenn ``JOINT`` fehlt oder dort keine Streuung auftrat.
+        Closer to 1 means: the sources are approximately independent and the
+        decomposition is readable. ``nan`` if ``JOINT`` is missing or showed no spread.
         """
         joint = self.per_source.get(VarianceSource.JOINT)
         single = (VarianceSource.DATA, VarianceSource.NOISE, VarianceSource.MODEL)
         if joint is None or joint.sigma_from_span == 0.0:
             return math.nan
         if any(source not in self.per_source for source in single):
-            # Fehlt eine Einzelachse, ist die Quadratsumme keine Zerlegung der
-            # Gesamtstreuung, sondern ein Teil davon -- und eine Zahl nahe Null würde als
-            # "keine Interaktionen" gelesen statt als "nicht gemessen".
+            # If an individual axis is missing, the sum of squares is not a decomposition of
+            # the total spread but a part of it -- and a number close to zero would be read
+            # as "no interactions" instead of as "not measured".
             return math.nan
         total = math.sqrt(
             sum(
@@ -290,7 +290,7 @@ class VarianceDecomposition:
         return total / joint.sigma_from_span
 
     def as_metrics(self) -> dict[str, float]:
-        """Flache Kennzahlen für das Log."""
+        """Flat figures for the log."""
         metrics: dict[str, float] = {}
         for source, spread in self.per_source.items():
             metrics.update(spread.as_metrics(f"variance/{source.value}"))
@@ -305,17 +305,17 @@ def collect_spreads(
     horizon: int,
     metric: str = DEFAULT_METRIC,
 ) -> dict[tuple[PointKey, VarianceSource], SeedSpread]:
-    """Gruppiere Records nach Punkt und Zufallsquelle.
+    """Group records by point and random source.
 
-    Erwartet die Parameter ``variance/source``, ``variance/replicate``, ``model/label``
-    und ``n_train``, wie sie
-    :func:`~twinlink_ml.evaluation.protocol.run_variance_decomposition` schreibt.
-    Mehrfach vorkommende Replikate derselben Achse werden **nicht** stillschweigend
-    gemittelt, sondern als Fehler gemeldet. Das ist gleichzeitig der Schutz gegen den
-    naheliegenden Bedienfehler: schiebt man ein Log hinein, in dem außer dem Seed noch
-    ein zweiter Faktor variiert (Rauschniveau, Validierungs-Betriebsart, Δt), erscheint
-    dasselbe Replikat mit zwei Werten -- und die "Streuung über Seeds" wäre in Wahrheit
-    der Effekt dieses Faktors. Vorher mit :func:`select` filtern.
+    Expects the parameters ``variance/source``, ``variance/replicate``, ``model/label``
+    and ``n_train``, as written by
+    :func:`~twinlink_ml.evaluation.protocol.run_variance_decomposition`.
+    Replicates of the same axis that occur more than once are **not** silently averaged
+    but reported as an error. This is at the same time the protection against the obvious
+    usage error: if one feeds in a log in which a second factor varies besides the seed
+    (noise level, validation mode, Δt), the same replicate appears with two values -- and
+    the "spread over seeds" would in truth be the effect of that factor. Filter with
+    :func:`select` beforehand.
     """
     key_name = f"{metric}/{target}/h{horizon}"
     grouped: dict[tuple[PointKey, VarianceSource], dict[int, float]] = {}
@@ -355,7 +355,7 @@ def decompose_variance(
     horizon: int,
     metric: str = DEFAULT_METRIC,
 ) -> dict[PointKey, VarianceDecomposition]:
-    """Varianzzerlegung je Modell und Stützstelle."""
+    """Variance decomposition per model and learning-curve point."""
     spreads = collect_spreads(records, target=target, horizon=horizon, metric=metric)
     per_key: dict[PointKey, dict[VarianceSource, SeedSpread]] = {}
     for (key, source), spread in spreads.items():
@@ -380,19 +380,19 @@ def resolution_thresholds(
     confidence: float = 0.95,
     source: VarianceSource = VarianceSource.JOINT,
 ) -> dict[int, float]:
-    r"""Auflösungsschwelle je Stützstelle, relativ, aus einer parameterfreien Baseline.
+    r"""Resolution threshold per learning-curve point, relative, from a parameter-free baseline.
 
-    Warum die Referenz parameterfrei sein muss: die Streuung eines angepassten Modells
-    enthält Datensatz-Realisierung **und** Schätzunsicherheit. Als Schwelle taugt nur der
-    erste Anteil, denn er begrenzt jeden Vergleich, unabhängig von der Architektur. Die
-    Persistenz hat keine Parameter -- ihre Streuung ist genau dieser Anteil.
+    Why the reference must be parameter-free: the spread of a fitted model contains data
+    set realisation **and** estimation uncertainty. Only the first part is suitable as a
+    threshold, because it limits every comparison, independently of the architecture.
+    Persistence has no parameters -- its spread is exactly this part.
 
-    Der Preis dieser Wahl, offen benannt: die Schwelle ist damit **konstruktionsbedingt
-    unabhängig von** :math:`n_{\text{train}}`, weil die Persistenz nicht trainiert wird
-    und der Testsplit über alle Stützstellen derselbe ist. Sie ist eine untere Schranke.
-    Die zusätzliche, mit kleinem :math:`n` wachsende Schätzstreuung steht in der
-    Zerlegung der angepassten Baselines (``static``, ``arx``) und ist dort abzulesen --
-    beide Zahlen gehören in den Bericht, nicht nur diese.
+    The price of this choice, stated openly: the threshold is thereby **by construction
+    independent of** :math:`n_{\text{train}}`, because persistence is not trained and the
+    test split is the same across all learning-curve points. It is a lower bound. The
+    additional estimation spread, which grows with small :math:`n`, is in the
+    decomposition of the fitted baselines (``static``, ``arx``) and is to be read there --
+    both numbers belong in the report, not only this one.
     """
     spreads = collect_spreads(records, target=target, horizon=horizon, metric=metric)
     thresholds: dict[int, float] = {}
@@ -419,7 +419,7 @@ def resolution_report(
     reference_label: str = "persistence",
     confidence: float = 0.95,
 ) -> str:
-    """Textbericht: Zerlegung nach Quelle, Auflösungsschwelle, nötige Replikatzahl."""
+    """Text report: decomposition by source, resolution threshold, required replicates."""
     decomposition = decompose_variance(records, target=target, horizon=horizon, metric=metric)
     lines = [
         f"Zielgröße {target}, h = {horizon}, Metrik {metric}",
@@ -472,11 +472,11 @@ def resolution_report(
 
 
 def select(records: Sequence[RunRecord], **parameters: object) -> list[RunRecord]:
-    """Filtere Records nach Parameterwerten.
+    """Filter records by parameter values.
 
-    Für Studien mit mehr als einem Faktor: erst auf eine Stufe des Faktors filtern, dann
-    zerlegen. Der Vergleich in Strings, damit ``0.005`` und ``"0.005"`` aus dem
-    JSONL-Wiedereinlesen dasselbe treffen.
+    For studies with more than one factor: first filter to one level of the factor, then
+    decompose. The comparison is on strings, so that ``0.005`` and ``"0.005"`` from
+    re-reading the JSONL match the same records.
     """
 
     def matches(record: RunRecord) -> bool:
@@ -487,17 +487,17 @@ def select(records: Sequence[RunRecord], **parameters: object) -> list[RunRecord
 
 @dataclass(frozen=True, slots=True)
 class Verdict:
-    """Vergleich zweier Modelle an einer Stützstelle, gegen die Auflösungsschwelle.
+    """Comparison of two models at a learning-curve point, against the resolution threshold.
 
     Attributes
     ----------
     candidate, reference
-        Labels. ``reference`` ist die Baseline, die geschlagen werden muss -- nicht die
-        parameterfreie Referenz, aus der die Schwelle stammt.
+        Labels. ``reference`` is the baseline that must be beaten -- not the
+        parameter-free reference from which the threshold comes.
     improvement
-        Relative Verbesserung des Medians, positiv wenn der Kandidat besser (kleiner) ist.
+        Relative improvement of the median, positive if the candidate is better (smaller).
     threshold
-        Relative Auflösungsschwelle an dieser Stützstelle.
+        Relative resolution threshold at this learning-curve point.
     """
 
     candidate: str
@@ -510,12 +510,12 @@ class Verdict:
 
     @property
     def is_resolved(self) -> bool:
-        """Ob der Unterschied größer als das Auflösungsvermögen ist."""
+        """Whether the difference is larger than the resolving power."""
         return abs(self.improvement) > self.threshold
 
     @property
     def statement(self) -> str:
-        """Formulierung, die berichtet werden darf -- und keine andere."""
+        """The wording that may be reported -- and no other."""
         if not self.is_resolved:
             return (
                 f"{self.candidate} vs. {self.reference}: {self.improvement:+.1%} — "
@@ -540,17 +540,17 @@ def architecture_verdicts(
     source: VarianceSource = VarianceSource.JOINT,
     confidence: float = 0.95,
 ) -> list[Verdict]:
-    """Jeden Kandidaten gegen eine Baseline halten -- **mit** der Schwelle daneben.
+    """Hold every candidate against a baseline -- **with** the threshold next to it.
 
-    Der Zweck dieser Funktion ist eine Formulierungsdisziplin, nicht eine Rechnung: die
-    Zahl "12 % besser" ist ohne die Schwelle daneben keine Aussage, und in einem Bericht
-    steht sie dann trotzdem. Hier kommen beide nur gemeinsam heraus, und
-    :attr:`Verdict.statement` formuliert das Ergebnis so, wie es berichtet werden darf.
+    The purpose of this function is a discipline of wording, not a calculation: the
+    number "12 % better" is not a statement without the threshold next to it, and yet it
+    ends up in a report. Here both only come out together, and
+    :attr:`Verdict.statement` words the result the way it may be reported.
 
-    ``reference_label`` ist die Baseline, die zu schlagen ist (auf ``product_moisture``
-    die Persistenz, auf ``energy_target`` der ARX). ``resolution_label`` ist die
-    parameterfreie Baseline, aus deren Seed-Streuung die Schwelle kommt -- im
-    Soft-Sensor-Betrieb ``climatology`` statt ``persistence``.
+    ``reference_label`` is the baseline to be beaten (on ``product_moisture`` persistence,
+    on ``energy_target`` the ARX). ``resolution_label`` is the parameter-free baseline
+    from whose seed spread the threshold comes -- in soft-sensor operation
+    ``climatology`` instead of ``persistence``.
     """
     spreads = collect_spreads(records, target=target, horizon=horizon, metric=metric)
     thresholds = resolution_thresholds(

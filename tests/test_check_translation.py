@@ -1,8 +1,8 @@
-"""Tests fuer ``tools/check_translation.py``.
+"""Tests for ``tools/check_translation.py``.
 
-Testet nur die reinen Vergleichsfunktionen (``check_python``/``check_yaml``/
-``check_markdown``, kein Git) -- ``tools/`` ist kein Package (analog zu ``scripts/``,
-siehe dortige Konvention), deshalb per Dateipfad importiert.
+Tests only the pure comparison functions (``check_python``/``check_yaml``/
+``check_markdown``, no git) -- ``tools/`` is not a package (analogous to ``scripts/``,
+see the convention there), hence imported by file path.
 """
 
 from __future__ import annotations
@@ -100,7 +100,7 @@ def test_yaml_numeric_change_is_reported_hard() -> None:
 
 
 def test_yaml_status_change_is_reported_hard() -> None:
-    """``status`` ist kategorial, kein Freitext -- bleibt eine harte Pruefung."""
+    """``status`` is categorical, not free text -- stays a hard check."""
     old = "provenance:\n  status: placeholder\n"
     new = "provenance:\n  status: calibrated\n"
     findings = check_translation.check_yaml(old, new, "c.yaml")

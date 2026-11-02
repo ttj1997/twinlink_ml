@@ -1,125 +1,125 @@
-# Code-Konventionen
+# Code conventions
 
-## Sprache und Werkzeuge
+## Language and tools
 
 - **Python** ≥ 3.11
-- **PyTorch**, gerne PyTorch Lightning für Trainingsschleifen
-- **Hydra** oder OmegaConf für Konfiguration
-- **MLflow** oder Weights & Biases für Experiment-Tracking (ab Tag 1, nicht nachträglich)
-- **Ruff** (Linting + Formatierung), **mypy** (strict), **pytest**
-- Paketverwaltung: `uv` oder Poetry
+- **PyTorch**, PyTorch Lightning welcome for training loops
+- **Hydra** or OmegaConf for configuration
+- **MLflow** or Weights & Biases for experiment tracking (from day 1, not retrofitted)
+- **Ruff** (linting + formatting), **mypy** (strict), **pytest**
+- Package management: `uv` or Poetry
 
-## Struktur
+## Structure
 
-Installierbares Paket mit `src`-Layout:
+Installable package with `src` layout:
 
     twinlink_ml/
     ├── pyproject.toml
     ├── README.md
-    ├── conf/                     # Hydra-Konfigurationen, versioniert
+    ├── conf/                     # Hydra configurations, versioned
     ├── src/twinlink_ml/
-    │   ├── simulation/           # Grey-Box-Prozessmodell, Anregungsdesign
-    │   ├── data/                 # Datasets, Fensterung, Splits
-    │   ├── models/               # Architekturen hinter gemeinsamem Interface
-    │   ├── evaluation/           # Metriken, Rollouts, Lernkurven
-    │   ├── constraints/          # physikalische Constraints (Projektion, Monotonie)
-    │   └── utils/                # Seeding, Logging, Serialisierung
-    ├── notebooks/                # importieren die Module, duplizieren keinen Code
+    │   ├── simulation/           # grey-box process model, excitation design
+    │   ├── data/                 # datasets, windowing, splits
+    │   ├── models/               # architectures behind a common interface
+    │   ├── evaluation/           # metrics, rollouts, learning curves
+    │   ├── constraints/          # physical constraints (projection, monotonicity)
+    │   └── utils/                # seeding, logging, serialization
+    ├── notebooks/                # import the modules, duplicate no code
     └── tests/
 
-Strikte Trennung: **Config** (`conf/`) – **Code** (`src/`) – **Artefakte** (außerhalb der
-Versionskontrolle, über Tracking-Tool referenziert).
+Strict separation: **config** (`conf/`) – **code** (`src/`) – **artifacts** (outside version
+control, referenced via the tracking tool).
 
-## Objektorientierung
+## Object orientation
 
-- **Type Hints durchgängig**, auch bei internen Funktionen. mypy im strict-Modus muss durchlaufen.
-- **Dataclasses** (`frozen=True` wo möglich) oder **Pydantic** für alle Konfigurationsobjekte.
-  Keine losen Dicts als Parametercontainer.
-- **Registrierung statt Auswahl im Skript.** Modelle stehen genau einmal in
-  `models/registry.py`, mit Label, Fabrik und Voraussetzungen. Ein Dict im Treiberskript
-  reicht nur bis zum zweiten Treiber; danach vergleichen zwei Studien unterschiedliche
-  Modellmengen unter demselben Namen. Fabriken sind nullstellig, damit je Seed und
-  Stützstelle eine frische Instanz entsteht und kein Zustand über Lernkurvenpunkte lebt.
-- **Abstrakte Basisklassen (ABC)** für die vier Kernabstraktionen:
-  - `ProcessSimulator` – liefert Trajektorien (Grey-Box-Modell, später Dyssol-Adapter,
-    später ggf. gelerntes Surrogat)
-  - `SequenceDataset` – Fensterung, Normalisierung, Splits
-  - `SequenceModel` – gemeinsames Interface für GRU/LSTM/xLSTM/Mamba/Transformer,
-    inkl. Mehrschritt-Rollout
-  - `Evaluator` – Metriken und Ergebnisformate
-- **Dependency Injection** statt harter Kopplung: Modelle bekommen den Simulator bzw. das Dataset
-  übergeben, konstruieren es nicht selbst. Ermöglicht später den Tausch Grey-Box → Dyssol → Realdaten
-  ohne Änderung am Trainingscode.
-- **SOLID** beachten, insbesondere Open-Closed: eine neue Architektur hinzufügen darf keine
-  Änderung an Trainings- oder Evaluationscode erfordern.
-- Komposition vor Vererbung. Vererbungstiefe > 2 vermeiden.
+- **Type hints throughout**, including internal functions. mypy in strict mode must pass.
+- **Dataclasses** (`frozen=True` where possible) or **Pydantic** for all configuration objects.
+  No loose dicts as parameter containers.
+- **Registration instead of selection in the script.** Models are listed exactly once in
+  `models/registry.py`, with label, factory and prerequisites. A dict in the driver script
+  only lasts until the second driver; after that, two studies compare different
+  sets of models under the same name. Factories take no arguments, so that each seed and
+  support point gets a fresh instance and no state lives across learning-curve points.
+- **Abstract base classes (ABC)** for the four core abstractions:
+  - `ProcessSimulator` – delivers trajectories (grey-box model, later Dyssol adapter,
+    later possibly a learned surrogate)
+  - `SequenceDataset` – windowing, normalisation, splits
+  - `SequenceModel` – common interface for GRU/LSTM/xLSTM/Mamba/Transformer,
+    incl. multi-step rollout
+  - `Evaluator` – metrics and result formats
+- **Dependency injection** instead of hard coupling: models are handed the simulator or the dataset,
+  they do not construct it themselves. This later allows the swap grey-box → Dyssol → real data
+  without changing the training code.
+- Observe **SOLID**, in particular open-closed: adding a new architecture must not require any
+  change to training or evaluation code.
+- Composition over inheritance. Avoid inheritance depth > 2.
 
-**Bewusste Abweichung: `steady_state.py` ist eine Modulfunktion, keine ABC.** Der exakte
-Beharrungszustands-Löser (`solve_steady_state`) ist bewusst *kein* fünfter Punkt in der
-ABC-Liste oben. Eine Abstraktion (z. B. `SteadyStateSolver`) über genau eine Implementierung
-ist Vorratsbau: der einzige absehbare zweite Fall -- ein stationärer Fließschema-Modus von
-Dyssol -- liefert keine rechte Seite, gegen deren Nullstelle sich bisezieren ließe, die
-Schnittstelle des zweiten Falls ist also noch nicht einmal in der Form absehbar. Die ABC
-wird nachgezogen, sobald dieser zweite Fall implementiert wird, nicht vorher.
+**Deliberate deviation: `steady_state.py` is a module function, not an ABC.** The exact
+steady-state solver (`solve_steady_state`) is deliberately *not* a fifth item in the
+ABC list above. An abstraction (e.g. `SteadyStateSolver`) over exactly one implementation
+is speculative building: the only foreseeable second case -- a steady-state flowsheet mode of
+Dyssol -- provides no right-hand side whose root could be bisected, so the
+interface of the second case is not even foreseeable in its form yet. The ABC
+will be added once this second case is implemented, not before.
 
-**Bestätigung der Konvention: `sorption.SorptionIsotherm` ist eine ABC.** Anders als beim
-`SteadyStateSolver`-Fall oben lagen hier von Anfang an zwei konkrete Implementierungen vor
-(`ConstantIsotherm`, `GabIsotherm`) -- dieselbe Schwelle, die `excitation.DisturbanceDesign`
-bereits über zwei Implementierungen zieht. Eine ABC ist hier also keine Vorratsabstraktion,
-sondern folgt der bestehenden Konvention; siehe `04_stand_ap1.md`, Befund 34.
+**Confirmation of the convention: `sorption.SorptionIsotherm` is an ABC.** Unlike the
+`SteadyStateSolver` case above, two concrete implementations existed here from the start
+(`ConstantIsotherm`, `GabIsotherm`) -- the same threshold that `excitation.DisturbanceDesign`
+already draws over two implementations. An ABC here is therefore not a speculative abstraction,
+but follows the existing convention; see `04_stand_ap1.md`, Befund 34.
 
-## Reproduzierbarkeit
+## Reproducibility
 
-- **Zentrales Seed-Handling** an einer Stelle (Python, NumPy, PyTorch, CUDA)
-- **Config-Serialisierung**: die vollständige aufgelöste Konfiguration wird zu jedem Run gespeichert
-- **Deterministische Splits**: Split-Zuordnung aus Lauf-IDs und Seed berechnet, nicht zufällig
-  zur Laufzeit gezogen
-- Git-Commit-Hash im Run-Log
+- **Central seed handling** in one place (Python, NumPy, PyTorch, CUDA)
+- **Config serialization**: the complete resolved configuration is saved with every run
+- **Deterministic splits**: split assignment computed from run IDs and seed, not drawn at random
+  at run time
+- Git commit hash in the run log
 
 ## Tests
 
-- Unit-Tests für alle physikalischen Bilanzen des Grey-Box-Modells (Masse, Energie schließen
-  innerhalb Toleranz)
-- Test, dass Splits **keine überlappenden Fenster** zwischen Train und Test enthalten
-  (Leakage-Regression)
-- Property-based Tests (Hypothesis) für Constraint-Projektionen: Output verlässt den
-  physikalischen Wertebereich nie
-- Smoke-Test, der die gesamte Pipeline mit winzigem Datensatz durchläuft
-- **Leakage-Test für die Beobachtbarkeit:** ist eine Zielgröße als nicht inline gemessen
-  konfiguriert, darf sie in der Fensterhistorie nirgends auftauchen. Ein Leck dort sieht in
-  allen Metriken wie ein exzellenter Soft Sensor aus und ist an der Anlage nicht
-  reproduzierbar — es macht einen Vergleich unbrauchbar, ohne ihn verdächtig zu machen.
-- **Test für die Residual-Äquivalenz:** ein Modell mit nullgesetztem Kopf muss *exakt* die
-  parameterfreie Baseline reproduzieren (Persistenz bei Inline-Messung,
-  Mittelwertvorhersage ohne). Ohne PyTorch ist das am `RandomFeatureNARX` prüfbar, also
-  auch die Vorgabe selbst und nicht nur eine Implementierung.
-- **Kein blind geschriebener Architekturcode.** Ein Modul, in dem kein Tensor-Vorgang
-  ausgeführt wurde, wird im Statusdokument als nicht ausgeführt gekennzeichnet und liefert
-  keine berichtbare Zahl. Die zugehörigen Tests überspringen sich mit
-  `pytest.importorskip` und sind die erste Aufgabe auf einer Maschine mit der fehlenden
-  Abhängigkeit.
+- Unit tests for all physical balances of the grey-box model (mass, energy close
+  within tolerance)
+- Test that splits contain **no overlapping windows** between train and test
+  (leakage regression)
+- Property-based tests (Hypothesis) for constraint projections: output never leaves the
+  physical value range
+- Smoke test that runs the entire pipeline with a tiny data set
+- **Leakage test for observability:** if a target is configured as not measured inline,
+  it must not appear anywhere in the window history. A leak there looks like an excellent
+  soft sensor in all metrics and is not reproducible at the plant — it makes a comparison
+  useless without making it suspicious.
+- **Test for residual equivalence:** a model with a zeroed head must reproduce *exactly* the
+  parameter-free baseline (persistence with inline measurement,
+  mean prediction without). Without PyTorch this can be checked on the `RandomFeatureNARX`, so
+  the requirement itself is checked and not just one implementation.
+- **No architecture code written blind.** A module in which no tensor operation has been
+  executed is marked as not executed in the status document and delivers
+  no reportable number. The associated tests skip themselves with
+  `pytest.importorskip` and are the first task on a machine with the missing
+  dependency.
 
 ## Notebooks
 
-- Dienen der **Visualisierung und Exploration**, nicht der Implementierung
-- Importieren aus `src/`, enthalten keine Logik, die nicht auch als Modul existiert
-- Kommentiert und erzählend: was wird gezeigt, was ist daran zu sehen
-- Standard-Visualisierungen: Trajektorien des Prozessmodells, Anregungssignale,
-  Lernkurven mit Streuband, Rollout-Vergleiche gegen Ground Truth
-- **Jede Lernkurve trägt ihre Auflösungsschwelle und, wo bekannt, ihre Rauschgrenze.** Das
-  Band ist Teil der Plot-Funktion in `evaluation/plots.py` und nicht des Aufrufers —
-  liegt die Logik in der Notebook-Zelle, entsteht früher oder später eine Variante ohne
-  Schwellenband, und die wandert in einen Vortrag.
-- **Kurven verschiedener Beobachtbarkeits-Betriebsarten nicht in ein Diagramm.** Die
-  Primärmetrik unterscheidet sich (laufweise gegen gepoolt); die y-Achsen bedeuten
-  Verschiedenes.
-- Ausgaben vor dem Commit leeren (`nbstripout`)
+- Serve **visualization and exploration**, not implementation
+- Import from `src/`, contain no logic that does not also exist as a module
+- Commented and narrative: what is shown, what can be seen in it
+- Standard visualizations: trajectories of the process model, excitation signals,
+  learning curves with spread band, rollout comparisons against ground truth
+- **Every learning curve carries its resolution threshold and, where known, its noise floor.** The
+  band is part of the plot function in `evaluation/plots.py` and not of the caller —
+  if the logic sits in the notebook cell, sooner or later a variant without the
+  threshold band appears, and that one ends up in a talk.
+- **Do not put curves of different observability operating modes into one diagram.** The
+  primary metric differs (run-level vs. pooled); the y-axes mean
+  different things.
+- Clear outputs before the commit (`nbstripout`)
 
-## Dokumentation
+## Documentation
 
-- Docstrings im NumPy- oder Google-Stil, mit Einheiten bei allen physikalischen Größen
-- Einheiten immer explizit: `T_in_celsius`, `m_spray_kg_per_h` – nie nur `T` und `m`
-- **Zeitspannen in Sekunden berichten, nicht in Abtastschritten.** Eine Historie von „zwei
-  Schritten" ist bei Δt = 2 s etwas völlig anderes als bei Δt = 25 s. Schrittzahlen sind
-  Implementierungsgrößen, Sekunden sind mit den Prozesszeitkonstanten vergleichbar — und nur
-  der Vergleich mit ihnen ist eine Aussage.
+- Docstrings in NumPy or Google style, with units for all physical quantities
+- Units always explicit: `T_in_celsius`, `m_spray_kg_per_h` – never just `T` and `m`
+- **Report time spans in seconds, not in sampling steps.** A history of "two
+  steps" is something completely different at Δt = 2 s than at Δt = 25 s. Step counts are
+  implementation quantities, seconds are comparable with the process time constants — and only
+  the comparison with them is a statement.

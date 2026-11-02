@@ -1,87 +1,87 @@
-r"""Ein-Schritt-Bandit-Umgebung -- Befund 52 in RL-Form.
+r"""One-step bandit environment -- Befund 52 in RL form.
 
-Reproduziert ``scripts/study_operating_point_regret.py`` (Befund 52) als kontextuellen
-Bandit, keine neue Physik und keine neue Zielfunktion.
+Reproduces ``scripts/study_operating_point_regret.py`` (Befund 52) as a contextual
+bandit, no new physics and no new objective function.
 
-Beobachtung
-    ``ambient_temperature_celsius``, ``ambient_relative_humidity`` -- gezogen aus
-    ``ProcessConfig.disturbances`` (``DisturbanceRange.minimum``/``maximum``, NICHT neu
-    gesetzt).
-Aktion
-    ``inlet_temperature_celsius``, ``gas_velocity_m_per_s`` -- normiert auf ``[-1, 1]``,
-    Grenzen aus ``ProcessConfig.actions`` (``ActionBound.minimum``/``maximum``, NICHT neu
-    gesetzt).
-Fest
-    ``nozzle_pressure_bar`` = :data:`FIXED_NOZZLE_PRESSURE_BAR` (Befund 52, fester
-    Betriebspunkt), ``spray_rate_kg_per_h`` = ``ActionBound.nominal``,
-    ``suspension_solid_fraction`` = ``DisturbanceRange.nominal`` -- beide Begruendungen aus
-    Befund 52 unveraendert: die Sprührate legt den Durchsatz fest (sonst ist "Energie
-    minimieren" entartet), der Duesendruck variiert über alle Gitteroptima nur um 0.4 %.
-Uebergang
-    ``solve_steady_state`` MIT DER SUCH-PRAEZISION aus Befund 52
-    (``DEFAULT_SEARCH_MAX_ITERATIONS``/``DEFAULT_SEARCH_TOLERANCE``, 30 Bisektionsschritte,
-    Toleranz 1e-7), NICHT den Loeser-Defaults (100/1e-13). Kein Kompromiss fuer diesen
-    Auftrag, sondern numerisch notwendig: mit den Loeser-Defaults scheitern 6 der 25
-    Befund-52-Gitterpunkte an einem Bracket-Vorzeichenfehler in der aeusseren
-    Temperatur-Bisektion (empirisch geprueft) -- exakt das Phaenomen, das ``evaluate_point``s
-    Docstring in ``study_operating_point_regret.py`` beschreibt: an der Bracket-Untergrenze
-    (``T_amb + 10``) liegt die wahre Nullstelle knapp ausserhalb, und ob der dort ausgewertete
-    Residuenwert numerisches Rauschen mit positivem oder negativem Vorzeichen zeigt, haengt von
-    der Bisektionstiefe der INNEREN Feuchte-Bisektion an genau diesem Punkt ab. Befund 52 loest
-    das, indem Such- UND Report-Aufruf dieselbe (Such-)Praezision verwenden -- diese Umgebung
-    uebernimmt das unveraendert, fuer JEDEN Schritt (nicht nur fuer den VA2-Orakeltest).
-Belohnung
-    ``-(energy_target + penalty_weight_kw * normalized_violation)``, wie in Befund 52s
-    ``_penalized_energy`` (dort Zielfunktion einer Minimierung, hier ihr Negatives als
-    Belohnung).
+Observation
+    ``ambient_temperature_celsius``, ``ambient_relative_humidity`` -- drawn from
+    ``ProcessConfig.disturbances`` (``DisturbanceRange.minimum``/``maximum``, NOT newly
+    set).
+Action
+    ``inlet_temperature_celsius``, ``gas_velocity_m_per_s`` -- normalised to ``[-1, 1]``,
+    bounds from ``ProcessConfig.actions`` (``ActionBound.minimum``/``maximum``, NOT newly
+    set).
+Fixed
+    ``nozzle_pressure_bar`` = :data:`FIXED_NOZZLE_PRESSURE_BAR` (Befund 52, fixed
+    operating point), ``spray_rate_kg_per_h`` = ``ActionBound.nominal``,
+    ``suspension_solid_fraction`` = ``DisturbanceRange.nominal`` -- both justifications from
+    Befund 52 unchanged: the spray rate fixes the throughput (otherwise "minimise
+    energy" is degenerate), the nozzle pressure varies over all grid optima by only 0.4 %.
+Transition
+    ``solve_steady_state`` WITH THE SEARCH PRECISION from Befund 52
+    (``DEFAULT_SEARCH_MAX_ITERATIONS``/``DEFAULT_SEARCH_TOLERANCE``, 30 bisection steps,
+    tolerance 1e-7), NOT the solver defaults (100/1e-13). Not a compromise for this
+    task, but numerically necessary: with the solver defaults, 6 of the 25
+    Befund 52 grid points fail due to a bracket sign error in the outer
+    temperature bisection (checked empirically) -- exactly the phenomenon that ``evaluate_point``'s
+    docstring in ``study_operating_point_regret.py`` describes: at the lower bracket bound
+    (``T_amb + 10``) the true root lies just outside, and whether the residual value evaluated
+    there shows numerical noise with a positive or negative sign depends on
+    the bisection depth of the INNER moisture bisection at exactly this point. Befund 52 solves
+    this by having the search AND report calls use the same (search) precision -- this environment
+    adopts that unchanged, for EVERY step (not only for the VA2 oracle test).
+Reward
+    ``-(energy_target + penalty_weight_kw * normalized_violation)``, as in Befund 52's
+    ``_penalized_energy`` (there the objective function of a minimisation, here its negative as
+    reward).
 
-Nebenbedingungsbehandlung (VA1-Entscheidung, siehe Auftrag und Antwort darauf)
--------------------------------------------------------------------------------
-Straffunktion fuer ALLE drei Nebenbedingungen aus Befund 52 (Gutsfeuchte,
-Fluidisierungsfenster, Bettemperatur <= 80 C), unveraendert per ``check_constraints``
-importiert -- KEINE Projektion.
+Constraint handling (VA1 decision, see the task and the answer to it)
+---------------------------------------------------------------------
+Penalty function for ALL three constraints from Befund 52 (product moisture,
+fluidisation window, bed temperature <= 80 C), imported unchanged via ``check_constraints``
+-- NO projection.
 
-Befund, nicht nur Implementierungsentscheidung: in diesem Environment ist die
-Gutsfeuchte die einzige praktisch wirksame Nebenbedingung. Das
-Fluidisierungsfenster bindet strukturell nie, weil der Beharrungsdurchmesser d50 (siehe
-``steady_state.py``, Schritt 2) hier nur von ``material.nucleus_diameter_m`` und
-``material.nucleation_solid_fraction`` abhaengt -- Spruehrate und Suspensionsfeststoffanteil
-kuerzen sich in der Herleitung heraus, und beide sind in diesem Environment ohnehin fest.
-d50 ist damit UEBER DEN GESAMTEN AKTIONS- UND STOERGROESSENRAUM eine Konstante (750 um bei
-den Platzhalterwerten). Eine Sweep-Rechnung ueber Betttemperaturen 20-140 C (weit ueber das
-plausible Beharrungsfenster hinaus) und den vollen Stoergroessenbereich liefert worst-case
-u_mf ~= 0.236 m/s, worst-case u_terminal ~= 3.42 m/s -- die ``ActionBound`` fuer
-``gas_velocity_m_per_s`` ([0.8, 2.5] m/s) liegt mit >= 0.56 m/s Marge unten und
->= 0.92 m/s Marge oben vollstaendig darin. Eine Projektion haette in diesem Environment
-nichts zu tun; ``check_constraints`` bleibt trotzdem die alleinige, unveraenderte Quelle
-der Zulaessigkeitspruefung (auch fuer Fluidisierung/Bettemperatur), damit ein spaeterer
-Wechsel der Nukleationsparameter (die das oben genannte Ergebnis aufheben wuerde) nicht
-still unbemerkt bliebe.
+Finding, not just an implementation decision: in this environment the
+product moisture is the only practically effective constraint. The
+fluidisation window structurally never binds, because the steady-state diameter d50 (see
+``steady_state.py``, step 2) here depends only on ``material.nucleus_diameter_m`` and
+``material.nucleation_solid_fraction`` -- spray rate and suspension solid fraction
+cancel out in the derivation, and both are fixed in this environment anyway.
+d50 is thus a constant OVER THE ENTIRE ACTION AND DISTURBANCE SPACE (750 um with
+the placeholder values). A sweep calculation over bed temperatures 20-140 C (far beyond the
+plausible steady-state window) and the full disturbance range yields worst-case
+u_mf ~= 0.236 m/s, worst-case u_terminal ~= 3.42 m/s -- the ``ActionBound`` for
+``gas_velocity_m_per_s`` ([0.8, 2.5] m/s) lies completely within it with >= 0.56 m/s margin
+below and >= 0.92 m/s margin above. A projection would have nothing to do in this environment;
+``check_constraints`` nevertheless remains the sole, unchanged source
+of the feasibility check (also for fluidisation/bed temperature), so that a later
+change of the nucleation parameters (which would cancel the result above) would not
+go silently unnoticed.
 
-WICHTIG: das ist eine Eigenschaft DIESES VIER-ZUSTANDS-MODELLS, keine Aussage über die
-reale Anlage oder ein Dyssol-Modell mit Agglomeration/Bruch/Wachstumskopplung an die
-Trocknungsbedingungen -- dort haengt die Partikelgroesse sehr wohl von der Fahrweise ab,
-und die zustandsabhaengige Aktionsprojektion
-(:meth:`~twinlink_ml.simulation.greybox.GreyBoxFluidBedGranulator.project_action`) wird erst
-in TRANSIENTEN wirksam, wenn d50 vom stationaeren Wert abweicht (Anfahrvorgaenge,
-Produktwechsel) -- im stationaeren Fall hier ist sie ein fester Kasten. Dass im
-Anlagenmassstab (separate Untersuchung, RA3) bei selbem d50-Platzhalter 15 Gitterpunkte an
-der Fluidisierungsobergrenze scheiterten, ist damit vereinbar, nicht widersprüchlich:
-vermutlich hoehere Gasgeschwindigkeiten im dortigen Anlagengitter oder andere
-Gaseigenschaften bei anderer Betttemperatur -- nicht in diesem Worktree nachgerechnet,
-hier nur zur Einordnung genannt, damit beide Aussagen nebeneinander stehen koennen.
+IMPORTANT: this is a property of THIS FOUR-STATE MODEL, not a statement about the
+real plant or a Dyssol model with agglomeration/breakage/growth coupling to the
+drying conditions -- there the particle size does depend on the mode of operation,
+and the state-dependent action projection
+(:meth:`~twinlink_ml.simulation.greybox.GreyBoxFluidBedGranulator.project_action`) only
+becomes effective in TRANSIENTS, when d50 deviates from the steady-state value (start-ups,
+product changes) -- in the steady-state case here it is a fixed box. That at
+plant scale (separate investigation, RA3) with the same d50 placeholder 15 grid points failed at
+the upper fluidisation bound is consistent with this, not contradictory:
+presumably higher gas velocities in the plant grid there or different
+gas properties at a different bed temperature -- not recalculated in this worktree,
+mentioned here only for orientation, so that both statements can stand side by side.
 
-``_PENALTY_WEIGHT_KW`` (Befund 52, 50.0 kW) wird UNVERAENDERT uebernommen -- fuer den
-VA2-Orakeltest muss die Belohnung am Befund-52-Optimum bitgleich zu ``-energy_target``
-sein, und das Gewicht wurde nie neu kalibriert. Es ist aber ein Hyperparameter mit echter
-Wirkung auf einen RL-Agenten (der bei bindender Gutsfeuchte direkt an der Grenze sitzt,
-anders als der Optimierer, der sie nur als Suchheuristik durchquert) und für RL nicht
-abgestimmt -- siehe Befund-Entwurf (VA5) und die berichtete Zulaessigkeitsrate/mittlere
-Feuchteueberschreitung (VA3).
+``_PENALTY_WEIGHT_KW`` (Befund 52, 50.0 kW) is adopted UNCHANGED -- for the
+VA2 oracle test the reward at the Befund 52 optimum must be bit-identical to ``-energy_target``,
+and the weight was never recalibrated. It is, however, a hyperparameter with a real
+effect on an RL agent (which, with binding product moisture, sits directly at the bound,
+unlike the optimiser, which only passes through it as a search heuristic) and not tuned
+for RL -- see the draft finding (VA5) and the reported feasibility rate/mean
+moisture exceedance (VA3).
 
-Bewusst NICHT in diesem Environment (siehe Auftrag)
------------------------------------------------------
-Speicher, mehrere Linien, Netto-Zielfunktion, Anlagenmassstab -- spaetere Erweiterungen.
+Deliberately NOT in this environment (see the task)
+---------------------------------------------------
+Storage, several lines, net objective function, plant scale -- later extensions.
 """
 
 from __future__ import annotations
@@ -174,32 +174,32 @@ def _denormalise(value: float, minimum: float, maximum: float) -> float:
 
 @dataclass(frozen=True, slots=True)
 class RewardCentering:
-    r"""BB2: affine Belohnungstransformation ``r' = (r - r_ref) / scale_kw``.
+    r"""BB2: affine reward transformation ``r' = (r - r_ref) / scale_kw``.
 
-    ``r_ref`` ist die ROHE Belohnung (kein Strafanteil, da Befund 52s fester Betriebspunkt
-    an allen 25 Gitterpunkten zulaessig ist) des FESTEN Befund-52-Betriebspunkts
+    ``r_ref`` is the RAW reward (no penalty part, since Befund 52's fixed operating point
+    is feasible at all 25 grid points) of the FIXED Befund 52 operating point
     (:data:`FIXED_OPERATING_POINT_INLET_TEMPERATURE_CELSIUS`/``..._GAS_VELOCITY_M_PER_S``),
-    fuer JEDEN Kontext neu ausgewertet -- ein zusaetzlicher ``solve_steady_state``-Aufruf je
-    Schritt, etwa doppelte Kosten gegenueber dem rohen Modus.
+    evaluated anew for EVERY context -- one additional ``solve_steady_state`` call per
+    step, roughly double the cost compared with the raw mode.
 
-    WICHTIG, drei Punkte (Auftrag):
+    IMPORTANT, three points (task):
 
-    1. Die affine Abbildung AENDERT DAS OPTIMUM NICHT: fuer ``scale_kw > 0`` ist
-       ``a -> (a - c) / scale_kw`` streng monoton steigend, das Argmax einer Politik bleibt
-       identisch. Befund 52 bleibt der Massstab -- diese Transformation aendert NUR die
-       Belohnungs-SKALA, die der Agent sieht, nicht die zugrunde liegende Optimierungsaufgabe.
-    2. Die Umgebung behaelt einen Reproduktionsmodus mit ROHER Belohnung
-       (``BanditEnvConfig.reward_centering=None``, Default) -- die VA2-Orakelpruefung laeuft
-       ausschliesslich in diesem Modus und bleibt bitgleich (siehe
-       ``tests/test_operating_point_bandit_env.py``, unveraendert).
-    3. Die in YA2 gemessene Dominanz der Strafe (Faktor ~516 gegenueber dem zu schliessenden
-       Regret) AENDERT SICH DADURCH NICHT: Strafe und Energie werden GLEICH skaliert (beide
-       durch denselben ``scale_kw`` geteilt), ihr VERHAELTNIS zueinander bleibt exakt
-       erhalten. Das ist ein getrenntes Problem (siehe YA2s vier Optionen) und hier
-       ausdruecklich NICHT adressiert -- BB2 testet ausschliesslich, ob das Entfernen der
-       KONTEXTABHAENGIGEN Rohenergie-Grundskala (YA2 (b): ~2-4 kW Streuung zulaessiger
-       Aktionen, ~18-fach des Regret-Signals) dem Kritiker hilft, unabhaengig von der
-       Strafdominanz.
+    1. The affine mapping DOES NOT CHANGE THE OPTIMUM: for ``scale_kw > 0``,
+       ``a -> (a - c) / scale_kw`` is strictly monotonically increasing, the argmax of a policy
+       stays identical. Befund 52 remains the yardstick -- this transformation changes ONLY the
+       reward SCALE the agent sees, not the underlying optimisation task.
+    2. The environment keeps a reproduction mode with RAW reward
+       (``BanditEnvConfig.reward_centering=None``, default) -- the VA2 oracle check runs
+       exclusively in this mode and stays bit-identical (see
+       ``tests/test_operating_point_bandit_env.py``, unchanged).
+    3. The dominance of the penalty measured in YA2 (factor ~516 relative to the regret to be
+       closed) DOES NOT CHANGE BECAUSE OF THIS: penalty and energy are scaled EQUALLY (both
+       divided by the same ``scale_kw``), their RATIO to each other is preserved
+       exactly. That is a separate problem (see YA2's four options) and is
+       explicitly NOT addressed here -- BB2 tests exclusively whether removing the
+       CONTEXT-DEPENDENT raw-energy base scale (YA2 (b): ~2-4 kW spread of feasible
+       actions, ~18 times the regret signal) helps the critic, independently of the
+       penalty dominance.
     """
 
     scale_kw: float = DEFAULT_REWARD_CENTERING_SCALE_KW
@@ -207,10 +207,10 @@ class RewardCentering:
 
 @dataclass(frozen=True, slots=True)
 class BanditEnvConfig:
-    """Env-eigene Konfiguration.
+    """The environment's own configuration.
 
-    Aktions-/Stoergroessengrenzen stehen bereits in ``ProcessConfig``
-    (``config.actions``/``config.disturbances``) und werden hier NICHT dupliziert.
+    Action/disturbance bounds are already in ``ProcessConfig``
+    (``config.actions``/``config.disturbances``) and are NOT duplicated here.
     """
 
     process_config_path: Path = CONFIG_PATH
@@ -258,11 +258,11 @@ class BanditEnvConfig:
 
 
 class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
-    """Kontextueller Bandit: eine Episode = ein Schritt. Siehe Moduldocstring."""
+    """Contextual bandit: one episode = one step. See module docstring."""
 
-    # dict statt ClassVar: gym.Env deklariert ``metadata`` selbst als Instanzattribut
-    # (mypy lehnt eine ClassVar-Ueberschreibung davon ab) -- Standardmuster im gesamten
-    # Gymnasium-Oekosystem, keine tatsaechliche Mutable-Default-Gefahr.
+    # dict instead of ClassVar: gym.Env itself declares ``metadata`` as an instance attribute
+    # (mypy rejects a ClassVar override of it) -- standard pattern throughout the
+    # Gymnasium ecosystem, no actual mutable-default danger.
     metadata: dict[str, Any] = {"render_modes": []}  # noqa: RUF012
 
     def __init__(self, config: BanditEnvConfig | None = None) -> None:
@@ -305,17 +305,17 @@ class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
 
         self._disturbance: tuple[float, float] | None = None
 
-    # ------------------------------------------------------------- Gymnasium-Schnittstelle
+    # ---------------------------------------------------------------- Gymnasium interface
 
     def reset(
         self, *, seed: int | None = None, options: dict[str, Any] | None = None
     ) -> tuple[np.ndarray, dict[str, Any]]:
-        """Zieht einen neuen Stoergroessenpunkt (oder uebernimmt einen vorgegebenen).
+        """Draws a new disturbance point (or adopts a given one).
 
-        ``options`` mit ``ambient_temperature_celsius``/``ambient_relative_humidity``
-        erzwingt einen bestimmten Punkt statt einer Ziehung -- fuer den VA2-Orakeltest
-        (die exakten 25 Befund-52-Gitterpunkte) und die VA3-Metrik (fester Testpunktsatz),
-        die keinen Zufall vertragen.
+        ``options`` with ``ambient_temperature_celsius``/``ambient_relative_humidity``
+        forces a specific point instead of a draw -- for the VA2 oracle test
+        (the exact 25 Befund 52 grid points) and the VA3 metric (fixed test point set),
+        which tolerate no randomness.
         """
         super().reset(seed=seed)
         options = options or {}
@@ -365,7 +365,7 @@ class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
         truncated = False
         return observation, reward, terminated, truncated, info
 
-    # -------------------------------------------------------------------- Kernberechnung
+    # ------------------------------------------------------------------ Core calculation
 
     def evaluate_operating_point(
         self,
@@ -375,14 +375,14 @@ class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
         ambient_temperature_celsius: float,
         ambient_relative_humidity: float,
     ) -> tuple[float, dict[str, Any]]:
-        """Belohnung (roh oder zentriert, siehe :class:`RewardCentering`) und Info-Dict.
+        """Reward (raw or centred, see :class:`RewardCentering`) and info dict.
 
-        Kernmethode ohne ``reset()``/``step()`` und ohne Normierungs-Rundtrip -- von
-        :meth:`step` UND vom VA2-Orakeltest sowie der VA3-Metrik (``evaluation.py``)
-        verwendet, damit Belohnung/Zulaessigkeit an genau einer Stelle berechnet werden.
-        VA2 verlangt Bitgleichheit im ROHEN Modus (``reward_centering=None``, Default) --
-        dieser Pfad ruft intern exakt dieselbe :meth:`_evaluate_operating_point_raw`
-        auf wie zuvor, unveraendert.
+        Core method without ``reset()``/``step()`` and without a normalisation round trip --
+        used by :meth:`step` AND by the VA2 oracle test as well as the VA3 metric
+        (``evaluation.py``), so that reward/feasibility are computed in exactly one place.
+        VA2 demands bit-identity in the RAW mode (``reward_centering=None``, default) --
+        this path internally calls exactly the same :meth:`_evaluate_operating_point_raw`
+        as before, unchanged.
         """
         raw_reward, info = self._evaluate_operating_point_raw(
             inlet_temperature_celsius=inlet_temperature_celsius,
@@ -394,9 +394,9 @@ class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
         if centering is None:
             return raw_reward, info
 
-        # BB2: r' = (r - r_ref) / scale_kw -- r_ref ist Befund 52s fester Betriebspunkt am
-        # SELBEN Kontext, roh ausgewertet (kein Rekursionsrisiko: dieser Aufruf geht direkt
-        # an die rohe Methode, nicht an evaluate_operating_point selbst).
+        # BB2: r' = (r - r_ref) / scale_kw -- r_ref is Befund 52's fixed operating point in the
+        # SAME context, evaluated raw (no recursion risk: this call goes directly
+        # to the raw method, not to evaluate_operating_point itself).
         fixed_reward, fixed_info = self._evaluate_operating_point_raw(
             inlet_temperature_celsius=FIXED_OPERATING_POINT_INLET_TEMPERATURE_CELSIUS,
             gas_velocity_m_per_s=FIXED_OPERATING_POINT_GAS_VELOCITY_M_PER_S,
@@ -419,7 +419,7 @@ class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
         ambient_temperature_celsius: float,
         ambient_relative_humidity: float,
     ) -> tuple[float, dict[str, Any]]:
-        """Rohe Belohnung, wie vor BB2 -- unveraendert, damit VA2 bitgleich bleibt."""
+        """Raw reward, as before BB2 -- unchanged, so that VA2 stays bit-identical."""
         variant_config = build_variant_config(
             self._base_config,
             t_in=inlet_temperature_celsius,
@@ -473,8 +473,8 @@ class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
         if self._env_config.include_penalty:
             reward = -(energy_target + self._penalty_weight_kw * check.normalized_violation)
         else:
-            # DA1: Nebenbedingungen bleiben geprueft/protokolliert (unten in ``info``),
-            # gehen aber NICHT in die Belohnung ein.
+            # DA1: constraints remain checked/logged (below in ``info``),
+            # but do NOT enter the reward.
             reward = -energy_target
 
         info = {
@@ -485,11 +485,11 @@ class OperatingPointBanditEnv(gym.Env[np.ndarray, np.ndarray]):
             "specific_energy_kwh_per_kg": specific_energy_kwh_per_kg(solution),
             "constraint_check": check.as_dict(),
             "infeasibility_reasons": list(solution.infeasibility_reasons),
-            # Keine Projektionsmechanik in diesem Environment (siehe Moduldocstring) --
-            # "requested"/"applied" sind hier immer identisch; die Felder bleiben trotzdem
-            # bestehen, damit ein Aufrufer nicht zwischen "kein Projektionsmechanismus" und
-            # "Projektion hat nicht gegriffen" unterscheiden muss (Analogie zu
-            # ``Trajectory.requested_actions``, siehe ``simulation/base.py``).
+            # No projection mechanism in this environment (see module docstring) --
+            # "requested"/"applied" are always identical here; the fields remain nevertheless,
+            # so that a caller does not have to distinguish between "no projection mechanism" and
+            # "projection did not take effect" (analogy to
+            # ``Trajectory.requested_actions``, see ``simulation/base.py``).
             "action_physical_requested": requested_physical,
             "action_physical_applied": requested_physical,
             "ambient_temperature_celsius": ambient_temperature_celsius,

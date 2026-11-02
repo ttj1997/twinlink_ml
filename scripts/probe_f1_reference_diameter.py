@@ -1,11 +1,11 @@
-r"""F1: Bezugsdurchmesser von fluidization_margin_upper/lower_m_per_s klaeren.
+r"""F1: clarify the reference diameter of fluidization_margin_upper/lower_m_per_s.
 
-KEIN Netztraining, KEINE Aenderung an src/. Ruft terminal_velocity_m_per_s /
-minimum_fluidization_velocity_m_per_s (fluidization.py, unveraendert) mit dem
-Keimdurchmesser statt d50 auf, um u_t(d_Keim) nachzurechnen -- im Modell selbst
-(greybox.py:466-471) wird ausschliesslich d50 verwendet, siehe Zitat unten.
+NO network training, NO change to src/. Calls terminal_velocity_m_per_s /
+minimum_fluidization_velocity_m_per_s (fluidization.py, unchanged) with the
+seed diameter instead of d50, in order to recompute u_t(d_Keim) -- in the model itself
+(greybox.py:466-471) only d50 is used, see the quotation below.
 
-Datensatz: identisch zu D2 (mamba_reduced_comparison.jsonl-Rekonstruktion, 128 Laeufe,
+Dataset: identical to D2 (mamba_reduced_comparison.jsonl reconstruction, 128 runs,
 master_seed=1, greybox_gab_placeholder.yaml, dt=25s).
 """
 
@@ -56,13 +56,13 @@ def main() -> None:
     n_runs, n_steps, _ = trajectory.actions.shape
     gas_velocity = trajectory.actions[..., 1]
 
-    # (a) gegen d50 -- so, wie im Modell tatsaechlich gerechnet (diagnostics unveraendert)
+    # (a) against d50 -- as actually computed in the model (diagnostics unchanged)
     u_terminal_d50 = trajectory.diagnostics["terminal_velocity_m_per_s"]
     margin_upper_d50 = trajectory.diagnostics["fluidization_margin_upper_m_per_s"]
     violation_d50 = margin_upper_d50 < 0.0
 
-    # (b) gegen d_Keim -- NICHT im Modell implementiert, hier nachgerechnet mit derselben
-    # Korrelation (Haider & Levenspiel, fluidization.py:68-94), unveraendert importiert.
+    # (b) against d_Keim -- NOT implemented in the model, recomputed here with the same
+    # correlation (Haider & Levenspiel, fluidization.py:68-94), imported unchanged.
     backend = NumpyBackend()
     bed_temperature = trajectory.states[..., 3]
     inlet_humidity = trajectory.diagnostics["inlet_humidity_kg_per_kg"]

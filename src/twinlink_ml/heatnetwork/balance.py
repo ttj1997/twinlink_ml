@@ -1,47 +1,47 @@
-r"""Kaskadierte Wärmerückgewinnungsbilanz: Abluftquellen -> Prozessluft-Senken.
+r"""Cascaded heat-recovery balance: exhaust air sources -> process air sinks.
 
-Dieses Modul ist die Spezifikation für das künftige Dyssol-Bilanzmodul (AP3 des
-Software-Integrationspartners, siehe ``docs/06_waermenetz.md``) -- es portiert die
-Rechenvorschriften einer bestehenden
-Excel-Bilanz des Verbundpartners (zwei Trocknerlinien, zwei Wärmeübertrager, zwei
-Lufterhitzer), korrigiert dabei aber drei Defekte der Vorlage. Alle drei sind hier benannt,
-weil ein künftiges Dyssol-Modul dieselben Defekte nicht erben darf, nur weil es dieselbe
-Vorlage liest.
+This module is the specification for the future Dyssol balance module (AP3 of the
+software integration partner, see ``docs/06_waermenetz.md``) -- it ports the
+calculation rules of an existing
+Excel balance of the consortium partner (two dryer lines, two heat exchangers, two
+air heaters), but corrects three defects of the template in doing so. All three are named here,
+because a future Dyssol module must not inherit the same defects just because it reads the same
+template.
 
-Grundformeln (EA1, unverändert gegenüber der Vorlage)
+Basic formulas (EA1, unchanged from the template)
 ------------------------------------------------------
-Rückgewinnbare Leistung je Quelle:
+Recoverable power per source:
 
 .. math:: \dot Q_{rec} = \dot m_L \bigl(T_{out} - (T_{dp}(Y_{out}) + \Delta T_{approach})\bigr)
     \,(c_{p,L} + Y_{out}\, c_{p,D})
 
-mit :math:`\Delta T_{approach} = 3\,\mathrm K` (Grenze zur Kondensation,
-:data:`~.config.DEFAULT_DEW_POINT_APPROACH_K`). Brennstoffbedarf je Senke:
+with :math:`\Delta T_{approach} = 3\,\mathrm K` (limit to condensation,
+:data:`~.config.DEFAULT_DEW_POINT_APPROACH_K`). Fuel demand per sink:
 
 .. math:: \dot m_{gas} = \dot m_L\,(T_{soll} - T_{nach\,WUET})\,(c_{p,L} + Y\, c_{p,D})
     \,/\,(H_u\,\eta_H)
 
-Taupunkt über :func:`twinlink_ml.simulation.thermo.dew_point_celsius` (Buck 1996) --
-dieselbe Korrelation wie überall im Projekt, nicht neu hergeleitet oder gegen Magnus
-ausgetauscht (der Verbundpartner rechnet mit Magnus; die Differenz liegt unter 0,06 K,
-dokumentiert, aber irrelevant -- das Repo bleibt bei Buck, siehe ``thermo.py``,
-``saturation_pressure_pa``-Docstring). Stoffwerte ausschließlich aus dem injizierten
+Dew point via :func:`twinlink_ml.simulation.thermo.dew_point_celsius` (Buck 1996) --
+the same correlation as everywhere in the project, not re-derived or swapped for Magnus
+(the consortium partner computes with Magnus; the difference is below 0.06 K,
+documented, but irrelevant -- the repo stays with Buck, see ``thermo.py``,
+``saturation_pressure_pa`` docstring). Material properties exclusively from the injected
 :class:`~twinlink_ml.simulation.config.GasConfig` (``cp_dry_air_j_per_kg_k``,
-``cp_vapour_j_per_kg_k``), nicht neu gesetzt.
+``cp_vapour_j_per_kg_k``), not set anew.
 
-Zweiter Rückgewinnungsmodus: Kondensation (MA1)
+Second recovery mode: condensation (MA1)
 ------------------------------------------------
-:attr:`~.config.HeatNetworkConfig.recovery_mode` (Config, kein Funktionsparameter) wählt
-zwischen zwei Kühlgrenzen je Quelle:
+:attr:`~.config.HeatNetworkConfig.recovery_mode` (config, not a function parameter) chooses
+between two cooling limits per source:
 
-``"sensible"`` (Default, EA1 unverändert)
-    Kühlung bis zur Taupunktgrenze ``T_dp(Y_out) + dT_approach`` -- keine Kondensation im
-    Übertrager, jedes Ergebnis bitgleich zum Stand vor MA1.
+``"sensible"`` (default, EA1 unchanged)
+    Cooling down to the dew-point limit ``T_dp(Y_out) + dT_approach`` -- no condensation in the
+    exchanger, every result bit-identical to the state before MA1.
 
 ``"condensing"``
-    Kühlung bis zur Kalttemperatur :attr:`~.config.HeatNetworkConfig.
-    cold_temperature_celsius` (``T_kalt``), mit zusätzlicher latenter Wärme aus dem dabei
-    anfallenden Kondensat:
+    Cooling down to the cold temperature :attr:`~.config.HeatNetworkConfig.
+    cold_temperature_celsius` (``T_kalt``), with additional latent heat from the
+    condensate formed in the process:
 
     .. math::
         \dot m_{Kondensat} &= \max(0,\, Y_{out} - Y_s(T_{kalt}))\, \dot m_L \\
@@ -49,66 +49,66 @@ zwischen zwei Kühlgrenzen je Quelle:
         \dot Q_{sensibel} &= \dot m_L\,(T_{out} - T_{kalt})\,(c_{p,L} + Y_{out}\, c_{p,D}) \\
         \dot Q_{rec} &= \dot Q_{sensibel} + \dot Q_{latent}
 
-    :math:`Y_s` (:func:`~twinlink_ml.simulation.thermo.saturation_humidity_kg_per_kg`) und
-    :math:`\Delta h_v` (:func:`~twinlink_ml.simulation.thermo.latent_heat_j_per_kg`) kommen
-    unverändert aus ``thermo.py`` -- keine zweite Sättigungs-/Verdampfungsformel. Liegt
-    ``T_kalt`` über dem Taupunkt der Quelle, ist :math:`\dot m_{Kondensat}=0` und der Modus
-    fällt stetig auf reine sensible Kühlung bis ``T_kalt`` zurück (kein Sprung an der
-    Taupunktgrenze).
+    :math:`Y_s` (:func:`~twinlink_ml.simulation.thermo.saturation_humidity_kg_per_kg`) and
+    :math:`\Delta h_v` (:func:`~twinlink_ml.simulation.thermo.latent_heat_j_per_kg`) come
+    unchanged from ``thermo.py`` -- no second saturation/evaporation formula. If
+    ``T_kalt`` lies above the dew point of the source, :math:`\dot m_{Kondensat}=0` and the mode
+    falls back continuously to purely sensible cooling down to ``T_kalt`` (no jump at the
+    dew-point limit).
 
-    Innerhalb der Kaskade (mehrstufig, EA2 Korrektur 2) wird die latente Wärme als fester
-    Vorrat je Quelle geführt (``Q_latent`` bei ihrer Ausgangstemperatur, nicht neu bei jeder
-    Stufe berechnet) und erst dann angezapft, wenn die sensible Kühlreserve einer Stufe
-    bereits erschöpft ist -- Kondensation setzt physikalisch erst ein, wenn der Strom
-    tatsächlich bis ``T_kalt`` abgekühlt wurde, nicht schrittweise vorher. Das Kondensat
-    verlässt die Bilanz als Flüssigwasser; :attr:`HeatNetworkResult.
-    source_condensate_kg_per_s` macht das für die Massenbilanz nachprüfbar (Test:
+    Within the cascade (multi-stage, EA2 correction 2) the latent heat is carried as a fixed
+    reserve per source (``Q_latent`` at its outlet temperature, not recomputed at every
+    stage) and only tapped once the sensible cooling reserve of a stage
+    is already exhausted -- physically, condensation only starts once the stream
+    has actually been cooled down to ``T_kalt``, not gradually before. The condensate
+    leaves the balance as liquid water; :attr:`HeatNetworkResult.
+    source_condensate_kg_per_s` makes this checkable for the mass balance (test:
     ``tests/test_heatnetwork_balance.py``).
 
-Drei Korrekturen gegenüber der Excel-Vorlage (EA2)
+Three corrections to the Excel template (EA2)
 ----------------------------------------------------
-Die Vorlage hat drei Defekte, die :func:`evaluate_cascade` NICHT reproduziert:
+The template has three defects that :func:`evaluate_cascade` does NOT reproduce:
 
-1. **Taupunktbezug je Quelle.** In der Vorlage rechnet der zweite Wärmeübertrager gegen
-   den Taupunkt der ERSTEN Linie -- ein Kopierfehler zwischen zwei nebeneinander
-   liegenden Tabellenblättern, kein Modellierungsentscheid. Hier hat jede Quelle ihre
-   eigene, aus ihrer eigenen ``outlet_humidity_kg_per_kg`` berechnete Taupunktgrenze
-   (``source_floor_temperature_celsius`` in :func:`evaluate_cascade`), über alle Stufen
-   hinweg konstant (die Feuchte ändert sich nicht, solange nur sensibel gekühlt wird,
-   siehe Korrektur 3).
+1. **Dew-point reference per source.** In the template the second heat exchanger computes
+   against the dew point of the FIRST line -- a copy error between two adjacent
+   worksheets, not a modelling decision. Here every source has its
+   own dew-point limit, computed from its own ``outlet_humidity_kg_per_kg``
+   (``source_floor_temperature_celsius`` in :func:`evaluate_cascade`), constant over all
+   stages (the humidity does not change as long as only sensible cooling takes place,
+   see correction 3).
 
-2. **Restenthalpie kaskadieren, nicht verwerfen.** Die Vorlage kappt die Lufttemperatur
-   einer Senke auf ihren Sollwert und verwirft die nicht genutzte Quellenthalpie -- in
-   einem dokumentierten Fall 891,8 kW bei 87,4 °C, weit oberhalb jeder Taupunktgrenze und
-   damit weiter nutzbar. Hier ist jede Quelle ein Strom mit über die Kaskade ABNEHMENDER
-   Temperatur: nach jeder Stufe sinkt ihre Temperatur um
-   :math:`\dot Q_{genutzt} / (\dot m_L\, c_{p,eff})`, der Rest steht der nächsten Stufe
-   zur Verfügung (ggf. einer anderen Senke), bis die Taupunktgrenze erreicht ist. Welcher
-   Anteil je Quelle tatsächlich genutzt wurde, steht in
+2. **Cascade the residual enthalpy, do not discard it.** The template caps the air temperature
+   of a sink at its set point and discards the unused source enthalpy -- in
+   one documented case 891.8 kW at 87.4 °C, far above any dew-point limit and
+   thus still usable. Here every source is a stream with a temperature DECREASING over
+   the cascade: after each stage its temperature drops by
+   :math:`\dot Q_{genutzt} / (\dot m_L\, c_{p,eff})`, the rest is available to the next stage
+   (possibly a different sink) until the dew-point limit is reached. Which
+   share per source was actually used is given in
    :attr:`HeatNetworkResult.source_used_power_kw`/``source_discarded_power_kw`` --
-   ``used + discarded == available`` bis auf Rundung (Energieerhaltung, siehe
+   ``used + discarded == available`` up to rounding (energy conservation, see
    ``tests/test_heatnetwork_balance.py``).
 
-3. **Mindestgrädigkeit je Stufe.** Die Vorlage prüft nirgends
-   :math:`T_{Luft,aus} \le T_{Quelle} - \Delta T_{min}`; die dortige 120-°C-Kappung
-   verhindert eine Verletzung nur zufällig, nicht strukturell. Hier ist die Grädigkeit
-   eine harte Nebenbedingung jeder Stufe (:attr:`~.config.HeatNetworkConfig.
-   minimum_pinch_k`, Platzhalter-Begründung siehe
-   :data:`~.config.DEFAULT_MINIMUM_PINCH_K`). Kaskadenreihenfolge: Niedertemperaturquellen
-   zuerst am kalten Ende, Hochtemperaturquellen zuletzt (sonst ist die Senkenluft bereits
-   zu warm, um eine kalte Quelle noch aufzunehmen) -- Default-Regel in
-   ``routing.resolve_cascade_order``, überschreibbar über
+3. **Minimum approach temperature per stage.** The template nowhere checks
+   :math:`T_{Luft,aus} \le T_{Quelle} - \Delta T_{min}`; its 120 °C cap
+   prevents a violation only by chance, not structurally. Here the approach temperature is
+   a hard constraint of every stage (:attr:`~.config.HeatNetworkConfig.
+   minimum_pinch_k`, placeholder rationale see
+   :data:`~.config.DEFAULT_MINIMUM_PINCH_K`). Cascade order: low-temperature sources
+   first at the cold end, high-temperature sources last (otherwise the sink air is already
+   too warm to still take up a cold source) -- default rule in
+   ``routing.resolve_cascade_order``, overridable via
    :attr:`~.config.HeatNetworkConfig.cascade_order`.
 
-``stage_binding_code`` in :class:`HeatNetworkResult` kennt zusätzlich zu den zwei in EA3
-genannten Zuständen (``pinch``, ``dew_point``) einen dritten, ``sink_satisfied``: eine
-Stufe, die die Senke ohne Anstehen einer der beiden physikalischen Grenzen auf ihren
-Sollwert bringt, ist kein Grenzfall -- sie fälschlich als "Grädigkeit bindend" oder
-"Taupunkt bindend" zu melden wäre selbst ein neuer Interpretationsfehler.
+``stage_binding_code`` in :class:`HeatNetworkResult` knows, in addition to the two states
+named in EA3 (``pinch``, ``dew_point``), a third one, ``sink_satisfied``: a
+stage that brings the sink to its set point without either of the two physical limits
+being reached is not a limiting case -- reporting it wrongly as "approach temperature
+binding" or "dew point binding" would itself be a new interpretation error.
 
-Anbindung an den Simulator (EA4)
+Coupling to the simulator (EA4)
 ----------------------------------
-Der Abluftzustand kommt aus ``simulation/exhaust.py``. Wörtliche Signatur::
+The exhaust air state comes from ``simulation/exhaust.py``. Literal signature::
 
     def reconstruct_exhaust_state(
         backend: ArrayBackend,
@@ -125,27 +125,27 @@ Der Abluftzustand kommt aus ``simulation/exhaust.py``. Wörtliche Signatur::
         ...
         :returns: ``(T_gas_out_celsius, Y_gas_out_kg_per_kg, outlet_temperature_celsius)``
 
-Sie LIEFERT: ``T_gas_out_celsius`` (== Betttemperatur, per Modellannahme eines ideal
-durchmischten Betts), ``Y_gas_out_kg_per_kg`` und ``outlet_temperature_celsius`` (Betttemperatur
-minus ``ExhaustConfig.outlet_duct_heat_loss_k``). Sie VERLANGT bereits als Eingabe (nicht als
-Rückgabe), was hier als :attr:`~.config.HeatSourceConfig.dry_air_mass_flow_kg_per_s` gebraucht
-wird -- dieser Massenstrom ist KEINE Rückgabegröße der Funktion, sondern eine ihrer Eingaben,
-typischerweise aus ``dry_air_mass_flow_kg_per_s`` in ``diagnostics``/``SteadyStateSolution``
-übernommen, nicht aus der Gasgeschwindigkeit neu berechnet (dieselbe Größe, nur schon vorher
-im Aufrufer bekannt).
+It RETURNS: ``T_gas_out_celsius`` (== bed temperature, by the model assumption of an ideally
+mixed bed), ``Y_gas_out_kg_per_kg`` and ``outlet_temperature_celsius`` (bed temperature
+minus ``ExhaustConfig.outlet_duct_heat_loss_k``). It already REQUIRES as an input (not as a
+return value) what is needed here as :attr:`~.config.HeatSourceConfig.dry_air_mass_flow_kg_per_s`
+-- this mass flow is NOT a return quantity of the function but one of its inputs,
+typically taken from ``dry_air_mass_flow_kg_per_s`` in ``diagnostics``/``SteadyStateSolution``,
+not recomputed from the gas velocity (the same quantity, just already known beforehand
+in the caller).
 
-**Wichtig:** :class:`~.config.HeatSourceConfig.outlet_temperature_celsius` ist der AUSLASS-Kanal
-(dritter Rückgabewert, ``outlet_temperature_celsius``), NICHT die Betttemperatur (erster
-Rückgabewert, ``T_gas_out_celsius``/``bed_temperature_celsius``). Bei
-``outlet_duct_heat_loss_k = 0.0`` (Default) sind beide numerisch gleich, der Vertrag an der
-Verbundschnittstelle ist aber die Ablufttemperatur -- diese Unterscheidung ist im Repo bereits
-angelegt (``exhaust.py``, Vertragskorrektur-Absatz) und wird hier nicht wieder verschmiert.
+**Important:** :class:`~.config.HeatSourceConfig.outlet_temperature_celsius` is the OUTLET duct
+(third return value, ``outlet_temperature_celsius``), NOT the bed temperature (first
+return value, ``T_gas_out_celsius``/``bed_temperature_celsius``). With
+``outlet_duct_heat_loss_k = 0.0`` (default) both are numerically equal, but the contract at the
+site-network interface is the exhaust air temperature -- this distinction is already established
+in the repo (``exhaust.py``, contract-correction paragraph) and is not blurred again here.
 
-**Skalenvorbehalt.** Das Verbundmodell rechnet mit rund 8 kg/s Prozessluft
-(``evaluation.recoverable_power.DISTRICT_MASS_FLOW_KG_PER_S``), der Laborsimulator mit rund
-0,03 kg/s (``dry_air_mass_flow_kg_per_s`` in ``data.trajectory.diagnostics``) -- zwei
-Größenordnungen. Jede kW-Zahl aus der Kopplung von Labor-Quellen mit Verbund-Senken (oder
-umgekehrt) ist eine Skalierungsrechnung, keine Anlagenaussage (siehe
+**Scale caveat.** The site-network model computes with about 8 kg/s of process air
+(``evaluation.recoverable_power.DISTRICT_MASS_FLOW_KG_PER_S``), the lab simulator with about
+0.03 kg/s (``dry_air_mass_flow_kg_per_s`` in ``data.trajectory.diagnostics``) -- two
+orders of magnitude. Every kW figure from coupling lab sources with consortium sinks (or
+vice versa) is a scaling calculation, not a plant statement (see
 ``docs/06_waermenetz.md``).
 """
 
@@ -219,13 +219,13 @@ _TEMPERATURE_TOLERANCE_K = 1e-9
 
 
 def _as_step_array(value: float, n_steps: int) -> FloatArray:
-    """Skalar -> Array der Form ``(n_steps,)``, bereits ``(n_steps,)``-Arrays unverändert.
+    """Scalar -> array of shape ``(n_steps,)``, existing ``(n_steps,)`` arrays unchanged.
 
-    Erlaubt, dieselbe :func:`evaluate_cascade` sowohl für eine einzelne, statische
-    Auswertung (``n_steps == 1``, direkt aus einer :class:`~.config.HeatSourceConfig`
-    gebaut) als auch für eine ganze Trajektorie zu verwenden (``n_steps > 1``, echte
-    Zeitreihen als Eingabe) -- ein Code-Pfad für beide Fälle statt einer Sonderbehandlung
-    des Skalarfalls.
+    Allows the same :func:`evaluate_cascade` to be used both for a single, static
+    evaluation (``n_steps == 1``, built directly from a :class:`~.config.HeatSourceConfig`)
+    and for a whole trajectory (``n_steps > 1``, real
+    time series as input) -- one code path for both cases instead of special handling
+    of the scalar case.
     """
     array = np.asarray(value, dtype=np.float64)
     if array.ndim == 0:
@@ -237,7 +237,7 @@ def _as_step_array(value: float, n_steps: int) -> FloatArray:
 
 @dataclass(frozen=True, slots=True)
 class SourceState:
-    """Zeitreihe (oder Einzelwert, ``n_steps == 1``) einer Abluftquelle für einen Kaskadenlauf."""
+    """Time series (or single value, ``n_steps == 1``) of an exhaust source for a cascade run."""
 
     name: str
     dry_air_mass_flow_kg_per_s: FloatArray
@@ -255,11 +255,11 @@ class SourceState:
 
     @classmethod
     def from_config(cls, config: HeatSourceConfig, n_steps: int = 1) -> SourceState:
-        """Statische Quelle (``n_steps == 1`` per Default) aus einer :class:`HeatSourceConfig`.
+        """Static source (``n_steps == 1`` by default) from a :class:`HeatSourceConfig`.
 
-        Für eine echte Trajektorie stattdessen direkt mit ``(n_steps,)``-Arrays
-        konstruieren -- diese Fabrik ist der Brückenfall (Einzelstufen-Vergleich,
-        Excel-Nachrechnung), nicht der RL-/Auswertungsfall.
+        For a real trajectory, construct directly with ``(n_steps,)`` arrays
+        instead -- this factory is the bridging case (single-stage comparison,
+        Excel recalculation), not the RL/evaluation case.
         """
         return cls(
             name=config.name,
@@ -271,7 +271,7 @@ class SourceState:
 
 @dataclass(frozen=True, slots=True)
 class SinkState:
-    """Zeitreihe (oder Einzelwert) einer Senke für einen Kaskadenlauf."""
+    """Time series (or single value) of a sink for a cascade run."""
 
     name: str
     dry_air_mass_flow_kg_per_s: FloatArray
@@ -291,7 +291,7 @@ class SinkState:
 
     @classmethod
     def from_config(cls, config: HeatSinkConfig, n_steps: int = 1) -> SinkState:
-        """Statische Senke (``n_steps == 1`` per Default) aus einer :class:`HeatSinkConfig`."""
+        """Static sink (``n_steps == 1`` by default) from a :class:`HeatSinkConfig`."""
         return cls(
             name=config.name,
             dry_air_mass_flow_kg_per_s=_as_step_array(config.dry_air_mass_flow_kg_per_s, n_steps),
@@ -305,47 +305,47 @@ class SinkState:
 
 @dataclass(frozen=True, slots=True)
 class HeatNetworkResult:
-    """Ergebnis eines Kaskadenlaufs.
+    """Result of a cascade run.
 
-    Alle Arrays vektorisiert über die Zeitschrittachse (letzte Achse, Länge ``n_steps``);
-    die vorletzte Achse indiziert Stufen/Quellen/Senken in der Reihenfolge der jeweiligen
-    ``*_names``-Tupel.
+    All arrays vectorised over the time-step axis (last axis, length ``n_steps``);
+    the second-to-last axis indexes stages/sources/sinks in the order of the respective
+    ``*_names`` tuple.
 
-    :ivar stage_source_names: Quellenname je Stufe, Länge ``n_stages``.
-    :ivar stage_sink_names: Senkenname je Stufe, Länge ``n_stages``.
-    :ivar stage_recovered_power_kw: Genutzte Leistung je Stufe, Form ``(n_stages, n_steps)``.
-    :ivar stage_binding_code: Bindende Nebenbedingung je Stufe (siehe :data:`BINDING_LABELS`),
-        Form ``(n_stages, n_steps)``.
-    :ivar stage_source_outlet_temperature_celsius: Temperatur der Quelle NACH dieser Stufe
-        (vor der nächsten Stufe, die dieselbe Quelle referenziert, falls vorhanden), Form
-        ``(n_stages, n_steps)`` -- Diagnosegröße, um die Grädigkeits-/Taupunkt-Invarianten
-        je Stufe von außen prüfbar zu machen, ohne die Kaskadenlogik im Test zu duplizieren.
-    :ivar stage_sink_outlet_temperature_celsius: Temperatur der Senke NACH dieser Stufe,
-        analog, Form ``(n_stages, n_steps)``.
-    :ivar source_names: Quellennamen, Länge ``n_sources``.
-    :ivar source_available_power_kw: Maximal rückgewinnbare Leistung je Quelle (Kühlung bis
-        zur Taupunktgrenze, EA1-Formel unverändert), Form ``(n_sources, n_steps)``.
-    :ivar source_used_power_kw: Über alle ihre Stufen hinweg tatsächlich genutzte Leistung
-        je Quelle, Form ``(n_sources, n_steps)``.
-    :ivar source_discarded_power_kw: ``available - used`` je Quelle -- bei korrekter
-        Kaskadierung nur noch das, was wegen der Taupunktgrenze nicht mehr entziehbar war,
-        nicht mehr die volle Restenthalpie wie in der unkorrigierten Vorlage (Korrektur 2).
-    :ivar source_condensate_kg_per_s: Tatsächlich ausgekondensierter Massenstrom je Quelle
-        (MA1), Form ``(n_sources, n_steps)``. Null in ``recovery_mode="sensible"`` (Default)
-        und immer dann, wenn ``cold_temperature_celsius`` über dem Taupunkt der jeweiligen
-        Quelle liegt. Verlässt die Bilanz als Flüssigwasser -- für die Massenbilanz gilt
+    :ivar stage_source_names: Source name per stage, length ``n_stages``.
+    :ivar stage_sink_names: Sink name per stage, length ``n_stages``.
+    :ivar stage_recovered_power_kw: Used power per stage, shape ``(n_stages, n_steps)``.
+    :ivar stage_binding_code: Binding constraint per stage (see :data:`BINDING_LABELS`),
+        shape ``(n_stages, n_steps)``.
+    :ivar stage_source_outlet_temperature_celsius: Temperature of the source AFTER this stage
+        (before the next stage that references the same source, if any), shape
+        ``(n_stages, n_steps)`` -- diagnostic quantity to make the approach/dew-point invariants
+        per stage checkable from outside without duplicating the cascade logic in the test.
+    :ivar stage_sink_outlet_temperature_celsius: Temperature of the sink AFTER this stage,
+        analogously, shape ``(n_stages, n_steps)``.
+    :ivar source_names: Source names, length ``n_sources``.
+    :ivar source_available_power_kw: Maximum recoverable power per source (cooling down to
+        the dew-point limit, EA1 formula unchanged), shape ``(n_sources, n_steps)``.
+    :ivar source_used_power_kw: Power actually used per source across all its stages,
+        shape ``(n_sources, n_steps)``.
+    :ivar source_discarded_power_kw: ``available - used`` per source -- with correct
+        cascading only what could no longer be extracted because of the dew-point limit,
+        no longer the full residual enthalpy as in the uncorrected template (correction 2).
+    :ivar source_condensate_kg_per_s: Mass flow actually condensed out per source
+        (MA1), shape ``(n_sources, n_steps)``. Zero in ``recovery_mode="sensible"`` (default)
+        and whenever ``cold_temperature_celsius`` lies above the dew point of the respective
+        source. Leaves the balance as liquid water -- for the mass balance,
         ``outlet_humidity = outlet_humidity_kg_per_kg - source_condensate_kg_per_s /
-        dry_air_mass_flow_kg_per_s`` (bis zu ``Y_s(T_kalt)``, siehe Moduldocstring).
-    :ivar source_outlet_temperature_celsius: Austrittstemperatur der Quelle nach ALLEN ihren
-        Stufen, Form ``(n_sources, n_steps)``.
-    :ivar sink_names: Senkennamen, Länge ``n_sinks``.
-    :ivar sink_outlet_temperature_celsius: ``T_nach_WUET`` je Senke nach allen ihren Stufen,
-        Form ``(n_sinks, n_steps)``.
-    :ivar fuel_mass_flow_kg_per_s: ``m_gas`` je Senke, Form ``(n_sinks, n_steps)``.
-    :ivar stage_min_approach_k: Kleinste Grädigkeit über den Verlauf der Stufe (Modus
-        ``"along_exchanger"``; ``NaN`` im Modus ``"warm_end"``), Form ``(n_stages, n_steps)``.
-    :ivar stage_pinch_position: Lage dieser Engstelle, 0 = warmes Ende, 1 = kaltes Ende
-        (``NaN`` im Modus ``"warm_end"``), Form ``(n_stages, n_steps)``.
+        dry_air_mass_flow_kg_per_s`` holds (down to ``Y_s(T_kalt)``, see module docstring).
+    :ivar source_outlet_temperature_celsius: Outlet temperature of the source after ALL its
+        stages, shape ``(n_sources, n_steps)``.
+    :ivar sink_names: Sink names, length ``n_sinks``.
+    :ivar sink_outlet_temperature_celsius: ``T_nach_WUET`` per sink after all its stages,
+        shape ``(n_sinks, n_steps)``.
+    :ivar fuel_mass_flow_kg_per_s: ``m_gas`` per sink, shape ``(n_sinks, n_steps)``.
+    :ivar stage_min_approach_k: Smallest approach temperature along the stage (mode
+        ``"along_exchanger"``; ``NaN`` in mode ``"warm_end"``), shape ``(n_stages, n_steps)``.
+    :ivar stage_pinch_position: Position of this bottleneck, 0 = warm end, 1 = cold end
+        (``NaN`` in mode ``"warm_end"``), shape ``(n_stages, n_steps)``.
     """
 
     stage_source_names: tuple[str, ...]
@@ -367,29 +367,29 @@ class HeatNetworkResult:
     stage_pinch_position: FloatArray
 
     def total_recovered_power_kw(self) -> FloatArray:
-        """Summe der genutzten Leistung über alle Stufen, je Zeitschritt."""
+        """Sum of the used power over all stages, per time step."""
         return np.sum(self.stage_recovered_power_kw, axis=0)
 
     def total_fuel_mass_flow_kg_per_s(self) -> FloatArray:
-        """Summe des Brennstoffbedarfs über alle Senken, je Zeitschritt."""
+        """Sum of the fuel demand over all sinks, per time step."""
         return np.sum(self.fuel_mass_flow_kg_per_s, axis=0)
 
 
 def binding_label(code: int) -> str:
-    """Menschenlesbares Label für einen Eintrag aus ``stage_binding_code``."""
+    """Human-readable label for an entry of ``stage_binding_code``."""
     return BINDING_LABELS[code]
 
 
 @dataclass(frozen=True, slots=True)
 class SharedCap:
-    """E1: Leistungsgrenze EINES Übertragers, den mehrere Stufen gemeinsam nutzen.
+    """E1: power limit of ONE exchanger that several stages share.
 
-    ``stages`` sind ``(Quellenname, Senkenname)``-Paare; die Summe der übertragenen Leistung aller
-    Stufen der Gruppe, die in der Stufenliste vorkommen, darf ``power_kw`` nicht überschreiten. Die
-    Stufen bedienen die Grenze in der Reihenfolge der Kaskade (die erste nimmt, was sie nach
-    Pinch und Taupunkt bekäme, höchstens die Grenze; die nächste den Rest). Pairs, die in der
-    Stufenliste fehlen, tun nichts -- eine Verschaltung ohne diese Stufen ist von der Grenze nicht
-    betroffen. Ohne ``shared_caps`` ist die Kaskade bitgleich zum Stand vor E1.
+    ``stages`` are ``(Quellenname, Senkenname)`` pairs; the sum of the transferred power of all
+    stages of the group that appear in the stage list must not exceed ``power_kw``. The
+    stages serve the limit in the order of the cascade (the first takes what it would get after
+    pinch and dew point, at most the limit; the next one the rest). Pairs that are missing from the
+    stage list do nothing -- an interconnection without these stages is not affected by the
+    limit. Without ``shared_caps`` the cascade is bit-identical to the state before E1.
     """
 
     stages: tuple[tuple[str, str], ...]
@@ -430,52 +430,53 @@ def evaluate_cascade(
     shared_caps: tuple[SharedCap, ...] = (),
     profiles: dict[str, SourceProfile] | None = None,
 ) -> HeatNetworkResult:
-    r"""Werte die Kaskade entlang ``stages`` aus -- der eigentliche Rechenkern (EA2/EA3).
+    r"""Evaluate the cascade along ``stages`` -- the actual computational core (EA2/EA3).
 
-    ``stages`` ist eine geordnete Liste von ``(Quellenname, Senkenname)``-Paaren, typischerweise
-    das Ergebnis von ``routing.HeatNetworkRouting.route`` -- diese Funktion kennt ``routing.py``
-    nicht (Dependency Injection: die Verschaltung wird fertig aufgelöst übergeben, nicht hier
-    entschieden). Jede Stufe wird in der gegebenen Reihenfolge abgearbeitet; Quellen und Senken
-    führen dabei laufenden Zustand (aktuelle Temperatur), der von Stufe zu Stufe weitergereicht
-    wird -- genau die Kaskadierung aus Korrektur 2.
+    ``stages`` is an ordered list of ``(Quellenname, Senkenname)`` pairs, typically
+    the result of ``routing.HeatNetworkRouting.route`` -- this function does not know
+    ``routing.py`` (dependency injection: the interconnection is passed in fully resolved, not
+    decided here). Every stage is processed in the given order; sources and sinks
+    carry a running state (current temperature) that is passed on from stage to stage
+    -- exactly the cascading of correction 2.
 
-    Je Stufe: die Senke wird so weit aufgeheizt, wie es der kleinere von zwei Werten erlaubt --
-    ihr eigener Sollwert oder die Mindestgrädigkeit gegenüber der AKTUELLEN (bereits durch
-    vorherige Stufen abgekühlten) Quellentemperatur. Die dafür nötige Leistung wird zusätzlich
-    durch das gekappt, was die Quelle noch hergeben kann, ohne ihre Taupunktgrenze zu
-    unterschreiten (Korrektur 1: die eigene Taupunktgrenze, nicht die einer anderen Quelle).
-    Nicht verbrauchte Quellenenthalpie bleibt für die nächste Stufe verfügbar (Korrektur 2),
-    solange ``stages`` sie einer weiteren Senke zuweist.
+    Per stage: the sink is heated as far as the smaller of two values allows --
+    its own set point or the minimum approach temperature to the CURRENT source temperature
+    (already cooled by previous stages). The power needed for this is additionally
+    capped by what the source can still give without falling below its dew-point
+    limit (correction 1: its own dew-point limit, not that of another source).
+    Unused source enthalpy remains available for the next stage (correction 2),
+    as long as ``stages`` assigns it to a further sink.
 
-    Massenstrom- und Feuchte-bedingte Wärmekapazitätsraten (:math:`\dot m_L (c_{p,L}+Y c_{p,D})`)
-    werden je Quelle/Senke als über die Kaskade KONSTANT behandelt, berechnet aus der
-    ursprünglichen ``outlet_humidity_kg_per_kg`` -- reine sensible Wärmeübertragung, keine
-    Befeuchtung/Entfeuchtung der SENKE in diesem Modul. In ``recovery_mode="sensible"``
-    (Default) gilt das auch für die Quelle unverändert (die Feuchte ändert sich nicht,
-    solange die Quelle oberhalb ihrer Taupunktgrenze bleibt; unterhalb wird per Konstruktion
-    nicht mehr gekühlt). In ``recovery_mode="condensing"`` (MA1) entzieht die Quelle
-    zusätzlich latente Wärme aus Kondensation -- das ändert ihre Feuchte (Kondensat verlässt
-    die Bilanz, siehe :attr:`HeatNetworkResult.source_condensate_kg_per_s`), aber NICHT die
-    hier verwendete Kapazitätsrate: die sensible Kühlreserve wird weiterhin mit der
-    ursprünglichen Feuchte gerechnet, weil Kondensation modellhaft erst beim Erreichen von
-    ``cold_temperature_celsius`` einsetzt (Flash-Kondensation am kalten Ende, keine
-    graduelle Entfeuchtung über den Kühlverlauf) -- danach ist die Quelle für diese Stufe
-    ohnehin ausgeschöpft.
+    Heat capacity rates determined by mass flow and humidity (:math:`\dot m_L (c_{p,L}+Y c_{p,D})`)
+    are treated per source/sink as CONSTANT over the cascade, computed from the
+    original ``outlet_humidity_kg_per_kg`` -- purely sensible heat transfer, no
+    humidification/dehumidification of the SINK in this module. In ``recovery_mode="sensible"``
+    (default) this also holds unchanged for the source (the humidity does not change
+    as long as the source stays above its dew-point limit; below it, by construction,
+    no further cooling takes place). In ``recovery_mode="condensing"`` (MA1) the source
+    additionally gives off latent heat from condensation -- this changes its humidity (condensate
+    leaves the balance, see :attr:`HeatNetworkResult.source_condensate_kg_per_s`), but NOT the
+    capacity rate used here: the sensible cooling reserve is still computed with the
+    original humidity, because in the model condensation only sets in on reaching
+    ``cold_temperature_celsius`` (flash condensation at the cold end, no
+    gradual dehumidification along the cooling path) -- after that the source is
+    exhausted for this stage anyway.
 
-    ``shared_caps`` (E1, optional): Leistungsgrenzen geteilter Übertrager, siehe
-    :class:`SharedCap`. Leer (Default) heißt: Rechenweg und Ergebnis bitgleich zum Stand vor E1.
+    ``shared_caps`` (E1, optional): power limits of shared exchangers, see
+    :class:`SharedCap`. Empty (default) means: calculation path and result bit-identical to the
+    state before E1.
 
-    **Grädigkeitsprüfung (Befund 79, Prüfbefund A1).** Der Text oben beschreibt den Modus
-    ``config.approach_check="warm_end"`` (Stand vor Befund 79, nur zur Reproduktion alter
-    Artefakte). Im Default ``"along_exchanger"`` gilt ``dT_min`` als Minimum über den ganzen
-    Gegenstrom-Übertrager, auf dem Quellprofil mit Kondensation ab dem Taupunkt, siehe
-    :mod:`~twinlink_ml.heatnetwork.approach`; ``profiles`` (optional) sind vorab gebaute
-    Profile je Quelle (:func:`build_source_profiles`), damit viele Verschaltungen derselben
-    Quellen sie nur einmal bauen.
+    **Approach check (Befund 79, review finding A1).** The text above describes the mode
+    ``config.approach_check="warm_end"`` (state before Befund 79, only for reproducing old
+    artifacts). In the default ``"along_exchanger"``, ``dT_min`` applies as the minimum over the
+    whole counter-current exchanger, on the source profile with condensation from the dew point,
+    see :mod:`~twinlink_ml.heatnetwork.approach`; ``profiles`` (optional) are pre-built
+    profiles per source (:func:`build_source_profiles`), so that many interconnections of the same
+    sources build them only once.
 
-    :raises ValueError: wenn ``stages`` eine Quelle/Senke referenziert, die nicht in
-        ``sources``/``sinks`` vorkommt, oder wenn Quellen/Senken unterschiedliche Schrittzahlen
-        mitbringen.
+    :raises ValueError: if ``stages`` references a source/sink that does not appear in
+        ``sources``/``sinks``, or if sources/sinks come with different numbers of
+        steps.
     """
     source_by_name = {state.name: state for state in sources}
     sink_by_name = {state.name: state for state in sinks}
@@ -525,11 +526,11 @@ def evaluate_cascade(
         )
         for name, state in source_by_name.items()
     }
-    # MA1: latenter Leistungsvorrat je Quelle, einmalig aus der Ausgangsfeuchte berechnet
-    # (keine Neuberechnung je Stufe -- Kondensation setzt erst ein, wenn der Strom
-    # tatsächlich bis T_kalt abgekühlt wurde, siehe Moduldocstring). Null in
-    # ``recovery_mode="sensible"`` und immer dann, wenn T_kalt über dem Taupunkt der Quelle
-    # liegt -- in beiden Fällen bitgleich zum Stand vor MA1 (kein latenter Beitrag).
+    # MA1: latent power reserve per source, computed once from the outlet humidity
+    # (no recomputation per stage -- condensation only sets in once the stream has
+    # actually been cooled down to T_kalt, see module docstring). Zero in
+    # ``recovery_mode="sensible"`` and whenever T_kalt lies above the dew point of the source
+    # -- in both cases bit-identical to the state before MA1 (no latent contribution).
     source_latent_power_w = {
         name: (
             np.maximum(
@@ -584,8 +585,8 @@ def evaluate_cascade(
         sensible_available_w = np.maximum(
             capacity_source * (temperature_source - floor_temperature), 0.0
         )
-        # MA1: verbleibender latenter Vorrat kommt oben auf die sensible Kühlreserve --
-        # bei ``recovery_mode="sensible"`` ist er 0 und ``power_available_w`` bitgleich zu
+        # MA1: the remaining latent reserve is added on top of the sensible cooling reserve --
+        # with ``recovery_mode="sensible"`` it is 0 and ``power_available_w`` bit-identical to
         # ``sensible_available_w`` (IEEE-754: ``x + 0.0 == x``).
         power_available_w = sensible_available_w + remaining_latent_power_w[source_name]
         power_actual_w = np.clip(np.minimum(power_for_target_w, power_available_w), 0.0, None)
@@ -594,10 +595,10 @@ def evaluate_cascade(
         if group_index is not None:
             power_actual_w = np.minimum(power_actual_w, remaining_cap_w[group_index])
             remaining_cap_w[group_index] = remaining_cap_w[group_index] - power_actual_w
-        # Sensibler Anteil zuerst (senkt die Quellentemperatur), latenter Anteil erst danach
-        # (Kondensation setzt erst bei Erreichen von ``floor_temperature`` ein) -- ``np.minimum``
-        # gibt hier ``power_actual_w`` unverändert zurück, solange kein latenter Vorrat
-        # vorhanden ist, also ohne zusätzliche Rundung gegenüber dem Stand vor MA1.
+        # Sensible share first (lowers the source temperature), latent share only afterwards
+        # (condensation only sets in on reaching ``floor_temperature``) -- ``np.minimum``
+        # returns ``power_actual_w`` unchanged here as long as there is no latent reserve,
+        # i.e. without additional rounding compared with the state before MA1.
         power_sensible_used_w = np.minimum(power_actual_w, sensible_available_w)
         power_latent_used_w = power_actual_w - power_sensible_used_w
 
@@ -708,7 +709,7 @@ def evaluate_cascade(
 def build_source_profiles(
     config: HeatNetworkConfig, sources: tuple[SourceState, ...]
 ) -> dict[str, SourceProfile]:
-    """Profile je Quelle für den Modus ``"along_exchanger"`` (siehe :mod:`.approach`)."""
+    """Profiles per source for the mode ``"along_exchanger"`` (see :mod:`.approach`)."""
     return {
         state.name: build_source_profile(
             config,
@@ -730,13 +731,13 @@ def _evaluate_cascade_along(
     n_steps: int,
     profiles: dict[str, SourceProfile] | None,
 ) -> HeatNetworkResult:
-    """Kaskade mit ``dT_min`` als Minimum über den Verlauf jeder Stufe (Befund 79, A1).
+    """Cascade with ``dT_min`` as the minimum along each stage (Befund 79, A1).
 
-    Dieselbe Mechanik wie der Modus ``"warm_end"`` (Reihenfolge der Stufen, Sollwertgrenze der
-    Senke, Restwärme der Quelle bis zu ihrer Kühlgrenze, geteilte Übertrager, Brennstoff), aber
-    die Stufenleistung ist die größte, bei der die Grädigkeit an JEDER Stelle des
-    Gegenstrom-Übertragers mindestens ``dT_min`` beträgt, und die latente Wärme wird entlang
-    des Profils ab dem Taupunkt frei (kein Flash bei ``T_kalt``).
+    The same mechanism as the mode ``"warm_end"`` (order of the stages, set-point limit of the
+    sink, residual heat of the source down to its cooling limit, shared exchangers, fuel), but
+    the stage power is the largest at which the approach temperature at EVERY point of the
+    counter-current exchanger is at least ``dT_min``, and the latent heat is released along
+    the profile from the dew point onwards (no flash at ``T_kalt``).
     """
     gas = config.gas
     if profiles is None:

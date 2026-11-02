@@ -1,56 +1,55 @@
-r"""Diagnose zu Befund 25 (``04_stand_ap1.md``): negativer Transfer im Soft-Sensor-Fall.
+r"""Diagnosis of Befund 25 (``04_stand_ap1.md``): negative transfer in the soft-sensor case.
 
-Beobachtung, die dieses Skript prüft
+Observation this script checks
 -------------------------------------
-Im Soft-Sensor-Betrieb ist ``energy_target`` bei GRU und LSTM in *jeder* Stützstelle
-nachweisbar schlechter als ARX, obwohl dieselben Kerne dieselbe Zielgröße im Inline-Fall
-klar besser treffen als ARX (siehe ``artifacts/runs/arch_gru.jsonl``,
-``observation/mode``). ``src/twinlink_ml/models/torch_sequence.py`` trainiert alle
-Zielgrößen mit einem gemeinsamen Encoder und einem einzigen Skalarverlust
-(``_weighted_mse``), gemittelt **ohne** Gewichtung pro Zielgröße -- bestätigt durch
-Lektüre des Trainers, nicht durch dieses Skript. Im Soft-Sensor-Betrieb sind
-``product_moisture_kg_per_kg`` und ``d50_um`` für jedes bisher geprüfte Modell praktisch
-unlösbar (Climatology-NRMSE dort nahe 1.0). Die Hypothese: das Gradientenrauschen dieser
-beiden schweren, kaum lernbaren Teilaufgaben verschlechtert über den geteilten Encoder die
-sonst gute Lösung für ``energy_target`` -- negativer Transfer zwischen Teilaufgaben
-ungleicher Schwierigkeit.
+In soft-sensor operation, ``energy_target`` for GRU and LSTM is demonstrably worse than ARX
+at *every* learning-curve point, although the same cores clearly hit the same target better
+than ARX in the inline case (see ``artifacts/runs/arch_gru.jsonl``,
+``observation/mode``). ``src/twinlink_ml/models/torch_sequence.py`` trains all targets with
+a shared encoder and a single scalar loss (``_weighted_mse``), averaged **without**
+per-target weighting -- confirmed by reading the trainer, not by this script. In
+soft-sensor operation, ``product_moisture_kg_per_kg`` and ``d50_um`` are practically
+unsolvable for every model checked so far (climatology NRMSE there close to 1.0). The
+hypothesis: the gradient noise of these two hard, barely learnable sub-tasks degrades,
+via the shared encoder, the otherwise good solution for ``energy_target`` -- negative
+transfer between sub-tasks of unequal difficulty.
 
-Aufbau
+Setup
 ------
-Drei GRU-Läufe auf **identischem** Datenpool und Seed je Wiederholung, Soft-Sensor-Betrieb,
+Three GRU runs on an **identical** data pool and seed per repetition, soft-sensor operation,
 ``n_train = 32``:
 
-a) wie im bestehenden Architekturvergleich: ``target_names`` = alle drei Zielgrößen, ein
-   gemeinsames Netz (``torch_sequence.GruSequenceModel``).
-b) ``target_names`` = nur ``("energy_target",)`` -- der Kopf sieht die beiden schweren
-   Teilaufgaben gar nicht.
-c) ``CompositeSequenceModel`` (Befund 26, Option 2): ein eigenes Netz je Zielgröße, alle
-   drei Zielgrößen wie in (a), aber ohne geteilten Zustand.
+a) as in the existing architecture comparison: ``target_names`` = all three targets, one
+   shared network (``torch_sequence.GruSequenceModel``).
+b) ``target_names`` = only ``("energy_target",)`` -- the head does not see the two hard
+   sub-tasks at all.
+c) ``CompositeSequenceModel`` (Befund 26, option 2): a separate network per target, all
+   three targets as in (a), but without shared state.
 
-(a) und (b) teilen Trajektorie, Split und Modell-Seed (``dataclasses.replace`` auf
-demselben :class:`~twinlink_ml.evaluation.GeneratedData`); nur ``spec.target_names``
-unterscheidet sich. Eine Verbesserung in (b) kann damit nicht aus einem anderen
-Datenpool oder einer anderen Initialisierung kommen, nur aus der entfernten
-Mitverlustfunktion. (c) läuft auf demselben Datenpool wie (a), mit derselben
-``target_names``-Menge -- der einzige Unterschied ist die Architektur. Referenzwerte
-(ARX, Climatology) laufen auf demselben Pool mit, ausschließlich zur Einordnung.
+(a) and (b) share trajectory, split and model seed (``dataclasses.replace`` on the same
+:class:`~twinlink_ml.evaluation.GeneratedData`); only ``spec.target_names`` differs. An
+improvement in (b) can therefore not come from a different data pool or a different
+initialisation, only from the removed auxiliary loss. (c) runs on the same data pool as
+(a), with the same ``target_names`` set -- the only difference is the architecture.
+Reference values (ARX, climatology) run along on the same pool, solely for context.
 
-Aufruf::
+Invocation::
 
     python scripts/diagnose_soft_sensor_interference.py --seeds 1 2 3
 
-``--gradient-clip`` erlaubt die Fortsetzung aus Befund 26 (04_stand_ap1.md): ob das
-globale ``clip_grad_norm_`` über alle Netzparameter (statt getrennt je Zielgruppe) an der
-schlechten Leistung von Fall (a) mitwirkt, lässt sich prüfen, indem die Clip-Norm so hoch
-gesetzt wird, dass sie in der Praxis nicht mehr greift (z.B. 100.0 statt Voreinstellung
-1.0) -- bewusst nicht deaktiviert, um keine Divergenz als neues Störsignal einzuführen::
+``--gradient-clip`` allows the follow-up from Befund 26 (04_stand_ap1.md): whether the
+global ``clip_grad_norm_`` over all network parameters (instead of separately per target
+group) contributes to the poor performance of case (a) can be checked by setting the clip
+norm so high that in practice it no longer takes effect (e.g. 100.0 instead of the default
+1.0) -- deliberately not disabled, so as not to introduce divergence as a new interfering
+signal::
 
     python scripts/diagnose_soft_sensor_interference.py --seeds 1 2 3 --gradient-clip 100.0
 
-Fall (a) und Fall (c) laufen in **derselben** Skriptausführung, damit die
-Trainingszeit-Mehrkosten von (c) gegenüber (a) auf derselben Maschine, derselben Last und
-demselben Zeitpunkt gemessen sind -- ein Vergleich über zwei getrennte Läufe wäre durch
-Hintergrundlast auf der Maschine verzerrbar.
+Case (a) and case (c) run in the **same** script execution, so that the additional
+training-time cost of (c) over (a) is measured on the same machine, under the same load and
+at the same point in time -- a comparison across two separate runs could be distorted by
+background load on the machine.
 """
 
 from __future__ import annotations
@@ -87,7 +86,7 @@ ALL_TARGETS = ("energy_target", "product_moisture_kg_per_kg", "d50_um")
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=CONFIG_PATH)
     parser.add_argument("--n-train", type=int, default=32)
@@ -105,11 +104,11 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def _soft_sensor_variant(base: DataSpec, target_names: tuple[str, ...]) -> DataSpec:
-    """Soft-Sensor-Spezifikation für eine gegebene Zielgrößenmenge.
+    """Soft-sensor specification for a given set of targets.
 
-    ``spec_for_mode`` beobachtet alles außer den beiden Qualitätsgrößen; für
-    ``target_names = ("energy_target",)`` ist das ohnehin die einzige vorhandene
-    Zielgröße, das Verhalten bleibt also konsistent zwischen (a) und (b).
+    ``spec_for_mode`` observes everything except the two quality variables; for
+    ``target_names = ("energy_target",)`` that is the only existing target anyway,
+    so the behaviour stays consistent between (a) and (b).
     """
     variant = dataclasses.replace(base, target_names=target_names)
     return spec_for_mode(variant, ObservationMode.SOFT_SENSOR)
@@ -118,7 +117,7 @@ def _soft_sensor_variant(base: DataSpec, target_names: tuple[str, ...]) -> DataS
 def _fit_and_evaluate(
     data: GeneratedData, n_train: int, model: SequenceModel, evaluator: RolloutEvaluator
 ) -> tuple[dict[int, float], object, float]:
-    """Fit, auswerten, und die reine ``fit``-Zeit zurückgeben (für den Kostenvergleich)."""
+    """Fit, evaluate, and return the pure ``fit`` time (for the cost comparison)."""
     train, validation, test = build_datasets(data, n_train, policy=ValidationPolicy.FIXED_POOL)
     start = time.perf_counter()
     model.fit(train, seed=data.seeds.model_seed, validation=validation)
@@ -128,7 +127,7 @@ def _fit_and_evaluate(
 
 
 def main() -> None:
-    """Beide Varianten über mehrere Seeds fahren und energy_target vergleichen."""
+    """Run both variants over several seeds and compare energy_target."""
     arguments = parse_arguments()
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)

@@ -1,9 +1,8 @@
-"""Bilanzschluss, Constraints und analytische Grenzfälle.
+"""Balance closure, constraints and analytical limiting cases.
 
-Die Tests hier sind die eigentliche Absicherung des Modells. Sie prüfen nicht, dass der
-Code läuft, sondern dass er die Physik erfüllt, die er behauptet -- und zwar an Stellen,
-wo ein Vorzeichen- oder Einheitenfehler nicht durch Augenschein an einer Trajektorie
-auffällt.
+The tests here are the actual safeguard of the model. They do not check that the
+code runs, but that it satisfies the physics it claims -- and that at places
+where a sign or unit error would not be noticed by eye on a trajectory.
 """
 
 from __future__ import annotations
@@ -37,10 +36,10 @@ def _batch_config(config: ProcessConfig, **operation_overrides: object) -> Proce
 
 
 def test_solid_balance_closes_exactly_in_batch_mode(config: ProcessConfig) -> None:
-    """Ohne Produktabzug muss der Feststoffzuwachs exakt dem Eintrag entsprechen.
+    """Without product withdrawal the solids increase must correspond exactly to the feed.
 
-    Exakt, nicht approximativ: die Feststoffbilanz ist linear in den Zuständen, RK4
-    integriert sie fehlerfrei. Jede Abweichung wäre ein Implementierungsfehler.
+    Exactly, not approximately: the solids balance is linear in the states, RK4
+    integrates it without error. Any deviation would be an implementation error.
     """
     simulator = GreyBoxFluidBedGranulator(_batch_config(config, mode="batch"))
     n_steps = 200
@@ -60,13 +59,13 @@ def test_solid_balance_closes_exactly_in_batch_mode(config: ProcessConfig) -> No
 def test_solid_balance_closes_within_tolerance_in_continuous_mode(
     simulator: GreyBoxFluidBedGranulator,
 ) -> None:
-    """Feststoffbilanz inklusive Produktabzug.
+    """Solids balance including product withdrawal.
 
-    Die Betriebsart, die ``test_solid_balance_closes_exactly_in_batch_mode`` bewusst
-    ausspart (dort ``mode="batch"``, kein Produktabzug, deshalb dort exakter statt
-    tolerierter Schluss). Nutzt
-    :func:`~twinlink_ml.simulation.diagnostics.mass_balance_residual`, die
-    ``simulator``-Fixture läuft in der Default-Betriebsart ``continuous``.
+    The operating mode that ``test_solid_balance_closes_exactly_in_batch_mode`` deliberately
+    leaves out (there ``mode="batch"``, no product withdrawal, hence an exact instead of a
+    tolerated closure there). Uses
+    :func:`~twinlink_ml.simulation.diagnostics.mass_balance_residual`, the
+    ``simulator`` fixture runs in the default operating mode ``continuous``.
     """
     n_steps = 400
     actions, disturbances = constant_excitation(simulator, n_steps)
@@ -75,7 +74,7 @@ def test_solid_balance_closes_within_tolerance_in_continuous_mode(
 
 
 def test_water_balance_closes_without_evaporation(config: ProcessConfig) -> None:
-    """Mit abgeschalteter Trocknung sammelt sich das eingesprühte Wasser vollständig an."""
+    """With drying switched off, the sprayed-in water accumulates completely."""
     material = dataclasses.replace(config.material, max_saturation_degree=1e-12)
     dry_config = dataclasses.replace(_batch_config(config, mode="batch"), material=material)
     simulator = GreyBoxFluidBedGranulator(dry_config)
@@ -95,10 +94,10 @@ def test_water_balance_closes_without_evaporation(config: ProcessConfig) -> None
 
 
 def test_water_balance_closes_with_evaporation(simulator: GreyBoxFluidBedGranulator) -> None:
-    """Integraler Bilanzschluss inklusive Verdampfung und Produktabzug.
+    """Integral balance closure including evaporation and product withdrawal.
 
-    Toleranz 1e-3 relativ: hier begrenzt die Trapezintegration der Diagnosegrößen die
-    Genauigkeit, nicht das Modell.
+    Tolerance 1e-3 relative: here the trapezoidal integration of the diagnostic quantities
+    limits the accuracy, not the model.
     """
     n_steps = 400
     actions, disturbances = constant_excitation(simulator, n_steps)
@@ -121,7 +120,7 @@ def test_water_balance_closes_with_evaporation(simulator: GreyBoxFluidBedGranula
 
 
 def test_enthalpy_balance_closes_at_steady_state(simulator: GreyBoxFluidBedGranulator) -> None:
-    """Im Beharrungszustand muss die Enthalpiebilanz auf Null aufgehen."""
+    """In the steady state the enthalpy balance must close to zero."""
     n_steps = 2000
     actions, disturbances = constant_excitation(simulator, n_steps)
     trajectory = simulator.rollout(actions, disturbances, seed=0)
@@ -152,13 +151,13 @@ def test_enthalpy_balance_closes_at_steady_state(simulator: GreyBoxFluidBedGranu
 
 
 def test_layering_growth_matches_analytic_rate(config: ProcessConfig) -> None:
-    r"""Prüft die Identität zum Layering-Ansatz aus 02_prozess_setup.md.
+    r"""Checks the identity with the layering approach from 02_prozess_setup.md.
 
     .. math:: G = \frac{2\dot V_{fest}}{A}
               = \frac{\dot m_{spray} w_{solid} d_{50}}{3 m_s}
 
-    Ohne Nukleation und ohne Produktabzug muss die numerische Wachstumsrate des
-    Durchmessers exakt diesem Ausdruck entsprechen.
+    Without nucleation and without product withdrawal the numerical growth rate of the
+    diameter must correspond exactly to this expression.
     """
     material = dataclasses.replace(config.material, nucleation_solid_fraction=0.0)
     pure_layering = dataclasses.replace(_batch_config(config, mode="batch"), material=material)
@@ -179,13 +178,13 @@ def test_layering_growth_matches_analytic_rate(config: ProcessConfig) -> None:
 
 
 def test_nucleation_limited_diameter_matches_number_balance(config: ProcessConfig) -> None:
-    r"""Der Beharrungsdurchmesser des keimfreien Spezialfalls folgt der Zahlenbilanz.
+    r"""The steady-state diameter of the nucleus-free special case follows the number balance.
 
     .. math:: d_{50,ss} = d_{nuc}\, b_{nuc}^{-1/3}
 
-    Damit ist ``nucleation_solid_fraction`` kein freier Fitparameter: er wird durch die
-    Zielkorngröße festgelegt. Ein Modell, in dem beide unabhängig eingestellt werden,
-    ist überparametrisiert und verletzt die Zahlenbilanz.
+    Hence ``nucleation_solid_fraction`` is not a free fit parameter: it is fixed by the
+    target particle size. A model in which both are set independently
+    is over-parametrised and violates the number balance.
     """
     target_diameter_m = 750e-6
     fraction = nucleation_fraction_for_target_diameter(
@@ -207,10 +206,10 @@ def test_nucleation_limited_diameter_matches_number_balance(config: ProcessConfi
 
 
 def test_particle_moisture_stays_above_equilibrium(simulator: GreyBoxFluidBedGranulator) -> None:
-    """Zweite harte Grenze: X_p >= X_eq, strukturell über eta -> 0."""
+    """Second hard limit: X_p >= X_eq, structurally via eta -> 0."""
     n_steps = 1000
     actions, disturbances = constant_excitation(simulator, n_steps)
-    # extrem trocken fahren: heiß, viel Luft, minimale Sprührate
+    # run extremely dry: hot, a lot of air, minimal spray rate
     actions[..., 0] = simulator.config.actions.inlet_temperature_celsius.maximum
     actions[..., 1] = simulator.config.actions.gas_velocity_m_per_s.maximum
     actions[..., 2] = simulator.config.actions.spray_rate_kg_per_h.minimum
@@ -223,9 +222,9 @@ def test_particle_moisture_stays_above_equilibrium(simulator: GreyBoxFluidBedGra
 def _gab_config(
     config: ProcessConfig, *, critical_moisture_kg_per_kg: float = 0.200
 ) -> ProcessConfig:
-    """GAB-Isotherme, verankert bei phi=0.5/T=62C -> 0.030 kg/kg.
+    """GAB isotherm, anchored at phi=0.5/T=62C -> 0.030 kg/kg.
 
-    Siehe docs/04_stand_ap1.md, Befund 34 -- dieselben Parameter wie
+    See docs/04_stand_ap1.md, Befund 34 -- the same parameters as
     tests/test_sorption.py::_GAB_KWARGS.
     """
     material = dataclasses.replace(
@@ -246,9 +245,9 @@ def _gab_config(
 def test_particle_moisture_stays_above_local_equilibrium_with_gab_isotherm(
     config: ProcessConfig,
 ) -> None:
-    """Zweite harte Grenze mit zustandsabhängiger Isotherme.
+    """Second hard limit with a state-dependent isotherm.
 
-    X_p >= X_eq(phi,T) am jeweiligen Zeitschritt, nicht mehr X_p >= ein fester Skalar.
+    X_p >= X_eq(phi,T) at the respective time step, no longer X_p >= a fixed scalar.
     """
     from twinlink_ml.simulation.greybox import IDX_BED_TEMPERATURE
     from twinlink_ml.simulation.sorption import isotherm_from_material
@@ -281,11 +280,11 @@ def test_particle_moisture_stays_above_local_equilibrium_with_gab_isotherm(
 def test_scattered_cold_start_below_local_equilibrium_is_floored_up(
     config: ProcessConfig,
 ) -> None:
-    """Regressionsfall aus der Diversitäts-Kennzahl (docs/04_stand_ap1.md, Befund 34).
+    """Regression case from the diversity metric (docs/04_stand_ap1.md, Befund 34).
 
-    T_bed=T_amb=35C (minimale Heizdifferenz), phi_amb=0.85 (Maximum), X_p0=0.0301 (nahe
-    dem Anker) -- lokal ist X_eq dort ~0.056, weit über X_p0. Der k1-basierte Floor muss
-    das im allerersten internen Schritt korrekt und stetig hochklemmen.
+    T_bed=T_amb=35C (minimal heating difference), phi_amb=0.85 (maximum), X_p0=0.0301 (close
+    to the anchor) -- locally X_eq there is ~0.056, far above X_p0. The k1-based floor must
+    clamp this up correctly and continuously in the very first internal step.
     """
     gab_config = _gab_config(config)
     simulator = GreyBoxFluidBedGranulator(gab_config)
@@ -305,19 +304,19 @@ def test_scattered_cold_start_below_local_equilibrium_is_floored_up(
     moisture_after = float(result.diagnostics["particle_moisture_kg_per_kg"][0])
 
     assert np.all(np.isfinite(simulator.backend.to_numpy(result.state)))
-    assert moisture_after > 0.0301  # Floor hat sichtbar hochgeklemmt
+    assert moisture_after > 0.0301  # floor has visibly clamped up
     assert moisture_after < gab_config.material.critical_moisture_kg_per_kg
 
 
 def test_energy_target_is_non_negative_and_monotone(simulator: GreyBoxFluidBedGranulator) -> None:
-    r"""Monotonie-Constraints des Projekts als Property-Test.
+    r"""Monotonicity constraints of the project as a property test.
 
     .. math:: \partial \dot E/\partial T_{in} > 0, \qquad
               \partial \dot E/\partial u_{gas} > 0
 
-    Vor Verfügbarkeit von Hypothesis mit einem festen RNG-Seed umgesetzt; die Zusage
-    ``property-based`` aus den Code-Konventionen ist damit noch nicht erfüllt, der
-    Testinhalt aber schon.
+    Implemented with a fixed RNG seed before Hypothesis was available; the promise
+    ``property-based`` from the code conventions is thus not yet fulfilled, but the
+    test content is.
     """
     rng = np.random.default_rng(42)
     n = 300
@@ -342,11 +341,11 @@ def test_energy_target_is_non_negative_and_monotone(simulator: GreyBoxFluidBedGr
 
 
 def test_action_bounds_are_enforced(simulator: GreyBoxFluidBedGranulator) -> None:
-    """Sicherheitsrelevant: der Simulator ist die letzte Instanz vor der Physik."""
+    """Safety-relevant: the simulator is the last instance before the physics."""
     n_steps = 5
     actions, disturbances = constant_excitation(simulator, n_steps)
-    actions[..., 0] = 1e4  # absurd heiße Zuluft
-    actions[..., 1] = -5.0  # negative Gasgeschwindigkeit
+    actions[..., 0] = 1e4  # absurdly hot inlet air
+    actions[..., 1] = -5.0  # negative gas velocity
     trajectory = simulator.rollout(actions, disturbances, seed=0)
     assert np.all(trajectory.diagnostics["power_total_kw"] > 0.0)
     assert np.all(np.isfinite(trajectory.states))

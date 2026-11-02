@@ -1,85 +1,87 @@
-r"""CB1-CB4: prüft, ob der Regret aus Befund 52 den Übergang von Beharrungszustand zu Charge übersteht.
+r"""CB1-CB4: checks whether Befund 52's regret survives the step from steady state to batch.
 
-KEIN Netztraining, KEIN Reinforcement Learning -- transiente Rollouts des vorhandenen
-Grey-Box-Simulators (``GreyBoxFluidBedGranulator.rollout``, ``simulation/base.py``) plus
-Auswertung, aufsetzend auf dem committeten Ergebnis von Befund 52
+NO network training, NO reinforcement learning -- transient rollouts of the existing
+grey-box simulator (``GreyBoxFluidBedGranulator.rollout``, ``simulation/base.py``) plus
+evaluation, building on the committed result of Befund 52
 (``artifacts/runs/bb1_bb3_operating_point_regret.json``, ``scripts/
 study_operating_point_regret.py``).
 
-Anlass: Befund 52 bewertet 25 Gitterpunkte (Umgebungstemperatur x relative Luftfeuchte)
-ausschließlich im exakten Beharrungszustand (``solve_steady_state``). Die Feststoffmode hat
-``tau_4 = 16000 s`` gegenüber einer Chargendauer von 28800 s (Verhältnis 1.80, 83.5 %
-Annäherung an den Fixpunkt) -- der Fixpunkt wird während einer Charge nie erreicht. Dieses
-Skript prüft, ob Regret und Zulässigkeit aus Befund 52 unter dieser Chargen-Realität
-Bestand haben.
+Occasion: Befund 52 assesses 25 grid points (ambient temperature x relative humidity)
+exclusively in the exact steady state (``solve_steady_state``). The solids mode has
+``tau_4 = 16000 s`` against a batch duration of 28800 s (ratio 1.80, 83.5 %
+approach to the fixed point) -- the fixed point is never reached during a batch. This
+script checks whether regret and feasibility from Befund 52 hold up under this batch
+reality.
 
-Zwei Configs, bewusst unterschiedlich, siehe ``docs/04_stand_ap1.md``, Abschnitt
+Two configs, deliberately different, see ``docs/04_stand_ap1.md``, section
 "Fingerprint-Historie":
 
-* **Beharrungszustand** (Referenz, identisch zu Befund 52): ``conf/process/
-  greybox_gab_placeholder.yaml`` unverändert geladen (Fingerprint ``2acd06f38963c3af`` --
-  vor dem Pseudonymisierungs-Schnitt 2026-09-25: ``abbe8325f1326d80``, siehe
-  ``docs/ARCHIV.md`` -- ``sample_time_s=5.0`` Dateidefault, Projektion AUS).
-  ``solve_steady_state`` ist
-  algebraisch (Nullstelle von ``evaluate_derivative``) -- ``sample_time_s``/Projektion
-  gehen dort nicht ein, die Wahl dieser Config für die Referenzrechnung ist deshalb nur
-  Bequemlichkeit (dieselbe wie Befund 52), keine physikalische Festlegung.
-* **Transient** (Chargen-Rollout, CB1-CB4): dieselbe Datei, ``numerics.sample_time_s=25.0``
-  und ``numerics.enforce_gas_velocity_projection=True`` überschrieben (Fingerprint
-  ``bddca37f716f5cfc`` -- vor dem Schnitt: ``2d2679eeed716577`` --, verifiziert unten) --
-  die Config, unter der im Projekt sonst jede
-  Chargen-/Anregungsstudie läuft (``DataSpec(sample_time_s=25.0, run_duration_s=28800.0)``,
-  u. a. ``scripts/study_learning_curve.py``, ``scripts/probe_x3_recoverable_power.py``),
-  NICHT die Beharrungszustands-Config aus Befund 52. Grund für die Projektion: Befund 52
-  optimiert ohne sie (``solve_steady_state`` kennt keine Projektion, siehe CB1(d)) -- ihre
-  Wirkung während der Charge ist selbst Teil der Fragestellung, nicht vorentschieden.
+* **Steady state** (reference, identical to Befund 52): ``conf/process/
+  greybox_gab_placeholder.yaml`` loaded unchanged (fingerprint ``2acd06f38963c3af`` --
+  before the pseudonymisation cut 2026-09-25: ``abbe8325f1326d80``, see
+  ``docs/ARCHIV.md`` -- ``sample_time_s=5.0`` file default, projection OFF).
+  ``solve_steady_state`` is
+  algebraic (root of ``evaluate_derivative``) -- ``sample_time_s``/projection
+  do not enter there; the choice of this config for the reference calculation is therefore only
+  convenience (the same as Befund 52), not a physical determination.
+* **Transient** (batch rollout, CB1-CB4): the same file, ``numerics.sample_time_s=25.0``
+  and ``numerics.enforce_gas_velocity_projection=True`` overridden (fingerprint
+  ``bddca37f716f5cfc`` -- before the cut: ``2d2679eeed716577`` --, verified below) --
+  the config under which every other
+  batch/excitation study in the project runs
+  (``DataSpec(sample_time_s=25.0, run_duration_s=28800.0)``, among others
+  ``scripts/study_learning_curve.py``, ``scripts/probe_x3_recoverable_power.py``),
+  NOT the steady-state config from Befund 52. Reason for the projection: Befund 52
+  optimises without it (``solve_steady_state`` knows no projection, see CB1(d)) -- its
+  effect during the batch is itself part of the question, not decided in advance.
 
-CB1 -- Fixpunkt gegen Chargenverlauf
+CB1 -- fixed point against batch trajectory
 -------------------------------------
-Für jeden der 25 Gitterpunkte: Rollout über 28800 s (Delta_t=25 s, 1152 Schritte) mit den
-DORT (Befund 52) optimalen, konstant gehaltenen Sollwerten, Anfangszustand
-``simulator.initial_state(1)`` (nominal). Berichtet je Gitterpunkt: Endzustand gegen den
-Fixpunkt (d50, Feststoffmasse, Betttemperatur, Feuchte, absolut und relativ),
-``energy_target`` (Ende/Chargenmittel/Fixpunkt), ``Q_rec`` (Ende/Chargenmittel/Fixpunkt,
-``twinlink_ml.evaluation.recoverable_power.compute_recoverable_power_kw`` wiederverwendet,
-Bezugsmassenstrom/Taupunktmarge unverändert Modul-Default) und ``n_projected_steps``
-(``Trajectory.n_projected_steps``, generische Buchführung aus ``base.py``).
+For each of the 25 grid points: rollout over 28800 s (Delta_t=25 s, 1152 steps) with the
+set points optimal THERE (Befund 52), held constant, initial state
+``simulator.initial_state(1)`` (nominal). Reported per grid point: final state against the
+fixed point (d50, solids mass, bed temperature, moisture, absolute and relative),
+``energy_target`` (end/batch mean/fixed point), ``Q_rec`` (end/batch mean/fixed point,
+``twinlink_ml.evaluation.recoverable_power.compute_recoverable_power_kw`` reused,
+reference mass flow/dew-point margin unchanged module default) and ``n_projected_steps``
+(``Trajectory.n_projected_steps``, generic bookkeeping from ``base.py``).
 
-Der Fixpunkt selbst wird NICHT aus Befund 52s JSON übernommen (dort keine
-``outlet_humidity_kg_per_kg`` für Q_rec), sondern frisch mit ``solve_steady_state`` unter
-der Beharrungszustands-Config berechnet, über ``scripts/study_operating_point_regret.py``s
-eigene ``build_variant_config``/``evaluate_point`` (per ``importlib`` geladen, keine Zeile
-dort verändert) -- das ist zugleich eine Gegenprobe gegen Befund 52 (Feld
-``steady_state_cross_check``).
+The fixed point itself is NOT taken over from Befund 52's JSON (no
+``outlet_humidity_kg_per_kg`` for Q_rec there), but computed afresh with
+``solve_steady_state`` under the steady-state config, via
+``scripts/study_operating_point_regret.py``'s own ``build_variant_config``/``evaluate_point``
+(loaded via ``importlib``, no line changed there) -- this is at the same time a cross-check
+against Befund 52 (field ``steady_state_cross_check``).
 
-CB2 -- Sind die stationären Optima als Chargenfahrweise zulässig?
+CB2 -- Are the stationary optima feasible as a batch operating mode?
 ---------------------------------------------------------------------
-Über den GESAMTEN Chargenverlauf (nicht nur das Ende): Anteil der Zeitschritte mit
-``product_moisture_kg_per_kg > critical_moisture_kg_per_kg``, maximale Überschreitung;
-dasselbe für das Fluidisierungsfenster (``fluidization_margin_lower/upper_m_per_s`` aus
-``greybox._rhs``, an der REALISIERTEN, ggf. projizierten Gasgeschwindigkeit ausgewertet --
-bei aktiver Projektion strukturell fast nie negativ, siehe CB1(d) für die Häufigkeit des
-Eingriffs) und für ``bed_temperature_celsius > 80``.
+Over the ENTIRE batch trajectory (not only the end): share of time steps with
+``product_moisture_kg_per_kg > critical_moisture_kg_per_kg``, maximum exceedance;
+the same for the fluidization window (``fluidization_margin_lower/upper_m_per_s`` from
+``greybox._rhs``, evaluated at the REALISED, possibly projected gas velocity --
+with active projection structurally almost never negative, see CB1(d) for the frequency of the
+intervention) and for ``bed_temperature_celsius > 80``.
 
-CB3 -- Überlebt der Regret?
+CB3 -- Does the regret survive?
 ------------------------------
-Wiederholt die Regret-Rechnung aus Befund 52 (BB3(b)), aber mit der CHARGENGEMITTELTEN
-Energie statt des Fixpunktwerts, bei UNVERÄNDERTEN Sollwerten: 25 Rollouts mit den
-jeweils optimalen Sollwerten (aus CB1 wiederverwendet) plus 25 Rollouts mit dem festen
-Betriebspunkt aus Befund 52 (``T_in=90.41 °C``, ``u_gas=0.800 m/s``,
-``p_nozzle=1.003 bar``). KEINE transiente Reoptimierung -- die Sollwerte bleiben die
-stationär optimalen.
+Repeats the regret calculation from Befund 52 (BB3(b)), but with the BATCH-AVERAGED
+energy instead of the fixed-point value, with UNCHANGED set points: 25 rollouts with the
+respective optimal set points (reused from CB1) plus 25 rollouts with the fixed
+operating point from Befund 52 (``T_in=90.41 °C``, ``u_gas=0.800 m/s``,
+``p_nozzle=1.003 bar``). NO transient re-optimisation -- the set points stay the
+stationary optimal ones.
 
-CB4 (optional, ``--cb4``) -- wandert das Optimum?
+CB4 (optional, ``--cb4``) -- does the optimum move?
 -----------------------------------------------------
-Reoptimierung mit chargengemittelter Energie als Zielfunktion, an den vier Eckpunkten des
-Störgrößengitters (min/max Umgebungstemperatur x min/max Luftfeuchte). Gleiche
-Optimierermechanik wie Befund 52 (``differential_evolution`` + Nelder-Mead), aber die
-Zielfunktion selbst ist jetzt ein 1152-Schritt-Rollout (~6 s/Aufruf, gemessen) statt eines
-einzelnen ``solve_steady_state``-Aufrufs (~0.5 s) -- ``differential_evolution`` läuft daher
-mit ``workers=-1`` (Populations-Parallelität INNERHALB eines Punkts, nicht wie in Befund 52
-über die Punkte hinweg: hier gibt es nur vier, nicht 25). Abbruchkriterium: 30 min je
-Gitterpunkt (``callback``, wall-clock), danach Zwischenlösung plus Laufzeithochrechnung.
+Re-optimisation with batch-averaged energy as the objective function, at the four corner
+points of the disturbance grid (min/max ambient temperature x min/max humidity). The same
+optimiser mechanics as Befund 52 (``differential_evolution`` + Nelder-Mead), but the
+objective function itself is now a 1152-step rollout (~6 s/call, measured) instead of a
+single ``solve_steady_state`` call (~0.5 s) -- ``differential_evolution`` therefore runs
+with ``workers=-1`` (population parallelism WITHIN one point, not, as in Befund 52,
+across the points: here there are only four, not 25). Stopping criterion: 30 min per
+grid point (``callback``, wall-clock), after that the intermediate solution plus a run-time
+projection.
 """
 
 from __future__ import annotations
@@ -141,15 +143,15 @@ _CB4_DE_SEED = 0
 
 
 def _load_regret_module() -> ModuleType:
-    """``study_operating_point_regret.py`` per Dateipfad geladen (kein Package unter
-    ``scripts/``) -- Wiederverwendung von ``build_variant_config``/``evaluate_point``/
-    ``specific_energy_kwh_per_kg``/Toleranzkonstanten, keine Zeile dort verändert.
+    """``study_operating_point_regret.py`` loaded by file path (no package under
+    ``scripts/``) -- reuse of ``build_variant_config``/``evaluate_point``/
+    ``specific_energy_kwh_per_kg``/tolerance constants, no line changed there.
 
-    Muss VOR ``exec_module`` in ``sys.modules`` eingetragen werden: das Zielmodul
-    definiert ``@dataclass(frozen=True, slots=True)``-Klassen, deren Felder Python 3.12
-    über ``sys.modules[cls.__module__]`` auflöst (``dataclasses._is_type``) -- ohne den
-    Eintrag schlägt der Import mit ``AttributeError: 'NoneType' object has no attribute
-    '__dict__'`` fehl, kein Fehler des Zielmoduls selbst.
+    Must be entered in ``sys.modules`` BEFORE ``exec_module``: the target module
+    defines ``@dataclass(frozen=True, slots=True)`` classes whose fields Python 3.12
+    resolves via ``sys.modules[cls.__module__]`` (``dataclasses._is_type``) -- without the
+    entry the import fails with ``AttributeError: 'NoneType' object has no attribute
+    '__dict__'``, not an error of the target module itself.
     """
     spec = importlib.util.spec_from_file_location(
         "study_operating_point_regret", REGRET_SCRIPT_PATH
@@ -166,7 +168,7 @@ def _suppress_placeholder_warning() -> None:
 
 
 def build_transient_config(steady_state_base: ProcessConfig) -> ProcessConfig:
-    """``sample_time_s=25 s``, Projektion AN -- siehe Moduldocstring."""
+    """``sample_time_s=25 s``, projection ON -- see module docstring."""
     return dataclasses.replace(
         steady_state_base,
         numerics=dataclasses.replace(
@@ -179,7 +181,7 @@ def build_transient_config(steady_state_base: ProcessConfig) -> ProcessConfig:
 
 @dataclass(frozen=True, slots=True)
 class GridPoint:
-    """Ein Störgrößen-Gitterpunkt aus Befund 52, mit dort optimalen Sollwerten."""
+    """A disturbance grid point from Befund 52, with the set points optimal there."""
 
     index: int
     ambient_temperature_celsius: float
@@ -222,10 +224,10 @@ def rollout_constant_setpoint(
     n_steps: int,
     run_id: str,
 ) -> Trajectory:
-    """Rollout mit über die gesamte Charge konstant gehaltenen Soll-/Störgrößen.
+    """Rollout with set points/disturbances held constant over the entire batch.
 
-    ``initial_state`` ist der nominale Anfangszustand (Auftrag: "ausgehend vom nominalen
-    Anfangszustand"), nicht der Beharrungszustand -- genau der Unterschied, den CB1 misst.
+    ``initial_state`` is the nominal initial state (task: "starting from the nominal
+    initial state"), not the steady state -- exactly the difference that CB1 measures.
     """
     simulator = GreyBoxFluidBedGranulator(config)
     actions = np.tile(
@@ -241,12 +243,12 @@ def rollout_constant_setpoint(
 
 
 def q_rec_series_kw(config: ProcessConfig, trajectory: Trajectory) -> np.ndarray:
-    """``Q_rec`` je Zeitschritt, wiederverwendet aus ``evaluation.recoverable_power``.
+    """``Q_rec`` per time step, reused from ``evaluation.recoverable_power``.
 
     ``outlet_temperature_celsius = bed_temperature_celsius - outlet_duct_heat_loss_k``
-    (0.0 in dieser Config, siehe ``simulation.exhaust.reconstruct_exhaust_state`` --
-    identische Rechnung, hier ohne den Umweg über die Funktion, weil
-    ``outlet_humidity_kg_per_kg`` bereits unverändert in ``diagnostics`` steht).
+    (0.0 in this config, see ``simulation.exhaust.reconstruct_exhaust_state`` --
+    identical calculation, here without the detour via the function, because
+    ``outlet_humidity_kg_per_kg`` already sits unchanged in ``diagnostics``).
     """
     bed_temperature = trajectory.states[0, :, 3]
     outlet_temperature = bed_temperature - config.exhaust.outlet_duct_heat_loss_k
@@ -259,7 +261,7 @@ def q_rec_series_kw(config: ProcessConfig, trajectory: Trajectory) -> np.ndarray
 
 @dataclass(frozen=True, slots=True)
 class SteadyStateReference:
-    """Fixpunkt eines Gitterpunkts, frisch aus ``solve_steady_state`` -- siehe CB1-Docstring."""
+    """Fixed point of a grid point, fresh from ``solve_steady_state`` -- see CB1 docstring."""
 
     solid_mass_kg: float
     d50_um: float
@@ -275,10 +277,10 @@ def compute_steady_state_reference(
     steady_state_base: ProcessConfig,
     point: GridPoint,
 ) -> SteadyStateReference:
-    # Dieselbe (gelockerte) Bisektionspräzision wie Befund 52s eigener Report-Aufruf
-    # (``optimize_grid_point``, dort ausführlich begründet: Löser-Defaults am
-    # Suchergebnis reproduzieren den in Befund 52 selbst gefundenen Bracket-Fehlschlag,
-    # siehe ``evaluate_point``-Docstring) -- nicht die Löser-Defaults (100/1e-13).
+    # The same (relaxed) bisection precision as Befund 52's own report call
+    # (``optimize_grid_point``, justified in detail there: solver defaults at the
+    # search result reproduce the bracket failure found in Befund 52 itself,
+    # see ``evaluate_point`` docstring) -- not the solver defaults (100/1e-13).
     solution = regret_module.evaluate_point(
         point.inlet_temperature_celsius,
         point.gas_velocity_m_per_s,
@@ -353,7 +355,7 @@ def cb2_constraint_series(
 
 @dataclass(frozen=True, slots=True)
 class GridPointTask:
-    """Ein Gitterpunkt-Arbeitspaket für ``pool.imap_unordered`` in :func:`main`."""
+    """A grid-point work package for ``pool.imap_unordered`` in :func:`main`."""
 
     point: GridPoint
     transient_config: ProcessConfig
@@ -365,12 +367,12 @@ class GridPointTask:
 
 
 def _run_grid_point(task: GridPointTask) -> dict[str, Any]:
-    """CB1+CB2+CB3-Rohdaten für EINEN Gitterpunkt -- Ziel von ``pool.imap_unordered``.
+    """CB1+CB2+CB3 raw data for ONE grid point -- target of ``pool.imap_unordered``.
 
-    Läuft in einem Worker-Prozess (``fork``); das Regret-Modul wird hier NEU geladen (kein
-    Modul-Global über den Fork geerbt, siehe ``study_operating_point_regret.py``s eigenes
-    Muster mit ``_BASE_CONFIG`` -- hier stattdessen als Parameter durchgereicht, weil jeder
-    Task ohnehin seinen eigenen Gitterpunkt trägt).
+    Runs in a worker process (``fork``); the regret module is loaded ANEW here (no
+    module global inherited across the fork, see ``study_operating_point_regret.py``'s own
+    pattern with ``_BASE_CONFIG`` -- here instead passed through as a parameter, because each
+    task carries its own grid point anyway).
     """
     regret_module = _load_regret_module()
     point = task.point
@@ -515,11 +517,11 @@ def _cb4_objective(
     solid_fraction: float,
     critical_moisture_kg_per_kg: float,
 ) -> float:
-    """Zielfunktion für CB4: chargengemittelte Energie plus Straffunktion.
+    """Objective function for CB4: batch-averaged energy plus penalty function.
 
-    Straffunktion analog ``study_operating_point_regret._penalized_energy``, aber über die
-    GESAMTE Trajektorie gemittelt (nicht nur den Beharrungszustand) -- die Suche soll
-    Sollwerte meiden, die während der Charge im Mittel verletzen, nicht nur am Endpunkt.
+    Penalty function analogous to ``study_operating_point_regret._penalized_energy``, but averaged
+    over the ENTIRE trajectory (not only the steady state) -- the search should
+    avoid set points that violate on average during the batch, not only at the end point.
     """
     t_in, u_gas, p_nozzle = (float(v) for v in x)
     try:
@@ -615,10 +617,10 @@ def optimize_cb4_point(
     if not time_budget_hit:
         refine_start = time.perf_counter()
         remaining = max(0.0, deadline - refine_start)
-        # Nelder-Mead hat kein eingebautes Wall-Clock-Limit -- ``maxiter`` grob aus der
-        # verbleibenden Zeit und der gemessenen Kosten je Zielfunktionsaufruf geschätzt,
-        # konservativ (Faktor 2 Sicherheitsmarge), statt das 30-min-Abbruchkriterium durch
-        # eine unbegrenzte Verfeinerung zu unterlaufen.
+        # Nelder-Mead has no built-in wall-clock limit -- ``maxiter`` roughly estimated from the
+        # remaining time and the measured cost per objective-function call,
+        # conservatively (factor 2 safety margin), instead of undermining the 30-min stopping
+        # criterion with an unbounded refinement.
         per_eval_s = max(de_elapsed / max(de_result.nfev, 1), 0.5)
         max_refine_evals = max(5, int(remaining / (2.0 * per_eval_s)))
         refine_result = minimize(

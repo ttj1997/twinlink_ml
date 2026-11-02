@@ -1,11 +1,11 @@
-"""Tests für :class:`CompositeSequenceModel` (Befund 26, ``docs/04_stand_ap1.md``).
+"""Tests for :class:`CompositeSequenceModel` (Befund 26, ``docs/04_stand_ap1.md``).
 
-Wie bei den GRU-Tests in ``test_experiments.py``: nur mit PyTorch prüfbar, die Tests
-überspringen sich ohne Torch. Geprüft wird nicht, dass die getrennten Netze besser
-generalisieren -- das ist Aufgabe des Diagnoseexperiments
-(``scripts/diagnose_soft_sensor_interference.py``), nicht dieser Testsuite -- sondern
-dass die Verbundklasse die bestehenden Invarianten pro Teilmodell erhält und tatsächlich
-unabhängige Netze trainiert, keine Fassade um ein gemeinsames.
+As with the GRU tests in ``test_experiments.py``: checkable only with PyTorch, the tests
+skip themselves without Torch. What is checked is not that the separate networks
+generalise better -- that is the job of the diagnostic experiment
+(``scripts/diagnose_soft_sensor_interference.py``), not of this test suite -- but
+that the composite class preserves the existing invariants per sub-model and actually
+trains independent networks, not a facade around a shared one.
 """
 
 from __future__ import annotations
@@ -51,13 +51,12 @@ def data(process_config):
 
 
 def test_submodel_seed_is_reproducible_and_decorrelated() -> None:
-    """Kein Torch nötig -- reine Hash-Ableitung, analog zu ``SeedBundle``.
+    """No Torch needed -- pure hash derivation, analogous to ``SeedBundle``.
 
-    Siehe ``test_greybox_numerics.py::test_seed_bundle_is_reproducible_and_decorrelated``.
-    Die eigentliche Regression, gegen die dieser Test schützt: ``seed + index`` würde für
-    benachbarte Zielgrößen (Position 0, 1, 2) um genau 1 auseinanderliegende Seeds
-    erzeugen -- korreliert im selben Sinn, den ``utils/seeding._derive`` für Master-Seeds
-    vermeidet.
+    See ``test_greybox_numerics.py::test_seed_bundle_is_reproducible_and_decorrelated``.
+    The actual regression this test guards against: ``seed + index`` would produce seeds
+    exactly 1 apart for neighbouring targets (position 0, 1, 2) -- correlated in the same
+    sense that ``utils/seeding._derive`` avoids for master seeds.
     """
     from twinlink_ml.models.composite import _submodel_seed
 
@@ -72,14 +71,14 @@ def test_submodel_seed_is_reproducible_and_decorrelated() -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_composite_matches_three_independently_fitted_models(data) -> None:
-    """Kernzusicherung: das Verbundmodell ist keine Fassade um ein gemeinsames Netz.
+    """Core guarantee: the composite model is not a facade around a shared network.
 
-    Dieselbe Vorhersage wie drei einzeln mit ``TorchSequenceModel`` aufgerufene Modelle,
-    mit derselben Seed-Ableitung (``_submodel_seed``, SHA-256 wie ``SeedBundle`` -- nicht
-    ``seed + index``, siehe ``CompositeSequenceModel``-Docstring) und demselben
-    je-Zielgröße reduzierten Datensatz. Wäre der Verbund heimlich ein gemeinsames Netz
-    (oder liefen die Teilmodelle sich gegenseitig ins Gehege, z.B. durch geteilten
-    globalen Zustand), wäre diese Übereinstimmung nicht exakt.
+    The same prediction as three models called individually with ``TorchSequenceModel``,
+    with the same seed derivation (``_submodel_seed``, SHA-256 like ``SeedBundle`` -- not
+    ``seed + index``, see the ``CompositeSequenceModel`` docstring) and the same
+    per-target reduced data set. If the composite were secretly a shared network
+    (or if the sub-models got in each other's way, e.g. through shared
+    global state), this agreement would not be exact.
     """
     from twinlink_ml.models.composite import (
         CompositeSequenceModel,
@@ -117,11 +116,11 @@ def test_composite_matches_three_independently_fitted_models(data) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_composite_untrained_equals_persistence_per_target(data) -> None:
-    """Nullinitialisierter Kopf = Persistenz, jetzt pro Teilmodell geprüft.
+    """Zero-initialised head = persistence, now checked per sub-model.
 
-    Dieselbe Vorgabe wie ``test_untrained_network_equals_persistence`` in
-    ``test_experiments.py``, aber für den Verbund: jedes Teilnetz muss die Invariante
-    unabhängig erfüllen, nicht nur "im Mittel" über alle drei Zielgrößen.
+    The same requirement as ``test_untrained_network_equals_persistence`` in
+    ``test_experiments.py``, but for the composite: each sub-network must satisfy the
+    invariant independently, not just "on average" over all three targets.
     """
     from twinlink_ml.models.composite import CompositeSequenceModel
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig
@@ -139,10 +138,10 @@ def test_composite_untrained_equals_persistence_per_target(data) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_composite_rollout_does_not_see_future_targets(data) -> None:
-    """Dieselbe Zusicherung wie beim Einzelnetz: kein heimliches Fortschreiben der Wahrheit.
+    """The same guarantee as for the single network: no covert carrying forward of the truth.
 
-    Prüft insbesondere, dass das Umschneiden der Batches in ``predict`` (Kanalauswahl je
-    Teilmodell) keinen neuen Pfad öffnet, über den zukünftige Zielwerte einfließen könnten.
+    Checks in particular that re-cutting the batches in ``predict`` (channel selection per
+    sub-model) opens no new path through which future target values could flow in.
     """
     import dataclasses
 
@@ -159,7 +158,7 @@ def test_composite_rollout_does_not_see_future_targets(data) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_composite_shares_the_trainer_across_cores(data) -> None:
-    """GRU, LSTM und xLSTM teilen weiterhin denselben Trainer -- jetzt auch im Verbund."""
+    """GRU, LSTM and xLSTM still share the same trainer -- now also in the composite."""
     from twinlink_ml.models.composite import CompositeSequenceModel
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig
 
@@ -177,7 +176,7 @@ def test_composite_shares_the_trainer_across_cores(data) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_composite_n_parameters_sums_submodels(data) -> None:
-    """``n_parameters`` ist die Summe über alle Teilnetze, nicht die eines einzelnen."""
+    """``n_parameters`` is the sum over all sub-networks, not that of a single one."""
     from twinlink_ml.models.composite import CompositeSequenceModel
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig, TorchSequenceModel
 
@@ -190,19 +189,19 @@ def test_composite_n_parameters_sums_submodels(data) -> None:
     single = TorchSequenceModel(config)
     single.fit(train, seed=0)
 
-    # Die Teilnetze sind schmaler (ein Ausgang statt drei), aber es sind drei -- die
-    # Summe muss größer sein als ein einzelnes Netz mit vollem, geteiltem Kopf.
+    # The sub-networks are narrower (one output instead of three), but there are three --
+    # the sum must be larger than a single network with a full, shared head.
     assert composite.n_parameters > 0
     assert composite.n_parameters == sum(m.n_parameters for m in composite._submodels.values())
 
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_torch_sequence_describe_actual_device_none_before_fit() -> None:
-    """``net_actual_device`` ist ``None``, solange ``_network`` noch nicht gebaut ist.
+    """``net_actual_device`` is ``None`` as long as ``_network`` has not been built yet.
 
-    Defensive Absicherung (analog zu ``n_parameters``) fuer den Fall, dass ``describe()``
-    jemals vor ``fit()`` aufgerufen wird -- aktuell tut das keine Aufrufstelle im Repo,
-    aber ein falsch belegtes Feld waere schlimmer als gar keines.
+    Defensive safeguard (analogous to ``n_parameters``) for the case that ``describe()``
+    is ever called before ``fit()`` -- currently no call site in the repo does that,
+    but a wrongly populated field would be worse than none at all.
     """
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig, TorchSequenceModel
 
@@ -212,12 +211,12 @@ def test_torch_sequence_describe_actual_device_none_before_fit() -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_torch_sequence_describe_actual_device_matches_network_after_fit(data) -> None:
-    """``net_actual_device`` spiegelt das TATSAECHLICH verwendete Geraet nach ``fit()``.
+    """``net_actual_device`` reflects the device ACTUALLY used after ``fit()``.
 
-    Unterscheidet sich vom bereits vorhandenen ``net_device`` (dem konfigurierten Wunsch,
-    hier ``None`` -- der Default) -- ``device=None`` loest in ``fit()`` zu ``"cuda"`` auf,
-    falls verfuegbar, sonst ``"cpu"`` (Befund/Anlass: ``befund42_tbed_exhaust_sweep.jsonl``,
-    CUDA-faehiger Torch-Build ohne geloggtes Geraete-Feld).
+    Differs from the already existing ``net_device`` (the configured wish,
+    here ``None`` -- the default) -- ``device=None`` resolves in ``fit()`` to ``"cuda"``
+    if available, otherwise ``"cpu"`` (finding/occasion: ``befund42_tbed_exhaust_sweep.jsonl``,
+    CUDA-capable Torch build without a logged device field).
     """
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig, TorchSequenceModel
 
@@ -228,13 +227,13 @@ def test_torch_sequence_describe_actual_device_matches_network_after_fit(data) -
     model.fit(train, seed=0)
 
     description = model.describe()
-    assert description["net_device"] is None  # konfigurierter Wunsch, unveraendert
+    assert description["net_device"] is None  # configured wish, unchanged
     assert description["net_actual_device"] == str(next(model._network.parameters()).device)
 
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_composite_describe_actual_device_none_before_fit() -> None:
-    """``net_actual_device`` ist ``None``, solange ``_submodels`` noch leer ist."""
+    """``net_actual_device`` is ``None`` as long as ``_submodels`` is still empty."""
     from twinlink_ml.models.composite import CompositeSequenceModel
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig
 
@@ -244,11 +243,12 @@ def test_composite_describe_actual_device_none_before_fit() -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_composite_describe_actual_device_matches_first_submodel_after_fit(data) -> None:
-    """``CompositeSequenceModel.describe()`` uebernimmt ``net_actual_device`` vom Teilmodell.
+    """``CompositeSequenceModel.describe()`` takes ``net_actual_device`` from the sub-model.
 
-    Ohne diese Weiterleitung waere das in ``TorchSequenceModel.describe()`` neu eingefuehrte
-    Feld fuer praktisch jedes Produktionsskript toter Code -- ``run_xlstm_reduced_comparison.py``
-    u.ae. loggen ``CompositeXLSTMSequenceModel``/``CompositeSequenceModel``, nie ein blankes
+    Without this forwarding, the field newly introduced in ``TorchSequenceModel.describe()``
+    would be dead code for practically every production script --
+    ``run_xlstm_reduced_comparison.py`` etc. log
+    ``CompositeXLSTMSequenceModel``/``CompositeSequenceModel``, never a bare
     ``TorchSequenceModel``.
     """
     from twinlink_ml.models.composite import CompositeSequenceModel
@@ -267,11 +267,11 @@ def test_composite_describe_actual_device_matches_first_submodel_after_fit(data)
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_registry_gru_label_builds_composite_and_trains(data) -> None:
-    """Verdrahtung in ``registry.py``: das Label ``gru`` liefert seit Befund 26 den Verbund.
+    """Wiring in ``registry.py``: since Befund 26 the label ``gru`` returns the composite.
 
-    Regressionstest für die Umstellung in ``_resolve_torch_factory`` -- ohne ihn wäre ein
-    Rückfall auf das alte Einzelnetz (z.B. durch einen Merge-Konflikt) erst wieder in
-    einem vollen ``study_architectures.py``-Lauf sichtbar, nicht in der Testsuite.
+    Regression test for the switch in ``_resolve_torch_factory`` -- without it, a
+    fallback to the old single network (e.g. through a merge conflict) would only become
+    visible again in a full ``study_architectures.py`` run, not in the test suite.
     """
     from twinlink_ml.models.composite import CompositeSequenceModel
 
@@ -288,16 +288,16 @@ def test_registry_gru_label_builds_composite_and_trains(data) -> None:
 
 # --------------------------------------------------------------------------- xLSTM
 #
-# Dieselben Invarianten wie oben für GRU/LSTM, hier für den mLSTM-Kern
-# (``twinlink_ml.models.xlstm``, Registrierung unter dem Label ``xlstm``, siehe
-# ``docs/04_stand_ap1.md`` Befund 29). Ein eigener Abschnitt statt einer Parametrisierung
-# der bestehenden Tests -- die bestehenden Tests bleiben dadurch unverändert, und ein
-# roter xLSTM-Test kann keinen bestehenden GRU/LSTM-Test grün oder rot mitziehen.
+# The same invariants as above for GRU/LSTM, here for the mLSTM core
+# (``twinlink_ml.models.xlstm``, registered under the label ``xlstm``, see
+# ``docs/04_stand_ap1.md`` Befund 29). A separate section instead of a parametrisation
+# of the existing tests -- the existing tests thereby stay unchanged, and a
+# red xLSTM test cannot drag an existing GRU/LSTM test green or red along with it.
 
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_registry_xlstm_label_builds_composite_and_trains(data) -> None:
-    """Verdrahtung in ``registry.py``: das Label ``xlstm`` liefert den Verbund, wie gru/lstm."""
+    """Wiring in ``registry.py``: the label ``xlstm`` returns the composite, like gru/lstm."""
     from twinlink_ml.models.composite import CompositeSequenceModel
 
     train, _, test = build_datasets(data, 8)
@@ -313,13 +313,13 @@ def test_registry_xlstm_label_builds_composite_and_trains(data) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_composite_xlstm_untrained_equals_persistence_per_target(data) -> None:
-    """Nullinitialisierter Kopf = Persistenz, auch für den mLSTM-Kern, pro Teilmodell.
+    """Zero-initialised head = persistence, also for the mLSTM core, per sub-model.
 
-    Der mLSTM-Kern selbst ist **nicht** nullinitialisiert (nur der Kopf) -- die Zelle
-    läuft mit ihrer normalen Zufallsinitialisierung durch die volle Historie. Dass das
-    Ergebnis trotzdem exakt der Persistenz entspricht, prüft gleichzeitig, dass der Kern
-    für zufällige Gewichte endliche Ausgaben liefert (sonst würde ``0 * inf = nan`` den
-    nullinitialisierten Kopf durchbrechen, siehe Modul-Docstring von ``xlstm.py``).
+    The mLSTM core itself is **not** zero-initialised (only the head) -- the cell
+    runs with its normal random initialisation through the full history. That the
+    result nevertheless corresponds exactly to persistence checks at the same time that the
+    core yields finite outputs for random weights (otherwise ``0 * inf = nan`` would break
+    through the zero-initialised head, see the module docstring of ``xlstm.py``).
     """
     from twinlink_ml.models.composite import CompositeSequenceModel
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig
@@ -339,7 +339,7 @@ def test_composite_xlstm_untrained_equals_persistence_per_target(data) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_composite_xlstm_rollout_does_not_see_future_targets(data) -> None:
-    """Kein heimliches Fortschreiben der Wahrheit -- auch nicht über den mLSTM-Zustand."""
+    """No covert carrying forward of the truth -- not via the mLSTM state either."""
     import dataclasses
 
     from twinlink_ml.models.composite import CompositeSequenceModel
@@ -357,12 +357,12 @@ def test_composite_xlstm_rollout_does_not_see_future_targets(data) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_composite_xlstm_matches_three_independently_fitted_models(data) -> None:
-    """Verbund aus drei mLSTM-Teilnetzen == drei einzeln aufgerufene ``TorchSequenceModel``.
+    """Composite of three mLSTM sub-networks == three individually called ``TorchSequenceModel``.
 
-    Dieselbe Kernzusicherung wie ``test_composite_matches_three_independently_fitted_models``
-    (GRU), hier für ``core="xlstm"`` -- die mLSTM-Zelle hat mit ``(C, n, m)`` einen
-    komplexeren Zustand als GRU/LSTM; dieser Test prüft, dass ``CompositeSequenceModel``
-    diesen Zustand pro Teilmodell genauso sauber isoliert wie den von GRU/LSTM.
+    The same core guarantee as ``test_composite_matches_three_independently_fitted_models``
+    (GRU), here for ``core="xlstm"`` -- with ``(C, n, m)`` the mLSTM cell has a
+    more complex state than GRU/LSTM; this test checks that ``CompositeSequenceModel``
+    isolates this state per sub-model just as cleanly as that of GRU/LSTM.
     """
     from twinlink_ml.models.composite import (
         CompositeSequenceModel,
@@ -399,12 +399,12 @@ def test_composite_xlstm_matches_three_independently_fitted_models(data) -> None
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_composite_xlstm_prediction_is_reproducible_and_seed_sensitive(data) -> None:
-    """Gleicher Seed -> bitgleiche Vorhersage; verschiedener Seed -> andere Vorhersage.
+    """Same seed -> bit-identical prediction; different seed -> different prediction.
 
-    Die zweite Hälfte ist mit ``max_epochs=0`` nicht prüfbar: der nullinitialisierte Kopf
-    macht jede Vorhersage unabhängig vom Seed exakt zur Persistenz (siehe Test oben) --
-    Seed-Empfindlichkeit zeigt sich erst, nachdem der Kopf trainiert und von Null
-    weggerückt ist.
+    The second half cannot be checked with ``max_epochs=0``: the zero-initialised head
+    makes every prediction exactly persistence, independent of the seed (see the test
+    above) -- seed sensitivity only shows after the head has been trained and has moved
+    away from zero.
     """
     from twinlink_ml.models.composite import CompositeSequenceModel
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig
@@ -426,13 +426,13 @@ def test_composite_xlstm_prediction_is_reproducible_and_seed_sensitive(data) -> 
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_xlstm_stays_finite_over_long_rollout(process_config) -> None:
-    """Numerische Stabilität der exponentiellen Gatter -- der Grund für Phase 3 dieses Tests.
+    """Numerical stability of the exponential gates -- the reason for phase 3 of this test.
 
-    Ungestabilisiert überlaufen die exponentiellen Eingangs-/Vergessens-Gatter des mLSTM
-    über viele Schritte (Moduldocstring von ``xlstm.py``). Geprüft an zwei Horizonten
-    (24, der Projektstandard; 200, künstlich verlängert) mit **zufälliger**
-    Kerninitialisierung (``max_epochs=0`` nullt nur den Kopf, siehe Test oben) über
-    mehrere Seeds -- kein NaN/Inf, an keiner Stützstelle.
+    Unstabilised, the exponential input/forget gates of the mLSTM overflow
+    over many steps (module docstring of ``xlstm.py``). Checked at two horizons
+    (24, the project standard; 200, artificially extended) with **random**
+    core initialisation (``max_epochs=0`` only zeroes the head, see the test above) over
+    several seeds -- no NaN/Inf, at no support point.
     """
     from twinlink_ml.models.composite import CompositeSequenceModel
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig
@@ -466,21 +466,21 @@ def test_xlstm_stays_finite_over_long_rollout(process_config) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_xlstm_forward_ignores_teacher_when_teacher_forcing_is_zero(data) -> None:
-    """Störungstest: bei ``teacher_forcing=0.0`` darf kein wahrer Zukunftswert einfließen.
+    """Perturbation test: with ``teacher_forcing=0.0`` no true future value may flow in.
 
-    Dieselbe Zusicherung wie bei Transformer/Mamba
+    The same guarantee as for Transformer/Mamba
     (``test_transformer_forward_ignores_teacher_when_teacher_forcing_is_zero``,
-    ``test_mamba_forward_ignores_teacher_when_teacher_forcing_is_zero``), hier für die
-    mLSTM-Rekurrenz: bei der Voreinstellung ``teacher_forcing=0.0`` ist die Eingabe an
-    Schritt ``t > 0`` ausschließlich die eigene Vorhersage aus Schritt ``t - 1`` -- nie der
-    wahre Zielwert, auch wenn ein ``teacher``-Tensor an ``forward()`` übergeben wird. Der
-    bestehende ``test_composite_xlstm_rollout_does_not_see_future_targets`` prüft das nur
-    über ``predict()``, das ``teacher`` ohnehin nie übergibt (siehe Transformer-Docstring)
-    -- ein Leck ausschließlich im Trainingspfad wäre dort unsichtbar. Dieser Test ruft
-    ``forward()`` direkt im Trainingsmodus auf und ersetzt den ``teacher``-Tensor durch
-    Zufallsrauschen -- bitgleich (``torch.equal``), keine Toleranz. Die Gegenprobe mit
-    ``teacher_forcing=1.0`` stellt sicher, dass der Test nicht zufällig grün ist, weil
-    ``teacher`` im Netz gar nicht ankommt.
+    ``test_mamba_forward_ignores_teacher_when_teacher_forcing_is_zero``), here for the
+    mLSTM recurrence: with the default ``teacher_forcing=0.0`` the input at
+    step ``t > 0`` is exclusively the model's own prediction from step ``t - 1`` -- never the
+    true target value, even if a ``teacher`` tensor is passed to ``forward()``. The
+    existing ``test_composite_xlstm_rollout_does_not_see_future_targets`` checks this only
+    via ``predict()``, which never passes ``teacher`` anyway (see the Transformer docstring)
+    -- a leak exclusively in the training path would be invisible there. This test calls
+    ``forward()`` directly in training mode and replaces the ``teacher`` tensor with
+    random noise -- bit-identical (``torch.equal``), no tolerance. The cross-check with
+    ``teacher_forcing=1.0`` ensures that the test is not green by chance because
+    ``teacher`` never arrives in the network at all.
     """
     import torch
 
@@ -509,8 +509,8 @@ def test_xlstm_forward_ignores_teacher_when_teacher_forcing_is_zero(data) -> Non
         "Exposure-Bias-Leck"
     )
 
-    # Gegenprobe: bei aktivem Teacher-Forcing MUSS sich die Vorhersage aendern, sonst
-    # waere der Test oben nur zufaellig gruen (z. B. weil `teacher` gar nicht verdrahtet ist).
+    # Cross-check: with active teacher forcing the prediction MUST change, otherwise
+    # the test above would only be green by chance (e.g. because `teacher` is not wired at all).
     with_forcing = network(
         tensors["history"], tensors["future"], teacher=tensors["targets"], teacher_forcing=1.0
     )
@@ -522,20 +522,20 @@ def test_xlstm_forward_ignores_teacher_when_teacher_forcing_is_zero(data) -> Non
 
 # ----------------------------------------------------------------------- Transformer
 #
-# Dieselben Invarianten wie oben für GRU/LSTM/xLSTM, hier für den Transformer-Kern
-# (Encoder über die Historie, sequenzieller Decoder über den Horizont,
-# ``torch_sequence._build_transformer_network``, Registrierung unter dem Label
-# ``transformer``). Ein eigener Abschnitt statt einer Parametrisierung der bestehenden
-# Tests -- ein roter Transformer-Test kann keinen bestehenden GRU/LSTM/xLSTM-Test grün
-# oder rot mitziehen. ``hidden_size=16`` statt des Dataclass-Standards 64 durchgängig:
-# ein Encoder-Layer bei ``d_model=64`` hat allein rund 50000 Parameter (siehe
-# ``CompositeTransformerSequenceModel``-Docstring), bei den kleinen Testdatensätzen hier
-# unnötig teuer.
+# The same invariants as above for GRU/LSTM/xLSTM, here for the Transformer core
+# (encoder over the history, sequential decoder over the horizon,
+# ``torch_sequence._build_transformer_network``, registered under the label
+# ``transformer``). A separate section instead of a parametrisation of the existing
+# tests -- a red Transformer test cannot drag an existing GRU/LSTM/xLSTM test green
+# or red along with it. ``hidden_size=16`` instead of the dataclass default 64 throughout:
+# one encoder layer at ``d_model=64`` alone has around 50000 parameters (see the
+# ``CompositeTransformerSequenceModel`` docstring), needlessly expensive for the small
+# test data sets here.
 
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_registry_transformer_label_builds_composite_and_trains(data) -> None:
-    """Verdrahtung in ``registry.py``: das Label ``transformer`` liefert den Verbund."""
+    """Wiring in ``registry.py``: the label ``transformer`` returns the composite."""
     from twinlink_ml.models.composite import CompositeSequenceModel
 
     train, _, test = build_datasets(data, 8)
@@ -551,13 +551,13 @@ def test_registry_transformer_label_builds_composite_and_trains(data) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_composite_transformer_untrained_equals_persistence_per_target(data) -> None:
-    """Nullinitialisierter Kopf = Persistenz, auch für den Transformer-Kern, pro Teilmodell.
+    """Zero-initialised head = persistence, also for the Transformer core, per sub-model.
 
-    Der Encoder/Decoder selbst ist **nicht** nullinitialisiert (nur der Kopf) -- die
-    Attention-Gewichte laufen mit ihrer normalen Zufallsinitialisierung durch die volle
-    Historie und den Decoder-Schrittzyklus. Dass das Ergebnis trotzdem exakt der
-    Persistenz entspricht, prüft gleichzeitig, dass Encoder und Decoder für zufällige
-    Gewichte endliche Ausgaben liefern.
+    The encoder/decoder itself is **not** zero-initialised (only the head) -- the
+    attention weights run with their normal random initialisation through the full
+    history and the decoder step cycle. That the result nevertheless corresponds exactly to
+    persistence checks at the same time that encoder and decoder yield finite outputs for
+    random weights.
     """
     from twinlink_ml.models.composite import CompositeSequenceModel
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig
@@ -579,13 +579,13 @@ def test_composite_transformer_untrained_equals_persistence_per_target(data) -> 
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_composite_transformer_rollout_does_not_see_future_targets(data) -> None:
-    """Kein heimliches Fortschreiben der Wahrheit im Rollout -- auch nicht über den Decoder.
+    """No covert carrying forward of the truth in the rollout -- not via the decoder either.
 
-    Wie bei GRU/LSTM/xLSTM: ``predict()`` übergibt ``teacher`` ohnehin nie an
-    ``forward()`` (siehe ``TorchSequenceModel.predict``), Manipulation von
-    ``future_targets`` im Batch darf die Vorhersage also nicht verändern. Ein Leck in der
-    *Trainingsschleife* selbst (bei ``teacher_forcing=0.0``) prüft dieser Test nicht --
-    dafür siehe ``test_transformer_forward_ignores_teacher_when_teacher_forcing_is_zero``.
+    As with GRU/LSTM/xLSTM: ``predict()`` never passes ``teacher`` to
+    ``forward()`` anyway (see ``TorchSequenceModel.predict``), so manipulating
+    ``future_targets`` in the batch must not change the prediction. A leak in the
+    *training loop* itself (at ``teacher_forcing=0.0``) is not checked by this test --
+    for that see ``test_transformer_forward_ignores_teacher_when_teacher_forcing_is_zero``.
     """
     import dataclasses
 
@@ -606,9 +606,9 @@ def test_composite_transformer_rollout_does_not_see_future_targets(data) -> None
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_composite_transformer_matches_three_independently_fitted_models(data) -> None:
-    """Verbund aus drei Transformer-Teilnetzen == drei einzeln aufgerufene ``TorchSequenceModel``.
+    """Composite of three Transformer subnets == three separately called ``TorchSequenceModel``.
 
-    Dieselbe Kernzusicherung wie bei GRU/LSTM/xLSTM, hier für ``core="transformer"``.
+    The same core guarantee as for GRU/LSTM/xLSTM, here for ``core="transformer"``.
     """
     from twinlink_ml.models.composite import (
         CompositeSequenceModel,
@@ -647,18 +647,18 @@ def test_composite_transformer_matches_three_independently_fitted_models(data) -
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_transformer_forward_ignores_teacher_when_teacher_forcing_is_zero(data) -> None:
-    """Störungstest: bei ``teacher_forcing=0.0`` darf kein wahrer Zukunftswert einfließen.
+    """Perturbation test: with ``teacher_forcing=0.0`` no true future value may flow in.
 
-    Direkte Klärung vor der Implementierung (Klartext-Diskussion): bei der Voreinstellung
-    ``teacher_forcing=0.0`` ist die Decoder-Eingabe an Schritt ``t > 0`` ausschließlich die
-    eigene Vorhersage aus Schritt ``t - 1`` -- nie der wahre Zielwert, auch wenn ein
-    ``teacher``-Tensor an ``forward()`` übergeben wird. Dieser Test ersetzt genau diesen
-    Tensor durch Zufallsrauschen und ruft ``forward()`` direkt im Trainingsmodus auf --
-    bitgleich (``torch.equal``), keine Toleranz. ``predict()`` prüft das nicht: es übergibt
-    ``teacher`` ohnehin nie (siehe ``TorchSequenceModel.predict``), ein Leck in der
-    Trainingsschleife selbst wäre über den reinen Rollout-Test unsichtbar. Die Gegenprobe
-    mit ``teacher_forcing=1.0`` stellt sicher, dass der Test nicht zufällig grün ist, weil
-    ``teacher`` im Netz gar nicht ankommt.
+    Direct clarification before the implementation (plain-text discussion): with the default
+    ``teacher_forcing=0.0`` the decoder input at step ``t > 0`` is exclusively the
+    model's own prediction from step ``t - 1`` -- never the true target value, even if a
+    ``teacher`` tensor is passed to ``forward()``. This test replaces exactly this
+    tensor with random noise and calls ``forward()`` directly in training mode --
+    bit-identical (``torch.equal``), no tolerance. ``predict()`` does not check this: it never
+    passes ``teacher`` anyway (see ``TorchSequenceModel.predict``), a leak in the
+    training loop itself would be invisible via the pure rollout test. The cross-check
+    with ``teacher_forcing=1.0`` ensures that the test is not green by chance because
+    ``teacher`` never arrives in the network at all.
     """
     import torch
 
@@ -689,8 +689,8 @@ def test_transformer_forward_ignores_teacher_when_teacher_forcing_is_zero(data) 
         "Exposure-Bias-Leck"
     )
 
-    # Gegenprobe: bei aktivem Teacher-Forcing MUSS sich die Vorhersage aendern, sonst
-    # waere der Test oben nur zufaellig gruen (z. B. weil `teacher` gar nicht verdrahtet ist).
+    # Cross-check: with active teacher forcing the prediction MUST change, otherwise
+    # the test above would only be green by chance (e.g. because `teacher` is not wired at all).
     with_forcing = network(
         tensors["history"], tensors["future"], teacher=tensors["targets"], teacher_forcing=1.0
     )
@@ -702,16 +702,16 @@ def test_transformer_forward_ignores_teacher_when_teacher_forcing_is_zero(data) 
 
 # ----------------------------------------------------------------------------- Mamba
 #
-# Dieselben Invarianten wie oben für GRU/LSTM/xLSTM/Transformer, hier für den
-# selektiven State-Space-Kern (``twinlink_ml.models.mamba``, Registrierung unter dem
-# Label ``mamba``). Anders als beim Transformer-Abschnitt ist ``hidden_size=8`` hier
-# keine erzwungene Kapazitätsreduktion (die SSM-Zelle wächst nicht quadratisch mit
-# ``hidden_size``) -- schlicht dieselbe kleine Testgröße wie bei allen übrigen Kernen.
+# The same invariants as above for GRU/LSTM/xLSTM/Transformer, here for the
+# selective state-space core (``twinlink_ml.models.mamba``, registered under the
+# label ``mamba``). Unlike in the Transformer section, ``hidden_size=8`` here is
+# not a forced capacity reduction (the SSM cell does not grow quadratically with
+# ``hidden_size``) -- simply the same small test size as for all other cores.
 
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_registry_mamba_label_builds_composite_and_trains(data) -> None:
-    """Verdrahtung in ``registry.py``: das Label ``mamba`` liefert den Verbund."""
+    """Wiring in ``registry.py``: the label ``mamba`` returns the composite."""
     from twinlink_ml.models.composite import CompositeSequenceModel
 
     train, _, test = build_datasets(data, 8)
@@ -727,13 +727,13 @@ def test_registry_mamba_label_builds_composite_and_trains(data) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_composite_mamba_untrained_equals_persistence_per_target(data) -> None:
-    """Nullinitialisierter Kopf = Persistenz, auch für den Mamba-Kern, pro Teilmodell.
+    """Zero-initialised head = persistence, also for the Mamba core, per sub-model.
 
-    Die SSM-Zelle selbst ist **nicht** nullinitialisiert (nur der Kopf) -- ``A_log``,
-    die Projektionen und das Gate laufen mit ihrer normalen Initialisierung durch die
-    volle Historie und den Rekursions-Schrittzyklus. Dass das Ergebnis trotzdem exakt
-    der Persistenz entspricht, prüft gleichzeitig, dass die Rekurrenz für zufällige
-    Gewichte endliche Ausgaben liefert.
+    The SSM cell itself is **not** zero-initialised (only the head) -- ``A_log``,
+    the projections and the gate run with their normal initialisation through the
+    full history and the recursion step cycle. That the result nevertheless corresponds
+    exactly to persistence checks at the same time that the recurrence yields finite
+    outputs for random weights.
     """
     from twinlink_ml.models.composite import CompositeSequenceModel
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig
@@ -755,13 +755,13 @@ def test_composite_mamba_untrained_equals_persistence_per_target(data) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_composite_mamba_rollout_does_not_see_future_targets(data) -> None:
-    """Kein heimliches Fortschreiben der Wahrheit im Rollout -- auch nicht über die SSM.
+    """No covert carrying forward of the truth in the rollout -- not via the SSM either.
 
-    Wie bei GRU/LSTM/xLSTM/Transformer: ``predict()`` übergibt ``teacher`` ohnehin nie an
-    ``forward()`` (siehe ``TorchSequenceModel.predict``), Manipulation von
-    ``future_targets`` im Batch darf die Vorhersage also nicht verändern. Ein Leck in der
-    *Trainingsschleife* selbst (bei ``teacher_forcing=0.0``) prüft dieser Test nicht --
-    dafür siehe ``test_mamba_forward_ignores_teacher_when_teacher_forcing_is_zero``.
+    As with GRU/LSTM/xLSTM/Transformer: ``predict()`` never passes ``teacher`` to
+    ``forward()`` anyway (see ``TorchSequenceModel.predict``), so manipulating
+    ``future_targets`` in the batch must not change the prediction. A leak in the
+    *training loop* itself (at ``teacher_forcing=0.0``) is not checked by this test --
+    for that see ``test_mamba_forward_ignores_teacher_when_teacher_forcing_is_zero``.
     """
     import dataclasses
 
@@ -782,9 +782,9 @@ def test_composite_mamba_rollout_does_not_see_future_targets(data) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_composite_mamba_matches_three_independently_fitted_models(data) -> None:
-    """Verbund aus drei Mamba-Teilnetzen == drei einzeln aufgerufene ``TorchSequenceModel``.
+    """Composite of three Mamba sub-networks == three individually called ``TorchSequenceModel``.
 
-    Dieselbe Kernzusicherung wie bei GRU/LSTM/xLSTM/Transformer, hier für ``core="mamba"``.
+    The same core guarantee as for GRU/LSTM/xLSTM/Transformer, here for ``core="mamba"``.
     """
     from twinlink_ml.models.composite import (
         CompositeSequenceModel,
@@ -823,20 +823,20 @@ def test_composite_mamba_matches_three_independently_fitted_models(data) -> None
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_composite_with_fourth_target_leaves_existing_submodels_bit_identical(data) -> None:
-    """Vier statt drei Ziele (``bed_temperature_celsius`` ergaenzt) -- guenstiger Korrektheitslauf.
+    """Four instead of three targets (``bed_temperature_celsius`` added) -- cheap correctness run.
 
-    Vor einer moeglichen spaeteren Erweiterung von ``DataSpec.target_names``
-    (``docs/04_stand_ap1.md``, T_bed als vierte Zielgroesse, Ableitung der
-    Abluft-Austrittsgroessen ueber ``simulation.exhaust``). Drei Kernaussagen, nicht nur
-    eine Randnotiz:
+    Ahead of a possible later extension of ``DataSpec.target_names``
+    (``docs/04_stand_ap1.md``, T_bed as the fourth target, derivation of the
+    exhaust air outlet quantities via ``simulation.exhaust``). Three core statements, not just
+    a side note:
 
-    1. Das vierte Teilnetz baut ohne Fehler.
-    2. Sein Trainingsverlust ist endlich (kein NaN/Inf).
-    3. Die drei bestehenden Teilnetze sind **bitgenau unveraendert** gegenueber einem
-       Drei-Ziele-Composite auf denselben Daten/demselben Seed -- das ist die wichtigste
-       der drei Aussagen: sie sichert ab, dass die Seed-Isolierung zwischen Teilnetzen
-       (``_submodel_seed``, Befund 26) auch bei vier statt drei Zielen haelt und das
-       vierte Ziel keinen neuen negativen Transfer in die bestehenden drei einschleppt.
+    1. The fourth sub-network builds without error.
+    2. Its training loss is finite (no NaN/Inf).
+    3. The three existing sub-networks are **bit for bit unchanged** compared with a
+       three-target composite on the same data/the same seed -- this is the most important
+       of the three statements: it ensures that the seed isolation between sub-networks
+       (``_submodel_seed``, Befund 26) also holds with four instead of three targets and the
+       fourth target does not bring any new negative transfer into the existing three.
     """
     import dataclasses
 
@@ -860,17 +860,17 @@ def test_composite_with_fourth_target_leaves_existing_submodels_bit_identical(da
     composite4 = CompositeSequenceModel(net_config)
     composite4.fit(train4, seed=5, validation=val4)
 
-    # (1) Viertes Teilnetz vorhanden.
+    # (1) Fourth sub-network present.
     assert set(composite4._submodels.keys()) == set(four_targets)
 
-    # (2) bed_temperature_celsius: Trainingsverlust endlich ueber alle Epochen.
+    # (2) bed_temperature_celsius: training loss finite over all epochs.
     bed_losses = [r["train_loss"] for r in composite4.training_history["bed_temperature_celsius"]]
     assert len(bed_losses) == 15
     assert all(np.isfinite(v) for v in bed_losses), "NaN/Inf in bed_temperature_celsius-Verlust"
 
-    # (3) Die drei bestehenden Ziele sind bitgenau unveraendert -- wichtigste Aussage,
-    #     siehe Docstring. Ein einzelnes ungleiches Paar wuerde bedeuten, dass das vierte
-    #     Teilnetz heimlich auf gemeinsamen Zustand/RNG-Verbrauch der anderen einwirkt.
+    # (3) The three existing targets are bit for bit unchanged -- most important statement,
+    #     see the docstring. A single unequal pair would mean that the fourth
+    #     sub-network covertly acts on shared state/RNG consumption of the others.
     for target in SMALL.target_names:
         losses3 = np.array([r["train_loss"] for r in composite3.training_history[target]])
         losses4 = np.array([r["train_loss"] for r in composite4.training_history[target]])
@@ -879,7 +879,7 @@ def test_composite_with_fourth_target_leaves_existing_submodels_bit_identical(da
             "Vier-Ziele-Composite -- Isolationsannahme (Befund 26) verletzt"
         )
 
-    # Inferenz-Sanity: predict() liefert vier endliche Spalten.
+    # Inference sanity: predict() yields four finite columns.
     batch4 = test4.batch(range(min(8, test4.n_windows)))
     prediction4 = composite4.predict(batch4)
     assert prediction4.shape[-1] == 4
@@ -888,17 +888,17 @@ def test_composite_with_fourth_target_leaves_existing_submodels_bit_identical(da
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_mamba_forward_ignores_teacher_when_teacher_forcing_is_zero(data) -> None:
-    """Störungstest: bei ``teacher_forcing=0.0`` darf kein wahrer Zukunftswert einfließen.
+    """Perturbation test: with ``teacher_forcing=0.0`` no true future value may flow in.
 
-    Dieselbe Zusicherung wie beim Transformer
-    (``test_transformer_forward_ignores_teacher_when_teacher_forcing_is_zero``), hier für
-    die SSM-Rekurrenz: bei der Voreinstellung ``teacher_forcing=0.0`` ist die Eingabe an
-    Schritt ``t > 0`` ausschließlich die eigene Vorhersage aus Schritt ``t - 1`` -- nie der
-    wahre Zielwert, auch wenn ein ``teacher``-Tensor an ``forward()`` übergeben wird.
-    Dieser Test ersetzt genau diesen Tensor durch Zufallsrauschen und ruft ``forward()``
-    direkt im Trainingsmodus auf -- bitgleich (``torch.equal``), keine Toleranz. Die
-    Gegenprobe mit ``teacher_forcing=1.0`` stellt sicher, dass der Test nicht zufällig
-    grün ist, weil ``teacher`` im Netz gar nicht ankommt.
+    The same guarantee as for the Transformer
+    (``test_transformer_forward_ignores_teacher_when_teacher_forcing_is_zero``), here for
+    the SSM recurrence: with the default ``teacher_forcing=0.0`` the input at
+    step ``t > 0`` is exclusively the model's own prediction from step ``t - 1`` -- never the
+    true target value, even if a ``teacher`` tensor is passed to ``forward()``.
+    This test replaces exactly this tensor with random noise and calls ``forward()``
+    directly in training mode -- bit-identical (``torch.equal``), no tolerance. The
+    cross-check with ``teacher_forcing=1.0`` ensures that the test is not green by chance
+    because ``teacher`` never arrives in the network at all.
     """
     import torch
 
@@ -929,8 +929,8 @@ def test_mamba_forward_ignores_teacher_when_teacher_forcing_is_zero(data) -> Non
         "Exposure-Bias-Leck"
     )
 
-    # Gegenprobe: bei aktivem Teacher-Forcing MUSS sich die Vorhersage aendern, sonst
-    # waere der Test oben nur zufaellig gruen (z. B. weil `teacher` gar nicht verdrahtet ist).
+    # Cross-check: with active teacher forcing the prediction MUST change, otherwise
+    # the test above would only be green by chance (e.g. because `teacher` is not wired at all).
     with_forcing = network(
         tensors["history"], tensors["future"], teacher=tensors["targets"], teacher_forcing=1.0
     )

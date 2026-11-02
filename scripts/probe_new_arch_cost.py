@@ -1,17 +1,17 @@
-r"""Kostenprobe (OA2, Transformer/xLSTM/Mamba-Erweiterung der Lernkurve): ein Fit je
-Architektur, ein Seed, n_train=8, unter EXAKT demselben Protokoll wie
-``run_arch_learning_curve_worker.py`` (drei Zielkanaele, ``enforce_gas_velocity_projection``
-explizit an, Fingerprint-Pruefung gegen ``bddca37f716f5cfc`` -- vor dem
-Pseudonymisierungs-Schnitt 2026-09-25: ``2d2679eeed716577``, siehe ``docs/ARCHIV.md``).
+r"""Cost probe (OA2, Transformer/xLSTM/Mamba extension of the learning curve): one fit per
+architecture, one seed, n_train=8, under EXACTLY the same protocol as
+``run_arch_learning_curve_worker.py`` (three target channels, ``enforce_gas_velocity_projection``
+explicitly on, fingerprint check against ``bddca37f716f5cfc`` -- before the
+pseudonymisation cut 2026-09-25: ``2d2679eeed716577``, see ``docs/ARCHIV.md``).
 
-Kein Sweep, kein Checkpoint, keine Auswertung -- nur ``training/elapsed_s`` und die
-Epochenzahl je Teilnetz, als Grundlage fuer die Hochrechnung auf 4 Budgetpunkte x 5 Seeds.
-``MKL_NUM_THREADS``/``OMP_NUM_THREADS=1`` muessen als PROZESS-Umgebungsvariablen VOR dem
-Start gesetzt sein (nicht nur ``torch.set_num_threads``, siehe
-``run_arch_learning_curve_sweep.py``-Docstring) -- dieses Skript prueft das und bricht ab,
-falls sie fehlen, statt still mit falscher Thread-Konfiguration zu messen.
+No sweep, no checkpoint, no evaluation -- only ``training/elapsed_s`` and the
+epoch count per sub-network, as the basis for extrapolating to 4 budget points x 5 seeds.
+``MKL_NUM_THREADS``/``OMP_NUM_THREADS=1`` must be set as PROCESS environment variables BEFORE
+the start (not only ``torch.set_num_threads``, see the
+``run_arch_learning_curve_sweep.py`` docstring) -- this script checks this and aborts
+if they are missing, instead of silently measuring with a wrong thread configuration.
 
-Aufruf, ein Prozess je Architektur::
+Usage, one process per architecture::
 
     MKL_NUM_THREADS=1 OMP_NUM_THREADS=1 python scripts/probe_new_arch_cost.py --architecture transformer
 """

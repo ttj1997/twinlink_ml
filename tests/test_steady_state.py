@@ -1,7 +1,7 @@
-"""Tests des exakten Beharrungszustands-Lösers.
+"""Tests of the exact steady-state solver.
 
-Referenzwerte (T_bed, X_ss, d50, Verhältnis Abluftenthalpie/Leistung) sind extern
-verifiziert -- siehe ``docs/04_stand_ap1.md``, Befund A/B.
+Reference values (T_bed, X_ss, d50, ratio exhaust air enthalpy/power) are externally
+verified -- see ``docs/04_stand_ap1.md``, Befund A/B.
 """
 
 from __future__ import annotations
@@ -57,14 +57,14 @@ def _load_regret_module() -> ModuleType:
     return module
 
 
-# Vorfaktor der Exponentialhüllkurve für den langsamen Zustand (d50/N), siehe
+# Prefactor of the exponential envelope for the slow state (d50/N), see
 # test_slow_state_approaches_transient_within_exponential_envelope.
 _ENVELOPE_FACTOR = 10.0
 _TRANSIENT_DURATION_S = 150_000.0
 
 
 def test_matches_verified_reference_point(config: ProcessConfig) -> None:
-    """T_bed, X_ss, d50 am Nominalpunkt -- extern verifiziert, siehe Modul-Docstring."""
+    """T_bed, X_ss, d50 at the nominal point -- externally verified, see module docstring."""
     simulator = GreyBoxFluidBedGranulator(config)
     solution = solve_steady_state(simulator)
     assert solution.bed_temperature_celsius == pytest.approx(62.311, abs=5e-4)
@@ -81,11 +81,11 @@ def test_residual_is_below_tolerance(config: ProcessConfig) -> None:
 def test_diameter_matches_nucleation_limited_diameter_when_seed_is_zero(
     config: ProcessConfig,
 ) -> None:
-    """Der Test aus dem Auftrag gilt nur unter der Bedingung ``seed_mass_flow == 0``.
+    """The test from the task applies only under the condition ``seed_mass_flow == 0``.
 
-    Die allgemeine Formel (mit Keimzufuhr) reduziert sich auf
-    ``MaterialConfig.nucleation_limited_diameter_m`` nur in diesem Spezialfall --
-    siehe dessen Docstring und den Moduldocstring von ``steady_state.py``.
+    The general formula (with seed feed) reduces to
+    ``MaterialConfig.nucleation_limited_diameter_m`` only in this special case --
+    see its docstring and the module docstring of ``steady_state.py``.
     """
     assert config.operation.seed_mass_flow_kg_per_h == 0.0
     simulator = GreyBoxFluidBedGranulator(config)
@@ -110,12 +110,12 @@ def test_jacobian_eigenvalues_are_all_stable_at_solution(config: ProcessConfig) 
 
 
 def test_bracket_sign_violation_raises_runtime_error(config: ProcessConfig) -> None:
-    """Konstruiertes Gegenbeispiel: ein Bracket vollständig in der Kondensationsbranche.
+    """Constructed counter-example: a bracket entirely in the condensation branch.
 
-    Bei Betttemperaturen nahe/unter T_amb kippt ``evaporation_rate_kg_per_s`` in die
-    Kondensationsbranche (Y_in > Y_s(T_bed)); dort existiert im Feuchtebracket
-    ``[X_eq, moisture_high]`` kein Vorzeichenwechsel -- die innere Bisektion muss das
-    laut, nicht still, melden.
+    At bed temperatures near/below T_amb, ``evaporation_rate_kg_per_s`` flips into the
+    condensation branch (Y_in > Y_s(T_bed)); there no sign change exists in the moisture bracket
+    ``[X_eq, moisture_high]`` -- the inner bisection must report this
+    loudly, not silently.
     """
     simulator = GreyBoxFluidBedGranulator(config)
     with pytest.raises(RuntimeError, match="Wasserbilanz"):
@@ -138,9 +138,9 @@ def test_dew_point_is_below_bed_temperature(config: ProcessConfig) -> None:
 
 
 def test_exhaust_enthalpy_covers_most_of_input_power(config: ProcessConfig) -> None:
-    """Bezugszustand Umgebung (T_amb, Wasser flüssig) -- siehe SteadyStateSolution-Docstring.
+    """Reference state ambient (T_amb, water liquid) -- see the SteadyStateSolution docstring.
 
-    Verifizierter Wert am Nominalpunkt: 87.92 %.
+    Verified value at the nominal point: 87.92 %.
     """
     simulator = GreyBoxFluidBedGranulator(config)
     solution = solve_steady_state(simulator)
@@ -154,10 +154,10 @@ def test_exhaust_enthalpy_covers_most_of_input_power(config: ProcessConfig) -> N
 def test_feasibility_flag_false_when_seed_flow_pushes_diameter_below_fluidization_window(
     config: ProcessConfig,
 ) -> None:
-    """Eine große Keimzufuhr drückt d50 unter das Fluidisierungsfenster.
+    """A large seed feed pushes d50 below the fluidisation window.
 
-    Hier 2 kg/h gegen ~3.6 g/h Keimbildung aus dem Sprühfeststoff (siehe
-    Moduldocstring) -- u_gas übersteigt dann u_t(d50) (Austrag/Elutriation).
+    Here 2 kg/h against ~3.6 g/h nucleation from the spray solids (see the
+    module docstring) -- u_gas then exceeds u_t(d50) (discharge/elutriation).
     """
     operation = dataclasses.replace(config.operation, seed_mass_flow_kg_per_h=2.0)
     seeded_config = dataclasses.replace(config, operation=operation)
@@ -172,27 +172,27 @@ def test_feasibility_flag_false_when_seed_flow_pushes_diameter_below_fluidizatio
 def test_matches_transient_integration_at_multiple_operating_points(
     config: ProcessConfig, target_diameter_um: float
 ) -> None:
-    """Vergleich mit einer transienten Integration über 150 000 s.
+    """Comparison with a transient integration over 150000 s.
 
-    Zwei verschiedene Toleranzlogiken für zwei verschiedene Zeitskalen -- bewusst, nicht
-    vereinheitlicht:
+    Two different tolerance logics for two different time scales -- deliberately, not
+    unified:
 
-    * Wassermasse und Betttemperatur (tau bis 600 s, siehe time_constants) sind nach
-      150 000 s (>= 250 tau) auf Maschinenpräzision eingeschwungen: 1e-6 relativ, wie
-      ursprünglich beauftragt.
-    * Partikelanzahl/d50 hängen an der langsamsten Mode (tau ~ 16000 s). Bei 150 000 s
-      sind das nur ~9.4 tau; ein reiner Endwertvergleich mit 1e-6 relativ ist hier
-      strukturell unerreichbar (exp(-150000/16000) ~ 8.5e-5) UND das falsche Kriterium:
-      genau dieser Endwert-bei-zu-kurzer-Laufzeit-Fehlschluss war der defekte Befund
-      (610.1 µm statt 750.0 µm bei duration_s=30000, siehe docs/04_stand_ap1.md, Befund
-      A). Stattdessen wird geprüft, dass sich der Transient dem Löserwert **mit der
-      erwarteten Abklingrate** nähert -- eine Exponentialhüllkurve auf dem relativen
-      Restabstand, mit großzügigem Vorfaktor (die Mode ist nicht exakt exponentiell,
-      d50 hängt über die dritte Wurzel an N). tau_slow kommt aus time_constants, nicht
-      hartkodiert. Von Hand geprüft: ersetzt man den Löserwert probeweise durch den
-      alten, falschen 610.1-µm-Wert, verletzt der Transient diese Hüllkurve um mehr als
-      drei Größenordnungen (Restverhältnis ~0.67 gegen eine Schranke ~8e-4) -- der Test
-      ist scharf genug, um genau diesen Fehler zu fangen.
+    * Water mass and bed temperature (tau up to 600 s, see time_constants) have settled
+      to machine precision after 150000 s (>= 250 tau): 1e-6 relative, as
+      originally commissioned.
+    * Particle number/d50 depend on the slowest mode (tau ~ 16000 s). At 150000 s
+      that is only ~9.4 tau; a pure final-value comparison with 1e-6 relative is
+      structurally unachievable here (exp(-150000/16000) ~ 8.5e-5) AND the wrong criterion:
+      exactly this final-value-at-too-short-duration fallacy was the defective finding
+      (610.1 µm instead of 750.0 µm at duration_s=30000, see docs/04_stand_ap1.md, Befund
+      A). Instead it is checked that the transient approaches the solver value **with the
+      expected decay rate** -- an exponential envelope on the relative
+      residual distance, with a generous prefactor (the mode is not exactly exponential,
+      d50 depends on N via the cube root). tau_slow comes from time_constants, not
+      hard-coded. Checked by hand: if the solver value is tentatively replaced by the
+      old, wrong 610.1 µm value, the transient violates this envelope by more than
+      three orders of magnitude (residual ratio ~0.67 against a bound ~8e-4) -- the test
+      is sharp enough to catch exactly this error.
     """
     fraction = nucleation_fraction_for_target_diameter(
         target_diameter_um * 1e-6, config.material.nucleus_diameter_m
@@ -232,16 +232,16 @@ def test_matches_transient_integration_at_multiple_operating_points(
 
 
 def test_solve_steady_state_defaults_at_the_befund_52_trap_point_use_the_fallback() -> None:
-    """WA2, seit Befund 78/79 (K1) geändert: die Löser-DEFAULTS scheitern dort nicht mehr.
+    """WA2, changed since Befund 78/79 (K1): the solver DEFAULTS no longer fail there.
 
-    Gitterpunkt :data:`_KNOWN_FAILING_GRID_INDEX` scheiterte mit den Löser-Defaults (100
-    Bisektionsschritte/Toleranz 1e-13) an einem Bracket-Vorzeichenfehler der äußeren
-    Bisektion an ``T_amb + 10`` -- die Nullstelle liegt dort im Rauschen knapp unter der
-    Grenze. Mit dem Rückfallintervall ``[T_amb + 0.5, T_amb + 10]`` finden die Defaults sie
-    (wenige 1e-6 K unter ``T_amb + 10``); ``energy_target`` stimmt auf 1e-6 relativ mit Befund
-    52 überein, ist aber NICHT bitgleich (anderer Rechenweg). Mit Befund 52s eigener
-    SUCH-Präzision (30/1e-7) läuft derselbe Punkt ohne Rückfall wie bisher. Schlägt fehl,
-    falls eine künftige Änderung das Verhalten an dieser Stelle verschiebt.
+    Grid point :data:`_KNOWN_FAILING_GRID_INDEX` failed with the solver defaults (100
+    bisection steps/tolerance 1e-13) on a bracket sign error of the outer
+    bisection at ``T_amb + 10`` -- the root lies there in the noise just below the
+    limit. With the fallback interval ``[T_amb + 0.5, T_amb + 10]`` the defaults find it
+    (a few 1e-6 K below ``T_amb + 10``); ``energy_target`` agrees with Befund 52 to 1e-6
+    relative, but is NOT bit-identical (different calculation path). With Befund 52's own
+    SEARCH precision (30/1e-7) the same point runs without fallback as before. Fails
+    if a future change shifts the behaviour at this point.
     """
     regret_module = _load_regret_module()
     with warnings.catch_warnings():
@@ -286,11 +286,11 @@ def _k1_line_configs() -> dict[str, ProcessConfig]:
 
 
 def test_k1_fallback_finds_the_drying_state_below_the_old_bound() -> None:
-    """Befund 78 (K1): Linie A, 35 degC / phi 0.25, Zuluft 1 K unter dem Festbetriebspunkt.
+    """Befund 78 (K1): line A, 35 degC / phi 0.25, inlet air 1 K below the fixed operating point.
 
-    Mit der Grenze ``T_amb + 10`` allein gibt es keinen Vorzeichenwechsel (der alte Löser
-    scheiterte); mit dem Rückfallintervall liegt die Lösung 9.20 K über der Umgebung, im
-    Trocknungsregime, zulässig (Wert der Prüfung in ``review_k1_solver_bracket``).
+    With the limit ``T_amb + 10`` alone there is no sign change (the old solver
+    failed); with the fallback interval the solution lies 9.20 K above ambient, in the
+    drying regime, feasible (value of the check in ``review_k1_solver_bracket``).
     """
     config = _k1_line_configs()["A"]
     t_amb, phi = 35.0, 0.25
@@ -339,11 +339,11 @@ def test_default_solver_fails_where_no_drying_state_exists_above_ambient() -> No
 
 
 def test_k1_stored_solutions_reproduce_bit_for_bit() -> None:
-    """Befund 78/79 (K1): überall, wo der alte Löser eine Lösung fand, ist das Ergebnis bitgleich.
+    """Befund 78/79 (K1): wherever the old solver found a solution, the result is bit-identical.
 
-    Stichprobe der in ``review_k1_solver_bracket`` gespeicherten Linienlösungen (mit dem alten
-    Löser gerechnet, gegen die Originalartefakte geprüft): Betttemperatur und Produktfeuchte
-    mit ``==``, ohne Rückfall, zulässig wie zuvor.
+    Sample of the line solutions stored in ``review_k1_solver_bracket`` (computed with the old
+    solver, checked against the original artifacts): bed temperature and product moisture
+    with ``==``, without fallback, feasible as before.
     """
     configs = _k1_line_configs()
     stored = json.loads(_K1_ARTIFACT_PATH.read_text(encoding="utf-8"))["solutions"]

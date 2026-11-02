@@ -1,8 +1,8 @@
-"""Tests für :mod:`twinlink_ml.utils.tracking` (Befund 33, G4a).
+"""Tests for :mod:`twinlink_ml.utils.tracking` (Befund 33, G4a).
 
-``subprocess.run`` wird gemockt, damit die Tests nicht vom tatsächlichen Git-Zustand
-dieses Arbeitsbaums abhängen -- ein sauberer Checkout in CI und ein dirty
-Entwicklungsstand müssen dieselben Ergebnisse liefern.
+``subprocess.run`` is mocked so that the tests do not depend on the actual git state
+of this working tree -- a clean checkout in CI and a dirty
+development state must yield the same results.
 """
 
 from __future__ import annotations
@@ -41,23 +41,23 @@ def _run_side_effect(
     untracked_text: str = "",
     repo_root: str | None = None,
 ):
-    """Ersetzt ``subprocess.run`` für ``git rev-parse``/``status``/``diff``/``ls-files``.
+    """Replaces ``subprocess.run`` for ``git rev-parse``/``status``/``diff``/``ls-files``.
 
-    ``untracked_text`` (Default leer -- keine untracked Dateien) simuliert die Ausgabe von
-    ``git ls-files --others --exclude-standard`` (s. :func:`_git_untracked_files`); ein
-    darin gelisteter Pfad wird beim tatsächlichen Lesen in :func:`_git_diff_digest` NICHT
-    real existieren (dieses Modul mockt nur ``subprocess.run``, nicht das Dateisystem), fällt
-    also auf ``_UNTRACKED_FILE_UNREADABLE`` zurück -- für die Tests, die diese Funktion
-    nutzen, irrelevant, weil sie den konkreten Digest-Wert nicht prüfen, nur seine
-    Existenz/Länge.
+    ``untracked_text`` (default empty -- no untracked files) simulates the output of
+    ``git ls-files --others --exclude-standard`` (see :func:`_git_untracked_files`); a
+    path listed in it will NOT really exist when actually read in :func:`_git_diff_digest`
+    (this module mocks only ``subprocess.run``, not the file system), and thus falls
+    back to ``_UNTRACKED_FILE_UNREADABLE`` -- irrelevant for the tests that use this
+    function, because they do not check the concrete digest value, only its
+    existence/length.
 
-    ``repo_root`` (Default ``None``) ist die Antwort auf ``git rev-parse --show-toplevel``
-    (s. :func:`_git_repo_root`) -- ``None`` liefert einen Pfad, der garantiert kein Präfix
-    eines Testpfads ist, damit :func:`_relativize_path_params` in Tests, die das nicht
-    prüfen, stillschweigend nichts tut.
+    ``repo_root`` (default ``None``) is the answer to ``git rev-parse --show-toplevel``
+    (see :func:`_git_repo_root`) -- ``None`` yields a path that is guaranteed not to be a prefix
+    of a test path, so that :func:`_relativize_path_params` silently does nothing in tests that
+    do not check it.
     """
 
-    def _side_effect(args, **kwargs):  # noqa: ANN003 - Mock-Signatur
+    def _side_effect(args, **kwargs):  # noqa: ANN003 - mock signature
         if args[:3] == ["git", "rev-parse", "--show-toplevel"]:
             return _completed((repo_root or "/nonexistent-repo-root") + "\n")
         if args[:2] == ["git", "rev-parse"]:
@@ -74,7 +74,7 @@ def _run_side_effect(
 
 
 class _NoWarnings:
-    """Kontextmanager: schlägt fehl, wenn eine Warnung ausgelöst wird."""
+    """Context manager: fails if a warning is raised."""
 
     def __enter__(self) -> None:
         import warnings as _warnings
@@ -128,7 +128,7 @@ def test_environment_fingerprint_no_repository() -> None:
 def test_environment_fingerprint_thread_env_vars_none_when_unset(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Nicht gesetzte Env-Vars werden zu ``None``, nicht zu einem leeren String."""
+    """Unset env vars become ``None``, not an empty string."""
     monkeypatch.delenv("MKL_NUM_THREADS", raising=False)
     monkeypatch.delenv("OMP_NUM_THREADS", raising=False)
     with patch("subprocess.run", side_effect=_run_side_effect(clean=True)), _NoWarnings():
@@ -158,7 +158,7 @@ def test_environment_fingerprint_torch_num_threads_present_when_torch_installed(
 def test_environment_fingerprint_torch_num_threads_none_without_torch(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """``_torch_num_threads`` gemockt statt den Import zu faelschen (siehe dessen Docstring)."""
+    """``_torch_num_threads`` mocked instead of faking the import (see its docstring)."""
     monkeypatch.setattr("twinlink_ml.utils.tracking._torch_num_threads", lambda: None)
     with patch("subprocess.run", side_effect=_run_side_effect(clean=True)), _NoWarnings():
         fingerprint = environment_fingerprint()
@@ -169,30 +169,30 @@ def test_environment_fingerprint_torch_num_threads_none_without_torch(
 def test_git_diff_digest_survives_narrow_locale_regardless_of_platform(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Regressionstest fuer die cp1252-Falle aus G4a -- faengt sie auch unter Linux/CI.
+    """Regression test for the cp1252 trap from G4a -- catches it under Linux/CI too.
 
-    Der urspruengliche Fehler (``subprocess.run(text=True)`` ohne ``encoding=`` faellt auf
-    die Locale-Codepage des ausfuehrenden Systems zurueck; auf Windows meist cp1252) ist
-    unter Linux/CI in der Praxis unsichtbar, weil dort die Standard-Locale fast immer schon
-    UTF-8 ist (und neuere Python-Versionen eine reine C-Locale zudem automatisch auf
-    C.UTF-8 "koerzieren", PEP 538) -- ein Test, der sich auf Umgebungsvariablen wie
-    ``LC_ALL``/``LANG`` verlaesst, koennte deshalb genau dort durchrutschen, wo er am
-    wichtigsten waere. Deshalb wird hier zusaetzlich direkt der Mechanismus gepatcht, den
-    ``subprocess.run(text=True)`` ohne explizites ``encoding=`` tatsaechlich befragt
-    (``locale.getencoding``/``locale.getpreferredencoding``) -- das reproduziert die
-    schmale, nicht-UTF-8-faehige Codepage deterministisch auf jedem Betriebssystem und jeder
-    Python-Version, unabhaengig von der tatsaechlichen Locale der ausfuehrenden Maschine.
-    Die Umgebungsvariablen werden zusaetzlich gesetzt (dokumentiert die Absicht und greift,
-    falls ``_git_diff_digest`` jemals in einen eigenen Subprozess ausgelagert wird), sind
-    fuer die Determinismus-Garantie dieses Tests aber nicht das tragende Element.
+    The original error (``subprocess.run(text=True)`` without ``encoding=`` falls back to
+    the locale code page of the executing system; on Windows usually cp1252) is
+    invisible in practice under Linux/CI, because there the default locale is almost always
+    UTF-8 already (and newer Python versions moreover automatically "coerce" a pure C locale to
+    C.UTF-8, PEP 538) -- a test that relies on environment variables such as
+    ``LC_ALL``/``LANG`` could therefore slip through exactly where it would be
+    most important. Hence the mechanism that
+    ``subprocess.run(text=True)`` without an explicit ``encoding=`` actually consults
+    (``locale.getencoding``/``locale.getpreferredencoding``) is additionally patched directly here
+    -- this reproduces the narrow, non-UTF-8-capable code page deterministically on every
+    operating system and every Python version, independent of the actual locale of the
+    executing machine. The environment variables are set in addition (documents the intent
+    and takes effect if ``_git_diff_digest`` is ever moved into its own subprocess), but are
+    not the load-bearing element of this test's determinism guarantee.
 
-    ``_git_diff_digest`` bindet ihr ``cwd`` fest an das Verzeichnis von ``tracking.py`` (das
-    tatsaechliche Projekt-Repo), kann also nicht direkt auf ein synthetisches Test-Repo
-    zeigen. Der Redirect unten leitet nur das ``cwd``-Kwarg auf das Test-Repo um und ruft
-    danach das ECHTE ``subprocess.run`` mit allen anderen Kwargs (insbesondere
-    ``encoding=``/``errors=``) unveraendert auf -- die echte Git- und Decodier-Maschinerie
-    laeuft damit tatsaechlich, nur gegen einen kontrollierten dirty Stand statt gegen den
-    echten Projekt-Checkout.
+    ``_git_diff_digest`` binds its ``cwd`` firmly to the directory of ``tracking.py`` (the
+    actual project repo), so it cannot point directly at a synthetic test repo.
+    The redirect below only redirects the ``cwd`` kwarg to the test repo and then calls
+    the REAL ``subprocess.run`` with all other kwargs (in particular
+    ``encoding=``/``errors=``) unchanged -- the real git and decoding machinery
+    thus actually runs, just against a controlled dirty state instead of against the
+    real project checkout.
     """
     repo = tmp_path / "repo"
     repo.mkdir()
@@ -203,7 +203,7 @@ def test_git_diff_digest_survives_narrow_locale_regardless_of_platform(
     tracked.write_text("x = 1\n", encoding="utf-8")
     subprocess.run(["git", "add", "module.py"], cwd=repo, check=True)
     subprocess.run(["git", "commit", "-q", "-m", "initial"], cwd=repo, check=True)
-    # Dirty machen mit Zeichen ausserhalb von cp1252: tau, Delta, hochgestellte Ziffern, ~=.
+    # Make dirty with characters outside cp1252: tau, Delta, superscript digits, ~=.
     tracked.write_text("x = 1  # tau=τ Delta=Δ x² x⁶ ungefaehr≈gleich\n", encoding="utf-8")
 
     monkeypatch.setenv("LC_ALL", "C")
@@ -215,7 +215,7 @@ def test_git_diff_digest_survives_narrow_locale_regardless_of_platform(
 
     real_run = subprocess.run
 
-    def _redirect_cwd_to_repo(args, **kwargs):  # noqa: ANN003 - Passthrough-Wrapper
+    def _redirect_cwd_to_repo(args, **kwargs):  # noqa: ANN003 - passthrough wrapper
         kwargs = dict(kwargs)
         kwargs["cwd"] = repo
         return real_run(args, **kwargs)
@@ -237,11 +237,11 @@ def test_git_diff_digest_survives_narrow_locale_regardless_of_platform(
 
 
 def _init_repo(repo: Path) -> None:
-    """Leeres Git-Repo mit einem committeten Startpunkt.
+    """Empty git repo with a committed starting point.
 
-    Gemeinsame Basis für die untracked-Datei-Tests unten.
-    ``monkeypatch.setattr(tracking, "_GIT_CWD", repo)`` danach umleiten, nicht
-    ``subprocess.run`` mocken -- s. Docstring von ``_GIT_CWD``.
+    Common basis for the untracked-file tests below.
+    Afterwards redirect via ``monkeypatch.setattr(tracking, "_GIT_CWD", repo)``, do not
+    mock ``subprocess.run`` -- see the docstring of ``_GIT_CWD``.
     """
     repo.mkdir()
     subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
@@ -252,18 +252,18 @@ def _init_repo(repo: Path) -> None:
     subprocess.run(["git", "commit", "-q", "-m", "initial"], cwd=repo, check=True)
 
 
-# ------------------------------------------------------- IA1: untracked Dateien im Digest
+# ------------------------------------------------------- IA1: untracked files in the digest
 
 
 @pytest.mark.skipif(not HAS_GIT, reason="Test braucht ein echtes git-Binary auf dem PATH")
 def test_git_diff_digest_distinguishes_untracked_file_from_clean_tree(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Der eigentliche IA1-Fall: ein komplett neues, nie committetes Skript.
+    """The actual IA1 case: a completely new, never committed script.
 
-    Vor dieser Erweiterung lieferte dieser Fall denselben Digest wie ein sauberer Baum
-    (``sha256("")`` -- ``git diff HEAD`` sieht ungetrackte Dateien nicht). Das war
-    ausgerechnet der häufigste Fall in der Praxis (Befund 52-54).
+    Before this extension, this case yielded the same digest as a clean tree
+    (``sha256("")`` -- ``git diff HEAD`` does not see untracked files). Of all cases, that was
+    the most frequent one in practice (Befund 52-54).
     """
     repo = tmp_path / "repo"
     _init_repo(repo)
@@ -286,12 +286,12 @@ def test_git_diff_digest_distinguishes_untracked_file_from_clean_tree(
 def test_git_diff_digest_distinguishes_different_content_of_same_untracked_file(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Der eigentliche Auslöser dieses Nachtrags: dasselbe untracked Skript, geändert.
+    """The actual trigger of this addendum: the same untracked script, changed.
 
-    Ein Digest, der nur den DATEINAMEN der untracked Datei erfasst (statt ihren Inhalt),
-    würde hier fälschlich denselben Wert liefern -- genau der Fall aus Befund 52-54 (das
-    Skript wurde zwischen zwei Läufen weiterentwickelt, blieb aber bis zum Ende der
-    Untersuchung uncommittet).
+    A digest that captures only the FILE NAME of the untracked file (instead of its content)
+    would wrongly yield the same value here -- exactly the case from Befund 52-54 (the
+    script was developed further between two runs, but stayed uncommitted until the end of
+    the investigation).
     """
     repo = tmp_path / "repo"
     _init_repo(repo)
@@ -316,11 +316,11 @@ def test_git_diff_digest_distinguishes_different_content_of_same_untracked_file(
 def test_git_diff_digest_marks_unreadable_untracked_file_instead_of_failing(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Eine verschwindende untracked Datei darf die Digest-Bildung nicht abbrechen.
+    """A vanishing untracked file must not abort the digest computation.
 
-    Zwischen ``ls-files`` und dem Lesen verschwunden (oder aus einem anderen Grund nicht
-    lesbar) bekommt sie den Marker :data:`_UNTRACKED_FILE_UNREADABLE` statt eines
-    Inhalts-Hashes, und das Ergebnis unterscheidet sich deshalb von dem der lesbaren Datei.
+    If it vanished between ``ls-files`` and the reading (or is unreadable for another
+    reason), it gets the marker :data:`_UNTRACKED_FILE_UNREADABLE` instead of a
+    content hash, and the result therefore differs from that of the readable file.
     """
     repo = tmp_path / "repo"
     _init_repo(repo)
@@ -387,10 +387,10 @@ def test_jsonl_logger_writes_normally_with_git_commit(tmp_path: Path) -> None:
 
 
 def test_jsonl_logger_relativizes_absolute_checkpoint_path(tmp_path: Path) -> None:
-    """Absolute Checkpoint-Pfade enthielten Benutzernamen/Netzlaufwerke (Audit 2026-09-25).
+    """Absolute checkpoint paths contained user names/network drives (audit 2026-09-25).
 
-    Künftige Records sollen ``*/path``-Parameter relativ zur Repo-Wurzel loggen, sofern
-    der Pfad darunter liegt.
+    Future records are to log ``*/path`` parameters relative to the repo root, provided
+    the path lies below it.
     """
     from twinlink_ml.utils.tracking import read_jsonl
 
@@ -415,13 +415,13 @@ def test_jsonl_logger_relativizes_absolute_checkpoint_path(tmp_path: Path) -> No
         logger.log(record)
     records = read_jsonl(log_path)
     assert records[0].params["checkpoint/path"] == "artifacts/checkpoints/gru_seed1.pt"
-    assert records[0].params["other/path"] == str(outside)  # außerhalb der Repo-Wurzel
+    assert records[0].params["other/path"] == str(outside)  # outside the repo root
 
 
 def test_jsonl_logger_leaves_checkpoint_path_absolute_without_git(tmp_path: Path) -> None:
-    """Kein Git-Repository (bzw. ``git`` nicht auf dem PATH) -- Pfad bleibt unverändert.
+    """No git repository (or ``git`` not on the PATH) -- the path stays unchanged.
 
-    Kein falscher relativer Pfad wird erzeugt.
+    No wrong relative path is produced.
     """
     from twinlink_ml.utils.tracking import read_jsonl
 
@@ -434,7 +434,7 @@ def test_jsonl_logger_leaves_checkpoint_path_absolute_without_git(tmp_path: Path
     log_path = tmp_path / "log.jsonl"
     logger = JsonlExperimentLogger(log_path)
 
-    def _no_repo(args, **kwargs):  # noqa: ANN003 - Mock-Signatur
+    def _no_repo(args, **kwargs):  # noqa: ANN003 - mock signature
         if args[:3] == ["git", "rev-parse", "--show-toplevel"]:
             raise FileNotFoundError("git nicht gefunden")
         return _run_side_effect(clean=True)(args, **kwargs)
@@ -446,24 +446,24 @@ def test_jsonl_logger_leaves_checkpoint_path_absolute_without_git(tmp_path: Path
 
 
 def test_jsonl_logger_treats_missing_field_as_unavailable(tmp_path: Path) -> None:
-    """Records ohne ``git/commit_available`` (alte Aufrufer) gelten als nicht verfügbar."""
+    """Records without ``git/commit_available`` (old callers) count as not available."""
     logger = JsonlExperimentLogger(tmp_path / "log.jsonl")
     record = RunRecord(group="test", params={}, metrics={"nrmse": 0.1})
     with pytest.raises(MissingGitCommitError):
         logger.log(record)
 
 
-# --------------------------------------------------------- R2: git/diff_digest-Luecke
+# ------------------------------------------------------------ R2: git/diff_digest gap
 
 
 def test_environment_fingerprint_dirty_but_diff_unobtainable_sets_marker_and_warns() -> None:
-    """``git/dirty=True``, aber ``git diff`` selbst schlägt fehl.
+    """``git/dirty=True``, but ``git diff`` itself fails.
 
-    Der stille Fehlpfad aus G4a: ``git/diff_digest`` wäre sonst ``None``, ununterscheidbar
-    von einem sauberen Stand.
+    The silent failure path from G4a: ``git/diff_digest`` would otherwise be ``None``,
+    indistinguishable from a clean state.
     """
 
-    def _side_effect(args, **kwargs):  # noqa: ANN003 - Mock-Signatur
+    def _side_effect(args, **kwargs):  # noqa: ANN003 - mock signature
         if args[:2] == ["git", "rev-parse"]:
             return _completed("abc123deadbeef\n")
         if args[:2] == ["git", "status"]:
@@ -480,7 +480,7 @@ def test_environment_fingerprint_dirty_but_diff_unobtainable_sets_marker_and_war
     assert fingerprint["git/dirty"] is True
     assert fingerprint["git/diff_digest"] == DIFF_DIGEST_UNAVAILABLE
     assert fingerprint["git/diff_digest_available"] is False
-    # Der Marker ist kein 16-stelliger Hex-Digest -- von einem echten Digest unterscheidbar.
+    # The marker is not a 16-digit hex digest -- distinguishable from a real digest.
     assert len(fingerprint["git/diff_digest"]) != 16
 
 
@@ -514,9 +514,9 @@ def test_jsonl_logger_writes_with_allow_missing_git_when_diff_digest_unavailable
 
 
 def test_jsonl_logger_ignores_diff_digest_available_when_not_dirty(tmp_path: Path) -> None:
-    """``git/diff_digest_available=False`` ist nur relevant, wenn der Record selbst dirty ist.
+    """``git/diff_digest_available=False`` is only relevant if the record itself is dirty.
 
-    Ein sauberer Stand erwartet ohnehin keinen Digest.
+    A clean state does not expect a digest anyway.
     """
     path = tmp_path / "log.jsonl"
     logger = JsonlExperimentLogger(path)

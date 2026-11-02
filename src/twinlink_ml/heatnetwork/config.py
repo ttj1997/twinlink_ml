@@ -1,14 +1,14 @@
-r"""Konfigurationsobjekte des Wärmenetz-Moduls (Kaskade Abluft -> Prozessluft).
+r"""Configuration objects of the heat-network module (cascade exhaust air -> process air).
 
-Siehe ``docs/06_waermenetz.md`` für Zweck, Abgrenzung und die drei Korrekturen
-gegenüber der Excel-Vorlage des Verbundpartners; dieses Docstring beschränkt sich auf
-die Konfigurationsobjekte selbst.
+See ``docs/06_waermenetz.md`` for purpose, scope and the three corrections
+to the Excel template of the consortium partner; this docstring is limited to
+the configuration objects themselves.
 
-Stoffwerte kommen ausschließlich aus :class:`~twinlink_ml.simulation.config.GasConfig`
-(``cp_dry_air_j_per_kg_k``, ``cp_vapour_j_per_kg_k``) -- keine zweite, hier neu gesetzte
-Kopie derselben Größen. ``MaterialConfig`` ist hier nicht relevant: das Wärmenetz
-rechnet mit Luftströmen (Abluft, Prozessluft), nicht mit dem Feststoffsystem der
-Wirbelschicht.
+Material properties come exclusively from :class:`~twinlink_ml.simulation.config.GasConfig`
+(``cp_dry_air_j_per_kg_k``, ``cp_vapour_j_per_kg_k``) -- no second copy of the same
+quantities set anew here. ``MaterialConfig`` is not relevant here: the heat network
+computes with air streams (exhaust air, process air), not with the solids system of the
+fluidized bed.
 """
 
 from __future__ import annotations
@@ -131,25 +131,25 @@ Projekt :meth:`HeatNetworkConfig.warn_if_placeholder` aus.
 
 @dataclass(frozen=True, slots=True)
 class HeatSourceConfig:
-    r"""Eine Abluftquelle (Trocknerlinie) mit Massenstrom, Austrittstemperatur, -feuchte.
+    r"""An exhaust air source (dryer line) with mass flow, outlet temperature, outlet humidity.
 
-    Felder entweder direkt gesetzt (Verbundmodell, ca. 8 kg/s) oder aus einem simulierten
-    Abluftzustand übernommen (Laborsimulator, ca. 0,03 kg/s) -- siehe ``balance.py``
-    Moduldocstring, Abschnitt "Anbindung an den Simulator" (EA4), für die wörtliche
-    Signatur von :func:`~twinlink_ml.simulation.exhaust.reconstruct_exhaust_state` und den
-    Skalenvorbehalt. Diese Klasse kennt den Simulator nicht (Dependency Injection bleibt
-    beim Aufrufer, wie überall im Projekt).
+    Fields either set directly (site-network model, approx. 8 kg/s) or taken from a simulated
+    exhaust air state (lab simulator, approx. 0.03 kg/s) -- see the ``balance.py``
+    module docstring, section "Coupling to the simulator" (EA4), for the literal
+    signature of :func:`~twinlink_ml.simulation.exhaust.reconstruct_exhaust_state` and the
+    scale caveat. This class does not know the simulator (dependency injection stays
+    with the caller, as everywhere in the project).
 
-    :param name: Eindeutiger Bezeichner -- Referenzpunkt für ``routing.py``.
-    :param dry_air_mass_flow_kg_per_s: Trockenluftmassenstrom der Abluft. Aus
-        ``dry_air_mass_flow_kg_per_s`` in ``diagnostics``/``SteadyStateSolution``
-        übernehmen, nicht aus der Gasgeschwindigkeit neu rechnen (EA4).
-    :param outlet_temperature_celsius: Ablufttemperatur -- der AUSLASS-Kanal
-        (``outlet_temperature_celsius`` aus ``reconstruct_exhaust_state``), nicht die
-        Betttemperatur (``bed_temperature_celsius``/``T_gas_out_celsius``). Bei
-        ``ExhaustConfig.outlet_duct_heat_loss_k == 0.0`` (Default) numerisch identisch,
-        der Vertrag an der Verbundschnittstelle ist aber der Auslass-Kanal (EA4).
-    :param outlet_humidity_kg_per_kg: Absolute Abluftfeuchte ``Y_out``.
+    :param name: Unique identifier -- reference point for ``routing.py``.
+    :param dry_air_mass_flow_kg_per_s: Dry-air mass flow of the exhaust air. Take it from
+        ``dry_air_mass_flow_kg_per_s`` in ``diagnostics``/``SteadyStateSolution``,
+        do not recompute it from the gas velocity (EA4).
+    :param outlet_temperature_celsius: Exhaust air temperature -- the OUTLET duct
+        (``outlet_temperature_celsius`` from ``reconstruct_exhaust_state``), not the
+        bed temperature (``bed_temperature_celsius``/``T_gas_out_celsius``). With
+        ``ExhaustConfig.outlet_duct_heat_loss_k == 0.0`` (default) numerically identical,
+        but the contract at the site-network interface is the outlet duct (EA4).
+    :param outlet_humidity_kg_per_kg: Absolute exhaust air humidity ``Y_out``.
     """
 
     name: str
@@ -174,28 +174,28 @@ class HeatSourceConfig:
 
 @dataclass(frozen=True, slots=True)
 class HeatSinkConfig:
-    r"""Eine Senke (Lufterhitzer einer Trocknerlinie).
+    r"""A sink (air heater of a dryer line).
 
-    Muss auf ``setpoint_temperature_celsius`` gebracht werden.
+    Must be brought to ``setpoint_temperature_celsius``.
 
-    :param name: Eindeutiger Bezeichner -- Referenzpunkt für ``routing.py``.
-    :param dry_air_mass_flow_kg_per_s: Trockenluftmassenstrom der Prozessluft dieser Senke.
-    :param humidity_kg_per_kg: Absolute Feuchte der Prozessluft (als über die Kaskade
-        konstant angenommen -- reine sensible Erwärmung, keine Befeuchtung in diesem
-        Modul).
-    :param intake_temperature_celsius: Temperatur der Ansaugluft VOR jeder
-        Rückgewinnung und vor dem Erhitzer. Bewusst nicht ``inlet_temperature_celsius``
-        genannt: dieser Bezeichner ist im Prozessmodul bereits als Stellgröße belegt
-        (``ActionSpaceConfig.inlet_temperature_celsius`` -- die Zulufttemperatur NACH dem
-        Erhitzer, also ein Sollwert). Hier ist die Temperatur VOR dem Erhitzer gemeint;
-        zwei gleichnamige Felder mit entgegengesetzter Bedeutung an derselben Anlage
-        wären eine unnötige Verwechslungsgefahr. Bewusst ein Feld je Senke, nicht eine
-        netzweite Umgebungsgröße auf :class:`HeatNetworkConfig`: die Ansaugbedingungen
-        (Außenluft/Umluft/Vorkonditionierung) sind ortsabhängig, zwei Senken im selben
-        Netz können unterschiedliche Werte haben -- eine zweite Quelle für dieselbe
-        physikalische Größe (netzweit UND je Senke) wäre der Widerspruch, aus dem später
-        ein stiller Fehler entsteht.
-    :param setpoint_temperature_celsius: Sollwert nach dem Erhitzer (``T_soll``).
+    :param name: Unique identifier -- reference point for ``routing.py``.
+    :param dry_air_mass_flow_kg_per_s: Dry-air mass flow of the process air of this sink.
+    :param humidity_kg_per_kg: Absolute humidity of the process air (assumed constant
+        over the cascade -- pure sensible heating, no humidification in this
+        module).
+    :param intake_temperature_celsius: Temperature of the intake air BEFORE any
+        recovery and before the heater. Deliberately not called ``inlet_temperature_celsius``:
+        this identifier is already taken in the process module as an action
+        (``ActionSpaceConfig.inlet_temperature_celsius`` -- the inlet air temperature AFTER the
+        heater, i.e. a set point). Here the temperature BEFORE the heater is meant;
+        two fields of the same name with opposite meaning on the same plant
+        would be an unnecessary risk of confusion. Deliberately one field per sink, not a
+        network-wide ambient quantity on :class:`HeatNetworkConfig`: the intake conditions
+        (outside air/recirculated air/preconditioning) depend on the location, two sinks in the
+        same network can have different values -- a second source for the same
+        physical quantity (network-wide AND per sink) would be the contradiction from which
+        a silent error later arises.
+    :param setpoint_temperature_celsius: Set point after the heater (``T_soll``).
     """
 
     name: str
@@ -225,47 +225,47 @@ class HeatSinkConfig:
 
 @dataclass(frozen=True, slots=True)
 class HeatNetworkConfig:
-    r"""Vollständige Konfiguration des Wärmenetz-Moduls: Quellen, Senken, Kaskadenparameter.
+    r"""Complete configuration of the heat-network module: sources, sinks, cascade parameters.
 
-    Enthält bewusst KEINE Verschaltungsregel (welche Quelle speist welche Senke) --
-    das ist Verhalten, kein Konfigurationswert, und lebt als injizierbare Komponente in
+    Deliberately contains NO interconnection rule (which source feeds which sink) --
+    that is behaviour, not a configuration value, and lives as an injectable component in
     ``routing.py`` (:class:`~twinlink_ml.heatnetwork.routing.HeatNetworkRouting`,
-    Dependency Injection wie ``SorptionIsotherm`` in ``simulation.sorption``). Was hier
-    lebt, ist ``cascade_order``: die physikalische Regel "Niedertemperaturquellen zuerst"
-    (EA2, Korrektur 3) ist keine austauschbare Strategie, sondern eine Modellinvariante,
-    und gehört deshalb als Konfigurationswert (mit sinnvollem Default) hierher, nicht in
-    eine Strategieklasse.
+    dependency injection like ``SorptionIsotherm`` in ``simulation.sorption``). What lives
+    here is ``cascade_order``: the physical rule "low-temperature sources first"
+    (EA2, correction 3) is not an exchangeable strategy but a model invariant,
+    and therefore belongs here as a configuration value (with a sensible default), not in
+    a strategy class.
 
-    Fingerprint/``section_fingerprints`` über :func:`~twinlink_ml.simulation.config.
+    Fingerprint/``section_fingerprints`` via :func:`~twinlink_ml.simulation.config.
     config_fingerprint`/:func:`~twinlink_ml.simulation.config.section_fingerprints_of` --
-    dieselbe Mechanik wie :class:`~twinlink_ml.simulation.config.ProcessConfig`,
-    wiederverwendet statt neu gebaut.
+    the same mechanism as :class:`~twinlink_ml.simulation.config.ProcessConfig`,
+    reused instead of rebuilt.
 
-    :param provenance: Herkunft der Zahlenwerte, wie ``ProcessConfig.provenance``.
-    :param gas: Stoffwerte der Luft (``cp_dry_air_j_per_kg_k``, ``cp_vapour_j_per_kg_k``)
-        -- aus dem vorhandenen :class:`~twinlink_ml.simulation.config.GasConfig`, nicht
-        neu gesetzt (EA1).
-    :param sources: Abluftquellen, siehe :class:`HeatSourceConfig`.
-    :param sinks: Senken, siehe :class:`HeatSinkConfig`.
-    :param minimum_pinch_k: ``dT_min``, siehe :data:`DEFAULT_MINIMUM_PINCH_K`.
-    :param dew_point_approach_k: ``dT_approach``, siehe :data:`DEFAULT_DEW_POINT_APPROACH_K`.
-    :param fuel_lower_heating_value_j_per_kg: ``H_u`` des Zusatzbrennstoffs.
-    :param heater_efficiency: ``eta_H`` des Lufterhitzers, in (0, 1].
-    :param recovery_mode: ``"sensible"`` (Default) oder ``"condensing"``, siehe
+    :param provenance: Origin of the numerical values, like ``ProcessConfig.provenance``.
+    :param gas: Material properties of the air (``cp_dry_air_j_per_kg_k``, ``cp_vapour_j_per_kg_k``)
+        -- from the existing :class:`~twinlink_ml.simulation.config.GasConfig`, not
+        set anew (EA1).
+    :param sources: Exhaust air sources, see :class:`HeatSourceConfig`.
+    :param sinks: Sinks, see :class:`HeatSinkConfig`.
+    :param minimum_pinch_k: ``dT_min``, see :data:`DEFAULT_MINIMUM_PINCH_K`.
+    :param dew_point_approach_k: ``dT_approach``, see :data:`DEFAULT_DEW_POINT_APPROACH_K`.
+    :param fuel_lower_heating_value_j_per_kg: ``H_u`` of the supplementary fuel.
+    :param heater_efficiency: ``eta_H`` of the air heater, in (0, 1].
+    :param recovery_mode: ``"sensible"`` (default) or ``"condensing"``, see
         :data:`RecoveryMode`.
-    :param cold_temperature_celsius: ``T_kalt``, siehe
-        :data:`DEFAULT_COLD_TEMPERATURE_CELSIUS`. Nur in ``recovery_mode="condensing"``
-        wirksam; im Default-Modus mitgeführt (geht trotzdem in den Fingerprint ein), aber
-        ohne Effekt auf das Ergebnis.
-    :param approach_check: Prüfung der Mindestgrädigkeit, siehe :data:`ApproachCheck`.
-    :param approach_profile_nodes: Stützstellen des Quellprofils, siehe
+    :param cold_temperature_celsius: ``T_kalt``, see
+        :data:`DEFAULT_COLD_TEMPERATURE_CELSIUS`. Effective only in
+        ``recovery_mode="condensing"``; carried along in the default mode (still enters the
+        fingerprint), but without effect on the result.
+    :param approach_check: Check of the minimum approach temperature, see :data:`ApproachCheck`.
+    :param approach_profile_nodes: Nodes of the source profile, see
         :data:`DEFAULT_APPROACH_PROFILE_NODES`.
-    :param cascade_order: Explizite Bearbeitungsreihenfolge der Quellennamen
-        (Niedertemperatur zuerst). Leeres Tupel (Default) bedeutet: automatisch
-        aufsteigend nach ``outlet_temperature_celsius`` sortieren (siehe
-        ``routing.resolve_cascade_order``). Eine explizite Angabe muss eine Permutation
-        aller Quellennamen sein -- geprüft in ``__post_init__``, nicht erst beim
-        Kaskadenlauf, damit ein Tippfehler im Quellennamen sofort auffällt.
+    :param cascade_order: Explicit processing order of the source names
+        (low temperature first). An empty tuple (default) means: sort automatically
+        ascending by ``outlet_temperature_celsius`` (see
+        ``routing.resolve_cascade_order``). An explicit value must be a permutation
+        of all source names -- checked in ``__post_init__``, not only during the
+        cascade run, so that a typo in a source name is noticed immediately.
     """
 
     provenance: Provenance = field(default_factory=Provenance)
@@ -337,23 +337,23 @@ class HeatNetworkConfig:
 
     @property
     def fingerprint(self) -> str:
-        """Stabiler Hash der aufgelösten Config -- siehe ``ProcessConfig.fingerprint``."""
+        """Stable hash of the resolved config -- see ``ProcessConfig.fingerprint``."""
         return config_fingerprint(without_documentary_provenance(self.to_dict()))
 
     @property
     def section_fingerprints(self) -> dict[str, str]:
-        """Teil-Fingerprints je Konfigurationsfeld.
+        """Partial fingerprints per configuration field.
 
-        Siehe ``ProcessConfig.section_fingerprints``.
+        See ``ProcessConfig.section_fingerprints``.
         """
         sections = tuple(f.name for f in fields(self))
         return section_fingerprints_of(without_documentary_provenance(self.to_dict()), sections)
 
     def warn_if_placeholder(self) -> None:
-        """Wie ``ProcessConfig.warn_if_placeholder``, hier auf ``HeatNetworkConfig`` angewendet.
+        """Like ``ProcessConfig.warn_if_placeholder``, here applied to ``HeatNetworkConfig``.
 
-        ``minimum_pinch_k`` (siehe :data:`DEFAULT_MINIMUM_PINCH_K`) ist der Platzhalter, der
-        diese Warnung im Default-Fall auslöst.
+        ``minimum_pinch_k`` (see :data:`DEFAULT_MINIMUM_PINCH_K`) is the placeholder that
+        triggers this warning in the default case.
         """
         if self.provenance.status == "placeholder":
             warnings.warn(

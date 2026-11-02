@@ -1,9 +1,9 @@
-"""Tests der Sorptionsisotherme (``simulation.sorption``).
+"""Tests of the sorption isotherm (``simulation.sorption``).
 
-``ConstantIsotherm`` muss das bisherige Verhalten exakt reproduzieren (Regression).
-``GabIsotherm`` wird gegen die in ``docs/04_stand_ap1.md`` (Befund 34) vorgelegte und
-gegengelesene Plausibilitätstabelle sowie die dort abgestimmten Sicherheitseigenschaften
-geprüft: Monotonie, kein Polstellen-Zugriff im Sicherheitsraster, Ankerwert exakt.
+``ConstantIsotherm`` must reproduce the previous behaviour exactly (regression).
+``GabIsotherm`` is checked against the plausibility table presented and cross-read in
+``docs/04_stand_ap1.md`` (Befund 34) as well as the safety properties agreed there:
+monotonicity, no pole access in the safety grid, anchor value exact.
 """
 
 from __future__ import annotations
@@ -30,8 +30,8 @@ from twinlink_ml.simulation.thermo import (
 
 HAS_TORCH = importlib.util.find_spec("torch") is not None
 
-# Placeholder-Parametrisierung aus Schritt 1 (docs/04_stand_ap1.md, Befund 34), gegengelesen
-# und bestätigt: verankert bei phi=0.5, T=62°C -> 0.030 kg/kg (Ankerwert aus
+# Placeholder parametrisation from step 1 (docs/04_stand_ap1.md, Befund 34), cross-read
+# and confirmed: anchored at phi=0.5, T=62°C -> 0.030 kg/kg (anchor value from
 # greybox_lab_moisture.yaml).
 _GAB_KWARGS = {
     "monolayer_moisture_kg_per_kg": 0.020,
@@ -61,7 +61,7 @@ def _gab_material(*, critical_moisture_kg_per_kg: float = 0.200) -> MaterialConf
 
 
 def test_constant_isotherm_reproduces_scalar_exactly(backend: ArrayBackend) -> None:
-    """Regression: identisch zum bisherigen Skalarverhalten, für beliebige phi/T."""
+    """Regression: identical to the previous scalar behaviour, for arbitrary phi/T."""
     isotherm = ConstantIsotherm(equilibrium_moisture_kg_per_kg=0.003)
     phi = np.array([0.0, 0.2, 0.5, 0.8, 0.99])
     temperature = np.array([20.0, 40.0, 62.0, 90.0, 130.0])
@@ -126,7 +126,7 @@ def test_gab_isotherm_monotonic_increasing_in_relative_humidity(backend: ArrayBa
 
 
 def test_gab_isotherm_monotonic_falling_in_temperature(backend: ArrayBackend) -> None:
-    """Desorption: X_eq fällt mit steigender Temperatur bei fester relativer Feuchte."""
+    """Desorption: X_eq falls with rising temperature at fixed relative humidity."""
     isotherm = GabIsotherm(**_GAB_KWARGS)  # type: ignore[arg-type]
     temperature = np.linspace(-10.0, 130.0, 200)
     for phi in (0.2, 0.5, 0.8):
@@ -138,10 +138,10 @@ def test_gab_isotherm_monotonic_falling_in_temperature(backend: ArrayBackend) ->
 
 
 def test_gab_isotherm_low_phi_limit_well_below_critical_moisture(backend: ArrayBackend) -> None:
-    """phi->0 liegt deutlich unter X_cr.
+    """phi->0 lies clearly below X_cr.
 
-    Sonst wäre die Trocknungskurve von Anfang an im zweiten Abschnitt (eta<1 bereits am
-    unteren Rand des Feuchtebereichs).
+    Otherwise the drying curve would be in the second section from the start (eta<1 already at
+    the lower edge of the moisture range).
     """
     isotherm = GabIsotherm(**_GAB_KWARGS)  # type: ignore[arg-type]
     material = _gab_material()
@@ -150,7 +150,7 @@ def test_gab_isotherm_low_phi_limit_well_below_critical_moisture(backend: ArrayB
 
 
 def test_gab_isotherm_plausibility_table(backend: ArrayBackend) -> None:
-    """Kontrolltabelle aus Schritt 1 (gegengelesen), auf zwei Nachkommastellen relativ."""
+    """Control table from step 1 (cross-read), to two decimal places relative."""
     isotherm = GabIsotherm(**_GAB_KWARGS)  # type: ignore[arg-type]
     expected = {
         (0.2, 40.0): 0.01978,
@@ -171,10 +171,10 @@ def test_gab_isotherm_plausibility_table(backend: ArrayBackend) -> None:
 def test_gab_isotherm_finite_positive_over_safety_grid(
     config: ProcessConfig, backend: ArrayBackend
 ) -> None:
-    """Sicherheitsraster (nicht das Plausibilitätsraster oben): keine Polstelle.
+    """Safety grid (not the plausibility grid above): no pole.
 
-    phi bis 0.99, T-Rand an der Aktions-/Störgrößenhüllkurve -- keine Polstelle im
-    numerisch erreichbaren Bereich.
+    phi up to 0.99, T edge at the action/disturbance envelope -- no pole in the
+    numerically reachable range.
     """
     isotherm = GabIsotherm(**_GAB_KWARGS)  # type: ignore[arg-type]
     phi_min, phi_max, t_min, t_max = sorption_safety_grid(
@@ -193,10 +193,10 @@ def test_gab_isotherm_finite_positive_over_safety_grid(
 def test_sorption_safety_grid_phi_min_is_envelope_transformed_not_zero(
     config: ProcessConfig, backend: ArrayBackend
 ) -> None:
-    """phi_min folgt aus der Störgrößenhülle, nicht aus einer mathematischen Grenze.
+    """phi_min follows from the disturbance envelope, not from a mathematical limit.
 
-    T_amb.min, ambient_relative_humidity.min, erwärmt auf t_max -- nicht aus einer
-    mathematischen phi->0-Grenze.
+    T_amb.min, ambient_relative_humidity.min, heated to t_max -- not from a
+    mathematical phi->0 limit.
     """
     phi_min, phi_max, t_min, t_max = sorption_safety_grid(
         backend, config.gas, config.actions, config.disturbances
@@ -249,7 +249,7 @@ def test_isotherm_from_material_builds_gab() -> None:
     )
 
 
-# ------------------------------------------------------- MaterialConfig-Feldvalidierung
+# ------------------------------------------------------ MaterialConfig field validation
 
 
 def test_material_config_gab_requires_all_fields() -> None:
@@ -275,9 +275,9 @@ def test_material_config_gab_validates_k_bounds() -> None:
 
 
 def test_material_config_constant_kind_ignores_missing_gab_fields() -> None:
-    """Default-Fall: kein gab_* Feld gesetzt, sorption_isotherm_kind bleibt 'constant'.
+    """Default case: no gab_* field set, sorption_isotherm_kind stays 'constant'.
 
-    Lädt unverändert, keine Validierung greift.
+    Loads unchanged, no validation engages.
     """
     material = MaterialConfig()
     assert material.sorption_isotherm_kind == "constant"
@@ -288,8 +288,8 @@ def test_material_config_constant_kind_ignores_missing_gab_fields() -> None:
 
 
 def test_validate_isotherm_skips_constant_isotherm(config: ProcessConfig) -> None:
-    """Default-Config (ConstantIsotherm) -- die Prüfung greift gar nicht erst."""
-    validate_isotherm_against_critical_moisture(config)  # darf nicht raisen
+    """Default config (ConstantIsotherm) -- the check does not engage at all."""
+    validate_isotherm_against_critical_moisture(config)  # must not raise
 
 
 def test_validate_isotherm_passes_for_lab_level_critical_moisture(config: ProcessConfig) -> None:
@@ -298,18 +298,18 @@ def test_validate_isotherm_passes_for_lab_level_critical_moisture(config: Proces
     gab_config = dataclasses.replace(
         config, material=_gab_material(critical_moisture_kg_per_kg=0.200)
     )
-    validate_isotherm_against_critical_moisture(gab_config)  # darf nicht raisen
+    validate_isotherm_against_critical_moisture(gab_config)  # must not raise
 
 
 def test_validate_isotherm_raises_when_critical_moisture_below_grid_maximum(
     config: ProcessConfig,
 ) -> None:
-    """X_cr=0.05 liegt über dem Ankerwert, aber unter dem Isothermen-Maximum.
+    """X_cr=0.05 lies above the anchor value, but below the isotherm maximum.
 
-    Besteht die lokale MaterialConfig-Prüfung (Ankerwert 0.030), aber liegt unter dem
-    tatsächlichen Isothermen-Maximum im Sicherheitsraster (~0.090, siehe
-    docs/04_stand_ap1.md, Befund 34) -- genau der Fall, den die generische,
-    ProcessConfig-weite Prüfung zusätzlich zur lokalen abdeckt.
+    Passes the local MaterialConfig check (anchor value 0.030), but lies below the
+    actual isotherm maximum in the safety grid (~0.090, see
+    docs/04_stand_ap1.md, Befund 34) -- exactly the case that the generic,
+    ProcessConfig-wide check covers in addition to the local one.
     """
     import dataclasses
 
@@ -326,12 +326,12 @@ def test_validate_isotherm_raises_when_critical_moisture_below_grid_maximum(
 def test_relative_humidity_from_absolute_humidity_is_exact_inverse_within_safety_grid(
     config: ProcessConfig, backend: ArrayBackend
 ) -> None:
-    """Exakte algebraische Inversion von absolute_humidity_kg_per_kg.
+    """Exact algebraic inversion of absolute_humidity_kg_per_kg.
 
-    Bestätigt bis auf Float64-Rundung, aber nur außerhalb von deren eigenem
-    p_partial-Clip (T ab ca. 90-100°C mit hohem phi, siehe Docstring). Im
-    Sicherheitsraster-Bereich greift der Clip bei einem Teil der Stichproben; dort ist
-    eine Abweichung erwartet und wird getrennt geprüft.
+    Confirmed up to float64 rounding, but only outside its own
+    p_partial clip (T from approx. 90-100°C with high phi, see the docstring). In the
+    safety grid range the clip engages for part of the samples; there
+    a deviation is expected and is checked separately.
     """
     phi_min, phi_max, t_min, t_max = sorption_safety_grid(
         backend, config.gas, config.actions, config.disturbances

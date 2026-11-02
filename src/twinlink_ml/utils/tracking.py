@@ -1,25 +1,25 @@
-"""Experiment-Tracking ab Tag 1 (Arbeitsplan Schritt 5).
+"""Experiment tracking from day 1 (work plan step 5).
 
-Warum ein eigenes Modul und nicht direkt MLflow
+Why a separate module and not MLflow directly
 -----------------------------------------------
-MLflow ist keine Laufzeitabhängigkeit des Pakets, und ein Lernkurvenlauf soll auch ohne
-Tracking-Server funktionieren. Die ABC :class:`ExperimentLogger` erlaubt beides: das
-JSONL-Log läuft überall und ist versionierbar, der MLflow-Adapter wird nachgeladen, wenn
-er verfügbar ist. Dieselbe Trennung wie beim Backend und beim Simulator.
+MLflow is not a runtime dependency of the package, and a learning-curve run should also work
+without a tracking server. The ABC :class:`ExperimentLogger` allows both: the
+JSONL log runs everywhere and can be versioned, the MLflow adapter is loaded on demand when
+it is available. The same separation as for the backend and the simulator.
 
-Was zwingend in jeden Datensatz gehört
+What must go into every record
 --------------------------------------
-Ohne diese sechs Fingerprints ist ein Lernkurvenpunkt nicht rekonstruierbar, und das
-merkt man erst Monate später:
+Without these six fingerprints a learning-curve point cannot be reconstructed, and one
+only notices months later:
 
-* ``process/fingerprint`` -- Prozesskonfiguration inklusive aller Platzhalter
-* ``excitation/fingerprint`` -- Anregungsdesign; enthält ``n_runs``, ist also je
-  Pool-Größe verschieden
-* ``split/digest`` -- Zuordnung *und* Reihenfolge der Trainingsläufe
-* ``scaler/digest`` -- Normalisierungsstatistiken; deckt auf, wenn sie aus dem
-  falschen Split kamen
-* ``seed/{data,noise,model}`` -- die drei trennbaren Zufallsquellen
-* ``git/commit`` und die Paketversionen
+* ``process/fingerprint`` -- process configuration including all placeholders
+* ``excitation/fingerprint`` -- excitation design; contains ``n_runs``, so it differs per
+  pool size
+* ``split/digest`` -- assignment *and* order of the training runs
+* ``scaler/digest`` -- normalisation statistics; reveals whether they came from the
+  wrong split
+* ``seed/{data,noise,model}`` -- the three separable random sources
+* ``git/commit`` and the package versions
 """
 
 from __future__ import annotations
@@ -82,60 +82,60 @@ werden. Vor einem Codestand-Vergleich immer zuerst ``git/diff_digest_available``
 
 
 class DirtyWorkingTreeWarning(UserWarning):
-    """``git status --porcelain`` ist nicht leer, wenn ein Record entsteht.
+    """``git status --porcelain`` is not empty when a record is created.
 
-    Eigene Klasse statt ``UserWarning`` direkt, damit sie gezielt gefiltert werden kann --
-    ``pyproject.toml`` markiert sie als erwartet (dieselbe Begründung wie
-    ``PlaceholderConfigWarning``: ein dirty Arbeitsbaum ist während normaler Iteration die
-    Regel, kein Fehlerfall, und darf die Testsuite nicht blockieren, siehe Docstring von
+    A separate class instead of ``UserWarning`` directly, so that it can be filtered
+    specifically -- ``pyproject.toml`` marks it as expected (the same rationale as
+    ``PlaceholderConfigWarning``: a dirty working tree is the rule during normal iteration,
+    not an error case, and must not block the test suite, see the docstring of
     :func:`environment_fingerprint`).
     """
 
 
 class MissingGitCommitError(RuntimeError):
-    """Ein Record mit einer Provenienz-Lücke sollte geschrieben werden.
+    """A record with a provenance gap was about to be written.
 
-    Befund 33 (``docs/04_stand_ap1.md``): ``git/commit`` stand in jedem bisher
-    aufgezeichneten Lauf still auf ``"unknown"`` -- ohne Warnung, ohne Log-Eintrag an der
-    Aufrufstelle. Bei ``arch_composite.jsonl`` (440 Records) fiel das erst Wochen später
-    auf, als die Konfiguration hinter den Zahlen nicht mehr rekonstruierbar war. Diese
-    Ausnahme macht das Fehlen zum Standardfehler statt zur stillen Zeichenkette; ein
-    Aufrufer, der das bewusst in Kauf nehmen will (z. B. ein Docker-Image ohne ``.git``),
-    setzt ``allow_missing_git=True`` am Logger.
+    Befund 33 (``docs/04_stand_ap1.md``): ``git/commit`` silently stood at ``"unknown"`` in
+    every run recorded so far -- without a warning, without a log entry at the
+    call site. For ``arch_composite.jsonl`` (440 records) this was only noticed weeks later,
+    when the configuration behind the numbers could no longer be reconstructed. This
+    exception turns the absence into a default error instead of a silent string; a
+    caller who wants to accept this deliberately (e.g. a Docker image without ``.git``)
+    sets ``allow_missing_git=True`` on the logger.
 
-    G4a-Nachbesserung: dieselbe Ausnahme deckt jetzt auch die verwandte Lücke ab, dass ein
-    dirty Arbeitsbaum keinen ermittelbaren ``git/diff_digest`` hat (s.
-    :func:`_check_git_provenance`) -- dieselbe stille-Lücke-Fehlerklasse wie beim Commit,
-    unter demselben ``allow_missing_git``-Schalter geprüft. ``allow_missing_git`` und der
-    Klassenname sind dadurch etwas enger benannt, als sie inhaltlich abdecken (sie heißen
-    nach dem Commit, nicht nach der Provenienz insgesamt) -- absichtlich nicht umbenannt,
-    weil das bestehende Aufrufer betrifft; das ist eine eigene Entscheidung.
+    G4a follow-up fix: the same exception now also covers the related gap that a
+    dirty working tree has no determinable ``git/diff_digest`` (see
+    :func:`_check_git_provenance`) -- the same silent-gap error class as for the commit,
+    checked under the same ``allow_missing_git`` switch. ``allow_missing_git`` and the
+    class name are thus named somewhat more narrowly than what they cover in substance (they
+    are named after the commit, not after provenance as a whole) -- deliberately not renamed,
+    because that affects existing callers; that is a separate decision.
     """
 
 
 class DiffDigestUnavailableWarning(UserWarning):
-    """``git/dirty`` ist wahr, aber ``git diff HEAD`` ließ sich nicht in einen Digest übersetzen.
+    """``git/dirty`` is true, but ``git diff HEAD`` could not be turned into a digest.
 
-    Eigene Klasse statt ``DirtyWorkingTreeWarning`` direkt: ein dirty Arbeitsbaum allein ist
-    die Regel (siehe dort), aber zusätzlich keinen Digest dafür ermitteln zu können, ist der
-    stille Fehlpfad, der vor ``encoding="utf-8"``/``errors="replace"`` in
-    :func:`_git_diff_digest` zehn Tests in ``tests/test_protocol.py`` unter Windows scheitern
-    ließ (``stdout`` blieb ``None``, ohne dass eine Exception den Aufrufer erreichte). Diese
-    Warnung bleibt als Absicherung für den verbleibenden, echten Fehlerfall (kein ``git`` auf
-    dem PATH, kein Repository, ``git diff`` oder ``git ls-files --others`` selbst schlägt
-    fehl -- Letzteres seit der Erweiterung um untracked Dateien, s. :func:`_git_diff_digest`).
+    A separate class instead of ``DirtyWorkingTreeWarning`` directly: a dirty working tree alone
+    is the rule (see there), but additionally being unable to determine a digest for it is the
+    silent failure path that, before ``encoding="utf-8"``/``errors="replace"`` in
+    :func:`_git_diff_digest`, made ten tests in ``tests/test_protocol.py`` fail under Windows
+    (``stdout`` stayed ``None`` without an exception reaching the caller). This
+    warning remains as a safeguard for the remaining, genuine error case (no ``git`` on
+    the PATH, no repository, ``git diff`` or ``git ls-files --others`` itself fails
+    -- the latter since the extension to untracked files, see :func:`_git_diff_digest`).
     """
 
 
 def _git_commit() -> str | None:
-    """Commit-Hash des Arbeitsbaums, ``None`` außerhalb eines Repositories.
+    """Commit hash of the working tree, ``None`` outside a repository.
 
-    ``encoding="utf-8"``/``errors="replace"``: dieselbe Windows-Falle wie in
-    :func:`_git_diff_digest` (``text=True`` ohne ``encoding`` fällt auf die Locale-Codepage
-    des ausführenden Systems zurück) trifft grundsätzlich jeden ``subprocess.run``-Aufruf
-    hier -- auch wenn ein Commit-Hash in der Praxis rein hexadezimal ist und nie
-    undekodierbare Bytes enthält, macht die explizite Angabe die Funktion unabhängig davon
-    korrekt statt zufällig.
+    ``encoding="utf-8"``/``errors="replace"``: the same Windows trap as in
+    :func:`_git_diff_digest` (``text=True`` without ``encoding`` falls back to the locale code page
+    of the executing system) applies in principle to every ``subprocess.run`` call
+    here -- even if a commit hash is in practice purely hexadecimal and never contains
+    undecodable bytes, the explicit setting makes the function correct independently of that
+    instead of by chance.
     """
     try:
         completed = subprocess.run(
@@ -153,11 +153,11 @@ def _git_commit() -> str | None:
 
 
 def _git_repo_root() -> Path | None:
-    """Wurzelverzeichnis des Arbeitsbaums, ``None`` außerhalb eines Repositories.
+    """Root directory of the working tree, ``None`` outside a repository.
 
-    Für :func:`_relativize_path_params` -- absolute Checkpoint-Pfade sollen relativ
-    zu dieser Wurzel geloggt werden, nicht als absoluter Pfad mit Benutzername/
-    Netzlaufwerk (Vertraulichkeits-Audit 2026-09-25).
+    For :func:`_relativize_path_params` -- absolute checkpoint paths are to be logged relative
+    to this root, not as an absolute path with user name/
+    network drive (confidentiality audit 2026-09-25).
     """
     try:
         completed = subprocess.run(
@@ -204,20 +204,20 @@ def status_is_dirty(
 
 
 def _git_dirty(ignore_paths: Iterable[Path | str] = ()) -> bool:
-    """``True``, wenn der Arbeitsbaum uncommittete Änderungen hat.
+    """``True`` if the working tree has uncommitted changes.
 
     ``ignore_paths``: untracked files that do not count (see :func:`status_is_dirty`); with
     them ``git status`` lists untracked files one by one (``--untracked-files=all``) so that a file
     inside a new directory can be matched.
 
-    ``False`` außerhalb eines Repositories oder wenn ``git`` selbst nicht auf dem PATH
-    liegt (Befund 33 dokumentiert genau diese Umgebung) -- ``git/dirty`` beantwortet dann
-    keine sinnvolle Frage, und ``git/commit_available=False`` trägt die eigentliche
-    Information bereits.
+    ``False`` outside a repository or if ``git`` itself is not on the PATH
+    (Befund 33 documents exactly this environment) -- ``git/dirty`` then answers
+    no meaningful question, and ``git/commit_available=False`` already carries the actual
+    information.
 
-    ``encoding="utf-8"``/``errors="replace"``: s. :func:`_git_diff_digest` -- ``git status
-    --porcelain`` quotet untypische Dateinamen zwar normalerweise, verlässt sich aber nicht
-    darauf.
+    ``encoding="utf-8"``/``errors="replace"``: see :func:`_git_diff_digest` -- ``git status
+    --porcelain`` normally quotes unusual file names, but this does not rely
+    on it.
     """
     ignore = list(ignore_paths)
     command = ["git", "status", "--porcelain"] + (["--untracked-files=all"] if ignore else [])
@@ -250,19 +250,19 @@ aussehenden Wert liefern."""
 
 
 def _git_untracked_files() -> list[str] | None:
-    """Pfade aller nicht-ignorierten, nicht getrackten Dateien.
+    """Paths of all non-ignored, untracked files.
 
-    ``git ls-files --others --exclude-standard``, von Git selbst deterministisch nach
-    Pfad sortiert.
+    ``git ls-files --others --exclude-standard``, sorted deterministically by path by
+    Git itself.
 
-    ``--exclude-standard`` spiegelt dieselbe ``.gitignore``-Semantik, die ``git status
-    --porcelain`` (s. :func:`_git_dirty`) ohnehin schon anwendet -- eine ignorierte Datei
-    macht den Baum nicht dirty und soll auch hier nicht auftauchen.
+    ``--exclude-standard`` mirrors the same ``.gitignore`` semantics that ``git status
+    --porcelain`` (see :func:`_git_dirty`) already applies anyway -- an ignored file
+    does not make the tree dirty and should not appear here either.
 
-    ``None`` bei jedem Fehler (kein ``git`` auf dem PATH, kein Repository, nicht-Null
-    Exit) -- wie :func:`_git_commit`/:func:`_git_dirty`, dieselbe ``encoding="utf-8"``/
-    ``errors="replace"``-Begründung für die Pfadnamen selbst (nicht für Dateiinhalte, die
-    werden binär gelesen, s. :func:`_git_diff_digest`).
+    ``None`` on any error (no ``git`` on the PATH, no repository, non-zero
+    exit) -- like :func:`_git_commit`/:func:`_git_dirty`, the same ``encoding="utf-8"``/
+    ``errors="replace"`` rationale for the path names themselves (not for file contents, those
+    are read in binary, see :func:`_git_diff_digest`).
     """
     try:
         result = subprocess.run(
@@ -280,94 +280,94 @@ def _git_untracked_files() -> list[str] | None:
 
 
 def _git_diff_digest() -> str | None:
-    """Macht einen dirty Stand identifizierbar.
+    """Makes a dirty state identifiable.
 
-    sha256 (16 Hex-Zeichen) über ``git diff HEAD`` UND den Inhalt aller untracked Dateien.
+    sha256 (16 hex characters) over ``git diff HEAD`` AND the content of all untracked files.
 
-    ``git diff HEAD`` allein sieht nur getrackte Änderungen (inklusive gestageter neuer
-    Dateien) -- eine komplett neue, nie ``git add``ete Datei taucht darin NICHT auf, auch
-    nicht als "neue Datei"-Hunk. Ein dirty Stand, der ausschließlich aus einer solchen
-    Datei besteht, lieferte deshalb bislang den Digest des LEEREN Diffs
-    (``sha256("")[:16] == "e3b0c44298fc1c14"``) -- identifizierbar nur im Namen, nicht in
-    der Sache: ausgerechnet der häufigste Fall (ein neu geschriebenes, noch nicht
-    committetes Skript) blieb damit stumm. Diese Funktion schließt die Lücke, indem sie
-    zusätzlich :func:`_git_untracked_files` abfragt und für jede darin gelistete Datei
-    ihren Inhalt hasht -- nicht nur ihren Namen, sonst würde ein zwischen zwei Läufen
-    GEÄNDERTES uncommittetes Skript denselben Digest liefern, solange der Dateiname
-    gleich bleibt (genau der Fall, der diese Erweiterung ausgelöst hat).
+    ``git diff HEAD`` alone only sees tracked changes (including staged new
+    files) -- a completely new file that was never ``git add``ed does NOT appear in it, not even
+    as a "new file" hunk. A dirty state consisting exclusively of such a
+    file therefore previously returned the digest of the EMPTY diff
+    (``sha256("")[:16] == "e3b0c44298fc1c14"``) -- identifiable in name only, not in
+    substance: of all cases, the most frequent one (a newly written, not yet
+    committed script) thus stayed silent. This function closes the gap by
+    additionally querying :func:`_git_untracked_files` and hashing, for every file listed there,
+    its content -- not only its name, otherwise an uncommitted script CHANGED between two runs
+    would return the same digest as long as the file name
+    stays the same (exactly the case that triggered this extension).
 
-    Kombination über eine strukturierte, nicht über eine simple String-Konkatenation:
+    Combination via a structured, not a simple string concatenation:
     ``json.dumps({"diff": <sha256 von git diff HEAD>, "untracked": [[pfad, sha256(inhalt)],
-    ...]}, sort_keys=True)``, danach sha256 darüber. Eine simple Konkatenation
-    (Pfad+Inhalt aneinandergehängt) wäre mehrdeutig -- Pfad "a"+Inhalt "bc" ergäbe dieselben
-    Bytes wie Pfad "ab"+Inhalt "c". Jede Datei wird zuerst auf ihren eigenen 64-stelligen
-    Hash reduziert, bevor sie in die äußere Struktur eingeht, damit eine einzelne große
-    untracked Datei nicht die äußere Hash-Eingabe aufbläht. Die ``untracked``-Liste wird
-    zusätzlich explizit sortiert (nicht nur auf Gits eigene, an sich schon deterministische
-    Sortierung von ``ls-files`` vertraut) -- Reproduzierbarkeit soll aus dieser Funktion
-    selbst folgen, nicht aus einer Eigenschaft eines Aufrufs, den sie nur konsumiert.
+    ...]}, sort_keys=True)``, then sha256 over that. A simple concatenation
+    (path+content joined together) would be ambiguous -- path "a"+content "bc" would give the same
+    bytes as path "ab"+content "c". Every file is first reduced to its own 64-character
+    hash before it enters the outer structure, so that a single large
+    untracked file does not inflate the outer hash input. The ``untracked`` list is
+    additionally sorted explicitly (not just relying on Git's own, in itself already deterministic
+    sorting of ``ls-files``) -- reproducibility should follow from this function
+    itself, not from a property of a call it merely consumes.
 
-    Kann eine untracked Datei nicht gelesen werden (Race mit ``git ls-files --others``,
-    fehlende Berechtigung), ersetzt :data:`_UNTRACKED_FILE_UNREADABLE` ihren Inhalts-Hash --
-    die Digest-Bildung bricht dadurch nicht ab, aber die Lücke bleibt im Wert selbst
-    sichtbar (kein stiller Fallback auf einen harmlos aussehenden Wert).
+    If an untracked file cannot be read (race with ``git ls-files --others``,
+    missing permission), :data:`_UNTRACKED_FILE_UNREADABLE` replaces its content hash --
+    the digest computation does not abort because of this, but the gap stays visible in the value
+    itself (no silent fallback to a harmless-looking value).
 
-    Untracked Dateien werden BINÄR gelesen, nicht als dekodierter Text: für den
-    getrackten Diff ist ``errors="replace"`` die richtige Wahl (s. unten), für
-    Dateiinhalte wäre es Informationsverlust -- zwei inhaltlich verschiedene Binärdateien
-    dürften nicht durch identische Ersetzungszeichen auf denselben Hash abgebildet werden.
+    Untracked files are read in BINARY, not as decoded text: for the
+    tracked diff ``errors="replace"`` is the right choice (see below), for
+    file contents it would be a loss of information -- two binary files with different content
+    must not be mapped to the same hash through identical replacement characters.
 
-    **Zeilenenden zwischen Windows und Linux:** dieses Repository setzt
-    ``.gitattributes: * text=auto eol=lf`` -- getrackte Dateien werden von Git beim
-    Checkout/Diff unabhängig von ``core.autocrlf`` auf LF normalisiert, ihr Beitrag zum
-    Digest ist deshalb plattformunabhängig stabil. Für UNTRACKED Dateien gilt das NICHT:
-    Git wendet weder ``.gitattributes`` noch ``core.autocrlf`` auf Dateien an, die es nicht
-    verwaltet. Dieselbe uncommittete Datei kann auf einer Windows- und einer
-    Linux-Maschine unterschiedliche Bytes (CRLF vs. LF) und damit einen unterschiedlichen
-    Digest tragen, auch wenn sie inhaltlich "derselbe Code" ist. Das ist kein Fehler dieser
-    Funktion -- der Digest soll den TATSÄCHLICHEN Zustand erfassen, und unterschiedliche
-    Bytes sind ein tatsächlich unterschiedlicher Zustand --, aber es gehört hierhin, damit
-    ein späterer Vergleich zweier Digests von verschiedenen Maschinen nicht fälschlich als
-    "unterschiedlicher Code" gelesen wird, wo es eigentlich nur unterschiedliche
-    Zeilenenden derselben, noch nicht committeten Datei sind.
+    **Line endings between Windows and Linux:** this repository sets
+    ``.gitattributes: * text=auto eol=lf`` -- tracked files are normalised to LF by Git on
+    checkout/diff independently of ``core.autocrlf``, so their contribution to the
+    digest is stable across platforms. This does NOT hold for UNTRACKED files:
+    Git applies neither ``.gitattributes`` nor ``core.autocrlf`` to files it does not
+    manage. The same uncommitted file can carry different bytes (CRLF vs. LF) on a Windows and a
+    Linux machine, and thus a different
+    digest, even if in substance it is "the same code". This is not a bug of this
+    function -- the digest is meant to capture the ACTUAL state, and different
+    bytes are an actually different state --, but it belongs here so that
+    a later comparison of two digests from different machines is not wrongly read as
+    "different code" where it is really only different
+    line endings of the same, not yet committed file.
 
-    ``None`` außerhalb eines Repositories oder wenn ``git diff``/``git ls-files`` selbst
-    fehlschlägt (nicht auf dem PATH, kein Repository, nicht-Null Exit).
-    :func:`environment_fingerprint` übersetzt ein dirty-aber-``None`` in einen expliziten
-    Marker statt es still wie "kein Diff" aussehen zu lassen (s. dort) -- diese Funktion
-    selbst bleibt bei ``None``.
+    ``None`` outside a repository or if ``git diff``/``git ls-files`` itself
+    fails (not on the PATH, no repository, non-zero exit).
+    :func:`environment_fingerprint` translates a dirty-but-``None`` into an explicit
+    marker instead of letting it silently look like "no diff" (see there) -- this function
+    itself stays at ``None``.
 
-    **Nicht vergleichbar über diese Änderung hinweg:** vor dieser Erweiterung war der
-    Digest ``sha256(git diff HEAD)[:16]`` (roher Diff-Text). Jetzt ist er
+    **Not comparable across this change:** before this extension the
+    digest was ``sha256(git diff HEAD)[:16]`` (raw diff text). Now it is
     ``sha256(json.dumps({"diff": sha256(git diff HEAD), "untracked": [...]}, sort_keys=True))[:16]``
-    -- eine andere Eingabestruktur, nicht nur eine Erweiterung derselben. Ein VOR diesem
-    Commit berechneter ``git/diff_digest`` und einer DANACH sind deshalb selbst bei
-    identischem Baumzustand (auch ganz ohne untracked Dateien) verschieden -- derselbe
-    Diff-Text erzeugt jetzt einen anderen Hash, weil er zuerst selbst gehasht und dann in
-    eine JSON-Struktur eingebettet wird, statt direkt gehasht zu werden. Ein Vergleich
-    ``digest_alt == digest_neu`` "gleicher Codestand?" ist damit über diesen Commit hinweg
-    sinnlos -- dieselbe Klasse Drift wie beim ``ProcessConfig``-Fingerprint (dessen Digest
-    sich bei jeder Erweiterung um ein Feld ändert, auch wenn der neue Wert dem alten
-    Default entspricht). Innerhalb eines einzelnen Digest-Verfahrens (vor ODER nach diesem
-    Commit, nicht gemischt) bleibt der Vergleich weiterhin gültig.
+    -- a different input structure, not just an extension of the same one. A ``git/diff_digest``
+    computed BEFORE this commit and one AFTER it are therefore different even with an
+    identical tree state (even with no untracked files at all) -- the same
+    diff text now produces a different hash, because it is first hashed itself and then
+    embedded in a JSON structure, instead of being hashed directly. A comparison
+    ``digest_alt == digest_neu`` "same code state?" is therefore meaningless across this commit
+    -- the same class of drift as with the ``ProcessConfig`` fingerprint (whose digest
+    changes with every extension by a field, even if the new value equals the old
+    default). Within a single digest procedure (before OR after this
+    commit, not mixed) the comparison remains valid.
 
-    ``encoding="utf-8"``: ein dirty Diff enthält hier routinemäßig UTF-8-Sonderzeichen
-    (deutsche Dokumentation, griechische Formelzeichen, hochgestellte Ziffern). Ohne
-    explizites ``encoding`` fällt ``subprocess.run(text=True)`` auf die Locale-Codepage des
-    ausführenden Systems zurück (auf Windows meist cp1252), die solche Bytes nicht dekodieren
-    kann. Der Fehler passiert dabei in einem internen Reader-Thread von ``subprocess`` und
-    wird NICHT als Exception an den Aufrufer durchgereicht -- ``stdout`` bleibt einfach
-    ``None``, ohne dass der ``except``-Block unten je greift: genau die Fehlerklasse, gegen
-    die diese Funktion gebaut wurde, unterläuft sie an ihrer eigenen Decodierung.
+    ``encoding="utf-8"``: a dirty diff here routinely contains UTF-8 special characters
+    (German documentation, Greek formula symbols, superscript digits). Without
+    explicit ``encoding``, ``subprocess.run(text=True)`` falls back to the locale code page of the
+    executing system (on Windows mostly cp1252), which cannot decode such bytes.
+    The error happens in an internal reader thread of ``subprocess`` and
+    is NOT passed on to the caller as an exception -- ``stdout`` simply stays
+    ``None`` without the ``except`` block below ever taking effect: exactly the error class
+    against which this function was built undermines it through its own decoding.
 
-    ``errors="replace"``: ein Diff kann auch nach Wahl von UTF-8 nicht-dekodierbare Bytes
-    enthalten (z. B. Binärdateien im Diff). Der Digest soll dafür trotzdem einen Wert
-    liefern statt an einzelnen Bytes zu scheitern -- er ist dann nicht mehr byte-identisch
-    zum Rohdiff (Ersetzungszeichen U+FFFD statt der Originalbytes an unlesbaren Stellen),
-    bleibt aber über wiederholte Aufrufe an demselben Stand stabil und reproduzierbar, was
-    für den Zweck hier (einen dirty Stand identifizierbar machen, nicht den Diff selbst
-    rekonstruieren) ausreicht. Für untracked Dateien stellt sich dieselbe Frage nicht --
-    die werden binär gelesen (s. oben).
+    ``errors="replace"``: even after choosing UTF-8, a diff can contain undecodable bytes
+    (e.g. binary files in the diff). The digest should still return a value for it
+    instead of failing on individual bytes -- it is then no longer byte-identical
+    to the raw diff (replacement character U+FFFD instead of the original bytes at unreadable
+    positions), but stays stable and reproducible over repeated calls on the same state, which
+    suffices for the purpose here (making a dirty state identifiable, not reconstructing the
+    diff itself). For untracked files the same question does not arise --
+    they are read in binary (see above).
     """
     try:
         diff = subprocess.run(
@@ -401,12 +401,12 @@ def _git_diff_digest() -> str | None:
 
 
 def _torch_num_threads() -> int | None:
-    """``torch.get_num_threads()``, ``None`` wenn Torch nicht installiert ist.
+    """``torch.get_num_threads()``, ``None`` if torch is not installed.
 
-    Eigene Funktion (nicht inline in :func:`environment_fingerprint`), damit Tests den
-    torch-freien Fall simulieren koennen, ohne den echten Import zu faelschen -- ``torch``
-    bleibt damit ein optionaler Import fuer dieses ansonsten torch-freie Modul, dieselbe
-    Bedingung wie beim ``version/torch``-Feld weiter unten.
+    A separate function (not inline in :func:`environment_fingerprint`), so that tests can
+    simulate the torch-free case without faking the real import -- ``torch``
+    thus remains an optional import for this otherwise torch-free module, the same
+    condition as for the ``version/torch`` field further below.
     """
     try:
         import torch
@@ -418,41 +418,41 @@ def _torch_num_threads() -> int | None:
 def environment_fingerprint(
     *, check_code_location: bool = True, ignore_paths: Iterable[Path | str] = ()
 ) -> dict[str, Any]:
-    """Umgebung, so weit sie das Ergebnis beeinflussen kann.
+    """Environment, as far as it can influence the result.
 
-    ``git/commit`` ist ``None`` (nicht mehr die Zeichenkette ``"unknown"``), wenn kein
-    Repository gefunden wird; ``git/commit_available`` macht das explizit statt es still
-    im Wert zu verstecken (Befund 33 -- siehe :class:`MissingGitCommitError`). Ein dirty
-    Arbeitsbaum (``git/dirty=True``) ist selbst mit gültigem Commit-Hash nicht
-    reproduzierbar -- der Commit beschreibt den Stand nicht vollständig; die aktuelle
-    Sitzung demonstriert das (``xlstm.py``, ``test_composite.py`` uncommittet).
-    ``git/diff_digest`` macht auch einen dirty Stand nachträglich identifizierbar. Ein
-    dirty Arbeitsbaum ist nur eine laute Warnung, kein Fehler -- sonst wäre Iteration
-    zwischen Läufen unmöglich. Ist der Arbeitsbaum dirty, der Digest aber TROTZDEM nicht
-    ermittelbar (kein ``git`` auf dem PATH, kein Repository, ``git diff`` schlägt fehl),
-    wird das NICHT still zu ``None`` -- das wäre von einem sauberen Stand (``git/dirty
-    =False``, ``git/diff_digest=None`` ebenfalls) nicht mehr unterscheidbar, exakt die
-    Fehlerklasse aus Befund 33. Stattdessen bekommt ``git/diff_digest`` den Marker
-    :data:`DIFF_DIGEST_UNAVAILABLE`, ``git/diff_digest_available=False`` macht es
-    maschinell auswertbar (Pendant zu ``git/commit_available``), und eine
-    :class:`DiffDigestUnavailableWarning` wird ausgelöst. :func:`_check_git_provenance`
-    prüft dieses Feld unter demselben ``allow_missing_git``-Schalter wie
-    ``git/commit_available`` (s. dort).
+    ``git/commit`` is ``None`` (no longer the string ``"unknown"``) if no
+    repository is found; ``git/commit_available`` makes this explicit instead of silently
+    hiding it in the value (Befund 33 -- see :class:`MissingGitCommitError`). A dirty
+    working tree (``git/dirty=True``) is not reproducible even with a valid commit hash
+    -- the commit does not fully describe the state; the current
+    session demonstrates this (``xlstm.py``, ``test_composite.py`` uncommitted).
+    ``git/diff_digest`` makes even a dirty state identifiable afterwards. A
+    dirty working tree is only a loud warning, not an error -- otherwise iteration
+    between runs would be impossible. If the working tree is dirty but the digest NEVERTHELESS
+    cannot be determined (no ``git`` on the PATH, no repository, ``git diff`` fails),
+    this does NOT silently become ``None`` -- that would no longer be distinguishable from a clean
+    state (``git/dirty=False``, ``git/diff_digest=None`` likewise), exactly the
+    error class of Befund 33. Instead ``git/diff_digest`` gets the marker
+    :data:`DIFF_DIGEST_UNAVAILABLE`, ``git/diff_digest_available=False`` makes it
+    machine-evaluable (counterpart to ``git/commit_available``), and a
+    :class:`DiffDigestUnavailableWarning` is raised. :func:`_check_git_provenance`
+    checks this field under the same ``allow_missing_git`` switch as
+    ``git/commit_available`` (see there).
 
-    ``torch/num_threads``, ``env/mkl_num_threads``, ``env/omp_num_threads``: Anlass war die
-    Faktor-5-Streuung in ``s/Epoche`` in ``befund42_tbed_exhaust_sweep.jsonl``, die ohne
-    diese Felder nur ueber die zeitlichen Cluster der ``created_unix_s``-Werte diagnostizierbar
-    war (Threading/Prozess-Ueberzeichnung, nicht Konvergenz -- siehe Analyse dazu). Die beiden
-    Env-Var-Felder sind ``None``, wenn die Variable nicht gesetzt ist -- das ist selbst die
-    Information (kein Pinning aktiv), nicht mit einem leeren String zu verwechseln.
+    ``torch/num_threads``, ``env/mkl_num_threads``, ``env/omp_num_threads``: the occasion was the
+    factor-5 spread in ``s/Epoche`` in ``befund42_tbed_exhaust_sweep.jsonl``, which without
+    these fields could only be diagnosed via the temporal clusters of the ``created_unix_s`` values
+    (threading/process oversubscription, not convergence -- see the analysis of it). The two
+    env-var fields are ``None`` if the variable is not set -- that itself is the
+    information (no pinning active), not to be confused with an empty string.
 
-    ``code/package_dir``, ``code/interpreter``, ``code/root_checked`` (siehe
-    :mod:`twinlink_ml.utils.code_location`): wo ``twinlink_ml`` tatsächlich geladen wurde und
-    mit welchem Interpreter. Liegt das geladene Paket nicht unter der Wurzel des Repositorys
-    bzw. Worktrees, aus dem der Lauf gestartet wurde (Arbeitsverzeichnis), bricht die Funktion
-    mit :class:`~twinlink_ml.utils.code_location.CodeLocationError` ab, bevor irgendein
-    Record entsteht. ``check_code_location=False`` nur für Aufrufer, die ausdrücklich keinen
-    Artefakt-Lauf protokollieren (die Felder werden trotzdem geschrieben).
+    ``code/package_dir``, ``code/interpreter``, ``code/root_checked`` (see
+    :mod:`twinlink_ml.utils.code_location`): where ``twinlink_ml`` was actually loaded from and
+    with which interpreter. If the loaded package does not lie under the root of the repository
+    or worktree from which the run was started (working directory), the function aborts
+    with :class:`~twinlink_ml.utils.code_location.CodeLocationError` before any
+    record is created. ``check_code_location=False`` only for callers that explicitly do not
+    log an artifact run (the fields are written anyway).
     """
     location = (
         require_code_location(find_repo_root())
@@ -515,24 +515,24 @@ def environment_fingerprint(
 
 
 def _check_git_provenance(record: RunRecord, *, allow_missing_git: bool) -> None:
-    """Verweigert das Schreiben eines Records mit einer Provenienz-Lücke.
+    """Refuses to write a record with a provenance gap.
 
-    Zwei Lücken werden geprüft, beide unter demselben ``allow_missing_git``-Schalter (s.
-    :class:`MissingGitCommitError` zur Begründung, warum Name und Schalter trotzdem so
-    heißen wie ursprünglich, nur nach dem ersten Fall):
+    Two gaps are checked, both under the same ``allow_missing_git`` switch (see
+    :class:`MissingGitCommitError` for the reason why name and switch are still named
+    as originally, only after the first case):
 
-    * ``git/commit_available`` kommt aus :func:`environment_fingerprint`. Fehlt der
-      Schlüssel (ein Aufrufer, der ``environment_fingerprint()`` nicht verwendet), wird das
-      als nicht verfügbar behandelt (Standard ``False``) -- lieber ein Aufrufer setzt
-      ``allow_missing_git`` bewusst, als dass ein Record wie in ``arch_composite.jsonl``
-      (``git/commit="unknown"`` in 440 Records) Monate später unauffindbar wird.
-    * ``git/diff_digest_available`` kommt ebenfalls aus :func:`environment_fingerprint`,
-      wird aber nur geprüft, wenn der Record selbst ``git/dirty=True`` trägt -- ein Record
-      ohne ``git/dirty``-Angabe (älterer Aufrufer, der das Feld nie kannte) soll dadurch
-      nicht rückwirkend als lückenhaft gelten, wo vorher gar keine Erwartung bestand; fehlt
-      der Schlüssel bei ``git/dirty=True``, gilt er als verfügbar (Standard ``True``), da
-      ``environment_fingerprint()`` das Feld inzwischen immer setzt und ein Fehlen hier eher
-      einen fremden Aufrufer als einen echten Fehlerfall anzeigt.
+    * ``git/commit_available`` comes from :func:`environment_fingerprint`. If the
+      key is missing (a caller that does not use ``environment_fingerprint()``), this is
+      treated as not available (default ``False``) -- better a caller sets
+      ``allow_missing_git`` deliberately than a record like those in ``arch_composite.jsonl``
+      (``git/commit="unknown"`` in 440 records) becomes untraceable months later.
+    * ``git/diff_digest_available`` also comes from :func:`environment_fingerprint`,
+      but is only checked if the record itself carries ``git/dirty=True`` -- a record
+      without a ``git/dirty`` entry (older caller that never knew the field) should thereby
+      not retroactively count as incomplete where there was no expectation before; if
+      the key is missing with ``git/dirty=True``, it counts as available (default ``True``), since
+      ``environment_fingerprint()`` now always sets the field and its absence here rather
+      indicates a foreign caller than a genuine error case.
     """
     commit_available = bool(record.params.get("git/commit_available", False))
     dirty = bool(record.params.get("git/dirty", False))
@@ -571,20 +571,20 @@ def _check_git_provenance(record: RunRecord, *, allow_missing_git: bool) -> None
 
 @dataclass(frozen=True, slots=True)
 class RunRecord:
-    """Ein Eintrag im Ergebnis-Log.
+    """An entry in the results log.
 
     Attributes
     ----------
     group
-        Experimentname, etwa ``"learning_curve"`` oder ``"dt_study"``.
+        Experiment name, for example ``"learning_curve"`` or ``"dt_study"``.
     params
-        Alles, was den Lauf bestimmt: Fingerprints, Seeds, Fenster- und
-        Modellkonfiguration. Muss JSON-serialisierbar sein.
+        Everything that determines the run: fingerprints, seeds, window and
+        model configuration. Must be JSON-serialisable.
     metrics
-        Skalare Ergebnisse, flach benannt (siehe
+        Scalar results, flatly named (see
         :meth:`~twinlink_ml.evaluation.evaluator.EvaluationResult.as_flat_metrics`).
     tags
-        Kurze Kennzeichnungen für Filterung, etwa Modell- und Zielgrößenname.
+        Short labels for filtering, for example model and target name.
     """
 
     group: str
@@ -595,7 +595,7 @@ class RunRecord:
     created_unix_s: float = field(default_factory=time.time)
 
     def to_json(self) -> dict[str, Any]:
-        """Serialisierbare Form."""
+        """Serialisable form."""
         return {
             "run_uid": self.run_uid,
             "group": self.group,
@@ -632,15 +632,15 @@ def training_curves(params: Mapping[str, Any], head: str) -> TrainingCurves | No
 
 
 def _relativize_path_params(params: Mapping[str, Any]) -> dict[str, Any]:
-    """Macht absolute Pfade in ``*/path``-Parametern relativ zum Repository-Wurzelverzeichnis.
+    """Makes absolute paths in ``*/path`` parameters relative to the repository root directory.
 
-    Betrifft nur künftig geschriebene Records (:meth:`JsonlExperimentLogger.log`) --
-    bestehende Zeilen in ``artifacts/runs/*.jsonl`` bleiben unangetastet. Ruft
-    :func:`_git_repo_root` (ein ``subprocess.run``) bewusst erst auf, wenn überhaupt ein
-    absoluter ``*/path``-Wert vorliegt -- der häufige Fall ohne solche Parameter bleibt so
-    ohne zusätzlichen Prozessaufruf. Ein Pfad außerhalb der Repo-Wurzel (z. B. ein
-    Checkpoint auf einem anderen Laufwerk) oder kein Git-Repository bleibt unverändert --
-    lieber ein absoluter Pfad als ein falscher relativer.
+    Affects only records written in future (:meth:`JsonlExperimentLogger.log`) --
+    existing lines in ``artifacts/runs/*.jsonl`` stay untouched. Deliberately calls
+    :func:`_git_repo_root` (a ``subprocess.run``) only when an absolute ``*/path`` value
+    is present at all -- the frequent case without such parameters thus stays
+    without an additional process call. A path outside the repo root (e.g. a
+    checkpoint on another drive) or no Git repository stays unchanged --
+    better an absolute path than a wrong relative one.
     """
     result = dict(params)
     absolute_path_keys = [
@@ -660,7 +660,7 @@ def _relativize_path_params(params: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def _jsonable(value: Any) -> Any:
-    """Rekursive Konversion in JSON-taugliche Typen."""
+    """Recursive conversion into JSON-compatible types."""
     if isinstance(value, Mapping):
         return {str(key): _jsonable(item) for key, item in value.items()}
     if isinstance(value, str | int | float | bool) or value is None:
@@ -671,42 +671,42 @@ def _jsonable(value: Any) -> Any:
 
 
 class ExperimentLogger(ABC):
-    """Senke für Ergebnis-Einträge."""
+    """Sink for result entries."""
 
     @abstractmethod
     def log(self, record: RunRecord) -> None:
-        """Einen Eintrag schreiben."""
+        """Write one entry."""
 
-    def close(self) -> None:  # noqa: B027 - absichtlich nicht abstrakt
-        """Ressourcen freigeben.
+    def close(self) -> None:  # noqa: B027 - deliberately not abstract
+        """Release resources.
 
-        Standardimplementierung tut nichts und ist bewusst **nicht** abstrakt: ein Logger
-        ohne Ressourcen soll keine leere Methode schreiben müssen.
+        The default implementation does nothing and is deliberately **not** abstract: a logger
+        without resources should not have to write an empty method.
         """
 
 
 @dataclass(slots=True)
 class JsonlExperimentLogger(ExperimentLogger):
-    """Anfügendes JSON-Lines-Log -- eine Zeile pro Lauf.
+    """Appending JSON Lines log -- one line per run.
 
-    Bewusst anfügend und nicht überschreibend: ein Lernkurvenlauf, der nach 40 von 45
-    Punkten abbricht, soll die 40 behalten. Das Format ist zeilenweise diffbar und ohne
-    Zusatzwerkzeug auswertbar.
+    Deliberately appending and not overwriting: a learning-curve run that aborts after 40 of 45
+    points should keep the 40. The format is diffable line by line and can be evaluated
+    without additional tooling.
 
     Attributes
     ----------
     allow_missing_git
-        ``False`` (Standard): :meth:`log` wirft :class:`MissingGitCommitError`, wenn der
-        Record keinen ermittelbaren ``git/commit`` trägt (siehe Befund 33). ``True``:
-        der Record wird trotzdem geschrieben, mit einer lauten Warnung -- für Umgebungen
-        ohne Git-Repository, bewusst vom Aufrufer gesetzt.
+        ``False`` (default): :meth:`log` raises :class:`MissingGitCommitError` if the
+        record carries no determinable ``git/commit`` (see Befund 33). ``True``:
+        the record is written anyway, with a loud warning -- for environments
+        without a Git repository, set deliberately by the caller.
     """
 
     path: Path
     allow_missing_git: bool = False
 
     def log(self, record: RunRecord) -> None:
-        """Eintrag anfügen."""
+        """Append an entry."""
         _check_git_provenance(record, allow_missing_git=self.allow_missing_git)
         relativized_params = _relativize_path_params(record.params)
         record = replace(record, params=relativized_params)
@@ -717,9 +717,9 @@ class JsonlExperimentLogger(ExperimentLogger):
 
 @dataclass(slots=True)
 class MlflowExperimentLogger(ExperimentLogger):
-    """Adapter auf MLflow; wird nur beim ersten Schreiben importiert.
+    """Adapter to MLflow; imported only on the first write.
 
-    Fehlt MLflow, schlägt die Konstruktion fehl und nicht erst der 40. Lauf.
+    If MLflow is missing, the construction fails and not only the 40th run.
     """
 
     experiment_name: str
@@ -729,7 +729,7 @@ class MlflowExperimentLogger(ExperimentLogger):
     def __post_init__(self) -> None:
         try:
             import mlflow
-        except ImportError as error:  # pragma: no cover - abhängig von der Umgebung
+        except ImportError as error:  # pragma: no cover - depends on the environment
             raise ImportError(
                 "MLflow ist nicht installiert. Entweder 'pip install twinlink-ml[train]' "
                 "oder JsonlExperimentLogger verwenden."
@@ -739,7 +739,7 @@ class MlflowExperimentLogger(ExperimentLogger):
         mlflow.set_experiment(self.experiment_name)
 
     def log(self, record: RunRecord) -> None:
-        """Eintrag als MLflow-Run schreiben."""
+        """Write the entry as an MLflow run."""
         _check_git_provenance(record, allow_missing_git=self.allow_missing_git)
         import mlflow
 
@@ -757,27 +757,27 @@ class MlflowExperimentLogger(ExperimentLogger):
 
 @dataclass(slots=True)
 class MultiExperimentLogger(ExperimentLogger):
-    """Mehrere Senken gleichzeitig. Reihenfolge bleibt erhalten."""
+    """Several sinks at once. The order is preserved."""
 
     loggers: tuple[ExperimentLogger, ...]
 
     def log(self, record: RunRecord) -> None:
-        """Den Eintrag an alle Senken weitergeben."""
+        """Pass the entry on to all sinks."""
         for logger in self.loggers:
             logger.log(record)
 
     def close(self) -> None:
-        """Alle Senken schließen."""
+        """Close all sinks."""
         for logger in self.loggers:
             logger.close()
 
 
 def read_jsonl(path: Path | str) -> list[RunRecord]:
-    """JSONL-Log als :class:`RunRecord`-Liste einlesen.
+    """Read a JSONL log as a :class:`RunRecord` list.
 
-    Damit ein Notebook keine JSON-Struktur selbst auspacken muss: Auswertung und Plots
-    arbeiten auf demselben Typ wie die Treiber, und eine Änderung am Log-Format schlägt
-    an einer Stelle durch statt in jeder Zelle.
+    So that a notebook does not have to unpack a JSON structure itself: evaluation and plots
+    work on the same type as the drivers, and a change to the log format takes effect
+    in one place instead of in every cell.
     """
     records: list[RunRecord] = []
     for line in Path(path).read_text(encoding="utf-8").splitlines():

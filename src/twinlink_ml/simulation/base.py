@@ -1,21 +1,21 @@
-"""Abstraktion ``ProcessSimulator`` und Trajektorien-Container.
+"""Abstraction ``ProcessSimulator`` and trajectory container.
 
-Diese Schnittstelle ist der eigentliche Ertrag von Schritt 1: sie ist gleichzeitig die
-**Schnittstellenspezifikation gegenüber TUHH-A und dem Software-Integrationspartner**. Wer einen
-Datensatz
-liefern kann, der als :class:`Trajectory` darstellbar ist, kann ohne Änderung am
-Trainingscode eingehängt werden.
+This interface is the actual yield of step 1: it is at the same time the
+**interface specification towards TUHH-A and the software integration partner**. Anyone who can
+deliver a dataset
+that can be represented as a :class:`Trajectory` can be plugged in without changing the
+training code.
 
-Geplante Implementierungen:
+Planned implementations:
 
-* :class:`~twinlink_ml.simulation.greybox.GreyBoxFluidBedGranulator` -- jetzt
-* ``DyssolSimulator`` -- ab Verfügbarkeit der Python-Bibliothek des
-  Software-Integrationspartners (M7)
-* ``ReplaySimulator`` -- Wiedergabe gemessener Anwendungspartner-/Labordaten als Trajektorien
-* ``SurrogateSimulator`` -- gelerntes Modell als Environment für TD3/SAC
+* :class:`~twinlink_ml.simulation.greybox.GreyBoxFluidBedGranulator` -- now
+* ``DyssolSimulator`` -- once the Python library of the
+  software integration partner is available (M7)
+* ``ReplaySimulator`` -- replay of measured application-partner/lab data as trajectories
+* ``SurrogateSimulator`` -- learned model as environment for TD3/SAC
 
-Der Rollout ist als Template-Methode in der Basisklasse implementiert: eine neue
-Datenquelle muss nur ``step`` und die Namenslisten bereitstellen (Open-Closed).
+The rollout is implemented as a template method in the base class: a new
+data source only needs to provide ``step`` and the name lists (open-closed).
 """
 
 from __future__ import annotations
@@ -34,7 +34,7 @@ IntArray = NDArray[np.int64]
 
 @dataclass(frozen=True, slots=True)
 class StepResult:
-    """Ergebnis eines Abtastschritts."""
+    """Result of one sampling step."""
 
     state: Array
     """Zustandsvektor, Form ``(batch, n_state)``."""
@@ -48,11 +48,11 @@ class StepResult:
 
 @dataclass(frozen=True, slots=True)
 class Trajectory:
-    """Ein Simulationslauf (oder ein Batch davon).
+    """One simulation run (or a batch of them).
 
-    Die Achsenkonvention ist ``(batch, time, channel)`` -- identisch zu der, die die
-    Fensterung in ``data/`` erwartet. ``run_id`` ist die Einheit, auf der die Splits
-    gebildet werden (**nie** auf Fensterebene, siehe Arbeitsplan Schritt 5).
+    The axis convention is ``(batch, time, channel)`` -- identical to the one the
+    windowing in ``data/`` expects. ``run_id`` is the unit on which the splits
+    are formed (**never** at window level, see work plan step 5).
     """
 
     run_id: tuple[str, ...]
@@ -130,7 +130,7 @@ class Trajectory:
         return int(self.actions.shape[1])
 
     def select(self, index: int) -> Trajectory:
-        """Einzelnen Lauf herauslösen, Batch-Dimension bleibt erhalten."""
+        """Extract a single run; the batch dimension is kept."""
         sl = slice(index, index + 1)
         return Trajectory(
             run_id=(self.run_id[index],),
@@ -152,11 +152,11 @@ class Trajectory:
         )
 
     def concatenate(self, other: Trajectory) -> Trajectory:
-        """Läufe zusammenführen. Vorbedingung: gleiches Zeitraster und ``projection_active``.
+        """Merge runs. Precondition: same time grid and ``projection_active``.
 
-        Unterschiedliches ``projection_active`` wird nicht stillschweigend zusammengefuehrt --
-        das wuerde Laeufe mit und ohne Sicherheitsprojektion ununterscheidbar vermischen, ein
-        Datenintegritaetsfehler derselben Art wie der bereits geprueften Zeitraster-Vorbedingung.
+        Differing ``projection_active`` is not merged silently -- that would mix runs with
+        and without safety projection indistinguishably, a data integrity error of the same
+        kind as the already checked time-grid precondition.
         """
         if not np.allclose(self.time_s, other.time_s):
             raise ValueError("Trajektorien mit unterschiedlichem Zeitraster")
@@ -200,7 +200,7 @@ class Trajectory:
 
 
 class ProcessSimulator(ABC):
-    """Quelle von Trajektorien für Training und Evaluation."""
+    """Source of trajectories for training and evaluation."""
 
     @property
     @abstractmethod
@@ -228,83 +228,83 @@ class ProcessSimulator(ABC):
 
     @abstractmethod
     def initial_state(self, n_batch: int) -> Array:
-        """Zustandsvektor der Form ``(batch, n_state)`` im Anfangsbetriebspunkt."""
+        """State vector of shape ``(batch, n_state)`` at the initial operating point."""
 
     @abstractmethod
     def step(self, state: Array, action: Array, disturbance: Array) -> StepResult:
-        """Ein Abtastschritt von ``t`` nach ``t + sample_time_s``."""
+        """One sampling step from ``t`` to ``t + sample_time_s``."""
 
     @abstractmethod
     def measure(self, outputs: Array, rng: np.random.Generator) -> Array:
-        """Sensormodell: verrauschte, verzögerte Beobachtung der Ausgangsgrößen."""
+        """Sensor model: noisy, delayed observation of the output variables."""
 
     def time_constants(self, state: Array, action: Array, disturbance: Array) -> dict[str, float]:
-        """Zeitkonstanten im linearisierten Arbeitspunkt, falls das Modell sie liefert.
+        """Time constants at the linearised operating point, if the model provides them.
 
-        Optionale Fähigkeit statt Pflichtmethode: das Grey-Box-Modell kann seine
-        Jacobi-Matrix numerisch differenzieren, ein künftiger Dyssol-Adapter oder ein
-        gelerntes Surrogat womöglich nicht. Die Standardimplementierung wirft, damit
-        `simulator.time_constants(...)` unter mypy strict typgeprüft bleibt -- ohne diese
-        Deklaration bräuchte jeder Aufrufer ein `# type: ignore[attr-defined]`, das bei der
-        nächsten Refaktorierung so leicht unbemerkt falsch wird wie richtig.
+        Optional capability instead of mandatory method: the grey-box model can
+        differentiate its Jacobian numerically, a future Dyssol adapter or a
+        learned surrogate possibly not. The default implementation raises, so that
+        `simulator.time_constants(...)` stays type-checked under mypy strict -- without this
+        declaration every caller would need a `# type: ignore[attr-defined]`, which at the
+        next refactoring becomes wrong unnoticed as easily as right.
 
-        :raises NotImplementedError: wenn der Simulator keine Zeitkonstanten unterstützt.
-            Aufrufer, die das behandeln müssen, prüfen vorher mit
-            ``hasattr(simulator, "time_constants")`` -- das bleibt gültig, weil die Methode
-            auf jeder Instanz existiert, nur eben manchmal nicht implementiert ist.
+        :raises NotImplementedError: if the simulator does not support time constants.
+            Callers that must handle this check beforehand with
+            ``hasattr(simulator, "time_constants")`` -- that stays valid because the method
+            exists on every instance, it is just sometimes not implemented.
         """
         raise NotImplementedError(f"{type(self).__name__} liefert keine Zeitkonstanten")
 
-    def reset_sensor(self) -> None:  # noqa: B027 - absichtlich nicht abstrakt
-        """Internen Zustand des Sensormodells verwerfen.
+    def reset_sensor(self) -> None:  # noqa: B027 - deliberately not abstract
+        """Discard the internal state of the sensor model.
 
-        Notwendig, weil das Sensormodell ein Verzögerungsglied erster Ordnung enthält und
-        damit **Zustand über die Zeitschritte hinweg** trägt. Wird dieselbe
-        Simulatorinstanz zweimal ausgerollt, startet der Filter sonst mit dem Endzustand
-        des vorigen Laufs: eine Kopplung zwischen Läufen, die es im Prozess nicht gibt
-        und die als Fehler nirgends sichtbar wäre. Die Standardimplementierung tut
-        nichts -- ein Simulator ohne Sensordynamik hat nichts zurückzusetzen.
+        Necessary because the sensor model contains a first-order lag element and
+        thus carries **state across the time steps**. If the same
+        simulator instance is rolled out twice, the filter otherwise starts with the final state
+        of the previous run: a coupling between runs that does not exist in the process
+        and that would be visible as an error nowhere. The default implementation does
+        nothing -- a simulator without sensor dynamics has nothing to reset.
         """
 
     @property
     def projection_active(self) -> bool:
-        """Ob :meth:`project_action` fuer diesen Simulator tatsaechlich etwas clippt.
+        """Whether :meth:`project_action` actually clips anything for this simulator.
 
-        Generischer Schalter-Zustand fuer :meth:`rollout`: bestimmt, ob die Buchfuehrung
-        (``requested_actions``/``n_projected_steps`` auf der resultierenden
-        :class:`Trajectory`) ueberhaupt gefuehrt wird. Default False -- ein Simulator ohne
-        Sicherheitsprojektion (Dyssol-Adapter, Replay, Surrogat) muss nichts überschreiben.
+        Generic switch state for :meth:`rollout`: determines whether the bookkeeping
+        (``requested_actions``/``n_projected_steps`` on the resulting
+        :class:`Trajectory`) is kept at all. Default False -- a simulator without
+        safety projection (Dyssol adapter, replay, surrogate) need not override anything.
         """
         return False
 
     def project_action(self, state: Array, action: Array, disturbance: Array) -> Array:
-        """Stoffspezifische Sicherheitsprojektion, VOR dem Schritt am wahren Zustand.
+        """Material-specific safety projection, BEFORE the step, on the true state.
 
-        Generischer Aufrufpunkt in :meth:`rollout`, direkt vor ``step()`` -- Vorgabe aus dem
-        Auftrag: Margen wie Fluidisierungsgrenzen sind zustandsabhängig und müssen aus dem
-        WAHREN, unverrauschten Zustand berechnet werden (nie aus einer Messung), unmittelbar
-        vor dem Integrationsschritt, dessen Aktion sie einschränken. Die generische
-        Basisimplementierung tut nichts -- Simulatoren mit einer solchen Projektion (siehe
+        Generic call point in :meth:`rollout`, directly before ``step()`` -- requirement from the
+        task: margins such as fluidization limits are state-dependent and must be computed from
+        the TRUE, noise-free state (never from a measurement), immediately
+        before the integration step whose action they restrict. The generic
+        base implementation does nothing -- simulators with such a projection (see
         :meth:`~twinlink_ml.simulation.greybox.GreyBoxFluidBedGranulator.project_action`)
-        überschreiben sowohl diese Methode als auch :attr:`projection_active`.
+        override both this method and :attr:`projection_active`.
         """
-        del state, disturbance  # ungenutzt in der generischen No-Op-Basisimplementierung
+        del state, disturbance  # unused in the generic no-op base implementation
         return action
 
     def remeasure(self, outputs: FloatArray, *, seed: int) -> FloatArray:
-        """Sensormodell erneut auf bereits berechnete Ausgangsgrößen anwenden.
+        """Apply the sensor model again to already computed output variables.
 
-        Warum das eine eigene Methode ist und nicht ein zweiter ``rollout``: das
-        Prozessmodell ist deterministisch, der Seed betrifft **ausschließlich** das
-        Sensormodell. Ein Rausch-Seed oder ein Rauschniveau zu variieren erfordert
-        deshalb keine neue Integration. Für Schritt 5 ist das der Unterschied zwischen
-        einer Simulation je Datensatz-Realisierung und einer je Kombination aus
-        Datensatz, Rausch-Seed und Rauschniveau.
+        Why this is a method of its own and not a second ``rollout``: the
+        process model is deterministic, the seed affects **exclusively** the
+        sensor model. Varying a noise seed or a noise level therefore requires
+        no new integration. For step 5 this is the difference between
+        one simulation per dataset realisation and one per combination of
+        dataset, noise seed and noise level.
 
-        Die Schleife über die Zeit ist absichtlich dieselbe wie in :meth:`rollout` --
-        eine vektorisierte Variante würde den Zufallsgenerator in anderer Reihenfolge
-        verbrauchen und wäre nicht bitgleich zum Rollout. Ein Test sichert die Gleichheit
-        zu.
+        The loop over time is deliberately the same as in :meth:`rollout` --
+        a vectorised variant would consume the random generator in a different order
+        and would not be bit-identical to the rollout. A test guarantees the
+        equality.
         """
         self.reset_sensor()
         backend = self.backend
@@ -329,15 +329,15 @@ class ProcessSimulator(ABC):
         seed: int = 0,
         initial_state: Array | None = None,
     ) -> Trajectory:
-        """Trajektorie zu vorgegebenen Anregungs- und Störsignalen.
+        """Trajectory for given excitation and disturbance signals.
 
-        Template-Methode: die Schleife ist hier festgelegt, die Physik in ``step``.
+        Template method: the loop is fixed here, the physics in ``step``.
 
-        :param actions: Form ``(batch, time, n_action)`` in Ingenieurseinheiten
-        :param disturbances: Form ``(batch, time, n_disturbance)``
-        :param seed: Seed **ausschließlich** für das Sensormodell. Das Prozessmodell
-            selbst ist deterministisch -- Reproduzierbarkeit hängt damit nur an
-            (Config, Anregung, Seed).
+        :param actions: shape ``(batch, time, n_action)`` in engineering units
+        :param disturbances: shape ``(batch, time, n_disturbance)``
+        :param seed: seed **exclusively** for the sensor model. The process model
+            itself is deterministic -- reproducibility thus depends only on
+            (config, excitation, seed).
         """
         self._validate_inputs(actions, disturbances)
         n_batch, n_time, _ = actions.shape
@@ -351,10 +351,10 @@ class ProcessSimulator(ABC):
         measurements: list[FloatArray] = []
         diagnostics: dict[str, list[FloatArray]] = {}
 
-        # Generischer Projektions-Schalter: Buchfuehrung (requested_actions/
-        # n_projected_steps) wird nur gefuehrt, wenn ueberhaupt konfiguriert -- sonst bleibt
-        # der Rollout so leicht wie zuvor und die Trajectory bitgleich zum Vor-Projektions-
-        # Stand (siehe Trajectory-Feld-Docstrings und den Regressionstest dazu).
+        # Generic projection switch: bookkeeping (requested_actions/
+        # n_projected_steps) is kept only if configured at all -- otherwise the
+        # rollout stays as light as before and the Trajectory bit-identical to the
+        # pre-projection state (see the Trajectory field docstrings and the regression test).
         projection_active = self.projection_active
         realised_actions_steps: list[FloatArray] = []
         requested_actions_steps: list[FloatArray] = []
@@ -363,9 +363,9 @@ class ProcessSimulator(ABC):
         for k in range(n_time):
             requested_action = backend.asarray(actions[:, k, :])
             disturbance = backend.asarray(disturbances[:, k, :])
-            # `state` ist hier der interne, WAHRE Simulatorzustand dieser Iteration --
-            # unveraendert von self.measure() weiter unten. project_action() darf sich
-            # deshalb nie auf eine Messung stuetzen, siehe dessen Vertrag.
+            # `state` is here the internal, TRUE simulator state of this iteration --
+            # unchanged by self.measure() further below. project_action() must therefore
+            # never rely on a measurement, see its contract.
             action = self.project_action(state, requested_action, disturbance)
             action_np = backend.to_numpy(action)
             realised_actions_steps.append(action_np)
@@ -387,10 +387,10 @@ class ProcessSimulator(ABC):
         return Trajectory(
             run_id=run_id if run_id is not None else tuple(f"run_{i:05d}" for i in range(n_batch)),
             time_s=np.arange(1, n_time + 1, dtype=np.float64) * self.sample_time_s,
-            # REALISIERTE Aktion (nach project_action()) -- speist Modellmerkmale und
-            # Massenbilanz und muss zum integrierten Zustand passen. Bei
-            # projection_active=False bitgleich zum rohen `actions`-Argument, weil
-            # project_action() dann fuer jeden Schritt die Identitaet ist.
+            # REALISED action (after project_action()) -- feeds model features and
+            # mass balance and must match the integrated state. With
+            # projection_active=False bit-identical to the raw `actions` argument, because
+            # project_action() is then the identity for every step.
             actions=np.stack(realised_actions_steps, axis=1),
             disturbances=np.asarray(disturbances, dtype=np.float64),
             states=np.stack(states, axis=1),
@@ -404,7 +404,7 @@ class ProcessSimulator(ABC):
         )
 
     def run_metadata(self, *, seed: int) -> dict[str, Any]:
-        """Wird in jede Trajektorie geschrieben und später ins Experiment-Tracking."""
+        """Written into every trajectory and later into the experiment tracking."""
         return {
             "simulator": type(self).__name__,
             "backend": self.backend.name,

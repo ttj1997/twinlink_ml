@@ -1,17 +1,17 @@
-r"""SA1: Auf welcher Testmenge gilt Befund 58s Faktor 6.4-7.8 (energy_target, statische
-Regression gegen GRU/LSTM/Transformer)? Lädt dieselben zwei Logs wie OA5
-(``scripts/analyze_arch_learning_curve_extended.py``, Commit ``bc6b097``), OHNE erneut zu
-trainieren, und rechnet den Faktor je Testmenge, Horizont und Budgetpunkt aus --
-``rmse_run_median_physical(static) / rmse_run_median_physical(Modell)``, Median über die 5
-Seeds je Zelle.
+r"""SA1: On which test set does Befund 58's factor 6.4-7.8 (energy_target, static
+regression against GRU/LSTM/Transformer) hold? Loads the same two logs as OA5
+(``scripts/analyze_arch_learning_curve_extended.py``, commit ``bc6b097``), WITHOUT training
+again, and computes the factor per test set, horizon and budget point --
+``rmse_run_median_physical(static) / rmse_run_median_physical(Modell)``, median over the 5
+seeds per cell.
 
-Hintergrund: Befund 51 (K5) zeigte an `product_moisture_kg_per_kg`, dass ein auf der
-angeregten Testmenge gemessener Faktor (19-24) auf dem betriebsrelevanten
-Konstantlauf-Holdout auf 1.31 einbrechen kann, weil die dort verwendete Baseline
-(Persistenz) zwischen den Testmengen strukturell unterschiedlich stark ist. Dieses Skript
-prüft, ob derselbe Effekt bei `energy_target`/statischer Regression vorliegt.
+Background: Befund 51 (K5) showed on `product_moisture_kg_per_kg` that a factor measured on
+the excited test set (19-24) can collapse to 1.31 on the operationally relevant
+constant-run holdout, because the baseline used there (persistence) differs structurally
+in strength between the test sets. This script checks whether the same effect is present
+for `energy_target`/static regression.
 
-Aufruf::
+Usage::
 
     python scripts/analyze_energy_target_static_factor.py
 """

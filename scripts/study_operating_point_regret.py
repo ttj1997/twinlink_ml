@@ -1,135 +1,136 @@
-r"""BB1-BB3: verschiebt sich der energieoptimale Betriebspunkt über den Störgrößenbereich.
+r"""BB1-BB3: does the energy-optimal operating point shift across the disturbance range.
 
-Voruntersuchung zur RL-Eignung -- KEIN Reinforcement Learning, KEIN Netztraining, KEIN
-Datensatz-Sweep. Nur ``solve_steady_state`` (``simulation/steady_state.py``) plus klassische
-Optimierung je Gitterpunkt. Die Frage: hängt der Nutzen einer gelernten Policy (Abbildung
-Störgrößen -> Sollwerte) überhaupt an etwas Messbarem, oder tut es ein fester Betriebspunkt?
+Preliminary study on RL suitability -- NO reinforcement learning, NO network training, NO
+dataset sweep. Only ``solve_steady_state`` (``simulation/steady_state.py``) plus classical
+optimisation per grid point. The question: does the benefit of a learned policy (mapping
+disturbances -> set points) depend on anything measurable at all, or does a fixed operating
+point do the job?
 
-BB1 -- Problemdefinition
+BB1 -- Problem definition
 -------------------------
-Optimierungsvariablen (die späteren RL-Aktionen), Grenzen aus ``ActionSpaceConfig``
-(``conf/process/greybox_gab_placeholder.yaml``, Abschnitt ``actions``), NICHT neu gesetzt:
+Optimisation variables (the later RL actions), bounds from ``ActionSpaceConfig``
+(``conf/process/greybox_gab_placeholder.yaml``, section ``actions``), NOT set anew:
 
     inlet_temperature_celsius, gas_velocity_m_per_s, nozzle_pressure_bar
 
-FEST, nicht optimiert: ``spray_rate_kg_per_h`` am Nominalwert. Begründung: bei konstantem
-Suspensionsfeststoffanteil bestimmt die Sprührate den Durchsatz. Ohne fixierten Durchsatz
-ist "Energie minimieren" entartet -- das Optimum wäre Sprührate null, also keine Produktion.
+FIXED, not optimised: ``spray_rate_kg_per_h`` at its nominal value. Reason: at a constant
+suspension solid fraction the spray rate determines the throughput. Without a fixed
+throughput, "minimise energy" is degenerate -- the optimum would be spray rate zero, i.e. no
+production.
 
-Störgrößengitter: ``ambient_temperature_celsius`` x ``ambient_relative_humidity``, Bereiche
-aus ``DisturbanceSpaceConfig``, äquidistant. ``suspension_solid_fraction`` fest am
-Nominalwert (dritte Störgröße, hier nicht Teil des Gitters -- eine 3D-Störgrößenkarte wäre
-für eine Vorabschätzung Überbau). Standardgitter 5x5 (Laufzeit gemessen: siehe unten);
-7x7 über ``--grid-size`` erreichbar, laut Laufzeitmessung deutlich teurer (Faktor ~2, siehe
-``--grid-size``-Hilfetext) -- "akzeptable Laufzeit" ist damit eine explizite Entscheidung
-beim Aufruf, keine im Skript vorentschiedene.
+Disturbance grid: ``ambient_temperature_celsius`` x ``ambient_relative_humidity``, ranges
+from ``DisturbanceSpaceConfig``, equidistant. ``suspension_solid_fraction`` fixed at its
+nominal value (third disturbance, not part of the grid here -- a 3D disturbance map would be
+over-engineering for a preliminary estimate). Default grid 5x5 (run time measured: see
+below); 7x7 reachable via ``--grid-size``, according to the run-time measurement clearly more
+expensive (factor ~2, see the ``--grid-size`` help text) -- "acceptable run time" is thus an
+explicit decision at invocation, not one pre-decided in the script.
 
-Zielfunktion: ``diagnostics["energy_target"]`` im Beharrungszustand -- respektiert die im
-Projekt noch offene Formulierung (``energy.target: power_kw | specific_kwh_per_kg`` in der
-Config, siehe ``simulation/energy.py``), ohne sie hier neu zu entscheiden. Zusätzlich wird
-IMMER der spezifische Verbrauch ``power_total_kw / (3600 * product_mass_flow_kg_per_s)``
-berichtet, unabhängig davon, was ``energy.target`` gerade ist -- welche der beiden
-Formulierungen am Ende die Zielgröße wird, ist im Projekt offen (siehe ``energy.py``-
-Docstring), diese Studie beantwortet nur, wie sich der Betriebspunkt je nach Wahl anfühlt.
+Objective: ``diagnostics["energy_target"]`` in steady state -- respects the formulation still
+open in the project (``energy.target: power_kw | specific_kwh_per_kg`` in the config, see
+``simulation/energy.py``) without deciding it anew here. In addition, the specific
+consumption ``power_total_kw / (3600 * product_mass_flow_kg_per_s)`` is ALWAYS reported,
+regardless of what ``energy.target`` currently is -- which of the two formulations ends up
+as the target is open in the project (see the ``energy.py`` docstring); this study only
+answers how the operating point feels depending on the choice.
 
-Harte Nebenbedingungen (ein Punkt, der eine davon verletzt, ist UNZULÄSSIG -- keine
-Straffunktion verwischt das in der Berichterstattung; der interne Optimierer nutzt eine
-Straffunktion nur als Suchheuristik, siehe ``_normalized_violation`` unten, aber jede
-berichtete Zulässigkeit kommt aus einer eigenen, ungewichteten Prüfung am Endpunkt):
+Hard constraints (a point that violates one of them is INFEASIBLE -- no penalty function
+blurs that in the reporting; the internal optimiser uses a penalty function only as a search
+heuristic, see ``_normalized_violation`` below, but every reported feasibility comes from a
+separate, unweighted check at the end point):
 
-1. ``product_moisture_kg_per_kg <= material.critical_moisture_kg_per_kg`` (vorhandenes Feld).
-2. ``u_mf(d50) <= gas_velocity <= u_terminal(d50)``, ausgewertet am Beharrungszustand mit
-   ``simulation/fluidization.py`` (identische Rechnung wie die Diagnosegrößen aus
+1. ``product_moisture_kg_per_kg <= material.critical_moisture_kg_per_kg`` (existing field).
+2. ``u_mf(d50) <= gas_velocity <= u_terminal(d50)``, evaluated at steady state with
+   ``simulation/fluidization.py`` (identical calculation to the diagnostic quantities from
    ``solve_steady_state``).
-3. ``bed_temperature_celsius <= 80`` -- ein frei gesetzter Platzhalter (Befund 46, siehe
-   ``docs/04_stand_ap1.md``), separat berichtet, OB er bindet: bindet er, ist das ein
-   Artefakt der (unbelegten) Grenze und keine Aussage über die reale Anlage.
+3. ``bed_temperature_celsius <= 80`` -- a freely set placeholder (Befund 46, see
+   ``docs/04_stand_ap1.md``), reported separately WHETHER it binds: if it binds, that is an
+   artifact of the (unsupported) bound and not a statement about the real plant.
 
-Zusätzlich muss ``SteadyStateSolution.feasible`` (der Löser-eigene Gültigkeitscheck:
-Sättigungsgrad <= 1, Partikelfeuchte im durch die Sorptionsisotherme plausiblen Bereich)
-erfüllt sein -- das ist keine vierte Prozess-Nebenbedingung, sondern die Bedingung, dass der
-gefundene "Beharrungszustand" überhaupt ein gültiger ist (siehe ``steady_state.py``-
-Moduldocstring, Abschnitt "Zulässigkeit ist ein Flag, keine Exception"). Ohne sie ließe sich
-ein numerisch entarteter Punkt für eine Optimierung "gewinnen".
+In addition, ``SteadyStateSolution.feasible`` (the solver's own validity check: degree of
+saturation <= 1, particle moisture in the range plausible from the sorption isotherm) must
+hold -- this is not a fourth process constraint but the condition that the "steady state"
+found is a valid one at all (see the ``steady_state.py`` module docstring, section
+"Feasibility is a flag, not an exception"). Without it, a numerically degenerate point
+could "win" an optimisation.
 
-BB2 -- Optimierung je Gitterpunkt
+BB2 -- Optimisation per grid point
 -----------------------------------
-Drei Variablen, also ``scipy.optimize.differential_evolution`` (robust gegen nichtkonvexe
-zulässige Bereiche -- das Fluidisierungsfenster und die Feuchtegrenze schneiden die Box auf
-eine im Allgemeinen nicht konvexe Teilmenge), gefolgt von einer lokalen Verfeinerung
-(Nelder-Mead, nicht gradientenbasiert: ``evaluate_derivative`` enthält ``clip``/``max``-
-Terme, an denen ein Gradientenverfahren wie in ``steady_state.py`` begründet vermieden
-werden sollte). Seed fest (``--seed``, Default 0).
+Three variables, hence ``scipy.optimize.differential_evolution`` (robust against non-convex
+feasible regions -- the fluidization window and the moisture bound cut the box down to a
+subset that is in general not convex), followed by a local refinement (Nelder-Mead, not
+gradient-based: ``evaluate_derivative`` contains ``clip``/``max`` terms at which a gradient
+method should, for good reason, be avoided, as in ``steady_state.py``). Seed fixed
+(``--seed``, default 0).
 
-Laufzeit-Kompromiss (gemessen auf dieser Maschine, 16 Kerne): ein einzelner
-``solve_steady_state``-Aufruf mit den Löser-Defaults (100 Bisektionsschritte, Toleranz
-1e-13) kostet ~0.46 s. ``differential_evolution`` mit Default-Einstellungen (popsize=15)
-bräuchte dafür pro Gitterpunkt mehrere tausend Aufrufe -- unpraktikabel. Zwei Anpassungen,
-beide NUR für die Suche, nicht für das berichtete Ergebnis:
+Run-time compromise (measured on this machine, 16 cores): a single ``solve_steady_state``
+call with the solver defaults (100 bisection steps, tolerance 1e-13) costs ~0.46 s.
+``differential_evolution`` with default settings (popsize=15) would need several thousand
+calls per grid point for this -- impractical. Two adjustments, both ONLY for the search, not
+for the reported result:
 
-* Die Bisektion läuft während der Suche mit gelockerter Toleranz
-  (``--search-max-iterations``/``--search-tolerance``, Default 30 / 1e-7 statt 100 / 1e-13
-  -- Residuum am Nominalpunkt damit ~2e-9 statt ~5e-15, für eine Optimierungssuche
-  irrelevant). Der ENDGÜLTIG berichtete Punkt wird immer mit den Löser-Defaults neu
-  gelöst.
-* Parallelisiert wird ÜBER DIE GITTERPUNKTE, nicht innerhalb der DE-Population eines
-  einzelnen Punkts (``differential_evolution(workers=...)``). Erster Entwurf machte es
-  umgekehrt -- Populations-Parallelität über alle Kerne, dann eine (grundsätzlich
-  serielle) Nelder-Mead-Verfeinerung. Gemessen: die Verfeinerung allein kostete dabei so
-  viel Wandzeit wie die parallele DE-Phase davor, während 15 von 16 Kernen währenddessen
-  nichts taten -- pro Gitterpunkt exakt das Muster "N Kandidaten parallel, dann einer
-  allein, der so lange braucht wie die parallele Phase". Da die 25-49 Gitterpunkte
-  echt unabhängig sind, verteilt ``main()`` sie stattdessen über einen Prozess-Pool
-  (``pool.imap_unordered``, ``optimize_grid_point`` läuft je Punkt einsträngig), was
-  ALLE Kerne über die GESAMTE Rechenzeit jedes Punkts (DE **und** Verfeinerung) auslastet
-  und zusätzlich die Synchronisationsbarriere entfernt, die ``differential_evolution``
-  sonst am Ende jeder Generation einlegt (eine langsame Population verzögert dort die
-  gesamte Generation, hier nur ihren eigenen Gitterpunkt). Gemessene Kosten EINES
-  Gitterpunkts, einsträngig, mit popsize=10/maxiter=50: DE ~90 s, Verfeinerung
-  (Nelder-Mead, ``maxiter=200``) zusätzlich bis zu ~30-60 s -- macht mit 16 parallelen
-  Gitterpunkten (``ceil(25/16)=2`` Runden) ein Vielfaches weniger Wandzeit für das
-  gesamte Gitter als die anfängliche Population-Parallelität pro Punkt.
+* During the search the bisection runs with a relaxed tolerance
+  (``--search-max-iterations``/``--search-tolerance``, default 30 / 1e-7 instead of 100 / 1e-13
+  -- residual at the nominal point thus ~2e-9 instead of ~5e-15, irrelevant for an
+  optimisation search). The FINALLY reported point is always solved again with the solver
+  defaults.
+* Parallelisation is ACROSS THE GRID POINTS, not within the DE population of a single point
+  (``differential_evolution(workers=...)``). The first draft did it the other way round --
+  population parallelism across all cores, then a (fundamentally serial) Nelder-Mead
+  refinement. Measured: the refinement alone cost as much wall time as the parallel DE phase
+  before it, while 15 of 16 cores did nothing in the meantime -- per grid point exactly the
+  pattern "N candidates in parallel, then one alone that takes as long as the parallel
+  phase". Since the 25-49 grid points are truly independent, ``main()`` instead distributes
+  them over a process pool (``pool.imap_unordered``, ``optimize_grid_point`` runs
+  single-threaded per point), which keeps ALL cores busy over the ENTIRE computing time of
+  each point (DE **and** refinement) and additionally removes the synchronisation barrier
+  that ``differential_evolution`` otherwise inserts at the end of every generation (there a
+  slow population delays the entire generation, here only its own grid point). Measured cost
+  of ONE grid point, single-threaded, with popsize=10/maxiter=50: DE ~90 s, refinement
+  (Nelder-Mead, ``maxiter=200``) an additional up to ~30-60 s -- with 16 parallel grid points
+  (``ceil(25/16)=2`` rounds) this makes many times less wall time for the entire grid than
+  the initial population parallelism per point.
 
-Nicht konvergierte Gitterpunkte (``differential_evolution``- oder Nelder-Mead-Ergebnis mit
-``success=False``) werden GEMELDET (Feld ``de_converged``/``refine_converged`` je
-Gitterpunkt), nicht übersprungen -- der beste gefundene Punkt wird trotzdem verwendet und
-ausgewiesen.
+Non-converged grid points (``differential_evolution`` or Nelder-Mead result with
+``success=False``) are REPORTED (field ``de_converged``/``refine_converged`` per grid point),
+not skipped -- the best point found is still used and flagged.
 
-BB3 -- Regret eines festen Betriebspunkts
+BB3 -- Regret of a fixed operating point
 --------------------------------------------
-(a) Fester Betriebspunkt = der Sollwertsatz, der die MITTLERE Energie über das Gitter
-    minimiert, UNTER DER NEBENBEDINGUNG, an JEDEM Gitterpunkt zulässig zu sein (sonst ist er
-    als Vergleich untauglich, siehe Auftrag). Gleiche Optimierungsmaschinerie wie BB2, nur
-    mit über das Gitter gemittelter Zielfunktion und über alle Gitterpunkte summierter
-    Verletzung; die Gitter-Auswertung je Kandidat wird über einen eigenen, wiederverwendeten
-    Multiprocessing-Pool parallelisiert (``differential_evolution`` selbst läuft dafür mit
-    ``workers=1`` -- verschachtelte Pools sind nicht vorgesehen).
+(a) Fixed operating point = the set-point set that minimises the MEAN energy over the grid,
+    SUBJECT TO THE CONSTRAINT of being feasible at EVERY grid point (otherwise it is
+    unsuitable as a comparison, see the task). Same optimisation machinery as BB2, only with
+    the objective averaged over the grid and the violation summed over all grid points; the
+    grid evaluation per candidate is parallelised over a separate, reused multiprocessing
+    pool (``differential_evolution`` itself runs with ``workers=1`` for this -- nested pools
+    are not intended).
 
-    Existiert kein überall zulässiger fester Punkt, wird das SOFORT und VOR allen weiteren
-    Zahlen gemeldet (Kriterium: die beste im Hauptlauf gefundene Kandidatenlösung ist an
-    mindestens einem Gitterpunkt unzulässig; zur Erhärtung läuft dann zusätzlich eine zweite
-    Suche, die ausschließlich die summierte Verletzung minimiert -- bleibt auch deren
-    Minimum > 0, ist das ein empirischer Befund dieser Suche, kein Beweis, aber die
-    bestmögliche Aussage ohne erschöpfende Suche über eine kontinuierliche Box).
+    If no fixed point feasible everywhere exists, this is reported IMMEDIATELY and BEFORE all
+    other numbers (criterion: the best candidate solution found in the main run is infeasible
+    at at least one grid point; for corroboration a second search then runs in addition,
+    which minimises only the summed violation -- if its minimum also stays > 0, that is an
+    empirical finding of this search, not a proof, but the best possible statement without
+    an exhaustive search over a continuous box).
 
-(b) Regret je Gitterpunkt = Energie(fester Punkt) - Energie(instanzweises Optimum aus BB2),
-    Median/95-Perzentil/Maximum, absolut (kW bzw. kWh/kg) und relativ (%).
+(b) Regret per grid point = energy(fixed point) - energy(instance-wise optimum from BB2),
+    median/95th percentile/maximum, absolute (kW or kWh/kg) and relative (%).
 
-(c) Spannweite der optimalen Sollwerte über das Gitter je Variable, absolut und als Anteil
-    der jeweiligen Stellgrößenspanne (``ActionBound.span``).
+(c) Range of the optimal set points over the grid per variable, absolute and as a fraction
+    of the respective action span (``ActionBound.span``).
 
-Einordnung (keine Empfehlung): der Regret ist die OBERGRENZE dessen, was eine adaptive
-Regelung gegenüber einem festen Betriebspunkt einsparen kann. Im Promillebereich genügt ein
-fester Betriebspunkt; im Prozentbereich ist eine Policy begründet.
+Classification (no recommendation): the regret is the UPPER BOUND of what an adaptive
+control can save compared with a fixed operating point. In the per-mille range a fixed
+operating point suffices; in the percent range a policy is justified.
 
-Aufruf::
+Invocation::
 
     python scripts/study_operating_point_regret.py --output artifacts/runs/bb1_bb3.json
 
-BB4 (Sensitivität gegen die 80-°C-Bettemperaturgrenze) ist NICHT Teil dieses Skripts -- laut
-Auftrag nur relevant, falls BB3 zeigt, dass ``bed_temperature_celsius <= 80`` an relevanten
-Gitterpunkten bindet. Das Skript berichtet dafür die nötige Vorbedingung (Feld
-``binding_bed_temperature`` je Gitterpunkt); die konkrete Sensitivitätsanalyse folgt separat.
+BB4 (sensitivity to the 80 °C bed temperature bound) is NOT part of this script -- according
+to the task only relevant if BB3 shows that ``bed_temperature_celsius <= 80`` binds at
+relevant grid points. For this, the script reports the necessary precondition (field
+``binding_bed_temperature`` per grid point); the concrete sensitivity analysis follows
+separately.
 """
 
 from __future__ import annotations
@@ -221,13 +222,13 @@ def _set_objective_value_fn(
 def _objective_components(
     solution: SteadyStateSolution, base_config: ProcessConfig
 ) -> dict[str, float]:
-    """Zielgröße plus Diagnosefelder für einen Beharrungszustand.
+    """Target plus diagnostic fields for a steady state.
 
-    Ohne Override (``_OBJECTIVE_VALUE_FN is None``, der Stand vor MA4): reine
-    Bruttoleistung, bitgleich zu ``solution.diagnostics["energy_target"]`` wie zuvor direkt
-    inline gelesen -- ``objective_value == gross_energy_target_kw``,
-    ``q_rec_kw``/``recovery_credit_kw`` beide 0.0. Mit Override (MA4-Netto-Varianten)
-    liefert die injizierte Funktion dieselben vier Schlüssel, mit
+    Without override (``_OBJECTIVE_VALUE_FN is None``, the state before MA4): pure
+    gross power, bit-identical to ``solution.diagnostics["energy_target"]`` as previously
+    read directly inline -- ``objective_value == gross_energy_target_kw``,
+    ``q_rec_kw``/``recovery_credit_kw`` both 0.0. With override (MA4 net variants)
+    the injected function returns the same four keys, with
     ``objective_value != gross_energy_target_kw``.
     """
     if _OBJECTIVE_VALUE_FN is not None:
@@ -248,7 +249,7 @@ def _suppress_placeholder_warning() -> None:
 def _penalized_energy(
     x: np.ndarray, t_amb: float, phi_amb: float, max_iterations: int, tolerance: float
 ) -> float:
-    """Zielfunktion für die Suche (BB2, je Gitterpunkt). Modul-Ebene für Picklebarkeit."""
+    """Objective function for the search (BB2, per grid point). Module level for picklability."""
     assert _BASE_CONFIG is not None
     t_in, u_gas, p_nozzle = x
     try:
@@ -276,21 +277,21 @@ def _penalized_energy(
 def optimize_grid_point(
     t_amb: float, phi_amb: float, bounds: list[tuple[float, float]], budget: OptimizationBudget
 ) -> dict[str, Any]:
-    """Ein Gitterpunkt (BB2) -- LÄUFT EINSTRÄNGIG (``de_workers=1``), absichtlich.
+    """One grid point (BB2) -- RUNS SINGLE-THREADED (``de_workers=1``), deliberately.
 
-    Parallelisiert wird NICHT hier (innerhalb der DE-Population eines einzelnen
-    Gitterpunkts), sondern in ``main()`` ÜBER die Gitterpunkte hinweg (``pool.
-    imap_unordered`` auf dieser Funktion) -- siehe Modul-Docstring, Abschnitt
-    "Laufzeit-Kompromiss", für die Messung, die diese Entscheidung begründet: Populations-
-    Parallelität beschleunigt nur die DE-Phase und lässt alle Kerne bis auf einen während
-    der (grundsätzlich seriellen) Nelder-Mead-Verfeinerung ungenutzt -- pro Gitterpunkt
-    genau das Muster "N Kandidaten parallel, danach einer allein, der so lange braucht wie
-    die parallele Phase zuvor". 25-49 Gitterpunkte sind dagegen echt unabhängig
-    voneinander: sie über den Pool zu verteilen hält alle Kerne während des GESAMTEN
-    Laufs (DE **und** Verfeinerung jedes einzelnen Punkts) beschäftigt und vermeidet
-    zusätzlich die Synchronisationsbarriere, die ``differential_evolution`` sonst am Ende
-    jeder Generation einlegt (eine langsame Population verzögert dort die gesamte
-    Generation, hier nur ihren eigenen Gitterpunkt).
+    Parallelisation happens NOT here (within the DE population of a single
+    grid point), but in ``main()`` ACROSS the grid points (``pool.
+    imap_unordered`` on this function) -- see module docstring, section
+    "Laufzeit-Kompromiss", for the measurement that justifies this decision: population
+    parallelism only speeds up the DE phase and leaves all cores but one idle during
+    the (inherently serial) Nelder-Mead refinement -- per grid point
+    exactly the pattern "N candidates in parallel, then one alone, taking as long as
+    the parallel phase before". 25-49 grid points, by contrast, are genuinely independent
+    of each other: distributing them over the pool keeps all cores busy during the ENTIRE
+    run (DE **and** refinement of every single point) and additionally avoids
+    the synchronisation barrier that ``differential_evolution`` otherwise inserts at the end
+    of each generation (a slow population delays the entire
+    generation there, here only its own grid point).
     """
     assert _BASE_CONFIG is not None
     args = (t_amb, phi_amb, budget.search_max_iterations, budget.search_tolerance)
@@ -300,9 +301,9 @@ def optimize_grid_point(
     best_x = refine_result.x if refine_result.fun <= de_result.fun else de_result.x
 
     t_in, u_gas, p_nozzle = (float(v) for v in best_x)
-    # Gleiche Präzision wie während der Suche (siehe ``evaluate_point``-Docstring) --
-    # eine höhere Präzision NUR für den Report-Aufruf war die Ursache der
-    # Bracket-Fehlschläge im ersten vollen Gitterlauf, nicht deren Heilmittel.
+    # Same precision as during the search (see ``evaluate_point`` docstring) --
+    # a higher precision ONLY for the report call was the cause of the
+    # bracket failures in the first full grid run, not their remedy.
     solve_failed = False
     try:
         solution = evaluate_point(
@@ -326,11 +327,11 @@ def optimize_grid_point(
         "inlet_temperature_celsius": t_in,
         "gas_velocity_m_per_s": u_gas,
         "nozzle_pressure_bar": p_nozzle,
-        # DE erschöpft bei diesem Budget planmäßig ``maxiter`` (siehe Modul-Docstring,
-        # "Laufzeit-Kompromiss") -- das ist KEIN Fehlschlag, solange die anschließende
-        # Verfeinerung konvergiert. ``converged`` bewertet deshalb nur die Verfeinerung
-        # (den Stand, der tatsächlich berichtet wird); ``de_converged`` bleibt als
-        # Diagnosefeld erhalten, ist aber für sich genommen kein Warnsignal.
+        # At this budget DE exhausts ``maxiter`` as planned (see module docstring,
+        # "Laufzeit-Kompromiss") -- this is NOT a failure as long as the subsequent
+        # refinement converges. ``converged`` therefore only assesses the refinement
+        # (the state that is actually reported); ``de_converged`` is kept as a
+        # diagnostic field, but on its own is no warning sign.
         "de_converged": bool(de_result.success),
         "de_message": str(de_result.message),
         "de_nit": int(de_result.nit),
@@ -377,11 +378,11 @@ def optimize_grid_point(
 def _grid_point_task(
     task: tuple[int, float, float, list[tuple[float, float]], OptimizationBudget],
 ) -> dict[str, Any]:
-    """Ein Element für ``pool.imap_unordered`` in ``main()`` -- ein Gitterpunkt komplett
-    (DE + Verfeinerung + finaler Löser-Aufruf), einsträngig in EINEM Worker-Prozess.
-    Der Index geht mit durch, weil ``imap_unordered`` die Ankunftsreihenfolge NICHT
-    garantiert -- ``compute_regret``/``compute_setpoint_spread`` erwarten aber dieselbe
-    Reihenfolge wie ``grid_points``.
+    """One element for ``pool.imap_unordered`` in ``main()`` -- one grid point complete
+    (DE + refinement + final solver call), single-threaded in ONE worker process.
+    The index is passed along because ``imap_unordered`` does NOT guarantee the order
+    of arrival -- ``compute_regret``/``compute_setpoint_spread`` however expect the same
+    order as ``grid_points``.
     """
     index, t_amb, phi_amb, bounds, budget = task
     start = time.perf_counter()
@@ -398,7 +399,7 @@ def _fixed_point_worker(
     max_iterations: int,
     tolerance: float,
 ) -> tuple[float, float] | None:
-    """Ein Gitterpunkt für einen festen Kandidaten -- Ziel des Pools in BB3(a)."""
+    """One grid point for a fixed candidate -- target of the pool in BB3(a)."""
     assert _BASE_CONFIG is not None
     t_in, u_gas, p_nozzle = x
     try:
@@ -431,11 +432,11 @@ def _fixed_point_objective(
     tolerance: float,
     energy_weight: float,
 ) -> float:
-    """``energy_weight`` ist absichtlich NICHT keyword-only: ``differential_evolution``
-    reicht ``args`` rein positional an die Zielfunktion durch (``func(x, *args)``,
-    siehe ``scipy._lib._util._FunctionWrapper``) -- ein keyword-only-Parameter hier
-    führte zu ``TypeError: takes 5 positional arguments but 6 were given``, weil das
-    fünfte ``args``-Element (der Gewichtungsfaktor) keinen keyword-Slot findet."""
+    """``energy_weight`` is deliberately NOT keyword-only: ``differential_evolution``
+    passes ``args`` purely positionally to the objective function (``func(x, *args)``,
+    see ``scipy._lib._util._FunctionWrapper``) -- a keyword-only parameter here
+    led to ``TypeError: takes 5 positional arguments but 6 were given``, because the
+    fifth ``args`` element (the weighting factor) finds no keyword slot."""
     tasks = [
         (tuple(float(v) for v in x), t_amb, phi_amb, max_iterations, tolerance)
         for t_amb, phi_amb in grid_points
@@ -460,7 +461,7 @@ def find_fixed_operating_point(
     budget: OptimizationBudget,
     pool: Pool,
 ) -> dict[str, Any]:
-    """BB3(a): fester Betriebspunkt, an jedem Gitterpunkt zulässig, minimale Mittelenergie."""
+    """BB3(a): fixed operating point, feasible at every grid point, minimum mean energy."""
     args = (grid_points, pool, budget.search_max_iterations, budget.search_tolerance, 1.0)
     de_result, refine_result, de_elapsed, refine_elapsed = _optimize(
         _fixed_point_objective, bounds, args, budget, de_workers=1
@@ -537,11 +538,11 @@ def verify_no_feasible_fixed_point_exists(
     budget: OptimizationBudget,
     pool: Pool,
 ) -> dict[str, Any]:
-    """Zweite Suche, NUR gegen die summierte Verletzung, zur Erhärtung von BB3(a).
+    """Second search, ONLY against the summed violation, to corroborate BB3(a).
 
-    Kein Beweis (kontinuierliche Box, keine erschöpfende Suche) -- aber die bestmögliche
-    Aussage ohne sie: bleibt das Minimum der Verletzung > 0, hat auch eine ausschließlich
-    auf Zulässigkeit zielende globale Suche keinen überall zulässigen Punkt gefunden.
+    No proof (continuous box, no exhaustive search) -- but the best possible
+    statement without one: if the minimum of the violation stays > 0, even a global search aimed
+    exclusively at feasibility has found no point that is feasible everywhere.
     """
     args = (grid_points, pool, budget.search_max_iterations, budget.search_tolerance, 0.0)
     de_result, refine_result, de_elapsed, refine_elapsed = _optimize(
@@ -652,14 +653,14 @@ def main() -> int:
     print(f"git/commit={env['git/commit']}  git/dirty={env['git/dirty']}")
     print("=" * 78)
 
-    # EIN Pool für den gesamten Lauf (BB2-Verteilung + BB3), niemals pro Aufruf neu erzeugt --
-    # siehe Docstring von ``optimize_grid_point``: mehrfach angelegte Pools über viele
-    # sequentielle ``differential_evolution``-Aufrufe hinweg haben im Test einen Deadlock
-    # verursacht (fork() mit Thread-Altlasten des vorherigen Pools).
+    # ONE pool for the entire run (BB2 distribution + BB3), never created anew per call --
+    # see the docstring of ``optimize_grid_point``: pools created repeatedly across many
+    # sequential ``differential_evolution`` calls caused a deadlock in testing
+    # (fork() with thread leftovers of the previous pool).
     #
-    # initializer/initargs statt Vererbung über fork(): setzt ``_BASE_CONFIG`` in jedem
-    # Worker explizit, unabhängig von der Startmethode (fork unter Linux, spawn unter
-    # Windows) -- s. Docstring von ``_BASE_CONFIG``.
+    # initializer/initargs instead of inheritance via fork(): sets ``_BASE_CONFIG`` in every
+    # worker explicitly, independently of the start method (fork under Linux, spawn under
+    # Windows) -- see the docstring of ``_BASE_CONFIG``.
     with Pool(workers, initializer=_set_base_config, initargs=(base_config,)) as pool:
         print(
             f"\n--- BB2: Optimierung je Gitterpunkt ({len(grid_points)} Punkte, über {workers} "

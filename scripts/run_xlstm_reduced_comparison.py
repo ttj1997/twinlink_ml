@@ -1,30 +1,30 @@
-r"""Schritt 3 (xLSTM-Wiederaufnahme): verkleinerter Vergleich, 1 Seed, n_train=16.
+r"""Step 3 (xLSTM resumption): reduced comparison, 1 seed, n_train=16.
 
-**Nur xLSTM wird hier trainiert.** Analog zu ``run_mamba_reduced_comparison.py``: vor
-diesem Skript wurde geprueft, dass ``mamba_reduced_comparison.jsonl`` (Befund 40)
-exakt dieselbe ``DataSpec``, denselben ``master_seed=1`` und dieselbe
-``greybox_gab_placeholder.yaml`` verwendet wie ``transformer_reduced_comparison.jsonl``
--- bitgleich verifiziert an ``process/fingerprint``, ``split/digest`` und allen drei
-abgeleiteten Seeds. Die sieben dort bereits geloggten Records (persistence, static, arx,
-gru, lstm, transformer, mamba) werden deshalb UNVERAENDERT uebernommen, nicht neu
-berechnet.
+**Only xLSTM is trained here.** Analogous to ``run_mamba_reduced_comparison.py``: before
+this script it was checked that ``mamba_reduced_comparison.jsonl`` (Befund 40)
+uses exactly the same ``DataSpec``, the same ``master_seed=1`` and the same
+``greybox_gab_placeholder.yaml`` as ``transformer_reduced_comparison.jsonl``
+-- verified bit-identical on ``process/fingerprint``, ``split/digest`` and all three
+derived seeds. The seven records already logged there (persistence, static, arx,
+gru, lstm, transformer, mamba) are therefore taken over UNCHANGED, not
+recomputed.
 
-Ausgabe: ``artifacts/runs/xlstm_reduced_comparison.jsonl`` mit allen acht Records
-(sieben unveraendert aus ``mamba_reduced_comparison.jsonl`` kopiert, plus der neue
-xLSTM-Record) -- ``mamba_reduced_comparison.jsonl`` selbst bleibt unangetastet.
+Output: ``artifacts/runs/xlstm_reduced_comparison.jsonl`` with all eight records
+(seven copied unchanged from ``mamba_reduced_comparison.jsonl``, plus the new
+xLSTM record) -- ``mamba_reduced_comparison.jsonl`` itself stays untouched.
 
-Standard-Produktionskonfiguration fuer xLSTM, NICHT verkuerzt:
-``CompositeXLSTMSequenceModel()`` ohne Config-Override -- ``composite.py`` setzt fuer
-diesen Kern KEINEN eigenen Kapazitaets-Standard (anders als bei Mamba/Transformer), der
-Kern laeuft also mit dem generischen ``TorchSequenceConfig``-Standard
-``hidden_size=64`` -- derselbe Wert wie GRU/LSTM (Befund 28), eine echte
-"gleiche Breite"-Kapazitaetsparitaet. Schritt-0/2-Messung (``diag_xlstm_memory.py``,
-``diag_xlstm_cost.py``) bestaetigt, dass das bei Produktionsgroesse unproblematisch ist
-(674 MB Speicher-Delta, ~0.34s/Trainingsschritt, geschaetzt ~30 Minuten Gesamtlaufzeit
-fuer alle drei Teilnetze -- weit unter dem historischen >12h-Fall, der bei einem viel
-groesseren, parameterzahl-angepassten ``hidden_size`` auftrat, siehe
-``CompositeTransformerSequenceModel``-Docstring). ``max_epochs=200``, ``patience=20``
-(Dataclass-Standard, identisch zu Befund 28/36/37/40).
+Standard production configuration for xLSTM, NOT shortened:
+``CompositeXLSTMSequenceModel()`` without config override -- ``composite.py`` sets
+NO capacity default of its own for this core (unlike for Mamba/Transformer), so the
+core runs with the generic ``TorchSequenceConfig`` default
+``hidden_size=64`` -- the same value as GRU/LSTM (Befund 28), a genuine
+"same width" capacity parity. Step 0/2 measurement (``diag_xlstm_memory.py``,
+``diag_xlstm_cost.py``) confirms that this is unproblematic at production size
+(674 MB memory delta, ~0.34s/training step, estimated ~30 minutes total run time
+for all three subnetworks -- far below the historical >12h case, which occurred with a much
+larger, parameter-count-matched ``hidden_size``, see the
+``CompositeTransformerSequenceModel`` docstring). ``max_epochs=200``, ``patience=20``
+(dataclass default, identical to Befund 28/36/37/40).
 """
 
 from __future__ import annotations
@@ -50,16 +50,16 @@ OUTPUT_PATH = REPO_ROOT / "artifacts" / "runs" / "xlstm_reduced_comparison.jsonl
 SEED = 1
 N_TRAIN = 16
 
-# Bitgleich mit den in mamba_reduced_comparison.jsonl/transformer_reduced_comparison.jsonl
-# geloggten Werten verifiziert -- Gegenprobe unten in main() wiederholt denselben
-# Vergleich, damit ein spaeterer Aufruf (z. B. nach einer Config-Aenderung) nicht
-# stillschweigend inkompatible Records zusammenfuehrt.
+# Verified bit-identical with the values logged in mamba_reduced_comparison.jsonl/
+# transformer_reduced_comparison.jsonl -- the cross-check below in main() repeats the same
+# comparison, so that a later call (e.g. after a config change) does not
+# silently merge incompatible records.
 #
-# Fingerprint aktualisiert von 82f65f576a2e5253 auf 40aae2b4526a5ed7: NumericsConfig.
-# enforce_gas_velocity_projection hinzugefuegt (Default AUS). ProcessConfig.fingerprint
-# hasht die gesamte Config, daher aendert sich der Wert auch bei unveraendertem Verhalten.
-# Aequivalenz belegt durch test_gas_velocity_projection_disabled_matches_legacy_baseline
-# (tests/test_gas_velocity_projection.py) -- siehe dort fuer den Bitgleichheits-Beleg.
+# Fingerprint updated from 82f65f576a2e5253 to 40aae2b4526a5ed7: NumericsConfig.
+# enforce_gas_velocity_projection added (default OFF). ProcessConfig.fingerprint
+# hashes the entire config, so the value changes even with unchanged behaviour.
+# Equivalence shown by test_gas_velocity_projection_disabled_matches_legacy_baseline
+# (tests/test_gas_velocity_projection.py) -- see there for the bit-identity evidence.
 EXPECTED = {
     "process/fingerprint": "40aae2b4526a5ed7",
     "split/digest": "5b9628a151344f37",
@@ -76,7 +76,7 @@ die drei bisherigen Schluessel."""
 
 
 def _spec() -> DataSpec:
-    """Identisch zu ``run_mamba_reduced_comparison._spec``/``_transformer_reduced_comparison``."""
+    """Identical to ``run_mamba_reduced_comparison._spec``/``_transformer_reduced_comparison``."""
     return DataSpec(
         sample_time_s=25.0,
         run_duration_s=28_800.0,
@@ -94,10 +94,10 @@ def _log(message: str) -> None:
 
 
 def _check_expected(actual: Mapping[str, object]) -> None:
-    """``EXPECTED`` gegen tatsaechliche Werte pruefen, hart abbrechen bei Abweichung.
+    """Check ``EXPECTED`` against actual values, abort hard on a deviation.
 
-    Eigene Funktion (nicht inline in ``main()``), damit die Schemapruefung ohne vollen
-    Datengenerierungs-/Trainingslauf testbar ist.
+    Separate function (not inline in ``main()``) so that the schema check is testable
+    without a full data-generation/training run.
     """
     mismatches = {k: (v, actual[k]) for k, v in EXPECTED.items() if v != actual[k]}
     if mismatches:
@@ -168,9 +168,9 @@ def main() -> None:
     for target, history in model.training_history.items():
         _log(f"   Teilnetz {target!r}: {len(history)}/{model.config.max_epochs} Epochen")
 
-    # inference_us_per_window ist bereits Teil von result.as_flat_metrics() (Evaluator misst
-    # intern, siehe evaluator.py) -- kein eigenes Timing hier, sonst zwei leicht
-    # unterschiedliche Zahlen fuer dieselbe Groesse (Konvention aus Mamba-/Transformer-Skript).
+    # inference_us_per_window is already part of result.as_flat_metrics() (the evaluator
+    # measures internally, see evaluator.py) -- no own timing here, otherwise two slightly
+    # different numbers for the same quantity (convention from the Mamba/Transformer script).
     result = evaluator.evaluate(model, test)
     record = RunRecord(
         group="xlstm_reduced_comparison",
@@ -184,8 +184,8 @@ def main() -> None:
     )
     _log(f"-- Modell 'xlstm': ausgewertet --\n{result.format()}")
 
-    # Sieben bestehende Records unveraendert kopieren (mamba_reduced_comparison.jsonl
-    # selbst bleibt unangetastet), dann den neuen xLSTM-Record anhaengen.
+    # Copy seven existing records unchanged (mamba_reduced_comparison.jsonl
+    # itself stays untouched), then append the new xLSTM record.
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy(REUSED_LOG_PATH, OUTPUT_PATH)
     with REUSED_LOG_PATH.open("r", encoding="utf-8") as handle:

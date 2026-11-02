@@ -1,4 +1,4 @@
-"""Tests für ``plant_data`` -- Messstellenzuordnung und Excel-Import."""
+"""Tests for ``plant_data`` -- measuring-point assignment and Excel import."""
 
 from __future__ import annotations
 
@@ -75,7 +75,7 @@ def test_load_plant_export_reads_columns_and_overrides_mislabelled_unit(
     assert len(series.timestamps) == 2
     assert series.columns["TIR-322412"] == pytest.approx((4.9, 4.8))
     assert series.units["TIR-322412"] == "°C"
-    # Quelle beschriftet FIRAL-323604 faelschlich als [°C] -- Loader korrigiert auf m3/h.
+    # Source wrongly labels FIRAL-323604 as [°C] -- the loader corrects it to m3/h.
     assert series.units["FIRAL-323604"] == "m3/h"
 
 

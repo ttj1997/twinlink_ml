@@ -1,73 +1,72 @@
-r"""Metriken und Evaluationsprotokoll (Arbeitsplan Schritt 5).
+r"""Metrics and evaluation protocol (work plan step 5).
 
-Rangfolge der Metriken -- bewusst gegen die übliche Praxis
----------------------------------------------------------
-1. **Mehrschritt-Rollout-Fehler** über mehrere Horizonte -- primär.
-2. Ein-Schritt-Fehler -- nur noch Nebenmetrik. Bei :math:`\Delta t = 5` s liegt der
-   Persistenz-NRMSE bei 0.016; ein Vergleich auf dieser Metrik misst Seed-Varianz.
-3. Inferenzzeit -- Echtzeitfähigkeit ist ein Auswahlkriterium in AP 1.
+Ranking of the metrics -- deliberately against common practice
+---------------------------------------------------------------
+1. **Multi-step rollout error** over several horizons -- primary.
+2. One-step error -- only a secondary metric. At :math:`\Delta t = 5` s the
+   persistence NRMSE is 0.016; a comparison on this metric measures seed variance.
+3. Inference time -- real-time capability is a selection criterion in AP 1.
 
-Normierung
-----------
+Normalisation
+-------------
 .. math:: \mathrm{NRMSE} = \frac{\sqrt{\overline{(y - \hat y)^2}}}{\sigma_y}
 
-mit :math:`\sigma_y` aus dem **Evaluations**-Split, nicht aus dem Training. Damit ist
-1.0 die Schwelle, unterhalb derer ein Modell überhaupt besser ist als die Vorhersage des
-Mittelwerts, und die Zahl ist über Zielgrößen mit völlig verschiedenen Einheiten
-(kW, kg/kg, µm) vergleichbar.
+with :math:`\sigma_y` from the **evaluation** split, not from training. Thus 1.0 is the
+threshold below which a model is better at all than predicting the mean, and the number
+is comparable across targets with completely different units (kW, kg/kg, µm).
 
-Zwei Referenzen pro Zahl
-------------------------
-``nrmse`` misst gegen die verrauschte Messung -- das ist, was an der Anlage prüfbar ist.
-``nrmse_truth`` misst gegen die rauschfreie Ausgangsgröße des Grey-Box-Modells. Die
-Differenz beider ist der irreduzible Anteil und damit die **Sättigungshöhe der
-Lernkurve**. Ohne diese zweite Zahl liest man eine Lernkurve, die bei 0.12 abflacht, als
-Modellgrenze, obwohl sie die Rauschgrenze sein kann.
+Two references per number
+-------------------------
+``nrmse`` measures against the noisy measurement -- that is what can be checked at the
+plant. ``nrmse_truth`` measures against the noise-free output of the grey-box model. The
+difference between the two is the irreducible part and thus the **saturation level of the
+learning curve**. Without this second number, a learning curve that flattens at 0.12 is
+read as a model limit, although it may be the noise floor.
 
-Laufweise Normierung ist die Primärzahl, nicht die gepoolte
------------------------------------------------------------
-Wird :math:`\sigma_y` über alle Läufe gepoolt geschätzt, enthält es die
-Niveauunterschiede **zwischen** den Läufen. Die entstehen durch die gestreuten
-Anfangszustände (Anregungsdesign, Schritt 2) und müssen von keinem Modell vorhergesagt
-werden -- sie stehen in der Fensterhistorie. Der Nenner ist damit künstlich groß.
+Run-level normalisation is the primary number, not the pooled one
+-----------------------------------------------------------------
+If :math:`\sigma_y` is estimated pooled over all runs, it contains the level differences
+**between** the runs. They arise from the scattered initial states (excitation design,
+step 2) and do not have to be predicted by any model -- they are in the window history.
+The denominator is thus artificially large.
 
-Gemessen am Grey-Box-Modell, :math:`\Delta t = 25` s, ARX(4,2), :math:`h = 24`:
+Measured on the grey-box model, :math:`\Delta t = 25` s, ARX(4,2), :math:`h = 24`:
 
 ============================  ========  ==========
-Zielgröße                     gepoolt   pro Lauf
+Target                        pooled    per run
 ============================  ========  ==========
 ``energy_target``               0.133      0.154
 ``product_moisture_kg_per_kg``  0.043      1.354
 ``d50_um``                      0.026      0.091
 ============================  ========  ==========
 
-Bei der Produktfeuchte wechselt damit die Aussage: gepoolt liest sich die Zeile als
-"praktisch gelöst", laufweise liegt der Fehler über der Streuung innerhalb des Laufs --
-das Modell schlägt den Mittelwert des eigenen Laufs nicht. Der Effekt ist bei
-``energy_target`` klein und bei den Qualitätsgrößen groß, also genau dort, wo der
-Architekturvergleich stattfindet. Deshalb ist der **Median über Läufe** die berichtete
-Zahl und die gepoolte nur Nebeninformation.
+For product moisture this changes the statement: pooled, the row reads as "practically
+solved"; run-level, the error lies above the spread within the run -- the model does not
+beat the mean of its own run. The effect is small for ``energy_target`` and large for the
+quality variables, i.e. exactly where the architecture comparison takes place. Therefore
+the **median over runs** is the reported number and the pooled one is only secondary
+information.
 
-Fenster desselben Laufs sind zusätzlich stark korreliert; die laufweise Aggregation gibt
-damit auch eine belastbarere Streuungsangabe als die Fensterzahl suggeriert.
+Windows of the same run are in addition strongly correlated; the run-level aggregation
+thus also gives a more robust spread figure than the number of windows suggests.
 
-Absoluter RMSE zusätzlich zur NRMSE
-------------------------------------
-Der Nenner ``np.std(reference)`` in :func:`nrmse` wird **je Lauf** neu geschätzt (siehe
-oben) und streut selbst stark zwischen den Läufen -- gemessen an einem Konstantlauf-Holdout
-des Grey-Box-Modells (``scripts/probe_e0_normalisation_artifact.py``,
-``artifacts/runs/probe_e0_normalisation_artifact.json``) um den Faktor 26.6 bei ``d50_um``
-und um den Faktor 2292.7 bei ``product_moisture_kg_per_kg`` (Minimum zu Maximum über alle
-geprüften Läufe, Seed 1, GRU/LSTM, h=1/h=36). Die NRMSE allein ist damit nicht in einen
-physikalischen Fehler übersetzbar: derselbe NRMSE-Wert kann aus einem kleinen absoluten
-Fehler bei einem ruhigen Lauf (kleiner Nenner) oder einem großen absoluten Fehler bei einem
-stark streuenden Lauf (großer Nenner) stammen. :func:`per_run_rmse_median` und
-``EvaluationResult.rmse_run_median_physical`` liefern deshalb zusätzlich den unnormierten
-RMSE in physikalischen Einheiten (nach ``target_scaler.inverse()``, unabhängig vom
-``physical_units``-Schalter von :class:`RolloutEvaluator`) -- als Ergänzung, nicht als
-Ersatz: die laufweise NRMSE bleibt die Primärzahl für Modellvergleiche, weil sie Zielgrößen
-unterschiedlicher Einheit vergleichbar macht; der absolute RMSE beantwortet die davon
-getrennte Frage, wie groß der Fehler in der Einheit der Zielgröße tatsächlich ist.
+Absolute RMSE in addition to the NRMSE
+--------------------------------------
+The denominator ``np.std(reference)`` in :func:`nrmse` is estimated anew **per run** (see
+above) and itself scatters strongly between the runs -- measured on a constant-run holdout
+of the grey-box model (``scripts/probe_e0_normalisation_artifact.py``,
+``artifacts/runs/probe_e0_normalisation_artifact.json``) by a factor of 26.6 for ``d50_um``
+and by a factor of 2292.7 for ``product_moisture_kg_per_kg`` (minimum to maximum over all
+checked runs, seed 1, GRU/LSTM, h=1/h=36). The NRMSE alone can therefore not be translated
+into a physical error: the same NRMSE value can come from a small absolute error in a calm
+run (small denominator) or a large absolute error in a strongly scattering run (large
+denominator). :func:`per_run_rmse_median` and
+``EvaluationResult.rmse_run_median_physical`` therefore additionally provide the
+unnormalised RMSE in physical units (after ``target_scaler.inverse()``, independent of the
+``physical_units`` switch of :class:`RolloutEvaluator`) -- as a complement, not as a
+replacement: the run-level NRMSE remains the primary number for model comparisons,
+because it makes targets of different units comparable; the absolute RMSE answers the
+separate question of how large the error actually is in the unit of the target.
 """
 
 from __future__ import annotations
@@ -98,7 +97,7 @@ __all__ = [
 def nrmse(
     prediction: FloatArray, reference: FloatArray, *, axis: tuple[int, ...] = (0,)
 ) -> FloatArray:
-    """NRMSE, normiert auf die Streuung der Referenz entlang derselben Achsen."""
+    """NRMSE, normalised by the spread of the reference along the same axes."""
     residual = prediction - reference
     rmse = np.sqrt(np.mean(residual**2, axis=axis))
     scale = np.std(reference, axis=axis)
@@ -111,15 +110,15 @@ def pooled_nrmse(
     horizons: Sequence[int],
     names: Sequence[str],
 ) -> dict[str, dict[int, float]]:
-    r"""NRMSE, gepoolt über alle Fenster und die Schritte :math:`1..h`.
+    r"""NRMSE, pooled over all windows and the steps :math:`1..h`.
 
-    Kumulativ und nicht punktuell: der Rollout-Fehler bei :math:`h` soll den Weg dorthin
-    enthalten. Ein Modell, das bei :math:`h = 12` zufällig wieder nahe an der Wahrheit
-    liegt, nachdem es dazwischen divergiert ist, darf nicht gut aussehen.
+    Cumulative and not pointwise: the rollout error at :math:`h` should contain the path
+    there. A model that happens to be close to the truth again at :math:`h = 12` after
+    diverging in between must not look good.
 
-    Modulfunktion und nicht Methode, damit dieselbe Normierungskonvention auch außerhalb
-    eines Modellvergleichs benutzbar ist -- etwa für die Rauschgrenze in
-    :mod:`twinlink_ml.evaluation.protocol`, die kein Modell auswertet.
+    A module function and not a method, so that the same normalisation convention can
+    also be used outside a model comparison -- for instance for the noise floor in
+    :mod:`twinlink_ml.evaluation.protocol`, which evaluates no model.
     """
     result: dict[str, dict[int, float]] = {name: {} for name in names}
     for horizon in horizons:
@@ -136,11 +135,11 @@ def per_run_nrmse(
     horizons: Sequence[int],
     names: Sequence[str],
 ) -> dict[str, dict[int, tuple[float, float, float]]]:
-    """NRMSE je Lauf, zusammengefasst als ``(Median, Minimum, Maximum)``.
+    """NRMSE per run, summarised as ``(Median, Minimum, Maximum)``.
 
-    Die **Primärzahl** des Protokolls, siehe Modul-Docstring: der Nenner enthält damit
-    nur die Streuung innerhalb eines Laufs und nicht die Niveauunterschiede zwischen den
-    Läufen, die aus den gestreuten Anfangszuständen kommen.
+    The **primary number** of the protocol, see the module docstring: the denominator
+    thereby contains only the spread within a run and not the level differences between
+    the runs, which come from the scattered initial states.
     """
     result: dict[str, dict[int, tuple[float, float, float]]] = {name: {} for name in names}
     unique = np.unique(runs)
@@ -173,14 +172,14 @@ def per_run_rmse_median(
     horizons: Sequence[int],
     names: Sequence[str],
 ) -> dict[str, dict[int, float]]:
-    """Unnormierter RMSE je Lauf, Median über die Läufe -- Ergänzung zur NRMSE.
+    """Unnormalised RMSE per run, median over the runs -- complement to the NRMSE.
 
-    ``prediction``/``reference`` müssen bereits in physikalischen Einheiten vorliegen
-    (``target_scaler.inverse()``), unabhängig davon, ob der Aufrufer die NRMSE selbst
-    standardisiert oder physikalisch berechnet -- siehe Moduldocstring, Abschnitt
-    "Absoluter RMSE zusätzlich zur NRMSE". Nur der Median, keine Spannweite: die
-    Streuung des absoluten Fehlers über Läufe wird bereits über den NRMSE-Nenner
-    (``nrmse_run_min``/``_max``) sichtbar, hier geht es um das Niveau.
+    ``prediction``/``reference`` must already be in physical units
+    (``target_scaler.inverse()``), regardless of whether the caller computes the NRMSE
+    itself standardised or physically -- see the module docstring, section "Absolute RMSE
+    in addition to the NRMSE". Only the median, no range: the spread of the absolute error
+    over runs is already visible via the NRMSE denominator (``nrmse_run_min``/``_max``),
+    here the point is the level.
     """
     result: dict[str, dict[int, float]] = {name: {} for name in names}
     unique = np.unique(runs)
@@ -205,35 +204,36 @@ def per_run_rmse_median(
 
 @dataclass(frozen=True, slots=True)
 class EvaluationResult:
-    """Ergebnis einer Evaluation, flach genug für MLflow-/W&B-Metriken.
+    """Result of an evaluation, flat enough for MLflow/W&B metrics.
 
     Attributes
     ----------
     model_name
-        Kurzname des Modells.
+        Short name of the model.
     target_names
-        Zielgrößen in Spaltenreihenfolge.
+        Targets in column order.
     horizons
-        Ausgewertete Horizonte in Abtastschritten; ``1`` ist der Ein-Schritt-Fehler.
+        Evaluated horizons in sampling steps; ``1`` is the one-step error.
     nrmse_by_horizon
-        ``{Zielgröße: {Horizont: NRMSE}}`` gegen die Messung, über alle Fenster gepoolt.
+        ``{Zielgröße: {Horizont: NRMSE}}`` against the measurement, pooled over all windows.
     nrmse_truth_by_horizon
-        Dasselbe gegen die rauschfreie Referenz, oder leer.
+        The same against the noise-free reference, or empty.
     nrmse_run_spread
-        ``{Zielgröße: {Horizont: (Median, Minimum, Maximum)}}`` über Läufe -- die
-        Primärzahl.
+        ``{Zielgröße: {Horizont: (Median, Minimum, Maximum)}}`` over runs -- the
+        primary number.
     nrmse_truth_run_spread
-        Dasselbe gegen die rauschfreie Referenz. Ohne diese Zahl ist die Sättigungshöhe
-        einer Lernkurve nicht in derselben Normierung lesbar wie die Kurve selbst.
+        The same against the noise-free reference. Without this number the saturation
+        level of a learning curve cannot be read in the same normalisation as the curve
+        itself.
     rmse_run_median_physical
-        ``{Zielgröße: {Horizont: Median-RMSE}}`` über Läufe, unnormiert, in physikalischen
-        Einheiten -- Ergänzung zur NRMSE, siehe Moduldocstring "Absoluter RMSE zusätzlich
-        zur NRMSE". Immer in physikalischen Einheiten, unabhängig vom
-        ``physical_units``-Schalter von :class:`RolloutEvaluator`.
+        ``{Zielgröße: {Horizont: Median-RMSE}}`` over runs, unnormalised, in physical
+        units -- complement to the NRMSE, see the module docstring "Absolute RMSE in
+        addition to the NRMSE". Always in physical units, independent of the
+        ``physical_units`` switch of :class:`RolloutEvaluator`.
     inference_us_per_window
-        Inferenzzeit je Fenster für den vollen Horizont, in Mikrosekunden.
+        Inference time per window for the full horizon, in microseconds.
     n_windows, n_runs
-        Umfang der Auswertung.
+        Size of the evaluation.
     """
 
     model_name: str
@@ -251,11 +251,11 @@ class EvaluationResult:
     rmse_run_median_physical: dict[str, dict[int, float]] = field(default_factory=dict)
 
     def as_flat_metrics(self) -> dict[str, float]:
-        """Flache Schlüssel-Wert-Paare für das Experiment-Tracking.
+        """Flat key-value pairs for experiment tracking.
 
-        Enthält beide Normierungen und beide Referenzen. Die laufweisen Kennzahlen sind
-        hier und nicht erst im Treiber, damit es nur **eine** Stelle gibt, an der ein
-        Metrikname entsteht -- sonst laufen Log-Schlüssel und Auswertung auseinander.
+        Contains both normalisations and both references. The run-level figures are here
+        and not only in the driver, so that there is only **one** place where a metric
+        name is created -- otherwise log keys and analysis drift apart.
         """
         flat: dict[str, float] = {
             "inference_us_per_window": self.inference_us_per_window,
@@ -268,11 +268,11 @@ class EvaluationResult:
         for target, truth_by_horizon in self.nrmse_truth_by_horizon.items():
             for horizon, value in truth_by_horizon.items():
                 flat[f"nrmse_truth/{target}/h{horizon}"] = value
-        # Eigener Variablenname je Schleife, absichtlich: dieselbe Bezeichnung für einen
-        # `dict[int, float]` weiter oben und einen `dict[int, tuple[float, float, float]]`
-        # hier würde mypy als inkompatible Neuzuweisung ablehnen -- das ist keine
-        # Formalie, sondern derselbe Fehler, den ein Mensch beim Lesen auch verwechseln
-        # würde: eine gepoolte Zahl ist keine Median/Min/Max-Spanne.
+        # A separate variable name per loop, on purpose: the same name for a
+        # `dict[int, float]` further up and a `dict[int, tuple[float, float, float]]`
+        # here would be rejected by mypy as an incompatible reassignment -- that is not a
+        # formality but the same mistake a human reader would also make: a pooled number
+        # is not a median/min/max range.
         for prefix, spread_by_target in (
             ("nrmse_run", self.nrmse_run_spread),
             ("nrmse_truth_run", self.nrmse_truth_run_spread),
@@ -288,7 +288,7 @@ class EvaluationResult:
         return flat
 
     def format(self) -> str:
-        """Tabelle für Run-Logs."""
+        """Table for run logs."""
         header = f"{self.model_name}  ({self.n_runs} Läufe, {self.n_windows} Fenster)"
         columns = "".join(f"{f'h={h}':>10}" for h in self.horizons)
         lines = [header, f"{'Zielgröße':<28}{columns}"]
@@ -309,29 +309,29 @@ class EvaluationResult:
 
 
 class Evaluator(ABC):
-    """Abstraktion über Evaluationsprotokolle."""
+    """Abstraction over evaluation protocols."""
 
     @abstractmethod
     def evaluate(self, model: SequenceModel, dataset: SequenceDataset) -> EvaluationResult:
-        """Modell auf einem Datensatz bewerten."""
+        """Evaluate a model on a data set."""
 
 
 @dataclass(frozen=True, slots=True)
 class RolloutEvaluator(Evaluator):
-    """Standardprotokoll: NRMSE über mehrere Horizonte, laufweise Streuung, Inferenzzeit.
+    """Standard protocol: NRMSE over several horizons, run-level spread, inference time.
 
     Attributes
     ----------
     horizons
-        Auszuwertende Horizonte. ``None`` wählt automatisch ``1``, ein Viertel, die
-        Hälfte und den vollen Horizont des Datensatzes.
+        Horizons to evaluate. ``None`` automatically selects ``1``, a quarter, half and
+        the full horizon of the data set.
     physical_units
-        Metriken nach Rückrechnung in Ingenieurseinheiten berechnen. Für den NRMSE
-        rechnerisch nahezu gleichwertig, aber die Rückrechnung deckt Fehler in der
-        Skalierer-Weitergabe zwischen den Splits auf -- die häufigste stille
-        Leakage-Variante nach dem Split selbst.
+        Compute metrics after back-transformation into engineering units. For the NRMSE
+        numerically almost equivalent, but the back-transformation exposes errors in
+        passing the scalers between the splits -- the most frequent silent leakage
+        variant after the split itself.
     batch_size
-        Stapelgröße der Auswertung.
+        Batch size of the evaluation.
     """
 
     horizons: tuple[int, ...] | None = None
@@ -350,7 +350,7 @@ class RolloutEvaluator(Evaluator):
         return tuple(sorted({1, max(1, full // 4), max(1, full // 2), full}))
 
     def evaluate(self, model: SequenceModel, dataset: SequenceDataset) -> EvaluationResult:
-        """Rollout auswerten."""
+        """Evaluate the rollout."""
         horizons = self._horizons_for(dataset)
         scaler = dataset.target_scaler
         collected: list[tuple[FloatArray, FloatArray, FloatArray | None, FloatArray]] = []
@@ -380,9 +380,9 @@ class RolloutEvaluator(Evaluator):
         )
         runs = np.concatenate([item[3] for item in collected], axis=0)
 
-        # Fuer rmse_run_median_physical wird IMMER in physikalische Einheiten
-        # zurueckgerechnet, unabhaengig vom physical_units-Schalter unten -- ein
-        # unnormierter Fehler in standardisierten Einheiten waere nicht interpretierbar.
+        # For rmse_run_median_physical the values are ALWAYS converted back into physical
+        # units, independent of the physical_units switch below -- an unnormalised error
+        # in standardised units would not be interpretable.
         prediction_physical = scaler.inverse(prediction_raw)
         reference_physical = scaler.inverse(reference_raw)
 
@@ -424,7 +424,7 @@ class RolloutEvaluator(Evaluator):
         return list(dataset.iter_batches(self.batch_size))
 
     def describe(self) -> dict[str, Any]:
-        """Protokollparameter für das Tracking."""
+        """Protocol parameters for tracking."""
         return {
             "evaluator": type(self).__name__,
             "horizons": self.horizons,

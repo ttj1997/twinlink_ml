@@ -1,55 +1,55 @@
-r"""P1/P2: Arbeitspunktgeplantes FIR-Modell (GEPLANT) gegen eine Merkmalszahl-Kontrolle.
+r"""P1/P2: operating-point-scheduled FIR model (GEPLANT) against a feature-count control.
 
-KEIN Netztraining -- reine OLS-Regression (``np.linalg.lstsq``). Datenerzeugung,
-Split-Mechanik, Regime-Definition, FIR-Fensterlogik, k=43, 3 Trainingspool-Seeds und
-fixer Konstantlauf-Holdout werden unveraendert aus ``probe_n1_regime_crosstab.py``
-importiert (``_generate_pools``, ``_crosstab_for_k``, ``_fir_design``,
-``_fit_mode_keep_mask``) statt erneut abgetippt -- bitgleiche Datenbasis garantiert, kein
-Drift-Risiko. Import funktioniert, weil beide Skripte im selben ``scripts/``-Verzeichnis
-liegen (Python haengt beim Aufruf ``python scripts/x.py`` das Skriptverzeichnis vorn an
-``sys.path``); die importierte Datei hat keinen Modul-Seiteneffekt (``main()`` steht
-hinter ``if __name__ == "__main__"``). KEINE Aenderung an ``src/`` oder an
+NO network training -- pure OLS regression (``np.linalg.lstsq``). Data generation,
+split mechanics, regime definition, FIR window logic, k=43, 3 training-pool seeds and
+fixed constant-run holdout are imported unchanged from ``probe_n1_regime_crosstab.py``
+(``_generate_pools``, ``_crosstab_for_k``, ``_fir_design``,
+``_fit_mode_keep_mask``) instead of being typed out again -- bit-identical data basis
+guaranteed, no risk of drift. The import works because both scripts lie in the same
+``scripts/`` directory (on the call ``python scripts/x.py`` Python prepends the script
+directory to ``sys.path``); the imported file has no module side effect (``main()`` sits
+behind ``if __name__ == "__main__"``). NO change to ``src/`` or to
 ``probe_n1_regime_crosstab.py``.
 
-Hintergrund (Befund 49, ``docs/04_stand_ap1.md``): lokal gefittete FIR-Modelle schlagen
-das gepoolte Modell auf ``product_moisture_kg_per_kg`` deutlich (Faktor 66 in
-Residuenvarianz auf dem HEISS-Holdout). Offene Frage: Arbeitspunktabhaengigkeit der
-Parameter (dann genuegt ein arbeitspunktgeplantes lineares Modell) oder echte
-Zustandsabhaengigkeit der Dynamik (dann Begruendung fuer Sequenzmodelle)?
+Background (Befund 49, ``docs/04_stand_ap1.md``): locally fitted FIR models beat
+the pooled model on ``product_moisture_kg_per_kg`` clearly (factor 66 in
+residual variance on the HEISS holdout). Open question: operating-point dependence of the
+parameters (then an operating-point-scheduled linear model suffices) or genuine
+state dependence of the dynamics (then a justification for sequence models)?
 
-P1 -- GEPLANT: gepooltes FIR-Modell (k=43), dessen Merkmalssatz zusaetzlich die
-Wechselwirkung jedes linearen/quadratischen FIR-Merkmals mit der gemessenen
-``bed_temperature_celsius`` zum Zeitpunkt t enthaelt, plus ``bed_temperature_celsius(t)``
-selbst als Haupteffekt (Standardpraxis bei Interaktionsmodellen: Haupteffekt immer mit
-aufnehmen). Merkmalszahl verdoppelt sich dadurch exakt (siehe ``_fir_design_scheduled``).
+P1 -- GEPLANT: pooled FIR model (k=43) whose feature set additionally contains the
+interaction of every linear/quadratic FIR feature with the measured
+``bed_temperature_celsius`` at time t, plus ``bed_temperature_celsius(t)``
+itself as a main effect (standard practice for interaction models: always include the
+main effect). The feature count thereby doubles exactly (see ``_fir_design_scheduled``).
 
-WICHTIG fuer die Interpretation: ``bed_temperature_celsius(t)`` ist fuer die Kanaele
-``energy_target``, ``product_moisture_kg_per_kg`` und ``d50_um`` ein ANDERER Ausgangskanal
-als das Ziel -- keine autoregressive Ruckfuehrung des Zielkanals. Fuer das Ziel
-``bed_temperature_celsius`` selbst ist die Konstruktion dagegen autoregressiv (das Modell
-bekommt den Zielwert zum Vorhersagezeitpunkt direkt als Merkmal) -- die Zahl dort ist
-KEIN Beleg fuer Arbeitspunktplanung, sondern ein Leckage-Artefakt, und wird entsprechend
-gekennzeichnet.
+IMPORTANT for the interpretation: for the channels ``energy_target``,
+``product_moisture_kg_per_kg`` and ``d50_um``, ``bed_temperature_celsius(t)`` is a DIFFERENT
+output channel than the target -- no autoregressive feedback of the target channel. For the
+target ``bed_temperature_celsius`` itself, by contrast, the construction is autoregressive (the
+model receives the target value at the prediction time directly as a feature) -- the number
+there is NO evidence for operating-point scheduling but a leakage artifact, and is marked
+accordingly.
 
-P2 -- CONTROL: gepooltes FIR-Modell ohne Betriebspunktbezug, aber mit einem hoeheren k,
-sodass die Merkmalszahl mit GEPLANT vergleichbar ist (naechstliegendes k, siehe
-``_select_control_k``). Prueft, ob der GEPLANT-Gewinn reine Merkmalszahl ist statt
-Arbeitspunktbezug.
+P2 -- CONTROL: pooled FIR model without operating-point reference, but with a higher k,
+so that the feature count is comparable to GEPLANT (nearest k, see
+``_select_control_k``). Checks whether the GEPLANT gain is pure feature count rather than
+operating-point reference.
 
-Ausgewertet auf HEISS-Holdout und KALT-Holdout wie in N1: R2, Var(y) und
-Residuenvarianz in physikalischen Einheiten, Merkmalszahl, 3 Seeds, Median und Spannweite.
-POOLED und LOKAL (k=43) werden dafuer aus ``_crosstab_for_k`` (N1, unveraendert)
-mitberichtet, damit GEPLANT/CONTROL direkt daneben stehen.
+Evaluated on the HEISS holdout and the KALT holdout as in N1: R2, Var(y) and
+residual variance in physical units, feature count, 3 seeds, median and range.
+POOLED and LOKAL (k=43) are reported alongside for this from ``_crosstab_for_k`` (N1,
+unchanged), so that GEPLANT/CONTROL stand directly next to them.
 
-Q1 -- Konditionierung: je Trainings-Entwurfsmatrix (POOLED/GEPLANT/CONTROL, je Seed)
-Konditionszahl (``np.linalg.cond``), effektiver Rang (``np.linalg.matrix_rank``),
-Verhaeltnis groesste/kleinste Spaltennorm und der von ``lstsq`` gemeldete Rang (s.
-``_design_matrix_diagnostics``). Zusatz-Kontrollrechnung: dieselben drei Modelle mit
-spaltenweise standardisierten Merkmalen (Mittel 0, Std 1 je Trainings-Seed, Bias-Spalte
-ausgenommen, s. ``_standardize_design``) neu gefittet -- R2/Residuenvarianz auf beiden
-Holdouts, NICHT als neuer Standard der FIR-Pipeline gedacht, nur zur Kontrolle, ob der
-tief negative HEISS-R2 (u.a. ``product_moisture_kg_per_kg``) durch schlechte
-Konditionierung der Entwurfsmatrix miterklaerbar ist statt rein strukturell.
+Q1 -- conditioning: per training design matrix (POOLED/GEPLANT/CONTROL, per seed)
+condition number (``np.linalg.cond``), effective rank (``np.linalg.matrix_rank``),
+ratio of largest/smallest column norm and the rank reported by ``lstsq`` (see
+``_design_matrix_diagnostics``). Additional control computation: the same three models
+refitted with column-wise standardised features (mean 0, std 1 per training seed, bias
+column excluded, see ``_standardize_design``) -- R2/residual variance on both
+holdouts, NOT intended as a new standard of the FIR pipeline, only as a check whether the
+deeply negative HEISS R2 (among others ``product_moisture_kg_per_kg``) can be partly explained
+by poor conditioning of the design matrix rather than being purely structural.
 """
 
 from __future__ import annotations
@@ -74,8 +74,8 @@ from probe_n1_regime_crosstab import (
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
-# actions, outputs, k, *, point_mask -> (design, run_idx, t_idx); s. _fir_design_scheduled
-# und _fir_design (N1) fuer die beiden konkreten Implementierungen.
+# actions, outputs, k, *, point_mask -> (design, run_idx, t_idx); see _fir_design_scheduled
+# and _fir_design (N1) for the two concrete implementations.
 DesignFn = Callable[..., tuple[np.ndarray, np.ndarray, np.ndarray]]
 
 
@@ -87,12 +87,12 @@ def _fir_design_scheduled(
     *,
     point_mask: np.ndarray | None = None,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """FIR-Merkmalsmatrix mit Betttemperatur-Interaktion.
+    """FIR feature matrix with bed temperature interaction.
 
-    Fensterlogik (Lags, ``point_mask``, Ausschluss leerer Laeufe) identisch zu
-    ``probe_n1_regime_crosstab._fir_design``, nur um die Wechselwirkungsspalten
-    ``[lin, quad] * T_bed(t)`` und den Haupteffekt ``T_bed(t)`` erweitert (vor der
-    abschliessenden Bias-Spalte).
+    Window logic (lags, ``point_mask``, exclusion of empty runs) identical to
+    ``probe_n1_regime_crosstab._fir_design``, only extended by the interaction columns
+    ``[lin, quad] * T_bed(t)`` and the main effect ``T_bed(t)`` (before the
+    final bias column).
     """
     n_runs, n_steps, _n_actions = actions.shape
     run_idx_list = []
@@ -128,10 +128,10 @@ def _design_plain(
     *,
     point_mask: np.ndarray | None = None,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Unveraenderte FIR-Merkmale, ``outputs`` nur fuer die ``DesignFn``-Signatur da.
+    """Unchanged FIR features, ``outputs`` only present for the ``DesignFn`` signature.
 
-    N1s ``_fir_design`` unveraendert -- gemeinsam fuer POOLED (k=``K_MAIN``) und CONTROL
-    (k=``k_control``) verwendet, beide ohne Betriebspunktbezug.
+    N1's ``_fir_design`` unchanged -- used jointly for POOLED (k=``K_MAIN``) and CONTROL
+    (k=``k_control``), both without reference to the operating point.
     """
     return _fir_design(actions, k, point_mask=point_mask)
 
@@ -141,10 +141,10 @@ def _n_features_plain(n_actions: int, k: int) -> int:
 
 
 def _select_control_k(n_actions: int, target_features: int) -> int:
-    """Naechstliegendes k, dessen unveraenderte FIR-Merkmalszahl target_features trifft.
+    """Nearest k whose unchanged FIR feature count matches target_features.
 
-    Sucht ueber k=1..399, keine geschlossene Form (die Merkmalszahl ist ungerade,
-    ``target_features`` i.A. gerade -- exakte Gleichheit ist nicht erreichbar).
+    Searches over k=1..399, no closed form (the feature count is odd,
+    ``target_features`` in general even -- exact equality cannot be reached).
     """
     best_k = 1
     best_diff = abs(_n_features_plain(n_actions, best_k) - target_features)
@@ -157,11 +157,11 @@ def _select_control_k(n_actions: int, target_features: int) -> int:
 
 
 def _design_matrix_diagnostics(design: np.ndarray) -> dict[str, float | int]:
-    """Konditionszahl, effektiver Rang, Spaltennorm-Verhaeltnis und lstsq-Rang.
+    """Condition number, effective rank, column norm ratio and lstsq rank.
 
-    Der von ``lstsq`` gemeldete Rang haengt nur von der Entwurfsmatrix ab (SVD-basiert,
-    unabhaengig von der rechten Seite `b`) -- ein Nullvektor als `b` liefert denselben Rang
-    wie ein echter Fit, ohne einen Zielkanal auszuzeichnen.
+    The rank reported by ``lstsq`` depends only on the design matrix (SVD-based,
+    independent of the right-hand side `b`) -- a zero vector as `b` yields the same rank
+    as a real fit, without singling out a target channel.
     """
     condition_number = float(np.linalg.cond(design))
     effective_rank = int(np.linalg.matrix_rank(design))
@@ -186,11 +186,11 @@ def _conditioning_report(
     design_fn: DesignFn,
     train_pools: dict[int, dict],
 ) -> list[dict[str, float | int | str]]:
-    """Konditionierungsdiagnostik der gepoolten Trainings-Entwurfsmatrix, je Seed.
+    """Conditioning diagnostics of the pooled training design matrix, per seed.
 
-    Dieselbe Maske (``_fit_mode_keep_mask(..., "pooled")``) wie beim eigentlichen Fit in
-    ``_pooled_variant_crosstab`` -- die Entwurfsmatrix ist Ziel-unabhaengig, daher reicht
-    eine Diagnostik je Seed statt je (Seed, Kanal).
+    The same mask (``_fit_mode_keep_mask(..., "pooled")``) as in the actual fit in
+    ``_pooled_variant_crosstab`` -- the design matrix is target-independent, so one
+    diagnostic per seed suffices instead of per (seed, channel).
     """
     reports: list[dict[str, float | int | str]] = []
     for seed in TRAIN_SEEDS:
@@ -207,10 +207,10 @@ def _conditioning_report(
 def _standardize_design(
     design_tr: np.ndarray, eval_designs: dict[str, np.ndarray]
 ) -> tuple[np.ndarray, dict[str, np.ndarray]]:
-    """Spaltenweise z-Standardisierung (Mittel 0, Std 1), aus den Trainingsdaten geschaetzt.
+    """Column-wise z-standardisation (mean 0, std 1), estimated from the training data.
 
-    Die letzte Spalte (Bias/Intercept, konstant 1) bleibt unveraendert: sie hat Std=0,
-    Standardisieren wuerde durch Null teilen und den Intercept zerstoeren.
+    The last column (bias/intercept, constant 1) stays unchanged: it has std=0,
+    standardising would divide by zero and destroy the intercept.
     """
     n_features = design_tr.shape[1]
     feature_cols = slice(0, n_features - 1)
@@ -241,12 +241,12 @@ def _pooled_variant_crosstab(
     eval_regimes: tuple[str, ...] = REGIMES,
     standardize: bool = False,
 ) -> dict[str, dict[str, dict]]:
-    """Gepooltes Fit-Modell (``fit_mode="pooled"``, s. N1), Merkmale aus ``design_fn``.
+    """Pooled fit model (``fit_mode="pooled"``, see N1), features from ``design_fn``.
 
-    ``standardize=True`` (Q1-Kontrollrechnung): Entwurfsmatrix je Seed spaltenweise
-    z-standardisiert (Statistik aus dem Trainingsfenster dieses Seeds, angewendet auf
-    Training UND Holdout desselben Seeds) -- deshalb werden die Holdout-Entwuerfe hier,
-    anders als im unstandardisierten Fall, JE SEED neu transformiert statt einmal vorab.
+    ``standardize=True`` (Q1 control computation): design matrix z-standardised column-wise
+    per seed (statistics from the training window of this seed, applied to
+    training AND holdout of the same seed) -- therefore the holdout designs are
+    transformed anew PER SEED here, unlike in the unstandardised case, instead of once upfront.
     """
     eval_designs_raw = {
         regime: design_fn(holdout_actions, holdout_outputs, k, point_mask=~holdout_masks[regime])
@@ -345,7 +345,7 @@ def main() -> None:
     n_features_pooled = _n_features_plain(n_actions, K_MAIN)
     print(f"POOLED/LOKAL (aus N1, unveraendert): k={K_MAIN}, n_features={n_features_pooled}")
 
-    def _design_geplant(
+    def _design_scheduled(
         actions: np.ndarray,
         outputs: np.ndarray,
         k: int,
@@ -357,7 +357,7 @@ def main() -> None:
     geplant = _pooled_variant_crosstab(
         "geplant",
         K_MAIN,
-        _design_geplant,
+        _design_scheduled,
         channels,
         holdout_actions,
         holdout_outputs,
@@ -391,13 +391,13 @@ def main() -> None:
         print(f"-- {channel}{tag} --")
         for regime in REGIMES:
             pooled_cell = baseline[channel][f"fit_pooled__eval_{regime}"]
-            lokal_cell = baseline[channel][f"fit_{regime}__eval_{regime}"]
-            geplant_cell = geplant[channel][regime]
+            local_cell = baseline[channel][f"fit_{regime}__eval_{regime}"]
+            scheduled_cell = geplant[channel][regime]
             control_cell = control[channel][regime]
             cells_by_label = (
                 ("POOLED", pooled_cell),
-                ("LOKAL", lokal_cell),
-                ("GEPLANT", geplant_cell),
+                ("LOKAL", local_cell),
+                ("GEPLANT", scheduled_cell),
                 ("CONTROL", control_cell),
             )
             parts = [
@@ -406,27 +406,27 @@ def main() -> None:
             ]
             print(f"  eval={regime:<5s} " + " | ".join(parts))
 
-    moisture_heiss_pooled = baseline["product_moisture_kg_per_kg"]["fit_pooled__eval_heiss"][
+    moisture_hot_pooled = baseline["product_moisture_kg_per_kg"]["fit_pooled__eval_heiss"][
         "residual_var_median"
     ]
-    moisture_heiss_lokal = baseline["product_moisture_kg_per_kg"]["fit_heiss__eval_heiss"][
+    moisture_hot_local = baseline["product_moisture_kg_per_kg"]["fit_heiss__eval_heiss"][
         "residual_var_median"
     ]
-    moisture_heiss_geplant = geplant["product_moisture_kg_per_kg"]["heiss"]["residual_var_median"]
-    gap = moisture_heiss_pooled - moisture_heiss_lokal
-    closed = moisture_heiss_pooled - moisture_heiss_geplant
+    moisture_hot_scheduled = geplant["product_moisture_kg_per_kg"]["heiss"]["residual_var_median"]
+    gap = moisture_hot_pooled - moisture_hot_local
+    closed = moisture_hot_pooled - moisture_hot_scheduled
     fraction_closed = closed / gap if gap != 0.0 else float("nan")
     print(
         "Kernfrage product_moisture_kg_per_kg (HEISS-Holdout): "
-        f"POOLED ResidVar={moisture_heiss_pooled:.6g}, LOKAL={moisture_heiss_lokal:.6g}, "
-        f"GEPLANT={moisture_heiss_geplant:.6g}, Luecke geschlossen={fraction_closed:.4%}"
+        f"POOLED ResidVar={moisture_hot_pooled:.6g}, LOKAL={moisture_hot_local:.6g}, "
+        f"GEPLANT={moisture_hot_scheduled:.6g}, Luecke geschlossen={fraction_closed:.4%}"
     )
 
     print("-- Q1: Konditionierung der Trainings-Entwurfsmatrizen (gepoolte Maske, je Seed) --")
     k_by_variant = {"pooled": K_MAIN, "geplant": K_MAIN, "control": k_control}
     conditioning = (
         _conditioning_report("pooled", K_MAIN, _design_plain, train_pools)
-        + _conditioning_report("geplant", K_MAIN, _design_geplant, train_pools)
+        + _conditioning_report("geplant", K_MAIN, _design_scheduled, train_pools)
         + _conditioning_report("control", k_control, _design_plain, train_pools)
     )
     for entry in conditioning:
@@ -450,10 +450,10 @@ def main() -> None:
         train_pools,
         standardize=True,
     )
-    standardized_geplant = _pooled_variant_crosstab(
+    standardized_scheduled = _pooled_variant_crosstab(
         "geplant_standardized",
         K_MAIN,
-        _design_geplant,
+        _design_scheduled,
         channels,
         holdout_actions,
         holdout_outputs,
@@ -479,7 +479,7 @@ def main() -> None:
         for regime in REGIMES:
             cells_by_label = (
                 ("POOLED_STD", standardized_pooled[channel][regime]),
-                ("GEPLANT_STD", standardized_geplant[channel][regime]),
+                ("GEPLANT_STD", standardized_scheduled[channel][regime]),
                 ("CONTROL_STD", standardized_control[channel][regime]),
             )
             parts = [
@@ -488,26 +488,26 @@ def main() -> None:
             ]
             print(f"  eval={regime:<5s} " + " | ".join(parts))
 
-    moisture_heiss_pooled_std = standardized_pooled["product_moisture_kg_per_kg"]["heiss"][
+    moisture_hot_pooled_std = standardized_pooled["product_moisture_kg_per_kg"]["heiss"][
         "r2_median"
     ]
-    moisture_heiss_geplant_std = standardized_geplant["product_moisture_kg_per_kg"]["heiss"][
+    moisture_hot_scheduled_std = standardized_scheduled["product_moisture_kg_per_kg"]["heiss"][
         "r2_median"
     ]
-    moisture_heiss_control_std = standardized_control["product_moisture_kg_per_kg"]["heiss"][
+    moisture_hot_control_std = standardized_control["product_moisture_kg_per_kg"]["heiss"][
         "r2_median"
     ]
-    moisture_heiss_pooled_r2 = baseline["product_moisture_kg_per_kg"]["fit_pooled__eval_heiss"][
+    moisture_hot_pooled_r2 = baseline["product_moisture_kg_per_kg"]["fit_pooled__eval_heiss"][
         "r2_median"
     ]
-    moisture_heiss_geplant_r2 = geplant["product_moisture_kg_per_kg"]["heiss"]["r2_median"]
-    moisture_heiss_control_r2 = control["product_moisture_kg_per_kg"]["heiss"]["r2_median"]
+    moisture_hot_scheduled_r2 = geplant["product_moisture_kg_per_kg"]["heiss"]["r2_median"]
+    moisture_hot_control_r2 = control["product_moisture_kg_per_kg"]["heiss"]["r2_median"]
     print(
         "Kernfrage Q1 product_moisture_kg_per_kg (HEISS-Holdout), R2 unstandardisiert -> "
         "standardisiert: "
-        f"POOLED {moisture_heiss_pooled_r2:+.3f} -> {moisture_heiss_pooled_std:+.3f}, "
-        f"GEPLANT {moisture_heiss_geplant_r2:+.3f} -> {moisture_heiss_geplant_std:+.3f}, "
-        f"CONTROL {moisture_heiss_control_r2:+.3f} -> {moisture_heiss_control_std:+.3f}"
+        f"POOLED {moisture_hot_pooled_r2:+.3f} -> {moisture_hot_pooled_std:+.3f}, "
+        f"GEPLANT {moisture_hot_scheduled_r2:+.3f} -> {moisture_hot_scheduled_std:+.3f}, "
+        f"CONTROL {moisture_hot_control_r2:+.3f} -> {moisture_hot_control_std:+.3f}"
     )
 
     result = {
@@ -527,7 +527,7 @@ def main() -> None:
         "conditioning": conditioning,
         "standardized_control_check": {
             "pooled": standardized_pooled,
-            "geplant": standardized_geplant,
+            "geplant": standardized_scheduled,
             "control": standardized_control,
         },
         "_elapsed_s": time.monotonic() - t0,

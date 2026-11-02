@@ -1,8 +1,8 @@
-"""R1: Regressionstest gegen den Luftstrom-Fehler in ``study_plant_validation.py``.
+"""R1: regression test against the air-flow error in ``study_plant_validation.py``.
 
-Relative statt absolute Feuchte in der Nm3/h-Umrechnung, Faktor ~2.2, Befund 56 Korrektur.
-``scripts/`` ist kein Package -- Laden per ``importlib.util.spec_from_file_location``,
-wie in ``test_arch_learning_curve_resume.py``.
+Relative instead of absolute humidity in the Nm3/h conversion, factor ~2.2, Befund 56 correction.
+``scripts/`` is not a package -- loading via ``importlib.util.spec_from_file_location``,
+as in ``test_arch_learning_curve_resume.py``.
 """
 
 from __future__ import annotations
@@ -32,20 +32,20 @@ def _load_script(name: str) -> types.ModuleType:
 
 
 def test_gas_velocity_from_normal_flow_matches_mass_conservation() -> None:
-    """Der Trockenluftmassenstrom darf nicht um Faktor 2 vom Normvolumenstrom abweichen.
+    """The dry-air mass flow must not deviate from the normal volume flow by a factor of 2.
 
-    Ein Normkubikmeter ist per Definition eine Massenangabe: der Trockenluft-
-    massenstrom, den das Modell aus einem gegebenen Normvolumenstrom ableitet, muss
-    Normvolumenstrom mal Normdichte entsprechen -- bis auf die Feuchtekorrektur von
-    wenigen Prozent (moist/dry-Umrechnung, temperaturabhaengige Gasdichte). Weder die
-    angenommene Umgebungsfeuchte (0.75 relativ) noch die Betttemperatur duerfen diesen
-    Massenstrom um einen Faktor wie 2 verschieben -- genau das tat der Fehler, den
-    dieser Test verhindert (relative statt absolute Feuchte in der Nm3/h-Umrechnung).
+    A normal cubic metre is by definition a mass quantity: the dry-air
+    mass flow that the model derives from a given normal volume flow must correspond to
+    normal volume flow times normal density -- up to the moisture correction of
+    a few percent (moist/dry conversion, temperature-dependent gas density). Neither the
+    assumed ambient humidity (0.75 relative) nor the bed temperature may shift this
+    mass flow by a factor like 2 -- exactly what the error did that
+    this test prevents (relative instead of absolute humidity in the Nm3/h conversion).
 
-    Prueft den echten Produktionspfad: ``_gas_velocity_m_per_s`` liefert die
-    Modellgeschwindigkeit, ``GreyBoxFluidBedGranulator.evaluate_derivative`` liest daraus
-    -- wie im echten Lauf -- ``dry_air_mass_flow_kg_per_s`` zurueck. Keine der beiden
-    Formeln wird hier erneut abgetippt.
+    Checks the real production path: ``_gas_velocity_m_per_s`` yields the
+    model velocity, ``GreyBoxFluidBedGranulator.evaluate_derivative`` reads
+    ``dry_air_mass_flow_kg_per_s`` back from it -- as in the real run. Neither of the two
+    formulas is typed out again here.
     """
     module = _load_script("study_plant_validation")
     backend = NumpyBackend()

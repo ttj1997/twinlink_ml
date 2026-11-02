@@ -47,31 +47,31 @@ def evaluate_point(
 ) -> SteadyStateSolution:
     """Steady state of one operating point (set points + ambient state).
 
-    Bewusst OHNE eigenes ``temperature_bracket_celsius`` -- ein erster Versuch, das
-    Modul-Default (``ambient+10`` / ``max(inlet, susp)+5``, siehe ``steady_state.py``)
-    durch eine breitere, "physikalisch begründete" Marge zu ersetzen, hat sich als
-    Fehlschlag erwiesen: ``ambient+10`` ist keine willkürliche Wahl, sondern hält die
-    äußere Bisektion aktiv im Trocknungsregime (siehe dortiger Docstring, Abschnitt zur
-    unteren Bracket-Grenze) -- eine niedrigere Grenze reicht in die Kondensationsbranche
-    hinein, in der die INNERE Feuchte-Bisektion strukturell keinen Vorzeichenwechsel
-    findet. Das brach nicht nur die wenigen Randfälle, die es beheben sollte, sondern
-    praktisch jede Kandidatenauswertung (siehe Modul-Docstring, Abschnitt
-    "Laufzeit-Kompromiss"). Der eigentliche Befund aus dem ersten vollen Gitterlauf --
-    Such- und Report-Präzision fanden am Bracket-Rand unterschiedliches Vorzeichen, weil
-    sie MIT UNTERSCHIEDLICHER Bisektionspräzision liefen -- wird stattdessen dadurch
-    behoben, dass ``optimize_grid_point``/``find_fixed_operating_point`` für den
-    ENDGÜLTIGEN Report dieselbe (Such-)Präzision verwenden wie während der Suche, siehe
-    dort. Ein danach verbleibender Bracket-Fehlschlag ist damit ein echter Befund
-    (der angenommene Beharrungszustand liegt außerhalb des dokumentierten Gültigkeits-
-    bereichs des Lösers), keine Artefakt-Diagnose mehr.
+    Deliberately WITHOUT its own ``temperature_bracket_celsius`` -- a first attempt to replace
+    the module default (``ambient+10`` / ``max(inlet, susp)+5``, see ``steady_state.py``)
+    with a wider, "physically justified" margin turned out to be a
+    failure: ``ambient+10`` is not an arbitrary choice but keeps the
+    outer bisection active in the drying regime (see the docstring there, section on the
+    lower bracket bound) -- a lower bound reaches into the condensation branch,
+    in which the INNER moisture bisection structurally finds no sign change.
+    That broke not only the few edge cases it was meant to fix but
+    practically every candidate evaluation (see module docstring, section
+    "runtime compromise"). The actual finding from the first full grid run --
+    search and report precision found different signs at the bracket edge because
+    they ran WITH DIFFERENT bisection precision -- is instead fixed by
+    ``optimize_grid_point``/``find_fixed_operating_point`` using for the
+    FINAL report the same (search) precision as during the search, see
+    there. A bracket failure that still remains after that is thus a real finding
+    (the assumed steady state lies outside the documented validity
+    range of the solver), no longer an artifact diagnosis.
 
-    **Nachtrag (Befund 78/79, Prüfbefund K1).** Die Begründung oben gilt nur für Grenzen
-    UNTERHALB der Umgebungstemperatur: oberhalb von ``T_amb`` ist ``Y_in < Y_s(T_bed)``, die
-    Kondensationsbranche existiert dort nicht. Die feste Grenze ``ambient+10`` schnitt bei
-    warmer Umgebung gültige Trocknungszustände ab, und mehrere berichtete Optima lagen genau
-    auf ihr. ``solve_steady_state`` durchsucht deshalb, nur wenn an ``ambient+10`` kein
-    Vorzeichenwechsel besteht, das Rückfallintervall ``[ambient+0.5, ambient+10]`` (überall
-    sonst bitgleich zum Stand davor). Diese Funktion übergibt weiterhin kein eigenes Bracket.
+    **Addendum (Befund 78/79, review finding K1).** The reasoning above holds only for bounds
+    BELOW the ambient temperature: above ``T_amb``, ``Y_in < Y_s(T_bed)`` holds; the
+    condensation branch does not exist there. The fixed bound ``ambient+10`` cut off valid
+    drying states in warm surroundings, and several reported optima lay exactly
+    on it. ``solve_steady_state`` therefore searches, only if there is no sign change at
+    ``ambient+10``, the fallback interval ``[ambient+0.5, ambient+10]`` (everywhere
+    else bit-identical to the state before). This function still passes no bracket of its own.
     """
     config = build_variant_config(
         base_config, t_in=t_in, u_gas=u_gas, p_nozzle=p_nozzle, t_amb=t_amb, phi_amb=phi_amb
@@ -82,7 +82,7 @@ def evaluate_point(
 
 @dataclass(frozen=True, slots=True)
 class OptimizationBudget:
-    """Suchbudget für ``differential_evolution`` + Nelder-Mead, geteilt von BB2 und BB3(a)."""
+    """Search budget for ``differential_evolution`` + Nelder-Mead, shared by BB2 and BB3(a)."""
 
     seed: int
     popsize: int
@@ -101,7 +101,7 @@ def run_de_nm(
     *,
     de_workers: int | Callable[[Callable, list], list],
 ) -> tuple[Any, Any, float, float]:
-    """DE + Nelder-Mead-Verfeinerung, gemeinsam für BB2 und BB3(a) verwendet."""
+    """DE + Nelder-Mead refinement, used jointly for BB2 and BB3(a)."""
     de_start = time.perf_counter()
     de_result = differential_evolution(
         objective,

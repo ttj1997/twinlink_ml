@@ -1,15 +1,15 @@
-r"""Probe D2+D4: Tragfaehigkeit von arch_composite.jsonl / mamba_reduced_comparison.jsonl.
+r"""Probe D2+D4: soundness of arch_composite.jsonl / mamba_reduced_comparison.jsonl.
 
-Prueft die u>u_terminal-Verletzung in V0.
+Checks the u>u_terminal violation in V0.
 
-KEIN Netztraining (PersistenceModel/LinearARXModel sind geschlossene Baselines, kein
-Gradientenverfahren), KEINE Aenderung an ``src/``.
+NO network training (PersistenceModel/LinearARXModel are closed-form baselines, no
+gradient method), NO change to ``src/``.
 
-Vorbedingung (siehe D1-Befund im Chat): arch_composite.jsonl hat einen ANDEREN
-process/fingerprint (b24c5b728681bca9) als V0 (82f65f576a2e5253) und laesst sich mit den
-aktuellen conf/process/*.yaml NICHT rekonstruieren -- dieses Skript arbeitet deshalb nur
-mit mamba_reduced_comparison.jsonl (fp 82f65f576a2e5253, split/digest 5b9628a151344f37,
-master_seed=1, siehe scripts/run_mamba_reduced_comparison.py::_spec/EXPECTED).
+Precondition (see the D1 finding in the chat): arch_composite.jsonl has a DIFFERENT
+process/fingerprint (b24c5b728681bca9) than V0 (82f65f576a2e5253) and can NOT be
+reconstructed with the current conf/process/*.yaml -- this script therefore works only
+with mamba_reduced_comparison.jsonl (fp 82f65f576a2e5253, split/digest 5b9628a151344f37,
+master_seed=1, see scripts/run_mamba_reduced_comparison.py::_spec/EXPECTED).
 """
 
 from __future__ import annotations
@@ -37,12 +37,12 @@ N_TRAIN = 16
 MASTER_SEED = 1
 BUDGET_POINTS = (8, 16, 32, 64)
 
-# Fingerprint aktualisiert von 82f65f576a2e5253 (Wert oben in der Vorbedingung, historisch
-# korrekt fuer mamba_reduced_comparison.jsonl) auf 40aae2b4526a5ed7: NumericsConfig.
-# enforce_gas_velocity_projection hinzugefuegt (Default AUS). ProcessConfig.fingerprint
-# hasht die gesamte Config, daher aendert sich der Wert auch bei unveraendertem Verhalten.
-# Aequivalenz belegt durch test_gas_velocity_projection_disabled_matches_legacy_baseline
-# (tests/test_gas_velocity_projection.py) -- siehe dort fuer den Bitgleichheits-Beleg.
+# Fingerprint updated from 82f65f576a2e5253 (value above in the precondition, historically
+# correct for mamba_reduced_comparison.jsonl) to 40aae2b4526a5ed7: NumericsConfig.
+# enforce_gas_velocity_projection added (default OFF). ProcessConfig.fingerprint
+# hashes the whole config, so the value changes even when behaviour is unchanged.
+# Equivalence shown by test_gas_velocity_projection_disabled_matches_legacy_baseline
+# (tests/test_gas_velocity_projection.py) -- see there for the bit-identity evidence.
 EXPECTED = {
     "process/fingerprint": "40aae2b4526a5ed7",
     "split/digest": "5b9628a151344f37",
@@ -106,8 +106,8 @@ def main() -> None:
     trajectory = data.trajectory
     run_id = trajectory.run_id
     n_runs, n_steps, _ = trajectory.actions.shape
-    train_pool = set(data.split.train)  # 64 Laeufe
-    holdout_pool = set(data.split.test)  # 32 Laeufe, "test" im Code, "Holdout" im Auftrag
+    train_pool = set(data.split.train)  # 64 runs
+    holdout_pool = set(data.split.test)  # 32 runs, "test" in the code, "holdout" in the task
 
     masks = _violation_masks(trajectory, config.material)
 
@@ -166,7 +166,7 @@ def main() -> None:
     result["d2c"] = d2c
 
     # ---------------------------------------------------------------- D2d
-    train_pool_ordered = data.split.train  # 64, Design-Reihenfolge
+    train_pool_ordered = data.split.train  # 64, design order
     d2d: dict = {}
     for n in BUDGET_POINTS:
         subset = train_pool_ordered[:n]

@@ -1,22 +1,22 @@
-r"""TA4: Transformer/LSTM bei ``net_max_epochs=600`` gegen den 200-Epochen-Stand (Befund 58/59c).
+r"""TA4: Transformer/LSTM at ``net_max_epochs=600`` against the 200-epoch state (Befund 58/59c).
 
-Laedt drei bestehende Logs, OHNE erneut zu trainieren:
+Loads three existing logs, WITHOUT training again:
 
-- ``arch_epoch_budget_probe600.jsonl`` (TA3, dieser Auftrag): Transformer/LSTM,
-  ``n_train=64``, 5 Seeds, ``net_max_epochs=600``. AUSDRUECKLICH NICHT protokollgleich zu
-  Befund 51/58 -- einzige Abweichung ist das Epochenbudget, siehe Commit-Nachricht.
-  Baselines nicht enthalten (``--skip-baselines``).
-- ``arch_learning_curve_projected.jsonl`` (Befund 51/28-Protokoll): LSTM bei 200 Epochen.
-- ``arch_learning_curve_projected_extended.jsonl`` (Befund 58/OA4): Transformer bei
-  200 Epochen.
+- ``arch_epoch_budget_probe600.jsonl`` (TA3, this task): Transformer/LSTM,
+  ``n_train=64``, 5 seeds, ``net_max_epochs=600``. EXPLICITLY NOT under the same protocol as
+  Befund 51/58 -- the only deviation is the epoch budget, see the commit message.
+  Baselines not included (``--skip-baselines``).
+- ``arch_learning_curve_projected.jsonl`` (Befund 51/28 protocol): LSTM at 200 epochs.
+- ``arch_learning_curve_projected_extended.jsonl`` (Befund 58/OA4): Transformer at
+  200 epochs.
 
-Kernfrage (Befund 58/59c): ueberholt der Transformer LSTM auf ``bed_temperature_celsius``
-(Konstantlauf-Holdout, h=36, ``n_train=64``), wenn beide auskonvergieren duerfen, statt
-durch ``net_max_epochs=200`` gemeinsam abgeschnitten zu werden (Befund 59c: Transformer an
-allen 5 Seeds, LSTM an 2/5 gecappt -- die urspruengliche Aufhol-Aussage war dadurch fuer
-BEIDE Architekturen budget-konfundiert, nicht nur fuer den Transformer).
+Core question (Befund 58/59c): does the Transformer overtake LSTM on ``bed_temperature_celsius``
+(constant-run holdout, h=36, ``n_train=64``) when both are allowed to converge fully, instead
+of being cut off jointly by ``net_max_epochs=200`` (Befund 59c: Transformer capped on
+all 5 seeds, LSTM on 2/5 -- the original catch-up claim was therefore budget-confounded for
+BOTH architectures, not only for the Transformer).
 
-Aufruf::
+Usage::
 
     python scripts/analyze_epoch_budget_probe600.py
 """
@@ -64,8 +64,8 @@ def _rmse(records: list[dict], head: str, horizon: int = HORIZON) -> list[tuple[
 
 
 def _epochs_run(records: list[dict]) -> dict[int, dict[str, int]]:
-    """Je Seed die erreichte Epochenzahl pro Kopf (ein Record je Testmenge traegt dieselben
-    Trainingsdiagnosen -- hier ueber ``excited`` dedupliziert)."""
+    """Per seed, the number of epochs reached per head (one record per test set carries the
+    same training diagnostics -- deduplicated here via ``excited``)."""
     out: dict[int, dict[str, int]] = {}
     for r in records:
         p = r["params"]

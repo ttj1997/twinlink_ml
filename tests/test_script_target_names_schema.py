@@ -1,10 +1,10 @@
-"""J2: Schemapruefung ``target_names`` in Log-anhaengenden Skripten.
+"""J2: schema check of ``target_names`` in log-appending scripts.
 
-``scripts/`` ist kein Package (kein ``__init__.py``, nicht auf ``sys.path``) -- die
-betroffenen Skripte werden deshalb per ``importlib.util.spec_from_file_location`` direkt
-aus ihrer Datei geladen, wie an keiner anderen Stelle dieses Projekts. Jeder Test prueft
-nur die Schemapruefungs-Funktion selbst (synthetischer Eingang mit abweichenden
-``target_names``), nicht den vollen Skriptlauf (kein Netztraining, keine Datenerzeugung).
+``scripts/`` is not a package (no ``__init__.py``, not on ``sys.path``) -- the
+affected scripts are therefore loaded directly from their file via
+``importlib.util.spec_from_file_location``, as nowhere else in this project. Each test checks
+only the schema check function itself (synthetic input with deviating
+``target_names``), not the full script run (no network training, no data generation).
 """
 
 from __future__ import annotations
@@ -22,11 +22,11 @@ HAS_TORCH = importlib.util.find_spec("torch") is not None
 
 
 def _load_script(name: str) -> types.ModuleType:
-    """``scripts/<name>.py`` als eigenstaendiges Modul laden (kein Package-Import moeglich).
+    """Load ``scripts/<name>.py`` as a standalone module (no package import possible).
 
-    Fuegt ``SCRIPTS_DIR`` einmalig zu ``sys.path`` hinzu: die Constant-Holdout-Worker
-    importieren top-level voneinander (``from run_arch_constant_holdout_worker import
-    ...``), was ohne ``scripts/`` auf dem Pfad mit ``ModuleNotFoundError`` scheitert.
+    Adds ``SCRIPTS_DIR`` to ``sys.path`` once: the constant-holdout workers
+    import each other at top level (``from run_arch_constant_holdout_worker import
+    ...``), which fails with ``ModuleNotFoundError`` without ``scripts/`` on the path.
     """
     if str(SCRIPTS_DIR) not in sys.path:
         sys.path.insert(0, str(SCRIPTS_DIR))
@@ -40,7 +40,7 @@ def _load_script(name: str) -> types.ModuleType:
 
 
 def _write_existing_record(path: Path, *, seed: int, target_names: tuple[str, ...]) -> None:
-    """Einen synthetischen Befund-36-artigen Record schreiben (``test_set=excited``)."""
+    """Write a synthetic Befund-36-like record (``test_set=excited``)."""
     record = {
         "params": {
             "master_seed": seed,
@@ -98,16 +98,16 @@ def test_run_arch_multipool_eval_rejects_mismatched_checkpoint_spec() -> None:
 
 
 class _StubEvaluationResult:
-    """Ersetzt ``RolloutEvaluator.evaluate(...)``-Rueckgabe: nur ``as_flat_metrics()`` noetig."""
+    """Replaces the ``RolloutEvaluator.evaluate(...)`` return: only ``as_flat_metrics()`` needed."""
 
     def as_flat_metrics(self) -> dict[str, float]:
         return {}
 
 
 class _StubEvaluator:
-    """Ersetzt ``RolloutEvaluator``.
+    """Replaces ``RolloutEvaluator``.
 
-    Kein echtes Rollout, nur die Record-Konstruktion in ``_log_result`` wird geprueft.
+    No real rollout, only the record construction in ``_log_result`` is checked.
     """
 
     def evaluate(self, model: object, dataset: object) -> _StubEvaluationResult:
@@ -119,17 +119,17 @@ class _StubEvaluator:
 def test_run_arch_multipool_eval_train_constant_run_fraction_reflects_training_not_test_set(
     tmp_path: Path,
 ) -> None:
-    """LA1: ``data/train_constant_run_fraction`` muss die TRAININGS-Spec ausweisen.
+    """LA1: ``data/train_constant_run_fraction`` must report the TRAINING spec.
 
-    Nicht die Testmenge: ``run_arch_multipool_eval.py`` wertet ausschliesslich gegen
-    Konstantlauf-Holdouts aus
-    (``test_set`` beginnt immer mit ``"constant_holdout_"``) -- ``excited_spec`` hier traegt
-    dennoch ``constant_run_fraction=0.10``, weil sie aus einem angeregt trainierten
-    Checkpoint stammt. Genau diese Kombination (angeregt trainiert, auf Konstantlauf
-    ausgewertet) ist der Fall, den das generische ``data/constant_run_fraction`` (identisch
-    fuer jeden ``test_set``-Wert desselben Records) nicht von einem konstant-trainierten Lauf
-    unterscheidbar macht -- das neue Feld muss trotz ``test_set="constant_holdout_999"`` bei
-    0.10 bleiben, nicht auf 1.0 kippen.
+    Not the test set: ``run_arch_multipool_eval.py`` evaluates exclusively against
+    constant-run holdouts
+    (``test_set`` always starts with ``"constant_holdout_"``) -- ``excited_spec`` here nevertheless
+    carries ``constant_run_fraction=0.10``, because it comes from a checkpoint trained on
+    excited data. Exactly this combination (trained on excited data, evaluated on constant runs)
+    is the case that the generic ``data/constant_run_fraction`` (identical
+    for every ``test_set`` value of the same record) does not make distinguishable from a
+    constant-trained run -- the new field must stay at 0.10 despite
+    ``test_set="constant_holdout_999"``, not flip to 1.0.
     """
     module = _load_script("run_arch_multipool_eval")
 
@@ -271,7 +271,7 @@ def test_run_mamba_constant_holdout_worker_accepts_matching_target_names(
     monkeypatch.setattr(module, "EXISTING_RECORDS_PATH", existing_path)
 
     expected = module._expected_from_existing(1)
-    module._check_expected(1, expected, dict(expected))  # keine Exception
+    module._check_expected(1, expected, dict(expected))  # no exception
 
 
 @pytest.mark.skipif(not HAS_TORCH, reason="Skript importiert torch-abhaengige Module")
@@ -311,4 +311,4 @@ def test_run_xlstm_constant_holdout_worker_accepts_matching_target_names(
     monkeypatch.setattr(module, "EXISTING_RECORDS_PATH", existing_path)
 
     expected = module._expected_from_existing(1)
-    module._check_expected(1, expected, dict(expected))  # keine Exception
+    module._check_expected(1, expected, dict(expected))  # no exception

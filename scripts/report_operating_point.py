@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""Charakterisierung des Grey-Box-Modells für einen gegebenen Config-Stand.
+"""Characterisation of the grey-box model for a given config state.
 
-Nach jedem Ersetzen von Platzhalterwerten laufen lassen. Der Report ist die Grundlage
-für zwei Entscheidungen, die sich sonst schleichend verschieben:
+Run after every replacement of placeholder values. The report is the basis
+for two decisions that would otherwise drift gradually:
 
-* Sequenzlänge und Abtastzeit (aus den Zeitkonstanten)
-* Auswahl der Zielgrößen (aus dem statischen Varianzanteil)
+* sequence length and sample time (from the time constants)
+* choice of targets (from the static variance share)
 
-Aufruf::
+Usage::
 
     python scripts/report_operating_point.py conf/process/greybox_placeholder.yaml \
         --figure artifacts/operating_point.png
 
-Das Skript enthält bewusst keine Logik, die nicht auch als Modul existiert -- alles
-Fachliche liegt in ``twinlink_ml.simulation.diagnostics``.
+The script deliberately contains no logic that does not also exist as a module -- all
+domain logic lives in ``twinlink_ml.simulation.diagnostics``.
 """
 
 from __future__ import annotations
@@ -49,11 +49,11 @@ def parse_args() -> argparse.Namespace:
 def step_sequence(
     simulator: GreyBoxFluidBedGranulator, n_steps: int, hold_steps: int, seed: int
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Provisorische Sprungfolge zur Charakterisierung.
+    """Provisional step sequence for characterisation.
 
-    **Kein** Ersatz für das Anregungsdesign aus Schritt 2 des Arbeitsplans (PRBS, Rampen,
-    Latin-Hypercube über die Störgrößen). Hier nur, um überhaupt Varianz auf den Eingängen
-    zu haben -- ohne Anregung ist der statische Varianzanteil nicht definiert.
+    **No** replacement for the excitation design from step 2 of the work plan (PRBS, ramps,
+    Latin hypercube over the disturbances). Only here to have any variance on the inputs
+    at all -- without excitation the static variance share is not defined.
     """
     rng = np.random.default_rng(seed)
     actions = np.repeat(simulator.nominal_action(1)[:, None, :], n_steps, axis=1)

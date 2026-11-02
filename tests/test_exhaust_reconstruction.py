@@ -1,23 +1,23 @@
-"""Regressionstests für die Abluft-Rückrechnung (``evaluation/exhaust_reconstruction.py``).
+"""Regression tests for the exhaust air back-calculation (``evaluation/exhaust_reconstruction.py``).
 
-Zwei unabhängige Fehlklassen, zwei Testgruppen:
+Two independent error classes, two test groups:
 
-1. **Massenstrom-Leck** (Befund 42): ``dry_air_mass_flow_kg_per_s`` hängt
-   konstruktionsbedingt von der Betttemperatur ab (``greybox._rhs`` wertet die Luftdichte
-   bei ``bed_temperature`` aus, nicht bei Einlasstemperatur). Würde man für die
-   "Rekonstruktion aus Modellvorhersage" trotzdem den wahren, aus der wahren Betttemperatur
-   abgeleiteten Massenstrom verwenden, wäre die End-zu-End-Metrik optimistischer, als ein
-   reales System mit vorhergesagtem statt wahrem T_bed leisten könnte -- ein Leck aus der
-   Zukunft, im selben Sinn, den die bestehenden ``rollout_does_not_see_future_targets``-Tests
-   für die Sequenzmodelle selbst prüfen.
+1. **Mass-flow leak** (Befund 42): ``dry_air_mass_flow_kg_per_s`` depends
+   by construction on the bed temperature (``greybox._rhs`` evaluates the air density
+   at ``bed_temperature``, not at the inlet temperature). If one nevertheless used, for the
+   "reconstruction from model prediction", the true mass flow derived from the true bed
+   temperature, the end-to-end metric would be more optimistic than a
+   real system with predicted instead of true T_bed could achieve -- a leak from the
+   future, in the same sense that the existing ``rollout_does_not_see_future_targets`` tests
+   check for the sequence models themselves.
 
-2. **Stille Fehlpaarung** (Befund 42(b)): ``evaluate_exhaust_reconstruction()`` braucht ein
-   ``(GeneratedData, SequenceDataset)``-Paar, das tatsächlich zusammengehört (``test`` muss
-   aus ``data.trajectory``/``data.split`` gebaut worden sein). Eine erste Fassung prüfte das
-   nicht -- bei zufällig passender Fensterzahl (z. B. Trainingspool und Konstantlauf-Holdout
-   mit gleichem ``n_test``) wäre eine Verwechslung klaglos durchgelaufen und hätte still
-   falsche Zahlen geliefert, kein Absturz. Gefunden durch eine gezielte Gegenprobe (falsches
-   Paar absichtlich übergeben), nicht durch einen Fehlerbericht.
+2. **Silent mismatch** (Befund 42(b)): ``evaluate_exhaust_reconstruction()`` needs a
+   ``(GeneratedData, SequenceDataset)`` pair that actually belongs together (``test`` must
+   have been built from ``data.trajectory``/``data.split``). A first version did not check
+   this -- with a coincidentally matching window count (e.g. training pool and constant-run
+   holdout with the same ``n_test``) a mix-up would have run through without complaint and
+   silently delivered wrong numbers, no crash. Found through a targeted cross-check (wrong
+   pair passed deliberately), not through a bug report.
 """
 
 from __future__ import annotations
@@ -50,7 +50,7 @@ except ImportError:
 def test_rescaled_dry_air_mass_flow_matches_true_value_when_prediction_is_exact(
     config: ProcessConfig, simulator, backend: ArrayBackend
 ) -> None:
-    """T_pred == T_true: keine neue Physik darf hier bereits eine Abweichung erzeugen."""
+    """T_pred == T_true: no new physics may already produce a deviation here."""
     solution = solve_steady_state(simulator)
     assert solution.feasible, solution.infeasibility_reasons
 
@@ -75,13 +75,13 @@ def test_rescaled_dry_air_mass_flow_matches_true_value_when_prediction_is_exact(
 def test_rescaled_dry_air_mass_flow_decreases_for_overpredicted_bed_temperature(
     config: ProcessConfig, simulator, backend: ArrayBackend
 ) -> None:
-    """Plausibler Vorhersagefehler (+3 °C) muss den Massenstrom nachweisbar senken.
+    """A plausible prediction error (+3 °C) must demonstrably lower the mass flow.
 
-    Ideales Gasgesetz: höhere Temperatur -> geringere Dichte -> bei gleicher
-    Gasgeschwindigkeit (in der Rekonstruktion unbekannt, kürzt sich aber im Verhältnis
-    heraus, siehe Docstring von ``rescale_dry_air_mass_flow_kg_per_s``) geringerer
-    Massenstrom. Ohne diesen Test wäre nicht belegt, dass die Korrektur überhaupt etwas
-    bewirkt, statt nur rechnerisch plausibel zu klingen.
+    Ideal gas law: higher temperature -> lower density -> at the same
+    gas velocity (unknown in the reconstruction, but cancels out in the ratio,
+    see the docstring of ``rescale_dry_air_mass_flow_kg_per_s``) lower
+    mass flow. Without this test there would be no evidence that the correction has any
+    effect at all, instead of merely sounding arithmetically plausible.
     """
     solution = solve_steady_state(simulator)
     assert solution.feasible, solution.infeasibility_reasons
@@ -106,23 +106,23 @@ def test_rescaled_dry_air_mass_flow_decreases_for_overpredicted_bed_temperature(
         "+3 °C Vorhersagefehler muss den rekonstruierten Massenstrom senken "
         "(ideales Gasgesetz), nicht nur irgendeine Abweichung erzeugen"
     )
-    # Deutlich messbar, nicht nur eine Gleitkomma-Nuance -- bei ~3 K Unterschied um eine
-    # Betttemperatur im Bereich einiger 10 °C sollte die relative Änderung bei ~1 % liegen.
+    # Clearly measurable, not just a floating-point nuance -- with a ~3 K difference around a
+    # bed temperature in the range of some 10s of °C the relative change should be ~1 %.
     relative_change = (true_value - rescaled_value) / true_value
     assert relative_change > 1e-4, (
         f"Effekt zu klein, um kein Rundungsartefakt zu sein: {relative_change}"
     )
 
 
-# --------------------------------------------------------- Stille Fehlpaarung (Befund 42b)
+# ---------------------------------------------------------- Silent mismatch (Befund 42b)
 #
-# Winzige Groessen (n_train_max=8, run_duration_s=4000) statt Produktionsgroesse -- geprueft
-# wird die Verdrahtung (wirft der Fehler bei einer Verwechslung?), nicht die Guete einer
-# Vorhersage. Muster identisch zu run_arch_constant_holdout_worker.py (Befund 36): ein
-# Trainingspool ("excited") und ein separater Konstantlauf-Holdout-Pool, beide via
-# generate_data() erzeugt, test_constant via TrajectoryWindowDataset.from_trajectory(...)
-# mit den Trainings-Skalierern gebaut -- absichtlich mit gleichem n_test, damit eine
-# Verwechslung nur an den WERTEN sichtbar wuerde, nicht an der Form.
+# Tiny sizes (n_train_max=8, run_duration_s=4000) instead of production size -- what is
+# checked is the wiring (does the error raise on a mix-up?), not the quality of a
+# prediction. Pattern identical to run_arch_constant_holdout_worker.py (Befund 36): a
+# training pool ("excited") and a separate constant-run holdout pool, both generated via
+# generate_data(), test_constant built via TrajectoryWindowDataset.from_trajectory(...)
+# with the training scalers -- deliberately with the same n_test, so that a
+# mix-up would only become visible in the VALUES, not in the shape.
 
 CONFIG_PATH = "conf/process/greybox_gab_placeholder.yaml"
 HOLDOUT_SEED = 999
@@ -156,14 +156,14 @@ def _tiny_holdout_spec(excited: DataSpec) -> DataSpec:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_evaluate_exhaust_reconstruction_rejects_mismatched_data_and_test() -> None:
-    """Falsches (GeneratedData, SequenceDataset)-Paar muss ValueError werfen, nicht durchlaufen.
+    """A wrong (GeneratedData, SequenceDataset) pair must raise ValueError, not run through.
 
-    Vor Befund 42(b) prüfte die Funktion nicht, ob ``test`` tatsächlich aus
-    ``data.trajectory``/``data.split`` gebaut wurde -- bei gleicher Fensterzahl (hier: beide
-    Pools mit ``n_test=4``) lief eine Verwechslung klaglos durch und hätte still falsche
-    Zahlen geliefert (Diagnostics vom falschen Pool, nur formal passend indiziert). Diese
-    Gegenprobe reproduziert genau die Verwechslung, die den Fehler ursprünglich aufdeckte:
-    ``excited`` (Trainingspool) zusammen mit ``test_constant`` (Konstantlauf-Testmenge).
+    Before Befund 42(b) the function did not check whether ``test`` was actually built from
+    ``data.trajectory``/``data.split`` -- with the same window count (here: both
+    pools with ``n_test=4``) a mix-up ran through without complaint and would silently have
+    delivered wrong numbers (diagnostics from the wrong pool, only formally indexed to match).
+    This cross-check reproduces exactly the mix-up that originally uncovered the error:
+    ``excited`` (training pool) together with ``test_constant`` (constant-run test set).
     """
     from twinlink_ml.models.composite import CompositeGruSequenceModel
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig
@@ -198,11 +198,11 @@ def test_evaluate_exhaust_reconstruction_rejects_mismatched_data_and_test() -> N
     model = CompositeGruSequenceModel(TorchSequenceConfig(hidden_size=8, max_epochs=1, patience=0))
     model.fit(train, seed=excited.seeds.model_seed, validation=validation)
 
-    # Korrekte Paarungen muessen weiterhin funktionieren -- die Pruefung darf nicht pauschal
-    # ueber-scharf sein und auch richtige Aufrufe blockieren.
+    # Correct pairings must continue to work -- the check must not be
+    # over-sharp across the board and also block correct calls.
     evaluate_exhaust_reconstruction(model, excited, test_excited, horizons=(1, 8))
     evaluate_exhaust_reconstruction(model, holdout, test_constant, horizons=(1, 8))
 
-    # Die eigentliche Gegenprobe: vertauschtes Paar muss scheitern.
+    # The actual cross-check: a swapped pair must fail.
     with pytest.raises(ValueError, match="stimmt nicht mit data.trajectory"):
         evaluate_exhaust_reconstruction(model, excited, test_constant, horizons=(1, 8))

@@ -1,9 +1,9 @@
-"""Tests des Anregungsdesigns.
+"""Tests of the excitation design.
 
-Zwei Tests tragen hier die eigentliche Aussage: ``test_sobol_design_is_nested`` und
-``test_latin_hypercube_is_not_nested``. Sie belegen den Grund für die Abweichung vom
-Arbeitsplan (Sobol statt LHS) und würden sofort auffallen, wenn jemand den Sampler
-zurückstellt.
+Two tests carry the actual statement here: ``test_sobol_design_is_nested`` and
+``test_latin_hypercube_is_not_nested``. They document the reason for the deviation from
+the work plan (Sobol instead of LHS) and would show up immediately if someone switched the
+sampler back.
 """
 
 from __future__ import annotations
@@ -53,10 +53,10 @@ def test_generators_stay_in_unit_interval(kind: str) -> None:
 
 @pytest.mark.parametrize("kind", ["step", "prbs", "ramp"])
 def test_generators_respect_amplitude(kind: str) -> None:
-    """Kleine Amplitudenstufen müssen tatsächlich klein sein.
+    """Small amplitude steps must actually be small.
 
-    Das ist die Voraussetzung dafür, dass schnelle Anregung trotz Ratenbegrenzung möglich
-    ist -- siehe ``feasible_switch_time_over_tau_fast`` im Report.
+    This is the precondition for fast excitation being possible despite rate limiting
+    -- see ``feasible_switch_time_over_tau_fast`` in the report.
     """
     generators = {
         "step": StepSequenceGenerator(HoldTimeRange(30.0, 120.0)),
@@ -87,7 +87,7 @@ def test_step_sequence_hold_times_within_range() -> None:
 
 
 def test_prbs_is_balanced_and_has_full_period() -> None:
-    """m-Sequenz: gleich viele Nullen und Einsen (bis auf eine) und Periode 2^n - 1."""
+    """m-sequence: equally many zeros and ones (up to one) and period 2^n - 1."""
     generator = PrbsGenerator(7, 5.0)
     rng = np.random.default_rng(3)
     period = 2**7 - 1
@@ -97,7 +97,7 @@ def test_prbs_is_balanced_and_has_full_period() -> None:
     count_high = int(np.sum(signal == levels[1]))
     assert abs(count_high - period // 2) <= 1
 
-    # Autokorrelation einer m-Sequenz: scharfe Spitze bei Verschiebung 0, sonst flach
+    # Autocorrelation of an m-sequence: sharp peak at shift 0, flat otherwise
     binary = np.where(signal == levels[1], 1.0, -1.0)
     autocorrelation = np.array(
         [float(np.mean(binary * np.roll(binary, shift))) for shift in range(1, period)]
@@ -124,7 +124,7 @@ def test_rate_limit_is_respected_and_idempotent() -> None:
 
 
 def test_rate_limit_preserves_bounds() -> None:
-    """Die Begrenzung darf den Stellgrößenbereich nicht verlassen (konvexe Operation)."""
+    """The limiting must not leave the action range (convex operation)."""
     rng = np.random.default_rng(5)
     signal = rng.uniform(0.8, 2.5, size=(4, 300))
     limited = apply_rate_limit(signal, max_rate_per_s=0.05, sample_time_s=5.0)
@@ -133,14 +133,14 @@ def test_rate_limit_preserves_bounds() -> None:
 
 
 def test_sobol_design_is_nested() -> None:
-    """Der Grund für Sobol als Standard: Teilmengen bleiben Folgen niedriger Diskrepanz."""
+    """The reason for Sobol as default: subsets remain low-discrepancy sequences."""
     full = quasi_random_points(64, 5, sampler="sobol", seed=7)
     small = quasi_random_points(8, 5, sampler="sobol", seed=7)
     np.testing.assert_allclose(full[:8], small, rtol=0.0, atol=0.0)
 
 
 def test_latin_hypercube_is_not_nested() -> None:
-    """Gegenprobe: bei LHS ändert sich die Abdeckung mit der Stützstelle der Lernkurve."""
+    """Cross-check: with LHS the coverage changes with the learning-curve point."""
     full = quasi_random_points(64, 5, sampler="lhs", seed=7)
     small = quasi_random_points(8, 5, sampler="lhs", seed=7)
     assert not np.allclose(full[:8], small)
@@ -181,7 +181,7 @@ def test_actions_stay_within_bounds_and_rate_limits(config: ProcessConfig) -> No
 
 
 def test_rate_limits_can_be_disabled(config: ProcessConfig) -> None:
-    """Ohne Begrenzung müssen die Sprünge tatsächlich größer sein -- sonst wirkt nichts."""
+    """Without limiting the steps must actually be larger -- otherwise nothing has an effect."""
     unlimited = dataclasses.replace(_excitation_config(), apply_rate_limits=False)
     design = build_design(config, excitation=unlimited)
     schedule = design.build(8, seed=0)
@@ -207,7 +207,7 @@ def test_piecewise_constant_disturbances_are_constant_within_run(config: Process
 
 
 def test_diurnal_design_produces_partial_decorrelation(config: ProcessConfig) -> None:
-    """Tagesgang koppelt Temperatur und Feuchte -- der OU-Anteil muss die Kopplung brechen."""
+    """The daily cycle couples temperature and humidity -- the OU part must break the coupling."""
     design = build_design(
         config,
         disturbance_design=DiurnalDisturbanceDesign(drift_amplitude_fraction=0.10),
@@ -255,8 +255,8 @@ def test_config_from_time_constants_respects_fast_mode() -> None:
     assert config.hold_time.minimum_s >= 2.0 * 9.5
     assert config.hold_time.minimum_s >= 4.0 * 5.0
     assert config.hold_time.maximum_s > config.hold_time.minimum_s
-    # Periode muss die Laufdauer überschreiten -- Wiederholung innerhalb eines Laufs
-    # verschwendet Abtastpunkte. Die langsame Mode ist nicht stellgrößenanregbar.
+    # The period must exceed the run duration -- repetition within a run
+    # wastes support points. The slow mode cannot be excited by the actions.
     assert config.prbs_period_s >= config.run_duration_s
 
 
@@ -270,7 +270,7 @@ def test_invalid_excitation_config_is_rejected() -> None:
 
 
 def test_constant_run_fraction_upper_bound_is_inclusive() -> None:
-    """1.0 ist der reine Konstantlauf-Auswertungsdatensatz und muss zulässig sein."""
+    """1.0 is the pure constant-run evaluation data set and must be permitted."""
     ExcitationConfig(constant_run_fraction=1.0)
     with pytest.raises(ValueError, match=r"constant_run_fraction muss in \[0, 1\] liegen"):
         ExcitationConfig(constant_run_fraction=1.0001)
@@ -286,10 +286,10 @@ def test_constant_run_fraction_one_yields_all_constant_runs(config: ProcessConfi
 
 
 def test_constant_run_fraction_mask_unchanged_at_ten_percent() -> None:
-    """Regression: die Maske bei fraction=0.10 darf sich nicht ändern.
+    """Regression: the mask at fraction=0.10 must not change.
 
-    Die geöffnete Obergrenze betrifft nur ``ExcitationConfig.__post_init__``;
-    ``_constant_run_flags`` selbst ist unverändert.
+    The opened upper bound only affects ``ExcitationConfig.__post_init__``;
+    ``_constant_run_flags`` itself is unchanged.
     """
     from twinlink_ml.simulation.excitation import _constant_run_flags
 
@@ -302,7 +302,7 @@ def test_constant_run_fraction_mask_unchanged_at_ten_percent() -> None:
 def test_schedule_drives_simulator_without_producing_invalid_states(
     config: ProcessConfig,
 ) -> None:
-    """Ende-zu-Ende: Plan -> Rollout, endliche Zustände, Constraints eingehalten."""
+    """End to end: plan -> rollout, finite states, constraints satisfied."""
     short = dataclasses.replace(_excitation_config(), run_duration_s=3000.0)
     design = build_design(config, excitation=short)
     schedule = design.build(8, seed=0)
@@ -335,7 +335,7 @@ def test_schedule_drives_simulator_without_producing_invalid_states(
 
 
 def test_initial_state_round_trip(config: ProcessConfig) -> None:
-    """state_from_physical und die Diagnose müssen denselben Durchmesser ergeben."""
+    """state_from_physical and the diagnostics must yield the same diameter."""
     simulator = GreyBoxFluidBedGranulator(config)
     diameters = np.array([300e-6, 600e-6, 900e-6])
     state = simulator.state_from_physical(
@@ -367,11 +367,11 @@ def test_design_reports_metadata(config: ProcessConfig) -> None:
     assert isinstance(InitialConditionDesign().n_dimensions, int)
 
 
-# ------------------------------------------------------ Anregungsdiagnose
+# ------------------------------------------------- Excitation diagnostics
 
 
 def test_report_detects_rate_limit_violation(config: ProcessConfig) -> None:
-    """Ohne Begrenzung muss der Report die Verletzung melden, nicht verschweigen."""
+    """Without limiting the report must flag the violation, not conceal it."""
     unlimited = dataclasses.replace(_excitation_config(), apply_rate_limits=False)
     design = build_design(config, excitation=unlimited)
     schedule = design.build(8, seed=0)
@@ -389,7 +389,7 @@ def test_report_detects_rate_limit_violation(config: ProcessConfig) -> None:
 
 
 def test_report_detects_collinear_channels(config: ProcessConfig) -> None:
-    """Kollinearität muss auffallen -- sonst sind die Monotonie-Constraints nicht prüfbar."""
+    """Collinearity must be noticed -- otherwise the monotonicity constraints are uncheckable."""
     design = build_design(config)
     schedule = design.build(8, seed=0)
     collinear = schedule.actions.copy()
@@ -410,10 +410,10 @@ def test_report_detects_collinear_channels(config: ProcessConfig) -> None:
 
 
 def test_report_shows_rate_limited_bandwidth_loss(config: ProcessConfig) -> None:
-    """Die realisierte Bandbreite muss unter der Eckfrequenz der schnellen Mode liegen.
+    """The realised bandwidth must lie below the corner frequency of the fast mode.
 
-    Das ist die quantitative Fassung des Befunds: mit den Platzhalter-Ratengrenzen ist die
-    schnellste Prozessmode nicht anregbar.
+    This is the quantitative version of the finding: with the placeholder rate limits the
+    fastest process mode cannot be excited.
     """
     excitation = _excitation_config()
     design = build_design(config, excitation=excitation)
@@ -471,7 +471,7 @@ def test_constraint_violation_summary_returns_fractions(config: ProcessConfig) -
 
 
 def test_excitation_config_roundtrip(tmp_path) -> None:
-    """Der aufgelöste Anregungsstand muss serialisierbar sein."""
+    """The resolved excitation state must be serialisable."""
     from twinlink_ml.simulation import dump_excitation_config, load_excitation_config
 
     original = ExcitationConfig.from_time_constants(

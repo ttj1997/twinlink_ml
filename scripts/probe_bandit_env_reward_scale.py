@@ -1,14 +1,14 @@
-r"""YA2: Belohnungsskala beziffern -- reine Messung, KEIN Training, KEINE Aenderung.
+r"""YA2: quantify the reward scale -- pure measurement, NO training, NO change.
 
-Drei Groessen, alle in kW, damit sie direkt vergleichbar sind:
+Three quantities, all in kW, so that they are directly comparable:
 
-a) Energieunterschied Orakel gegen festen Betriebspunkt je Testpunkt (``E_fest -
-   E_Orakel``) -- das Signal, das ein Agent aufloesen muss, um Regret zu schliessen.
-b) Spannweite der Energie ueber ZULAESSIGE Zufallsaktionen (siehe YA1, dieselben 20
-   Wiederholungen/Seeds) -- wie stark sich zulaessige Aktionen ueberhaupt unterscheiden.
-c) Strafe fuer die in XA3 TATSAECHLICH beobachteten Bettemperaturverletzungen,
-   ``_PENALTY_WEIGHT_KW * normalized_violation`` -- wortgleich aus
-   ``study_operating_point_regret.py`` (siehe :data:`NORMALIZED_VIOLATION_FORMULA` unten):
+a) Energy difference oracle versus fixed operating point per test point (``E_fest -
+   E_Orakel``) -- the signal that an agent must resolve in order to close the regret.
+b) Range of the energy over FEASIBLE random actions (see YA1, the same 20
+   repetitions/seeds) -- how much feasible actions differ at all.
+c) Penalty for the bed temperature violations ACTUALLY observed in XA3,
+   ``_PENALTY_WEIGHT_KW * normalized_violation`` -- verbatim from
+   ``study_operating_point_regret.py`` (see :data:`NORMALIZED_VIOLATION_FORMULA` below):
 
    .. code-block:: python
 
@@ -20,41 +20,42 @@ c) Strafe fuer die in XA3 TATSAECHLICH beobachteten Bettemperaturverletzungen,
            + (0.0 if solution.feasible else 1.0)
        )
 
-   Fuer eine REINE Bettemperaturverletzung (Feuchte/Fluidisierungsfenster nicht bindend,
-   Loeser feasible -- laut XA3 ALLE 25/25/15/11 Verletzungen an allen vier Checkpoints)
-   reduziert sich das auf ``normalized_violation = bed_temperature_violation_k / 10.0``,
-   also ``Strafe_kW = _PENALTY_WEIGHT_KW * bed_temperature_violation_k / 10.0``.
+   For a PURE bed temperature violation (moisture/fluidization window not binding,
+   solver feasible -- according to XA3 ALL 25/25/15/11 violations at all four checkpoints)
+   this reduces to ``normalized_violation = bed_temperature_violation_k / 10.0``,
+   i.e. ``Strafe_kW = _PENALTY_WEIGHT_KW * bed_temperature_violation_k / 10.0``.
 
-Berichtet: Verhaeltnis (c)/(a). Bei mehr als einer Groessenordnung: wahrscheinliche
-Ursache ist ein von der Strafe dominierter Gradient, der das Energiesignal darin untergehen
-laesst -- der Agent lernt (wenn ueberhaupt) zuerst Zulaessigkeit, dann Energie, siehe YA1
-(Zulaessigkeit ebenfalls unter Zufallsniveau -- selbst das ist nach 10^4 Schritten nicht
-gelernt).
+Reported: ratio (c)/(a). At more than one order of magnitude: the likely
+cause is a gradient dominated by the penalty, in which the energy signal is drowned
+out -- the agent learns (if at all) feasibility first, then energy, see YA1
+(feasibility likewise below random level -- even that is not learned after 10^4
+steps).
 
-Optionen (Auftrag: NICHT auswaehlen, nur benennen, mit Wirkung auf die Vergleichbarkeit zu
-Befund 52 -- ``_PENALTY_WEIGHT_KW`` ist aktuell bewusst aus Befund 52 uebernommen, weil die
-VA2-Orakelpruefung Bitgleichheit verlangt; jede Aenderung beruehrt das):
+Options (the task: do NOT choose, only name them, with their effect on the comparability to
+Befund 52 -- ``_PENALTY_WEIGHT_KW`` is currently deliberately taken over from Befund 52, because
+the VA2 oracle check requires bit-identity; every change touches that):
 
-1. Belohnung normieren (Energie relativ zu einem Bezugswert). Aendert die Belohnungs-SKALA,
-   nicht die VA2-Bitgleichheit selbst (die prueft ``reward == -energy_target`` am
-   Orakelpunkt, wo ``normalized_violation`` ohnehin ~0 ist) -- aber jede spaetere
-   Lernkurve waere nicht mehr direkt in kW gegen Befund 52 lesbar, ein neuer Bezugswert
-   muesste dokumentiert und versioniert werden.
-2. Strafgewicht fuer RL getrennt vom Optimierer setzen. Bricht die Bitgleichheit VA2
-   EXPLIZIT (der Orakeltest vergleicht Belohnung gegen ``-energy_target``, was nur bei
-   ``_PENALTY_WEIGHT_KW=50`` exakt gilt, weil Befund 52s Optimum ohnehin ~zulaessig ist --
-   ein anderes Gewicht aendert daran nichts direkt, aber jede kuenftige Kalibrierung
-   entkoppelt sich von Befund 52 als Referenz).
-3. Lagrange-Verfahren (Nebenbedingung als eigene Groesse statt Strafe). Groesster Eingriff:
-   ersetzt die Straf-Formulierung komplett, damit auch die VA1-Entscheidung ("Straffunktion
-   fuer alle drei Nebenbedingungen"). Reward waere nicht mehr direkt mit Befund 52s
-   Optimierer-Zielfunktion vergleichbar, weil dieser selbst eine Straffunktion nutzt.
-4. Laengeres Training, Formulierung unveraendert. Aendert an der Vergleichbarkeit NICHTS
-   (exakt dieselbe Belohnung, derselbe Fixpunkt) -- aber YA1 zeigt, dass 10^4 Schritte
-   nicht einmal Zufallsniveau erreichen; ob mehr Schritte das Skalenproblem ueberwinden
-   oder nur langsamer an derselben Verzerrung vorbeitrainieren, ist ungeklaert.
+1. Normalise the reward (energy relative to a reference value). Changes the reward SCALE,
+   not the VA2 bit-identity itself (which checks ``reward == -energy_target`` at the
+   oracle point, where ``normalized_violation`` is ~0 anyway) -- but every later
+   learning curve would no longer be directly readable in kW against Befund 52, a new
+   reference value would have to be documented and versioned.
+2. Set the penalty weight for RL separately from the optimizer. Breaks the VA2 bit-identity
+   EXPLICITLY (the oracle test compares the reward against ``-energy_target``, which holds
+   exactly only for ``_PENALTY_WEIGHT_KW=50``, because the optimum of Befund 52 is ~feasible
+   anyway -- a different weight does not change that directly, but every future calibration
+   decouples itself from Befund 52 as the reference).
+3. Lagrangian method (constraint as a quantity of its own instead of a penalty). Largest
+   intervention: replaces the penalty formulation completely, and with it the VA1 decision
+   ("penalty function for all three constraints"). The reward would no longer be directly
+   comparable with the objective function of the Befund 52 optimizer, because the latter
+   itself uses a penalty function.
+4. Longer training, formulation unchanged. Changes NOTHING about the comparability
+   (exactly the same reward, the same fixed point) -- but YA1 shows that 10^4 steps
+   do not even reach random level; whether more steps overcome the scale problem
+   or only train more slowly past the same distortion is unclear.
 
-Aufruf::
+Usage::
 
     python scripts/probe_bandit_env_reward_scale.py \
         --output artifacts/runs/rl_bandit_reward_scale.json
@@ -98,10 +99,10 @@ def _suppress_placeholder_warning() -> None:
 
 
 def _make_random_policy(seed: int) -> Any:
-    """Identisch zu ``scripts/probe_bandit_env_random_baseline.py::_make_random_policy``
-    -- absichtlich dupliziert (eine Zeile) statt importiert, damit dieses Skript ohne
-    Abhaengigkeit vom YA1-Skript lesbar bleibt; beide muessen bei einer Aenderung
-    gemeinsam angepasst werden.
+    """Identical to ``scripts/probe_bandit_env_random_baseline.py::_make_random_policy``
+    -- deliberately duplicated (one line) instead of imported, so that this script stays
+    readable without a dependency on the YA1 script; both must be adapted together
+    when one changes.
     """
     rng = np.random.default_rng(seed)
 
@@ -113,7 +114,7 @@ def _make_random_policy(seed: int) -> Any:
 
 
 def measure_oracle_fixed_gap_kw() -> dict[str, float]:
-    """(a) ``E_fest - E_Orakel`` je Testpunkt, in kW."""
+    """(a) ``E_fest - E_Orakel`` per test point, in kW."""
     points = load_test_points()
     gaps = np.array([p.energy_fixed_kw - p.energy_oracle_kw for p in points])
     return {
@@ -128,7 +129,7 @@ def measure_oracle_fixed_gap_kw() -> dict[str, float]:
 def measure_feasible_random_energy_spread_kw(
     env: OperatingPointBanditEnv, n_repetitions: int
 ) -> dict[str, float]:
-    """(b) Spannweite der rohen Energie ueber ZULAESSIGE Zufallsaktionen (YA1-Ziehungen)."""
+    """(b) Range of the raw energy over FEASIBLE random actions (YA1 draws)."""
     feasible_energies: list[float] = []
     for seed in range(n_repetitions):
         result = evaluate_policy(env, _make_random_policy(seed))
@@ -147,7 +148,7 @@ def measure_feasible_random_energy_spread_kw(
 
 
 def measure_observed_penalty_kw(xa3_path: Path, penalty_weight_kw: float) -> dict[str, Any]:
-    """(c) Strafe fuer die in XA3 TATSAECHLICH beobachteten Bettemperaturverletzungen."""
+    """(c) Penalty for the bed temperature violations ACTUALLY observed in XA3."""
     if not xa3_path.exists():
         return {"available": False, "reason": f"{xa3_path} nicht gefunden"}
     records = [json.loads(line) for line in xa3_path.read_text(encoding="utf-8").splitlines()]

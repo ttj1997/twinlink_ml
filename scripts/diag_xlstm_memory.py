@@ -52,12 +52,12 @@ from typing import Any, ClassVar
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = REPO_ROOT / "conf" / "process" / "greybox_gab_placeholder.yaml"
 SEED = 1
-N_TRAIN = 16  # Produktionsgroesse, wie run_transformer_/run_mamba_reduced_comparison.py
-DEFAULT_BATCH_SIZE = 256  # TorchSequenceConfig-Standard
+N_TRAIN = 16  # production size, as in run_transformer_/run_mamba_reduced_comparison.py
+DEFAULT_BATCH_SIZE = 256  # TorchSequenceConfig default
 
 
 def _peak_working_set_mb() -> float:
-    """Reales ``PeakWorkingSetSize`` dieses Prozesses in MB (Windows, ``psapi.dll``)."""
+    """Real ``PeakWorkingSetSize`` of this process in MB (Windows, ``psapi.dll``)."""
     import ctypes
     from ctypes import wintypes
 
@@ -97,10 +97,10 @@ def _peak_working_set_mb() -> float:
 
 
 def _run_single_point(hidden_size: int, batch_size: int) -> dict:
-    """Ein ``forward`` + ``backward`` bei ``hidden_size``/``batch_size``, in DIESEM Prozess.
+    """One ``forward`` + ``backward`` at ``hidden_size``/``batch_size``, in THIS process.
 
-    Wird nur als Unterprozess aufgerufen (siehe ``main``), damit ``PeakWorkingSetSize``
-    ausschliesslich diese eine Messung widerspiegelt.
+    Called only as a subprocess (see ``main``), so that ``PeakWorkingSetSize``
+    reflects exclusively this one measurement.
     """
     baseline_mb = _peak_working_set_mb()
 
@@ -133,7 +133,7 @@ def _run_single_point(hidden_size: int, batch_size: int) -> dict:
         data = generate_data(config, spec, master_seed=SEED)
     train, _, _ = build_datasets(data, N_TRAIN, policy=ValidationPolicy.FIXED_POOL)
 
-    single = _SingleTargetView(train, 0)  # energy_target, wie diag_mamba_cost.py
+    single = _SingleTargetView(train, 0)  # energy_target, as in diag_mamba_cost.py
     n_exogenous = len(single.exogenous_names)
     n_windows = single.n_windows
     used_batch = min(batch_size, n_windows)
@@ -199,7 +199,7 @@ def main() -> None:
         (32, DEFAULT_BATCH_SIZE),
         (64, DEFAULT_BATCH_SIZE),
         (128, DEFAULT_BATCH_SIZE),
-        (16, 32),  # kleinere batch_size bei H=16 -- hilft das dem Speicher?
+        (16, 32),  # smaller batch_size at H=16 -- does that help memory?
         (16, 8),
     ]
 

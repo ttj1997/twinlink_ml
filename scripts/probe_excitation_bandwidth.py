@@ -1,20 +1,20 @@
-r"""Probe: Anregungsbandbreite diagnostizieren (Auftrag C0-C4).
+r"""Probe: diagnose the excitation bandwidth (task C0-C4).
 
-KEIN Netztraining, KEIN Sweep, KEINE Aenderung an ``src/`` -- insbesondere nicht an
-``excitation.py``-Defaults. Alle Varianten sind lokale ``ExcitationConfig``- bzw.
-``ActionSpaceConfig``-Instanzen in diesem Skript. Ruft nur bestehenden Code auf:
-``simulation.diagnostics.static_explained_variance`` (Referenz, unveraendert daneben
-mitgefuehrt), ``simulation.diagnostics.time_constant_report`` (ruft
-``GreyBoxFluidBedGranulator.time_constants``, greybox.py:662-680, auf),
+NO network training, NO sweep, NO change to ``src/`` -- in particular not to
+``excitation.py`` defaults. All variants are local ``ExcitationConfig`` or
+``ActionSpaceConfig`` instances in this script. Only calls existing code:
+``simulation.diagnostics.static_explained_variance`` (reference, carried along unchanged
+beside it), ``simulation.diagnostics.time_constant_report`` (calls
+``GreyBoxFluidBedGranulator.time_constants``, greybox.py:662-680),
 ``simulation.excitation.ExcitationConfig`` / ``MixedExcitationDesign``.
 
-Die einzige NEUE Berechnung (C0) ist ``static_explained_variance_with_lag1`` unten in
-diesem Skript -- keine Aenderung an ``simulation/diagnostics.py``.
+The only NEW computation (C0) is ``static_explained_variance_with_lag1`` below in
+this script -- no change to ``simulation/diagnostics.py``.
 
-Basis: ``conf/process/greybox_gab_placeholder.yaml`` (fp 82f65f576a2e5253, siehe
+Basis: ``conf/process/greybox_gab_placeholder.yaml`` (fp 82f65f576a2e5253, see
 ``artifacts/runs/probe_a2_a3_static_variance_time_constants.json``), n_runs=32,
 dt=25 s, run_duration=28800 s, randomise_initial_conditions=True,
-Seeds 20260812/13/14 (``SeedBundle.from_master``).
+seeds 20260812/13/14 (``SeedBundle.from_master``).
 """
 
 from __future__ import annotations
@@ -49,14 +49,14 @@ SAMPLE_TIME_S = 25.0
 RUN_DURATION_S = 28_800.0
 MASTER_SEEDS = (20260812, 20260813, 20260814)
 
-# aus artifacts/runs/probe_a2_a3_static_variance_time_constants.json (a3, gab, unveraendert)
+# from artifacts/runs/probe_a2_a3_static_variance_time_constants.json (a3, gab, unchanged)
 TAU_1_S = 30.22626192813928
 TAU_2_S = 359.9276103387108
 
-BED_TEMPERATURE_VALIDITY_LIMIT_C = 80.0  # thermo.py:268, dokumentierte Modellgrenze
+BED_TEMPERATURE_VALIDITY_LIMIT_C = 80.0  # thermo.py:268, documented model limit
 
 
-# ------------------------------------------------------------------------ Aufbau
+# ------------------------------------------------------------------------ Setup
 
 
 def _load(config_path: Path, *, sample_time_s: float = SAMPLE_TIME_S) -> GreyBoxFluidBedGranulator:
@@ -142,15 +142,15 @@ def _build_trajectory(
 def static_explained_variance_with_lag1(
     trajectory: Trajectory, *, quadratic: bool = True
 ) -> dict[str, dict[str, float]]:
-    r"""Erweiterung von ``static_explained_variance`` um u(t-dt) je Stellgroesse (C0).
+    r"""Extension of ``static_explained_variance`` by u(t-dt) per action (C0).
 
-    Gleiche Merkmalslogik wie das Original: elementweise, kein Kreuzprodukt, keine
-    Standardisierung, OLS via ``lstsq``. R2_stat wird HIER auf denselben Stichproben
-    (t >= 1 je Lauf) neu berechnet wie R2_lag1 -- t=0 hat kein u(t-dt) und entfaellt
-    fuer beide Modelle, damit die Differenz nicht durch eine unterschiedliche
-    Stichprobenzahl konfundiert ist. ``simulation.diagnostics.static_explained_variance``
-    bleibt daneben unveraendert und wird fuer den Vollstichproben-Referenzwert separat
-    aufgerufen.
+    Same feature logic as the original: elementwise, no cross product, no
+    standardisation, OLS via ``lstsq``. R2_stat is recomputed HERE on the same samples
+    (t >= 1 per run) as R2_lag1 -- t=0 has no u(t-dt) and is dropped
+    for both models, so that the difference is not confounded by a different
+    sample count. ``simulation.diagnostics.static_explained_variance``
+    remains unchanged beside it and is called separately for the full-sample reference
+    value.
     """
     n_runs, n_steps, _ = trajectory.actions.shape
     actions_t = trajectory.actions[:, 1:, :]
@@ -201,7 +201,7 @@ def static_explained_variance_with_lag1(
 def quasistationary_fractions(
     actions: np.ndarray, action_space: ActionSpaceConfig, *, sample_time_s: float, tau_s: float
 ) -> dict[str, float]:
-    """Ratenbasiertes Quasistationaritaetsmass: |u(t)-u(t-3*tau)| < 0.05*Spanne."""
+    """Rate-based quasi-stationarity measure: |u(t)-u(t-3*tau)| < 0.05*range."""
     lag_steps = max(1, round(3.0 * tau_s / sample_time_s))
     names = action_space.names
     bounds = action_space.bounds
@@ -218,7 +218,7 @@ def quasistationary_fractions(
 def quasistationary_fractions_old(
     actions: np.ndarray, action_space: ActionSpaceConfig
 ) -> dict[str, float]:
-    """Altes Kriterium (B1): exakte Gleichheit aufeinanderfolgender Abtastwerte."""
+    """Old criterion (B1): exact equality of consecutive samples."""
     names = action_space.names
     result: dict[str, float] = {}
     for c, name in enumerate(names):
@@ -257,7 +257,7 @@ def _aggregate_lag1(
 
 
 def constraint_counts(trajectory: Trajectory, config: ProcessConfig) -> dict[str, dict[str, int]]:
-    """Anzahl betroffener Laeufe und Abtastpunkte je Nebenbedingung (C3c)."""
+    """Number of affected runs and sample points per constraint (C3c)."""
     diagnostics = trajectory.diagnostics
     n_runs, n_steps = trajectory.n_runs, trajectory.n_steps
     out: dict[str, dict[str, int]] = {}
@@ -389,7 +389,7 @@ def main() -> None:
     print("\n=== C3 ===")
     c3: dict[str, Any] = {}
 
-    # a) PRBS-Periode
+    # a) PRBS period
     c3["a_prbs_period"] = {}
     for name, (excitation_config, _) in variants.items():
         period_s = excitation_config.prbs_period_s
@@ -400,7 +400,7 @@ def main() -> None:
             "complete_periods_per_run": RUN_DURATION_S / period_s,
         }
 
-    # b) Verduennung: tatsaechliche PRBS-Kanal/Lauf-Kombinationen je Seed
+    # b) dilution: actual PRBS channel/run combinations per seed
     c3["b_prbs_channel_run_combinations"] = {}
     for name in ("V0", "V1", "V4"):
         counts = []
@@ -413,13 +413,13 @@ def main() -> None:
             "total_combinations": N_RUNS * len(config.actions.names),
         }
 
-    # c) Nebenbedingungen je Variante
+    # c) constraints per variant
     c3["c_constraints"] = {}
     for name in variants:
         per_seed_counts = [constraint_counts(traj, config) for traj in trajectories[name]]
         c3["c_constraints"][name] = _sum_constraint_counts(per_seed_counts)
 
-    # d) Zeitkonstanten je Variante
+    # d) time constants per variant
     print("Eigenwertauswertung je Variante...")
     base_taus = time_constant_report(simulator)
     rate_actions = _rate_limited_actions(config.actions, inlet_max_rate=2.0)

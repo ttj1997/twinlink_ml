@@ -1,39 +1,39 @@
-r"""NA3-NA5: erste Validierung des Grey-Box-Modells gegen ECHTE Anlagendaten.
+r"""NA3-NA5: first validation of the grey-box model against REAL plant data.
 
-Kein Netztraining, kein RL, kein Sweep -- zwei 24h-Exporte des Anwendungspartners
-(Minutentakt, je 1441 Zeilen, Produkte "prod1"/"prod2", siehe ``twinlink_ml.plant_data``)
-gegen den exakten Beharrungszustands-Loeser (``simulation.steady_state``).
+No network training, no RL, no sweep -- two 24h exports from the application partner
+(one-minute interval, 1441 rows each, products "prod1"/"prod2", see ``twinlink_ml.plant_data``)
+against the exact steady-state solver (``simulation.steady_state``).
 
-Rohdaten bleiben ausserhalb des Repos (NA1, siehe ``docs/04_stand_ap1.md``): die
-beiden Pfade kommen ausschliesslich aus den Umgebungsvariablen
-``TWINLINK_PLANT_DATA_PROD1`` / ``TWINLINK_PLANT_DATA_PROD2``, nirgends als Literal.
+Raw data stay outside the repo (NA1, see ``docs/04_stand_ap1.md``): the
+two paths come exclusively from the environment variables
+``TWINLINK_PLANT_DATA_PROD1`` / ``TWINLINK_PLANT_DATA_PROD2``, nowhere as a literal.
 
-Drei Teile
+Three parts
 ----------
-1. NA3: hoehere Temperaturposition (TRZSAH-320417/418/419) vs. Betttemperatur
-   (TIRSAH-320414/415/416) -- Zeitreihenstatistik, kein Modelllauf.
-2. NA4: ``outlet_duct_heat_loss_k`` -- Bett-Abluft-Versatz als Zeitreihe, Korrelation
-   mit Luftmenge/Spruehrate/Umgebungstemperatur, kein Modelllauf.
-3. NA5: Beharrungszustand des Grey-Box-Modells mit Anlagenparametern je Produkt,
-   Vergleich der berechneten mit der gemessenen Betttemperatur. Parameter werden NICHT
-   angepasst, um die Messung zu treffen -- alle Annahmen stehen in
-   :data:`ASSUMPTIONS` mit Begruendung, unveraendert zwischen product 1 und product 2.
+1. NA3: upper temperature position (TRZSAH-320417/418/419) vs. bed temperature
+   (TIRSAH-320414/415/416) -- time-series statistics, no model run.
+2. NA4: ``outlet_duct_heat_loss_k`` -- bed-to-exhaust offset as a time series, correlation
+   with air flow/spray rate/ambient temperature, no model run.
+3. NA5: steady state of the grey-box model with plant parameters per product,
+   comparison of the computed with the measured bed temperature. Parameters are NOT
+   adjusted to hit the measurement -- all assumptions are in
+   :data:`ASSUMPTIONS` with justification, unchanged between product 1 and product 2.
 
-Geometrie-Annahme (Querschnittsflaeche)
+Geometry assumption (cross-section area)
 ----------------------------------------
-Nicht gemessen in den Exporten. Abgeschaetzt aus dem Leitsystem-Screenshot (dritter
-Zeitpunkt, 05.-08.09.2025, NICHT Teil der validierten Exporte) ueber
-``dp_bed = m_bed * g / A`` -- dieselbe Formel wie
-``simulation.fluidization.bed_pressure_drop_pa``. PDIRAH-320404 zeigt 19.2 mbar dort,
-konsistent mit der Leitsystem-Anzeige "Betthoehe: 20 mbar". Bettmasse laut Screenshot
-(A-3215) 600 kg, Anwendungspartner nannte mündlich 800 kg -- beide Werte werden
-gerechnet (Sensitivitaet), keiner ist "der richtige".
+Not measured in the exports. Estimated from the control-system screenshot (third
+point in time, 05.-08.09.2025, NOT part of the validated exports) via
+``dp_bed = m_bed * g / A`` -- the same formula as
+``simulation.fluidization.bed_pressure_drop_pa``. PDIRAH-320404 shows 19.2 mbar there,
+consistent with the control-system display "Betthoehe: 20 mbar". Bed mass according to the
+screenshot (A-3215) 600 kg; the application partner stated 800 kg orally -- both values are
+computed (sensitivity), neither is "the right one".
 
-Wichtig: die Flaeche geht in die ENERGIEBILANZ NICHT ein (``gas_velocity_m_per_s *
-cross_section_area_m2`` kuerzt sich exakt gegen die Umrechnung von Nm3/h weg, siehe
-:func:`_gas_velocity_m_per_s`) -- sie wirkt ausschliesslich auf die
-Fluidisierungs-Zulaessigkeitspruefung (u_mf < u_gas < u_terminal) und den berichteten
-Bettdruckverlust. Die berechnete Betttemperatur ist von dieser Annahme UNABHAENGIG.
+Important: the area does NOT enter the ENERGY BALANCE (``gas_velocity_m_per_s *
+cross_section_area_m2`` cancels exactly against the conversion from Nm3/h, see
+:func:`_gas_velocity_m_per_s`) -- it acts exclusively on the
+fluidization feasibility check (u_mf < u_gas < u_terminal) and the reported
+bed pressure drop. The computed bed temperature is INDEPENDENT of this assumption.
 """
 
 from __future__ import annotations
@@ -64,7 +64,7 @@ from twinlink_ml.simulation.thermo import absolute_humidity_kg_per_kg, gas_densi
 
 _BACKEND = NumpyBackend()
 
-# -- NA5: geometrische/stoffliche Annahmen, siehe Moduldocstring und ASSUMPTIONS -----
+# -- NA5: geometric/material assumptions, see module docstring and ASSUMPTIONS -----
 _BED_PRESSURE_DROP_PA = 1920.0
 """19.2 mbar, PDIRAH-320404 im Screenshot (dritter Zeitpunkt, nicht Teil der Exporte)."""
 _BED_MASS_CANDIDATES_KG = (600.0, 800.0)
@@ -82,7 +82,7 @@ Innenraum-/Ansatztemperatur plausibler als Aussenlufttemperatur (TIR-322412)."""
 
 @dataclass(frozen=True, slots=True)
 class OperatingPoint:
-    """Ein Betriebspunkt, aus den Exportspalten gemittelt (24h)."""
+    """An operating point, averaged from the export columns (24h)."""
 
     label: str
     ambient_temperature_c: float
@@ -113,7 +113,7 @@ def load_operating_point(label: str, path: str) -> OperatingPoint:
 
 
 # ---------------------------------------------------------------------------------
-# NA3: hoehere Position vs. Betttemperatur -- reine Zeitreihenstatistik
+# NA3: upper position vs. bed temperature -- pure time-series statistics
 # ---------------------------------------------------------------------------------
 
 
@@ -149,7 +149,7 @@ def report_na3_upper_position(label: str, columns: dict[str, tuple[float, ...]])
 
 
 # ---------------------------------------------------------------------------------
-# NA4: outlet_duct_heat_loss_k -- Bett-Abluft-Versatz
+# NA4: outlet_duct_heat_loss_k -- bed-to-exhaust offset
 # ---------------------------------------------------------------------------------
 
 
@@ -194,7 +194,7 @@ def report_na4_cv(label: str, columns: dict[str, tuple[float, ...]]) -> None:
 
 
 # ---------------------------------------------------------------------------------
-# NA5: Beharrungszustand mit Anlagenparametern
+# NA5: steady state with plant parameters
 # ---------------------------------------------------------------------------------
 
 ASSUMPTIONS: tuple[str, ...] = (
@@ -237,24 +237,24 @@ def _gas_velocity_m_per_s(
     ambient_temperature_c: float,
     ambient_relative_humidity: float,
 ) -> float:
-    """Gasgeschwindigkeit (bei Bettbedingungen, Modellkonvention) aus Nm3/h.
+    """Gas velocity (at bed conditions, model convention) from Nm3/h.
 
-    Normdichte trockener Luft aus ``GasConfig`` (0 degC, ``gas.pressure_pa``), keine
-    zweite, hier neu gesetzte Konstante. ``bed_temperature_guess_c`` ist die GEMESSENE
-    Betttemperatur -- eine Kalibrierung der EINGANGS-Repraesentation (bekannter
-    Messwert Luftmenge -> Modellkonvention "Geschwindigkeit bei Bettbedingungen"),
-    KEINE Anpassung an das Ergebnis: die Loesung fuer T_bed bleibt frei, siehe
-    Moduldocstring.
+    Standard density of dry air from ``GasConfig`` (0 degC, ``gas.pressure_pa``), no
+    second constant newly set here. ``bed_temperature_guess_c`` is the MEASURED
+    bed temperature -- a calibration of the INPUT representation (known
+    measured value air flow -> model convention "velocity at bed conditions"),
+    NO fit to the result: the solution for T_bed stays free, see
+    module docstring.
 
-    **Korrektur (R1):** nimmt bewusst die RELATIVE Feuchte (``ambient_relative_humidity``,
-    dimensionslos, 0-1) plus die Umgebungstemperatur entgegen und rechnet intern ueber
-    :func:`~twinlink_ml.simulation.thermo.absolute_humidity_kg_per_kg` in absolute Feuchte
-    um -- keine zweite Konvertierung im Aufrufer. Die Erstfassung erwartete hier direkt
-    eine absolute Feuchte in kg/kg, wurde aber mit der relativen Feuchte (0.75) aufgerufen;
-    das trieb den abgeleiteten Trockenluftmassenstrom um Faktor ~2.2 ueber den Wert, der
-    aus Normvolumenstrom mal Normdichte folgt (siehe
+    **Correction (R1):** deliberately takes the RELATIVE humidity (``ambient_relative_humidity``,
+    dimensionless, 0-1) plus the ambient temperature and converts internally via
+    :func:`~twinlink_ml.simulation.thermo.absolute_humidity_kg_per_kg` into absolute
+    humidity -- no second conversion in the caller. The first version expected an
+    absolute humidity in kg/kg directly here, but was called with the relative humidity (0.75);
+    this drove the derived dry-air mass flow by a factor of ~2.2 above the value that
+    follows from standard volume flow times standard density (see
     ``test_gas_velocity_from_normal_flow_matches_mass_conservation`` in
-    ``tests/test_study_plant_validation.py`` und Befund 56, Korrektur).
+    ``tests/test_study_plant_validation.py`` and Befund 56, correction).
     """
     absolute_humidity = float(
         _BACKEND.to_numpy(
@@ -357,17 +357,17 @@ _BRACKET_LOW_MAX_OFFSET_K = 60.0
 def _solve_steady_state_widening_bracket(
     simulator: GreyBoxFluidBedGranulator, point: OperatingPoint
 ) -> tuple[SteadyStateSolution, float | None]:
-    """Loest den Beharrungszustand, weitet bei Bedarf die UNTERE Bracket-Grenze auf.
+    """Solves the steady state, widening the LOWER bracket limit if needed.
 
-    Der Solver-Default (``T_amb + 10``, siehe ``steady_state.py``) haelt die aeussere
-    Bisektion im Trocknungsregime -- kalibriert am Labormassstab. Bei sehr hoher
-    Spruehrate (product 2: 2118 kg/h, >2x product 1) reicht dieser Abstand nicht: unterhalb einer
-    hoeheren Schwelle befeuchtet sich das Bett bei JEDER angenommenen Partikelfeuchte
-    netto (keine Loesung der inneren Bisektion). Das ist eine NUMERISCHE Anpassung des
-    Suchbereichs, KEINE Aenderung der Bilanzgleichungen oder eines physikalischen
-    Parameters: sie erweitert nur, wo nach der Nullstelle gesucht wird. Wird eine
-    Erweiterung noetig, gibt diese Funktion die tatsaechlich verwendete untere Grenze
-    zurueck (sonst ``None``) -- das gehoert in den Bericht, nicht versteckt.
+    The solver default (``T_amb + 10``, see ``steady_state.py``) keeps the outer
+    bisection in the drying regime -- calibrated at lab scale. At a very high
+    spray rate (product 2: 2118 kg/h, >2x product 1) this distance is not enough: below a
+    higher threshold the bed gets wetter on net at EVERY assumed particle moisture
+    (no solution of the inner bisection). This is a NUMERICAL adjustment of the
+    search range, NO change of the balance equations or of a physical
+    parameter: it only extends where the root is searched for. If an
+    extension becomes necessary, this function returns the lower limit actually used
+    (otherwise ``None``) -- that belongs in the report, not hidden.
     """
     default_low = point.ambient_temperature_c + 10.0
     default_high = max(point.inlet_temperature_c, _ASSUMED_SUSPENSION_TEMPERATURE_C) + 5.0
@@ -395,13 +395,13 @@ Faktor-~2.2-Fehler in der Luftstromumrechnung per Hand aufgedeckt hat, jetzt aut
 def _check_air_heat_plausibility(
     point: OperatingPoint, config: ProcessConfig, solution: SteadyStateSolution
 ) -> None:
-    """Vergleicht die aus der MESSUNG folgende Luftwaerme (m_L * cp * dT, mit dT gegen
-    die GEMESSENE Betttemperatur, m_L korrekt aus Nm3/h abgeleitet) mit der vom Modell
-    tatsaechlich verwendeten Luftwaerme (m_L_modell * cp * dT, dT gegen die VOM MODELL
-    GEFUNDENE Betttemperatur). Weicht das Verhaeltnis um mehr als
-    :data:`_AIR_HEAT_PLAUSIBILITY_TOLERANCE` von 1 ab, wird gewarnt -- nicht automatisch
-    korrigiert. Diese Pruefung haette den R1-Fehler (Faktor ~2.2 im Luftmassenstrom durch
-    relative statt absolute Feuchte) beim ERSTEN Lauf gemeldet.
+    """Compares the air heat following from the MEASUREMENT (m_L * cp * dT, with dT against
+    the MEASURED bed temperature, m_L correctly derived from Nm3/h) with the air heat
+    actually used by the model (m_L_modell * cp * dT, dT against the bed temperature
+    FOUND BY THE MODEL). If the ratio deviates from 1 by more than
+    :data:`_AIR_HEAT_PLAUSIBILITY_TOLERANCE`, a warning is issued -- not automatically
+    corrected. This check would have reported the R1 error (factor ~2.2 in the air mass flow due to
+    relative instead of absolute humidity) on the FIRST run.
     """
     absolute_humidity = float(
         _BACKEND.to_numpy(

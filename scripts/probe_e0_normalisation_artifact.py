@@ -1,10 +1,10 @@
-r"""E0: Ist der d50-Maskierungseffekt (F3) ein Normierungsartefakt?.
+r"""E0: Is the d50 masking effect (F3) a normalisation artifact?.
 
-KEIN Netztraining -- reine Inferenz auf vorhandenen Checkpoints (gru_seed1.pt,
-lstm_seed1.pt). KEINE Aenderung an src/. Nutzt evaluator.nrmse()/per_run_nrmse()
-(evaluator.py:79-147) unveraendert als Referenz fuer den per-Lauf-Nenner, berechnet ihn
-hier aber direkt (np.std je Lauf), um ihn getrennt von der RMSE auszuweisen -- die
-bestehende Funktion gibt nur das fertige Verhaeltnis zurueck.
+NO network training -- pure inference on existing checkpoints (gru_seed1.pt,
+lstm_seed1.pt). NO change to src/. Uses evaluator.nrmse()/per_run_nrmse()
+(evaluator.py:79-147) unchanged as the reference for the per-run denominator, but computes it
+directly here (np.std per run) in order to report it separately from the RMSE -- the
+existing function only returns the finished ratio.
 """
 
 from __future__ import annotations
@@ -31,23 +31,23 @@ CHECKPOINT_DIR = REPO_ROOT / "artifacts" / "checkpoints"
 HOLDOUT_SEED = 999
 SEED_FOR_MODELS = 1
 
-# Zwei getrennte Konstanten statt einer gemeinsamen: dieses Skript prueft zwei
-# UNTERSCHIEDLICHE Provenienzen gegeneinander, nicht denselben Wert zweimal.
-# EXPECTED_FP_FRESH ist der Fingerprint der HIER frisch erzeugten Holdout-Daten (aktueller
-# Code-Stand). EXPECTED_FP_CHECKPOINT ist der Fingerprint, der beim Training in die
-# artifacts/checkpoints/{gru,lstm}_seed1.pt-Dateien geschrieben wurde (permanent, wird beim
-# Laden nie neu berechnet, siehe utils/checkpoints.py::load_checkpoint) -- diese Checkpoints
-# wurden VOR Einfuehrung von NumericsConfig.enforce_gas_velocity_projection trainiert und
-# bleiben deshalb fuer immer beim alten Wert.
+# Two separate constants instead of a shared one: this script checks two
+# DIFFERENT provenances against each other, not the same value twice.
+# EXPECTED_FP_FRESH is the fingerprint of the holdout data freshly generated HERE (current
+# code state). EXPECTED_FP_CHECKPOINT is the fingerprint that was written into the
+# artifacts/checkpoints/{gru,lstm}_seed1.pt files at training time (permanent, never
+# recomputed on loading, see utils/checkpoints.py::load_checkpoint) -- these checkpoints
+# were trained BEFORE NumericsConfig.enforce_gas_velocity_projection was introduced and
+# therefore stay at the old value forever.
 #
-# Die Gleichsetzung "40aae2b4526a5ed7 entspricht 82f65f576a2e5253" ist NUR durch den
-# Bitgleichheits-Regressionstest test_gas_velocity_projection_disabled_matches_legacy_
-# baseline (tests/test_gas_velocity_projection.py) gedeckt: er belegt, dass beide
-# Fingerprints bei ausgeschalteter Projektion dieselben Trajektorien liefern. Ohne diesen
-# Beleg waere die Auswertung hier ungueltig -- siehe die Laufzeitpruefung in main()
-# (enforce_gas_velocity_projection muss AUS sein, sonst wertet ein auf unprojizierten Daten
-# trainiertes Checkpoint auf einer anderen Verteilung aus, ohne dass sich das an einem
-# Fingerprint-Vergleich zeigen wuerde).
+# The identification "40aae2b4526a5ed7 corresponds to 82f65f576a2e5253" is covered ONLY by the
+# bit-identity regression test test_gas_velocity_projection_disabled_matches_legacy_
+# baseline (tests/test_gas_velocity_projection.py): it shows that both
+# fingerprints yield the same trajectories with the projection switched off. Without this
+# evidence the evaluation here would be invalid -- see the runtime check in main()
+# (enforce_gas_velocity_projection must be OFF, otherwise a checkpoint trained on unprojected
+# data is evaluated on a different distribution without this showing up in a
+# fingerprint comparison).
 EXPECTED_FP_FRESH = "40aae2b4526a5ed7"
 EXPECTED_FP_CHECKPOINT = "82f65f576a2e5253"
 
@@ -90,10 +90,10 @@ def main() -> None:
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
         config = load_process_config(CONFIG_PATH)
 
-    # Die gru/lstm-Checkpoints wurden auf UNPROJIZIERTEN Daten trainiert. Wertet dieses
-    # Skript sie auf projizierten Daten aus, ist das ein Verteilungsbruch, den kein
-    # Fingerprint-Vergleich mehr anzeigt (beide Konstanten wuerden dann einfach "wie
-    # erwartet" voneinander abweichen) -- deshalb eine eigene, explizite Pruefung.
+    # The gru/lstm checkpoints were trained on UNPROJECTED data. If this script
+    # evaluates them on projected data, that is a distribution break that no
+    # fingerprint comparison shows any more (both constants would then simply deviate
+    # from each other "as expected") -- hence a separate, explicit check.
     if config.numerics.enforce_gas_velocity_projection:
         raise RuntimeError(
             "enforce_gas_velocity_projection ist AN, aber die gru/lstm-Checkpoints in "

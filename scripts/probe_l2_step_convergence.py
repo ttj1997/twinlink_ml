@@ -1,28 +1,28 @@
-r"""L2: Schrittweitenkonvergenz (``numerics.substeps`` 5 -> 10 -> 20) am RK4-Integrator.
+r"""L2: step-size convergence (``numerics.substeps`` 5 -> 10 -> 20) of the RK4 integrator.
 
-KEIN Netztraining. Ruft nur bestehenden Code auf (``GreyBoxFluidBedGranulator.rollout``,
-unveraendert). KEINE Aenderung an ``src/``.
+NO network training. Only calls existing code (``GreyBoxFluidBedGranulator.rollout``,
+unchanged). NO change to ``src/``.
 
-Frage: ist die Schrittweite ``substeps=5`` (Standard in ``greybox_gab_placeholder.yaml``)
-fein genug, oder aendert sich die Trajektorie relevant bei Verfeinerung? Besonders
-interessant sind Laeufe mit hohen ``bed_temperature_celsius``-Spitzen, weil dort das
-Sicherheitsnetz aus ``greybox.py`` (Zustandsboden, Knick der Verdampfungsrate am
-Klippungspunkt, siehe ``thermo.evaporation_rate_kg_per_s``) am ehesten greift und
-RK4 nicht ueberall differenzierbare rechte Seiten integriert.
+Question: is the step size ``substeps=5`` (default in ``greybox_gab_placeholder.yaml``)
+fine enough, or does the trajectory change relevantly on refinement? Of particular
+interest are runs with high ``bed_temperature_celsius`` peaks, because there the
+safety net from ``greybox.py`` (state floor, kink of the evaporation rate at the
+clipping point, see ``thermo.evaporation_rate_kg_per_s``) is most likely to act and
+RK4 integrates right-hand sides that are not differentiable everywhere.
 
-Vorgehen: ein Standard-Anregungspool (128 Laeufe, ``DataSpec``-Default, Δt=25s,
-Trainingspool-Seed 1, wie in ``probe_e2_e3_e4_lag_depth.py``) bei ``substeps=5``
-simulieren, je die drei Laeufe mit der hoechsten und die drei mit der niedrigsten
-``bed_temperature_celsius``-Spitze auswaehlen ("heiss"/"Kontrolle"), und jeden dieser
-sechs Laeufe -- gleiche Anregung, gleicher Anfangszustand -- bei ``substeps`` in
-{5, 10, 20} erneut integrieren. Verglichen wird die wahre, unverrauschte Betttemperatur
-(``trajectory.outputs[..., 1]``, siehe ``greybox.step`` -- dort ohne Sensorfilter/Rauschen
-gebildet, im Gegensatz zu ``trajectory.measurements``), nicht die Messung: das
-Sensormodell ueberlagert mit 0.2 K absolutem Rauschen, das die hier gesuchten
-Integrationsfehler (< 0.002 K) um zwei Grossenordnungen verdecken wuerde.
+Procedure: simulate a standard excitation pool (128 runs, ``DataSpec`` default, Δt=25s,
+training pool seed 1, as in ``probe_e2_e3_e4_lag_depth.py``) at ``substeps=5``,
+select the three runs with the highest and the three with the lowest
+``bed_temperature_celsius`` peak ("hot"/"control"), and integrate each of these
+six runs again -- same excitation, same initial state -- at ``substeps`` in
+{5, 10, 20}. Compared is the true, noise-free bed temperature
+(``trajectory.outputs[..., 1]``, see ``greybox.step`` -- formed there without sensor
+filter/noise, in contrast to ``trajectory.measurements``), not the measurement: the
+sensor model superimposes 0.2 K absolute noise, which would mask the integration errors
+sought here (< 0.002 K) by two orders of magnitude.
 
-Berichtet wird je Lauf die maximale absolute Abweichung der Trajektorie zwischen
-5 und 10 sowie zwischen 10 und 20 Substeps.
+Reported per run is the maximum absolute deviation of the trajectory between
+5 and 10 and between 10 and 20 substeps.
 """
 
 from __future__ import annotations

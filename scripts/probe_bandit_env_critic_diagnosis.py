@@ -1,31 +1,31 @@
-r"""BB1: Mechanismus des Eckenkollaps pruefen -- NUR mit vorhandenen Checkpoints, kein Training.
+r"""BB1: check the mechanism of the corner collapse -- ONLY with existing checkpoints, no training.
 
-Zwei vermutete Mechanismen (Auftrag):
+Two suspected mechanisms (the task):
 
-* **Optimismus durch Initialisierung**: alle Belohnungen sind negativ, der Kritiker startet
-  nahe null; unbesuchte Aktionen erscheinen dadurch besser als besuchte, der Akteur laeuft
-  in die Ecken.
-* **tanh-Saettigung**: in der Ecke waechst die Voraktivierung, der Gradient durch tanh
-  verschwindet, der Akteur kommt nicht zurueck.
+* **Optimism through initialisation**: all rewards are negative, the critic starts
+  close to zero; unvisited actions therefore appear better than visited ones, the actor runs
+  into the corners.
+* **tanh saturation**: in the corner the pre-activation grows, the gradient through tanh
+  vanishes, the actor does not come back.
 
-Drei Messungen an den XA2-Checkpoints (1000 und 10000 Schritte), fuer alle 25 Befund-52-
-Testkontexte:
+Three measurements on the XA2 checkpoints (1000 and 10000 steps), for all 25 Befund 52
+test contexts:
 
-a) Voraktivierung ``mu`` des Akteurs VOR tanh (``Actor.get_action_dist_params``), je
-   Aktionsdimension. ``|mu| > 3`` bedeutet ``tanh' < 0.01`` (nahezu verschwindender
-   Gradient) -- siehe :data:`SATURATION_MU_THRESHOLD`.
-b) Kritikerwert ``Q`` (beide Kritiker-Netze) an der tatsaechlich ausgegebenen (Ecken-)
-   Aktion UND an der Orakelaktion desselben Kontexts (normiert eingespeist, wie ein Agent
-   sie saehe). ``Q(Ecke) > Q(Orakel)`` trotz Unzulaessigkeit der Ecke waere eine
-   Kritikerfehleinschaetzung.
-c) ``Q`` an einer Handvoll Aktionen ohne besonderen Bezug zur ausgegebenen Politik (Mitte,
-   Gegenecke, gemischte Ecken) -- ACHTUNG: der Replay-Buffer wurde in XA2 NICHT gesichert
-   (nur die Politik-Gewichte, siehe ``utils/checkpoints.py``-Konvention), "tatsaechlich nie
-   besucht" ist deshalb NICHT direkt pruefbar. Diese Aktionen sind ein PROXY (weit von der
-   ausgegebenen Politik entfernt), keine verifizierte Negativliste -- siehe Auftragsantwort
-   fuer die Einordnung dieser Einschraenkung.
+a) Pre-activation ``mu`` of the actor BEFORE tanh (``Actor.get_action_dist_params``), per
+   action dimension. ``|mu| > 3`` means ``tanh' < 0.01`` (nearly vanishing
+   gradient) -- see :data:`SATURATION_MU_THRESHOLD`.
+b) Critic value ``Q`` (both critic networks) at the action actually output (corner action)
+   AND at the oracle action of the same context (fed in normalised, as an agent
+   would see it). ``Q(Ecke) > Q(Orakel)`` despite the infeasibility of the corner would be a
+   misjudgement by the critic.
+c) ``Q`` at a handful of actions without particular relation to the output policy (centre,
+   opposite corner, mixed corners) -- CAUTION: the replay buffer was NOT saved in XA2
+   (only the policy weights, see the ``utils/checkpoints.py`` convention), "actually never
+   visited" is therefore NOT directly checkable. These actions are a PROXY (far away from the
+   output policy), not a verified negative list -- see the answer to the task
+   for the assessment of this limitation.
 
-Aufruf::
+Usage::
 
     python scripts/probe_bandit_env_critic_diagnosis.py \
         --output artifacts/runs/rl_bandit_critic_diagnosis.json
@@ -66,9 +66,9 @@ def _suppress_placeholder_warning() -> None:
 
 
 def _find_checkpoint(step: int, run_uid: str | None) -> Path:
-    """Siehe ``probe_bandit_env_policy_inspection.py::_find_checkpoint`` -- ``run_uid``
-    fuer exakten Treffer statt mtime-basierter Auswahl, noetig bei parallel laufenden
-    Trainingslaeufen.
+    """See ``probe_bandit_env_policy_inspection.py::_find_checkpoint`` -- ``run_uid``
+    for an exact match instead of mtime-based selection, needed with training runs
+    running in parallel.
     """
     if run_uid is not None:
         path = CHECKPOINT_DIR / f"{run_uid}_step{step:06d}.zip"
@@ -170,7 +170,7 @@ def diagnose_checkpoint(path: Path, env: OperatingPointBanditEnv) -> dict[str, A
     q_corner_arr = np.asarray(q_corner)
     q_oracle_arr = np.asarray(q_oracle)
 
-    # (c) Proxy-Aktionen fuer "nie besucht", am ersten Kontext.
+    # (c) Proxy actions for "never visited", at the first context.
     obs0 = np.array(
         [points[0].ambient_temperature_celsius, points[0].ambient_relative_humidity],
         dtype=np.float32,

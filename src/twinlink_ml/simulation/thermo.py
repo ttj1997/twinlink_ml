@@ -1,14 +1,14 @@
-r"""Psychrometrie und Trocknungskinetik.
+r"""Psychrometrics and drying kinetics.
 
-Reine Funktionen, backend-agnostisch. Jede Größe trägt ihre Einheit im Namen.
+Pure functions, backend-agnostic. Every quantity carries its unit in its name.
 
-Die Sättigungsfeuchte ist die Stelle, an der die harte Grenze aus
-``02_prozess_setup.md`` (Abluftfeuchte :math:`\le` Sättigungsfeuchte) entsteht. Sie wird
-hier **nicht** durch eine nachgeschaltete Projektion erzwungen, sondern durch die
-Struktur der Trocknungskinetik: der Sättigungsgrad :math:`\nu \le \nu_{max} \le 1`
-begrenzt die Verdampfung so, dass die Abluft die Sättigung nie überschreiten kann.
-Ein Constraint, das aus der Modellstruktur folgt, kann nicht durch numerische
-Ungenauigkeit verletzt werden -- eine Projektion kann das.
+The saturation humidity is the place where the hard limit from
+``02_prozess_setup.md`` (exhaust air humidity :math:`\le` saturation humidity) arises. It is
+**not** enforced here by a downstream projection but by the
+structure of the drying kinetics: the saturation degree :math:`\nu \le \nu_{max} \le 1`
+limits the evaporation such that the exhaust air can never exceed saturation.
+A constraint that follows from the model structure cannot be violated by numerical
+inaccuracy -- a projection can.
 """
 
 from __future__ import annotations
@@ -19,11 +19,11 @@ from .backend import Array, ArrayBackend
 from .config import GasConfig, MaterialConfig
 
 if TYPE_CHECKING:
-    # Nur für Typannotationen: sorption.py importiert bereits aus thermo.py
-    # (absolute_humidity_kg_per_kg, relative_humidity_from_absolute_humidity). Ein
-    # Modul-Top-Level-Import hier würde einen Zirkelbezug erzeugen. Die Isotherme wird
-    # deshalb injiziert (Dependency Injection, wie ``backend``), nicht intern aus
-    # ``material`` konstruiert -- kein Laufzeit-Import nötig.
+    # Only for type annotations: sorption.py already imports from thermo.py
+    # (absolute_humidity_kg_per_kg, relative_humidity_from_absolute_humidity). A
+    # module top-level import here would create a circular reference. The isotherm is
+    # therefore injected (dependency injection, like ``backend``), not constructed internally
+    # from ``material`` -- no runtime import needed.
     from .sorption import SorptionIsotherm
 
 _KELVIN_OFFSET = 273.15
@@ -32,26 +32,26 @@ _PICARD_DAMPING = 0.7
 
 
 def kelvin(temperature_celsius: Array) -> Array:
-    """Celsius nach Kelvin."""
+    """Celsius to Kelvin."""
     return temperature_celsius + _KELVIN_OFFSET
 
 
 def saturation_pressure_pa(backend: ArrayBackend, temperature_celsius: Array) -> Array:
-    r"""Sättigungsdampfdruck nach Buck (1996).
+    r"""Saturation vapour pressure according to Buck (1996).
 
     .. math:: p_s(T) = 611.21\,
         \exp\!\left[\left(18.678 - \frac{T}{234.5}\right)\frac{T}{257.14 + T}\right]
 
-    Genauigkeit besser als 0.2 % im Bereich 0-100 °C.
+    Accuracy better than 0.2 % in the range 0-100 °C.
 
-    Bewusst **nicht** die einfachere Magnus-Formel: die weicht bei 100 °C um 2.6 kPa
-    (2.6 %) ab. Weil Zulufttemperaturen bis 120 °C im Stellgrößenbereich liegen und die
-    Betttemperatur bei kleiner Sprührate in diese Region läuft, wäre das ein
-    systematischer Fehler genau im energetisch interessanten Randbereich -- also dort, wo
-    ein RL-Agent später hin optimiert.
+    Deliberately **not** the simpler Magnus formula: it deviates at 100 °C by 2.6 kPa
+    (2.6 %). Because inlet air temperatures up to 120 °C lie in the action range and the
+    bed temperature runs into this region at a small spray rate, this would be a
+    systematic error exactly in the energetically interesting edge region -- i.e. where
+    an RL agent will later optimise towards.
 
-    :param temperature_celsius: Temperatur in °C
-    :returns: Sättigungsdampfdruck in Pa
+    :param temperature_celsius: temperature in °C
+    :returns: saturation vapour pressure in Pa
     """
     t = backend.clip(temperature_celsius, -40.0, 200.0)
     return 611.21 * backend.exp((18.678 - t / 234.5) * t / (257.14 + t))
@@ -63,11 +63,11 @@ def absolute_humidity_kg_per_kg(
     temperature_celsius: Array,
     relative_humidity: Array,
 ) -> Array:
-    r"""Absolute Feuchte aus relativer Feuchte.
+    r"""Absolute humidity from relative humidity.
 
     .. math:: Y = 0.622\,\frac{\varphi\, p_s(T)}{p - \varphi\, p_s(T)}
 
-    Einheit: kg Wasser pro kg trockene Luft.
+    Unit: kg water per kg dry air.
     """
     p_partial = relative_humidity * saturation_pressure_pa(backend, temperature_celsius)
     p_partial = backend.minimum(p_partial, 0.95 * gas.pressure_pa)
@@ -82,29 +82,29 @@ def relative_humidity_from_absolute_humidity(
     *,
     saturation_pressure: Array | None = None,
 ) -> Array:
-    r"""Relative Feuchte aus absoluter Feuchte -- Umkehrung von :func:`absolute_humidity_kg_per_kg`.
+    r"""Relative humidity from absolute humidity -- inverse of :func:`absolute_humidity_kg_per_kg`.
 
     .. math:: \varphi = \mathrm{clip}\!\left(\frac{Y\,p}{(0.622+Y)\,p_s(T)},\, 0,\, 1\right)
 
-    Dieselbe Buck-Sättigungsdruckformel wie :func:`saturation_pressure_pa` -- keine zweite
-    psychrometrische Formel. ``temperature_celsius`` ist hier nicht notwendig die
-    Temperatur, bei der ``humidity_kg_per_kg`` gemessen wurde: die Funktion beantwortet
-    "welche relative Feuchte hätte diese absolute Feuchte bei dieser Temperatur", etwa
-    für Zuluft, die von :math:`T_{amb}` auf :math:`T_{bed}` erwärmt wird, ohne dass sich
-    ihre absolute Feuchte dabei ändert.
+    The same Buck saturation pressure formula as :func:`saturation_pressure_pa` -- no second
+    psychrometric formula. ``temperature_celsius`` here is not necessarily the
+    temperature at which ``humidity_kg_per_kg`` was measured: the function answers
+    "which relative humidity would this absolute humidity have at this temperature", e.g.
+    for inlet air that is heated from :math:`T_{amb}` to :math:`T_{bed}` without its
+    absolute humidity changing.
 
-    Exakte algebraische Inversion von :func:`absolute_humidity_kg_per_kg`: numerisch
-    bestätigt bis auf Float64-Rundung (< 1e-15). Eine Ausnahme: bei sehr hohem
-    ``temperature_celsius`` kombiniert mit hoher ``humidity_kg_per_kg`` greift
-    :func:`absolute_humidity_kg_per_kg`s eigener, dort schon vorhandener Clip
-    (``p_partial = min(p_partial, 0.95*p)``, Sättigungsdampfdruck übersteigt den
-    Gesamtdruck ab ca. 95-100 °C) -- das an dieser Stelle bereits geclippte ``Y`` ist dann
-    nicht mehr die exakte Umkehrung der ursprünglichen relativen Feuchte, unabhängig davon,
-    wie exakt diese Funktion selbst rechnet. Wer diese Funktion bei Temperaturen deutlich
-    über dem Sicherheitsraster einsetzt (:func:`~.sorption.sorption_safety_grid`, hier nur
-    bis 130 °C ausgewertet), sollte diesen Effekt einkalkulieren.
+    Exact algebraic inversion of :func:`absolute_humidity_kg_per_kg`: numerically
+    confirmed up to float64 rounding (< 1e-15). One exception: at very high
+    ``temperature_celsius`` combined with high ``humidity_kg_per_kg``,
+    :func:`absolute_humidity_kg_per_kg`'s own clip already present there takes effect
+    (``p_partial = min(p_partial, 0.95*p)``, saturation vapour pressure exceeds the
+    total pressure from about 95-100 °C) -- the ``Y`` already clipped at that point is then
+    no longer the exact inversion of the original relative humidity, regardless of
+    how exactly this function itself computes. Whoever uses this function at temperatures clearly
+    above the safety grid (:func:`~.sorption.sorption_safety_grid`, evaluated here only
+    up to 130 °C) should take this effect into account.
 
-    :returns: relative Feuchte in [0, 1]
+    :returns: relative humidity in [0, 1]
     """
     p_partial = humidity_kg_per_kg * gas.pressure_pa / (0.622 + humidity_kg_per_kg)
     # ``saturation_pressure``: p_s(temperature_celsius) precomputed by a caller that evaluates
@@ -124,27 +124,27 @@ def dew_point_celsius(
     *,
     iterations: int = 60,
 ) -> Array:
-    r"""Taupunkt aus absoluter Feuchte -- Umkehrung von :func:`saturation_pressure_pa`.
+    r"""Dew point from absolute humidity -- inversion of :func:`saturation_pressure_pa`.
 
-    :math:`p_s(T_{dp}) = p_{partial}`, mit :math:`p_{partial} = Y\,p / (0.622 + Y)`
-    (Umkehrung von :func:`absolute_humidity_kg_per_kg`, dieselbe Formel wie in
-    :func:`relative_humidity_from_absolute_humidity`). Dieselbe Buck-Korrelation
-    (:func:`saturation_pressure_pa`) wie überall in diesem Modul -- keine zweite
-    psychrometrische Formel. Numerisch über Bisektion, nicht Newton: ``saturation_pressure_pa``
-    clippt an den Bracket-Rändern, keine überall differenzierbare Funktion (dieselbe
-    Begründung wie bei ``simulation.steady_state._solve_dew_point``, der skalaren, privaten
-    Variante für den Beharrungszustands-Löser). Diese Funktion ist die array-fähige,
-    öffentliche Entsprechung -- gebraucht, weil eine Auswertung auf ganzen
-    Vorhersage-Arrays (viele Fenster/Läufe/Horizonte) läuft, nicht an einem einzelnen
-    Beharrungspunkt.
+    :math:`p_s(T_{dp}) = p_{partial}`, with :math:`p_{partial} = Y\,p / (0.622 + Y)`
+    (inversion of :func:`absolute_humidity_kg_per_kg`, the same formula as in
+    :func:`relative_humidity_from_absolute_humidity`). The same Buck correlation
+    (:func:`saturation_pressure_pa`) as everywhere in this module -- no second
+    psychrometric formula. Numerically via bisection, not Newton: ``saturation_pressure_pa``
+    clips at the bracket edges, not an everywhere differentiable function (the same
+    reasoning as for ``simulation.steady_state._solve_dew_point``, the scalar, private
+    variant for the steady-state solver). This function is the array-capable,
+    public counterpart -- needed because an evaluation runs on whole
+    prediction arrays (many windows/runs/horizons), not at a single
+    steady-state point.
 
-    60 feste Iterationen, keine Abbruchprüfung: bei Startbracket ``[-40, 100]`` °C halbiert
-    sich das Intervall auf :math:`140 / 2^{60}` °C -- weit unterhalb jeder
-    Float64-Auflösung, ohne bedingten Kontrollfluss über Arrayelemente hinweg (kein früher
-    Abbruch bei Konvergenz einzelner Elemente).
+    60 fixed iterations, no termination check: with the start bracket ``[-40, 100]`` °C the
+    interval halves to :math:`140 / 2^{60}` °C -- far below any
+    float64 resolution, without conditional control flow across array elements (no early
+    termination at convergence of individual elements).
 
-    :param absolute_humidity_kg_per_kg: :math:`Y`, kg Wasser pro kg trockene Luft.
-    :returns: Taupunkt in °C.
+    :param absolute_humidity_kg_per_kg: :math:`Y`, kg water per kg dry air.
+    :returns: dew point in °C.
     """
     p_partial = (
         absolute_humidity_kg_per_kg * gas.pressure_pa / (0.622 + absolute_humidity_kg_per_kg)
@@ -163,13 +163,13 @@ def dew_point_celsius(
 def saturation_humidity_kg_per_kg(
     backend: ArrayBackend, gas: GasConfig, temperature_celsius: Array
 ) -> Array:
-    """Sättigungsfeuchte :math:`Y_s(T)` in kg/kg trockene Luft."""
+    """Saturation humidity :math:`Y_s(T)` in kg/kg dry air."""
     one = backend.zeros_like(temperature_celsius) + 1.0
     return absolute_humidity_kg_per_kg(backend, gas, temperature_celsius, one)
 
 
 def latent_heat_j_per_kg(backend: ArrayBackend, temperature_celsius: Array) -> Array:
-    r"""Verdampfungsenthalpie von Wasser.
+    r"""Enthalpy of evaporation of water.
 
     .. math:: \Delta h_v(T) \approx 2.5008\cdot 10^{6} - 2358.6\,T \quad [\mathrm{J/kg}]
     """
@@ -178,12 +178,12 @@ def latent_heat_j_per_kg(backend: ArrayBackend, temperature_celsius: Array) -> A
 
 
 def gas_density_kg_per_m3(
-    backend: ArrayBackend,  # noqa: ARG001 - gemeinsame Signatur aller Korrelationen
+    backend: ArrayBackend,  # noqa: ARG001 - common signature of all correlations
     gas: GasConfig,
     temperature_celsius: Array,
     humidity_kg_per_kg: Array,
 ) -> Array:
-    r"""Dichte feuchter Luft, ideales Gasgemisch.
+    r"""Density of moist air, ideal gas mixture.
 
     .. math:: \rho = \frac{p}{R_{L} T}\cdot\frac{1 + Y}{1 + Y/0.622}
     """
@@ -193,7 +193,7 @@ def gas_density_kg_per_m3(
 
 
 def gas_viscosity_pa_s(backend: ArrayBackend, gas: GasConfig, temperature_celsius: Array) -> Array:
-    r"""Dynamische Viskosität nach Sutherland.
+    r"""Dynamic viscosity according to Sutherland.
 
     .. math:: \mu(T) = \mu_0
         \left(\frac{T}{T_0}\right)^{3/2}\frac{T_0 + S}{T + S}
@@ -217,27 +217,27 @@ def normalised_moisture(
     relative_humidity: Array,
     temperature_celsius: Array,
 ) -> Array:
-    r"""Normierte Partikelfeuchte :math:`\eta` der Trocknungskurve.
+    r"""Normalised particle moisture :math:`\eta` of the drying curve.
 
     .. math:: \eta = \mathrm{clip}\!\left(
         \frac{X_p - X_{eq}(\varphi, T)}{X_{cr} - X_{eq}(\varphi, T)},\, 0,\, 1\right)
 
-    :math:`\eta = 1` entspricht dem ersten Trocknungsabschnitt (konstante Rate),
-    :math:`\eta < 1` dem zweiten (fallende Rate). Der Nulldurchgang bei
-    :math:`X_p = X_{eq}` garantiert strukturell die zweite harte Grenze aus
-    ``02_prozess_setup.md``: die Partikelfeuchte kann die Gleichgewichtsfeuchte der
-    Sorptionsisotherme nicht unterschreiten, weil die Verdampfungsrate dort verschwindet.
+    :math:`\eta = 1` corresponds to the first drying period (constant rate),
+    :math:`\eta < 1` to the second (falling rate). The zero crossing at
+    :math:`X_p = X_{eq}` structurally guarantees the second hard limit from
+    ``02_prozess_setup.md``: the particle moisture cannot fall below the equilibrium moisture of the
+    sorption isotherm, because the evaporation rate vanishes there.
 
-    :math:`X_{eq}(\varphi, T)` kommt aus der injizierten Sorptionsisotherme
-    (``simulation.sorption``) -- ``ConstantIsotherm`` bildet den historischen
-    Skalarfall exakt nach, ``GabIsotherm`` macht :math:`X_{eq}` von der relativen
-    Abluftfeuchte und der Betttemperatur abhängig. Welche Isotherme aktiv ist, ist
-    Sache des Aufrufers (Dependency Injection, wie ``backend``) -- diese Funktion
-    kennt nur das Isothermen-Interface, nicht ``MaterialConfig.sorption_isotherm_kind``.
+    :math:`X_{eq}(\varphi, T)` comes from the injected sorption isotherm
+    (``simulation.sorption``) -- ``ConstantIsotherm`` reproduces the historical
+    scalar case exactly, ``GabIsotherm`` makes :math:`X_{eq}` dependent on the relative
+    exhaust air humidity and the bed temperature. Which isotherm is active is
+    up to the caller (dependency injection, like ``backend``) -- this function
+    knows only the isotherm interface, not ``MaterialConfig.sorption_isotherm_kind``.
 
-    :param relative_humidity: relative Feuchte der Abluft in [0, 1] -- bei
-        ``evaporation_rate_kg_per_s`` das Ergebnis der Picard-Iteration über
-        :math:`Y_{out}`, nicht direkt gegeben (siehe dort).
+    :param relative_humidity: relative humidity of the exhaust air in [0, 1] -- in
+        ``evaporation_rate_kg_per_s`` the result of the Picard iteration over
+        :math:`Y_{out}`, not given directly (see there).
     """
     equilibrium_moisture = isotherm.equilibrium_moisture(
         backend, relative_humidity, temperature_celsius
@@ -257,72 +257,72 @@ def evaporation_rate_kg_per_s(
     inlet_humidity_kg_per_kg: Array,
     particle_moisture_kg_per_kg: Array,
 ) -> tuple[Array, Array, Array]:
-    r"""Verdampfungsrate über die normierte Trocknungskurve.
+    r"""Evaporation rate via the normalised drying curve.
 
     .. math::
         \dot m_{evap} = \underbrace{\nu_{max}\,f(\eta)}_{\nu}\;
         \dot m_{L}\,\bigl(Y_s(T_{bed}) - Y_{in}\bigr),
         \qquad f(\eta) = \eta
 
-    Annahme: ideal durchmischtes Bett, Abluft auf Betttemperatur. Der Sättigungsgrad
-    :math:`\nu` beschreibt, wie weit die Abluft an die Sättigung herankommt. Für
-    Wirbelschichten liegt er im ersten Trocknungsabschnitt typisch bei 0.4-0.8.
+    Assumption: ideally mixed bed, exhaust air at bed temperature. The saturation degree
+    :math:`\nu` describes how close the exhaust air comes to saturation. For
+    fluidized beds it is typically 0.4-0.8 in the first drying period.
 
-    Fallstrick: mit :math:`f(\eta) = \eta` ist die Feuchtedynamik ein
-    Verzögerungsglied erster Ordnung mit sehr kleiner Zeitkonstante, weil die
-    Trocknungskapazität der Luft die eingesprühte Wassermenge bei
-    Granulationsbedingungen um eine Größenordnung übersteigt. Das ist physikalisch
-    korrekt (das Bett ist trocken), macht die Feuchte aber zur schnellsten Mode des
-    Systems -- relevant für die Wahl von :math:`\Delta t`.
+    Pitfall: with :math:`f(\eta) = \eta` the moisture dynamics are a
+    first-order lag element with a very small time constant, because the
+    drying capacity of the air exceeds the sprayed-in water amount under
+    granulation conditions by an order of magnitude. That is physically
+    correct (the bed is dry), but makes the moisture the fastest mode of the
+    system -- relevant for the choice of :math:`\Delta t`.
 
-    Kondensation
+    Condensation
     ------------
-    Ist die Zuluft feuchter als die Sättigung bei Betttemperatur
-    (:math:`Y_{in} > Y_s(T_{bed})`, z. B. beim Kaltstart oder bei sehr feuchter
-    Umgebungsluft), kehrt sich der Stofftransport um: Wasser kondensiert auf die Partikel,
-    bis die Abluft gesättigt ist. Dieser Zweig ist nicht kinetisch begrenzt.
+    If the inlet air is moister than saturation at bed temperature
+    (:math:`Y_{in} > Y_s(T_{bed})`, e.g. at a cold start or with very humid
+    ambient air), the mass transfer reverses: water condenses onto the particles
+    until the exhaust air is saturated. This branch is not kinetically limited.
 
-    Er ist nicht nur Vollständigkeit: **ohne** ihn gilt die harte Grenze
-    "Abluftfeuchte :math:`\le` Sättigungsfeuchte" nur im Trocknungsregime. Fehlt der
-    Zweig, liefert das Modell bei kaltem Bett stillschweigend übersättigte Abluft -- also
-    genau in dem Betriebspunkt, in den ein untrainierter RL-Agent zuerst hineinläuft.
+    It is not mere completeness: **without** it the hard limit
+    "exhaust air humidity :math:`\le` saturation humidity" holds only in the drying regime. If the
+    branch is missing, the model silently delivers supersaturated exhaust air for a cold bed -- i.e.
+    exactly at the operating point an untrained RL agent runs into first.
 
-    Gedämpfte Picard-Iteration für :math:`Y_{out}`
-    ------------------------------------------------
-    Mit einer zustandsabhängigen Isotherme entsteht eine algebraische Schleife:
-    :math:`\eta` (und damit die Verdampfung) hängt über :math:`X_{eq}(\varphi_{Abluft}, T)`
-    von :math:`\varphi_{Abluft}` ab, das seinerseits :math:`Y_{out}` braucht -- den
-    Rückgabewert dieser Funktion. :math:`Y_{in}` ist die natürliche nullte Iterierte
-    (kein Zirkelbezug, sofort verfügbar). Ungedämpfte Fixpunktiteration oszilliert
-    nachweisbar nahe der Knickstelle :math:`X_p \approx X_{eq}` (dort ist :math:`\eta`
-    extrem empfindlich gegenüber kleinen Änderungen von :math:`X_{eq}`, siehe
-    ``docs/04_stand_ap1.md`` Befund 34) -- Unterrelaxation mit :math:`\alpha = 0{,}7` über
-    :math:`n = 5` Iterationen hält den Fehler zwischen der vorletzten und letzten
-    Iterierten an allen geprüften Betriebspunkten (Nominalpunkt, zwei Befund-31-Randpunkte,
-    Knickszenario) unter 1 % relativ, sowohl für das NumPy- als auch das Torch-Backend
-    (bitgenau identisch, beide float64).
+    Damped Picard iteration for :math:`Y_{out}`
+    -------------------------------------------
+    With a state-dependent isotherm an algebraic loop arises:
+    :math:`\eta` (and thus the evaporation) depends via :math:`X_{eq}(\varphi_{Abluft}, T)`
+    on :math:`\varphi_{Abluft}`, which in turn needs :math:`Y_{out}` -- the
+    return value of this function. :math:`Y_{in}` is the natural zeroth iterate
+    (no circular reference, immediately available). Undamped fixed-point iteration demonstrably
+    oscillates near the kink :math:`X_p \approx X_{eq}` (there :math:`\eta` is
+    extremely sensitive to small changes of :math:`X_{eq}`, see
+    ``docs/04_stand_ap1.md`` Befund 34) -- under-relaxation with :math:`\alpha = 0{,}7` over
+    :math:`n = 5` iterations keeps the error between the second-to-last and last
+    iterate below 1 % relative at all checked operating points (nominal point, two Befund 31
+    edge points, kink scenario), for both the NumPy and the Torch backend
+    (bit-identical, both float64).
 
-    **Rechenkosten, explizit benannt statt verschwiegen:** :math:`n=5` Iterationen à
-    Sättigungsfeuchte- und Isothermenauswertung bedeuten 5 statt 1 zusätzliche
-    Backend-Auswertung dieser Funktion pro RHS-Aufruf -- bei RK4 (4 RHS-Aufrufe je
-    Integrationsschritt) also 20 statt 4, d.h. eine Verfünffachung des Aufwands dieser
-    einen Teilrechnung. Für ``ConstantIsotherm`` ist das reine Verschwendung (das Ergebnis
-    ist nach der ersten Iteration exakt), aber eine Fallunterscheidung nach Isothermentyp
-    würde die Funktion verzweigen und wurde bewusst nicht eingeführt -- der Mehraufwand ist
-    gegenüber den übrigen RHS-Termen (Fluidisierung, Energie) klein.
+    **Computational cost, named explicitly instead of concealed:** :math:`n=5` iterations of
+    saturation humidity and isotherm evaluation each mean 5 instead of 1 additional
+    backend evaluation of this function per RHS call -- with RK4 (4 RHS calls per
+    integration step) thus 20 instead of 4, i.e. a fivefold increase of the cost of this
+    one sub-calculation. For ``ConstantIsotherm`` this is pure waste (the result
+    is exact after the first iteration), but a case distinction by isotherm type
+    would branch the function and was deliberately not introduced -- the extra cost is
+    small compared with the other RHS terms (fluidization, energy).
 
-    :returns: (Verdampfungsrate kg/s, Abluftfeuchte kg/kg, Sättigungsgrad -)
+    :returns: (evaporation rate kg/s, exhaust air humidity kg/kg, saturation degree -)
     """
     y_saturation = saturation_humidity_kg_per_kg(backend, gas, bed_temperature_celsius)
     surplus = y_saturation - inlet_humidity_kg_per_kg
 
-    # Obergrenze der Treibkraft: oberhalb ~80 °C Betttemperatur divergiert Y_s und die
-    # Trocknung ist real nicht mehr sättigungs-, sondern transportlimitiert. Die
-    # normierte Trocknungskurve verliert dort ihre Gültigkeit -- die Begrenzung hält das
-    # Modell in einem plausiblen Bereich und markiert die Modellgrenze explizit.
+    # Upper bound of the driving force: above ~80 °C bed temperature Y_s diverges and the
+    # drying is in reality no longer saturation-limited but transport-limited. The
+    # normalised drying curve loses its validity there -- the limit keeps the
+    # model in a plausible range and marks the model boundary explicitly.
     y_effective = backend.minimum(y_saturation, material.max_driving_humidity_kg_per_kg)
 
-    outlet_humidity = inlet_humidity_kg_per_kg  # nullte Iterierte
+    outlet_humidity = inlet_humidity_kg_per_kg  # zeroth iterate
     evaporation = backend.zeros_like(bed_temperature_celsius)
     saturation_degree = backend.zeros_like(bed_temperature_celsius)
     for _ in range(_PICARD_ITERATIONS):
@@ -352,15 +352,15 @@ def evaporation_rate_kg_per_s(
         outlet_humidity_proposed = (
             inlet_humidity_kg_per_kg + evaporation / dry_air_mass_flow_kg_per_s
         )
-        # Dämpfung nur im Trocknungszweig: dort hängt der Fixpunkt über eta(phi(Y_out))
-        # vom vorherigen Y_out ab (die Knickstelle, die die Oszillation verursacht).
-        # Im Kondensationszweig ist outlet_humidity_proposed = Y_s(T_bed) exakt, für
-        # jede Iteration, unabhängig vom Zustand -- eine Konstante, kein iterativer
-        # Fixpunkt. Sie zu dämpfen würde die harte Grenze "Abluftfeuchte <= Y_s"
-        # (02_prozess_setup.md) nur näherungsweise statt exakt erfüllen (nachgewiesen:
-        # test_outlet_humidity_never_exceeds_saturation schlug mit Residuen bis 4e-5
-        # fehl, bevor dieser Zweig von der Dämpfung ausgenommen wurde) -- undamped
-        # bleibt sie exakt, weil der Kondensationszweig gar keine Oszillationsgefahr hat.
+        # Damping only in the drying branch: there the fixed point depends via eta(phi(Y_out))
+        # on the previous Y_out (the kink that causes the oscillation).
+        # In the condensing branch outlet_humidity_proposed = Y_s(T_bed) exactly, for
+        # every iteration, independent of the state -- a constant, not an iterative
+        # fixed point. Damping it would satisfy the hard limit "exhaust air humidity <= Y_s"
+        # (02_prozess_setup.md) only approximately instead of exactly (demonstrated:
+        # test_outlet_humidity_never_exceeds_saturation failed with residuals up to 4e-5
+        # before this branch was exempted from the damping) -- undamped
+        # it stays exact, because the condensing branch has no risk of oscillation at all.
         outlet_humidity_damped = (
             _PICARD_DAMPING * outlet_humidity_proposed + (1.0 - _PICARD_DAMPING) * outlet_humidity
         )

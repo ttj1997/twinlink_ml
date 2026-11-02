@@ -1,10 +1,10 @@
-"""Tests für ``heatnetwork/balance.py`` -- Kaskadenphysik (EA5).
+"""Tests for ``heatnetwork/balance.py`` -- cascade physics (EA5).
 
-Deckt: Energieerhaltung je Quelle, Grädigkeits- und Taupunkt-Invarianten je Stufe,
-Übereinstimmung mit der Einzelstufen-Formel (EA1) im Ein-Quelle/Ein-Senke-Fall,
-die Reihenfolgeregel (Niedertemperatur zuerst darf nie schlechter sein), bitgleiche
-Vektorisierung über Zeitschritte, und den Nachweis, dass die Kaskadierung (Korrektur 2)
-gegenüber der unkorrigierten Excel-Vorlage strikt weniger Brennstoff braucht.
+Covers: energy conservation per source, approach-temperature and dew-point invariants per stage,
+agreement with the single-stage formula (EA1) in the one-source/one-sink case,
+the ordering rule (low temperature first must never be worse), bit-identical
+vectorisation over time steps, and the evidence that the cascading (correction 2)
+needs strictly less fuel than the uncorrected Excel template.
 """
 
 from __future__ import annotations
@@ -86,7 +86,7 @@ def _states(
     return sources, sinks
 
 
-# --- Energieerhaltung ---------------------------------------------------------------
+# --- Energy conservation ------------------------------------------------------------
 
 
 def test_used_plus_discarded_equals_available_per_source() -> None:
@@ -102,7 +102,7 @@ def test_used_plus_discarded_equals_available_per_source() -> None:
     assert total == pytest.approx(result.source_available_power_kw, rel=1e-9, abs=1e-9)
 
 
-# --- Grädigkeit und Taupunktgrenze ----------------------------------------------------
+# --- Approach temperature and dew-point limit ------------------------------------------
 
 
 def test_no_stage_violates_the_minimum_pinch() -> None:
@@ -150,7 +150,7 @@ def test_no_source_is_cooled_below_its_own_dew_point_floor() -> None:
 
 
 def test_each_source_uses_its_own_dew_point_not_another_sources() -> None:
-    """Korrektur 1: unterschiedliche Feuchten -- unterschiedliche Taupunktgrenzen je Quelle."""
+    """Correction 1: different humidities -- different dew-point limits per source."""
     network = HeatNetworkConfig(
         sources=(_source("dry", 100.0, 0.01), _source("humid", 100.0, 0.04)),
         sinks=(_sink("only", 200.0, mass_flow=50.0),),
@@ -162,7 +162,7 @@ def test_each_source_uses_its_own_dew_point_not_another_sources() -> None:
 
     floor_dry = _dew_point(0.01) + network.dew_point_approach_k
     floor_humid = _dew_point(0.04) + network.dew_point_approach_k
-    assert floor_dry < floor_humid  # trockenere Quelle hat den niedrigeren Taupunkt
+    assert floor_dry < floor_humid  # drier source has the lower dew point
     dry_index = result_dry.source_names.index("dry")
     humid_index = result_humid.source_names.index("humid")
     assert result_dry.source_outlet_temperature_celsius[dry_index, 0] == pytest.approx(
@@ -173,7 +173,7 @@ def test_each_source_uses_its_own_dew_point_not_another_sources() -> None:
     )
 
 
-# --- Kaskade gegen Einzelstufe (EA1-Formel) -------------------------------------------
+# --- Cascade against single stage (EA1 formula) ---------------------------------------
 
 
 def test_single_source_single_sink_matches_ea1_formula_when_dew_point_binds() -> None:
@@ -183,8 +183,8 @@ def test_single_source_single_sink_matches_ea1_formula_when_dew_point_binds() ->
     source_humidity = 0.025
     sink_humidity = 0.008
     intake_temperature = 10.0
-    setpoint_temperature = 200.0  # unerreichbar -- isoliert den taupunkt-limitierten Zweig
-    minimum_pinch_k = 1.0  # bewusst locker, damit die Grädigkeit hier nicht bindet
+    setpoint_temperature = 200.0  # unreachable -- isolates the dew-point-limited branch
+    minimum_pinch_k = 1.0  # deliberately loose, so that the approach temperature does not bind here
 
     source_config = _source("s", source_temperature, source_humidity, mass_flow_source)
     sink_config = _sink(
@@ -224,18 +224,18 @@ def test_single_source_single_sink_matches_ea1_formula_when_dew_point_binds() ->
     assert result.stage_binding_code[0, 0] == BINDING_DEW_POINT
 
 
-# --- Reihenfolgeregel: Niedertemperatur zuerst darf nie schlechter sein ----------------
+# --- Ordering rule: low temperature first must never be worse --------------------------
 
 
 def test_swapping_to_hot_source_first_never_improves_and_can_worsen_the_result() -> None:
-    """EA2 Korrektur 3: kalte Quelle zuerst darf die Senke nur genauso gut oder besser aufheizen.
+    """EA2 correction 3: cold source first may heat the sink only equally well or better.
 
-    Konstruktion: ``hot`` hat wenig Enthalpie (klein, taupunktlimitiert) und trägt in jeder
-    Reihenfolge denselben festen Temperaturhub bei; ``cold`` ist grädigkeitslimitiert (ihr
-    Beitrag ist auf ``cold_temp - dT_min`` gedeckelt, unabhängig von der Starttemperatur der
-    Senke). Läuft ``hot`` zuerst, verbraucht sie einen Teil des Spielraums, den ``cold``
-    sonst exklusiv gehabt hätte, bevor ``cold`` an ihre eigene Grädigkeitsgrenze stößt --
-    das Ergebnis kann dadurch nur schlechter, nie besser werden.
+    Construction: ``hot`` has little enthalpy (small, dew-point-limited) and contributes the
+    same fixed temperature rise in any order; ``cold`` is approach-limited (its
+    contribution is capped at ``cold_temp - dT_min``, independent of the start temperature of
+    the sink). If ``hot`` runs first, it uses up part of the headroom that ``cold``
+    would otherwise have had exclusively, before ``cold`` hits its own approach limit --
+    the result can thereby only get worse, never better.
     """
     network = HeatNetworkConfig(
         sources=(
@@ -258,7 +258,7 @@ def test_swapping_to_hot_source_first_never_improves_and_can_worsen_the_result()
     )
 
 
-# --- Vektorisierung: Trajektorie == schleifenweise Einzelauswertung, bitgleich ---------
+# --- Vectorisation: trajectory == loop-wise single evaluation, bit-identical -----------
 
 
 def test_vectorised_trajectory_matches_stepwise_loop_bit_exactly() -> None:
@@ -346,7 +346,7 @@ def test_vectorised_trajectory_matches_stepwise_loop_bit_exactly() -> None:
         assert np.array_equal(vectorised_value, stepwise_value), field
 
 
-# --- Excel-Vorlage unkorrigiert vs. korrigiert (Nachweis für Korrektur 2) --------------
+# --- Excel template uncorrected vs. corrected (evidence for correction 2) --------------
 
 
 def _naive_excel_recovery(
@@ -358,13 +358,13 @@ def _naive_excel_recovery(
     fuel_lower_heating_value_j_per_kg: float,
     heater_efficiency: float,
 ) -> tuple[float, float]:
-    """Unkorrigierte Vorlage, absichtlich mit Defekt 1 und Defekt 2 nachgebaut (EA5).
+    """Uncorrected template, deliberately rebuilt with defect 1 and defect 2 (EA5).
 
-    NUR für diesen Test -- diese Logik darf nirgends in ``src/`` auftauchen (EA2). Defekt 1:
-    beide "Wärmeübertrager" rechnen gegen den Taupunkt von ``source_line1`` (Kopierfehler
-    zwischen den Tabellenblättern). Defekt 2: die Senkentemperatur wird auf ihren Sollwert
-    gekappt, die nicht genutzte Quellenenthalpie wird verworfen, keine Kaskade zur jeweils
-    anderen Senke.
+    ONLY for this test -- this logic must not appear anywhere in ``src/`` (EA2). Defect 1:
+    both "heat exchangers" compute against the dew point of ``source_line1`` (copy error
+    between the worksheets). Defect 2: the sink temperature is capped at its set point,
+    the unused source enthalpy is discarded, no cascade to the respective
+    other sink.
     """
     shared_dew_point = _dew_point(source_line1.outlet_humidity_kg_per_kg)
     shared_floor = shared_dew_point + dew_point_approach_k
@@ -385,7 +385,7 @@ def _naive_excel_recovery(
         )
         capacity_sink = capacity_of_sink(sink)
         naive_outlet = sink.intake_temperature_celsius + q_rec_w / capacity_sink
-        capped_outlet = min(naive_outlet, sink.setpoint_temperature_celsius)  # Defekt 2
+        capped_outlet = min(naive_outlet, sink.setpoint_temperature_celsius)  # defect 2
         return max(capacity_sink * (sink.setpoint_temperature_celsius - capped_outlet), 0.0) / (
             fuel_lower_heating_value_j_per_kg * heater_efficiency
         )
@@ -396,13 +396,13 @@ def _naive_excel_recovery(
 
 
 def test_cascading_beats_the_uncorrected_excel_template() -> None:
-    """Nachweis für Korrektur 2 (und Nebeneffekt von Korrektur 1): weniger Brennstoff insgesamt.
+    """Evidence for correction 2 (and side effect of correction 1): less fuel overall.
 
-    ``line1`` bekommt reichlich Enthalpie und eine kleine, schnell gesättigte Senke
-    (``heater1``) zugeordnet -- in der unkorrigierten Vorlage bleibt der Großteil ihrer
-    Enthalpie ungenutzt liegen (Defekt 2, das dokumentierte 891,8-kW-Beispiel). Im
-    korrigierten Modell kaskadiert der Rest zu ``heater2``, die sonst allein auf
-    ``line2`` angewiesen wäre.
+    ``line1`` is assigned plenty of enthalpy and a small, quickly saturated sink
+    (``heater1``) -- in the uncorrected template the bulk of its
+    enthalpy remains unused (defect 2, the documented 891.8 kW example). In the
+    corrected model the remainder cascades to ``heater2``, which would otherwise depend
+    on ``line2`` alone.
     """
     fuel_lower_heating_value_j_per_kg = 50.0e6
     heater_efficiency = 0.9
@@ -444,18 +444,18 @@ def test_cascading_beats_the_uncorrected_excel_template() -> None:
     assert corrected_total_fuel < naive_total_fuel, (
         f"korrigiert {corrected_total_fuel} kg/s sollte unter naiv {naive_total_fuel} kg/s liegen"
     )
-    # Substanzieller Effekt, kein Rundungsartefakt (analog zur dokumentierten Größenordnung).
+    # Substantial effect, not a rounding artifact (analogous to the documented order of magnitude).
     assert (naive_total_fuel - corrected_total_fuel) / naive_total_fuel > 0.05
 
 
-# --- MA1: zweiter Rückgewinnungsmodus (Kondensation) -----------------------------------
+# --- MA1: second recovery mode (condensation) ------------------------------------------
 
 
 def test_cold_temperature_is_a_no_op_in_sensible_mode() -> None:
-    """Regressionstest.
+    """Regression test.
 
-    ``cold_temperature_celsius`` darf in ``recovery_mode='sensible'`` (Default) keinerlei
-    Wirkung haben -- bitgleich, egal welcher Wert dort steht.
+    ``cold_temperature_celsius`` must have no effect whatsoever in ``recovery_mode='sensible'``
+    (default) -- bit-identical, whatever value is set there.
     """
     source = _source("s", 70.0, 0.03, mass_flow=8.0)
     sink = _sink("k", 200.0, intake=5.0, humidity=0.006, mass_flow=8.0)
@@ -466,7 +466,7 @@ def test_cold_temperature_is_a_no_op_in_sensible_mode() -> None:
         sinks=(sink,),
         minimum_pinch_k=1.0,
         recovery_mode="sensible",
-        cold_temperature_celsius=-30.0,  # bewusst extrem verschieden vom Default (15 °C)
+        cold_temperature_celsius=-30.0,  # deliberately extremely different from the default (15 °C)
     )
     sources, sinks = _states(network_default)
     result_default = evaluate_cascade(network_default, (("s", "k"),), sources, sinks)
@@ -492,10 +492,10 @@ def test_cold_temperature_is_a_no_op_in_sensible_mode() -> None:
 
 
 def test_sensible_mode_still_matches_ea1_formula() -> None:
-    """MA1-Regressionsanker.
+    """MA1 regression anchor.
 
-    ``recovery_mode='sensible'`` (Default) reproduziert die EA1-Einzelstufenformel exakt --
-    derselbe Aufbau wie
+    ``recovery_mode='sensible'`` (default) reproduces the EA1 single-stage formula exactly --
+    the same setup as
     ``test_single_source_single_sink_matches_ea1_formula_when_dew_point_binds``.
     """
     mass_flow = 8.0
@@ -519,17 +519,17 @@ def test_sensible_mode_still_matches_ea1_formula() -> None:
 
 
 def test_condensing_mode_recovers_at_least_as_much_as_sensible_mode() -> None:
-    """MA1-Anforderung 2.
+    """MA1 requirement 2.
 
-    Bei ``T_kalt <= Taupunkt`` ist Q_rec(kondensierend) >= Q_rec(nicht kondensierend) -- die
-    kondensierende Quelle kühlt weiter (bis ``T_kalt`` statt nur bis
-    ``T_dp + dT_approach``) UND liefert zusätzlich latente Wärme.
+    At ``T_kalt <= dew point``, Q_rec(condensing) >= Q_rec(non-condensing) -- the
+    condensing source cools further (down to ``T_kalt`` instead of only down to
+    ``T_dp + dT_approach``) AND additionally supplies latent heat.
     """
     source_temperature = 65.0
     source_humidity = 0.03
     mass_flow = 8.0
     dew_point = _dew_point(source_humidity)
-    cold_temperature = dew_point - 5.0  # klar unter dem Taupunkt
+    cold_temperature = dew_point - 5.0  # clearly below the dew point
     assert cold_temperature < dew_point
 
     source = _source("s", source_temperature, source_humidity, mass_flow)
@@ -554,19 +554,19 @@ def test_condensing_mode_recovers_at_least_as_much_as_sensible_mode() -> None:
 
 
 def test_condensing_mode_falls_back_continuously_above_dew_point() -> None:
-    """MA1-Anforderung 3.
+    """MA1 requirement 3.
 
-    Liegt ``T_kalt`` über dem Taupunkt, ist das Kondensat null und der Modus fällt stetig
-    auf reine sensible Kühlung bis ``T_kalt`` zurück (kein latenter Sprung an der
-    Taupunktgrenze).
+    If ``T_kalt`` lies above the dew point, the condensate is zero and the mode falls back
+    continuously to pure sensible cooling down to ``T_kalt`` (no latent jump at the
+    dew-point limit).
     """
     source_temperature = 65.0
     source_humidity = 0.03
     mass_flow = 8.0
     dew_point = _dew_point(source_humidity)
-    cold_temperature = dew_point + 10.0  # klar über dem Taupunkt
+    cold_temperature = dew_point + 10.0  # clearly above the dew point
     assert cold_temperature > dew_point
-    assert _saturation_humidity(cold_temperature) >= source_humidity  # Kondensat muss 0 sein
+    assert _saturation_humidity(cold_temperature) >= source_humidity  # condensate must be 0
 
     network = HeatNetworkConfig(
         sources=(_source("s", source_temperature, source_humidity, mass_flow),),
@@ -590,27 +590,27 @@ def test_condensing_mode_falls_back_continuously_above_dew_point() -> None:
 
 
 def test_condensing_mode_matches_ma1_formula_and_conserves_mass() -> None:
-    """MA1-Formel wörtlich nachgerechnet und Massenbilanz geprüft.
+    """MA1 formula recomputed literally and mass balance checked.
 
-    Kondensat, Q_latent, Q_sensibel, Q_rec gegen die MA1-Formel; das Kondensat verlässt die
-    Bilanz als Flüssigwasser, die Summe aus Restfeuchte und Kondensat ergibt wieder die
-    ursprüngliche Feuchtefracht. Modus ``approach_check="warm_end"`` (Flash bei ``T_kalt``,
-    Stand vor Befund 79); das Profil mit Kondensation ab dem Taupunkt prüft
+    Condensate, Q_latent, Q_sensible, Q_rec against the MA1 formula; the condensate leaves the
+    balance as liquid water, the sum of residual moisture and condensate again gives the
+    original moisture load. Mode ``approach_check="warm_end"`` (flash at ``T_kalt``,
+    state before Befund 79); the profile with condensation from the dew point on is checked by
     ``tests/test_heatnetwork_approach.py``.
     """
     source_temperature = 65.0
     source_humidity = 0.03
     mass_flow = 8.0
     cold_temperature = 12.0
-    assert cold_temperature < _dew_point(source_humidity)  # Kondensation muss stattfinden
+    assert cold_temperature < _dew_point(source_humidity)  # condensation must take place
 
     network = HeatNetworkConfig(
         sources=(_source("s", source_temperature, source_humidity, mass_flow),),
-        # Grosse Senke: ihre Nachfrage (kapazitaets- und pinchbegrenzt gegen die
-        # ANFANGS-Quellentemperatur von 65 C) muss ueber der GESAMTEN verfuegbaren Leistung
-        # (sensibel + latent) liegen, sonst bindet die Senke, bevor die Quelle wirklich bis
-        # T_kalt samt Kondensat ausgeschoepft ist (siehe Docstring-Anmerkung im Modul zur
-        # stufenweisen Freigabe des latenten Vorrats).
+        # Large sink: its demand (capacity- and pinch-limited against the
+        # INITIAL source temperature of 65 C) must lie above the ENTIRE available power
+        # (sensible + latent), otherwise the sink binds before the source is really exhausted down
+        # to T_kalt including condensate (see the docstring note in the module on the
+        # stage-wise release of the latent reserve).
         sinks=(_sink("k", 250.0, intake=5.0, humidity=0.006, mass_flow=20.0),),
         minimum_pinch_k=1.0,
         recovery_mode="condensing",
@@ -629,15 +629,15 @@ def test_condensing_mode_matches_ma1_formula_and_conserves_mass() -> None:
     expected_q_sensible_w = capacity_source * (source_temperature - cold_temperature)
     expected_q_rec_kw = (expected_q_sensible_w + expected_q_latent_w) / 1000.0
 
-    # Sollwert/Grädigkeit sind hier so locker gewählt, dass die Quelle vollständig bis
-    # T_kalt ausgeschöpft wird -- die Formel gilt also ungekappt.
+    # Set point/approach temperature are chosen so loosely here that the source is fully
+    # exhausted down to T_kalt -- the formula therefore applies uncapped.
     assert result.source_condensate_kg_per_s[0, 0] == pytest.approx(
         expected_condensate_kg_per_s, rel=1e-9
     )
     assert result.source_available_power_kw[0, 0] == pytest.approx(expected_q_rec_kw, rel=1e-9)
     assert result.source_used_power_kw[0, 0] == pytest.approx(expected_q_rec_kw, rel=1e-6)
 
-    # Massenbilanz: Restfeuchte im Luftstrom + ausgekondensiertes Wasser == Ausgangsfeuchte.
+    # Mass balance: residual moisture in the air stream + condensed-out water == initial moisture.
     outlet_humidity = source_humidity - result.source_condensate_kg_per_s[0, 0] / mass_flow
     assert outlet_humidity == pytest.approx(y_sat_cold, rel=1e-9)
     assert outlet_humidity * mass_flow + result.source_condensate_kg_per_s[0, 0] == pytest.approx(
@@ -646,12 +646,12 @@ def test_condensing_mode_matches_ma1_formula_and_conserves_mass() -> None:
 
 
 def test_condensate_released_only_after_sensible_reserve_exhausted() -> None:
-    """Mehrstufig.
+    """Multi-stage.
 
-    Die latente Wärme einer Quelle darf erst anfallen, wenn ihre sensible Kühlreserve in
-    einer Stufe bereits ausgeschöpft ist (Kondensation setzt erst bei Erreichen von
-    ``T_kalt`` ein, nicht graduell vorher). Gilt nur im Modus ``approach_check="warm_end"``
-    (Stand vor Befund 79); im Default kondensiert die Quelle ab ihrem Taupunkt.
+    The latent heat of a source may only arise once its sensible cooling reserve has
+    already been exhausted in a stage (condensation only sets in on reaching
+    ``T_kalt``, not gradually before). Applies only in the mode ``approach_check="warm_end"``
+    (state before Befund 79); in the default the source condenses from its dew point on.
     """
     source_temperature = 80.0
     source_humidity = 0.03
@@ -661,10 +661,10 @@ def test_condensate_released_only_after_sensible_reserve_exhausted() -> None:
 
     network = HeatNetworkConfig(
         sources=(_source("s", source_temperature, source_humidity, mass_flow),),
-        # Kleine erste Senke: sättigt sich, bevor die Quelle ihre sensible Reserve
-        # ausgeschöpft hat -- dort darf noch kein Kondensat anfallen.
-        # "big" braucht wie im Einzelstufentest reichlich Kapazitaet, damit ihre Nachfrage
-        # ueber der gesamten verfuegbaren Leistung (sensibel + latent) der Quelle liegt.
+        # Small first sink: saturates before the source has exhausted its sensible
+        # reserve -- no condensate may arise there yet.
+        # As in the single-stage test, "big" needs plenty of capacity, so that its demand
+        # lies above the entire available power (sensible + latent) of the source.
         sinks=(
             _sink("small", 40.0, intake=5.0, humidity=0.006, mass_flow=0.5),
             _sink("big", 250.0, intake=5.0, humidity=0.006, mass_flow=20.0),
@@ -677,10 +677,10 @@ def test_condensate_released_only_after_sensible_reserve_exhausted() -> None:
     sources, sinks = _states(network)
     result = evaluate_cascade(network, (("s", "small"), ("s", "big")), sources, sinks)
 
-    # Erste Stufe: Quelle bleibt klar über T_kalt, rein sensibel -- kein Kondensat.
+    # First stage: source stays clearly above T_kalt, purely sensible -- no condensate.
     assert result.stage_source_outlet_temperature_celsius[0, 0] > cold_temperature + 1.0
-    # Kumulativ (nach beiden Stufen) ist das Kondensat identisch zur Einzelstufenformel,
-    # weil die Quelle am Ende wieder vollständig bis T_kalt ausgeschöpft wird.
+    # Cumulatively (after both stages) the condensate is identical to the single-stage formula,
+    # because the source is again fully exhausted down to T_kalt at the end.
     y_sat_cold = _saturation_humidity(cold_temperature)
     expected_condensate_kg_per_s = max(0.0, source_humidity - y_sat_cold) * mass_flow
     assert result.source_condensate_kg_per_s[0, 0] == pytest.approx(

@@ -1,22 +1,22 @@
-r"""PA1-PA4: Pinch-Zielwert (Problem-Table-Algorithmus) gegen die sechs Verschaltungsfaelle
-des Partnermodells (Model_v3.xlsx, korrigierte Werte -- Faktor-1000-Fehler in der
-Verdampfungsenthalpie, siehe Befund 57).
+r"""PA1-PA4: pinch target (problem table algorithm) against the six interconnection cases
+of the partner model (Model_v3.xlsx, corrected values -- factor-1000 error in the
+evaporation enthalpy, see Befund 57).
 
-Beantwortet die Kernfrage von PA3 in einem Satz: wie weit ist die beste der sechs
-Verschaltungen vom thermodynamischen Optimum entfernt? Das Optimum kommt aus
-``heatnetwork.pinch`` (Problem-Table-Algorithmus, PA1); die sechs Faelle aus
-``heatnetwork.balance.evaluate_cascade`` (derselbe Code, der auch ``heatnetwork/`` selbst
-testet -- keine zweite Kaskadenimplementierung, anders als der fruehere
-``probe_six_case_reconciliation.py``, der wegen quellenindividueller ``T_kalt``-Werte noch
-manuell nachbauen musste; hier ist ``T_kalt`` netzweit EIN Parameter, das passt direkt in
-``HeatNetworkConfig``).
+Answers the core question of PA3 in one sentence: how far is the best of the six
+interconnections from the thermodynamic optimum? The optimum comes from
+``heatnetwork.pinch`` (problem table algorithm, PA1); the six cases from
+``heatnetwork.balance.evaluate_cascade`` (the same code that ``heatnetwork/`` itself
+also tests -- no second cascade implementation, unlike the earlier
+``probe_six_case_reconciliation.py``, which still had to rebuild things manually because of
+source-specific ``T_kalt`` values; here ``T_kalt`` is ONE network-wide parameter, which fits
+directly into ``HeatNetworkConfig``).
 
-Vorbehalt (PA3, MUSS in jeder Verwendung dieser Zahlen stehen): der Pinch-Zielwert setzt
-beliebig viele, ideal gegeneinander geschaltete Waermeuebertrager voraus. Er ist eine UNTERE
-SCHRANKE, keine Bauvorschrift -- eine kleine Luecke zum besten der sechs Faelle kann
-vollstaendig durch deren Beschraenkung auf zwei Uebertrager erklaert sein.
+Caveat (PA3, MUST accompany every use of these numbers): the pinch target assumes
+arbitrarily many, ideally counter-connected heat exchangers. It is a LOWER
+BOUND, not a construction specification -- a small gap to the best of the six cases can
+be fully explained by their restriction to two exchangers.
 
-Aufruf::
+Usage::
 
     python scripts/run_pinch_benchmark.py \
         --output artifacts/runs/run_pinch_benchmark.json
@@ -45,12 +45,12 @@ OUT_PATH = REPO_ROOT / "artifacts" / "runs" / "run_pinch_benchmark.json"
 
 GAS = GasConfig()
 
-# --- PA2-Datenfall (Model_v3.xlsx, KORRIGIERTE Werte, Befund 57) -----------------------
+# --- PA2 data case (Model_v3.xlsx, CORRECTED values, Befund 57) -----------------------
 
-SOURCE_1 = HeatSourceConfig("Q1", 20.0, 125.233, 0.06482)  # Abluft Trockner 1
-SOURCE_2 = HeatSourceConfig("Q2", 8.0, 81.416, 0.01998)  # Abluft Trockner 2
-SINK_1 = HeatSinkConfig("S1", 20.0, 0.005, 15.0, 300.0)  # Zuluft Trockner 1
-SINK_2 = HeatSinkConfig("S2", 8.0, 0.005, 15.0, 120.0)  # Zuluft Trockner 2
+SOURCE_1 = HeatSourceConfig("Q1", 20.0, 125.233, 0.06482)  # exhaust air dryer 1
+SOURCE_2 = HeatSourceConfig("Q2", 8.0, 81.416, 0.01998)  # exhaust air dryer 2
+SINK_1 = HeatSinkConfig("S1", 20.0, 0.005, 15.0, 300.0)  # inlet air dryer 1
+SINK_2 = HeatSinkConfig("S2", 8.0, 0.005, 15.0, 120.0)  # inlet air dryer 2
 
 FUEL_LOWER_HEATING_VALUE_J_PER_KG = 45.0e6
 HEATER_EFFICIENCY = 0.80
@@ -121,7 +121,7 @@ def _pinch_target(
 def _condensation_breakdown(
     source: HeatSourceConfig, floor_temperature_celsius: float
 ) -> dict[str, float]:
-    """PA4: wie viel der rueckgewinnbaren Waerme liegt ober-/unterhalb des Taupunkts."""
+    """PA4: how much of the recoverable heat lies above/below the dew point."""
     segments = hot_segments_for_source(source, GAS, floor_temperature_celsius)
     dew_point = dew_point_of_source_celsius(source, GAS)
     above = sum(

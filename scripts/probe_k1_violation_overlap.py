@@ -1,21 +1,21 @@
-r"""CA2 (Nachtrag zu Befund 51/K1): quantifiziert die Überlappung der vier Verletzungs-
-kriterien aus ``_violation_mask`` (u > u_terminal, u < u_mf, T_bed > 80 °C, Feuchte >
-kritisch), auf derselben Punktpopulation wie K1s Zusatzmessung (``probe_k1_l1_clip_
-sensitivity_projected.py``, 3 Seeds, Trainingspool-Block ``[:64]`` je Seed,
-``_excited_spec`` aus ``probe_l1_clip_sensitivity.py``), einmal unprojiziert und einmal
-projiziert (``enforce_gas_velocity_projection``).
+r"""CA2 (addendum to Befund 51/K1): quantifies the overlap of the four violation
+criteria from ``_violation_mask`` (u > u_terminal, u < u_mf, T_bed > 80 °C, moisture >
+critical), on the same point population as K1's additional measurement (``probe_k1_l1_clip_
+sensitivity_projected.py``, 3 seeds, training pool block ``[:64]`` per seed,
+``_excited_spec`` from ``probe_l1_clip_sensitivity.py``), once unprojected and once
+projected (``enforce_gas_velocity_projection``).
 
-Keine neuen Simulationsexperimente -- dieselben Seeds/dieselbe Config wie K1 (bzw. deren
-unprojizierte Referenz), deterministisch reproduziert, nur mit einer feineren Auswertung
-(komponentenweise statt nur Einzelkriterium/Union) als im ursprünglichen Befund 51
-festgehalten wurde.
+No new simulation experiments -- the same seeds/the same config as K1 (or its
+unprojected reference), reproduced deterministically, only with a finer evaluation
+(component-wise instead of only single criterion/union) than was recorded in the original
+Befund 51.
 
-Ergebnis dient Befund 48/CA2: Befund 48 nahm an, die verletzende Region zerfalle etwa
-hälftig in ``u > u_terminal`` und ``bed_temperature > 80 °C``, zwei UNABHÄNGIGE Hälften.
-K1 (Befund 51) widerlegte das bereits an den Aggregatzahlen (Union sinkt nur 34 % statt
-50 %, wenn ``u > u_terminal`` fast vollständig verschwindet) -- dieses Skript legt offen,
-WELCHER Anteil der verbleibenden Verletzung auf welches Kriterium fällt und wie stark sie
-sich überlappen.
+The result serves Befund 48/CA2: Befund 48 assumed that the violating region splits roughly
+in half into ``u > u_terminal`` and ``bed_temperature > 80 °C``, two INDEPENDENT halves.
+K1 (Befund 51) already refuted this on the aggregate numbers (the union drops only 34 % instead
+of 50 % when ``u > u_terminal`` almost completely disappears) -- this script reveals
+WHICH share of the remaining violation falls on which criterion and how strongly they
+overlap.
 """
 
 from __future__ import annotations
@@ -49,7 +49,7 @@ EXPECTED_FINGERPRINTS = {
 
 
 def _excited_spec() -> DataSpec:
-    """Bitgleich zu ``probe_l1_clip_sensitivity.py::_excited_spec``."""
+    """Bit-identical to ``probe_l1_clip_sensitivity.py::_excited_spec``."""
     return DataSpec(
         sample_time_s=25.0,
         run_duration_s=28_800.0,
@@ -72,8 +72,8 @@ def _load_config(*, projected: bool) -> ProcessConfig:
 
 
 def _violation_masks(trajectory: Trajectory, material: MaterialConfig) -> dict[str, np.ndarray]:
-    """Bitgleich zu den vier ODER-verknüpften Kriterien in ``_violation_mask`` (Befund
-    46/D2/F1), hier einzeln gehalten statt sofort vereinigt."""
+    """Bit-identical to the four OR-combined criteria in ``_violation_mask`` (Befund
+    46/D2/F1), kept separate here instead of being merged immediately."""
     diagnostics = trajectory.diagnostics
     output_names = trajectory.metadata["output_names"]
     bed_temp_idx = output_names.index("bed_temperature_celsius")
@@ -87,8 +87,8 @@ def _violation_masks(trajectory: Trajectory, material: MaterialConfig) -> dict[s
 
 
 def _pooled_masks(*, projected: bool) -> dict[str, np.ndarray]:
-    """Vereinigt die vier Einzelmasken über die 3-Seed-Trainingspool-Population
-    (192 Läufe x n_steps Punkte) zu EINEM flachen Array je Kriterium."""
+    """Merges the four single masks over the 3-seed training pool population
+    (192 runs x n_steps points) into ONE flat array per criterion."""
     config = _load_config(projected=projected)
     spec = _excited_spec()
     pooled: dict[str, list[np.ndarray]] = {
@@ -119,7 +119,7 @@ def _pooled_masks(*, projected: bool) -> dict[str, np.ndarray]:
 def _summarise(masks: dict[str, np.ndarray]) -> dict[str, float]:
     stacked = np.stack(list(masks.values()), axis=0)  # (4, n_points)
     n_points = stacked.shape[1]
-    n_criteria_hit = stacked.sum(axis=0)  # wie viele der 4 Kriterien je Punkt verletzt sind
+    n_criteria_hit = stacked.sum(axis=0)  # how many of the 4 criteria are violated per point
     union = n_criteria_hit > 0
     only_bed_temp = masks["T_bed_above_80C"] & (n_criteria_hit == 1)
 

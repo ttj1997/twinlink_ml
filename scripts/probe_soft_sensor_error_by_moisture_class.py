@@ -1,55 +1,55 @@
-r"""GA2: Ist der Feuchte-Soft-Sensor an der Feuchtegrenze genauso gut wie im Mittel.
+r"""GA2: Is the moisture soft sensor as good at the moisture limit as on average.
 
-Anlass: Befund 64 rechnet mit EINEM globalen Fehler (`rmse_run_median_physical`,
+Motivation: Befund 64 computes with ONE global error (`rmse_run_median_physical`,
 `product_moisture_kg_per_kg`, LSTM, `n_train=64`, `test_set=constant_holdout`, `h=36`,
-Median ueber 5 Seeds: 0,000543 kg/kg angeregt trainiert / 0,001488 kg/kg konstant trainiert,
-Befund 62 HA1). Das Optimum der Regelungsstudien liegt an 17 von 25 Gitterpunkten (Befund 62)
-genau auf der Feuchtegrenze (0,20 kg/kg) -- ein globaler Fehler sagt nichts darueber, ob der
-Soft Sensor GENAU DORT genauso gut ist wie im Rest des Wertebereichs.
+median over 5 seeds: 0.000543 kg/kg excited-trained / 0.001488 kg/kg constant-trained,
+Befund 62 HA1). The optimum of the control studies lies at 17 of 25 grid points (Befund 62)
+exactly on the moisture limit (0.20 kg/kg) -- a global error says nothing about whether the
+soft sensor is just as good EXACTLY THERE as in the rest of the value range.
 
-Kein Checkpoint der angeregt trainierten LSTM aus Befund 51/58 ist committet
-(`.gitignore:38` schliesst `artifacts/checkpoints/` aus; die in
-`artifacts/runs/arch_learning_curve_projected.jsonl` protokollierten `checkpoint/path`-Werte
-zeigen auf eine fremde Maschine und existieren in diesem Checkout nicht) -- deshalb trainiert
-dieses Skript 1-3 Seeds NEU, mit demselben Protokoll wie Befund 51/58
-(`scripts/run_arch_learning_curve_worker.py`, dessen `_excited_spec`/`_holdout_spec`/
-`HOLDOUT_SEED`/`CONFIG_PATH`/`TARGET_NAMES` unveraendert importiert werden -- keine Zeile
-dort geaendert), aber NUR fuer die LSTM-Architektur bei `n_train=64` (nicht die volle
-Budget/Architektur-Matrix) und faengt zusaetzlich die Rohfehler pro Fenster/Schritt ab, die
-`RolloutEvaluator.evaluate` intern berechnet, aber nicht persistiert (nur aggregierte
-Metriken werden geloggt, siehe `src/twinlink_ml/evaluation/evaluator.py::RolloutEvaluator.
+No checkpoint of the excited-trained LSTM from Befund 51/58 is committed
+(`.gitignore:38` excludes `artifacts/checkpoints/`; the `checkpoint/path` values logged in
+`artifacts/runs/arch_learning_curve_projected.jsonl` point to a foreign machine and
+do not exist in this checkout) -- therefore this script trains 1-3 seeds ANEW, with the
+same protocol as Befund 51/58
+(`scripts/run_arch_learning_curve_worker.py`, whose `_excited_spec`/`_holdout_spec`/
+`HOLDOUT_SEED`/`CONFIG_PATH`/`TARGET_NAMES` are imported unchanged -- no line
+changed there), but ONLY for the LSTM architecture at `n_train=64` (not the full
+budget/architecture matrix), and additionally captures the raw errors per window/step that
+`RolloutEvaluator.evaluate` computes internally but does not persist (only aggregated
+metrics are logged, see `src/twinlink_ml/evaluation/evaluator.py::RolloutEvaluator.
 evaluate`).
 
-Was gemessen wird
-------------------
-a) Verteilung der WAHREN Produktfeuchte (`future_targets_truth`, rauschfrei, ueber alle
-   Fenster und Schritte 1..36 gepoolt) im Trainings-Split (`n_train=64`), im angeregten
-   Test-Split und im Konstantlauf-Holdout -- je Anteil in festen Feuchteklassen, u.a.
-   0,18-0,22 kg/kg (die Klasse um die Feuchtegrenze).
-b) Fehler des LSTM (gegen die VERRAUSCHTE Referenz `future_targets_truth` -> nein:
-   `future_targets`, dieselbe Referenz wie `rmse_run_median_physical` in der bestehenden
-   Pipeline -- siehe `RolloutEvaluator.evaluate`, `reference_physical`) nach Klassen der
-   WAHREN Feuchte (`truth_physical`), auf dem Konstantlauf-Holdout, gepoolt ueber alle
-   Fenster und Schritte 1..36 je Klasse.
-c) Fehler in der Klasse um 0,20 kg/kg (0,18-0,22) gegen den globalen (klassenungewichteten)
-   Fehler auf demselben Testsatz.
+What is measured
+----------------
+a) Distribution of the TRUE product moisture (`future_targets_truth`, noise-free, pooled over
+   all windows and steps 1..36) in the training split (`n_train=64`), in the excited
+   test split and in the constant-run holdout -- the share in fixed moisture classes each,
+   among them 0.18-0.22 kg/kg (the class around the moisture limit).
+b) Error of the LSTM (against the NOISY reference `future_targets_truth` -> no:
+   `future_targets`, the same reference as `rmse_run_median_physical` in the existing
+   pipeline -- see `RolloutEvaluator.evaluate`, `reference_physical`) by classes of the
+   TRUE moisture (`truth_physical`), on the constant-run holdout, pooled over all
+   windows and steps 1..36 per class.
+c) Error in the class around 0.20 kg/kg (0.18-0.22) against the global (class-unweighted)
+   error on the same test set.
 
-Identisches Protokoll wie Befund 51/58, EINE zulaessige Abweichung: nur die LSTM-Architektur
-bei `n_train=64` wird gerechnet (nicht Baselines, nicht die anderen Budgetpunkte/Architekturen)
--- Befund 51/58 haben diese Zelle bereits unter demselben Protokoll gerechnet (RMSE-Werte in
-Befund 62 HA1 zitiert); dieses Skript reproduziert und ERWEITERT sie um Rohfehler-Arrays,
-ohne den Konfigurations-Fingerprint zu aendern (`bddca37f716f5cfc`, gegen `generate_data`
-geprueft, exakt wie im Worker).
+Identical protocol to Befund 51/58, ONE permitted deviation: only the LSTM architecture
+at `n_train=64` is computed (not baselines, not the other budget points/architectures)
+-- Befund 51/58 already computed this cell under the same protocol (RMSE values cited in
+Befund 62 HA1); this script reproduces it and EXTENDS it by raw-error arrays,
+without changing the configuration fingerprint (`bddca37f716f5cfc`, checked against
+`generate_data`, exactly as in the worker).
 
-Laufzeitschaetzung: Befund 51s vollstaendiger Sweep (4 Budgetpunkte x 8 Architekturen +
-3 Baselines, 5 Seeds parallel) brauchte 3,96 h (14250,8 s) fuer 5 Jobs. Dieses Skript
-rechnet je Seed nur EINE Architektur bei EINEM (dem groessten) Budgetpunkt -- die
-Datenerzeugung (Pool-Simulation, pro Seed fix) ist der dominante, unveraenderte Kostenanteil;
-das eigentliche Training ist ein Bruchteil des Sweep-Trainingsanteils. Seed 1 wird zuerst
-als zeitgestoppter Pilot gerechnet (wie Befund 51s eigenes Vorgehen: vorab geschaetzt, dann
-am ersten Punkt gemessen), bevor Seed 2/3 folgen.
+Runtime estimate: Befund 51's complete sweep (4 budget points x 8 architectures +
+3 baselines, 5 seeds in parallel) took 3.96 h (14250.8 s) for 5 jobs. This script
+computes only ONE architecture at ONE (the largest) budget point per seed -- the
+data generation (pool simulation, fixed per seed) is the dominant, unchanged cost share;
+the actual training is a fraction of the sweep's training share. Seed 1 is computed first
+as a timed pilot (like Befund 51's own procedure: estimated upfront, then
+measured at the first point), before seeds 2/3 follow.
 
-Aufruf::
+Usage::
 
     python scripts/probe_soft_sensor_error_by_moisture_class.py --seeds 1 \
         --output artifacts/runs/probe_soft_sensor_error_by_moisture_class_seed1.json
@@ -89,9 +89,9 @@ MOISTURE_INDEX = worker.TARGET_NAMES.index("product_moisture_kg_per_kg")
 EXPECTED_FINGERPRINT = "bddca37f716f5cfc"
 """Wie `run_arch_learning_curve_worker.py` -- dieselbe gepruefte BA0(c)-Grundlage."""
 
-# Feste Feuchteklassen [kg/kg), letztes Intervall offen. 0,18/0,22 klammern die
-# Feuchtegrenze (0,20 kg/kg) symmetrisch ein -- die Klasse, in der laut Befund 62 das
-# Optimum an 17 von 25 Gitterpunkten sitzt.
+# Fixed moisture classes [kg/kg), last interval open. 0.18/0.22 bracket the
+# moisture limit (0.20 kg/kg) symmetrically -- the class in which, according to Befund 62,
+# the optimum sits at 17 of 25 grid points.
 CLASS_EDGES: tuple[float, ...] = (0.0, 0.10, 0.14, 0.18, 0.22, 0.26, np.inf)
 BOUNDARY_CLASS_LOW = 0.18
 BOUNDARY_CLASS_HIGH = 0.22
@@ -111,11 +111,11 @@ CLASS_LABELS = _class_labels(CLASS_EDGES)
 def _collect_predictions(
     model: CompositeSequenceModel, dataset: TrajectoryWindowDataset, *, batch_size: int = 4096
 ) -> dict[str, Any]:
-    """Wie `RolloutEvaluator.evaluate`, aber die physikalischen Rohfelder werden
-    zurueckgegeben statt nur aggregierte Metriken -- `RolloutEvaluator.evaluate` selbst
-    bleibt unveraendert (`src/twinlink_ml/evaluation/evaluator.py` nicht angefasst), diese
-    Funktion dupliziert nur die Array-Konstruktion (Batches sammeln, konkatenieren,
-    `scaler.inverse`), identisch zu deren Koerper."""
+    """Like `RolloutEvaluator.evaluate`, but the physical raw fields are
+    returned instead of only aggregated metrics -- `RolloutEvaluator.evaluate` itself
+    stays unchanged (`src/twinlink_ml/evaluation/evaluator.py` not touched), this
+    function only duplicates the array construction (collect batches, concatenate,
+    `scaler.inverse`), identical to its body."""
     scaler = dataset.target_scaler
     predictions: list[np.ndarray] = []
     references: list[np.ndarray] = []
@@ -148,11 +148,11 @@ def _collect_predictions(
 def _moisture_channel(
     arrays: dict[str, Any],
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    """Extrahiert `product_moisture_kg_per_kg` (Kanal `MOISTURE_INDEX`) aus Vorhersage,
-    Referenz und Wahrheit, jeweils zu 1D ueber (Fenster x Schritte 1..36) geglaettet, plus
-    `run_index` auf dieselbe Laenge expandiert (ein Laufindex war je FENSTER gespeichert,
-    hier auf jeden der `horizon` Schritte dieses Fensters wiederholt) -- noetig fuer die
-    laufweise Median-Aggregation (siehe `_rmse_per_run_median`)."""
+    """Extracts `product_moisture_kg_per_kg` (channel `MOISTURE_INDEX`) from prediction,
+    reference and truth, each flattened to 1D over (windows x steps 1..36), plus
+    `run_index` expanded to the same length (one run index was stored per WINDOW,
+    here repeated for each of the `horizon` steps of that window) -- needed for the
+    run-level median aggregation (see `_rmse_per_run_median`)."""
     pred = arrays["prediction_physical"][..., MOISTURE_INDEX].reshape(-1)
     ref = arrays["reference_physical"][..., MOISTURE_INDEX].reshape(-1)
     truth = arrays["truth_physical"][..., MOISTURE_INDEX].reshape(-1)
@@ -168,12 +168,12 @@ def _rmse(prediction: np.ndarray, reference: np.ndarray) -> float:
 def _rmse_per_run_median(
     prediction: np.ndarray, reference: np.ndarray, run_index: np.ndarray
 ) -> float | None:
-    """Wie `twinlink_ml.evaluation.evaluator.per_run_rmse_median` (die Definition hinter
-    Befund 62 HA1s 0,000543-kg/kg-Zahl: RMSE je Lauf, dann Median ueber Laeufe) -- NICHT
-    der gepoolte/geglaettete RMSE ueber alle Fenster/Schritte (siehe Moduldocstring von
-    `evaluator.py`, Abschnitt "Laufweise Normierung ist die Primärzahl"). Diese Funktion
-    ist die primaere Kennzahl fuer GA2c, weil sie mit Befund 62 HA1s Definition
-    vergleichbar bleibt -- der gepoolte Wert (`_rmse`) ist hier nur Nebeninformation."""
+    """Like `twinlink_ml.evaluation.evaluator.per_run_rmse_median` (the definition behind
+    Befund 62 HA1's 0.000543 kg/kg number: RMSE per run, then median over runs) -- NOT
+    the pooled/flattened RMSE over all windows/steps (see the module docstring of
+    `evaluator.py`, section "Run-level normalisation is the primary number"). This function
+    is the primary metric for GA2c, because it stays comparable with Befund 62 HA1's
+    definition -- the pooled value (`_rmse`) is only side information here."""
     if prediction.size == 0:
         return None
     per_run = [
@@ -379,10 +379,10 @@ def main() -> int:
         pred_c, ref_c, truth_c, run_index_c = _moisture_channel(test_constant_arrays)
         error_by_class = _error_by_class(pred_c, ref_c, truth_c, run_index_c)
 
-        # Cross-Check gegen Befund 62 HA1: rmse_run_median_physical, product_moisture, h=36,
-        # test_set=constant_holdout -- dieselbe Definition (Median ueber Laeufe des
-        # unnormierten RMSE), hier direkt aus den abgefangenen Arrays statt ueber
-        # RolloutEvaluator (der dieselbe Funktion intern aufruft).
+        # Cross-check against Befund 62 HA1: rmse_run_median_physical, product_moisture, h=36,
+        # test_set=constant_holdout -- the same definition (median over runs of the
+        # unnormalised RMSE), here directly from the captured arrays instead of via
+        # RolloutEvaluator (which calls the same function internally).
         rmse_median_by_horizon = per_run_rmse_median(
             test_constant_arrays["prediction_physical"],
             test_constant_arrays["reference_physical"],
@@ -423,8 +423,8 @@ def main() -> int:
 
     total_elapsed = time.perf_counter() - total_start
 
-    # Aggregation ueber Seeds (Median), nur wenn mehr als ein Seed gerechnet wurde. Primaerzahl
-    # ist per_run_median (vergleichbar mit Befund 62 HA1), pooled nur Nebeninformation.
+    # Aggregation over seeds (median), only if more than one seed was computed. The primary
+    # number is per_run_median (comparable with Befund 62 HA1), pooled only side information.
     aggregate: dict[str, Any] | None = None
     if len(arguments.seeds) > 1:
         global_rmses = [

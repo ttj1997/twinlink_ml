@@ -1,8 +1,8 @@
-r"""Fensterung, Normalisierung und die Abstraktion :class:`SequenceDataset`.
+r"""Windowing, normalisation and the abstraction :class:`SequenceDataset`.
 
-Fensterstruktur -- die eigentliche Entwurfsentscheidung
+Window structure -- the actual design decision
 ------------------------------------------------------
-Ein Fenster besteht aus **drei** Blöcken, nicht aus zwei:
+A window consists of **three** blocks, not two:
 
 .. code-block:: text
 
@@ -11,50 +11,49 @@ Ein Fenster besteht aus **drei** Blöcken, nicht aus zwei:
     [u, z, y_gemessen]         [u, z]
                                future_targets  [y]
 
-Der Grund ist der Mehrschritt-Rollout. Stell- und Störgrößen sind über den
-Vorhersagehorizont **bekannt** -- die Stellgrößen, weil ein Regler sie vorgibt, die
-Störgrößen, weil sie gemessen (aber nicht steuerbar) sind. Nur die Zielgrößen muss das
-Modell autoregressiv fortschreiben. Ein Fensterformat, das ``future_exogenous`` nicht
-enthält, erzwingt entweder eine Extrapolation der Stellgrößen (physikalisch falsch) oder
-einen Sonderpfad im Modellcode für Rollouts. Mit diesem Format ist der
-Ein-Schritt-Fehler der Horizontschnitt :math:`h = 1` desselben Fensters -- eine
-Definition, zwei Metriken.
+The reason is the multi-step rollout. Actions and disturbances are **known** over the
+prediction horizon -- the actions because a controller sets them, the disturbances
+because they are measured (but not controllable). Only the targets have to be
+propagated autoregressively by the model. A window format that does not contain
+``future_exogenous`` forces either an extrapolation of the actions (physically wrong) or
+a special path in the model code for rollouts. With this format the one-step error is
+the horizon slice :math:`h = 1` of the same window -- one definition, two metrics.
 
-Normalisierung
---------------
-Statistiken kommen **ausschließlich** aus den Trainingsläufen der jeweiligen
-Lernkurven-Stützstelle. Werden sie einmal über den vollen Pool berechnet und für die
-kleine Stützstelle weiterverwendet, hat das Modell dort Information aus allen Läufen.
-Das hebt genau das linke Ende der Lernkurve an, also die Aussage von M2.
+Normalisation
+-------------
+Statistics come **exclusively** from the training runs of the respective learning-curve
+point. If they are computed once over the full pool and reused for the small point, the
+model there has information from all runs. That raises exactly the left end of the
+learning curve, i.e. the statement of M2.
 
-Beobachtbarkeit -- Inline-Messung oder Soft-Sensor
+Observability -- inline measurement or soft sensor
 -------------------------------------------------
-``WindowConfig.observed_target_names`` entscheidet, ob eine Zielgröße in der
-Fensterhistorie stehen darf. Der Unterschied ist keine Feinheit, sondern die Frage, ob das
-Modell im Zielsystem überhaupt existieren kann:
+``WindowConfig.observed_target_names`` decides whether a target may appear in the window
+history. The difference is not a detail but the question whether the model can exist in
+the target system at all:
 
-* **Inline gemessen** -- die Historie enthält die vergangenen Messwerte. Das Modell hat
-  einen *Anker*: den Niveauunterschied zwischen den Läufen (aus den gestreuten
-  Anfangszuständen) muss es nicht vorhersagen, er steht in der Historie. Persistenz ist
-  dann eine definierte Baseline.
-* **Nicht gemessen (Soft Sensor)** -- der Kanal wird in der Historie durch den
-  standardisierten Trainingsmittelwert ersetzt, also durch Null. Das Modell hat keinen
-  Anker und muss das Niveau aus den übrigen Messungen erschließen. Persistenz ist dort
-  **undefiniert**; die parameterfreie Referenz ist die Mittelwertvorhersage
+* **Measured inline** -- the history contains the past measurements. The model has an
+  *anchor*: it does not have to predict the level difference between the runs (from the
+  scattered initial states), it is in the history. Persistence is then a defined
+  baseline.
+* **Not measured (soft sensor)** -- the channel is replaced in the history by the
+  standardised training mean, i.e. by zero. The model has no anchor and has to infer the
+  level from the remaining measurements. Persistence is **undefined** there; the
+  parameter-free reference is the mean prediction
   (:class:`~twinlink_ml.models.baselines.ClimatologyModel`).
 
-Die Null-Füllung passiert in der Fensterung und nicht im Modell. Sonst müsste jede
-Architektur die Fallunterscheidung selbst korrekt implementieren, und ein Modell, das sie
-vergisst, bekäme eine nicht existierende Messung geschenkt -- ein Leck, das in den
-Metriken wie ein guter Soft Sensor aussieht. Ein Test vergleicht die Historie gegen das
-Messarray und schlägt an, wenn ein nicht beobachteter Kanal dort auftaucht.
+The zero filling happens in the windowing and not in the model. Otherwise every
+architecture would have to implement the case distinction correctly itself, and a model
+that forgets it would be handed a non-existent measurement for free -- a leak that looks
+like a good soft sensor in the metrics. A test compares the history against the
+measurement array and fires if an unobserved channel appears there.
 
-Zielgröße: Messung oder Wahrheit
+Target: measurement or truth
 --------------------------------
-Standard ist die **Messung** (``target_source="measurement"``), denn nur die existiert
-an der Anlage. Der Evaluator berichtet zusätzlich gegen die rauschfreie Ausgangsgröße,
-soweit vorhanden -- die Differenz beider Zahlen ist der irreduzible Anteil und
-begrenzt, wie tief eine Lernkurve überhaupt fallen kann.
+The default is the **measurement** (``target_source="measurement"``), because only that
+exists at the plant. The evaluator additionally reports against the noise-free output,
+where available -- the difference between the two numbers is the irreducible part and
+limits how low a learning curve can fall at all.
 """
 
 from __future__ import annotations
@@ -91,14 +90,14 @@ _SCALE_FLOOR: Final[float] = 1e-12
 
 @dataclass(frozen=True, slots=True)
 class Standardizer:
-    r"""Kanalweise Standardisierung :math:`\tilde x = (x - \mu) / \sigma`.
+    r"""Channel-wise standardisation :math:`\tilde x = (x - \mu) / \sigma`.
 
     Attributes
     ----------
     mean, scale
-        Form ``(n_channels,)``. ``scale`` ist nach unten abgeschnitten, damit konstante
-        Kanäle -- etwa eine Stellgröße in einem Konstantlauf-Design -- keine Division
-        durch Null erzeugen.
+        Shape ``(n_channels,)``. ``scale`` is clipped from below, so that constant
+        channels -- such as an action in a constant-run design -- do not cause a division
+        by zero.
     """
 
     mean: FloatArray
@@ -110,28 +109,28 @@ class Standardizer:
 
     @classmethod
     def fit(cls, values: FloatArray) -> Standardizer:
-        """Aus einem Array der Form ``(..., n_channels)`` schätzen."""
+        """Estimate from an array of shape ``(..., n_channels)``."""
         flat = np.asarray(values, dtype=np.float64).reshape(-1, values.shape[-1])
         mean = flat.mean(axis=0)
         scale = np.maximum(flat.std(axis=0), _SCALE_FLOOR)
         return cls(mean=mean, scale=scale)
 
     def transform(self, values: FloatArray) -> FloatArray:
-        """Standardisieren."""
+        """Standardise."""
         return (values - self.mean) / self.scale
 
     def inverse(self, values: FloatArray) -> FloatArray:
-        """Zurück in Ingenieurseinheiten."""
+        """Back to engineering units."""
         return values * self.scale + self.mean
 
     def select(self, indices: Sequence[int]) -> Standardizer:
-        """Teilmenge der Kanäle."""
+        """Subset of the channels."""
         index = np.asarray(indices, dtype=np.intp)
         return Standardizer(mean=self.mean[index], scale=self.scale[index])
 
     @property
     def digest(self) -> str:
-        """Fingerprint der Statistiken, damit im Run-Log prüfbar ist, woraus sie kamen."""
+        """Fingerprint of the statistics, so that the run log can check where they came from."""
         import hashlib
 
         payload = np.concatenate([self.mean, self.scale]).tobytes()
@@ -140,43 +139,42 @@ class Standardizer:
 
 @dataclass(frozen=True, slots=True)
 class WindowConfig:
-    """Fensterparameter.
+    """Window parameters.
 
     Attributes
     ----------
     history_length
-        :math:`L` Abtastschritte Vergangenheit. **Modellentscheidung, kein
-        Hyperparameter**: bei drei Dekaden Spreizung der Zeitkonstanten legt sie fest,
-        welche Mode das Modell überhaupt sehen kann.
+        :math:`L` sampling steps of the past. **A modelling decision, not a
+        hyperparameter**: with three decades of spread in the time constants it determines
+        which mode the model can see at all.
     horizon
-        :math:`H` Schritte Vorhersagehorizont für den Rollout. Der Ein-Schritt-Fehler
-        ist der Schnitt :math:`h = 1`.
+        :math:`H` steps of prediction horizon for the rollout. The one-step error is the
+        slice :math:`h = 1`.
     stride
-        Abstand aufeinanderfolgender Fensteranfänge innerhalb eines Laufs.
-        Überlappung ist unkritisch, solange Splits auf Lauf-Ebene liegen.
+        Distance between consecutive window starts within a run. Overlap is not critical
+        as long as splits are at run level.
     target_names
-        Zielgrößen als Teilmenge von ``Trajectory``-Ausgangsnamen. Mindestens eine
-        Qualitätsgröße neben ``energy_target``, sonst vergleicht man Optimierungsrauschen.
+        Targets as a subset of ``Trajectory`` output names. At least one quality variable
+        besides ``energy_target``, otherwise one compares optimisation noise.
     target_source
-        ``"measurement"`` (Standard) oder ``"truth"``.
+        ``"measurement"`` (default) or ``"truth"``.
     observed_target_names
-        Teilmenge von ``target_names``, die an der Anlage **inline gemessen** wird und
-        deshalb in der Fensterhistorie stehen darf. ``None`` heißt: alle. Nicht
-        beobachtete Zielgrößen werden in der Historie durch den standardisierten
-        Trainingsmittelwert (also 0) ersetzt -- siehe Modul-Docstring, Abschnitt
-        "Beobachtbarkeit".
+        Subset of ``target_names`` that is **measured inline** at the plant and may
+        therefore appear in the window history. ``None`` means: all. Unobserved targets
+        are replaced in the history by the standardised training mean (i.e. 0) -- see the
+        module docstring, section "Observability".
     future_actions
-        Welche Stellgrößenreihe in ``future_exogenous`` steht. ``"realised"`` (Voreinstellung,
-        Verhalten bis Befund 81): die vom Simulator realisierte Aktion, bei aktiver
-        Gasgeschwindigkeits-Projektion also die auf ``[u_mf(d50), u_t(d50)]`` begrenzte.
-        Dieses Clipping hängt am wahren Kornzustand und trägt damit Information über den
-        Zustand in die "bekannten" künftigen Eingänge (Review D1, 2026-10-09, 30.6 % der
-        Testfenster betroffen). ``"planned"``: die **geplanten Sollwerte**
-        (``Trajectory.requested_actions``), wie ein Regler sie vorgibt, bevor die Anlage sie
-        begrenzt -- ohne Zustandsinformation. Die Historie (``history_inputs``) enthält in
-        beiden Fällen die realisierte Aktion: sie ist vergangen und an der Anlage
-        beobachtbar. Ohne aktive Projektion (``requested_actions is None``) sind beide
-        Reihen identisch und die Option wirkungslos.
+        Which action series appears in ``future_exogenous``. ``"realised"`` (default,
+        behaviour up to Befund 81): the action realised by the simulator, i.e. with the
+        gas velocity projection active the one limited to ``[u_mf(d50), u_t(d50)]``.
+        This clipping depends on the true granule state and thereby carries information
+        about the state into the "known" future inputs (review D1, 2026-10-09, 30.6 % of
+        the test windows affected). ``"planned"``: the **planned set points**
+        (``Trajectory.requested_actions``), as a controller specifies them before the plant
+        limits them -- without state information. In both cases the history
+        (``history_inputs``) contains the realised action: it is in the past and observable
+        at the plant. Without an active projection (``requested_actions is None``) both
+        series are identical and the option has no effect.
     measured_input_names
         Measured process responses that enter the model as additional known inputs (follow-up
         sensor-value study, docs/29): output channels of the trajectory, taken from
@@ -200,20 +198,20 @@ class WindowConfig:
 
     @property
     def observed_targets(self) -> tuple[str, ...]:
-        """Inline gemessene Zielgrößen in Spaltenreihenfolge."""
+        """Targets measured inline, in column order."""
         if self.observed_target_names is None:
             return self.target_names
         return tuple(name for name in self.target_names if name in self.observed_target_names)
 
     @property
     def unobserved_targets(self) -> tuple[str, ...]:
-        """Zielgrößen ohne Inline-Messung -- die Soft-Sensor-Aufgabe."""
+        """Targets without inline measurement -- the soft-sensor task."""
         observed = set(self.observed_targets)
         return tuple(name for name in self.target_names if name not in observed)
 
     @property
     def is_fully_observed(self) -> bool:
-        """Ob jede Zielgröße als Messung in der Historie steht."""
+        """Whether every target appears as a measurement in the history."""
         return not self.unobserved_targets
 
     def __post_init__(self) -> None:
@@ -252,20 +250,20 @@ def future_actions_of(trajectory: Trajectory, config: WindowConfig) -> FloatArra
 
 @dataclass(frozen=True, slots=True)
 class WindowBatch:
-    """Ein Stapel Fenster, alle Größen standardisiert.
+    """A batch of windows, all quantities standardised.
 
     Attributes
     ----------
     history_inputs
-        ``(batch, L, n_u + n_z + n_y)`` -- Stell-, Stör- und beobachtete Zielgrößen.
+        ``(batch, L, n_u + n_z + n_y)`` -- actions, disturbances and observed targets.
     future_exogenous
-        ``(batch, H, n_u + n_z)`` -- bekannte Eingänge über den Horizont.
+        ``(batch, H, n_u + n_z)`` -- known inputs over the horizon.
     future_targets
-        ``(batch, H, n_y)`` -- Sollwerte gemäß ``target_source``.
+        ``(batch, H, n_y)`` -- reference values according to ``target_source``.
     future_targets_truth
-        ``(batch, H, n_y)`` oder ``None`` -- rauschfreie Referenz, nur für Diagnose.
+        ``(batch, H, n_y)`` or ``None`` -- noise-free reference, for diagnostics only.
     run_index, window_start
-        Herkunft jedes Fensters, für laufweise Aggregation der Metriken.
+        Origin of every window, for run-level aggregation of the metrics.
     """
 
     history_inputs: FloatArray
@@ -277,15 +275,15 @@ class WindowBatch:
 
     @property
     def n_windows(self) -> int:
-        """Anzahl Fenster im Stapel."""
+        """Number of windows in the batch."""
         return int(self.history_inputs.shape[0])
 
 
 class SequenceDataset(ABC):
-    """Abstraktion über gefensterte Sequenzdaten.
+    """Abstraction over windowed sequence data.
 
-    Hinter dieser ABC wird später der Dyssol- oder Messdaten-Datensatz eingehängt, ohne
-    Änderung an Modell- oder Evaluationscode.
+    Behind this ABC the Dyssol or measurement data set is later plugged in, without any
+    change to model or evaluation code.
     """
 
     @property
@@ -299,7 +297,7 @@ class SequenceDataset(ABC):
     @property
     @abstractmethod
     def exogenous_names(self) -> tuple[str, ...]:
-        """Namen der Stell- und Störgrößenkanäle."""
+        """Names of the action and disturbance channels."""
 
     @property
     @abstractmethod
@@ -308,52 +306,52 @@ class SequenceDataset(ABC):
     @property
     @abstractmethod
     def input_scaler(self) -> Standardizer:
-        """Standardisierung der ``history_inputs``-Kanäle."""
+        """Standardisation of the ``history_inputs`` channels."""
 
     @property
     @abstractmethod
     def target_scaler(self) -> Standardizer:
-        """Standardisierung der Zielgrößen; für die Rückrechnung im Evaluator."""
+        """Standardisation of the targets; for the back-transformation in the evaluator."""
 
     @abstractmethod
     def batch(self, indices: Sequence[int]) -> WindowBatch: ...
 
     @property
     def autoregressive_index(self) -> tuple[int, ...]:
-        """Positionen der Zielgrößen innerhalb der ``history_inputs``-Kanalachse.
+        """Positions of the targets within the ``history_inputs`` channel axis.
 
-        Die Kanäle existieren auch für nicht beobachtete Zielgrößen -- sie sind dort mit
-        dem Trainingsmittelwert gefüllt. Damit bleibt die Kanalzahl über beide
-        Betriebsarten gleich, und eine Architektur muss keine Fallunterscheidung tragen:
-        ein Modell, das seinen eigenen Zustand fortschreibt, tut das in beiden Fällen
-        gleich, es startet nur ohne Anker.
+        The channels also exist for unobserved targets -- there they are filled with the
+        training mean. The number of channels thus stays the same across both operating
+        modes, and an architecture does not have to carry a case distinction: a model
+        that propagates its own state does so in the same way in both cases, it only
+        starts without an anchor.
         """
         offset = len(self.exogenous_names)
         return tuple(offset + i for i in range(len(self.target_names)))
 
     @property
     def observed_target_names(self) -> tuple[str, ...]:
-        """Inline gemessene Zielgrößen."""
+        """Targets measured inline."""
         return self.config.observed_targets
 
     @property
     def unobserved_target_names(self) -> tuple[str, ...]:
-        """Zielgrößen ohne Inline-Messung."""
+        """Targets without inline measurement."""
         return self.config.unobserved_targets
 
     @property
     def is_fully_observed(self) -> bool:
-        """Ob jede Zielgröße als Messung in der Historie steht."""
+        """Whether every target appears as a measurement in the history."""
         return self.config.is_fully_observed
 
     def full_batch(self) -> WindowBatch:
-        """Alle Fenster in einem Stapel. Für Baselines und kleine Datensätze."""
+        """All windows in one batch. For baselines and small data sets."""
         return self.batch(range(self.n_windows))
 
     def iter_batches(
         self, batch_size: int, *, rng: np.random.Generator | None = None
     ) -> Iterator[WindowBatch]:
-        """Stapelweise Iteration, optional in zufälliger Reihenfolge."""
+        """Batch-wise iteration, optionally in random order."""
         order = np.arange(self.n_windows)
         if rng is not None:
             rng.shuffle(order)
@@ -363,14 +361,14 @@ class SequenceDataset(ABC):
 
 @dataclass(slots=True)
 class TrajectoryWindowDataset(SequenceDataset):
-    """Fenster über die Läufe eines Splits einer :class:`Trajectory`.
+    """Windows over the runs of one split of a :class:`Trajectory`.
 
-    Die Fenster werden **lazy** aus einem Index gebildet: bei 128 Läufen à 1152
-    Schritten und ``stride=1`` gibt es rund 130 000 Fenster, deren materialisierte Form
-    ein Vielfaches der Rohdaten belegt.
+    The windows are formed **lazily** from an index: with 128 runs of 1152 steps each
+    and ``stride=1`` there are about 130,000 windows, whose materialised form occupies a
+    multiple of the raw data.
 
-    Konstruktion über :meth:`from_trajectory`, damit die Normalisierung nicht versehentlich
-    aus dem falschen Split geschätzt wird.
+    Construction via :meth:`from_trajectory`, so that the normalisation is not
+    accidentally estimated from the wrong split.
     """
 
     _config: WindowConfig
@@ -385,7 +383,7 @@ class TrajectoryWindowDataset(SequenceDataset):
     _target_scaler: Standardizer
     run_ids: tuple[str, ...] = field(default=())
 
-    # ---------------------------------------------------------------- Konstruktion
+    # ---------------------------------------------------------------- Construction
 
     @classmethod
     def from_trajectory(
@@ -397,15 +395,15 @@ class TrajectoryWindowDataset(SequenceDataset):
         *,
         scalers: tuple[Standardizer, Standardizer] | None = None,
     ) -> TrajectoryWindowDataset:
-        """Datensatz für einen Split bauen.
+        """Build the data set for one split.
 
         Parameters
         ----------
         scalers
-            ``(input_scaler, target_scaler)``. Für ``val`` und ``test`` **zwingend** die
-            Skalierer des zugehörigen Trainings-Datensatzes übergeben. Ohne Angabe
-            werden sie aus den eigenen Läufen geschätzt, was für ``train`` richtig und
-            für ``test`` ein Leck ist.
+            ``(input_scaler, target_scaler)``. For ``val`` and ``test`` the scalers of the
+            corresponding training data set **must** be passed. If omitted, they are
+            estimated from the data set's own runs, which is correct for ``train`` and a
+            leak for ``test``.
         """
         output_names = tuple(trajectory.metadata.get("output_names", ()))
         if not output_names:
@@ -419,7 +417,7 @@ class TrajectoryWindowDataset(SequenceDataset):
         if len(positions) != len(wanted):
             found = {trajectory.run_id[i] for i in positions}
             raise ValueError(f"Läufe fehlen in der Trajektorie: {sorted(wanted - found)}")
-        # Reihenfolge des Splits erhalten -- sie definiert die Lernkurven-Verschachtelung.
+        # Preserve the order of the split -- it defines the learning-curve nesting.
         order = {trajectory.run_id[i]: i for i in positions}
         positions = [order[run_id] for run_id in split.as_mapping[which]]
         rows = np.asarray(positions, dtype=np.intp)
@@ -459,11 +457,11 @@ class TrajectoryWindowDataset(SequenceDataset):
         )
         standardised = input_scaler.transform(inputs)
 
-        # Beobachtbarkeit: nicht inline gemessene Kanäle tragen keine Information in die
-        # Historie. Maskiert wird **nach** der Standardisierung, damit die Null exakt dem
-        # Mittelwert des Trainings-Splits entspricht und der Skalierer derselbe bleibt wie
-        # im vollbeobachteten Fall -- sonst wären die beiden Betriebsarten nicht
-        # vergleichbar, weil sich auch die Normierung der Eingänge geändert hätte.
+        # Observability: channels not measured inline carry no information into the
+        # history. Masking happens **after** the standardisation, so that zero corresponds
+        # exactly to the mean of the training split and the scaler stays the same as in the
+        # fully observed case -- otherwise the two operating modes would not be
+        # comparable, because the normalisation of the inputs would have changed as well.
         unobserved = set(config.unobserved_targets)
         offset = exogenous.shape[-1]
         masked_channels = [
@@ -511,41 +509,41 @@ class TrajectoryWindowDataset(SequenceDataset):
 
     @property
     def config(self) -> WindowConfig:
-        """Fensterparameter."""
+        """Window parameters."""
         return self._config
 
     @property
     def n_windows(self) -> int:
-        """Anzahl Fenster."""
+        """Number of windows."""
         return int(self._index.shape[0])
 
     @property
     def exogenous_names(self) -> tuple[str, ...]:
-        """Stell- und Störgrößennamen."""
+        """Action and disturbance names."""
         return self._exogenous_names
 
     @property
     def target_names(self) -> tuple[str, ...]:
-        """Zielgrößennamen."""
+        """Target names."""
         return self._target_names
 
     @property
     def input_scaler(self) -> Standardizer:
-        """Skalierer der Eingangskanäle."""
+        """Scaler of the input channels."""
         return self._input_scaler
 
     @property
     def target_scaler(self) -> Standardizer:
-        """Skalierer der Zielgrößen."""
+        """Scaler of the targets."""
         return self._target_scaler
 
     @property
     def scalers(self) -> tuple[Standardizer, Standardizer]:
-        """Beide Skalierer, zur Weitergabe an val- und test-Datensätze."""
+        """Both scalers, for passing on to the val and test data sets."""
         return self._input_scaler, self._target_scaler
 
     def batch(self, indices: Sequence[int]) -> WindowBatch:
-        """Fenster zu den gegebenen Indizes bilden."""
+        """Form the windows for the given indices."""
         selected = self._index[np.asarray(indices, dtype=np.intp)]
         runs = selected[:, 0]
         starts = selected[:, 1]

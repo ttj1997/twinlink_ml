@@ -1,25 +1,25 @@
-r"""Abbildungen zu Lernkurven, Varianzzerlegung und Rauschgrenze (Schritt 5, Punkt 5).
+r"""Figures for learning curves, variance decomposition and noise floor (step 5, item 5).
 
-Warum das ein Modul ist und keine Notebook-Zellen
+Why this is a module and not notebook cells
 -------------------------------------------------
-Die Code-Konventionen verlangen es, aber es gibt auch einen inhaltlichen Grund: eine
-Lernkurve ohne Auflösungsschwelle ist eine irreführende Abbildung. Liegt die Logik im
-Notebook, entsteht früher oder später eine Variante ohne Schwellenband -- und die wandert
-dann in einen Vortrag. Hier ist das Band Teil der Funktion und nicht des Aufrufers.
+The code conventions require it, but there is also a substantive reason: a learning
+curve without a resolution threshold is a misleading figure. If the logic lives in the
+notebook, sooner or later a variant without the threshold band appears -- and that one
+then ends up in a talk. Here the band is part of the function and not of the caller.
 
-Was jede Kurve tragen muss
---------------------------
-1. Median über die Replikate mit Streuband (Min/Max, nicht ±1σ: bei drei Replikaten ist
-   die Normalverteilungsannahme nicht prüfbar).
-2. Die parameterfreien Baselines als waagerechte Linien -- Persistenz ist über
-   :math:`n_{\text{train}}` konstant, weil sie nicht trainiert wird.
-3. Die **Auflösungsschwelle** als Band um die beste Kurve. Alles, was darin liegt, ist
-   kein Ergebnis.
-4. Die **Sättigungshöhe** (Rauschgrenze) als untere Asymptote, soweit bekannt.
+What every curve must carry
+---------------------------
+1. Median over the replicates with a spread band (min/max, not ±1σ: with three
+   replicates the normality assumption cannot be checked).
+2. The parameter-free baselines as horizontal lines -- persistence is constant over
+   :math:`n_{\text{train}}`, because it is not trained.
+3. The **resolution threshold** as a band around the best curve. Anything that lies
+   inside it is not a result.
+4. The **saturation level** (noise floor) as the lower asymptote, where known.
 
-Matplotlib ist keine Laufzeitabhängigkeit des Pakets (Extra ``dev``); der Import erfolgt
-deshalb erst im Funktionsaufruf, damit ``import twinlink_ml`` auf einem Rechenknoten ohne
-Grafikstack nicht scheitert.
+Matplotlib is not a run-time dependency of the package (extra ``dev``); the import
+therefore only happens in the function call, so that ``import twinlink_ml`` does not fail
+on a compute node without a graphics stack.
 """
 
 from __future__ import annotations
@@ -47,7 +47,7 @@ _FLAT_LINE_LABELS: tuple[str, ...] = ("persistence",)
 def _pyplot() -> Any:
     try:
         import matplotlib.pyplot as plt
-    except ImportError as error:  # pragma: no cover - abhängig von der Umgebung
+    except ImportError as error:  # pragma: no cover - depends on the environment
         raise ImportError(
             "matplotlib fehlt. Entweder 'pip install twinlink-ml[dev]' oder die "
             "Tabellenausgabe der Skripte in scripts/ verwenden."
@@ -63,7 +63,7 @@ def _curves(
     metric: str,
     source: VarianceSource,
 ) -> dict[str, tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]]:
-    """``{Modell: (n_train, Median, Minimum, Maximum)}``, aufsteigend sortiert."""
+    """``{Modell: (n_train, Median, Minimum, Maximum)}``, sorted in ascending order."""
     spreads = collect_spreads(records, target=target, horizon=horizon, metric=metric)
     per_label: dict[str, dict[int, tuple[float, float, float]]] = {}
     for (key, spread_source), spread in spreads.items():
@@ -94,23 +94,22 @@ def plot_learning_curve(
     ax: Any = None,
     title: str | None = None,
 ) -> Any:
-    r"""Lernkurve mit Streuband, Baselines und Auflösungsschwelle.
+    r"""Learning curve with spread band, baselines and resolution threshold.
 
     Parameters
     ----------
     resolution
-        ``{n_train: relative Schwelle}`` aus
-        :func:`~twinlink_ml.evaluation.resolution.resolution_thresholds`. Gezeichnet wird
-        das Band um die **beste** Kurve: Unterschiede innerhalb dieses Bandes sind mit
-        der gefahrenen Replikatzahl nicht nachweisbar.
+        ``{n_train: relative Schwelle}`` from
+        :func:`~twinlink_ml.evaluation.resolution.resolution_thresholds`. The band is
+        drawn around the **best** curve: differences within this band cannot be
+        demonstrated with the number of replicates run.
     noise_floor
-        Sättigungshöhe aus :class:`~twinlink_ml.evaluation.protocol.NoiseFloor`. Eine
-        Kurve, die dort abflacht, hat die Rauschgrenze erreicht und nicht die
-        Modellgrenze.
+        Saturation level from :class:`~twinlink_ml.evaluation.protocol.NoiseFloor`. A
+        curve that flattens there has reached the noise floor and not the model limit.
 
-    Die x-Achse ist logarithmisch (Stützstellen sind Zweierpotenzen), die y-Achse nicht:
-    der Vergleich mit der Schwelle 1.0 -- besser als der Mittelwert des eigenen Laufs --
-    soll auf einen Blick ablesbar bleiben.
+    The x-axis is logarithmic (learning-curve points are powers of two), the y-axis is
+    not: the comparison with the threshold 1.0 -- better than the mean of the run itself --
+    should remain readable at a glance.
     """
     plt = _pyplot()
     axis = ax if ax is not None else plt.subplots(figsize=(7.0, 4.5))[1]
@@ -185,10 +184,10 @@ def plot_variance_decomposition(
     metric: str = DEFAULT_METRIC,
     ax: Any = None,
 ) -> Any:
-    r"""Streuung je Zufallsquelle als gruppierte Balken, Modell je Stützstelle.
+    r"""Spread per random source as grouped bars, model per learning-curve point.
 
-    Aufgetragen ist :math:`\\hat\\sigma` (spannweitenbasiert), nicht die Spannweite
-    selbst -- nur so sind Achsen mit unterschiedlicher Replikatzahl vergleichbar.
+    Plotted is :math:`\\hat\\sigma` (range-based), not the range itself -- only then are
+    axes with different numbers of replicates comparable.
     """
     plt = _pyplot()
     axis = ax if ax is not None else plt.subplots(figsize=(8.0, 4.5))[1]
@@ -227,11 +226,11 @@ def plot_noise_study(
     metric: str = DEFAULT_METRIC,
     ax: Any = None,
 ) -> Any:
-    """Fehler über dem Rauschniveau, mit der Rauschgrenze als Referenzlinie.
+    """Error over the noise level, with the noise floor as a reference line.
 
-    Der Abstand zwischen Kurve und Grenze ist der Anteil, den ein besseres Modell
-    überhaupt noch holen kann. Läuft die Kurve parallel über der Grenze, ist der
-    Modellfehler rauschunabhängig -- dann bringt eine leisere Messung nichts.
+    The gap between curve and limit is the share that a better model can still gain at
+    all. If the curve runs parallel above the limit, the model error is independent of
+    the noise -- then a quieter measurement gains nothing.
     """
     plt = _pyplot()
     axis = ax if ax is not None else plt.subplots(figsize=(7.0, 4.5))[1]

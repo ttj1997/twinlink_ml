@@ -1,10 +1,10 @@
-"""Tests für das Evaluationsprotokoll (Arbeitsplan Schritt 5).
+"""Tests for the evaluation protocol (work plan step 5).
 
-Die teuren Zusicherungen dieses Moduls sind nicht die Zahlen, sondern die
-**Orthogonalität** der Versuchsfaktoren: dass die Rausch-Achse wirklich nur das Rauschen
-variiert, dass ein neu vermessener Pool bitgleich zu einem neu simulierten ist, und dass
-die Validierungs-Betriebsart bei parameterfreien Modellen exakt nichts ändert. Jede
-dieser Eigenschaften ist im Ergebnis einer Lernkurve unsichtbar, wenn sie verletzt ist.
+The expensive guarantees of this module are not the numbers, but the
+**orthogonality** of the experimental factors: that the noise axis really varies only the
+noise, that a newly measured pool is bit-identical to a newly simulated one, and that
+the validation operating mode changes exactly nothing for parameter-free models. Each
+of these properties is invisible in the result of a learning curve if it is violated.
 """
 
 from __future__ import annotations
@@ -89,14 +89,14 @@ def pool(process_config):
     return generate_data(process_config, SMALL, seeds=SeedBundle.from_master(1))
 
 
-# ------------------------------------------------------- Sensormodell entkoppeln
+# --------------------------------------------------- Decoupling the sensor model
 
 
 def test_remeasure_reproduces_the_rollout_bit_for_bit(process_config, pool) -> None:
-    """Bit für Bit identisch mit dem, was der Rollout selbst gemessen hätte.
+    """Bit for bit identical with what the rollout itself would have measured.
 
-    Das ist die Grundlage des ganzen Kostenmodells von Schritt 5: Rauschen neu zu ziehen
-    darf keine neue Integration brauchen.
+    This is the basis of the whole cost model of step 5: redrawing noise
+    must not need a new integration.
     """
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
@@ -117,7 +117,7 @@ def test_with_measurements_leaves_the_process_untouched(pool) -> None:
 
 
 def test_noise_level_enters_the_fingerprint(pool) -> None:
-    """Ohne diesen Eintrag wären zwei Rauschniveaus im Log nicht unterscheidbar."""
+    """Without this entry two noise levels in the log would be indistinguishable."""
     louder = pool.with_measurements(
         measurement=measurement_at_level(pool.process_config.measurement, 0.02)
     )
@@ -126,9 +126,9 @@ def test_noise_level_enters_the_fingerprint(pool) -> None:
 
 
 def test_zero_noise_is_deterministic(pool) -> None:
-    """Bei Rauschniveau Null darf der Rausch-Seed nichts mehr bewirken -- sonst ist der.
+    """At noise level zero the noise seed must no longer have any effect -- otherwise the.
 
-    Versuchsfaktor nicht das Rauschen, sondern irgendetwas daneben.
+    experimental factor is not the noise, but something beside it.
     """
     clean = measurement_at_level(pool.process_config.measurement, 0.0)
     first = pool.with_measurements(noise_seed=11, measurement=clean)
@@ -138,10 +138,10 @@ def test_zero_noise_is_deterministic(pool) -> None:
 
 
 def test_sensor_state_does_not_leak_between_rollouts(process_config, pool) -> None:
-    """Das Sensor-PT1 trägt Zustand.
+    """The sensor PT1 carries state.
 
-    Zwei Rollouts auf derselben Instanz dürfen sich
-    trotzdem nicht beeinflussen.
+    Two rollouts on the same instance must
+    nevertheless not influence each other.
     """
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
@@ -151,7 +151,7 @@ def test_sensor_state_does_not_leak_between_rollouts(process_config, pool) -> No
     assert np.array_equal(first, second)
 
 
-# ------------------------------------------------------------------ Pool-Cache
+# ------------------------------------------------------------------ Pool cache
 
 
 def test_cache_simulates_once_per_data_seed(process_config) -> None:
@@ -166,7 +166,7 @@ def test_cache_simulates_once_per_data_seed(process_config) -> None:
 
 
 def test_cache_variant_equals_direct_generation(process_config) -> None:
-    """Der Cache darf keine andere Zahl liefern als der direkte Weg."""
+    """The cache must not yield a different number than the direct path."""
     bundle = SeedBundle.from_master(3)
     cache = DataPoolCache(process_config, SMALL)
     cached = cache.variant(
@@ -180,18 +180,18 @@ def test_cache_variant_equals_direct_generation(process_config) -> None:
     assert cached.seeds == direct.seeds
 
 
-# ------------------------------------------------------------- Spec-Fingerprint
+# ------------------------------------------------------------- Spec fingerprint
 
 
 def test_spec_digest_is_stable_and_distinguishes_observation_mode() -> None:
-    """Grundlage der Cache-Invalidierung in ``_run_grid``.
+    """Basis of the cache invalidation in ``_run_grid``.
 
-    ``spec_for_mode`` baut bei jedem Aufruf ein neues ``DataSpec``-Objekt -- die
-    Invalidierung darf sich deshalb nicht auf Objektidentität verlassen (das würde bei
-    *jedem* Punkt einen neuen Cache bauen, nicht nur bei Moduswechseln, ohne dass ein
-    Test das je bemerkt -- nur die Laufzeit würde leiden). Wertegleichheit über einen
-    Fingerprint ist die Voraussetzung dafür, dass die Invalidierung nur bei echten
-    Moduswechseln greift.
+    ``spec_for_mode`` builds a new ``DataSpec`` object on every call -- the
+    invalidation must therefore not rely on object identity (that would build a new cache at
+    *every* point, not only on mode changes, without any test ever
+    noticing -- only the runtime would suffer). Value equality via a
+    fingerprint is the precondition for the invalidation engaging only on real
+    mode changes.
     """
     inline_first = spec_for_mode(SMALL, ObservationMode.INLINE)
     inline_second = spec_for_mode(SMALL, ObservationMode.INLINE)
@@ -202,7 +202,7 @@ def test_spec_digest_is_stable_and_distinguishes_observation_mode() -> None:
     assert _spec_digest(inline_first) != _spec_digest(soft_sensor)
 
 
-# ----------------------------------------------------------- Varianzzerlegung
+# ----------------------------------------------------- Variance decomposition
 
 
 @pytest.fixture(scope="module")
@@ -224,10 +224,10 @@ def test_variance_records_cover_every_axis(variance_records) -> None:
 
 
 def test_model_axis_leaves_parameter_free_baseline_untouched(variance_records) -> None:
-    """Persistenz hat keine Parameter.
+    """Persistence has no parameters.
 
-    Streut sie über den Modell-Seed, ist irgendwo
-    Zufall im Spiel, der dort nicht hingehört.
+    If it scatters over the model seed, somewhere
+    randomness is at play that does not belong there.
     """
     spreads = collect_spreads(variance_records, target="energy_target", horizon=SMALL.horizon)
     for (key, source), spread in spreads.items():
@@ -257,13 +257,13 @@ def test_decomposition_and_threshold_are_computable(variance_records) -> None:
     assert all(value >= 0.0 for value in thresholds.values())
 
 
-# ---------------------------------------------------------------- Rauschgrenze
+# ----------------------------------------------------------------- Noise floor
 
 
 def test_noise_floor_grows_with_the_noise_level(process_config) -> None:
-    r"""Die Sättigungshöhe muss mit dem Rauschniveau steigen -- und bei Rauschniveau Null.
+    r"""The saturation height must rise with the noise level -- and at noise level zero.
 
-    exakt Null sein, weil der perfekte Prädiktor dann die Messung *ist*.
+    be exactly zero, because the perfect predictor then *is* the measurement.
     """
     quiet = generate_data(
         process_config,
@@ -285,9 +285,9 @@ def test_noise_floor_grows_with_the_noise_level(process_config) -> None:
 
 
 def test_sensor_lag_floor_is_not_zero_even_without_noise(process_config) -> None:
-    """Gegen die *ungefilterte* Wahrheit bleibt ein Sockel: das Sensor-PT1.
+    """Against the *unfiltered* truth a floor remains: the sensor PT1.
 
-    Wer ihn nicht kennt, hält Sensordynamik für Modellfehler.
+    Whoever does not know it mistakes sensor dynamics for model error.
     """
     data = generate_data(process_config, SMALL, seeds=SeedBundle.from_master(1))
     clean = data.with_measurements(
@@ -311,14 +311,14 @@ def test_noise_study_returns_records_and_floors(process_config) -> None:
     assert set(floors) == {0.0, 0.02}
     levels = {record.params["noise/relative_std"] for record in records}
     assert levels == {0.0, 0.02}
-    # Ohne Filter auf ein Niveau wäre die "Seed-Streuung" der Effekt des Rauschniveaus.
+    # Without filtering to one level the "seed scatter" would be the effect of the noise level.
     with pytest.raises(ValueError):
         collect_spreads(records, target="energy_target", horizon=SMALL.horizon)
     filtered = select(records, **{"noise/relative_std": 0.02})
     assert collect_spreads(filtered, target="energy_target", horizon=SMALL.horizon)
 
 
-# ------------------------------------------------------- Validierungsbetriebsart
+# ----------------------------------------------------- Validation operating mode
 
 
 _TIMING_METRICS = {"inference_us_per_window"}
@@ -329,13 +329,13 @@ aussagen."""
 
 
 def _assert_records_equal(old, new) -> None:
-    """Inhaltlicher Vergleich zweier ``RunRecord``-Listen.
+    """Content comparison of two ``RunRecord`` lists.
 
-    Nicht ``==``: ``RunRecord.run_uid``/``created_unix_s`` sind ``field(default_factory=...)``
-    und deshalb bei zwei unabhängig erzeugten Records nie gleich, selbst wenn Inhalt
-    identisch ist. Verglichen wird deshalb explizit ``group``/``params``/``metrics``/``tags``,
-    in derselben Reihenfolge (beide Implementierungen iterieren dieselben Achsen in
-    derselben Reihenfolge, ein Sortieren würde eine eigene Fehlerquelle einführen).
+    Not ``==``: ``RunRecord.run_uid``/``created_unix_s`` are ``field(default_factory=...)``
+    and therefore never equal for two independently generated records, even if the content
+    is identical. Hence ``group``/``params``/``metrics``/``tags`` are compared explicitly,
+    in the same order (both implementations iterate the same axes in
+    the same order, sorting would introduce a separate source of error).
     """
     assert len(old) == len(new), f"{len(old)} alte gegen {len(new)} neue Records"
     for index, (left, right) in enumerate(zip(old, new, strict=True)):
@@ -348,10 +348,10 @@ def _assert_records_equal(old, new) -> None:
 
 
 def test_validation_policy_is_a_no_op_for_baselines(process_config) -> None:
-    """Regressionsprüfung gegen Leakage: keine Baseline benutzt den Validierungssplit.
+    """Regression check against leakage: no baseline uses the validation split.
 
-    Die Differenz muss deshalb exakt Null sein. Wäre sie es nicht, sickerten
-    Validierungsläufe ins Training.
+    The difference must therefore be exactly zero. If it were not, validation
+    runs would seep into training.
     """
     records = run_validation_policy_comparison(
         process_config,
@@ -381,15 +381,15 @@ def test_validation_policy_none_reports_zero_budget(process_config) -> None:
     assert all(record.params["n_budget"] == 8 for record in records)
 
 
-# ------------------------------------------------------------ Architekturvergleich
+# --------------------------------------------------------- Architecture comparison
 
 
 def test_architecture_comparison_covers_modes_and_sources(process_config) -> None:
-    """Verhaltensregression, unabhängig vom Migrationskandidaten oben.
+    """Behavioural regression, independent of the migration candidate above.
 
-    ``run_architecture_comparison`` hatte vor diesem Umbau keinen einzigen Test in
-    diesem Modul (nur ``scripts/study_architectures.py`` rief es auf) -- diese Lücke
-    schließt dieser Test dauerhaft, nicht nur für die Dauer der Migration.
+    ``run_architecture_comparison`` had not a single test in this module before this
+    rework (only ``scripts/study_architectures.py`` called it) -- this test closes that gap
+    permanently, not only for the duration of the migration.
     """
     on_point_calls: list[tuple[str, int, int]] = []
     records = run_architecture_comparison(
@@ -405,8 +405,8 @@ def test_architecture_comparison_covers_modes_and_sources(process_config) -> Non
             (source, replicate, n_train)
         ),
     )
-    # on_point behält seine alte Signatur (source=, replicate=, n_train=) über einen
-    # internen Adapter -- study_architectures.py ruft die Funktion genauso auf.
+    # on_point keeps its old signature (source=, replicate=, n_train=) via an
+    # internal adapter -- study_architectures.py calls the function in the same way.
     assert on_point_calls
     assert {call[0] for call in on_point_calls} == {"joint", "model"}
 
@@ -425,14 +425,14 @@ def test_architecture_comparison_covers_modes_and_sources(process_config) -> Non
     assert all(record.params["observation/unobserved"] == [] for record in inline_records)
 
 
-# -------------------------------------------------------------------- Abbildungen
+# ------------------------------------------------------------------------ Figures
 
 
 def test_plots_render_without_display(process_config, variance_records, tmp_path) -> None:
-    """Smoke-Test der Abbildungen.
+    """Smoke test of the figures.
 
-    Sie sind Teil des Ergebnisformats von M2 -- eine
-    Änderung an den Metriknamen darf nicht erst im Notebook auffallen.
+    They are part of the result format of M2 -- a
+    change to the metric names must not first be noticed in the notebook.
     """
     matplotlib = pytest.importorskip("matplotlib")
     matplotlib.use("Agg")
@@ -477,10 +477,10 @@ def test_plots_render_without_display(process_config, variance_records, tmp_path
 
 
 def test_jsonl_roundtrip_keeps_the_study_parameters(variance_records, tmp_path) -> None:
-    """Das Notebook liest aus JSONL.
+    """The notebook reads from JSONL.
 
-    Gehen dabei ``variance/source`` oder ``n_train``
-    verloren, ist die Auswertung im Notebook eine andere als im Skript.
+    If ``variance/source`` or ``n_train`` get lost
+    in the process, the evaluation in the notebook differs from the one in the script.
     """
     from twinlink_ml.utils import JsonlExperimentLogger, read_jsonl
 

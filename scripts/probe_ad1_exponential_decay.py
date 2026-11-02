@@ -1,24 +1,24 @@
-r"""AD1: prueft, ob der GRU-Abfall h1->h36 (Befund 50i) einem Zustandsschaetzer folgt.
+r"""AD1: checks whether the GRU decline h1->h36 (Befund 50i) follows a state estimator.
 
-KEIN Training -- GRU wird aus den X2-Checkpoints geladen (``artifacts/checkpoints/
-gru_seed{1,2,3}.pt``), Persistenz/statische Baseline frisch angepasst (billig,
-geschlossene Form, identisches Muster zu ``probe_x3_recoverable_power.py``). Fenster-
-population wie in AC2 verdrahtet: EIN Fensterset mit ``horizon=36`` (wie X2), alle 36
-Horizonte als Slices ``[:h]`` desselben Fenstersets -- keine Populationsverschiebung
-zwischen den Horizonten.
+NO training -- the GRU is loaded from the X2 checkpoints (``artifacts/checkpoints/
+gru_seed{1,2,3}.pt``), persistence/static baseline freshly fitted (cheap,
+closed form, identical pattern to ``probe_x3_recoverable_power.py``). Window
+population wired as in AC2: ONE window set with ``horizon=36`` (as X2), all 36
+horizons as slices ``[:h]`` of the same window set -- no population shift
+between the horizons.
 
-Modell
-------
-``err(h) = floor + A * exp(-h * dt / tau)``, ``dt = 25 s`` (Abtastzeit). Wenn der
-h1->h36-Abfall daher kommt, dass das Modell mit wachsender Historie im eigenen
-rekurrenten Zustand zunehmend sicherer wird (Zustandsschaetzer-Erklaerung, Befund 50i),
-sollte ``tau`` im Modenband des gekoppelten Wassermasse/Betttemperatur-Paars liegen
-(Befund 49: 30,2-359,9 s am Referenzpunkt, 133-1195 s ueber den Betriebsbereich) --
-nicht bei den Baselines (kein rekurrenter Zustand, kein Grund fuer denselben Abfall).
+Model
+-----
+``err(h) = floor + A * exp(-h * dt / tau)``, ``dt = 25 s`` (sampling time). If the
+h1->h36 decline comes from the model becoming increasingly certain in its own
+recurrent state with growing history (state-estimator explanation, Befund 50i),
+``tau`` should lie in the mode band of the coupled water mass/bed temperature pair
+(Befund 49: 30.2-359.9 s at the reference point, 133-1195 s across the operating range) --
+not for the baselines (no recurrent state, no reason for the same decline).
 
-Fit je (Modell, Seed, Testmenge) einzeln, nicht ueber Seeds gemittelt: eine gemittelte
-Kurve wuerde Seed-zu-Seed-Streuung in tau/A verstecken, die fuer die Bewertung "trägt
-die Erklaerung" relevant ist.
+Fit per (model, seed, test set) individually, not averaged over seeds: an averaged
+curve would hide seed-to-seed scatter in tau/A, which is relevant for the assessment "does
+the explanation hold".
 """
 
 from __future__ import annotations
@@ -83,7 +83,7 @@ def _exponential_model(h: np.ndarray, floor: float, amplitude: float, tau: float
 
 
 def _fit_exponential(err_by_h: np.ndarray) -> dict[str, object]:
-    """Fit ``err(h) = floor + A*exp(-h*dt/tau)``, meldet Nichtkonvergenz statt abzustuerzen."""
+    """Fit ``err(h) = floor + A*exp(-h*dt/tau)``, reports non-convergence instead of crashing."""
     h = np.asarray(HORIZONS, dtype=np.float64)
     floor_guess = float(np.min(err_by_h))
     amplitude_guess = float(err_by_h[0] - floor_guess)

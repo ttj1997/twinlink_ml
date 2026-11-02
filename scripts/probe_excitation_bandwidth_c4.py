@@ -1,13 +1,13 @@
-r"""Probe C4: V0 mit Δt = 5 s, getrennt von C0-C3 (Δt = 25 s) gehalten.
+r"""Probe C4: V0 with Δt = 5 s, kept separate from C0-C3 (Δt = 25 s).
 
-KEIN Netztraining, KEINE Aenderung an ``src/``. Reine Zusatzauswertung zu
-``scripts/probe_excitation_bandwidth.py`` (dort C0-C3, unveraendert). Zwei Werte:
+NO network training, NO change to ``src/``. Pure additional evaluation to
+``scripts/probe_excitation_bandwidth.py`` (C0-C3 there, unchanged). Two values:
 
-  (i)  R2_stat/R2_lag1 auf dem nativen 5-s-Raster (andere Stichprobenzahl,
-       andere Rauschmittelung -- NICHT mit den 25-s-Werten vergleichbar).
-  (ii) dieselben Kennzahlen nach Unterabtastung des 5-s-Datensatzes zurueck auf 25 s
-       (jeder fuenfte Punkt, beginnend bei Index 4) -- das ist die mit V0-V3
-       vergleichbare Zahl.
+  (i)  R2_stat/R2_lag1 on the native 5 s grid (different sample count,
+       different noise averaging -- NOT comparable with the 25 s values).
+  (ii) the same metrics after downsampling the 5 s dataset back to 25 s
+       (every fifth point, starting at index 4) -- this is the number comparable
+       with V0-V3.
 """
 
 from __future__ import annotations

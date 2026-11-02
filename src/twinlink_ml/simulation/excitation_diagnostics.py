@@ -1,19 +1,19 @@
-r"""Bewertung der Anregungsqualität -- der Report, den TUHH-A sehen muss.
+r"""Assessment of the excitation quality -- the report TUHH-A must see.
 
-Vier Fragen, die ein Anregungsdesign beantworten muss, bevor damit 18 Monate lang
-Simulationsläufe produziert werden:
+Four questions an excitation design must answer before simulation runs are produced with it
+for 18 months:
 
-1. **Wird der Betriebsraum abgedeckt?** Amplitudenausnutzung je Kanal.
-2. **Sind die Kanäle trennbar?** Kollinearität zerstört die Identifizierbarkeit der
-   partiellen Ableitungen -- und damit die Überprüfbarkeit der Monotonie-Constraints.
-3. **Wird das relevante Frequenzband angeregt?** Spektrale Flachheit und Bandenergie,
-   bezogen auf die Zeitkonstanten des Prozesses.
-4. **Ist die Anregung realisierbar?** Verletzung der Ratenbegrenzung und der
-   Fluidisierungsgrenzen.
+1. **Is the operating space covered?** Amplitude utilisation per channel.
+2. **Are the channels separable?** Collinearity destroys the identifiability of the
+   partial derivatives -- and thus the checkability of the monotonicity constraints.
+3. **Is the relevant frequency band excited?** Spectral flatness and band energy,
+   relative to the time constants of the process.
+4. **Is the excitation realisable?** Violation of the rate limit and of the
+   fluidization limits.
 
-Die Zahlen aus diesem Report sind Teil des Datensatz-Metadatums. Eine Lernkurve ohne den
-zugehörigen Anregungsreport ist nicht interpretierbar: dieselbe Architektur auf
-schwach angeregten Daten sieht aus wie eine schlechtere Architektur.
+The numbers from this report are part of the dataset metadata. A learning curve without the
+associated excitation report is not interpretable: the same architecture on
+weakly excited data looks like a worse architecture.
 """
 
 from __future__ import annotations
@@ -33,7 +33,7 @@ FloatArray = NDArray[np.float64]
 
 @dataclass(frozen=True, slots=True)
 class ChannelExcitationReport:
-    """Kennzahlen eines Stellgrößenkanals."""
+    """Metrics of one action channel."""
 
     name: str
     range_utilisation: float
@@ -62,7 +62,7 @@ class ChannelExcitationReport:
 
 @dataclass(frozen=True, slots=True)
 class ExcitationReport:
-    """Gesamtbewertung eines Anregungsplans."""
+    """Overall assessment of an excitation schedule."""
 
     n_runs: int
     n_steps: int
@@ -106,39 +106,39 @@ def excitation_report(
     tau_slow_s: float,
     excitation_config: ExcitationConfig | None = None,
 ) -> ExcitationReport:
-    r"""Bewertet einen Anregungsplan gegen die Zeitkonstanten des Prozesses.
+    r"""Assesses an excitation schedule against the time constants of the process.
 
-    Kennzahlen je Kanal:
+    Metrics per channel:
 
     ``range_utilisation``
-        Verhältnis der tatsächlich durchfahrenen Spanne zur erlaubten. Werte deutlich
-        unter 1 bedeuten, dass das Modell später auf Betriebspunkte extrapolieren muss,
-        die es nie gesehen hat.
+        Ratio of the span actually traversed to the allowed one. Values clearly
+        below 1 mean that the model will later have to extrapolate to operating points
+        it has never seen.
 
     ``spectral_flatness``
-        Geometrisches durch arithmetisches Mittel der Leistungsdichte,
-        :math:`1` = weiß, :math:`\to 0` = schmalbandig. Nach Ratenbegrenzung ist die
-        Flachheit eines PRBS notwendig kleiner als 1 -- die Kennzahl macht sichtbar,
-        wie viel Bandbreite die Realisierbarkeit gekostet hat.
+        Geometric over arithmetic mean of the power density,
+        :math:`1` = white, :math:`\to 0` = narrowband. After rate limiting the
+        flatness of a PRBS is necessarily smaller than 1 -- the metric makes visible
+        how much bandwidth the realisability has cost.
 
     ``bandwidth_p90_hz``
-        Frequenz, unter der 90 % der Signalenergie liegen -- die realisierte Bandbreite.
-        Ins Verhältnis gesetzt zur Eckfrequenz der schnellsten Prozessmode
-        :math:`f_{fast} = 1/(2\pi\tau_{fast})` ergibt sich
-        ``bandwidth_over_fast_corner``. Werte deutlich unter 1 heißen: die schnelle Mode
-        des Prozesses wird nicht angeregt, sie verhält sich gegenüber dieser Anregung
-        quasistationär. Ein Energieanteil in einem breit definierten Band ist als Kennzahl
-        untauglich -- er liegt bei fast jedem Design nahe 1, weil das Band von
-        :math:`1/(2\pi\tau_{slow})` bis :math:`1/(2\pi\tau_{fast})` praktisch das
-        gesamte Spektrum unterhalb Nyquist umfasst.
+        Frequency below which 90 % of the signal energy lies -- the realised bandwidth.
+        Relating it to the corner frequency of the fastest process mode
+        :math:`f_{fast} = 1/(2\pi\tau_{fast})` gives
+        ``bandwidth_over_fast_corner``. Values clearly below 1 mean: the fast mode
+        of the process is not excited; it behaves quasi-stationary with respect to this
+        excitation. An energy share in a broadly defined band is unsuitable as a metric
+        -- it is close to 1 for almost every design, because the band from
+        :math:`1/(2\pi\tau_{slow})` to :math:`1/(2\pi\tau_{fast})` covers practically the
+        entire spectrum below Nyquist.
 
     ``full_amplitude_switch_time_over_tau_fast`` /
     ``fastest_amplitude_switch_time_over_tau_fast``
-        :math:`t_{switch}/\tau_{fast}` mit :math:`t_{switch} = \Delta u/\dot u_{max}`,
-        einmal für die volle Spanne und einmal für die kleinste Amplitudenstufe des
-        Designs. Die zweite Zahl ist die entscheidende: liegt **sie** über 1, ist die
-        schnellste Prozessmode mit keiner Amplitude anregbar, und die Abtastzeit ist zu
-        fein gewählt. Genau dafür existieren die Amplitudenstufen.
+        :math:`t_{switch}/\tau_{fast}` with :math:`t_{switch} = \Delta u/\dot u_{max}`,
+        once for the full span and once for the smallest amplitude level of the
+        design. The second number is the decisive one: if **it** lies above 1, the
+        fastest process mode cannot be excited with any amplitude, and the sample time is
+        chosen too fine. That is exactly what the amplitude levels exist for.
     """
     actions = schedule.actions
     n_runs, n_steps, n_channels = actions.shape
@@ -252,22 +252,22 @@ def excitation_report(
 
 
 def constraint_violation_summary(trajectory: Trajectory) -> dict[str, float]:
-    r"""Anteil der Abtastschritte, in denen Prozessgrenzen verletzt sind.
+    r"""Fraction of the sampling steps in which process limits are violated.
 
-    Auswertung der Diagnosegrößen eines Rollouts. Zwei Zwecke:
+    Evaluation of the diagnostic variables of a rollout. Two purposes:
 
-    * **Datensatzqualität.** Läufe, die dauerhaft außerhalb des Fluidisierungsfensters
-      liegen, beschreiben einen Zustand, den die Anlage nicht hat (Bett zusammengebrochen
-      oder ausgetragen). Das Grey-Box-Modell rechnet trotzdem weiter -- es kennt keinen
-      Kollaps. Solche Abschnitte sind für das Lernen der *regulären* Dynamik schädlich.
-    * **RL-Vorbereitung.** Dieselbe Kennzahl ist später die Verletzungsrate der
-      Safety-Constraints. Wer sie schon in AP 1 mitschreibt, hat in AP 3 eine Referenz
-      dafür, was ein Regler verbessern muss.
+    * **Dataset quality.** Runs that lie permanently outside the fluidization window
+      describe a state the plant does not have (bed collapsed
+      or elutriated). The grey-box model keeps computing anyway -- it knows no
+      collapse. Such sections are harmful for learning the *regular* dynamics.
+    * **RL preparation.** The same metric is later the violation rate of the
+      safety constraints. Whoever records it already in AP 1 has in AP 3 a reference
+      for what a controller must improve.
 
-    Anmerkung zur Interpretation: ``gas_velocity_above_terminal`` ist bei kleinen
-    Partikeln normal -- Feingut wird real ausgetragen und über den Zyklon zurückgeführt.
-    Das Modell bilanziert diesen Austrag nicht (siehe README). Ein hoher Wert heißt also
-    nicht "Betrieb unmöglich", sondern "hier fehlt Modellphysik".
+    Note on interpretation: ``gas_velocity_above_terminal`` is normal for small
+    particles -- fines are really elutriated and returned via the cyclone.
+    The model does not balance this elutriation (see README). A high value thus does
+    not mean "operation impossible" but "model physics is missing here".
     """
     diagnostics = trajectory.diagnostics
     total = float(trajectory.n_runs * trajectory.n_steps)
@@ -296,7 +296,7 @@ def constraint_violation_summary(trajectory: Trajectory) -> dict[str, float]:
 
 
 def _spectral_measures(values: FloatArray, sample_time_s: float) -> tuple[float, float]:
-    """Spektrale Flachheit und Frequenz, unter der 90 % der Energie liegen."""
+    """Spectral flatness and the frequency below which 90 % of the energy lies."""
     segment = min(values.shape[1], 1024)
     frequencies, density = scipy_signal.welch(
         values - values.mean(axis=1, keepdims=True),
@@ -318,7 +318,7 @@ def _spectral_measures(values: FloatArray, sample_time_s: float) -> tuple[float,
 
 
 def _pooled_correlation(actions: FloatArray) -> FloatArray:
-    """Korrelationsmatrix der Stellgrößen über alle Läufe und Zeitpunkte."""
+    """Correlation matrix of the actions over all runs and time points."""
     flattened = actions.reshape(-1, actions.shape[-1])
     centred = flattened - flattened.mean(axis=0, keepdims=True)
     deviation = centred.std(axis=0)
@@ -330,7 +330,7 @@ def _pooled_correlation(actions: FloatArray) -> FloatArray:
 def _coverage(
     values: FloatArray, low: FloatArray, high: FloatArray, names: tuple[str, ...]
 ) -> dict[str, float]:
-    """Ausgenutzter Anteil des erlaubten Bereichs je Kanal."""
+    """Utilised fraction of the allowed range per channel."""
     span = np.maximum(high - low, 1e-12)
     realised = values.max(axis=0) - values.min(axis=0)
     return {names[index]: float(realised[index] / span[index]) for index in range(len(names))}

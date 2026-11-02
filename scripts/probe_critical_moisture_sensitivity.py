@@ -1,34 +1,34 @@
-r"""DA1: haengt Befund 52 (Regret eines festen Betriebspunkts) an ``critical_moisture_kg_per_kg``.
+r"""DA1: does Befund 52 (fixed-operating-point regret) depend on ``critical_moisture_kg_per_kg``.
 
-Anlass: ``material.critical_moisture_kg_per_kg`` (aktuell 0.20 kg/kg, ``conf/process/
-greybox_gab_placeholder.yaml``) ist ein Platzhalter ohne Anlagendaten (siehe Dateikopf,
-offener TODO "SPE: Stoffsystem, ... kritische Feuchte") und bindet in Befund 52 im kalten
-Regime exakt am gefundenen Optimum. Statt den Wert zu erfragen, wird hier gemessen, wie
-stark Befund 52 (Regret-Groessenordnung, Bindungsverhalten der Feuchtegrenze, Existenz
-eines ueberall zulaessigen festen Betriebspunkts) von ihm abhaengt. Bleibt das Ergebnis
-ueber den plausiblen Bereich stabil, ist es staerker als mit einem exakten Wert, weil es
-nicht daran haengt -- siehe ``docs/04_stand_ap1.md``, Befund 54.
+Motivation: ``material.critical_moisture_kg_per_kg`` (currently 0.20 kg/kg, ``conf/process/
+greybox_gab_placeholder.yaml``) is a placeholder without plant data (see the file header,
+open TODO "SPE: Stoffsystem, ... kritische Feuchte") and in Befund 52 binds exactly at the
+optimum found in the cold regime. Instead of asking for the value, this script measures how
+strongly Befund 52 (order of magnitude of the regret, binding behaviour of the moisture
+bound, existence of a fixed operating point feasible everywhere) depends on it. If the
+result stays stable across the plausible range, it is stronger than with an exact value,
+because it does not depend on it -- see ``docs/04_stand_ap1.md``, Befund 54.
 
-KEIN Netztraining, KEIN Reinforcement Learning, KEIN neuer Optimierer: dieses Skript
-wiederholt exakt BB1-BB3 aus ``study_operating_point_regret.py`` (per ``importlib``
-geladen, keine Zeile dort veraendert -- gleiches Muster wie ``study_operating_point_
-transient.py``), fuer fuenf Werte von ``critical_moisture_kg_per_kg``:
+NO network training, NO reinforcement learning, NO new optimiser: this script repeats
+BB1-BB3 from ``study_operating_point_regret.py`` exactly (loaded via ``importlib``, no line
+there changed -- same pattern as ``study_operating_point_
+transient.py``), for five values of ``critical_moisture_kg_per_kg``:
 
-    0.10, 0.15, 0.20 (aktuell), 0.25, 0.30  kg/kg
+    0.10, 0.15, 0.20 (current), 0.25, 0.30  kg/kg
 
-Toleranzkonvention: Zulaessigkeits- und Bindungspruefung fuer die Feuchtegrenze verwenden
-dieselbe Toleranz (``_TOLERANCE_MOISTURE_KG_PER_KG``, 1e-4 kg/kg) -- aus dem Regret-Modul
-uebernommen, hier nicht neu gesetzt (siehe dortiger Docstring fuer die Begruendung).
+Tolerance convention: the feasibility and binding checks for the moisture bound use the same
+tolerance (``_TOLERANCE_MOISTURE_KG_PER_KG``, 1e-4 kg/kg) -- taken over from the regret
+module, not set anew here (see the docstring there for the reasoning).
 
-Gitterreduktion (Laufzeit): Befund 52 kostete ~2.5 h fuer EIN 5x5-Gitter; fuenf Werte
-waeren damit grob 12.5 h -- zu teuer fuer eine Sensitivitaetspruefung. Standardgitter hier
-daher 3x3 statt 5x5 (``--grid-size``). Fuer den AKTUELLEN Wert (0.20) wird zusaetzlich das
-committete 5x5-Ergebnis aus Befund 52 (``artifacts/runs/bb1_bb3_operating_point_regret.
-json``) als Anker geladen und mit dem hier neu gerechneten 3x3-Ergebnis am selben Wert
-verglichen (Feld ``anchor_comparison``) -- weichen beide deutlich voneinander ab, ist das
-VOR der Interpretation der uebrigen vier Werte zu melden (Auftrag).
+Grid reduction (run time): Befund 52 cost ~2.5 h for ONE 5x5 grid; five values would thus be
+roughly 12.5 h -- too expensive for a sensitivity check. The default grid here is therefore
+3x3 instead of 5x5 (``--grid-size``). For the CURRENT value (0.20), the committed 5x5 result
+from Befund 52 (``artifacts/runs/bb1_bb3_operating_point_regret.
+json``) is additionally loaded as an anchor and compared with the 3x3 result newly computed
+here at the same value (field ``anchor_comparison``) -- if the two deviate clearly from each
+other, this must be reported BEFORE the interpretation of the remaining four values (task).
 
-Aufruf::
+Invocation::
 
     python scripts/probe_critical_moisture_sensitivity.py \
         --output artifacts/runs/probe_critical_moisture_sensitivity.json
@@ -68,9 +68,9 @@ EXPECTED_BASE_FINGERPRINT = "2acd06f38963c3af"
 
 
 def _load_regret_module() -> ModuleType:
-    """Wie ``study_operating_point_transient.py::_load_regret_module`` -- siehe dort fuer
-    die Begruendung des ``sys.modules``-Eintrags vor ``exec_module`` (Dataclass-
-    Feldaufloesung ueber ``sys.modules[cls.__module__]``)."""
+    """Like ``study_operating_point_transient.py::_load_regret_module`` -- see there for
+    the rationale of the ``sys.modules`` entry before ``exec_module`` (dataclass
+    field resolution via ``sys.modules[cls.__module__]``)."""
     spec = importlib.util.spec_from_file_location(
         "study_operating_point_regret", REGRET_SCRIPT_PATH
     )
@@ -102,10 +102,10 @@ def run_regret_study(
     workers: int,
     label: str,
 ) -> dict[str, Any]:
-    """BB1-BB3 fuer EINE Config, EIN Gittergroesse -- Orchestrierung von ``main()`` aus
-    ``study_operating_point_regret.py`` nachgebildet (gleiche Funktionen, gleiche
-    Reihenfolge), nur ohne dessen argparse/CLI-Druck. Kein Aufruf-Parameter der
-    wiederverwendeten Funktionen wird geaendert (Budget = Modul-Defaults)."""
+    """BB1-BB3 for ONE config, ONE grid size -- orchestration of ``main()`` from
+    ``study_operating_point_regret.py`` replicated (same functions, same
+    order), only without its argparse/CLI printing. No call parameter of the
+    reused functions is changed (budget = module defaults)."""
     regret_module._set_base_config(variant_config)
     budget = regret_module.OptimizationBudget(
         seed=0,

@@ -1,36 +1,36 @@
-r"""Ein Seed-Job: Lernkurve ueber n_train in {8,16,32,64}, alle fuenf Architekturen --
-KONSTANT trainierter Zwilling zu ``run_arch_learning_curve_worker.py``.
+r"""One seed job: learning curve over n_train in {8,16,32,64}, all five architectures --
+CONSTANT-trained twin of ``run_arch_learning_curve_worker.py``.
 
-Beantwortet die Frage, ob das Anregungsexperiment (Spruenge/PRBS/Rampen ueber den Lauf)
-ueberhaupt noetig ist, oder ob Betriebsdaten (Stellgroessen je Lauf konstant, nur zwischen
-Laeufen unterschiedlich) genuegen -- am Anwendungspartner die Entscheidung zwischen "Modell
-aus vorhandenen Aufzeichnungen bauen" und "Anlagenversuch noetig".
+Answers the question whether the excitation experiment (steps/PRBS/ramps over the run)
+is needed at all, or whether operating data (actions constant per run, different only between
+runs) suffice -- at the application partner, the decision between "build the model
+from existing records" and "plant trial needed".
 
-Einzige inhaltliche Aenderung gegenueber ``run_arch_learning_curve_worker.py``:
-``DataSpec.constant_run_fraction=1.0`` im TRAININGSPOOL statt des dortigen Defaults 0.10 --
-Stellgroessen bleiben ueber die volle Laufdauer (28800 s) fest, nur die Stoergroessen
-bewegen sich; die Sollwerte selbst variieren weiterhin ZWISCHEN den 128 Pool-Laeufen (siehe
-Vorbehalt zu diesem Befund in ``docs/04_stand_ap1.md``: das ist der guenstige Fall fuer
-Betriebsdaten, nicht der ungewuenstigste -- ein realer Datensatz haette moeglicherweise auch
-zwischen Laeufen wenig Variation).
+The only substantive change compared with ``run_arch_learning_curve_worker.py``:
+``DataSpec.constant_run_fraction=1.0`` in the TRAINING POOL instead of the default 0.10 there --
+actions stay fixed over the full run duration (28800 s), only the disturbances
+move; the set points themselves still vary BETWEEN the 128 pool runs (see the
+caveat on this finding in ``docs/04_stand_ap1.md``: this is the favourable case for
+operating data, not the least favourable -- a real dataset might also have little variation
+between runs).
 
-Alles andere unveraendert -- Budgetpunkte, Seeds, Zielkanaele, Fenstergeometrie,
-Architekturen, Fingerprint-Pruefung, Exhaust-Rekonstruktion -- UND ausgewertet auf demselben
-Konstantlauf-Holdout (``HOLDOUT_SEED=999``) wie der angeregte Arm: gleiche Testmenge,
-verschiedene Trainingsart, damit ein Vergleich ueberhaupt aussagekraeftig ist.
+Everything else unchanged -- budget points, seeds, target channels, window geometry,
+architectures, fingerprint check, exhaust reconstruction -- AND evaluated on the same
+constant-run holdout (``HOLDOUT_SEED=999``) as the excited arm: same test set,
+different kind of training, so that a comparison is meaningful at all.
 
-``test_set``-Label der eigenen Pool-Testmenge heisst hier ``"own_pool"``, nicht ``"excited"``
-wie im Zwillingsskript -- der Pool, aus dem diese Testmenge stammt, ist hier ein
-Konstantlauf-Pool, ``"excited"`` waere irrefuehrend. ``data/train_constant_run_fraction``
-(LA1, ``docs/04_stand_ap1.md``) traegt in jedem Record dieses Skripts 1.0 -- explizit, nicht
-nur ueber das allgemeine ``data/constant_run_fraction``-Feld, das fuer beide ``test_set``-Werte
-desselben Records identisch bliebe.
+The ``test_set`` label of the own-pool test set is called ``"own_pool"`` here, not ``"excited"``
+as in the twin script -- the pool this test set comes from is a
+constant-run pool here, ``"excited"`` would be misleading. ``data/train_constant_run_fraction``
+(LA1, ``docs/04_stand_ap1.md``) carries 1.0 in every record of this script -- explicitly, not
+only via the general ``data/constant_run_fraction`` field, which would stay identical for both
+``test_set`` values of the same record.
 
-Checkpoints tragen den Praefix ``constant_trained_`` (``run_uid``), damit sie nicht
-dieselben Dateinamen wie die Checkpoints aus ``run_arch_learning_curve_worker.py`` im selben
-``--checkpoint-dir`` belegen.
+Checkpoints carry the prefix ``constant_trained_`` (``run_uid``), so that they do not
+occupy the same file names as the checkpoints from ``run_arch_learning_curve_worker.py`` in the
+same ``--checkpoint-dir``.
 
-Aufruf::
+Usage::
 
     python scripts/run_arch_constant_trained_learning_curve_worker.py --seed 1 \
         --output artifacts/runs/_constant_trained_learning_curve_work/_worker_seed1.jsonl
@@ -73,7 +73,7 @@ Trainingsarten (LA3) ist nur auf derselben Testmenge aussagekraeftig."""
 
 BUDGET_POINTS = (8, 16, 32, 64)
 SEEDS_DEFAULT = (1, 2, 3, 4, 5)
-HORIZON = 36  # 900 s bei sample_time_s=25.0, Befund 35
+HORIZON = 36  # 900 s at sample_time_s=25.0, Befund 35
 
 TARGET_NAMES: tuple[str, str, str] = (
     "energy_target",
@@ -91,8 +91,8 @@ ARCHITECTURE_LABELS = ("gru", "lstm")
 
 
 def _train_spec() -> DataSpec:
-    """Trainingspool: identisch zu ``run_arch_learning_curve_worker._excited_spec()``, bis
-    auf ``constant_run_fraction=1.0`` -- der gesamte Pool besteht aus Konstantlaeufen."""
+    """Training pool: identical to ``run_arch_learning_curve_worker._excited_spec()``, except
+    for ``constant_run_fraction=1.0`` -- the entire pool consists of constant runs."""
     return DataSpec(
         sample_time_s=25.0,
         run_duration_s=28_800.0,
@@ -108,13 +108,13 @@ def _train_spec() -> DataSpec:
 
 
 def _holdout_spec(train: DataSpec) -> DataSpec:
-    """Konstantlauf-Pool, ``n_test`` an die Standard-Testmenge angeglichen.
+    """Constant-run pool, ``n_test`` matched to the standard test set.
 
-    ``constant_run_fraction=1.0`` ist hier bereits der Wert aus ``train`` selbst (anders als
-    im angeregten Zwillingsskript, wo dieselbe Zeile 0.10 auf 1.0 umstellt) -- die
-    ``dataclasses.replace``-Zeile bleibt trotzdem explizit stehen, dieselbe Struktur wie dort,
-    damit ein Diff zwischen beiden Skripten nur die tatsaechliche Abweichung zeigt
-    (``_train_spec``), nicht zusaetzlich eine strukturelle.
+    ``constant_run_fraction=1.0`` is already the value from ``train`` itself here (unlike
+    in the excited twin script, where the same line switches 0.10 to 1.0) -- the
+    ``dataclasses.replace`` line nevertheless stays explicit, the same structure as there,
+    so that a diff between the two scripts shows only the actual deviation
+    (``_train_spec``), not an additional structural one.
     """
     return dataclasses.replace(
         train, n_train_max=2, n_val=2, n_test=train.n_test, constant_run_fraction=1.0
@@ -128,7 +128,7 @@ def _architecture_factory(label: str) -> Callable[[], CompositeSequenceModel]:
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--config", type=Path, default=CONFIG_PATH)
@@ -142,7 +142,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Ein Seed: Pool einmal erzeugen, alle Budgetpunkte x alle Architekturen durchlaufen."""
+    """One seed: generate the pool once, run through all budget points x all architectures."""
     arguments = parse_arguments()
 
     import torch
@@ -210,12 +210,13 @@ def main() -> None:
             )
             params: dict[str, object] = {
                 **train_spec.as_parameters(),
-                # data/train_constant_run_fraction wiederholt data/constant_run_fraction (aus
-                # derselben train_spec) bewusst redundant -- NICHT als ueberfluessig entfernen.
-                # data/constant_run_fraction ist ein generisches Spec-Attribut und bleibt fuer
-                # JEDEN test_set-Wert in diesem Record identisch; data/train_constant_run_fraction
-                # ist die explizite, eindeutig benannte Aussage "so trainiert" (hier: 1.0) --
-                # siehe Befund-Eintrag zu diesem Feld in docs/04_stand_ap1.md.
+                # data/train_constant_run_fraction repeats data/constant_run_fraction (from
+                # the same train_spec) deliberately redundantly -- do NOT remove as superfluous.
+                # data/constant_run_fraction is a generic spec attribute and stays
+                # identical for EVERY test_set value in this record;
+                # data/train_constant_run_fraction is the explicit, unambiguously named
+                # statement "trained like this" (here: 1.0) -- see the finding entry on this
+                # field in docs/04_stand_ap1.md.
                 "data/train_constant_run_fraction": train_spec.constant_run_fraction,
                 "process/fingerprint": train_data.process_config.fingerprint,
                 "excitation/fingerprint": train_data.schedule.metadata.get(

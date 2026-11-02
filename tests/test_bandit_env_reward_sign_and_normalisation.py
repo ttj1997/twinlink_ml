@@ -1,24 +1,24 @@
-r"""AB1/AB2: zwei Pfade, die VA2 NICHT geprueft hat.
+r"""AB1/AB2: two paths that VA2 did NOT check.
 
-VA2 hat nur zulaessige Orakelaktionen eingespeist (immer physikalisch, nie durch die
-Normierung). Zwei Fragen blieben offen, ausgeloest durch den Befund, dass der Agent bei
-der Zulaessigkeit UNTER dem Zufallsniveau liegt (YA1) -- eine Erklaerung ("strafdominierter
-Gradient", YA2) haette einen Agenten erwarten lassen, der die Strafe als staerkstes Signal
-zuerst vermeidet, also UEBER Zufall bei der Zulaessigkeit liegt. Das passt nicht zusammen,
-also: ist ein Pfad kaputt, den VA2 nicht abdeckt?
+VA2 fed in only feasible oracle actions (always physical, never through the
+normalisation). Two questions remained open, triggered by the finding that the agent lies
+BELOW the random level in feasibility (YA1) -- one explanation ("penalty-dominated
+gradient", YA2) would have suggested an agent that avoids the penalty first as the strongest
+signal, i.e. lies ABOVE random in feasibility. That does not fit together,
+so: is a path broken that VA2 does not cover?
 
-AB1 -- Vorzeichen der Strafe: eine bekannt unzulaessige Aktion muss eine DEUTLICH
-negativere Belohnung ergeben als eine bekannt zulaessige Aktion am selben Kontext.
+AB1 -- sign of the penalty: a known infeasible action must yield a CLEARLY
+more negative reward than a known feasible action in the same context.
 
-AB2 -- der normierte Aktionspfad ``[-1, 1] -> physikalisch``, ueber den ein Agent
-tatsaechlich handelt (VA2 hat physikalische Aktionen direkt eingespeist, nie durch die
-Normierung). Drei Pruefungen: Orakelaktionen durch den normierten Pfad -> bitgleich zu VA2;
-die vier Ecken -> plausible physikalische Extremwerte, insbesondere ``[1, 1]`` bei
-maximaler Zulufttemperatur UND maximaler Gasgeschwindigkeit (der "heissen Ecke").
+AB2 -- the normalised action path ``[-1, 1] -> physical``, through which an agent
+actually acts (VA2 fed in physical actions directly, never through the
+normalisation). Three checks: oracle actions through the normalised path -> bit-identical
+to VA2; the four corners -> plausible physical extreme values, in particular ``[1, 1]`` at
+maximum inlet air temperature AND maximum gas velocity (the "hot corner").
 
-Befund (siehe Auftragstext/Befund-Entwurf): beide Pruefungen finden HIER keinen Fehler --
-Vorzeichen und Normierung sind korrekt. Die Erklaerung fuer "unter Zufall" liegt woanders
-(AB3: Politikkollaps auf die heisse Ecke, siehe ``scripts/probe_bandit_env_policy_
+Finding (see task text/draft finding): neither check finds an error HERE --
+sign and normalisation are correct. The explanation for "below random" lies elsewhere
+(AB3: policy collapse onto the hot corner, see ``scripts/probe_bandit_env_policy_
 inspection.py``).
 """
 
@@ -58,11 +58,11 @@ def env() -> OperatingPointBanditEnv:
 def test_infeasible_action_reward_is_much_more_negative_than_feasible(
     env: OperatingPointBanditEnv,
 ) -> None:
-    """AB1: bekannt unzulaessige gegen bekannt zulaessige Aktion, gleicher Kontext.
+    """AB1: known infeasible against known feasible action, same context.
 
-    Unzulaessig: XA3s Beispiel (Zulufttemperatur 108.8 °C, Gasgeschwindigkeit 2.352 m/s,
-    Nominalstoergroesse) -- Bettemperatur 86.97 °C, 6.97 K ueber der Grenze. Zulaessig:
-    die nominelle Aktion (90 °C, 1.6 m/s) am selben Kontext.
+    Infeasible: XA3's example (inlet air temperature 108.8 °C, gas velocity 2.352 m/s,
+    nominal disturbance) -- bed temperature 86.97 °C, 6.97 K above the limit. Feasible:
+    the nominal action (90 °C, 1.6 m/s) in the same context.
     """
     reward_infeasible, info_infeasible = env.evaluate_operating_point(
         inlet_temperature_celsius=108.8,
@@ -79,11 +79,11 @@ def test_infeasible_action_reward_is_much_more_negative_than_feasible(
     assert not info_infeasible["feasible"]
     assert info_feasible["feasible"]
 
-    # Deutlich negativer, nicht nur numerisch kleiner -- Groessenordnungspruefung, nicht
-    # nur eine Vorzeichenpruefung.
+    # Clearly more negative, not only numerically smaller -- an order-of-magnitude check,
+    # not only a sign check.
     assert reward_feasible - reward_infeasible > 10.0
 
-    # Zerlegung: Belohnung = -(Energie + Strafe) -- Strafe muss positiv und dominant sein.
+    # Decomposition: reward = -(energy + penalty) -- the penalty must be positive and dominant.
     penalty_infeasible = -reward_infeasible - info_infeasible["energy_target"]
     assert penalty_infeasible > 0.0
     assert penalty_infeasible == pytest.approx(34.85, abs=0.01)
@@ -96,10 +96,10 @@ def test_infeasible_action_reward_is_much_more_negative_than_feasible(
 def test_action_space_corners_map_to_expected_physical_extremes(
     env: OperatingPointBanditEnv,
 ) -> None:
-    """AB2: die vier Ecken von ``[-1, 1]^2`` muessen plausible Extreme ergeben.
+    """AB2: the four corners of ``[-1, 1]^2`` must yield plausible extremes.
 
-    ``[1, 1]`` muss die "heisse Ecke" sein (maximale Zulufttemperatur UND maximale
-    Gasgeschwindigkeit), nicht irgendeine vertauschte Kombination.
+    ``[1, 1]`` must be the "hot corner" (maximum inlet air temperature AND maximum
+    gas velocity), not some swapped combination.
     """
     env.reset(options={"ambient_temperature_celsius": 20.0, "ambient_relative_humidity": 0.5})
     _, _, _, _, info_hot = env.step(np.array([1.0, 1.0], dtype=np.float64))
@@ -141,10 +141,10 @@ def test_action_space_corners_map_to_expected_physical_extremes(
 def test_oracle_actions_through_normalised_step_path_reproduce_va2(
     env: OperatingPointBanditEnv, anchor: dict[str, Any]
 ) -> None:
-    """AB2: dieselben 25 Orakelaktionen wie VA2, aber DURCH den normierten Pfad.
+    """AB2: the same 25 oracle actions as VA2, but THROUGH the normalised path.
 
-    VA2 selbst ruft ``evaluate_operating_point`` mit physikalischen Werten direkt auf, nie
-    durch ``_normalise``/``_denormalise`` -- hier ueber ``step()``, muss bitgleich bleiben.
+    VA2 itself calls ``evaluate_operating_point`` with physical values directly, never
+    through ``_normalise``/``_denormalise`` -- here via ``step()``, must stay bit-identical.
     """
     for point in anchor["grid_results"]:
         env.reset(

@@ -1,13 +1,13 @@
-r"""BB2/CB2: Vergleich -- Zufall (YA1) neben XA3, BB2 (zentriert), CB2 (gamma=0).
+r"""BB2/CB2: comparison -- random (YA1) next to XA3, BB2 (centred), CB2 (gamma=0).
 
-Reine Auswertung, kein Training -- liest die bereits geschriebenen Artefakte
+Pure evaluation, no training -- reads the already written artifacts
 (``rl_bandit_random_baseline.jsonl``, ``rl_bandit_sac_learning_curve_xa3.jsonl``,
 ``rl_bandit_sac_learning_curve_bb2_centered.jsonl``,
-``rl_bandit_sac_learning_curve_cb2_gamma0.jsonl``) und druckt (a) Zulaessigkeit und
-(b) gepoolten Anteil geschlossenen Regrets nebeneinander, je Checkpoint. Fehlende Artefakte
-werden uebersprungen (kein Fehler), damit dasselbe Skript vor UND nach CB2 laeuft.
+``rl_bandit_sac_learning_curve_cb2_gamma0.jsonl``) and prints (a) feasibility and
+(b) the pooled closed-regret fraction side by side, per checkpoint. Missing artifacts
+are skipped (no error), so that the same script runs before AND after CB2.
 
-Aufruf::
+Usage::
 
     python scripts/compare_bandit_env_reward_centering.py
 """

@@ -1,30 +1,31 @@
-r"""VA4: Rauchtest der RL-Bandit-Pipeline -- KEIN volles Training.
+r"""VA4: smoke test of the RL bandit pipeline -- NO full training.
 
-Der Hauptlauf des Projekts belegt die Kerne (siehe Auftrag) -- hier wird nur geprueft,
-dass die Kette (``OperatingPointBanditEnv`` -> SB3-Algorithmus -> VA3-Metrik) steht, mit
-sehr kleinem Budget und einem Seed. OB der Agent im Rauchtest schon etwas lernt, ist NICHT
-die Frage (siehe Auftrag) -- die Frage ist, was ein ernsthaftes Training (Groessenordnung
-10^4-10^5 Schritte) kosten wuerde und ob ``solve_steady_state`` dafuer als Uebergang reicht.
+The project's main run provides the evidence for the cores (see the task) -- here it is
+only checked that the chain (``OperatingPointBanditEnv`` -> SB3 algorithm -> VA3 metric)
+works, with a very small budget and one seed. WHETHER the agent already learns something in
+the smoke test is NOT the question (see the task) -- the question is what a serious training
+(order of magnitude 10^4-10^5 steps) would cost and whether ``solve_steady_state`` suffices
+as an interim solution for it.
 
-Drei Messungen:
+Three measurements:
 
-1. Reine Umgebungsschrittkosten (``env.step()``, ohne SB3-Overhead), Hochrechnung auf
-   10^4/10^5 Schritte.
-2. Disjunktheit der gezogenen Trainingspunkte von den 25 VA3-Testpunkten (Laufzeitpruefung,
-   siehe ``twinlink_ml.rl.evaluation.assert_disjoint_from_test_grid``).
-3. Ein winziger SAC- oder TD3-Lauf (Standard: SAC) ueber ``stable_baselines3`` --
-   ``total_timesteps`` per ``--total-timesteps`` (Default 64), EIN Seed. Die VA3-Metrik
-   wird am Ende einmal berechnet, um die Pipeline zu pruefen -- NICHT als Trainingsergebnis
-   (siehe Auftrag).
+1. Pure environment step cost (``env.step()``, without SB3 overhead), extrapolated to
+   10^4/10^5 steps.
+2. Disjointness of the drawn training points from the 25 VA3 test points (runtime check,
+   see ``twinlink_ml.rl.evaluation.assert_disjoint_from_test_grid``).
+3. A tiny SAC or TD3 run (default: SAC) via ``stable_baselines3`` --
+   ``total_timesteps`` via ``--total-timesteps`` (default 64), ONE seed. The VA3 metric
+   is computed once at the end to check the pipeline -- NOT as a training result
+   (see the task).
 
-Aufruf::
+Usage::
 
     python scripts/probe_bandit_env_sac_smoke.py \
         --output artifacts/runs/probe_bandit_env_sac_smoke.json
 
-Threading: MKL_NUM_THREADS=1/OMP_NUM_THREADS=1 als Prozessvariablen setzen, bevor dieses
-Skript laeuft (siehe ``environment_fingerprint``s ``env/mkl_num_threads``/``env/omp_num_
-threads`` -- Befund zur Faktor-5-Streuung durch Thread-/Prozess-Ueberzeichnung, ``docs/
+Threading: set MKL_NUM_THREADS=1/OMP_NUM_THREADS=1 as process variables before this
+script runs (see ``environment_fingerprint``'s ``env/mkl_num_threads``/``env/omp_num_
+threads`` -- finding on the factor-5 spread due to thread/process oversubscription, ``docs/
 04_stand_ap1.md``).
 """
 
@@ -58,9 +59,9 @@ def _suppress_placeholder_warning() -> None:
 
 
 def measure_env_step_cost(n_steps: int, *, seed: int) -> dict[str, Any]:
-    """Reine ``env.step()``-Kosten, ohne SB3-Overhead -- getrennter Datenpunkt von der
-    SB3-Trainingsmessung unten, damit Umgebungs- und Algorithmus-Overhead unterscheidbar
-    bleiben.
+    """Pure ``env.step()`` cost, without SB3 overhead -- a data point separate from the
+    SB3 training measurement below, so that environment and algorithm overhead remain
+    distinguishable.
     """
     env = OperatingPointBanditEnv()
     env.reset(seed=seed)
@@ -85,8 +86,8 @@ def measure_env_step_cost(n_steps: int, *, seed: int) -> dict[str, Any]:
 
 
 def check_training_disjointness(n_draws: int, *, seed: int) -> dict[str, Any]:
-    """VA3: belegt, dass ``reset()``-Ziehungen die 25 Testpunkte nicht treffen (siehe
-    ``assert_disjoint_from_test_grid``-Docstring fuer die Mass-Null-Begruendung).
+    """VA3: shows that ``reset()`` draws do not hit the 25 test points (see the
+    ``assert_disjoint_from_test_grid`` docstring for the measure-zero rationale).
     """
     env = OperatingPointBanditEnv()
     draws = []
@@ -132,8 +133,9 @@ def run_smoke_training(
 
 
 def evaluate_smoke_policy(model: Any) -> dict[str, Any]:
-    """VA3-Metrik einmalig berechnet -- Pipeline-Pruefung, KEIN Trainingsergebnis (siehe
-    Auftrag VA4: "Ob der Agent im Rauchtest schon etwas lernt, ist NICHT die Frage").
+    """VA3 metric computed once -- pipeline check, NOT a training result (see
+    task VA4: "Whether the agent already learns something in the smoke test is NOT the
+    question").
     """
 
     def policy(observation: np.ndarray) -> np.ndarray:

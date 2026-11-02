@@ -1,27 +1,27 @@
-r"""Einmalige Probe fuer den Auftrag "zwei Zahlen beschaffen" (A2, A3).
+r"""One-off probe for the task "obtain two numbers" (A2, A3).
 
-KEIN Netztraining. Ruft nur bestehenden Code auf:
-``simulation.diagnostics.static_explained_variance`` (unveraendert, siehe dort) und
-``simulation.diagnostics.time_constant_report`` (unveraendert, ruft
-``GreyBoxFluidBedGranulator.time_constants``, greybox.py:662-680, auf).
+NO network training. Only calls existing code:
+``simulation.diagnostics.static_explained_variance`` (unchanged, see there) and
+``simulation.diagnostics.time_constant_report`` (unchanged, calls
+``GreyBoxFluidBedGranulator.time_constants``, greybox.py:662-680).
 
-A2, Schritt 1: der Code, der die Tabelle in ``02_prozess_setup.md:189-194`` erzeugt hat,
-ist ``scripts/report_baselines.py`` (CONFIG_PATH=greybox_placeholder.yaml, n_runs=32,
-sample_time=25s, run_duration=28800s, Standard-``ExcitationConfig``, Standard-Seed
-20260812). Dieses Skript uebernimmt exakt dieselbe Anregung/Config-Ladung, ergaenzt nur
-eine Schleife ueber 3 Seeds und einen expliziten Schalter fuer
-``ExcitationConfig.randomise_initial_conditions`` (Feld existiert bereits,
-excitation.py:140), um "mit"/"ohne Streuung der Anfangszustaende" beide Zweige der
-Doku-Tabelle zu treffen -- report_baselines.py ruft nur den Default (True) auf.
+A2, step 1: the code that produced the table in ``02_prozess_setup.md:189-194``
+is ``scripts/report_baselines.py`` (CONFIG_PATH=greybox_placeholder.yaml, n_runs=32,
+sample_time=25s, run_duration=28800s, default ``ExcitationConfig``, default seed
+20260812). This script takes over exactly the same excitation/config loading, adding only
+a loop over 3 seeds and an explicit switch for
+``ExcitationConfig.randomise_initial_conditions`` (field already exists,
+excitation.py:140), in order to hit both branches "with"/"without spread of the initial
+states" of the documentation table -- report_baselines.py only calls the default (True).
 
-A2, Schritt 3: zweite Konfiguration ist ``conf/process/greybox_gab_placeholder.yaml``
-(GAB-Sorptionsisotherme statt ``ConstantIsotherm``, siehe Dateikopf und Befund 34) --
-verifiziert durch Lesen aller drei vorhandenen ``conf/process/*.yaml``.
+A2, step 3: the second configuration is ``conf/process/greybox_gab_placeholder.yaml``
+(GAB sorption isotherm instead of ``ConstantIsotherm``, see the file header and Befund 34) --
+verified by reading all three existing ``conf/process/*.yaml``.
 
-A3: ruft ``time_constant_report`` fuer beide Konfigurationen am exakten Beharrungszustand
-auf (kein Bezug zu den Seeds/der Anregung oben) und stellt die Eigenwert-Zeitkonstanten der
-geschlossenen Form tau_T = C / (m_L*c_pL + UA), C = m_s*c_ps + m_w*c_pw, am selben Punkt
-gegenueber. Nur Auswertung vorhandener Funktionen, ``greybox.py`` bleibt unveraendert.
+A3: calls ``time_constant_report`` for both configurations at the exact steady state
+(no relation to the seeds/the excitation above) and compares the eigenvalue time constants
+with the closed form tau_T = C / (m_L*c_pL + UA), C = m_s*c_ps + m_w*c_pw, at the same
+point. Only evaluation of existing functions, ``greybox.py`` stays unchanged.
 """
 
 from __future__ import annotations
@@ -50,7 +50,7 @@ CONFIG_GAB = REPO_ROOT / "conf" / "process" / "greybox_gab_placeholder.yaml"
 N_RUNS = 32
 SAMPLE_TIME_S = 25.0
 RUN_DURATION_S = 28_800.0
-MASTER_SEEDS = (20260812, 20260813, 20260814)  # erster Wert = Default aus report_baselines.py
+MASTER_SEEDS = (20260812, 20260813, 20260814)  # first value = default from report_baselines.py
 
 
 def _load(config_path: Path) -> GreyBoxFluidBedGranulator:

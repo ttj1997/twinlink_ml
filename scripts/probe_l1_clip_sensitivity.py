@@ -1,47 +1,47 @@
-r"""L1: haengt der Feuchte-Befund (48) an der Klippung von ``max_driving_humidity_kg_per_kg``.
+r"""L1: does the moisture finding (48) depend on the clipping of ``max_driving_humidity_kg_per_kg``.
 
-KEIN Netztraining -- reine OLS-Regression (``np.linalg.lstsq``), dieselbe Merkmalslogik
-wie ``scripts/probe_e2_e3_e4_lag_depth.py`` (E3, FIR, k in {1, 8, 43}, punktweise
-Maskierung nach denselben Kriterien wie Befund 46/D2/F1). KEINE Aenderung an ``src/``.
+NO network training -- pure OLS regression (``np.linalg.lstsq``), the same feature logic
+as ``scripts/probe_e2_e3_e4_lag_depth.py`` (E3, FIR, k in {1, 8, 43}, point-wise
+masking by the same criteria as Befund 46/D2/F1). NO change to ``src/``.
 
-Hintergrund: Befund 48 zeigt fuer ``product_moisture_kg_per_kg`` bei k=43 einen grossen
-R2_holdout-Sprung durch Maskierung der Verletzungspunkte (0.354 -> 0.785, Vorbehalt:
-Vergleich ueber zwei Stichproben). ``max_driving_humidity_kg_per_kg`` (Default 0.50
-kg/kg, Config ``material``, siehe Befund 46) begrenzt die Verdampfungsrate
+Background: Befund 48 shows for ``product_moisture_kg_per_kg`` at k=43 a large
+R2_holdout jump through masking of the violation points (0.354 -> 0.785, caveat:
+comparison across two samples). ``max_driving_humidity_kg_per_kg`` (default 0.50
+kg/kg, config ``material``, see Befund 46) limits the evaporation rate
 (``thermo.evaporation_rate_kg_per_s``, ``y_effective = min(y_saturation, max_driving_
-humidity)``) und ist an keiner Stelle validiert. Offene Frage: ist der R2-Sprung ein
-Artefakt genau dieser Klippung, oder bleibt er bestehen, wenn die Klippung kaum noch
-bindet?
+humidity)``) and is validated nowhere. Open question: is the R2 jump an
+artifact of exactly this clipping, or does it persist when the clipping hardly
+binds any more?
 
-Vorgehen: derselbe Datensatz/derselbe Maskierungs-Code wie E3, aber ``material.
-max_driving_humidity_kg_per_kg`` in {0.50, 1.00, 5.00} variiert (0.50 = aktueller
-Default, 5.00 = praktisch nie bindend, Y_sat(T) < 5.0 kg/kg im gesamten erreichbaren
-Bereich). Zusaetzlich pro Konfiguration:
+Procedure: the same data set/the same masking code as E3, but ``material.
+max_driving_humidity_kg_per_kg`` varied in {0.50, 1.00, 5.00} (0.50 = current
+default, 5.00 = practically never binding, Y_sat(T) < 5.0 kg/kg in the entire reachable
+range). In addition, per configuration:
 
-* Klippungsanteil: Anteil der Rohtrajektorien-Punkte (3 Trainingspool-Seeds + Holdout,
-  vor der FIR-Fensterung) mit ``Y_sat(T_bed) > max_driving_humidity`` -- die Bedingung,
-  unter der ``evaporation_rate_kg_per_s`` tatsaechlich am Minimum-Knick liegt.
-* Anteil ``bed_temperature_celsius > 78.8`` C -- fester physikalischer Schwellwert
-  (Y_sat(78.8 C) ~= 0.50 kg/kg bei 101325 Pa, siehe ``thermo.saturation_humidity_kg_
-  per_kg``), unabhaengig vom Config-Parameter. Deckt sich bei 0.50 kg/kg naeherungsweise
-  mit dem Klippungsanteil (dieselbe Grenze), faellt aber bei 1.00/5.00 kg/kg von der
-  Klippungsschwelle ab, waehrend der Anteil der Punkte oberhalb 78.8 C selbst nahezu
-  konstant bleibt (der Schwellwert ist eine Eigenschaft der Anregung/Dynamik, keine
-  Funktion des Klippungsparameters).
-* R2_holdout je Zielkanal (``energy_target``, ``bed_temperature_celsius``,
-  ``product_moisture_kg_per_kg``, ``d50_um``) bei k in {1, 8, 43}, maskiert und
-  unmaskiert (Median ueber 3 Seeds), sowie Var(y) und Residuenvarianz am Holdout in
-  physikalischen Einheiten -- fuer den Default-Fall 0.50 gegen Befund 47/48 pruefbar.
+* Clipping fraction: fraction of the raw trajectory points (3 training-pool seeds + holdout,
+  before the FIR windowing) with ``Y_sat(T_bed) > max_driving_humidity`` -- the condition
+  under which ``evaporation_rate_kg_per_s`` actually sits at the kink of the minimum.
+* Fraction ``bed_temperature_celsius > 78.8`` C -- fixed physical threshold
+  (Y_sat(78.8 C) ~= 0.50 kg/kg at 101325 Pa, see ``thermo.saturation_humidity_kg_
+  per_kg``), independent of the config parameter. Coincides approximately with the clipping
+  fraction at 0.50 kg/kg (the same boundary), but drops away from the clipping threshold
+  at 1.00/5.00 kg/kg, while the fraction of points above 78.8 C itself stays nearly
+  constant (the threshold is a property of the excitation/dynamics, not a
+  function of the clipping parameter).
+* R2_holdout per target channel (``energy_target``, ``bed_temperature_celsius``,
+  ``product_moisture_kg_per_kg``, ``d50_um``) at k in {1, 8, 43}, masked and
+  unmasked (median over 3 seeds), as well as Var(y) and residual variance on the holdout in
+  physical units -- checkable against Befund 47/48 for the default case 0.50.
 
-AB2/AC1-Erweiterung (docs/04_stand_ap1.md, Befund 47/50): urspruenglich nur
-``product_moisture_kg_per_kg`` (Befund 48). Split-Mechanik, Merkmalssatz
-(``_fir_design``) und Punktauswahl (``_violation_mask``) UNVERAENDERT -- die
-FIR-Entwurfsmatrix haengt nur von den Stellgroessen/Stoergroessen ab, nicht vom
-Zielkanal, wird deshalb je ``k``/Konfiguration/Maskierungsstufe EINMAL gebaut und ueber
-alle vier Kanaele wiederverwendet (kein zweiter Rueckrechnungs-Durchlauf, nur eine
-zusaetzliche ``lstsq``/Auswertung je Kanal). Die ``product_moisture_kg_per_kg``-Zahlen
-muessen deshalb bitgleich zum vorherigen, committeten Stand bleiben -- das ist eine
-eingebaute Gegenprobe der Erweiterung selbst, nicht nur eine Erwartung.
+AB2/AC1 extension (docs/04_stand_ap1.md, Befund 47/50): originally only
+``product_moisture_kg_per_kg`` (Befund 48). Split mechanics, feature set
+(``_fir_design``) and point selection (``_violation_mask``) UNCHANGED -- the
+FIR design matrix depends only on the actions/disturbances, not on the
+target channel, and is therefore built ONCE per ``k``/configuration/masking level and
+reused across all four channels (no second recomputation pass, only one
+additional ``lstsq``/evaluation per channel). The ``product_moisture_kg_per_kg`` numbers
+must therefore stay bit-identical to the previous, committed state -- this is a
+built-in cross-check of the extension itself, not just an expectation.
 """
 
 from __future__ import annotations
@@ -94,12 +94,12 @@ def _holdout_spec(excited: DataSpec) -> DataSpec:
 
 
 def _violation_mask(trajectory: Trajectory, material: MaterialConfig) -> np.ndarray:
-    """Punktweise Verletzungsmaske (d50-Basis, Kriterien wie D2/F1/Befund 46).
+    """Pointwise violation mask (d50 basis, criteria as in D2/F1/Befund 46).
 
-    Form ``(n_runs, n_steps)``. Unveraendert gegenueber
-    ``probe_e2_e3_e4_lag_depth.py`` -- haengt nicht an
-    ``max_driving_humidity_kg_per_kg``, damit die Maskierung ueber alle drei
-    Konfigurationen dieses Skripts vergleichbar bleibt.
+    Shape ``(n_runs, n_steps)``. Unchanged compared with
+    ``probe_e2_e3_e4_lag_depth.py`` -- does not depend on
+    ``max_driving_humidity_kg_per_kg``, so that the masking stays comparable across all three
+    configurations of this script.
     """
     diagnostics = trajectory.diagnostics
     output_names = trajectory.metadata["output_names"]
@@ -115,7 +115,7 @@ def _violation_mask(trajectory: Trajectory, material: MaterialConfig) -> np.ndar
 def _fir_design(
     actions: np.ndarray, k: int, *, point_mask: np.ndarray | None = None
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """FIR-Merkmalsmatrix, unveraendert gegenueber ``probe_e2_e3_e4_lag_depth.py``."""
+    """FIR feature matrix, unchanged compared with ``probe_e2_e3_e4_lag_depth.py``."""
     n_runs, n_steps, _n_actions = actions.shape
     run_idx_list = []
     t_idx_list = []
@@ -165,12 +165,12 @@ def _load_config(max_driving_humidity: float) -> ProcessConfig:
 def _clip_and_threshold_fractions(
     slices: list[tuple[np.ndarray, np.ndarray]], *, max_driving_humidity: float
 ) -> tuple[float, float]:
-    """Klippungsanteil und Anteil ``bed_temperature_celsius`` > Schwelle, ueber alle Punkte.
+    """Clipping share and share of ``bed_temperature_celsius`` > threshold, over all points.
 
-    ``slices`` sind ``(y_saturation, bed_temperature_celsius)``-Arrays, bereits auf
-    genau die Punkte geschnitten, die auch in die FIR-Regression eingehen (Holdout-
-    Testblock ``[4:36]``, Trainingspool-Bloecke ``[:64]``) -- nicht der volle erzeugte
-    Pool (der bei ``excited_spec`` auch ungenutzte val/test-Laeufe enthaelt).
+    ``slices`` are ``(y_saturation, bed_temperature_celsius)`` arrays, already cut to
+    exactly the points that also enter the FIR regression (holdout
+    test block ``[4:36]``, training pool blocks ``[:64]``) -- not the full generated
+    pool (which with ``excited_spec`` also contains unused val/test runs).
     """
     clip_hits = 0
     threshold_hits = 0
@@ -228,10 +228,10 @@ def run_for_max_driving_humidity(max_driving_humidity: float) -> dict:
         slices, max_driving_humidity=max_driving_humidity
     )
 
-    # Je Kanal (Ergebnis) eine eigene Liste -- die Entwurfsmatrizen unten sind
-    # kanalunabhaengig (haengen nur von Stell-/Stoergroessen ab) und werden je
-    # k/Seed/Maskierungsstufe genau EINMAL gebaut, dann ueber alle vier Kanaele
-    # wiederverwendet (Moduldocstring, AB2/AC1-Erweiterung).
+    # A separate list per channel (result) -- the design matrices below are
+    # channel-independent (depend only on actions/disturbances) and are built exactly ONCE
+    # per k/seed/masking level, then reused across all four channels
+    # (module docstring, AB2/AC1 extension).
     unmasked_by_channel: dict[str, list[dict[str, float]]] = {c: [] for c in TARGET_CHANNELS}
     masked_by_channel: dict[str, list[dict[str, float]]] = {c: [] for c in TARGET_CHANNELS}
     for k in K_VALUES_E3:

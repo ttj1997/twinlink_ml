@@ -1,51 +1,51 @@
-r"""Extra Trees -- methodische Reproduktion von Kräuter, Zhou & Heinrich (ABS23).
+r"""Extra Trees -- methodological reproduction of Kräuter, Zhou & Heinrich (ABS23).
 
-**Kein Kandidat des Architekturvergleichs.** Dieses Modell steht bewusst nicht in
-``models/registry.py``/``MODEL_SLOTS`` -- es dient ausschließlich dazu, den
-Splitvergleich aus ``docs/04_stand_ap1.md`` (Abschnitt "Was das Paper des Vorgängers
-ändert") auf demselben Datensatz zu messen: fenster-/punktweiser Split (Kräuters
-Methodik, siehe :mod:`twinlink_ml.data.point_split`) gegen laufweisen Split (Standard
-dieses Projekts). Der Abstand zwischen beiden Zahlen ist das Ergebnis, nicht eine
-Extra-Trees-Genauigkeit für sich genommen. Siehe ``scripts/run_extra_trees_split_comparison.py``.
+**Not a candidate of the architecture comparison.** This model is deliberately not in
+``models/registry.py``/``MODEL_SLOTS`` -- it serves exclusively to measure the
+split comparison from ``docs/04_stand_ap1.md`` (section "Was das Paper des Vorgängers
+ändert") on the same dataset: window-/point-level split (Kräuter's
+methodology, see :mod:`twinlink_ml.data.point_split`) against run-level split (the standard
+of this project). The gap between the two numbers is the result, not an
+Extra Trees accuracy taken on its own. See ``scripts/run_extra_trees_split_comparison.py``.
 
-Was übernommen wird
---------------------
-* :class:`sklearn.ensemble.ExtraTreesRegressor`, **ein** Regressor für alle Zielgrößen
-  (native Multi-Output-Unterstützung von Baumregressoren -- kein
-  ``MultiOutputRegressor``-Wrapper nötig).
-* Merkmale: aktueller Wert sowie erste und zweite Differenz über :math:`t, t{-}1, t{-}2`
-  (numerische Differenzen, kein Δt-normierter Schätzer) -- **kein** langes Fenster wie bei
-  GRU/LSTM/xLSTM/Transformer/Mamba. Kanäle: alle über die Historie beobachtbaren Größen,
-  also Stell- und Störgrößen (``exogenous_names``) **und** inline gemessene Zielgrößen
-  (``observed_target_names``) -- analog zur Selbstrückführung in
-  :class:`~twinlink_ml.models.baselines.LinearARXModel` und
-  :class:`~twinlink_ml.models.narx.RandomFeatureNARX`. Nicht beobachtete Zielgrößenkanäle
-  (Soft-Sensor-Fall) bleiben ausgeschlossen: sie stehen in der Historie konstant auf dem
-  Trainingsmittelwert, eine Ableitung davon wäre eine Ableitung von Rauschen um eine
-  Konstante.
-* Ein-Schritt-Vorhersage (:math:`h = 1`), keine Mehrschritt-Rollout-Bewertung -- die
-  Fensterkonfiguration für diesen Vergleich muss ``horizon=1`` setzen
-  (:meth:`ExtraTreesModel.fit` prüft das).
+What is adopted
+---------------
+* :class:`sklearn.ensemble.ExtraTreesRegressor`, **one** regressor for all targets
+  (native multi-output support of tree regressors -- no
+  ``MultiOutputRegressor`` wrapper needed).
+* Features: current value as well as first and second difference over :math:`t, t{-}1, t{-}2`
+  (numerical differences, not a Δt-normalised estimator) -- **no** long window as with
+  GRU/LSTM/xLSTM/Transformer/Mamba. Channels: all quantities observable via the history,
+  i.e. actions and disturbances (``exogenous_names``) **and** inline-measured targets
+  (``observed_target_names``) -- analogous to the self-feedback in
+  :class:`~twinlink_ml.models.baselines.LinearARXModel` and
+  :class:`~twinlink_ml.models.narx.RandomFeatureNARX`. Unobserved target channels
+  (soft sensor case) remain excluded: they sit constantly at the training mean in the
+  history; a derivative of that would be a derivative of noise around a
+  constant.
+* One-step prediction (:math:`h = 1`), no multi-step rollout evaluation -- the
+  window configuration for this comparison must set ``horizon=1``
+  (:meth:`ExtraTreesModel.fit` checks this).
 
-Was bewusst NICHT übernommen wird
-----------------------------------
-* **Keine PCA.** Kräuters 12 Hauptkomponenten waren die Antwort auf 74 Rohmerkmale; der
-  hiesige Merkmalsraum (Kanäle × 3) ist von vornherein klein, eine Dimensionsreduktion
-  hätte hier keine Entsprechung.
-* **Keine zentrierte Savitzky-Golay-Glättung der Zielgröße** -- nicht kausal, in einer
-  Simulation ohne eigene Sensorrauschen-Pipeline (siehe
-  :meth:`~twinlink_ml.simulation.greybox.GreyBoxFluidBedGranulator.measure`, rein
-  kausales PT1-Verzögerungsglied plus additives Rauschen) nicht sinnvoll übertragbar.
-* **Keine Ausreißerentfernung** -- kein Sensorartefakt in der Simulation.
+What is deliberately NOT adopted
+--------------------------------
+* **No PCA.** Kräuter's 12 principal components were the answer to 74 raw features; the
+  feature space here (channels × 3) is small from the outset, a dimensionality reduction
+  would have no counterpart here.
+* **No centred Savitzky-Golay smoothing of the target** -- not causal, not meaningfully
+  transferable to a simulation without its own sensor-noise pipeline (see
+  :meth:`~twinlink_ml.simulation.greybox.GreyBoxFluidBedGranulator.measure`, purely
+  causal PT1 lag element plus additive noise).
+* **No outlier removal** -- no sensor artefact in the simulation.
 
-Hyperparameter
---------------
-Kräuters eigene ``ExtraTreesRegressor``-Hyperparameter (Baumzahl, Tiefe, ...) sind in
-``02_prozess_setup.md``/``04_stand_ap1.md`` nicht überliefert -- nur das Ergebnis
-(R² = 0.994) und die Vorverarbeitung (PCA) stehen dort. Die Voreinstellungen hier sind
-deshalb **sklearn-Standardwerte** (``n_estimators=100``, ``max_depth=None``, ...): dieser
-Vergleich soll die Wirkung des Splits isolieren, nicht eine Baumkonfiguration
-nachträglich optimieren.
+Hyperparameters
+---------------
+Kräuter's own ``ExtraTreesRegressor`` hyperparameters (number of trees, depth, ...) are not
+recorded in ``02_prozess_setup.md``/``04_stand_ap1.md`` -- only the result
+(R² = 0.994) and the preprocessing (PCA) are given there. The defaults here are
+therefore **sklearn defaults** (``n_estimators=100``, ``max_depth=None``, ...): this
+comparison is meant to isolate the effect of the split, not to optimise a tree configuration
+after the fact.
 """
 
 from __future__ import annotations
@@ -62,22 +62,22 @@ __all__ = ["ExtraTreesModel"]
 
 
 class ExtraTreesModel(SequenceModel):
-    r"""Extra Trees auf Wert + 1./2. Differenz, Ein-Schritt-Vorhersage.
+    r"""Extra Trees on value + 1st/2nd difference, one-step prediction.
 
     Parameters
     ----------
     n_estimators
-        Anzahl Bäume im Ensemble. sklearn-Standard.
+        Number of trees in the ensemble. sklearn default.
     max_depth
-        Maximale Baumtiefe. ``None`` (sklearn-Standard) heißt unbegrenzt, bis
-        ``min_samples_leaf`` greift.
+        Maximum tree depth. ``None`` (sklearn default) means unlimited, until
+        ``min_samples_leaf`` takes effect.
     min_samples_leaf
-        sklearn-Standard.
+        sklearn default.
     n_jobs
-        Parallelität von ``fit``/``predict``. ``-1`` nutzt alle Kerne -- anders als bei
-        den übrigen Modellen dieses Projekts kostet das hier keine Reproduzierbarkeit:
-        Extra Trees hat keinen sequenziellen Optimierungspfad, den Threading-Reihenfolge
-        beeinflussen könnte.
+        Parallelism of ``fit``/``predict``. ``-1`` uses all cores -- unlike with
+        the other models of this project, this costs no reproducibility here:
+        Extra Trees has no sequential optimisation path that the threading order
+        could influence.
     """
 
     def __init__(
@@ -99,24 +99,24 @@ class ExtraTreesModel(SequenceModel):
 
     @property
     def name(self) -> str:
-        """Kurzname mit Baumzahl."""
+        """Short name with number of trees."""
         return f"extra_trees{self._n_estimators}"
 
     @property
     def n_parameters(self) -> int:
-        """Gesamtzahl der Knoten über alle Bäume.
+        """Total number of nodes over all trees.
 
-        Kein Gewicht im ANN-Sinn, aber die vergleichbare Kapazitätskennzahl für ein
-        Baumensemble.
+        Not a weight in the ANN sense, but the comparable capacity metric for a
+        tree ensemble.
         """
         if self._regressor is None:
             return 0
         return int(sum(tree.tree_.node_count for tree in self._regressor.estimators_))
 
     def _resolve_feature_channels(self, dataset: SequenceDataset) -> tuple[int, ...]:
-        """Kanalindizes in ``history_inputs``, deren Wert + Differenzen Merkmale werden.
+        """Channel indices in ``history_inputs`` whose value + differences become features.
 
-        Alle exogenen Kanäle plus die inline gemessenen Zielgrößen -- siehe Moduldocstring.
+        All exogenous channels plus the inline-measured targets -- see module docstring.
         """
         n_exogenous = len(dataset.exogenous_names)
         observed = set(dataset.observed_target_names)
@@ -126,11 +126,11 @@ class ExtraTreesModel(SequenceModel):
         return tuple(range(n_exogenous)) + target_indices
 
     def _features(self, history_inputs: FloatArray) -> FloatArray:
-        """Wert + erste + zweite Differenz über die letzten drei Zeitschritte.
+        """Value + first + second difference over the last three time steps.
 
-        ``history_inputs[:, -1]`` ist :math:`t`, ``[:, -2]`` ist :math:`t{-}1`,
-        ``[:, -3]`` ist :math:`t{-}2` -- numerische Differenzen, kein Δt-normierter
-        Ableitungsschätzer, wie bei Kräuter.
+        ``history_inputs[:, -1]`` is :math:`t`, ``[:, -2]`` is :math:`t{-}1`,
+        ``[:, -3]`` is :math:`t{-}2` -- numerical differences, not a Δt-normalised
+        derivative estimator, as with Kräuter.
         """
         channels = list(self._feature_channels)
         current = history_inputs[:, -1, channels]
@@ -147,10 +147,10 @@ class ExtraTreesModel(SequenceModel):
         seed: int,
         validation: SequenceDataset | None = None,
     ) -> None:
-        """Ein-Schritt-Regression auf Wert-/Differenzmerkmalen.
+        """One-step regression on value/difference features.
 
-        ``validation`` bleibt ungenutzt: Extra Trees hat keinen Trainingsverlauf, der
-        gestoppt werden könnte -- derselbe Grund wie bei den analytischen Baselines.
+        ``validation`` remains unused: Extra Trees has no training history that
+        could be stopped -- the same reason as for the analytical baselines.
         """
         del validation
         if train.config.horizon != 1:
@@ -180,7 +180,7 @@ class ExtraTreesModel(SequenceModel):
         self._regressor.fit(design, target)
 
     def predict(self, batch: WindowBatch) -> FloatArray:
-        """Direkte Ein-Schritt-Vorhersage, kein autoregressiver Rollout."""
+        """Direct one-step prediction, no autoregressive rollout."""
         if self._regressor is None:
             raise RuntimeError("Modell ist nicht angepasst")
         if batch.future_exogenous.shape[1] != 1:
@@ -195,7 +195,7 @@ class ExtraTreesModel(SequenceModel):
         return prediction[:, None, :]
 
     def describe(self) -> dict[str, Any]:
-        """Konfiguration für das Tracking."""
+        """Configuration for tracking."""
         return {
             **super().describe(),
             "n_estimators": self._n_estimators,

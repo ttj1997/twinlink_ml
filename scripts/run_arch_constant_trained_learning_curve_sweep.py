@@ -1,14 +1,14 @@
-r"""Orchestriert den KONSTANT trainierten Lernkurven-Sweep: 5 Seeds, je 4 Budgetpunkte x 5
-Architekturen, parallel.
+r"""Orchestrates the CONSTANT-trained learning-curve sweep: 5 seeds, 4 budget points x 5
+architectures each, in parallel.
 
-Identisch zu ``run_arch_learning_curve_sweep.py``, nur Worker-Skript und Default-``--log``
-ausgetauscht -- startet ``run_arch_constant_trained_learning_curve_worker.py`` statt
-``run_arch_learning_curve_worker.py`` und schreibt nach
-``artifacts/runs/arch_learning_curve_constant_trained.jsonl``, NICHT in den bestehenden
-``arch_learning_curve_projected.jsonl``-Datensatz.
+Identical to ``run_arch_learning_curve_sweep.py``, only the worker script and the default ``--log``
+swapped -- starts ``run_arch_constant_trained_learning_curve_worker.py`` instead of
+``run_arch_learning_curve_worker.py`` and writes to
+``artifacts/runs/arch_learning_curve_constant_trained.jsonl``, NOT into the existing
+``arch_learning_curve_projected.jsonl`` dataset.
 
-``MKL_NUM_THREADS``/``OMP_NUM_THREADS=1`` werden -- wie im Zwillingsskript -- als PROZESS-
-Umgebungsvariablen an jeden Worker weitergegeben, unabhaengig von ``--num-threads``.
+``MKL_NUM_THREADS``/``OMP_NUM_THREADS=1`` are -- as in the twin script -- passed as PROCESS
+environment variables to every worker, independently of ``--num-threads``.
 """
 
 from __future__ import annotations
@@ -92,9 +92,9 @@ def _run_batch(
     stagger_first: int,
     stagger_wait_s: float,
 ) -> list[tuple[int, int, Path]]:
-    """Einen Batch starten -- optional gestaffelt -- und auf Abschluss aller warten.
+    """Start one batch -- optionally staggered -- and wait for all to finish.
 
-    Rueckgabe je Job: ``(seed, returncode, output_path)``.
+    Returns per job: ``(seed, returncode, output_path)``.
     """
     handles: list[tuple[subprocess.Popen[bytes], int, Path]] = []
 
@@ -164,7 +164,7 @@ def _run_batch(
 
 
 def _merge(outputs: list[Path], final_path: Path) -> None:
-    """Alle Job-JSONL-Dateien zusammenfuehren, mit Duplikat-run_uid-Pruefung."""
+    """Merge all job JSONL files, with duplicate-run_uid check."""
     seen_run_uids: dict[str, Path] = {}
     lines: list[str] = []
     for output in outputs:
@@ -193,7 +193,7 @@ def _merge(outputs: list[Path], final_path: Path) -> None:
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",
@@ -223,7 +223,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Sweep fahren: Batches starten, warten, zusammenfuehren."""
+    """Run the sweep: start batches, wait, merge."""
     arguments = parse_arguments()
     arguments.work_dir.mkdir(parents=True, exist_ok=True)
     python = sys.executable

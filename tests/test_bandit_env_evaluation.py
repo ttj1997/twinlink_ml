@@ -1,15 +1,17 @@
-r"""VA3/XA1: Bewertungsmetrik -- siehe ``twinlink_ml.rl.evaluation``.
+r"""VA3/XA1: evaluation metric -- see ``twinlink_ml.rl.evaluation``.
 
-Zwei Grenzfaelle validieren die Metrik selbst (nicht nur ihre Implementierung gegen sich
-selbst): eine Policy, die immer den festen Betriebspunkt liefert, MUSS ueberall
-``closed_regret_fraction == 0`` ergeben (und ``pooled_closed_regret_fraction == 0``); eine
-Policy, die immer die Orakelaktion des jeweiligen Testpunkts liefert, MUSS ueberall ``== 1``
-ergeben. Beides folgt direkt aus der Definition, ist aber der Test, der eine falsch herum
-eingebaute Formel (z. B. Zaehler/Nenner vertauscht) sofort sichtbar macht.
+Two limiting cases validate the metric itself (not only its implementation against
+itself): a policy that always returns the fixed operating point MUST yield
+``closed_regret_fraction == 0`` everywhere (and ``pooled_closed_regret_fraction == 0``); a
+policy that always returns the oracle action of the respective test point MUST yield
+``== 1`` everywhere. Both follow directly from the definition, but this is the test that
+immediately exposes a formula built in the wrong way round (e.g. numerator/denominator
+swapped).
 
-XA1 zusaetzlich: eine einzelne unzulaessige Aktion darf ``pooled_closed_regret_fraction``
-NICHT beeinflussen (sie wird aus Summe/Nenner ausgeschlossen), nur ``feasibility_rate`` und
-``infeasible_violations`` -- siehe ``test_single_infeasible_action_does_not_affect_pooled_
+XA1 additionally: a single infeasible action must NOT affect
+``pooled_closed_regret_fraction`` (it is excluded from sum/denominator), only
+``feasibility_rate`` and ``infeasible_violations`` -- see
+``test_single_infeasible_action_does_not_affect_pooled_
 fraction``.
 """
 
@@ -115,10 +117,10 @@ def test_oracle_policy_closes_full_regret_everywhere(
 def test_oracle_optima_split_matches_known_boundary_count(
     env: OperatingPointBanditEnv,
 ) -> None:
-    """XA3: Regressionsanker fuer :func:`is_boundary_optimum`.
+    """XA3: regression anchor for :func:`is_boundary_optimum`.
 
-    23 von 25 Befund-52-Optima haben die Gasgeschwindigkeit an der unteren Aktionsschranke
-    (im warmen Regime) -- siehe Auftrag.
+    23 of 25 Befund 52 optima have the gas velocity at the lower action bound
+    (in the warm regime) -- see the task.
     """
     points = load_test_points()
     boundary_flags = [is_boundary_optimum(point, env) for point in points]
@@ -129,13 +131,14 @@ def test_oracle_optima_split_matches_known_boundary_count(
 def test_single_infeasible_action_does_not_affect_pooled_fraction(
     env: OperatingPointBanditEnv, anchor: dict[str, Any]
 ) -> None:
-    """XA1: eine unzulaessige Aktion beeinflusst nur (a)/(c), nicht (b).
+    """XA1: an infeasible action affects only (a)/(c), not (b).
 
-    Policy liefert an 24 von 25 Testpunkten die exakte Orakelaktion (schliesst dort
-    ``== 1``), an GENAU EINEM Punkt stattdessen eine Aktion, die absichtlich die
-    80-C-Bettemperaturgrenze verletzt (hohe Zulufttemperatur nahe der oberen
-    Aktionsschranke, siehe WA3-Befund) -- unabhaengig vom Aktions-Kontext des jeweiligen
-    Punkts, also unabhaengig davon, ob dieser Punkt ein Rand- oder Innenoptimum hat.
+    The policy returns the exact oracle action at 24 of 25 test points (closes
+    ``== 1`` there), and at EXACTLY ONE point instead an action that deliberately violates
+    the 80 C bed temperature limit (high inlet air temperature close to the upper
+    action bound, see the WA3 finding) -- independent of the action context of the
+    respective point, i.e. independent of whether this point has a boundary or interior
+    optimum.
     """
     lookup = {
         (
@@ -171,8 +174,8 @@ def test_single_infeasible_action_does_not_affect_pooled_fraction(
     assert result.feasibility_rate == pytest.approx(24.0 / 25.0)
     assert len(result.infeasible_violations) == 1
     assert result.infeasible_violations[0].bed_temperature_violation_k > 0.0
-    # Der Kern von XA1: (b) bleibt bitgleich zu einer reinen 24-von-24-Orakel-Auswertung,
-    # weil der eine unzulaessige Punkt aus Summe UND Nenner ausgeschlossen wird.
+    # The core of XA1: (b) stays bit-identical to a pure 24-of-24 oracle evaluation,
+    # because the one infeasible point is excluded from sum AND denominator.
     assert result.pooled_closed_regret_fraction == pytest.approx(1.0, abs=1e-6)
 
 
@@ -191,11 +194,11 @@ def test_assert_disjoint_from_test_grid_raises_on_exact_collision() -> None:
 
 
 def test_continuous_uniform_training_draws_never_collide_with_test_grid() -> None:
-    """VA3: Trainingsverteilung trifft die 25 Testpunkte nicht zufaellig exakt.
+    """VA3: the training distribution does not hit the 25 test points exactly by chance.
 
-    Stichprobenartige Bestaetigung der Mass-Null-Behauptung fuer die tatsaechliche
-    Ziehungsroutine (``OperatingPointBanditEnv.reset()`` ohne ``options``): 500 Ziehungen
-    treffen keinen der 25 diskreten Testpunkte numerisch.
+    Spot-check confirmation of the measure-zero claim for the actual sampling
+    routine (``OperatingPointBanditEnv.reset()`` without ``options``): 500 draws
+    hit none of the 25 discrete test points numerically.
     """
     env = OperatingPointBanditEnv()
     draws = []

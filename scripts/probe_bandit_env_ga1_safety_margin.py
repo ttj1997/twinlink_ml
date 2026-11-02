@@ -83,7 +83,7 @@ def main() -> int:
     bed_temperature_limit = BED_TEMPERATURE_LIMIT_C
     points = load_test_points()
 
-    # Orakel-Kennzahlen sind seedunabhaengig -- einmal berechnen.
+    # Oracle metrics are seed-independent -- compute once.
     oracle_per_point: list[dict[str, Any]] = []
     for point in points:
         _, info = env.evaluate_operating_point(
@@ -155,7 +155,7 @@ def main() -> int:
                 }
             )
 
-        # Kernvergleich: NUR an den Punkten, an denen das Orakel die Feuchtegrenze bindet.
+        # Core comparison: ONLY at the points where the oracle binds the moisture limit.
         binding_indices = [i for i, p in enumerate(oracle_per_point) if p["binding_moisture"]]
         agent_moisture_margin_all = [p["moisture_margin_kg_per_kg"] for p in agent_per_point]
         agent_moisture_margin_binding = [

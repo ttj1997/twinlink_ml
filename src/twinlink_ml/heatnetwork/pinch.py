@@ -1,50 +1,50 @@
-r"""Problem-Table-Algorithmus: das thermodynamische Minimum an Zusatzwaerme.
+r"""Problem table algorithm: the thermodynamic minimum of supplementary heat.
 
-Beantwortet eine andere Frage als ``balance.evaluate_cascade``: nicht "wie viel Brennstoff
-braucht DIESE Verschaltung", sondern "wie viel Brennstoff braucht JEDE DENKBARE
-Verschaltung mindestens" -- der Massstab, gegen den ``evaluate_cascade``-Ergebnisse (und
-jeder spaetere Regler) gemessen werden. Fuer das reine Zielwertproblem (kein Netzwerk-
-entwurf, nur der minimale Heiz-/Kuehlbedarf) ist der Problem-Table-Algorithmus exakt und
-braucht keinen Solver -- ein LP waere erst fuer die Frage noetig, welcher Waermeuebertrager
-wohin kommt (Netzwerksynthese), nicht Teil dieses Moduls.
+Answers a different question than ``balance.evaluate_cascade``: not "how much fuel
+does THIS interconnection need", but "how much fuel does EVERY CONCEIVABLE
+interconnection need at least" -- the yardstick against which ``evaluate_cascade`` results (and
+every later controller) are measured. For the pure target problem (no network
+design, only the minimum heating/cooling demand) the problem table algorithm is exact and
+needs no solver -- an LP would only be needed for the question of which heat exchanger
+goes where (network synthesis), not part of this module.
 
-Kondensation: keine neue Physik
+Condensation: no new physics
 --------------------------------
-Die Abluftquellen haben KEINE konstante Waermekapazitaet -- unterhalb ihres Taupunkts wird
-latente Waerme frei, die Enthalpie-Temperatur-Kurve knickt dort scharf. Ein Strom mit
-konstantem cp waere hier falsch. Dieses Modul fuehrt dafuer KEINE zweite Kondensationsformel
-ein: :func:`hot_segments_for_source` tastet die Kurve am vorhandenen, bereits getesteten
-:func:`~.balance.evaluate_cascade` (``recovery_mode="condensing"``) ab -- derselbe Code, der
-auch die Kaskadenrechnung selbst treibt -- und baut daraus eine stueckweise lineare
-Naeherung. Oberhalb des Taupunkts ist die Kurve exakt linear (Feuchte konstant, kein
-Diskretisierungsfehler moeglich, ein Segment genuegt); unterhalb wird sie an
-``n_segments_below_dew_point`` Stuetzstellen abgetastet, mit dem Taupunkt selbst als exakter
-Intervallgrenze (nicht dem Zufall eines Rasters ueberlassen). Wie fein diese Abtastung sein
-muss, ist eine empirische Frage -- siehe ``docs/06_waermenetz.md`` fuer die
-Konvergenzstudie.
+The exhaust air sources have NO constant heat capacity -- below their dew point
+latent heat is released, and the enthalpy-temperature curve kinks sharply there. A stream with
+constant cp would be wrong here. This module introduces NO second condensation formula
+for it: :func:`hot_segments_for_source` samples the curve with the existing, already tested
+:func:`~.balance.evaluate_cascade` (``recovery_mode="condensing"``) -- the same code that
+also drives the cascade calculation itself -- and builds a piecewise linear
+approximation from it. Above the dew point the curve is exactly linear (humidity constant, no
+discretisation error possible, one segment suffices); below it, it is sampled at
+``n_segments_below_dew_point`` nodes, with the dew point itself as an exact
+interval boundary (not left to the chance of a grid). How fine this sampling has to
+be is an empirical question -- see ``docs/06_waermenetz.md`` for the
+convergence study.
 
-Problem-Table-Algorithmus (Standardverfahren, hier nur die Kurzfassung; Lehrbuch z. B.
+Problem table algorithm (standard procedure, only the short version here; textbook e.g.
 Kemp, "Pinch Analysis and Process Integration")
 ------------------------------------------------------------------------------------------
-1. Verschobene Temperaturen: heisse Segmente um ``dT_min/2`` nach unten, kalte um
-   ``dT_min/2`` nach oben (:meth:`StreamSegment.shifted`) -- macht die Mindestgraedigkeit
-   zu einer einzigen gemeinsamen Temperaturskala, auf der sich heiss und kalt beruehren
-   duerfen.
-2. Alle verschobenen Segmentgrenzen (heiss und kalt) bilden die Intervallgrenzen.
-3. Je Intervall: Waermebilanz = (Summe CP heiss aktiv - Summe CP kalt aktiv) * Delta T.
-   Kaskade von der hoechsten Temperatur nach unten (Startwert 0). Der betragsmaessig
-   groesste negative Kaskadenwert ist der minimale Heizbedarf (Hot Utility); addiert man
-   ihn auf die gesamte Kaskade, wird sie ueberall nichtnegativ, ihr Endwert ist der minimale
-   Kuehlbedarf (Cold Utility), und die Stelle, an der sie exakt null wird, ist die
-   Pinch-Temperatur.
+1. Shifted temperatures: hot segments by ``dT_min/2`` downwards, cold ones by
+   ``dT_min/2`` upwards (:meth:`StreamSegment.shifted`) -- turns the minimum approach
+   temperature into a single common temperature scale on which hot and cold may
+   touch.
+2. All shifted segment boundaries (hot and cold) form the interval boundaries.
+3. Per interval: heat balance = (sum of CP hot active - sum of CP cold active) * Delta T.
+   Cascade from the highest temperature downwards (start value 0). The negative cascade
+   value with the largest magnitude is the minimum heating demand (hot utility); adding
+   it to the whole cascade makes it non-negative everywhere, its end value is the minimum
+   cooling demand (cold utility), and the point at which it becomes exactly zero is the
+   pinch temperature.
 
-Die untere Schranke, keine Bauvorschrift
+The lower bound, not a design rule
 ------------------------------------------
-Der hier berechnete Heizbedarf setzt beliebig viele, ideal gegeneinander geschaltete
-Waermeuebertrager voraus. Er ist eine UNTERE SCHRANKE fuer jede reale Verschaltung mit
-DERSELBEN Grädigkeit, keine Aussage darueber, ob sie mit zwei Uebertragern erreichbar ist.
+The heating demand computed here assumes arbitrarily many, ideally matched
+heat exchangers. It is a LOWER BOUND for every real interconnection with
+THE SAME approach temperature, not a statement about whether it is achievable with two exchangers.
 ``tests/test_heatnetwork_pinch.py::test_pinch_target_never_exceeds_the_best_of_six_cases``
-macht diese Ungleichung explizit pruefbar.
+makes this inequality explicitly checkable.
 """
 
 from __future__ import annotations
@@ -85,16 +85,16 @@ Ergebnis auf, dient nur dazu, ``evaluate_cascade`` ueberhaupt aufrufen zu koenne
 
 @dataclass(frozen=True, slots=True)
 class StreamSegment:
-    r"""Ein linearer Teilabschnitt eines Stroms mit konstanter Waermekapazitaetsrate.
+    r"""A linear sub-section of a stream with constant heat capacity rate.
 
-    :param name: Quellen-/Senkenname (fuer Diagnose, Composite-Curve-Zuordnung).
-    :param is_hot: ``True`` fuer Abluftquellen (kuehlen sich ab), ``False`` fuer Senken
-        (erwaermen sich).
-    :param high_temperature_celsius: obere Grenze dieses Abschnitts, UNVERSCHOBEN (reale
-        Temperatur). Bei einer Quelle die Eintritts-, bei einer Senke die Austrittsseite.
-    :param low_temperature_celsius: untere Grenze, analog.
-    :param capacity_rate_kw_per_k: :math:`\dot m\,(c_{p,L}+Y\,c_{p,D})` dieses Abschnitts in
-        kW/K, stets nichtnegativ.
+    :param name: source/sink name (for diagnostics, composite curve assignment).
+    :param is_hot: ``True`` for exhaust air sources (cool down), ``False`` for sinks
+        (heat up).
+    :param high_temperature_celsius: upper limit of this section, UNSHIFTED (real
+        temperature). For a source the inlet side, for a sink the outlet side.
+    :param low_temperature_celsius: lower limit, analogously.
+    :param capacity_rate_kw_per_k: :math:`\dot m\,(c_{p,L}+Y\,c_{p,D})` of this section in
+        kW/K, always non-negative.
     """
 
     name: str
@@ -115,16 +115,16 @@ class StreamSegment:
             )
 
     def duty_kw(self) -> float:
-        """Waermemenge dieses Abschnitts, kW."""
+        """Heat duty of this section, kW."""
         return self.capacity_rate_kw_per_k * (
             self.high_temperature_celsius - self.low_temperature_celsius
         )
 
     def shifted(self, minimum_pinch_k: float) -> tuple[float, float]:
-        """(hohe, niedrige) verschobene Grenze.
+        """(high, low) shifted limit.
 
-        Heiss um ``dT_min/2`` nach unten, kalt nach oben (Schritt 1 des
-        Problem-Table-Algorithmus, siehe Moduldocstring).
+        Hot by ``dT_min/2`` downwards, cold upwards (step 1 of the
+        problem table algorithm, see module docstring).
         """
         half = minimum_pinch_k / 2.0
         shift = -half if self.is_hot else half
@@ -132,10 +132,10 @@ class StreamSegment:
 
 
 def dew_point_of_source_celsius(source: HeatSourceConfig, gas: GasConfig) -> float:
-    """Taupunkt einer Quelle aus ihrer eigenen Abluftfeuchte.
+    """Dew point of a source from its own exhaust air humidity.
 
-    Dieselbe Buck-Korrelation wie ``balance.py`` (``thermo.dew_point_celsius``) -- keine
-    zweite Formel.
+    The same Buck correlation as ``balance.py`` (``thermo.dew_point_celsius``) -- no
+    second formula.
     """
     return float(
         _BACKEND.to_numpy(
@@ -147,16 +147,16 @@ def dew_point_of_source_celsius(source: HeatSourceConfig, gas: GasConfig) -> flo
 def _recoverable_power_to_floor_kw(
     source: HeatSourceConfig, gas: GasConfig, floor_temperature_celsius: float
 ) -> float:
-    r"""EIN Abtastpunkt der Enthalpie-Temperatur-Kurve.
+    r"""ONE support point of the enthalpy-temperature curve.
 
-    :math:`\dot Q_{rec}` beim Kuehlen von ``source`` von ihrer Austrittstemperatur bis
-    ``floor_temperature_celsius``. Ruft dafuer ``balance.evaluate_cascade`` mit
-    ``recovery_mode="condensing"`` auf und liest ``source_available_power_kw`` aus --
-    dieses Feld wird dort direkt aus
-    Ausgangstemperatur und Kaltgrenze berechnet, UNABHAENGIG von der Senke und den Stufen
-    (siehe ``balance.py``, Berechnung nach der Stufenschleife). Die Wegwerf-Senke unten
-    begrenzt also nichts; sie existiert nur, weil ``evaluate_cascade`` eine Stufenliste
-    verlangt. Keine eigene Kondensationsformel -- siehe Moduldocstring.
+    :math:`\dot Q_{rec}` when cooling ``source`` from its outlet temperature down to
+    ``floor_temperature_celsius``. For this it calls ``balance.evaluate_cascade`` with
+    ``recovery_mode="condensing"`` and reads ``source_available_power_kw`` --
+    this field is computed there directly from
+    outlet temperature and cold limit, INDEPENDENT of the sink and the stages
+    (see ``balance.py``, calculation after the stage loop). The throwaway sink below
+    therefore limits nothing; it exists only because ``evaluate_cascade`` requires a stage
+    list. No separate condensation formula -- see module docstring.
     """
     if floor_temperature_celsius >= source.outlet_temperature_celsius:
         return 0.0
@@ -192,16 +192,16 @@ def hot_segments_for_source(
     *,
     n_segments_below_dew_point: int = 50,
 ) -> tuple[StreamSegment, ...]:
-    r"""Zerlegt eine Quelle in stueckweise lineare Segmente.
+    r"""Splits a source into piecewise linear segments.
 
-    Von ``outlet_temperature_celsius`` bis ``floor_temperature_celsius`` (= ``T_kalt``
-    dieses Laufs). Liegt der Taupunkt bei oder unter ``floor_temperature_celsius``,
-    kondensiert die Quelle in diesem Lauf gar nicht (z. B. Quelle 2 oberhalb von ca. 25 °C, siehe
-    ``docs/06_waermenetz.md``) -- dann ein einziges, exakt lineares Segment. Sonst: ein
-    exaktes lineares Segment oberhalb des Taupunkts (Feuchte konstant) plus
-    ``n_segments_below_dew_point`` abgetastete Segmente darunter (siehe Moduldocstring).
+    From ``outlet_temperature_celsius`` to ``floor_temperature_celsius`` (= ``T_kalt``
+    of this run). If the dew point lies at or below ``floor_temperature_celsius``,
+    the source does not condense at all in this run (e.g. source 2 above approx. 25 °C, see
+    ``docs/06_waermenetz.md``) -- then a single, exactly linear segment. Otherwise: one
+    exact linear segment above the dew point (humidity constant) plus
+    ``n_segments_below_dew_point`` sampled segments below it (see module docstring).
 
-    :raises ValueError: wenn ``n_segments_below_dew_point < 1``.
+    :raises ValueError: if ``n_segments_below_dew_point < 1``.
     """
     t_out = source.outlet_temperature_celsius
     if floor_temperature_celsius >= t_out:
@@ -251,10 +251,10 @@ def hot_segments_for_source(
 
 
 def cold_segment_for_sink(sink: HeatSinkConfig, gas: GasConfig) -> StreamSegment:
-    """Eine Senke als einzelnes Segment.
+    """A sink as a single segment.
 
-    Rein sensible Erwaermung, konstante Feuchte, also exakt linear (kein
-    Diskretisierungsbedarf, anders als bei den Quellen).
+    Purely sensible heating, constant humidity, hence exactly linear (no
+    need for discretisation, unlike the sources).
     """
     capacity_rate = (
         sink.dry_air_mass_flow_kg_per_s
@@ -272,20 +272,20 @@ def cold_segment_for_sink(sink: HeatSinkConfig, gas: GasConfig) -> StreamSegment
 
 @dataclass(frozen=True, slots=True)
 class PinchResult:
-    """Ergebnis eines Problem-Table-Laufs.
+    """Result of a problem table run.
 
-    :ivar minimum_hot_utility_kw: minimaler Heizbedarf (Hot Utility) -- die untere Schranke
-        aus dem Moduldocstring.
-    :ivar minimum_cold_utility_kw: minimaler Kuehlbedarf (Cold Utility).
-    :ivar pinch_temperature_hot_side_celsius: Pinch-Temperatur auf der heissen Skala
-        (reale Quellentemperatur an der Engpassstelle).
-    :ivar pinch_temperature_cold_side_celsius: Pinch-Temperatur auf der kalten Skala;
-        Differenz zu ``pinch_temperature_hot_side_celsius`` ist per Konstruktion ``dT_min``.
-    :ivar interval_boundaries_shifted_celsius: verschobene Intervallgrenzen, absteigend
-        sortiert, Laenge ``n+1`` fuer ``n`` Intervalle.
-    :ivar cascade_kw: Kaskade NACH Zugabe von ``minimum_hot_utility_kw`` (ueberall
-        nichtnegativ), an denselben Stuetzstellen wie ``interval_boundaries_shifted_celsius``
-        -- das ist die Grand Composite Curve (PA4).
+    :ivar minimum_hot_utility_kw: minimum heating demand (hot utility) -- the lower bound
+        from the module docstring.
+    :ivar minimum_cold_utility_kw: minimum cooling demand (cold utility).
+    :ivar pinch_temperature_hot_side_celsius: pinch temperature on the hot scale
+        (real source temperature at the bottleneck).
+    :ivar pinch_temperature_cold_side_celsius: pinch temperature on the cold scale;
+        the difference to ``pinch_temperature_hot_side_celsius`` is ``dT_min`` by construction.
+    :ivar interval_boundaries_shifted_celsius: shifted interval boundaries, sorted in
+        descending order, length ``n+1`` for ``n`` intervals.
+    :ivar cascade_kw: cascade AFTER adding ``minimum_hot_utility_kw`` (non-negative
+        everywhere), at the same nodes as ``interval_boundaries_shifted_celsius``
+        -- this is the grand composite curve (PA4).
     """
 
     minimum_hot_utility_kw: float
@@ -307,15 +307,15 @@ def compute_pinch_target(
     *,
     minimum_pinch_k: float,
 ) -> PinchResult:
-    """Problem-Table-Algorithmus ueber bereits gebaute Segmente.
+    """Problem table algorithm over already built segments.
 
-    Siehe Moduldocstring, Schritte 1-3. Segmente duerfen aus mehreren Quellen/Senken UND
-    aus mehreren Teilabschnitten je Quelle (Kondensationskurve) stammen -- der Algorithmus
-    behandelt jedes Segment wie einen eigenen Teilstrom mit konstantem CP, das ist Standard
-    bei nichtlinearen Stroemen in der Pinch-Analyse.
+    See module docstring, steps 1-3. Segments may come from several sources/sinks AND
+    from several sub-sections per source (condensation curve) -- the algorithm
+    treats every segment like its own sub-stream with constant CP, which is standard
+    for non-linear streams in pinch analysis.
 
-    :raises ValueError: wenn ``minimum_pinch_k`` negativ ist oder keine Segmente uebergeben
-        wurden.
+    :raises ValueError: if ``minimum_pinch_k`` is negative or no segments were
+        passed.
     """
     if minimum_pinch_k < 0.0:
         raise ValueError(f"minimum_pinch_k darf nicht negativ sein, ist {minimum_pinch_k}")
@@ -365,13 +365,13 @@ def compute_pinch_target(
 
 
 def composite_curve_kw(segments: Sequence[StreamSegment]) -> tuple[tuple[float, float], ...]:
-    r"""Verbundkurve (heiss ODER kalt, je nachdem welche ``segments`` uebergeben werden).
+    r"""Composite curve (hot OR cold, depending on which ``segments`` are passed).
 
-    ``(Temperatur, kumulierte Leistung)``-Stuetzpunkte -- UNVERSCHOBENE (reale)
-    Temperaturen, das, was man dem Verbundpartner zeigt (PA4). Kumuliert von der
-    niedrigsten beteiligten Temperatur aufwaerts (:math:`H=0` am kalten Ende), Segmente wie
-    im Problem-Table-Algorithmus additiv ueber ihre jeweiligen Gueltigkeitsintervalle --
-    dieselbe Intervallzerlegung, hier ohne Verschiebung und ohne Kaskade.
+    ``(Temperatur, kumulierte Leistung)`` nodes -- UNSHIFTED (real)
+    temperatures, what is shown to the consortium partner (PA4). Accumulated from the
+    lowest involved temperature upwards (:math:`H=0` at the cold end), segments as
+    in the problem table algorithm additive over their respective validity intervals --
+    the same interval decomposition, here without shift and without cascade.
     """
     if not segments:
         return ()
@@ -402,14 +402,14 @@ def evaluate_pinch_target(
     minimum_pinch_k: float,
     n_segments_below_dew_point: int = 50,
 ) -> tuple[PinchResult, tuple[StreamSegment, ...], tuple[StreamSegment, ...]]:
-    """Baut Segmente fuer alle ``sources``/``sinks`` und wertet den Pinch-Zielwert aus.
+    """Builds segments for all ``sources``/``sinks`` and evaluates the pinch target.
 
-    Quellen-Ziel: ``cold_temperature_celsius``, Senken-Ziel: ihr eigener Sollwert; ausgewertet
-    ueber :func:`compute_pinch_target`.
+    Source target: ``cold_temperature_celsius``, sink target: its own set point; evaluated
+    via :func:`compute_pinch_target`.
 
-    :returns: ``(PinchResult, hot_segments, cold_segments)`` -- die Segmente zusaetzlich
-        zurueckgegeben, damit :func:`composite_curve_kw` sie ohne erneute Abtastung
-        wiederverwenden kann (die Abtastung ueber ``evaluate_cascade`` ist der teure Teil).
+    :returns: ``(PinchResult, hot_segments, cold_segments)`` -- the segments are also
+        returned so that :func:`composite_curve_kw` can reuse them without re-sampling
+        (the sampling via ``evaluate_cascade`` is the expensive part).
     """
     hot_segments = tuple(
         segment

@@ -1,16 +1,16 @@
-r"""S4: Sicherheitsprojektion von ``gas_velocity_m_per_s`` auf ``[u_mf(d50), u_terminal(d50)]``.
+r"""S4: safety projection of ``gas_velocity_m_per_s`` onto ``[u_mf(d50), u_terminal(d50)]``.
 
-Config: ``conf/process/greybox_gab_placeholder.yaml`` mit ``sample_time_s=25.0`` (wie
-``twinlink_ml.evaluation.generate_data``/``DataSpec`` es setzt) -- NICHT die
-``config``-Fixture aus ``conftest.py`` (``greybox_placeholder.yaml``, andere Datei).
+Config: ``conf/process/greybox_gab_placeholder.yaml`` with ``sample_time_s=25.0`` (as
+``twinlink_ml.evaluation.generate_data``/``DataSpec`` sets it) -- NOT the
+``config`` fixture from ``conftest.py`` (``greybox_placeholder.yaml``, a different file).
 
-``test_gas_velocity_projection_disabled_matches_legacy_baseline`` ist der in S3e
-geforderte Regressionstest: er belegt die Aequivalenz zwischen dem alten
-``process/fingerprint`` ``82f65f576a2e5253`` (vor Einfuehrung von
-``enforce_gas_velocity_projection``) und dem neuen ``40aae2b4526a5ed7`` (danach, Schalter
-AUS) -- beide liefern bitgleiche Trajektorien fuer dieselbe Anregung. Ohne diesen Beleg
-waere in einigen Monaten nicht mehr feststellbar, ob ein mit dem alten und ein mit dem
-neuen Fingerprint erzeugter Datensatz vergleichbar sind.
+``test_gas_velocity_projection_disabled_matches_legacy_baseline`` is the regression test
+required in S3e: it documents the equivalence between the old
+``process/fingerprint`` ``82f65f576a2e5253`` (before the introduction of
+``enforce_gas_velocity_projection``) and the new ``40aae2b4526a5ed7`` (after it, switch
+OFF) -- both yield bit-identical trajectories for the same excitation. Without this evidence
+it would no longer be possible in a few months to establish whether a data set generated
+with the old fingerprint and one generated with the new fingerprint are comparable.
 """
 
 from __future__ import annotations
@@ -78,11 +78,11 @@ def _load_config(*, projection_active: bool = False) -> ProcessConfig:
 def _random_actions_disturbances(
     n_batch: int, n_time: int, *, seed: int
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Aktionen/Stoergroessen ueber den GESAMTEN Stellbereich, nicht ratenlimitiert.
+    """Actions/disturbances over the ENTIRE action range, not rate-limited.
 
-    Bewusst aggressiver als das echte Anregungsdesign, um die Projektion (und die in S1/T1
-    charakterisierte Restverletzung) mit wenigen Laeufen/Schritten zuverlaessig und schnell
-    auszuloesen.
+    Deliberately more aggressive than the real excitation design, in order to trigger the
+    projection (and the residual violation characterised in S1/T1) reliably and quickly
+    with few runs/steps.
     """
     rng = np.random.default_rng(seed)
     actions = np.stack(
@@ -106,16 +106,16 @@ def _random_actions_disturbances(
 
 
 def test_gas_velocity_projection_disabled_matches_legacy_baseline() -> None:
-    """S3e-Regressionstest: Schalter AUS liefert bitgleiche Trajektorien zum alten Stand.
+    """S3e regression test: switch OFF yields bit-identical trajectories to the old state.
 
-    ``tests/data/gas_velocity_projection_regression_baseline.npz`` wurde mit dem
-    Code-Stand VOR Einfuehrung von ``enforce_gas_velocity_projection`` erzeugt
-    (``process/fingerprint`` == ``LEGACY_FINGERPRINT``). Dieser Test rollt dieselbe
-    Anregung mit dem AKTUELLEN Code aus (``process/fingerprint`` ==
-    ``NEW_FINGERPRINT_PROJECTION_OFF``, siehe dort fuer die volle Kette
-    ``82f65f576a2e5253`` -> ``40aae2b4526a5ed7`` -> ``078572b3a7a0fb45`` -- ein jeweils
-    anderer Wert, weil der Fingerprint ueber die gesamte Config hasht und jedes neue Feld
-    ihn auch bei unveraendertem Wert aendert) und verlangt bitgleiche Ergebnisse.
+    ``tests/data/gas_velocity_projection_regression_baseline.npz`` was generated with the
+    code state BEFORE the introduction of ``enforce_gas_velocity_projection``
+    (``process/fingerprint`` == ``LEGACY_FINGERPRINT``). This test rolls out the same
+    excitation with the CURRENT code (``process/fingerprint`` ==
+    ``NEW_FINGERPRINT_PROJECTION_OFF``, see there for the full chain
+    ``82f65f576a2e5253`` -> ``40aae2b4526a5ed7`` -> ``078572b3a7a0fb45`` -- a different
+    value each time, because the fingerprint hashes over the entire config and every new
+    field changes it even with an unchanged value) and demands bit-identical results.
     """
     config = _load_config(projection_active=False)
     assert config.fingerprint == NEW_FINGERPRINT_PROJECTION_OFF, (
@@ -139,13 +139,13 @@ def test_gas_velocity_projection_disabled_matches_legacy_baseline() -> None:
 
 
 def test_project_action_clips_to_pre_step_margins() -> None:
-    """Eigenschaft von ``project_action`` selbst, ohne Integration dazwischen.
+    """Property of ``project_action`` itself, without integration in between.
 
-    Die geclippte Geschwindigkeit liegt exakt in ``[u_mf, u_terminal]``, berechnet aus
-    GENAU DEM ZUSTAND, der ``project_action`` uebergeben wurde -- unabhaengig von jeder
-    Drift ueber einen Integrationsschritt (siehe die Restverletzungs-Tests unten, die
-    genau diese Drift betreffen). ``u_mf``/``u_terminal`` werden hier unabhaengig ueber
-    ``fluidization.py`` nachgerechnet, nicht aus der Simulator-Diagnose uebernommen.
+    The clipped velocity lies exactly in ``[u_mf, u_terminal]``, computed from
+    EXACTLY THE STATE that was passed to ``project_action`` -- independent of any
+    drift over an integration step (see the residual-violation tests below, which
+    concern exactly this drift). ``u_mf``/``u_terminal`` are recomputed here independently
+    via ``fluidization.py``, not taken from the simulator diagnostics.
     """
     config = _load_config(projection_active=True)
     with warnings.catch_warnings():
@@ -156,9 +156,9 @@ def test_project_action_clips_to_pre_step_margins() -> None:
 
     state = np.array([[2.0, 0.1, 5.0e9, 55.0], [2.0, 0.1, 5.0e9, 55.0]])
     disturbance = np.array([[20.0, 0.5, 0.3], [20.0, 0.5, 0.3]])
-    # gas_velocity: 0.001 liegt unter u_mf (~0.0029 m/s fuer diesen Zustand), 5.0 liegt
-    # ueber u_terminal (~0.221 m/s) -- project_action() clippt hier ohne Box-Constraint
-    # (das ist eine separate Pruefung in _clip_action, nicht Gegenstand dieses Tests)
+    # gas_velocity: 0.001 lies below u_mf (~0.0029 m/s for this state), 5.0 lies
+    # above u_terminal (~0.221 m/s) -- project_action() clips here without the box constraint
+    # (that is a separate check in _clip_action, not the subject of this test)
     action = np.array([[90.0, 0.001, 1.5, 2.5], [90.0, 5.0, 1.5, 2.5]])
 
     projected = simulator.project_action(state, action, disturbance)
@@ -179,12 +179,12 @@ def test_project_action_clips_to_pre_step_margins() -> None:
     expected_gas_velocity = np.clip(action[..., 1], u_mf, u_terminal)
     assert np.array_equal(projected[..., 1], expected_gas_velocity)
     assert bool((projected[..., 1] != action[..., 1]).all()), "muss beide Richtungen clippen"
-    # kein anderer Kanal veraendert
+    # no other channel changed
     assert np.array_equal(projected[..., [0, 2, 3]], action[..., [0, 2, 3]])
 
 
 def test_project_action_is_identity_when_switch_off() -> None:
-    """Bitgleiches Verhalten bei ausgeschaltetem Schalter, isoliert auf project_action."""
+    """Bit-identical behaviour with the switch off, isolated on project_action."""
     config = _load_config(projection_active=False)
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
@@ -193,19 +193,19 @@ def test_project_action_is_identity_when_switch_off() -> None:
 
     state = np.array([[2.0, 0.1, 5.0e9, 55.0]])
     disturbance = np.array([[20.0, 0.5, 0.3]])
-    action = np.array([[90.0, 5.0, 1.5, 2.5]])  # 5.0 m/s -- weit ausserhalb jedes Fensters
+    action = np.array([[90.0, 5.0, 1.5, 2.5]])  # 5.0 m/s -- far outside any window
 
     projected = simulator.project_action(state, action, disturbance)
     assert np.array_equal(projected, action)
 
 
 def test_projection_active_but_never_engaged() -> None:
-    """S4-Fall: Projektion aktiv, greift aber an keinem Punkt.
+    """S4 case: projection active, but does not engage at any point.
 
-    Nominelle Konstantfahrweise (400 um Start-d50, 90 C, 1.6 m/s Gasgeschwindigkeit) --
-    ``u_mf``/``u_terminal`` liegen ueber 50 Schritte bei ~0.07/~2.1 m/s (per Diagnose bei
-    ausgeschaltetem Schalter unabhaengig bestaetigt), die nominelle Gasgeschwindigkeit
-    bleibt damit durchgehend im Fenster.
+    Nominal constant operation (400 um initial d50, 90 C, 1.6 m/s gas velocity) --
+    ``u_mf``/``u_terminal`` lie at ~0.07/~2.1 m/s over 50 steps (independently confirmed
+    via diagnostics with the switch off), so the nominal gas velocity
+    stays within the window throughout.
     """
     config = _load_config(projection_active=True)
     with warnings.catch_warnings():
@@ -234,9 +234,9 @@ def test_projection_active_but_never_engaged() -> None:
 
 
 def test_requested_actions_differs_exactly_where_projected() -> None:
-    """``requested_actions``/``actions`` unterscheiden sich genau an den geclippten Punkten.
+    """``requested_actions``/``actions`` differ exactly at the clipped points.
 
-    Nur im ``gas_velocity_m_per_s``-Kanal, und ``n_projected_steps`` zaehlt sie korrekt.
+    Only in the ``gas_velocity_m_per_s`` channel, and ``n_projected_steps`` counts them correctly.
     """
     config = _load_config(projection_active=True)
     with warnings.catch_warnings():
@@ -250,7 +250,7 @@ def test_requested_actions_differs_exactly_where_projected() -> None:
     assert trajectory.requested_actions is not None
     assert trajectory.n_projected_steps is not None
     diff_per_channel = trajectory.actions != trajectory.requested_actions
-    # nur gas_velocity_m_per_s darf je differieren
+    # only gas_velocity_m_per_s may ever differ
     other_channels = [i for i in range(actions.shape[-1]) if i != gas_velocity_index]
     assert not diff_per_channel[..., other_channels].any()
     diff_any_channel = diff_per_channel.any(axis=-1)
@@ -259,7 +259,7 @@ def test_requested_actions_differs_exactly_where_projected() -> None:
 
 
 def test_trajectory_select_and_concatenate_preserve_projection_fields() -> None:
-    """``select``/``concatenate`` reichen die drei neuen Felder korrekt durch."""
+    """``select``/``concatenate`` pass the three new fields through correctly."""
     config = _load_config(projection_active=True)
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
@@ -282,9 +282,9 @@ def test_trajectory_select_and_concatenate_preserve_projection_fields() -> None:
 
 
 def test_concatenate_rejects_mismatched_projection_active() -> None:
-    """Trajektorien mit und ohne Projektion duerfen nicht stillschweigend vermischt werden.
+    """Trajectories with and without projection must not be silently mixed.
 
-    Sonst waeren projizierte und unprojizierte Laeufe in einem Datensatz ununterscheidbar.
+    Otherwise projected and unprojected runs would be indistinguishable in one data set.
     """
     config_off = _load_config(projection_active=False)
     config_on = _load_config(projection_active=True)
@@ -302,10 +302,10 @@ def test_concatenate_rejects_mismatched_projection_active() -> None:
 
 
 def test_trajectory_rejects_inconsistent_projection_fields() -> None:
-    """``__post_init__`` verlangt Konsistenz zwischen den drei neuen Feldern.
+    """``__post_init__`` demands consistency between the three new fields.
 
-    Aktiv ohne Wirkungsnachweis, oder Wirkungsnachweis ohne aktiv, sind beides
-    widerspruechliche Zustaende.
+    Active without evidence of effect, or evidence of effect without active, are both
+    contradictory states.
     """
     base_kwargs = {
         "run_id": ("r0",),
@@ -328,26 +328,26 @@ def test_trajectory_rejects_inconsistent_projection_fields() -> None:
 
 
 def test_projection_residual_violation_within_derived_bound() -> None:
-    r"""Restverletzung: Betrag und Haeufigkeit unter abgeleiteten Schranken.
+    r"""Residual violation: magnitude and frequency below derived bounds.
 
-    Keine Verletzung der unteren Grenze erwartet. Ursache der oberen
-    (S1/T1, ``scripts/probe_gas_velocity_projection.py``): die Projektion clippt
-    auf ``u_terminal`` am WAHREN Zustand VOR dem Schritt (Vorgabe), die hier gepruefte
-    Diagnose (``fluidization_margin_upper_m_per_s``) berechnet ``u_terminal`` aber NACH der
-    Integration. ``d50`` kann innerhalb eines Abtastschritts fallen, wenn die Keimbildung
-    die Partikelzahl schneller erhoeht als die Feststoffmasse waechst -- dann sinkt
-    ``u_terminal`` unter den zu Schrittbeginn zulaessigen Wert, und die (am Schrittanfang
-    korrekt geclippte) Geschwindigkeit liegt am Schrittende minimal darueber. Das ist eine
-    strukturelle Grenze jedes Ein-Schritt-Vorgriffs unter Zero-Order-Hold, keine falsch
-    platzierte Projektion (siehe ``f_root_cause`` im S1-Artefakt).
+    No violation of the lower limit expected. Cause of the upper one
+    (S1/T1, ``scripts/probe_gas_velocity_projection.py``): the projection clips
+    to ``u_terminal`` at the TRUE state BEFORE the step (requirement), but the diagnostic
+    checked here (``fluidization_margin_upper_m_per_s``) computes ``u_terminal`` AFTER the
+    integration. ``d50`` can fall within a sampling step if nucleation increases the
+    particle number faster than the solids mass grows -- then
+    ``u_terminal`` drops below the value permitted at the start of the step, and the velocity
+    (correctly clipped at the start of the step) lies minimally above it at the end of the
+    step. This is a structural limit of any one-step look-ahead under zero-order hold, not a
+    misplaced projection (see ``f_root_cause`` in the S1 artifact).
 
-    Schranken NICHT grosszuegig gerundet, sondern knapp oberhalb des mit diesem exakten
-    Szenario gemessenen Werts (deterministisch reproduziert, seed fixiert): relative
-    Ueberschreitung max. 0.4184 % (Schranke 0.45 %), Anteil betroffener Punkte 5.078 %
-    (Schranke 5.5 %) von 6400 Punkten. Diese Zahlen sind szenariospezifisch (aggressiv
-    randomisierte, ratenunlimitierte Aktionen -- deutlich haerter als das echte
-    Anregungsdesign) und NICHT mit den gepoolten S1-Werten (95-Perzentil 0.17 %, 3 Seeds x
-    128 Laeufe) zu verwechseln.
+    Bounds NOT rounded generously, but just above the value measured with this exact
+    scenario (deterministically reproduced, seed fixed): relative
+    exceedance max. 0.4184 % (bound 0.45 %), share of affected points 5.078 %
+    (bound 5.5 %) of 6400 points. These numbers are scenario-specific (aggressively
+    randomised, rate-unlimited actions -- considerably harsher than the real
+    excitation design) and NOT to be confused with the pooled S1 values (95th percentile
+    0.17 %, 3 seeds x 128 runs).
     """
     config = _load_config(projection_active=True)
     with warnings.catch_warnings():

@@ -1,23 +1,23 @@
-r"""E2/E3/E4: Lag-Tiefen-Kurve (FIR/ARX) plus punktweise Kontrollbasis.
+r"""E2/E3/E4: lag depth curve (FIR/ARX) plus pointwise control basis.
 
-KEIN Netztraining -- reine OLS-Regression (np.linalg.lstsq), konsistent mit
-simulation.diagnostics.static_explained_variance() (unveraendert, nicht aufgerufen, nur
-als Vorbild fuer die Merkmalslogik). KEINE Aenderung an src/.
+NO network training -- pure OLS regression (np.linalg.lstsq), consistent with
+simulation.diagnostics.static_explained_variance() (unchanged, not called, only
+as a model for the feature logic). NO change to src/.
 
-Datenbasis: fp 40aae2b4526a5ed7 (vor Einfuehrung von enforce_gas_velocity_projection:
-82f65f576a2e5253 -- Aequivalenz belegt durch test_gas_velocity_projection_disabled_
+Data basis: fp 40aae2b4526a5ed7 (before enforce_gas_velocity_projection was introduced:
+82f65f576a2e5253 -- equivalence shown by test_gas_velocity_projection_disabled_
 matches_legacy_baseline, tests/test_gas_velocity_projection.py), Δt=25s,
-greybox_gab_placeholder.yaml, Konstantlauf-Holdout wie arch_gab_constant_holdout.jsonl
-(HOLDOUT_SEED=999), 3 Trainingspool-Seeds (1,2,3).
+greybox_gab_placeholder.yaml, constant-run holdout as in arch_gab_constant_holdout.jsonl
+(HOLDOUT_SEED=999), 3 training pool seeds (1,2,3).
 
-FIR: u(t),...,u(t-k), alle vier Stellgroessen, linear+quadratisch elementweise, kein
-Kreuzprodukt, keine Standardisierung, Intercept.
-ARX: FIR-Merkmale plus y(t-1)..y(t-k) des jeweiligen Zielkanals (linear).
+FIR: u(t),...,u(t-k), all four actions, linear+quadratic elementwise, no
+cross product, no standardisation, intercept.
+ARX: FIR features plus y(t-1)..y(t-k) of the respective target channel (linear).
 
-R2_in-sample: Fit und Auswertung auf demselben Trainingspool (excited.split.train, 64
-Laeufe). R2_holdout: dieselben Koeffizienten, aber Varianz/Residuen auf dem fixen
-Konstantlauf-Holdout (32 Laeufe, seed 999) berechnet -- Referenzvarianz aus dem Holdout
-selbst (wie in static_explained_variance).
+R2_in-sample: fit and evaluation on the same training pool (excited.split.train, 64
+runs). R2_holdout: the same coefficients, but variance/residuals computed on the fixed
+constant-run holdout (32 runs, seed 999) -- reference variance from the holdout
+itself (as in static_explained_variance).
 """
 
 from __future__ import annotations
@@ -64,7 +64,7 @@ def _holdout_spec(excited: DataSpec) -> DataSpec:
 
 
 def _violation_mask(trajectory: Trajectory, material: MaterialConfig) -> np.ndarray:
-    """Punktweise Verletzungsmaske (d50-Basis, Kriterien wie D2/F1), Form (n_runs, n_steps)."""
+    """Pointwise violation mask (d50 basis, criteria as in D2/F1), shape (n_runs, n_steps)."""
     diagnostics = trajectory.diagnostics
     output_names = trajectory.metadata["output_names"]
     bed_temp_idx = output_names.index("bed_temperature_celsius")
@@ -79,12 +79,12 @@ def _violation_mask(trajectory: Trajectory, material: MaterialConfig) -> np.ndar
 def _fir_design(
     actions: np.ndarray, k: int, *, point_mask: np.ndarray | None = None
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """FIR-Merkmalsmatrix ueber alle Laeufe, Form (n_samples, 8*(k+1)+1), plus Ziel-Slicer.
+    """FIR feature matrix over all runs, shape (n_samples, 8*(k+1)+1), plus target slicer.
 
-    ``actions``: (n_runs, n_steps, 4). Fuer jeden Lauf werden Zeitpunkte t=k..n_steps-1
-    verwendet (Lag k braucht k Vorlaufschritte). ``point_mask`` (n_runs, n_steps), falls
-    gegeben: Punkte mit True an Position t werden zusaetzlich ausgeschlossen (E3).
-    Rueckgabe: (design, valid_run_idx, valid_t_idx) -- letztere zur Ziel-Extraktion.
+    ``actions``: (n_runs, n_steps, 4). For every run, time points t=k..n_steps-1 are
+    used (lag k needs k lead-in steps). ``point_mask`` (n_runs, n_steps), if
+    given: points with True at position t are additionally excluded (E3).
+    Returns: (design, valid_run_idx, valid_t_idx) -- the latter for target extraction.
     """
     n_runs, n_steps, n_actions = actions.shape
     run_idx_list = []
@@ -114,7 +114,7 @@ def _fir_design(
 def _y_lags(
     outputs_channel: np.ndarray, run_idx: np.ndarray, t_idx: np.ndarray, k: int
 ) -> np.ndarray:
-    """y(t-1)..y(t-k) fuer dieselben (run, t)-Paare wie die FIR-Design-Zeilen."""
+    """y(t-1)..y(t-k) for the same (run, t) pairs as the FIR design rows."""
     if k == 0:
         return np.zeros((run_idx.size, 0))
     cols = [outputs_channel[run_idx, t_idx - i] for i in range(1, k + 1)]
@@ -141,13 +141,13 @@ def main() -> None:
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
         holdout = generate_data(config, holdout_spec, master_seed=HOLDOUT_SEED)
     assert holdout.process_config.fingerprint == EXPECTED_FP
-    # split.test Block, siehe IndexBlockSplitter
+    # split.test block, see IndexBlockSplitter
     holdout_actions = holdout.trajectory.actions[4:36]
     holdout_outputs = holdout.trajectory.outputs[4:36]
     holdout_point_mask = _violation_mask(holdout.trajectory, config.material)[4:36]
     print(f"Holdout: {holdout_actions.shape[0]} Laeufe, fp={holdout.process_config.fingerprint}")
 
-    channels = holdout.trajectory.metadata["output_names"]  # 4 Kanaele
+    channels = holdout.trajectory.metadata["output_names"]  # 4 channels
     print(f"Zielkanaele: {channels}")
 
     pools: dict[int, dict] = {}
@@ -156,7 +156,7 @@ def main() -> None:
             warnings.simplefilter("ignore", PlaceholderConfigWarning)
             excited = generate_data(config, excited_spec, master_seed=seed)
         assert excited.process_config.fingerprint == EXPECTED_FP
-        train_actions = excited.trajectory.actions[:64]  # split.train Block
+        train_actions = excited.trajectory.actions[:64]  # split.train block
         train_outputs = excited.trajectory.outputs[:64]
         train_point_mask = _violation_mask(excited.trajectory, config.material)[:64]
         pools[seed] = {
@@ -182,7 +182,7 @@ def main() -> None:
             targets_train = pool["train_outputs"][run_idx_tr, t_idx_tr, :]  # (n, 4)
             targets_holdout = holdout_outputs[run_idx_ho, t_idx_ho, :]
 
-            # FIR: alle 4 Kanaele gemeinsam per lstsq (mehrspaltige rechte Seite)
+            # FIR: all 4 channels jointly via lstsq (multi-column right-hand side)
             coeff_fir, *_ = np.linalg.lstsq(design_train_fir, targets_train, rcond=None)
             for c_idx, channel in enumerate(channels):
                 r2_in = _r2(design_train_fir, targets_train[:, c_idx], coeff_fir[:, c_idx])
@@ -196,7 +196,7 @@ def main() -> None:
                     }
                 )
 
-            # ARX: je Kanal eigene y-Lags
+            # ARX: own y lags per channel
             for c_idx, channel in enumerate(channels):
                 y_lags_train = _y_lags(pool["train_outputs"][:, :, c_idx], run_idx_tr, t_idx_tr, k)
                 design_train_arx = np.concatenate(

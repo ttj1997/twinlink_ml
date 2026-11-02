@@ -1,10 +1,10 @@
-"""Tests für Schritt 6: Beobachtbarkeit, nichtlineares NARX, Slots, Verdikte.
+"""Tests for step 6: observability, nonlinear NARX, slots, verdicts.
 
-Die wichtigste Zusicherung dieses Moduls ist eine Leckprüfung: im Soft-Sensor-Betrieb darf
-die nicht gemessene Zielgröße **nirgends** in der Fensterhistorie auftauchen. Ein Leck dort
-sieht in allen Metriken wie ein exzellenter Soft Sensor aus und wäre an der Anlage nicht
-reproduzierbar -- genau der Fehler, der einen Vergleich unbrauchbar macht, ohne ihn
-verdächtig zu machen.
+The most important guarantee of this module is a leak check: in soft-sensor operation
+the unmeasured target must **nowhere** appear in the window history. A leak there
+looks like an excellent soft sensor in all metrics and would not be reproducible at the
+plant -- exactly the error that makes a comparison unusable without making it
+suspicious.
 """
 
 from __future__ import annotations
@@ -78,7 +78,7 @@ def soft_data(process_config):
     return generate_data(process_config, SOFT, seeds=SeedBundle.from_master(1))
 
 
-# ------------------------------------------------------------------ Konfiguration
+# ------------------------------------------------------------------ Configuration
 
 
 def test_observed_target_selection() -> None:
@@ -88,8 +88,8 @@ def test_observed_target_selection() -> None:
         target_names=("a", "b", "c"),
         observed_target_names=("c", "a"),
     )
-    # Reihenfolge folgt target_names, nicht der Angabe -- sonst wären Spaltenindizes
-    # von der Schreibweise des Aufrufs abhängig.
+    # Order follows target_names, not the specification -- otherwise column indices
+    # would depend on how the call is written.
     assert config.observed_targets == ("a", "c")
     assert config.unobserved_targets == ("b",)
     assert not config.is_fully_observed
@@ -112,26 +112,26 @@ def test_spec_for_mode_keeps_energy_observed() -> None:
     )
 
 
-# ------------------------------------------------------------------- Leckprüfung
+# ------------------------------------------------------------------- Leak check
 
 
 def test_unobserved_channel_carries_no_information(soft_data) -> None:
-    """Die Kernzusicherung: der nicht gemessene Kanal ist in der Historie konstant Null.
+    """The core guarantee: the unmeasured channel is constantly zero in the history.
 
-    Er stimmt an keiner Stelle mit dem Messwert überein.
+    It matches the measured value at no point.
     """
     train, _, _ = build_datasets(soft_data, 8)
     batch = train.full_batch()
     offset = len(train.exogenous_names)
     column = offset + train.target_names.index("product_moisture_kg_per_kg")
     assert np.all(batch.history_inputs[..., column] == 0.0)
-    # Der beobachtete Kanal ist dagegen nicht konstant.
+    # The observed channel, by contrast, is not constant.
     energy_column = offset + train.target_names.index("energy_target")
     assert np.std(batch.history_inputs[..., energy_column]) > 0.0
 
 
 def test_target_itself_is_untouched_in_soft_sensor_mode(soft_data) -> None:
-    """Maskiert wird die Historie, nicht die Zielgröße -- sonst gäbe es nichts zu lernen."""
+    """The history is masked, not the target -- otherwise there would be nothing to learn."""
     train, _, _ = build_datasets(soft_data, 8)
     batch = train.full_batch()
     column = train.target_names.index("product_moisture_kg_per_kg")
@@ -139,11 +139,11 @@ def test_target_itself_is_untouched_in_soft_sensor_mode(soft_data) -> None:
 
 
 def test_scalers_are_identical_across_modes(inline_data, soft_data) -> None:
-    """Die Maskierung greift nach der Standardisierung.
+    """The masking engages after the standardisation.
 
-    Wären die Skalierer verschieden,
-    unterschieden sich die beiden Betriebsarten zusätzlich in der Normierung der Eingänge
-    und die Kurven wären nicht vergleichbar.
+    If the scalers were different,
+    the two operating modes would additionally differ in the normalisation of the inputs
+    and the curves would not be comparable.
     """
     inline_train, _, _ = build_datasets(inline_data, 8)
     soft_train, _, _ = build_datasets(soft_data, 8)
@@ -165,10 +165,10 @@ def test_climatology_is_the_parameter_free_reference(soft_data) -> None:
     model = ClimatologyModel()
     model.fit(train, seed=0)
     prediction = model.predict(test.full_batch())
-    # Konstante Vorhersage: über Fenster und Horizont identisch.
+    # Constant prediction: identical over windows and horizon.
     assert np.allclose(prediction, prediction[0:1, 0:1, :])
-    # Und unabhängig vom Modell-Seed -- die Voraussetzung dafür, dass ihre Streuung
-    # reine Datensatz-Realisierung ist.
+    # And independent of the model seed -- the precondition for its scatter
+    # being pure data-set realisation.
     other = ClimatologyModel()
     other.fit(train, seed=999)
     assert np.allclose(other.predict(test.full_batch()), prediction)
@@ -188,11 +188,11 @@ def test_arx_and_static_still_work_without_the_measurement(soft_data) -> None:
 
 
 def test_narx_with_zero_head_is_exactly_persistence(inline_data) -> None:
-    """Residual-Parametrisierung: eine Ausgabeschicht aus Nullen **ist** die Persistenz.
+    """Residual parametrisation: an output layer of zeros **is** persistence.
 
-    Dieselbe Zusicherung, die der Arbeitsplan für jede Architektur in Schritt 6 verlangt --
-    hier ohne PyTorch prüfbar, und damit die Absicherung des Prinzips selbst und nicht nur
-    einer Implementierung.
+    The same guarantee that the work plan demands for every architecture in step 6 --
+    here checkable without PyTorch, and thus the safeguard of the principle itself and not
+    just of an implementation.
     """
     train, _, test = build_datasets(inline_data, 8)
     narx = RandomFeatureNARX(n_features=32)
@@ -205,15 +205,15 @@ def test_narx_with_zero_head_is_exactly_persistence(inline_data) -> None:
 
 
 def test_narx_at_large_ridge_is_persistence_plus_a_constant_drift(inline_data) -> None:
-    """Bei erdrückter Regularisierung bleibt **nicht** die Persistenz übrig, sondern.
+    """With overwhelming regularisation, what remains is **not** persistence, but.
 
-    Persistenz plus eine Konstante.
+    persistence plus a constant.
 
-    Der Grund steckt in :func:`~twinlink_ml.models.baselines._ridge_solve`: der
-    Achsenabschnitt wird absichtlich nicht bestraft. Der Grenzfall ist damit der mittlere
-    Ein-Schritt-Zuwachs des Trainings-Splits -- eine driftkorrigierte Persistenz. Das ist
-    gewollt, aber es ist **nicht** dasselbe wie die Persistenz-Baseline, und ein
-    Architekturvergleich, der das verwechselt, hätte eine leicht andere untere Schranke.
+    The reason lies in :func:`~twinlink_ml.models.baselines._ridge_solve`: the
+    intercept is deliberately not penalised. The limiting case is thus the mean
+    one-step increment of the training split -- a drift-corrected persistence. That is
+    intended, but it is **not** the same as the persistence baseline, and an
+    architecture comparison that confuses the two would have a slightly different lower bound.
     """
     train, _, test = build_datasets(inline_data, 8)
     narx = RandomFeatureNARX(n_features=32, ridge=1e12)
@@ -227,10 +227,10 @@ def test_narx_at_large_ridge_is_persistence_plus_a_constant_drift(inline_data) -
 
 
 def test_narx_depends_on_the_model_seed(inline_data) -> None:
-    """Das erste Modell mit einer echten Modell-Streuung.
+    """The first model with a real model scatter.
 
-    Ohne sie war die Achse ``model``
-    der Varianzzerlegung an keinem Fall geprüft.
+    Without it, the axis ``model``
+    of the variance decomposition was not checked in any case.
     """
     train, _, test = build_datasets(inline_data, 8)
     batch = test.full_batch()
@@ -252,10 +252,10 @@ def test_narx_is_reproducible_for_a_given_seed(inline_data) -> None:
 
 
 def test_narx_does_not_peek_at_future_targets(inline_data) -> None:
-    """Dieselbe Prüfung wie für die Baselines: kein Blick auf ``future_targets``.
+    """The same check as for the baselines: no look at ``future_targets``.
 
-    Manipulation von ``future_targets`` darf die Vorhersage nicht ändern, sonst schreibt
-    das Modell im Rollout die Wahrheit fort.
+    Manipulating ``future_targets`` must not change the prediction, otherwise
+    the model carries forward the truth in the rollout.
     """
     train, _, test = build_datasets(inline_data, 8)
     model = RandomFeatureNARX(n_features=64)
@@ -280,7 +280,7 @@ def test_narx_rejects_degenerate_configuration() -> None:
         RandomFeatureNARX(length_scale=0.0)
 
 
-# ------------------------------------------------------------------ Registrierung
+# ------------------------------------------------------------------- Registration
 
 
 def test_registry_covers_the_plan() -> None:
@@ -301,18 +301,18 @@ def test_registry_rejects_unknown_label() -> None:
 
 
 def test_registry_availability_tracks_dependencies_not_the_lazy_factory() -> None:
-    """Regressionstest: Verfügbarkeit muss ``implemented`` prüfen, nicht ``factory is not None``.
+    """Regression test: availability must check ``implemented``, not ``factory is not None``.
 
-    gru/lstm sind absichtlich mit ``factory=None`` registriert, damit die Torch-Fabrik
-    erst bei Bedarf aufgelöst wird. Ohne diesen Test hätte das erst wieder in
-    `study_architectures.py --mode both` (ohne explizite `--models`-Liste) aufgefallen,
-    nicht in der Testsuite.
+    gru/lstm are deliberately registered with ``factory=None``, so that the Torch factory
+    is only resolved when needed. Without this test, this would only have been noticed again in
+    `study_architectures.py --mode both` (without an explicit `--models` list),
+    not in the test suite.
 
-    Alle vier Architektur-Slots (gru/lstm/xlstm/transformer/mamba) sind inzwischen
-    implementiert -- kein realer Slot steht mehr stellvertretend für "deklariert, aber
-    nicht implementiert" zur Verfügung. Ein synthetischer Slot mit ``implemented=False``
-    übernimmt hier die Rolle, damit dieser Regressionstest nicht an der nächsten
-    fertiggestellten Architektur hinfällig wird.
+    All four architecture slots (gru/lstm/xlstm/transformer/mamba) are by now
+    implemented -- no real slot is available any more as a stand-in for "declared, but
+    not implemented". A synthetic slot with ``implemented=False``
+    takes on that role here, so that this regression test does not become obsolete with the next
+    completed architecture.
     """
     from unittest.mock import patch
 
@@ -339,7 +339,7 @@ def test_registry_availability_tracks_dependencies_not_the_lazy_factory() -> Non
 
 
 def test_registry_declared_but_unimplemented_slots_fail_fast() -> None:
-    """Wie oben: kein realer Slot ist mehr ``implemented=False``, ein Fake steht ein."""
+    """As above: no real slot is ``implemented=False`` any more, a fake stands in."""
     from unittest.mock import patch
 
     from twinlink_ml.models import registry as registry_module
@@ -359,9 +359,9 @@ def test_registry_declared_but_unimplemented_slots_fail_fast() -> None:
 
 
 def test_registry_factories_are_fresh_instances() -> None:
-    """Je Seed und Stützstelle eine neue Instanz -- sonst lebt Zustand über.
+    """A new instance per seed and support point -- otherwise state survives across.
 
-    Lernkurvenpunkte hinweg und das linke Kurvenende ist gehoben.
+    learning-curve points and the left end of the curve is lifted.
     """
     factories = build_factories(("narx",))
     first, second = factories["narx"](), factories["narx"]()
@@ -374,7 +374,7 @@ def test_baseline_labels_exclude_architectures() -> None:
     assert describe_slots()
 
 
-# ---------------------------------------------------------------------- Verdikt
+# ---------------------------------------------------------------------- Verdict
 
 
 def _record(label: str, value: float, replicate: int, n_train: int = 8) -> RunRecord:

@@ -1,28 +1,27 @@
-r"""Experimentkern: Datensatz erzeugen, Δt-Vorstudie, Lernkurve über mehrere Seeds.
+r"""Experiment core: generate a data set, Δt pre-study, learning curve over several seeds.
 
-Dieses Modul enthält die Orchestrierung, die in Schritt 5 zum vollen
-Evaluationsprotokoll ausgebaut wird. Hier steht der minimale Kern, der Schritt 3 und 4
-abschließt: eine Funktion, die aus (Prozesskonfiguration, Datensatzspezifikation, Seed)
-einen Datensatz erzeugt, und eine, die daraus eine Lernkurve macht.
+This module contains the orchestration that is extended to the full evaluation protocol
+in step 5. Here is the minimal core that completes steps 3 and 4: a function that
+generates a data set from (process configuration, data set specification, seed), and one
+that turns it into a learning curve.
 
-Validierungsbudget -- getroffene Entscheidung
+Validation budget -- decision taken
 --------------------------------------------
-Die Frage war, ob :math:`n` auf der x-Achse "Trainingsläufe" oder "Gesamtbudget" heißt.
-Umgesetzt ist :class:`ValidationPolicy` mit zwei Betriebsarten und der Voreinstellung
-``FIXED_POOL``:
+The question was whether :math:`n` on the x-axis means "training runs" or "total budget".
+Implemented is :class:`ValidationPolicy` with two modes and the default ``FIXED_POOL``:
 
-* ``FIXED_POOL`` -- fester Validierungs-Pool, über alle Stützstellen identisch. Alle
-  Architekturen bekommen dieselbe Behandlung, der Vergleich ist fair. Protokolliert wird
-  zusätzlich ``n_budget = n_train + n_val``, damit die Aussage "so viele Läufe wurden
-  verbraucht" nicht verloren geht.
-* ``NONE`` -- kein Validierungssplit, festes Epochenbudget statt Early Stopping. Diese
-  Variante liefert die Zahl, die im M2-Bericht als Trainingsdatenbedarf stehen darf: mit
-  15 zusätzlichen Validierungsläufen ist eine Aussage über 8 Trainingsläufe irreführend.
+* ``FIXED_POOL`` -- fixed validation pool, identical across all learning-curve points.
+  All architectures get the same treatment, the comparison is fair. In addition
+  ``n_budget = n_train + n_val`` is logged, so that the statement "this many runs were
+  used" is not lost.
+* ``NONE`` -- no validation split, fixed epoch budget instead of early stopping. This
+  variant provides the number that may appear in the M2 report as the training data
+  requirement: with 15 additional validation runs, a statement about 8 training runs is
+  misleading.
 
-Beide Betriebsarten sind zu fahren, ``FIXED_POOL`` für den Architekturvergleich und
-``NONE`` für die Datenbedarfs-Kennzahl. Die Differenz zwischen beiden Kurven ist selbst
-ein Ergebnis -- sie quantifiziert, wie viel Early Stopping an den kleinen Stützstellen
-wert ist.
+Both modes are to be run, ``FIXED_POOL`` for the architecture comparison and ``NONE`` for
+the data requirement figure. The difference between the two curves is itself a result --
+it quantifies how much early stopping is worth at the small learning-curve points.
 """
 
 from __future__ import annotations
@@ -84,7 +83,7 @@ ModelFactory = Callable[[], SequenceModel]
 
 
 def _measurement_digest(measurement: MeasurementConfig) -> str:
-    """Kurzer Fingerprint des Sensormodells."""
+    """Short fingerprint of the sensor model."""
     payload = ":".join(
         f"{key}={value}" for key, value in sorted(dataclasses.asdict(measurement).items())
     )
@@ -92,7 +91,7 @@ def _measurement_digest(measurement: MeasurementConfig) -> str:
 
 
 class ValidationPolicy(str, Enum):
-    """Umgang mit dem Validierungssplit, siehe Modul-Docstring."""
+    """Handling of the validation split, see the module docstring."""
 
     FIXED_POOL = "fixed_pool"
     NONE = "none"
@@ -122,26 +121,26 @@ their spec with :meth:`DataSpec.new_study`."""
 
 @dataclass(frozen=True, slots=True)
 class DataSpec:
-    """Spezifikation eines Datensatzes.
+    """Specification of a data set.
 
     Attributes
     ----------
     sample_time_s
-        Abtastzeit der ML-Pipeline. Versuchsparameter erster Ordnung, kein Detail.
+        Sample time of the ML pipeline. A first-order experimental parameter, not a detail.
     run_duration_s
-        Dauer je Lauf. 28 800 s entsprechen den 8 h aus ``02_prozess_setup.md``.
+        Duration per run. 28,800 s correspond to the 8 h from ``02_prozess_setup.md``.
     n_train_max, n_val, n_test
-        Blockgrößen. Zweierpotenzen, damit Trainings-Präfix und Blöcke auf
-        Sobol-Balance-Grenzen liegen.
+        Block sizes. Powers of two, so that the training prefix and the blocks lie on
+        Sobol balance boundaries.
     history_length, horizon, stride, target_names
-        Fensterparameter. ``target_names`` default reduziert auf zwei Zielgrößen -- siehe
-        Docstring des ``target_names``-Feldes.
+        Window parameters. ``target_names`` default reduced to two targets -- see the
+        docstring of the ``target_names`` field.
     constant_run_fraction
-        Anteil Läufe mit konstanten Stellgrößen im erzeugten Pool, siehe
-        ``ExcitationConfig.constant_run_fraction``. Default deckt sich mit dem dortigen
-        Default (0.10) -- unverändertes Verhalten, bis ein Aufrufer bewusst abweicht.
-        Bei 1.0 besteht der gesamte Pool aus Konstantläufen: die reale Betriebsweise der
-        Referenzanlage, als eigene Auswertungsmenge, nicht zum Trainieren gedacht.
+        Fraction of runs with constant actions in the generated pool, see
+        ``ExcitationConfig.constant_run_fraction``. The default matches the default there
+        (0.10) -- unchanged behaviour until a caller deliberately deviates. At 1.0 the
+        entire pool consists of constant runs: the real mode of operation of the reference
+        plant, as a separate evaluation set, not intended for training.
     """
 
     sample_time_s: float = 25.0
@@ -233,12 +232,12 @@ class DataSpec:
 
     @property
     def pool_size(self) -> int:
-        """Anzahl zu simulierender Läufe."""
+        """Number of runs to simulate."""
         return self.n_train_max + self.n_val + self.n_test
 
     @property
     def window(self) -> WindowConfig:
-        """Fensterkonfiguration."""
+        """Window configuration."""
         return WindowConfig(
             history_length=self.history_length,
             horizon=self.horizon,
@@ -249,13 +248,13 @@ class DataSpec:
         )
 
     def as_parameters(self) -> dict[str, Any]:
-        """Für das Run-Log."""
+        """For the run log."""
         return {f"data/{key}": value for key, value in dataclasses.asdict(self).items()}
 
 
 @dataclass(frozen=True, slots=True)
 class GeneratedData:
-    """Erzeugter Datensatz samt allem, was für die Rekonstruktion nötig ist."""
+    """Generated data set together with everything needed for its reconstruction."""
 
     trajectory: Trajectory
     schedule: ExcitationSchedule
@@ -266,12 +265,11 @@ class GeneratedData:
 
     @property
     def fingerprints(self) -> dict[str, str]:
-        """Die Fingerprints der Datenquelle.
+        """The fingerprints of the data source.
 
-        ``measurement/digest`` ist in Schritt 5 dazugekommen: sobald das Rauschniveau ein
-        Versuchsfaktor ist, unterscheiden sich zwei Datensätze mit identischem
-        Prozess-Fingerprint. Ohne diesen Eintrag wären die Läufe im Log nicht
-        unterscheidbar.
+        ``measurement/digest`` was added in step 5: as soon as the noise level is an
+        experimental factor, two data sets with identical process fingerprint differ.
+        Without this entry the runs in the log would not be distinguishable.
         """
         fingerprints = {
             "process/fingerprint": self.process_config.fingerprint,
@@ -305,7 +303,7 @@ class GeneratedData:
 
     @property
     def relative_noise_std(self) -> float:
-        """Rauschniveau des Sensormodells dieses Datensatzes."""
+        """Noise level of the sensor model of this data set."""
         measurement = self.process_config.measurement
         return measurement.relative_noise_std if measurement.enabled else 0.0
 
@@ -315,17 +313,16 @@ class GeneratedData:
         noise_seed: int | None = None,
         measurement: MeasurementConfig | None = None,
     ) -> GeneratedData:
-        """Denselben Lauf-Pool mit neu gezogenem Sensorrauschen.
+        """The same run pool with newly drawn sensor noise.
 
-        **Ohne neue Integration.** Das Grey-Box-Modell ist deterministisch; ``noise_seed``
-        und ``MeasurementConfig`` wirken ausschließlich im Sensormodell. Für Schritt 5
-        heißt das: die Rausch-Achse der Varianzzerlegung und die Rauschniveau-Studie
-        kosten je Variante nur die Filter- und Zufallsschleife, nicht den Integrator.
+        **Without a new integration.** The grey-box model is deterministic; ``noise_seed``
+        and ``MeasurementConfig`` act exclusively in the sensor model. For step 5 this
+        means: the noise axis of the variance decomposition and the noise-level study cost
+        only the filter and random loop per variant, not the integrator.
 
-        Der Fallstrick, den das vermeidet: variiert man den Rausch-Seed über einen neuen
-        Master-Seed, ändert sich mit ihm auch der Anregungs-Seed. Dann streut nicht das
-        Rauschen, sondern der Datensatz -- und die Zerlegung misst das Gegenteil dessen,
-        was sie behauptet.
+        The pitfall this avoids: if the noise seed is varied via a new master seed, the
+        excitation seed changes with it. Then it is not the noise that scatters but the
+        data set -- and the decomposition measures the opposite of what it claims.
         """
         seeds = (
             self.seeds
@@ -356,23 +353,23 @@ def generate_data(
     master_seed: int | None = None,
     seeds: SeedBundle | None = None,
 ) -> GeneratedData:
-    """Anregung bauen, simulieren, Split bilden.
+    """Build the excitation, simulate, form the split.
 
-    Die Anfangszustände kommen aus dem Anregungsdesign und werden über
-    ``state_from_physical`` in den Zustandsraum übersetzt -- das Design muss die
-    Zustandskodierung nicht kennen. Der Aufruf setzt außerdem das Sensormodell zurück.
+    The initial states come from the excitation design and are translated into the state
+    space via ``state_from_physical`` -- the design does not need to know the state
+    encoding. The call also resets the sensor model.
 
-    Genau eines von ``master_seed`` und ``seeds`` angeben. Der Master-Seed ist die
-    bequeme, konservative Variante (alle drei Quellen streuen gemeinsam); ``seeds``
-    erlaubt die Zerlegung nach Quelle, für die Schritt 5 gebaut ist. Ein Vorgabewert
-    wäre hier falsch: er würde stillschweigend eine der beiden Betriebsarten wählen.
+    Specify exactly one of ``master_seed`` and ``seeds``. The master seed is the
+    convenient, conservative variant (all three sources scatter jointly); ``seeds``
+    allows the decomposition by source for which step 5 is built. A default value would
+    be wrong here: it would silently choose one of the two modes.
     """
     if (master_seed is None) == (seeds is None):
         raise ValueError("genau eines von master_seed und seeds angeben")
     if seeds is None:
-        # Die Prüfung oben stellt sicher, dass master_seed hier gesetzt ist -- die
-        # XNOR-Form (master_seed is None) == (seeds is None) narrowt für mypy aber nicht,
-        # deshalb die explizite Fallunterscheidung statt eines Ternarys.
+        # The check above ensures that master_seed is set here -- but the XNOR form
+        # (master_seed is None) == (seeds is None) does not narrow for mypy, hence the
+        # explicit case distinction instead of a ternary.
         assert master_seed is not None
         seeds = SeedBundle.from_master(master_seed)
     with warnings.catch_warnings():
@@ -435,12 +432,12 @@ def build_datasets(
     policy: ValidationPolicy = ValidationPolicy.FIXED_POOL,
     window: WindowConfig | None = None,
 ) -> tuple[TrajectoryWindowDataset, TrajectoryWindowDataset | None, TrajectoryWindowDataset]:
-    """Datensätze für eine Lernkurven-Stützstelle.
+    """Data sets for one learning-curve point.
 
-    Die Normalisierungsstatistiken werden aus dem Trainings-Split **dieser** Stützstelle
-    geschätzt und an ``val`` und ``test`` weitergegeben. Werden sie einmal über den vollen
-    Pool berechnet, hat das Modell an der kleinsten Stützstelle Information aus allen
-    Läufen -- das hebt genau das linke Ende der Lernkurve.
+    The normalisation statistics are estimated from the training split of **this** point
+    and passed on to ``val`` and ``test``. If they are computed once over the full pool,
+    the model at the smallest point has information from all runs -- that raises exactly
+    the left end of the learning curve.
 
     ``window``: window configuration instead of ``data.spec.window`` (default ``None``: that one),
     e.g. with ``measured_input_names`` (docs/29).
@@ -511,13 +508,13 @@ def evaluate_point(
     group: str = "learning_curve",
     extra: Mapping[str, Any] | None = None,
 ) -> list[RunRecord]:
-    """Eine Stützstelle: Datensätze bauen, alle Modelle anpassen, auswerten, loggen.
+    """One learning-curve point: build data sets, fit all models, evaluate, log.
 
-    Der innerste Block aller Studien von Schritt 5. Bewusst herausgezogen und nicht in
-    jeder Studie neu geschrieben: Fensterung, Skalierer-Weitergabe und die Zuordnung
-    ``model_seed`` → ``fit`` sind genau die Stellen, an denen sich ein stiller Unterschied
-    zwischen zwei Treibern einschleicht -- und ein Vergleich zwischen zwei Studien wäre
-    dann nicht mehr zulässig.
+    The innermost block of all studies of step 5. Deliberately factored out and not
+    rewritten in every study: windowing, passing on the scalers and the mapping
+    ``model_seed`` → ``fit`` are exactly the places where a silent difference between two
+    drivers creeps in -- and a comparison between two studies would then no longer be
+    valid.
     """
     protocol = evaluator if evaluator is not None else RolloutEvaluator()
     train, validation, test = build_datasets(data, n_train, policy=policy)
@@ -559,12 +556,12 @@ def run_learning_curve(
     logger: ExperimentLogger | None = None,
     group: str = "learning_curve",
 ) -> list[RunRecord]:
-    """Lernkurve: Fehler über Anzahl Trainingsläufe, mehrere Seeds, mehrere Modelle.
+    """Learning curve: error over the number of training runs, several seeds, several models.
 
-    Ein Master-Seed variiert alle drei Zufallsquellen gemeinsam (Datensatz-Realisierung,
-    Sensorrauschen, Modellinitialisierung). Das ist die konservative Wahl: sie erzeugt die
-    größte, also ehrlichste Streuung, und bleibt die Voreinstellung für die berichtete
-    Kurve. Die Zerlegung, *welche* Quelle streut, steht in
+    A master seed varies all three random sources jointly (data set realisation, sensor
+    noise, model initialisation). That is the conservative choice: it produces the
+    largest, i.e. most honest, spread and remains the default for the reported curve. The
+    decomposition of *which* source scatters is in
     :func:`twinlink_ml.evaluation.protocol.run_variance_decomposition`.
     """
     specification = spec if spec is not None else DataSpec()
@@ -604,16 +601,16 @@ def run_sample_time_study(
     logger: ExperimentLogger | None = None,
     group: str = "sample_time_study",
 ) -> list[RunRecord]:
-    r"""Δt-Vorstudie mit **konstantem Zeithorizont** je Fenster.
+    r"""Δt pre-study with a **constant time horizon** per window.
 
-    Der Fallstrick: hält man ``history_length`` und ``horizon`` in Abtastschritten fest,
-    ändert sich mit :math:`\Delta t` gleichzeitig der abgedeckte Zeitraum. Bei
-    :math:`\Delta t = 5` s sieht ein Fenster mit 32 Schritten 160 s, bei 60 s dagegen
-    1920 s -- ein Vergleich der NRMSE-Werte mischt dann Abtastzeit und Modellhorizont.
-    Diese Funktion hält deshalb die **physikalischen** Fenster- und Horizontlängen
-    konstant und rechnet die Schrittzahlen um.
+    The pitfall: if ``history_length`` and ``horizon`` are held fixed in sampling steps,
+    the covered time span changes together with :math:`\Delta t`. At
+    :math:`\Delta t = 5` s a window with 32 steps sees 160 s, at 60 s by contrast
+    1920 s -- a comparison of the NRMSE values then mixes sample time and model horizon.
+    This function therefore holds the **physical** window and horizon lengths constant and
+    converts the step counts.
 
-    Referenz ist ``base_spec`` bei :math:`\Delta t = 25` s: 800 s Historie, 600 s Horizont.
+    The reference is ``base_spec`` at :math:`\Delta t = 25` s: 800 s history, 600 s horizon.
     """
     reference = base_spec if base_spec is not None else DataSpec()
     history_s = reference.history_length * reference.sample_time_s
@@ -651,11 +648,11 @@ def run_sample_time_study(
 def summarise_curve(
     records: Sequence[RunRecord], *, target: str, horizon: int, metric: str = "nrmse_run_median"
 ) -> dict[str, dict[int, tuple[float, float, float]]]:
-    """Median und Spannweite über die Seeds, je Modell und Stützstelle.
+    """Median and range over the seeds, per model and learning-curve point.
 
-    Rückgabe: ``{Modell: {n_train: (Median, Minimum, Maximum)}}``. Median und Spannweite
-    statt Mittelwert und Standardabweichung, weil bei drei bis fünf Seeds die
-    Normalverteilungsannahme nicht zu prüfen ist.
+    Returns: ``{Modell: {n_train: (Median, Minimum, Maximum)}}``. Median and range instead
+    of mean and standard deviation, because with three to five seeds the normality
+    assumption cannot be checked.
     """
     key = f"{metric}/{target}/h{horizon}"
     grouped: dict[tuple[str, int], list[float]] = {}

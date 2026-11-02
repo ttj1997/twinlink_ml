@@ -1,107 +1,107 @@
-r"""Selektiver State-Space-Kern (Mamba, Gu & Dao 2023, arXiv:2312.00752) -- der ``mamba``-Slot.
+r"""Selective state-space core (Mamba, Gu & Dao 2023, arXiv:2312.00752) -- the ``mamba`` slot.
 
-Warum reines PyTorch und nicht ``mamba-ssm``
----------------------------------------------
-Geprüft (Schritt 0 dieses Arbeitsstrangs): ``pip install mamba-ssm`` scheitert auf dieser
-CPU-only-Windows-Umgebung an einer harten Abhängigkeit von ``nvcc`` (CUDA-Compiler) --
-das offizielle Paket baut eigene CUDA-Kernel für den parallelen Scan und lässt sich ohne
-CUDA-Toolkit nicht einmal installieren (nicht nur nicht ausführen). Diese Datei
-implementiert stattdessen die Rekurrenz selbst, sequenziell, ohne eigene CUDA-Kernel --
-siehe Modul-Docstring-Abschnitt "Vereinfachungen" unten für das, was dabei bewusst
-wegfällt.
+Why pure PyTorch and not ``mamba-ssm``
+--------------------------------------
+Checked (step 0 of this work stream): ``pip install mamba-ssm`` fails on this
+CPU-only Windows environment due to a hard dependency on ``nvcc`` (CUDA compiler) --
+the official package builds its own CUDA kernels for the parallel scan and cannot even be
+installed without the CUDA toolkit (not merely not run). This file
+instead implements the recurrence itself, sequentially, without its own CUDA kernels --
+see the module docstring section "Simplifications" below for what is deliberately
+dropped in the process.
 
-Nur die Zelle, kein Block -- keine Fehlerquelle mehr, als bei xLSTM
---------------------------------------------------------------------
-Genau wie ``nn.GRU``/``nn.LSTM``/``XLSTMCore`` (:mod:`twinlink_ml.models.xlstm`) ist
-:class:`MambaCore` (Fabrik :func:`build_mamba_core_class`) eine rohe rekurrente Zelle mit
-demselben ``forward(sequence, hx=None) -> (output, hidden)``-Aufrufvertrag, kein
-Encoder-Decoder-Paar. Anders als beim Transformer-Kern (der einen eigenen Zweig
-``_build_transformer_network`` brauchte, weil ``nn.TransformerEncoder``/``-Decoder`` das
-``(input, hidden)``-Aufrufmuster nicht kennen) reicht bei Mamba **eine zusätzliche Zeile**
-im ``cell_type``-Dict von ``torch_sequence._build_network`` -- der Trainer
-(``TorchSequenceModel.fit``/``predict``/``state_dict``/``load_checkpoint``) bleibt
-unverändert, wie bei xLSTM.
+Only the cell, no block -- no more sources of error than with xLSTM
+-------------------------------------------------------------------
+Just like ``nn.GRU``/``nn.LSTM``/``XLSTMCore`` (:mod:`twinlink_ml.models.xlstm`),
+:class:`MambaCore` (factory :func:`build_mamba_core_class`) is a raw recurrent cell with
+the same ``forward(sequence, hx=None) -> (output, hidden)`` call contract, not an
+encoder-decoder pair. Unlike the Transformer core (which needed its own branch
+``_build_transformer_network``, because ``nn.TransformerEncoder``/``-Decoder`` do not know
+the ``(input, hidden)`` call pattern), for Mamba **one additional line**
+in the ``cell_type`` dict of ``torch_sequence._build_network`` suffices -- the trainer
+(``TorchSequenceModel.fit``/``predict``/``state_dict``/``load_checkpoint``) remains
+unchanged, as with xLSTM.
 
-Die Rekurrenz, Schritt für Schritt (das ist der ganze Grund für diese Architektur)
-------------------------------------------------------------------------------------
-Eingabe zum Zeitschritt :math:`t`: :math:`u_t \in \mathbb{R}^{d_{model}}`, zuerst
-``RMSNorm``-normalisiert (Referenz: ``Block.forward`` in ``state-spaces/mamba`` folgt
-strikt ``residual = hidden + residual; hidden = norm(residual); hidden = mixer(hidden)``
--- der Mixer bekommt nie den unnormierten Residualstrom zu sehen). Ohne diese Norm kann
-sich der autoregressive Rollout dieses Projekts (``last = last + head(...)`` in
-``torch_sequence.Network.forward``) aufschaukeln: ein einmal etwas zu großer Ausgang wird
-im nächsten Schritt zu einem noch größeren Eingang, über 36 Horizontschritte exponentiell
--- diagnostiziert an einem echten Trainingslauf (Schritt-2-Vergleich, ``n_train=16``,
-Teilnetz ``energy_target``, Epoche 12: der rohe Layer-Eingang wuchs innerhalb von 5
-Schritten von ~2 auf >1e19, `h` kollabierte zu NaN). GRU/LSTM sind dagegen strukturell
-robust (sättigende tanh/sigmoid-Gates), ``nn.Transformer{Encoder,Decoder}Layer`` bringen
-LayerNorm eingebaut mit -- diese selbst geschriebene SSM-Zelle brauchte die Norm
-nachträglich, dann projiziert über ``in_proj`` in zwei Hälften :math:`x_t, z_t \in
+The recurrence, step by step (this is the whole reason for this architecture)
+-----------------------------------------------------------------------------
+Input at time step :math:`t`: :math:`u_t \in \mathbb{R}^{d_{model}}`, first
+``RMSNorm``-normalised (reference: ``Block.forward`` in ``state-spaces/mamba`` strictly
+follows ``residual = hidden + residual; hidden = norm(residual); hidden = mixer(hidden)``
+-- the mixer never gets to see the unnormalised residual stream). Without this norm,
+the autoregressive rollout of this project (``last = last + head(...)`` in
+``torch_sequence.Network.forward``) can build up: an output that is once slightly too large
+becomes an even larger input in the next step, exponentially over 36 horizon steps
+-- diagnosed on a real training run (step 2 comparison, ``n_train=16``,
+subnetwork ``energy_target``, epoch 12: the raw layer input grew within 5
+steps from ~2 to >1e19, `h` collapsed to NaN). GRU/LSTM, by contrast, are structurally
+robust (saturating tanh/sigmoid gates), ``nn.Transformer{Encoder,Decoder}Layer`` come with
+LayerNorm built in -- this self-written SSM cell needed the norm
+retrofitted; then projected via ``in_proj`` into two halves :math:`x_t, z_t \in
 \mathbb{R}^{d_{inner}}` (``d_inner = expand * d_model``, ``expand = 2``).
 
-**Gelernte, zeitunabhängige Parameter:**
+**Learned, time-independent parameters:**
 
 .. math:: A = -\exp(A_{log}) \in \mathbb{R}^{d_{inner} \times d_{state}}
    \qquad D \in \mathbb{R}^{d_{inner}}
 
-``A_log`` initialisiert mit :math:`\log(n)`, :math:`n = 1 \ldots d_{state}`, je Zeile
-identisch wiederholt -- die S4D-real-Initialisierung aus der Referenzimplementierung
-(garantiert :math:`A < 0`, also Stabilität, unabhängig vom Trainingsfortschritt).
+``A_log`` initialised with :math:`\log(n)`, :math:`n = 1 \ldots d_{state}`, repeated
+identically per row -- the S4D-real initialisation from the reference implementation
+(guarantees :math:`A < 0`, i.e. stability, independently of training progress).
 
-**Selektive, eingabeabhängige Parameter** (linear aus :math:`x_t`, NACH SiLU-Aktivierung
--- das macht die Auswahl "selektiv" statt wie bei S4 zeitinvariant):
+**Selective, input-dependent parameters** (linear from :math:`x_t`, AFTER SiLU activation
+-- this makes the selection "selective" instead of time-invariant as in S4):
 
 .. math:: \Delta_t = \operatorname{softplus}(W_\Delta x_t + b_\Delta) \in \mathbb{R}_+^{d_{inner}}
    \qquad B_t = W_B x_t \in \mathbb{R}^{d_{state}}
    \qquad C_t = W_C x_t \in \mathbb{R}^{d_{state}}
 
-(``W_\Delta`` läuft über eine Tiefpass-Projektion mit Rang ``dt_rank = max(1, d_model //
-16)`` -- Parametersparsamkeit aus der Referenz, bei diesem Projekts kleinem ``d_model``
-kaum relevant, aber übernommen für Werktreue.)
+(``W_\Delta`` runs via a low-pass projection with rank ``dt_rank = max(1, d_model //
+16)`` -- parameter economy from the reference, hardly relevant at this project's small
+``d_model``, but adopted for fidelity to the original.)
 
-**Diskretisierung** (Euler-Näherung für :math:`\bar B`, wie in der Referenz):
+**Discretisation** (Euler approximation for :math:`\bar B`, as in the reference):
 
 .. math:: \bar A_t[i,n] = \exp(\Delta_t[i] \cdot A[i,n]) \qquad
    \bar B_t[i,n] = \Delta_t[i] \cdot B_t[n]
 
-**Zustandsupdate -- O(1) pro Schritt, das eigentliche Ziel dieser Architektur:**
+**State update -- O(1) per step, the actual goal of this architecture:**
 
 .. math:: h_t[i,n] = \bar A_t[i,n] \cdot h_{t-1}[i,n] + \bar B_t[i,n] \cdot x_t[i]
 
-:math:`h_t \in \mathbb{R}^{d_{inner} \times d_{state}}` hängt ausschließlich von
-:math:`h_{t-1}` und den Größen des aktuellen Schritts ab -- keine Referenz auf
-:math:`t' < t-1`, keine wachsende Sequenz wird bei jedem Schritt neu durchlaufen (anders
-als beim Transformer-Decoder, der bei Schritt :math:`t` über alle :math:`t` bisherigen
-Token neu attendiert, siehe ``torch_sequence._build_transformer_network``-Docstring und
-Befund 37, ``docs/04_stand_ap1.md``). Exakt dieselbe Eigenschaft, die eine
-GRU/LSTM-Zelle hat: ein fortgeschriebener Zustand fester Größe, keine wachsende
-Kontextmenge.
+:math:`h_t \in \mathbb{R}^{d_{inner} \times d_{state}}` depends exclusively on
+:math:`h_{t-1}` and the quantities of the current step -- no reference to
+:math:`t' < t-1`, no growing sequence is traversed anew at every step (unlike
+the Transformer decoder, which at step :math:`t` attends anew over all :math:`t` previous
+tokens, see the ``torch_sequence._build_transformer_network`` docstring and
+Befund 37, ``docs/04_stand_ap1.md``). Exactly the same property that a
+GRU/LSTM cell has: a carried-forward state of fixed size, no growing
+context set.
 
-**Ausgabe:**
+**Output:**
 
 .. math:: y_t[i] = \sum_n C_t[n] \cdot h_t[i,n] + D[i] \cdot x_t[i]
    \qquad y_t \leftarrow y_t \odot \operatorname{SiLU}(z_t)
    \qquad \text{out}_t = W_{out}\, y_t \in \mathbb{R}^{d_{model}}
 
-Für eine volle Sequenz (z. B. die Historie) wird dieselbe Rekurrenz in einer Python-
-``for``-Schleife sequenziell über die Zeit ausgeführt -- kein paralleler (Cumsum-/Scan-)
-Trick, wie ausdrücklich beauftragt (keine eigene CUDA-Kernel-Entwicklung, kein Versuch,
-die parallele Scan-Performance der Referenz nachzubauen).
+For a full sequence (e.g. the history) the same recurrence is executed sequentially over
+time in a Python ``for`` loop -- no parallel (cumsum/scan)
+trick, as explicitly instructed (no own CUDA kernel development, no attempt
+to rebuild the parallel scan performance of the reference).
 
-Vereinfachungen und Annahmen, offen aufgelistet (analog zu ``xlstm.py``)
+Simplifications and assumptions, listed openly (analogous to ``xlstm.py``)
 --------------------------------------------------------------------------
-1. **Kein kausaler Depthwise-Conv1d vor der SSM.** Im offiziellen Mamba-Block sitzt vor
-   der Selektionsprojektion ein kurzer (Kernel 4) kausaler Conv1d für lokalen Kontext.
-   Hier weggelassen -- bestätigt in der Schritt-0-Rückmeldung als kein Blocker für die
-   O(1)-Kerneigenschaft, bei Bedarf nachrüstbar (bräuchte einen kleinen FIFO-Puffer als
-   Teil von ``hidden``, bliebe O(1) pro Schritt).
-2. **``dt_proj``-Bias mit ``nn.Linear``-Standardinitialisierung**, nicht mit der
-   speziellen ``dt_init``-Softplus-Umkehr-Initialisierung der Referenz (steuert dort den
-   anfänglichen effektiven Zeitschritt). Trainingsdynamik-, keine Korrektheitsfrage.
-3. **Nur die sequenzielle Rekurrenz**, nicht der parallele assoziative Scan der
-   Referenz -- bei den Sequenzlängen dieses Projekts (Historie 16-32, Horizont bis 36)
-   ein Geschwindigkeits-, kein Korrektheitskompromiss (dieselbe Begründung wie bei
-   xLSTM, Punkt 6 dort).
+1. **No causal depthwise Conv1d before the SSM.** In the official Mamba block, a short
+   (kernel 4) causal Conv1d for local context sits before the selection projection.
+   Omitted here -- confirmed in the step 0 feedback as no blocker for the
+   O(1) core property, can be retrofitted if needed (would need a small FIFO buffer as
+   part of ``hidden``, would remain O(1) per step).
+2. **``dt_proj`` bias with ``nn.Linear`` default initialisation**, not with the
+   special ``dt_init`` softplus-inverse initialisation of the reference (which there controls
+   the initial effective time step). A question of training dynamics, not of correctness.
+3. **Only the sequential recurrence**, not the parallel associative scan of the
+   reference -- at the sequence lengths of this project (history 16-32, horizon up to 36)
+   a speed compromise, not a correctness compromise (the same justification as for
+   xLSTM, point 6 there).
 """
 
 from __future__ import annotations
@@ -112,21 +112,22 @@ __all__ = ["build_mamba_core_class"]
 
 
 def build_mamba_core_class(torch_module: Any, state_size: int, expand: int = 2) -> type:
-    """Erzeugt die ``MambaCore``-Klasse zur Laufzeit, mit ``torch_module`` als Basis.
+    """Creates the ``MambaCore`` class at run time, with ``torch_module`` as its base.
 
-    ``state_size``/``expand`` sind hier gebunden (nicht Teil des Konstruktoraufrufs) --
-    damit hat ``MambaCore.__init__`` dieselbe Signatur wie ``nn.GRU``/``nn.LSTM``/
-    ``XLSTMCore`` (``input_size, hidden_size, num_layers, dropout, batch_first``) und passt
-    unverändert in das ``cell_type``-Dict von ``torch_sequence._build_network``. Dieselbe
-    Fabrik-statt-Modulklasse-Begründung wie bei ``build_xlstm_core_class``: ``torch.nn.Module``
-    muss zur Definitionszeit verfügbar sein, das Paket muss ohne PyTorch importierbar bleiben.
+    ``state_size``/``expand`` are bound here (not part of the constructor call) --
+    so ``MambaCore.__init__`` has the same signature as ``nn.GRU``/``nn.LSTM``/
+    ``XLSTMCore`` (``input_size, hidden_size, num_layers, dropout, batch_first``) and fits
+    unchanged into the ``cell_type`` dict of ``torch_sequence._build_network``. The same
+    factory-instead-of-module-class justification as for ``build_xlstm_core_class``:
+    ``torch.nn.Module`` must be available at definition time, the package must remain
+    importable without PyTorch.
     """
     nn_module = torch_module.nn
     functional = nn_module.functional
     base: type = nn_module.Module
 
     class _MambaLayer(base):  # type: ignore[misc]
-        """Eine selektive SSM-Schicht: Zustand ``h`` -> Zustand, ein Zeitschritt je Aufruf."""
+        """One selective SSM layer: state ``h`` -> state, one time step per call."""
 
         def __init__(self, input_size: int, hidden_size: int) -> None:
             super().__init__()
@@ -134,52 +135,52 @@ def build_mamba_core_class(torch_module: Any, state_size: int, expand: int = 2) 
             self.d_inner = expand * hidden_size
             self.dt_rank = max(1, hidden_size // 16)
 
-            # Referenz (state-spaces/mamba, `Block.forward`): "Add -> LN -> Mixer" --
-            # der Mixer bekommt NIE den unnormierten Residualstrom zu sehen, nur die
-            # normalisierte Ansicht davon. Hier fehlte diese Norm zunaechst komplett;
-            # ohne sie kann der autoregressive Rollout (`last = last + head(...)` in
-            # `torch_sequence.Network.forward`) sich aufschaukeln: ein einmal etwas zu
-            # grosser Ausgang wird im naechsten Schritt zu einem noch groesseren Eingang,
-            # ueber 36 Horizontschritte hinweg exponentiell (diagnostiziert an einem
-            # echten Trainingslauf, n_train=16, Teilnetz energy_target, Epoche 12: der
-            # rohe Layer-Eingang selbst wuchs innerhalb von 5 Schritten von ~2 auf >1e19,
-            # bevor der Zustand nach NaN kollabierte -- ein reiner Delta-Clamp half nicht,
-            # weil `b_t`/`c_t` aus derselben unnormierten Eingabe ebenso explodierten).
-            # GRU/LSTM sind dagegen strukturell robust (saettigende tanh/sigmoid-Gates),
-            # `nn.Transformer{Encoder,Decoder}Layer` bringen LayerNorm eingebaut mit --
-            # die selbst geschriebene SSM-Zelle hatte keine Entsprechung.
+            # Reference (state-spaces/mamba, `Block.forward`): "Add -> LN -> Mixer" --
+            # the mixer NEVER gets to see the unnormalised residual stream, only the
+            # normalised view of it. Here this norm was at first missing entirely;
+            # without it the autoregressive rollout (`last = last + head(...)` in
+            # `torch_sequence.Network.forward`) can build up: an output that is once slightly
+            # too large becomes an even larger input in the next step,
+            # exponentially over 36 horizon steps (diagnosed on a
+            # real training run, n_train=16, subnetwork energy_target, epoch 12: the
+            # raw layer input itself grew within 5 steps from ~2 to >1e19,
+            # before the state collapsed to NaN -- a mere delta clamp did not help,
+            # because `b_t`/`c_t` from the same unnormalised input exploded as well).
+            # GRU/LSTM, by contrast, are structurally robust (saturating tanh/sigmoid gates),
+            # `nn.Transformer{Encoder,Decoder}Layer` come with LayerNorm built in --
+            # the self-written SSM cell had no counterpart.
             self.norm = nn_module.RMSNorm(input_size)
             self.in_proj = nn_module.Linear(input_size, 2 * self.d_inner, bias=False)
             self.x_proj = nn_module.Linear(self.d_inner, self.dt_rank + 2 * state_size, bias=False)
             self.dt_proj = nn_module.Linear(self.dt_rank, self.d_inner, bias=True)
 
-            # S4D-real-Initialisierung (Referenz): A = -(1, 2, ..., state_size), je
-            # d_inner-Zeile identisch -- garantiert A < 0 unabhaengig vom Training.
+            # S4D-real initialisation (reference): A = -(1, 2, ..., state_size), identical
+            # per d_inner row -- guarantees A < 0 independently of training.
             log_a_init = torch_module.log(
                 torch_module.arange(1, state_size + 1, dtype=torch_module.float32)
             )
             self.A_log = nn_module.Parameter(log_a_init.unsqueeze(0).repeat(self.d_inner, 1))
             self.D = nn_module.Parameter(torch_module.ones(self.d_inner))
-            # Referenzkonvention (state-spaces/mamba, mamba_simple.py): A_log/D tragen
-            # die Zeitskalen- bzw. Skip-Information der SSM direkt (keine gelernten
-            # Gewichte im ueblichen Sinn) -- Weight Decay wuerde die S4D-real-Vielfalt
-            # der Zerfallsraten ueber viele Epochen Richtung A_log=0 homogenisieren.
-            # `TorchSequenceModel._param_groups` (torch_sequence.py) liest genau dieses
-            # Attribut generisch, kein Mamba-Sonderfall dort.
+            # Reference convention (state-spaces/mamba, mamba_simple.py): A_log/D carry
+            # the time-scale and skip information of the SSM directly (not learned
+            # weights in the usual sense) -- weight decay would homogenise the S4D-real
+            # diversity of the decay rates towards A_log=0 over many epochs.
+            # `TorchSequenceModel._param_groups` (torch_sequence.py) reads exactly this
+            # attribute generically, no Mamba special case there.
             self.A_log._no_weight_decay = True
             self.D._no_weight_decay = True
             self.out_proj = nn_module.Linear(self.d_inner, hidden_size, bias=False)
 
         def init_state(self, batch_size: int, reference: Any) -> Any:
-            """Nullzustand, Form/Geraet/Dtype von ``reference`` (Eingabetensor) uebernommen."""
+            """Zero state, shape/device/dtype taken from ``reference`` (input tensor)."""
             return reference.new_zeros(batch_size, self.d_inner, state_size)
 
         def step(self, x_t: Any, h_prev: Any) -> tuple[Any, Any]:
-            """Ein Zeitschritt -- O(1): haengt nur von ``h_prev`` und ``x_t`` ab.
+            """One time step -- O(1): depends only on ``h_prev`` and ``x_t``.
 
-            Gleichungen siehe Moduldocstring. ``self.norm`` zuerst, wie in der Referenz
-            (siehe ``__init__``-Kommentar) -- alles Folgende sieht nur die normalisierte
-            Eingabe, nie den unbeschraenkten Rohwert von ``x_t`` selbst.
+            For the equations see the module docstring. ``self.norm`` first, as in the reference
+            (see the ``__init__`` comment) -- everything that follows sees only the normalised
+            input, never the unbounded raw value of ``x_t`` itself.
             """
             xz = self.in_proj(self.norm(x_t))
             x, z = xz.chunk(2, dim=-1)
@@ -201,12 +202,12 @@ def build_mamba_core_class(torch_module: Any, state_size: int, expand: int = 2) 
             return self.out_proj(y), h
 
     class MambaCore(base):  # type: ignore[misc]
-        """Selektiver-SSM-Stapel mit demselben Aufrufvertrag wie ``nn.GRU``/``nn.LSTM``.
+        """Selective SSM stack with the same call contract as ``nn.GRU``/``nn.LSTM``.
 
-        ``forward(input, hx=None) -> (output, hidden)``, ``batch_first=True`` erzwungen
-        (die einzige Aufrufform, die ``torch_sequence.py`` je verwendet). ``hidden`` ist
-        ein Tupel von ``num_layers`` Zustandstensoren -- wie bei GRU/LSTM/xLSTM wird es
-        von ``torch_sequence.py`` nirgends ausgepackt, sondern nur durchgereicht.
+        ``forward(input, hx=None) -> (output, hidden)``, ``batch_first=True`` enforced
+        (the only call form that ``torch_sequence.py`` ever uses). ``hidden`` is
+        a tuple of ``num_layers`` state tensors -- as with GRU/LSTM/xLSTM it is
+        unpacked nowhere in ``torch_sequence.py``, only passed through.
         """
 
         def __init__(
@@ -229,9 +230,9 @@ def build_mamba_core_class(torch_module: Any, state_size: int, expand: int = 2) 
             self.dropout = nn_module.Dropout(dropout)
 
         def forward(self, sequence: Any, hx: Any | None = None) -> tuple[Any, Any]:
-            """Historie oder Einzelschritt kodieren -- Sequenzlaenge ist beliebig.
+            """Encode history or a single step -- sequence length is arbitrary.
 
-            Sequenziell ueber die Zeit (kein paralleler Scan), siehe Moduldocstring.
+            Sequential over time (no parallel scan), see module docstring.
             """
             batch_size, seq_len, _ = sequence.shape
             if hx is None:

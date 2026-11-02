@@ -1,29 +1,29 @@
-r"""Messstellenzuordnung des Anwendungspartners (Anlage F-5, Granulator D 3204.
+r"""Measuring-point mapping of the application partner (plant F-5, granulator D 3204.
 
-Quelle: drei Leitsystem-Screenshots des Anwendungspartners (Granulation, Waerme-
-rueckgewinnung 1/2, Datum 05.-08.09.2025 -- ein anderer Zeitpunkt als die beiden
-validierten Exporte, siehe unten) sowie die Spaltenkoepfe der beiden 24h-Exporte
-selbst (Datei 1: Produkt "prod1", 26.03.2026; Datei 2: Produkt "prod2", 11.05.2026,
-je 1441 Zeilen im Minutentakt). Produktnamen werden hier bewusst nicht ausgeschrieben
-(Kundendaten des Anwendungspartners, siehe NA1/``docs/04_stand_ap1.md``).
+Source: three control-system screenshots of the application partner (granulation, heat
+recovery 1/2, date 05.-08.09.2025 -- a different point in time than the two
+validated exports, see below) as well as the column headers of the two 24h exports
+themselves (file 1: product "prod1", 26.03.2026; file 2: product "prod2", 11.05.2026,
+each 1441 rows at one-minute intervals). Product names are deliberately not written out here
+(customer data of the application partner, see NA1/``docs/04_stand_ap1.md``).
 
-Zwei Datenquellen faellt auseinander, das ist hier wichtig auseinanderzuhalten:
+Two data sources diverge; it is important here to keep them apart:
 
-1. Die **Exportdateien** (31 geloggte Kanaele, siehe :data:`GRANULATOR_D3204_CHANNELS`
-   mit ``exported=True``) -- das ist die validierte Zeitreihe.
-2. Der **Screenshot** (Momentaufnahme an einem dritten Datum) zeigt zusaetzliche
-   Kanaele, die NICHT im Export enthalten sind (``exported=False`` unten) -- unter
-   anderem Bettmasse, Suspensionsdichte, Duesendruck und die Druckverluste. Diese sind
-   nur zur Einordnung/Geometrieabschaetzung aufgefuehrt (siehe NA5-Skript), nicht als
-   Zeitreihe verfuegbar.
+1. The **export files** (31 logged channels, see :data:`GRANULATOR_D3204_CHANNELS`
+   with ``exported=True``) -- this is the validated time series.
+2. The **screenshot** (snapshot on a third date) shows additional
+   channels that are NOT contained in the export (``exported=False`` below) -- among
+   others bed mass, suspension density, nozzle pressure and the pressure drops. These are
+   only listed for orientation/geometry estimation (see NA5 script), not available as a
+   time series.
 
-Wichtiger Befund beim Abgleich Screenshot <-> Exportspaltenkoepfe: die Kanaele
-``FIRAL-323805`` und ``FIRAL-323604`` tragen in der Exportdatei die Einheit ``[°C]``
-in Zeile 2 -- das ist ein Beschriftungsfehler der Quelle. Der Tag-Praefix ``FIR``
-(Durchflussanzeige) und der Screenshot-Wert (FIRAL-323604: 37.2 m3/h,
-FIRAL-323805: 17.98 m3/h, beide nahe am Mittelwert der jeweiligen Exportspalte)
-bestaetigen: beides sind Durchfluesse in m3/h, keine Temperaturen. Die Einheit ist
-deshalb unten explizit korrigiert (``unit="m3/h"``), nicht aus der Datei uebernommen.
+Important finding when comparing screenshot <-> export column headers: the channels
+``FIRAL-323805`` and ``FIRAL-323604`` carry the unit ``[°C]`` in the export file
+in row 2 -- this is a labelling error of the source. The tag prefix ``FIR``
+(flow indicator) and the screenshot value (FIRAL-323604: 37.2 m3/h,
+FIRAL-323805: 17.98 m3/h, both close to the mean of the respective export column)
+confirm: both are flows in m3/h, not temperatures. The unit is
+therefore explicitly corrected below (``unit="m3/h"``), not taken from the file.
 """
 
 from __future__ import annotations
@@ -47,13 +47,13 @@ __all__ = [
 
 @dataclass(frozen=True, slots=True)
 class PlantChannel:
-    """Ein Messstellenkennzeichen des Leitsystems und seine Bedeutung im Modellkontext.
+    """A measuring-point tag of the control system and its meaning in the model context.
 
-    ``confirmed`` ist unabhaengig von ``exported``: ein Kanal kann im Export vorhanden
-    und trotzdem in seiner *Bedeutung* unbestaetigt sein (siehe die obere Temperatur-
-    Trias, NA3) -- und umgekehrt kann ein Kanal aus dem Screenshot in seiner Bedeutung
-    eindeutig sein, obwohl er nicht exportiert wurde (z. B. ``PDIRAH-320404``, dessen
-    Screenshot-Wert mit einer unabhaengigen Leitsystem-Anzeige uebereinstimmt).
+    ``confirmed`` is independent of ``exported``: a channel can be present in the export
+    and still be unconfirmed in its *meaning* (see the upper temperature
+    triad, NA3) -- and conversely a channel from the screenshot can be unambiguous in its
+    meaning although it was not exported (e.g. ``PDIRAH-320404``, whose
+    screenshot value agrees with an independent control-system display).
     """
 
     tag: str
@@ -65,7 +65,7 @@ class PlantChannel:
 
 
 GRANULATOR_D3204_CHANNELS: tuple[PlantChannel, ...] = (
-    # -- Zuluft / Umgebung ---------------------------------------------------------
+    # -- Inlet air / ambient -------------------------------------------------------
     PlantChannel(
         "FIRCAL-322411",
         "Nm3/h",
@@ -130,7 +130,7 @@ GRANULATOR_D3204_CHANNELS: tuple[PlantChannel, ...] = (
         confirmed=True,
         note="Nur im Screenshot sichtbar, nicht Teil der Exportdatei.",
     ),
-    # -- Betttemperatur --------------------------------------------------------------
+    # -- Bed temperature -------------------------------------------------------------
     PlantChannel(
         "TIRSAH-320414",
         "degC",
@@ -157,7 +157,7 @@ GRANULATOR_D3204_CHANNELS: tuple[PlantChannel, ...] = (
         exported=True,
         confirmed=True,
     ),
-    # -- Hoehere Position (NA3, unbestaetigt) -----------------------------------------
+    # -- Higher position (NA3, unconfirmed) -------------------------------------------
     PlantChannel(
         "TRZSAH-320417",
         "degC",
@@ -197,7 +197,7 @@ GRANULATOR_D3204_CHANNELS: tuple[PlantChannel, ...] = (
         confirmed=False,
         note="Siehe TRZSAH-320417.",
     ),
-    # -- Abluft ------------------------------------------------------------------------
+    # -- Exhaust air -------------------------------------------------------------------
     PlantChannel(
         "TIRSAH-320420",
         "degC",
@@ -206,7 +206,7 @@ GRANULATOR_D3204_CHANNELS: tuple[PlantChannel, ...] = (
         confirmed=True,
         note="Position im Screenshot am Apparatkopf, vor 'Filter'/V 3246 bestaetigt.",
     ),
-    # -- Zusaetzliche, nicht im NA2-Ausgangsstand erwartete Kanaele ---------------------
+    # -- Additional channels, not expected in the NA2 initial state ---------------------
     PlantChannel(
         "TIR-324010",
         "degC",
@@ -223,7 +223,7 @@ GRANULATOR_D3204_CHANNELS: tuple[PlantChannel, ...] = (
         confirmed=True,
         note="Im Filter-Screenshot exakt an gleicher Stelle/Wert bestaetigt (35.0 degC).",
     ),
-    # -- Ventilatoren --------------------------------------------------------------------
+    # -- Fans ----------------------------------------------------------------------------
     PlantChannel(
         "Leistung V-3226",
         "kW",
@@ -238,7 +238,7 @@ GRANULATOR_D3204_CHANNELS: tuple[PlantChannel, ...] = (
         exported=True,
         confirmed=True,
     ),
-    # -- Spruehsystem ----------------------------------------------------------------------
+    # -- Spray system ----------------------------------------------------------------------
     PlantChannel(
         "FIR-325160",
         "kg/h",
@@ -346,7 +346,7 @@ GRANULATOR_D3204_CHANNELS: tuple[PlantChannel, ...] = (
         confirmed=True,
         note="Nur im Screenshot sichtbar, nicht Teil der Exportdatei.",
     ),
-    # -- Druckverluste / Bettmasse -------------------------------------------------------
+    # -- Pressure drops / bed mass -------------------------------------------------------
     PlantChannel(
         "PDIRAH-320402",
         "mbar",
@@ -386,7 +386,7 @@ GRANULATOR_D3204_CHANNELS: tuple[PlantChannel, ...] = (
             "56 NA2-Nachtrag)."
         ),
     ),
-    # -- Waermerueckgewinnung --------------------------------------------------------------
+    # -- Heat recovery ---------------------------------------------------------------------
     PlantChannel(
         "TIRCSAH-322813",
         "degC",
@@ -450,47 +450,47 @@ GRANULATOR_D3204_CHANNELS: tuple[PlantChannel, ...] = (
 
 
 def channels_by_tag() -> dict[str, PlantChannel]:
-    """Nachschlagetabelle Tag -> :class:`PlantChannel`."""
+    """Lookup table tag -> :class:`PlantChannel`."""
     return {channel.tag: channel for channel in GRANULATOR_D3204_CHANNELS}
 
 
 def process_air_flow_tag() -> str:
-    """Tag der Prozessluftmenge."""
+    """Tag of the process air flow."""
     return "FIRCAL-322411"
 
 
 def ambient_temperature_tag() -> str:
-    """Tag der Ansaugluft-/Umgebungstemperatur."""
+    """Tag of the intake air / ambient temperature."""
     return "TIR-322412"
 
 
 def inlet_temperature_tags() -> tuple[str, str, str]:
-    """Tags der Zulufttemperatur unter dem Anstroemboden (drei Sensoren)."""
+    """Tags of the inlet air temperature below the distributor plate (three sensors)."""
     return ("TRZSAH-320408", "TRZSAH-320409", "TRZSAH-320410")
 
 
 def bed_temperature_tags() -> tuple[str, str, str]:
-    """Betttemperatur -- siehe :data:`GRANULATOR_D3204_CHANNELS`, bestaetigt via Screenshot."""
+    """Bed temperature -- see :data:`GRANULATOR_D3204_CHANNELS`, confirmed via screenshot."""
     return ("TIRSAH-320414", "TIRSAH-320415", "TIRSAH-320416")
 
 
 def upper_position_temperature_tags() -> tuple[str, str, str]:
-    """Hoehere Position, NICHT als Betttemperatur bestaetigt -- siehe NA3-Notiz."""
+    """Higher position, NOT confirmed as bed temperature -- see NA3 note."""
     return ("TRZSAH-320417", "TRZSAH-320418", "TRZSAH-320419")
 
 
 def outlet_temperature_tag() -> str:
-    """Tag der Ablufttemperatur am Granulatoraustritt, vor dem Filter."""
+    """Tag of the exhaust air temperature at the granulator outlet, before the filter."""
     return "TIRSAH-320420"
 
 
 def spray_rate_tag() -> str:
-    """Tag der Spruehrate."""
+    """Tag of the spray rate."""
     return "FIR-325160"
 
 
 def nozzle_atomising_air_tags() -> tuple[str, str, str, str, str, str]:
-    """Tags der Zerstaeuberluft je Duese (sechs Duesen)."""
+    """Tags of the atomising air per nozzle (six nozzles)."""
     return (
         "FIRSAL-320515",
         "FIRSAL-320525",

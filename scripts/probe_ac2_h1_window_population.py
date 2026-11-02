@@ -1,33 +1,33 @@
-r"""AC2: prueft, ob `h36 < h1` (Befund 50i) durch die Fensterpopulation erklaerbar ist.
+r"""AC2: checks whether `h36 < h1` (Befund 50i) can be explained by the window population.
 
-KEIN Training -- GRU wird aus den X2-Checkpoints geladen (``artifacts/checkpoints/
-gru_seed{1,2,3}.pt``), Persistenz/statische Baseline frisch angepasst (billig,
-geschlossene Form, identisches Muster zu ``probe_x3_recoverable_power.py``).
+NO training -- GRU is loaded from the X2 checkpoints (``artifacts/checkpoints/
+gru_seed{1,2,3}.pt``), persistence/static baseline freshly fitted (cheap,
+closed form, identical pattern to ``probe_x3_recoverable_power.py``).
 
-Hintergrund
------------
-``WindowConfig.horizon`` ist bei der Fenstererzeugung FEST
+Background
+----------
+``WindowConfig.horizon`` is FIXED at window creation
 (``data/windows.py::TrajectoryWindowDataset.from_trajectory``: ``span =
-history_length + horizon``, ``starts = arange(0, n_steps - span + 1, stride)``) -- ein
-groesserer Horizont braucht mehr Restlaenge je Lauf, also WENIGER moegliche
-Fensteranfaenge. X2 baute genau EIN Fensterset mit ``horizon=36``; das dort berichtete
-``h=1`` ist eine Zeitschritt-Teilmenge DESSELBEN Fenstersets (Slice ``[:1]`` der
-36-Schritt-Vorhersage), nicht ein eigenes, groesseres ``h=1``-Fensterset. Befund 50(i)
-fragt: waere der GRU-Einschritt-Fehler anders, wenn man ihn auf der tatsaechlichen
-(groesseren) ``h=1``-Population misst statt auf der (kleineren) Teilmenge, die auch bei
-``h=36`` noch existiert -- und verschwindet ``h36 < h1`` dann?
+history_length + horizon``, ``starts = arange(0, n_steps - span + 1, stride)``) -- a
+larger horizon needs more remaining length per run, hence FEWER possible
+window starts. X2 built exactly ONE window set with ``horizon=36``; the ``h=1`` reported
+there is a time-step subset of THE SAME window set (slice ``[:1]`` of the
+36-step prediction), not a separate, larger ``h=1`` window set. Befund 50(i)
+asks: would the GRU one-step error be different if measured on the actual
+(larger) ``h=1`` population instead of on the (smaller) subset that also still exists at
+``h=36`` -- and does ``h36 < h1`` disappear then?
 
-Vorgehen: je Testpool zwei Fenstersets bauen -- A (``horizon=36``, wie X2) und B
-(``horizon=1``, sonst identisch: ``history_length``/``stride``/``target_names``/
-Skalierer). Beide verwenden ``starts = arange(0, n_steps - span + 1, stride)`` mit
-demselben ``stride``/Ursprung -- A's Startmenge ist deshalb exakt eine Teilmenge von B's
-Startmenge (kleineres ``span`` bei B -> hoehere obere Grenze), keine Matching-Heuristik
-noetig: die "h=36-Teilmenge" von B ist B eingeschraenkt auf ``window_start <=
+Procedure: build two window sets per test pool -- A (``horizon=36``, as in X2) and B
+(``horizon=1``, otherwise identical: ``history_length``/``stride``/``target_names``/
+scaler). Both use ``starts = arange(0, n_steps - span + 1, stride)`` with
+the same ``stride``/origin -- A's start set is therefore exactly a subset of B's
+start set (smaller ``span`` for B -> higher upper bound), no matching heuristic
+needed: the "h=36 subset" of B is B restricted to ``window_start <=
 max(A.window_start)``.
 
-Referenz: rauschfreie Wahrheit (``future_targets_truth``), wie die bereits berichteten
-Befund-50-Zahlen (``exhaust_rmse_run_median_physical``/``nrmse_truth_run_median`` --
-siehe deren Identitaet, Befund 50i).
+Reference: noise-free truth (``future_targets_truth``), like the already reported
+Befund 50 numbers (``exhaust_rmse_run_median_physical``/``nrmse_truth_run_median`` --
+see their identity, Befund 50i).
 """
 
 from __future__ import annotations
@@ -88,11 +88,11 @@ def _rmse_by_population(
     *,
     keep: np.ndarray | None = None,
 ) -> tuple[float, int]:
-    """RMSE [K] (``per_run_rmse_median``, h=1, ein Kanal), optional auf ``keep`` beschraenkt.
+    """RMSE [K] (``per_run_rmse_median``, h=1, one channel), optionally restricted to ``keep``.
 
-    ``keep`` ist eine boolesche Maske ueber die Fensterachse -- damit laesst sich
-    dieselbe Auswertung auf eine Teilmenge der Fenster einschraenken, ohne den
-    Datensatz neu zu bauen.
+    ``keep`` is a boolean mask over the window axis -- this allows restricting
+    the same evaluation to a subset of the windows without rebuilding the
+    dataset.
     """
     if keep is not None:
         prediction_physical = prediction_physical[keep]

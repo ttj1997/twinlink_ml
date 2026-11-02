@@ -1,9 +1,9 @@
-"""Tests für Auflösungsvermögen und Varianzzerlegung (Arbeitsplan Schritt 5).
+"""Tests for resolving power and variance decomposition (work plan step 5).
 
-Reine Statistik, keine Simulation: die Aussagen dieses Moduls entscheiden darüber, ob ein
-Architekturunterschied berichtet werden darf. Sie müssen deshalb ohne Prozessmodell
-prüfbar sein -- ein Fehler hier wäre sonst erst in einem Lernkurvenlauf sichtbar und dort
-nicht von einem echten Effekt unterscheidbar.
+Pure statistics, no simulation: the statements of this module decide whether an
+architecture difference may be reported. They must therefore be checkable without a
+process model -- otherwise an error here would only be visible in a learning-curve run and
+there indistinguishable from a real effect.
 """
 
 from __future__ import annotations
@@ -36,7 +36,7 @@ def make_record(
     horizon: int = 24,
     extra: dict | None = None,
 ) -> RunRecord:
-    """Minimaler Record, wie ihn ``run_variance_decomposition`` schreibt."""
+    """Minimal record, as ``run_variance_decomposition`` writes it."""
     params = {
         "model/label": label,
         "n_train": n_train,
@@ -70,9 +70,9 @@ def test_seed_plan_varies_exactly_one_axis() -> None:
 
 
 def test_replicate_zero_is_the_reference_on_every_axis() -> None:
-    """Sonst hätte jede Achse ihren eigenen Bezugspunkt und die Spannweiten wären nicht.
+    """Otherwise each axis would have its own reference point and the spans would not be.
 
-    vergleichbar.
+    comparable.
     """
     plan = SeedPlan()
     for source in VarianceSource:
@@ -80,7 +80,7 @@ def test_replicate_zero_is_the_reference_on_every_axis() -> None:
 
 
 def test_data_axis_shares_seeds_with_joint_axis() -> None:
-    """Voraussetzung dafür, dass der Pool-Cache über die Achsen hinweg greift."""
+    """Precondition for the pool cache taking effect across the axes."""
     plan = SeedPlan()
     data_seeds = {bundle.data_seed for bundle in plan.bundles(VarianceSource.DATA)}
     joint_seeds = {bundle.data_seed for bundle in plan.bundles(VarianceSource.JOINT)}
@@ -113,7 +113,7 @@ def test_spread_statistics() -> None:
 
 
 def test_minimum_detectable_difference_falls_with_replicates() -> None:
-    r"""Die Schwelle fällt mit :math:`\sqrt{2/n}` und ist kleiner als die Spannweite."""
+    r"""The threshold falls with :math:`\sqrt{2/n}` and is smaller than the span."""
     spread = SeedSpread(source=VarianceSource.JOINT, values=(0.90, 1.00, 1.10))
     three = spread.minimum_detectable_difference(n_replicates=3)
     twelve = spread.minimum_detectable_difference(n_replicates=12)
@@ -131,9 +131,9 @@ def test_required_replicates_is_monotone_and_capped() -> None:
 
 
 def test_parameter_free_baseline_has_zero_model_spread() -> None:
-    """Ein Modell ohne Parameter kann über den Modell-Seed nicht streuen -- genau deshalb.
+    """A model without parameters cannot scatter over the model seed -- exactly for that reason.
 
-    taugt es als Referenz für das Auflösungsvermögen.
+    it is suitable as a reference for the resolving power.
     """
     spread = SeedSpread(source=VarianceSource.MODEL, values=(0.794, 0.794, 0.794))
     assert spread.sigma_from_span == 0.0
@@ -162,9 +162,9 @@ def test_collect_and_decompose() -> None:
 
 
 def test_mixed_factor_log_is_rejected() -> None:
-    """Zwei Rauschniveaus im selben Log ergäben eine 'Seed-Streuung', die in Wahrheit der.
+    """Two noise levels in the same log would yield a 'seed scatter' that in truth is the.
 
-    Effekt des Rauschniveaus ist. Der Doppeleintrag muss auffallen.
+    effect of the noise level. The duplicate entry must be noticed.
     """
     records = [
         make_record(

@@ -409,14 +409,14 @@ def task_57(_: Any) -> dict[str, Any]:
 
 def task_60(_: Any) -> dict[str, Any]:
     out: dict[str, Any] = {}
-    for t_kalt in p60.COLD_TEMPERATURES_CELSIUS:
+    for t_cold in p60.COLD_TEMPERATURES_CELSIUS:
         for dt in (10.0, 20.0):
             network = HeatNetworkConfig(
                 sources=(p60.SOURCE_1, p60.SOURCE_2),
                 sinks=(p60.SINK_1, p60.SINK_2),
                 minimum_pinch_k=dt,
                 recovery_mode="condensing",
-                cold_temperature_celsius=t_kalt,
+                cold_temperature_celsius=t_cold,
                 fuel_lower_heating_value_j_per_kg=p60.FUEL_LOWER_HEATING_VALUE_J_PER_KG,
                 heater_efficiency=p60.HEATER_EFFICIENCY,
             )
@@ -424,13 +424,13 @@ def task_60(_: Any) -> dict[str, Any]:
                 (p60.SOURCE_1, p60.SOURCE_2),
                 (p60.SINK_1, p60.SINK_2),
                 p60.GAS,
-                cold_temperature_celsius=t_kalt,
+                cold_temperature_celsius=t_cold,
                 minimum_pinch_k=dt,
                 n_segments_below_dew_point=p60.N_SEGMENTS_BELOW_DEW_POINT,
             )
             target = p60._kw_to_fuel_kg_per_h(pinch.minimum_hot_utility_kw)
             reference = p60._six_case_fuel_kg_per_h(
-                cold_temperature_celsius=t_kalt, minimum_pinch_k=dt
+                cold_temperature_celsius=t_cold, minimum_pinch_k=dt
             )
             row: dict[str, Any] = {"pinch_target_kg_per_h": target}
             for check in ("warm_end", "along"):
@@ -444,14 +444,14 @@ def task_60(_: Any) -> dict[str, Any]:
                 }
                 if check == "warm_end":
                     for case in fuel:
-                        _check(fuel[case], reference[case], f"60 {case} {t_kalt} {dt}")
+                        _check(fuel[case], reference[case], f"60 {case} {t_cold} {dt}")
                 best = min(fuel, key=fuel.get)
                 row["as_run" if check == "warm_end" else "along"] = {
                     "fuel_kg_per_h": fuel,
                     "best_case": best,
                     "gap_of_best_to_pinch": fuel[best] / target - 1.0,
                 }
-            out[f"T_kalt {t_kalt:g} / dT_min {dt:g}"] = row
+            out[f"T_kalt {t_cold:g} / dT_min {dt:g}"] = row
     return {"befund": "60", "result": out}
 
 
@@ -482,7 +482,7 @@ def task_69b(spray: float) -> dict[str, Any]:
                 sinks=sinks,
                 minimum_pinch_k=lb.DT_MIN_K,
                 recovery_mode="condensing",
-                cold_temperature_celsius=lb.T_KALT_C,
+                cold_temperature_celsius=lb.T_COLD_C,
                 fuel_lower_heating_value_j_per_kg=lb.H_U_J_PER_KG,
                 heater_efficiency=lb.ETA_H,
             )

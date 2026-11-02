@@ -1,8 +1,8 @@
-r"""DA1/EA2: Belohnung ohne Strafe, begrenzter Loeserfehlschlagwert.
+r"""DA1/EA2: reward without penalty, bounded solver-failure value.
 
-Nebenbedingungen bleiben geprueft, nur nicht in der Belohnung. Reproduktionsmodus
-(``include_penalty=True``, ``solve_failure_penalty_kw=None``, beides Default) bleibt
-bitgleich zu VA2.
+Constraints are still checked, just not in the reward. Reproduction mode
+(``include_penalty=True``, ``solve_failure_penalty_kw=None``, both default) stays
+bit-identical to VA2.
 """
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ def anchor() -> dict[str, Any]:
 
 
 def test_default_config_still_reproduces_va2_bitgleich(anchor: dict[str, Any]) -> None:
-    """``include_penalty=True`` (Default) bleibt bitgleich zu VA2 -- unveraendert."""
+    """``include_penalty=True`` (default) stays bit-identical to VA2 -- unchanged."""
     env = OperatingPointBanditEnv()
     for point in anchor["grid_results"]:
         reward, _ = env.evaluate_operating_point(
@@ -39,13 +39,13 @@ def test_default_config_still_reproduces_va2_bitgleich(anchor: dict[str, Any]) -
 
 
 def test_no_penalty_reward_equals_negative_energy_regardless_of_feasibility() -> None:
-    """``include_penalty=False``: Belohnung ist immer ``-energy_target``.
+    """``include_penalty=False``: the reward is always ``-energy_target``.
 
-    Auch bei unzulaessigen Aktionen -- die Zulaessigkeit wird weiterhin berichtet.
+    Also for infeasible actions -- feasibility is still reported.
     """
     env = OperatingPointBanditEnv(BanditEnvConfig(include_penalty=False))
 
-    # bekannt unzulaessige Aktion (heisse Ecke, AB3/DA0-Beispiel)
+    # known infeasible action (hot corner, AB3/DA0 example)
     reward, info = env.evaluate_operating_point(
         inlet_temperature_celsius=120.0,
         gas_velocity_m_per_s=2.5,
@@ -56,7 +56,7 @@ def test_no_penalty_reward_equals_negative_energy_regardless_of_feasibility() ->
     assert reward == pytest.approx(-info["energy_target"])
     assert info["constraint_check"]["bed_temperature_violation_k"] > 0.0
 
-    # bekannt zulaessige Aktion
+    # known feasible action
     reward_feasible, info_feasible = env.evaluate_operating_point(
         inlet_temperature_celsius=90.0,
         gas_velocity_m_per_s=1.6,
@@ -68,9 +68,9 @@ def test_no_penalty_reward_equals_negative_energy_regardless_of_feasibility() ->
 
 
 def test_no_penalty_reward_differs_from_penalized_reward_when_infeasible() -> None:
-    """Bei identischer unzulaessiger Aktion muss der Strafmodus deutlich negativer sein.
+    """For an identical infeasible action the penalty mode must be clearly more negative.
 
-    Sonst wirkt der Schalter nicht.
+    Otherwise the switch has no effect.
     """
     env_penalized = OperatingPointBanditEnv()
     env_no_penalty = OperatingPointBanditEnv(BanditEnvConfig(include_penalty=False))
@@ -91,12 +91,12 @@ def test_no_penalty_reward_differs_from_penalized_reward_when_infeasible() -> No
 
 
 def test_default_solve_failure_penalty_still_uses_va2_sentinel() -> None:
-    """``solve_failure_penalty_kw=None`` bleibt bitgleich zu VA2.
+    """``solve_failure_penalty_kw=None`` stays bit-identical to VA2.
 
-    Der Sentinel aus Befund 52 (``_SOLVE_FAILURE_PENALTY_KW`` = 1.000.000), unveraendert.
+    The sentinel from Befund 52 (``_SOLVE_FAILURE_PENALTY_KW`` = 1,000,000), unchanged.
     """
     env = OperatingPointBanditEnv()
-    # bekannter Loeserfehlschlagpunkt (EA1(b)/DA0(a))
+    # known solver-failure point (EA1(b)/DA0(a))
     reward, info = env.evaluate_operating_point(
         inlet_temperature_celsius=60.0,
         gas_velocity_m_per_s=0.8,
@@ -109,7 +109,7 @@ def test_default_solve_failure_penalty_still_uses_va2_sentinel() -> None:
 
 
 def test_bounded_solve_failure_penalty_overrides_sentinel() -> None:
-    """EA2: ein gesetzter ``solve_failure_penalty_kw`` ersetzt den Sentinel exakt."""
+    """EA2: a set ``solve_failure_penalty_kw`` replaces the sentinel exactly."""
     env = OperatingPointBanditEnv(BanditEnvConfig(solve_failure_penalty_kw=4.5))
     reward, info = env.evaluate_operating_point(
         inlet_temperature_celsius=60.0,
@@ -123,17 +123,17 @@ def test_bounded_solve_failure_penalty_overrides_sentinel() -> None:
 
 
 def test_fa1_bounded_solve_failure_penalty_with_penalty_mode() -> None:
-    """Pinnt den fuer FA2 verwendeten Grenzwert im DEFAULT-Modus "mit Strafe".
+    """Pins the bound used for FA2 in the DEFAULT mode "with penalty".
 
-    Aus ``probe_bandit_env_solve_failure_bound.py`` (``with_penalty``, 155.57896052362634
-    kW -- schlechteste Summe aus Energie und Strafe ueber die loesbaren 13x9-Gitterpunkte,
-    erreicht bei t_in=65 °C/u_gas=0.8 m/s, siehe Befund 62 DA0(a)). Ersetzt den Sentinel
-    bitgleich, auch im DEFAULT-Modus "mit Strafe" (``include_penalty=True``) -- derselbe
-    generische Override-Mechanismus wie EA2s ohne-Strafe-Grenzwert, hier mit dem
-    tatsaechlich fuer FA2 verwendeten Wert gepinnt, damit eine spaetere Aenderung an diesem
-    Wert hier auffaellt statt still im Trainingslauf zu verschwinden. ``include_penalty``
-    bleibt Default (True) -- kein zweiter Modus-Schalter noetig, der Sentinel-Override ist
-    von ``include_penalty`` unabhaengig (siehe env.py).
+    From ``probe_bandit_env_solve_failure_bound.py`` (``with_penalty``, 155.57896052362634
+    kW -- worst sum of energy and penalty over the solvable 13x9 grid points,
+    reached at t_in=65 °C/u_gas=0.8 m/s, see Befund 62 DA0(a)). Replaces the sentinel
+    bit-identically, also in the DEFAULT mode "with penalty" (``include_penalty=True``) --
+    the same generic override mechanism as EA2's without-penalty bound, here pinned with
+    the value actually used for FA2, so that a later change to this value shows up here
+    instead of silently disappearing in the training run. ``include_penalty`` stays
+    default (True) -- no second mode switch needed, the sentinel override is independent
+    of ``include_penalty`` (see env.py).
     """
     env = OperatingPointBanditEnv(BanditEnvConfig(solve_failure_penalty_kw=155.57896052362634))
     reward, info = env.evaluate_operating_point(

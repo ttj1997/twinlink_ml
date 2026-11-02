@@ -1,10 +1,10 @@
-"""Tests für ``simulation/exhaust.py`` -- Rückrechnung der Abluft-Austrittsgrößen.
+"""Tests for ``simulation/exhaust.py`` -- back-calculation of the exhaust air outlet quantities.
 
-Geprüft wird die Verdrahtung gegen die bestehende Referenzrechnung aus
-``steady_state.py``/Befund 31 (``docs/04_stand_ap1.md``) -- mit den WAHREN, simulierten
-Werten als Eingabe, nicht mit Modellvorhersagen. Ob ein trainiertes Sequenzmodell
-T_bed/``product_moisture_kg_per_kg`` gut genug vorhersagt, ist eine andere, spätere Frage
-(Rollout-Güte), die dieser Test nicht beantwortet.
+What is checked is the wiring against the existing reference calculation from
+``steady_state.py``/Befund 31 (``docs/04_stand_ap1.md``) -- with the TRUE, simulated
+values as input, not with model predictions. Whether a trained sequence model predicts
+T_bed/``product_moisture_kg_per_kg`` well enough is a different, later question
+(rollout quality) that this test does not answer.
 """
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ def _reconstruct_at_solution(
     simulator: GreyBoxFluidBedGranulator,
     backend: ArrayBackend,
 ) -> tuple[float, float, float, SteadyStateSolution]:
-    """Rückrechnung mit den wahren Werten der Beharrungszustandslösung, plus die Lösung selbst."""
+    """Back-calculation with the true values of the steady-state solution, plus the solution."""
     solution = solve_steady_state(simulator)
     assert solution.feasible, solution.infeasibility_reasons
 
@@ -59,11 +59,11 @@ def _reconstruct_at_solution(
 def test_reconstruction_matches_steady_state_reference_bitgenau(
     config: ProcessConfig, simulator: GreyBoxFluidBedGranulator, backend: ArrayBackend
 ) -> None:
-    """Am Nominalpunkt (Befund 31) gegen ``solve_steady_state()`` -- bitgleich erwartet.
+    """At the nominal point (Befund 31) against ``solve_steady_state()`` -- bit-identical expected.
 
-    Beide Wege rufen ``thermo.evaporation_rate_kg_per_s`` mit denselben Eingaben auf;
-    eine Abweichung wäre ein Verdrahtungsfehler in ``exhaust.py``, keine physikalische
-    Frage -- deshalb ``rel=1e-12``, nicht eine großzügige Tolerenz.
+    Both paths call ``thermo.evaporation_rate_kg_per_s`` with the same inputs;
+    a deviation would be a wiring error in ``exhaust.py``, not a physical
+    question -- hence ``rel=1e-12``, not a generous tolerance.
     """
     t_gas_out, y_gas_out, _outlet_temperature, solution = _reconstruct_at_solution(
         config, simulator, backend
@@ -76,7 +76,7 @@ def test_reconstruction_matches_steady_state_reference_bitgenau(
 def test_reconstruction_matches_documented_befund_31_values(
     config: ProcessConfig, simulator: GreyBoxFluidBedGranulator, backend: ArrayBackend
 ) -> None:
-    """Gegenprobe gegen den dokumentierten Tabellenwert (``docs/04_stand_ap1.md``, Befund 31)."""
+    """Cross-check against the documented table value (``docs/04_stand_ap1.md``, Befund 31)."""
     _t_gas_out, y_gas_out, _outlet_temperature, _solution = _reconstruct_at_solution(
         config, simulator, backend
     )
@@ -86,10 +86,10 @@ def test_reconstruction_matches_documented_befund_31_values(
 def test_outlet_temperature_matches_bed_temperature_at_zero_loss(
     config: ProcessConfig, simulator: GreyBoxFluidBedGranulator, backend: ArrayBackend
 ) -> None:
-    """``outlet_duct_heat_loss_k`` Default 0.0: bitgleiche Identität.
+    """``outlet_duct_heat_loss_k`` default 0.0: bit-identical identity.
 
-    ``outlet_temperature_celsius`` == ``bed_temperature_celsius`` -- keine numerische
-    Änderung gegenüber dem bisherigen (fehlerhaft benannten) Verhalten.
+    ``outlet_temperature_celsius`` == ``bed_temperature_celsius`` -- no numerical
+    change compared with the previous (wrongly named) behaviour.
     """
     assert config.exhaust.outlet_duct_heat_loss_k == 0.0
     t_gas_out, _y_gas_out, outlet_temperature, _solution = _reconstruct_at_solution(
@@ -101,9 +101,9 @@ def test_outlet_temperature_matches_bed_temperature_at_zero_loss(
 def test_outlet_temperature_subtracts_duct_loss(
     config: ProcessConfig, simulator: GreyBoxFluidBedGranulator, backend: ArrayBackend
 ) -> None:
-    """Bei gesetztem Rohrleitungsverlust: um genau diesen Betrag kühler.
+    """With a set duct loss: cooler by exactly this amount.
 
-    ``outlet_temperature_celsius`` ist um ``loss_k`` niedriger als ``bed_temperature_celsius``.
+    ``outlet_temperature_celsius`` is lower than ``bed_temperature_celsius`` by ``loss_k``.
     """
     loss_k = 3.5
     lossy_config = replace(config, exhaust=replace(config.exhaust, outlet_duct_heat_loss_k=loss_k))

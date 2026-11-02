@@ -91,6 +91,8 @@ lab book (`04_stand_ap1.md`), process setup, and synthesis documents.
   from conversations.
 - Label placeholders without a source as such.
 - Translation passes must pass `tools/check_translation.py`.
+- Comments, docstrings and docs are English; exceptions are listed in docs/12, section
+  'Translation to English'.
 
 ## Code
 

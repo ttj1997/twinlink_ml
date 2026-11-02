@@ -61,30 +61,30 @@ __all__ = ["RandomFeatureNARX"]
 
 
 class RandomFeatureNARX(SequenceModel):
-    r"""NARX mit gezogenen Zufallsmerkmalen und Ridge-Ausgabeschicht.
+    r"""NARX with drawn random features and a ridge output layer.
 
     Parameters
     ----------
     n_features
-        Anzahl Zufallsmerkmale :math:`M`. Der Kapazitätsparameter. Über der Zahl der
-        Trainingsfenster wird das Modell auch mit Ridge instabil; bei acht Läufen ist das
-        erreichbar, deshalb ist die Voreinstellung bewusst moderat.
+        Number of random features :math:`M`. The capacity parameter. Above the number of
+        training windows the model becomes unstable even with ridge; with eight runs this is
+        reachable, which is why the default is deliberately moderate.
     n_lags_target, n_lags_exogenous
-        Verzögerungsordnung, identisch zur Konvention des linearen ARX -- der Vergleich
-        soll die Basisfunktion isolieren und nicht gleichzeitig die Ordnung ändern.
+        Lag order, identical to the convention of the linear ARX -- the comparison
+        is meant to isolate the basis function and not change the order at the same time.
     length_scale
-        Bandbreite :math:`\ell` der Zufallsfrequenzen,
-        :math:`\boldsymbol\omega \sim \mathcal N(0, \ell^{-2} I)`. Im standardisierten
-        Eingangsraum ist 1.0 die neutrale Wahl. Zu kleines :math:`\ell` erzeugt
-        hochfrequente Merkmale, die bei wenigen Läufen sofort überanpassen -- das ist der
-        eigentliche Hyperparameter dieses Modells.
+        Bandwidth :math:`\ell` of the random frequencies,
+        :math:`\boldsymbol\omega \sim \mathcal N(0, \ell^{-2} I)`. In the standardised
+        input space 1.0 is the neutral choice. Too small an :math:`\ell` produces
+        high-frequency features that overfit immediately with few runs -- this is the
+        actual hyperparameter of this model.
     ridge
-        Regularisierung der Ausgabeschicht. Größer als beim linearen ARX, weil die
-        Entwurfsmatrix breiter und schlechter konditioniert ist.
+        Regularisation of the output layer. Larger than for the linear ARX, because the
+        design matrix is wider and worse conditioned.
     include_linear
-        Die standardisierten Eingänge zusätzlich zu den Zufallsmerkmalen mitführen. Damit
-        ist der lineare ARX ein Spezialfall (Zufallsgewichte auf Null gedrückt) und das
-        Modell kann nicht *schlechter* als er sein, wenn die Regularisierung passt.
+        Include the standardised inputs in addition to the random features. This
+        makes the linear ARX a special case (random weights pushed to zero), and the
+        model cannot be *worse* than it if the regularisation fits.
     """
 
     def __init__(
@@ -122,17 +122,17 @@ class RandomFeatureNARX(SequenceModel):
 
     @property
     def name(self) -> str:
-        """Kurzname mit Kapazitätsangabe."""
+        """Short name with capacity."""
         return f"narx_rf{self._n_features}"
 
     @property
     def n_parameters(self) -> int:
-        """Nur die Ausgabeschicht ist angepasst; die Merkmale sind gezogen."""
+        """Only the output layer is fitted; the features are drawn."""
         return 0 if self._coefficients is None else int(self._coefficients.size)
 
     @property
     def required_history(self) -> int:
-        """Mindestens nötige Fensterhistorie."""
+        """Minimum window history required."""
         return _max_lag(self._n_lags_target, self._n_lags_exogenous)
 
     def fit(
@@ -142,12 +142,12 @@ class RandomFeatureNARX(SequenceModel):
         seed: int,
         validation: SequenceDataset | None = None,
     ) -> None:
-        """Merkmale ziehen, Ausgabeschicht in geschlossener Form lösen.
+        """Draw features, solve the output layer in closed form.
 
-        ``validation`` bleibt ungenutzt: es gibt keinen Trainingsverlauf, der gestoppt
-        werden könnte. Das ist der Grund, warum dieses Modell die Differenz zwischen den
-        Validierungs-Betriebsarten weiterhin auf exakt Null lässt -- die inhaltliche Zahl
-        dazu bleibt an ein iterativ trainiertes Modell gebunden.
+        ``validation`` remains unused: there is no training history that could be
+        stopped. This is the reason why this model still leaves the difference between the
+        validation operating modes at exactly zero -- the substantive number
+        for it remains tied to an iteratively trained model.
         """
         del validation
         self._autoregressive_index = train.autoregressive_index
@@ -177,11 +177,11 @@ class RandomFeatureNARX(SequenceModel):
         self._coefficients = _ridge_solve(design[keep], residual[keep], self._ridge)
 
     def predict(self, batch: WindowBatch) -> FloatArray:
-        """Autoregressiver Rollout, Residual auf den jeweils letzten Zustand."""
+        """Autoregressive rollout, residual on the respective last state."""
         if self._coefficients is None:
             raise RuntimeError("Modell ist nicht angepasst")
-        # Lokal binden statt self._coefficients im Closure lesen: mypy narrowt die
-        # Optionalität nicht über eine verschachtelte Funktion hinweg.
+        # Bind locally instead of reading self._coefficients in the closure: mypy does not
+        # narrow the optionality across a nested function.
         coefficients = self._coefficients
 
         def predict_step(
@@ -201,7 +201,7 @@ class RandomFeatureNARX(SequenceModel):
         )
 
     def describe(self) -> dict[str, Any]:
-        """Konfiguration für das Tracking."""
+        """Configuration for tracking."""
         return {
             **super().describe(),
             "n_features": self._n_features,
@@ -212,29 +212,29 @@ class RandomFeatureNARX(SequenceModel):
             "include_linear": self._include_linear,
         }
 
-    # ---------------------------------------------------------------------- intern
+    # -------------------------------------------------------------------- internal
 
     def _anchor(self, history: FloatArray) -> FloatArray:
-        """Bezugspunkt der Residual-Parametrisierung: die letzte Beobachtung."""
+        """Reference point of the residual parametrisation: the last observation."""
         return self._mask_anchor(history[:, -1, list(self._autoregressive_index)])
 
     def _mask_anchor(self, values: FloatArray) -> FloatArray:
-        r"""Anker auf die inline gemessenen Kanäle beschränken.
+        r"""Restrict the anchor to the inline-measured channels.
 
-        **Der wichtigste Sonderfall dieses Modells.** Die Residual-Parametrisierung
-        :math:`\hat y(t+1) = y(t) + \Delta` setzt voraus, dass :math:`y(t)` bekannt ist.
-        Ist die Zielgröße nicht inline gemessen, tritt an ihre Stelle im Rollout die
-        eigene Vorhersage des Vorschritts -- und die Vorhersage wird zu einem
-        **Integrator ohne Rückführung**: jeder Schätzfehler des Zuwachses summiert sich
-        über den Horizont auf, und über 24 Schritte driftet das Modell weg. Gemessen an
-        der Produktfeuchte ohne Inline-Messung war das der Unterschied zwischen NRMSE 3.8
-        (Mittelwertvorhersage) und 40 bis 60.
+        **The most important special case of this model.** The residual parametrisation
+        :math:`\hat y(t+1) = y(t) + \Delta` presupposes that :math:`y(t)` is known.
+        If the target is not measured inline, its place in the rollout is taken by the
+        model's own prediction of the previous step -- and the prediction becomes an
+        **integrator without feedback**: every estimation error of the increment adds up
+        over the horizon, and over 24 steps the model drifts away. Measured on
+        product moisture without inline measurement, this was the difference between NRMSE 3.8
+        (mean prediction) and 40 to 60.
 
-        Für nicht beobachtete Kanäle ist der Anker deshalb konstant Null, also der
-        standardisierte Trainingsmittelwert: die Vorhersage ist dort **direkt** und nicht
-        inkrementell. Damit gilt die Vorgabe des Arbeitsplans -- Nullgewichte entsprechen
-        der besten parameterfreien Baseline -- in beiden Betriebsarten, nur ist diese
-        Baseline im einen Fall die Persistenz und im anderen die Mittelwertvorhersage.
+        For unobserved channels the anchor is therefore constantly zero, i.e. the
+        standardised training mean: the prediction there is **direct** and not
+        incremental. Thus the requirement of the work plan -- zero weights correspond to
+        the best parameter-free baseline -- holds in both operating modes, only this
+        baseline is persistence in one case and the mean prediction in the other.
         """
         if self._anchor_mask is None:
             return values
@@ -266,12 +266,12 @@ class RandomFeatureNARX(SequenceModel):
         )
 
     def _design(self, raw: FloatArray) -> FloatArray:
-        r"""Entwurfsmatrix: Zufallsmerkmale, optional linear, plus Achsenabschnitt.
+        r"""Design matrix: random features, optionally linear, plus intercept.
 
-        Der Faktor :math:`\sqrt{2/M}` ist die übliche Normierung, damit das innere Produkt
-        der Merkmale den Gauß-Kern approximiert und die Skala der Merkmale nicht mit
-        :math:`M` wächst -- sonst wäre die Ridge-Strafe von der Merkmalszahl abhängig und
-        eine Kapazitätsstudie würde gleichzeitig die Regularisierung verschieben.
+        The factor :math:`\sqrt{2/M}` is the usual normalisation, so that the inner product
+        of the features approximates the Gaussian kernel and the scale of the features does not
+        grow with :math:`M` -- otherwise the ridge penalty would depend on the number of features
+        and a capacity study would shift the regularisation at the same time.
         """
         assert self._frequencies is not None and self._offsets is not None
         projection = raw @ self._frequencies + self._offsets[None, :]

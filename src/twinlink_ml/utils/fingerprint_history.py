@@ -1,48 +1,48 @@
-r"""Aequivalenz der ``greybox_gab_placeholder.yaml``-Fingerprints über den Namens-Schnitt.
+r"""Equivalence of the ``greybox_gab_placeholder.yaml`` fingerprints across the name cut.
 
-Grund: die Trennung des Repos von seiner Historie (siehe ``docs/ARCHIV.md``, 2026-09-25) ersetzte
-Partnernamen in ``provenance.open_todos`` durch Pseudonyme. Diese Freitextliste war Teil
-der gehashten Config, verschob also ``ProcessConfig.fingerprint`` -- obwohl an keiner
-einzigen Zahl etwas geaendert wurde. Seit diesem Schnitt schliesst
-:func:`twinlink_ml.simulation.config.without_documentary_provenance` ``open_todos`` (und
-``description``) aus dem Hash aus; die drei Paare unten sind deshalb die LETZTEN, die
-dieser Schnitt erzeugt -- kuenftige Aenderungen an dokumentarischen Feldern bewegen den
-Fingerprint nicht mehr.
+Reason: separating the repo from its history (see ``docs/ARCHIV.md``, 2026-09-25) replaced
+partner names in ``provenance.open_todos`` with pseudonyms. This free-text list was part
+of the hashed config and therefore shifted ``ProcessConfig.fingerprint`` -- although not a
+single number was changed. Since this cut,
+:func:`twinlink_ml.simulation.config.without_documentary_provenance` excludes ``open_todos`` (and
+``description``) from the hash; the three pairs below are therefore the LAST ones that
+this cut produces -- future changes to documentary fields no longer move the
+fingerprint.
 
-Aequivalenznachweis (einmalig, siehe Audit-Konversation 2026-09-25): fuer jedes Paar wurde
-``config_fingerprint(without_documentary_provenance(...))`` sowohl ueber die unveraenderte
-Archiv-Config (mit Partnernamen, aus dem Vorgaengerrepo) als auch ueber die bereinigte
-Config berechnet -- beide Seiten lieferten fuer jede der drei Varianten (Projektion aus/an,
-und ohne Ueberschreibung "wie geladen") denselben Wert. Das belegt: die Config-Paare
-bezeichnen dieselbe numerische Konfiguration, nur die Dokumentation unterscheidet sich.
+Evidence of equivalence (one-off, see audit conversation 2026-09-25): for every pair,
+``config_fingerprint(without_documentary_provenance(...))`` was computed both over the unchanged
+archive config (with partner names, from the predecessor repo) and over the cleaned
+config -- both sides returned the same value for each of the three variants (projection off/on,
+and without override "as loaded"). This shows: the config pairs
+denote the same numerical configuration, only the documentation differs.
 
-Diese Tabelle ist GESCHLOSSEN. Sie enthaelt ausschliesslich die drei durch den obigen
-Nachweis gedeckten Paare -- eine kuenftige Aenderung, die den Fingerprint bewegt, bekommt
-KEINEN neuen Eintrag hier. Eine solche Aenderung ist echt (eine Zahl hat sich geaendert)
-und soll von jedem Guard, der :func:`fingerprints_equivalent` benutzt, gemeldet werden wie
-jede andere unerwartete Drift auch. Siehe ``tests/test_fingerprint_history.py``, der genau
-diese drei Paare erzwingt -- nicht mehr, nicht weniger.
+This table is CLOSED. It contains exclusively the three pairs covered by the above
+evidence -- a future change that moves the fingerprint gets
+NO new entry here. Such a change is real (a number has changed)
+and is to be reported by every guard that uses :func:`fingerprints_equivalent`, like
+any other unexpected drift. See ``tests/test_fingerprint_history.py``, which enforces exactly
+these three pairs -- no more, no fewer.
 """
 
 from __future__ import annotations
 
 PRE_CUT_FINGERPRINT_EQUIVALENTS: dict[str, str] = {
-    # alt (vor dem Schnitt) -> neu (ab without_documentary_provenance)
-    "abbe8325f1326d80": "2acd06f38963c3af",  # greybox_gab_placeholder.yaml, wie geladen
-    "078572b3a7a0fb45": "6ecedc6bd993fb3d",  # ... sample_time_s=25.0, projection AUS
-    "2d2679eeed716577": "bddca37f716f5cfc",  # ... sample_time_s=25.0, projection AN
+    # old (before the cut) -> new (from without_documentary_provenance onwards)
+    "abbe8325f1326d80": "2acd06f38963c3af",  # greybox_gab_placeholder.yaml, as loaded
+    "078572b3a7a0fb45": "6ecedc6bd993fb3d",  # ... sample_time_s=25.0, projection OFF
+    "2d2679eeed716577": "bddca37f716f5cfc",  # ... sample_time_s=25.0, projection ON
 }
 """Nur lesen, nie erweitern -- siehe Moduldocstring."""
 
 
 def fingerprints_equivalent(a: str, b: str) -> bool:
-    """``True``, wenn ``a``/``b`` identisch sind oder laut der Tabelle aequivalent sind.
+    """``True`` if ``a``/``b`` are identical or equivalent according to the table.
 
-    "Aequivalent" heisst: dieselbe numerische Konfiguration, eine Seite vor, die andere
-    nach dem Pseudonymisierungs-Schnitt (siehe Moduldocstring). Neue Laeufe erzeugen immer
-    den neuen Fingerprint -- die Tabelle wird nur zum ANERKENNEN alter, eingefrorener
-    Artefaktwerte benutzt, nie zum Schreiben. Symmetrisch: die Reihenfolge von ``a``/``b``
-    spielt keine Rolle.
+    "Equivalent" means: the same numerical configuration, one side before, the other
+    after the pseudonymisation cut (see module docstring). New runs always produce
+    the new fingerprint -- the table is only used to ACKNOWLEDGE old, frozen
+    artifact values, never for writing. Symmetric: the order of ``a``/``b``
+    does not matter.
     """
     if a == b:
         return True

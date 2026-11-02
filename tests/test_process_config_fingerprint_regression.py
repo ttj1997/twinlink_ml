@@ -1,16 +1,16 @@
-r"""Regressionstest: ``ProcessConfig.fingerprint`` bleibt stabil ueber den Hash-Refactor.
+r"""Regression test: ``ProcessConfig.fingerprint`` stays stable across the hash refactor.
 
-Extraktion von :func:`config_fingerprint` aus der Property, siehe
-``twinlink_ml.simulation.config``. Der committete Lernkurvendatensatz
-(``artifacts/runs/arch_learning_curve_projected.jsonl``, Befund 51) traegt diese
-Fingerprints, und ein Refactor der Hash-Mechanik darf sie nicht bewegen. Dieser Test
-fehlte und haette den Refactor abgesichert.
+Extraction of :func:`config_fingerprint` from the property, see
+``twinlink_ml.simulation.config``. The committed learning-curve data set
+(``artifacts/runs/arch_learning_curve_projected.jsonl``, Befund 51) carries these
+fingerprints, and a refactor of the hash mechanics must not move them. This test
+was missing and would have secured the refactor.
 
-Werte hier sind die AKTUELLEN (nach dem Pseudonymisierungs-Schnitt 2026-09-25, der
-``provenance.open_todos`` aus dem Hash ausschloss, siehe ``without_documentary_provenance``
-und ``twinlink_ml.utils.fingerprint_history``). Die vor dem Schnitt geloggten Records
-tragen die AELTEREN, dort als aequivalent eingetragenen Werte -- dieser Test prueft nur die
-aktuelle Config, nicht die alten Records.
+Values here are the CURRENT ones (after the pseudonymisation cut 2026-09-25, which
+excluded ``provenance.open_todos`` from the hash, see ``without_documentary_provenance``
+and ``twinlink_ml.utils.fingerprint_history``). The records logged before the cut
+carry the OLDER values, entered there as equivalent -- this test checks only the
+current config, not the old records.
 """
 
 from __future__ import annotations

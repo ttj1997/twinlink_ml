@@ -1,27 +1,27 @@
-r"""Orchestriert den Konstantlauf-Holdout-Sweep: GRU/LSTM, 10 Seeds, parallel.
+r"""Orchestrates the constant-run holdout sweep: GRU/LSTM, 10 seeds, in parallel.
 
-Startet ``run_arch_constant_holdout_worker.py`` als unabhängige Prozesse -- ein Job je
-(Architektur, Seed)-Kombination, 20 insgesamt. Kein Hyperparameter, kein Seed wird dadurch
-verändert; nur die Wanduhrzeit sinkt (siehe Thread-Skalierungsmessung, 04_stand_ap1.md).
+Starts ``run_arch_constant_holdout_worker.py`` as independent processes -- one job per
+(architecture, seed) combination, 20 in total. No hyperparameter and no seed is changed by
+this; only the wall-clock time drops (see thread-scaling measurement, 04_stand_ap1.md).
 
-Gestaffelter Start (nur der erste Batch)
+Staggered start (first batch only)
 -----------------------------------------
-Netzlaufwerk-Risiko: acht Prozesse, die gleichzeitig Checkpoints und JSONL-Teil-Dateien auf
-eine SMB-Freigabe schreiben, sind eine andere Belastungsklasse als der Ein-Prozess-Thread-
-Benchmark, der die Parallelitätsentscheidung begründet hat. Deshalb starten im ersten Batch
-zunächst zwei Jobs, kurze Wartezeit, Prüfung (Prozess lebt noch, Log-Datei zeigt den
-"Setup fertig"-Marker aus dem Worker -- die Phase, die Konfigurations-/Netzlaufwerkfehler am
-ehesten zeigen würde), erst dann die restlichen sechs. Kostet keine zusätzliche Rechenzeit --
-es sind ohnehin reale Sweep-Läufe, nur zeitversetzt gestartet statt blind alle acht auf
-einmal.
+Network-drive risk: eight processes that simultaneously write checkpoints and partial JSONL
+files to an SMB share are a different load class than the single-process thread
+benchmark that justified the parallelism decision. Therefore the first batch starts
+with two jobs, a short wait, a check (process still alive, log file shows the
+"Setup fertig" marker from the worker -- the phase most likely to reveal configuration/network-
+drive errors), and only then the remaining six. Costs no additional compute time --
+these are real sweep runs anyway, just started with a delay instead of blindly all eight at
+once.
 
-Zusammenführen
+Merging
 ---------------
-Jeder Job schreibt in eine eigene JSONL-Datei (kein gemeinsames Schreiben mehrerer Prozesse
-in dieselbe Datei). Am Ende werden alle Dateien zusammengeführt; dabei wird geprüft, dass
-keine ``run_uid`` doppelt vorkommt -- ein Duplikat wäre ein Zeichen für einen
-Verteilungslogik-Fehler (zwei Jobs mit derselben Architektur/demselben Seed), kein
-harmloses Race, und bricht den Merge ab statt es zu übergehen.
+Each job writes to its own JSONL file (no shared writing of several processes
+into the same file). At the end all files are merged; this checks that
+no ``run_uid`` occurs twice -- a duplicate would be a sign of a
+distribution-logic error (two jobs with the same architecture/the same seed), not a
+harmless race, and aborts the merge instead of passing over it.
 """
 
 from __future__ import annotations
@@ -41,7 +41,7 @@ ARCHITECTURES = ("gru", "lstm")
 
 
 def _jobs() -> list[tuple[str, int, bool]]:
-    """(Architektur, Seed, mit_Baselines) je Job -- Baselines nur einmal je Seed."""
+    """(Architecture, seed, with_baselines) per job -- baselines only once per seed."""
     return [
         (architecture, seed, architecture == ARCHITECTURES[0])
         for seed in SEEDS
@@ -110,9 +110,9 @@ def _run_batch(
     stagger_first: int,
     stagger_wait_s: float,
 ) -> list[tuple[str, int, int, Path]]:
-    """Einen Batch starten -- optional gestaffelt -- und auf Abschluss aller warten.
+    """Start one batch -- optionally staggered -- and wait for all to finish.
 
-    Rückgabe je Job: ``(architecture, seed, returncode, output_path)``.
+    Returns per job: ``(architecture, seed, returncode, output_path)``.
     """
     handles: list[tuple[subprocess.Popen[bytes], str, int, Path]] = []
 
@@ -185,7 +185,7 @@ def _run_batch(
 
 
 def _merge(outputs: list[Path], final_path: Path) -> None:
-    """Alle Job-JSONL-Dateien zusammenführen, mit Duplikat-run_uid-Pruefung."""
+    """Merge all job JSONL files, with duplicate-run_uid check."""
     seen_run_uids: dict[str, Path] = {}
     lines: list[str] = []
     for output in outputs:
@@ -214,7 +214,7 @@ def _merge(outputs: list[Path], final_path: Path) -> None:
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",
@@ -242,7 +242,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Sweep fahren: Batches starten, warten, zusammenführen."""
+    """Run the sweep: start batches, wait, merge."""
     arguments = parse_arguments()
     arguments.work_dir.mkdir(parents=True, exist_ok=True)
     python = sys.executable
