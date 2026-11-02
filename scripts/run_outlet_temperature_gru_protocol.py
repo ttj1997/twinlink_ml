@@ -1,46 +1,46 @@
-r"""X2: schlankes Vorhersageprotokoll fuer den Ablufttemperatur-Kanal (Befund 50).
+r"""X2: lean prediction protocol for the exhaust air temperature channel (Befund 50).
 
-Eine Architektur (GRU), drei Seeds, konstantes Holdout, ``n_train_max=64`` (Konvention aus
-``arch_gab_constant_holdout.jsonl``/Befund 36). Pflichtbaselines: Persistenz UND statische
-Regression (``StaticRegressionModel`` -- Pflicht-Baseline nach Befund 2, 98.7 % statisch
-erklaerbar fuer ``energy_target``; bei ``product_moisture_kg_per_kg``/Betttemperatur ist die
-statische Referenz die bindende Huerde, nicht Persistenz, siehe ``models/baselines.py``).
+One architecture (GRU), three seeds, constant holdout, ``n_train_max=64`` (convention from
+``arch_gab_constant_holdout.jsonl``/Befund 36). Mandatory baselines: persistence AND static
+regression (``StaticRegressionModel`` -- mandatory baseline after Befund 2, 98.7 % statically
+explainable for ``energy_target``; for ``product_moisture_kg_per_kg``/bed temperature the
+static reference is the binding hurdle, not persistence, see ``models/baselines.py``).
 
-Ablufttemperatur als Zielkanal: kein Simulator-Output
+Exhaust air temperature as a target channel: not a simulator output
 ------------------------------------------------------
-``outlet_temperature_celsius`` kann NICHT direkt als ``DataSpec.target_names``-Eintrag
-verwendet werden -- ``TrajectoryWindowDataset.from_trajectory`` verlangt
-``target_names ⊆ output_names`` (``data/windows.py``), und ``output_names`` ist der feste
-Vier-Kanal-Satz des Simulators (``energy_target``, ``bed_temperature_celsius``,
-``product_moisture_kg_per_kg``, ``d50_um``, siehe ``GreyBoxFluidBedGranulator.output_names``).
-``outlet_temperature_celsius`` existiert erst als nachgelagerte algebraische Rekonstruktion
+``outlet_temperature_celsius`` can NOT be used directly as a ``DataSpec.target_names`` entry
+-- ``TrajectoryWindowDataset.from_trajectory`` requires
+``target_names ⊆ output_names`` (``data/windows.py``), and ``output_names`` is the fixed
+four-channel set of the simulator (``energy_target``, ``bed_temperature_celsius``,
+``product_moisture_kg_per_kg``, ``d50_um``, see ``GreyBoxFluidBedGranulator.output_names``).
+``outlet_temperature_celsius`` only exists as a downstream algebraic reconstruction
 (``simulation.exhaust.reconstruct_exhaust_state``, ``ExhaustConfig``, X1).
 
-Deshalb: trainiert wird gegen ``bed_temperature_celsius`` (der real existierende Kanal).
-Fuer den Bericht wird JEDE Vorhersage zusaetzlich durch
-``evaluation.exhaust_reconstruction.evaluate_exhaust_reconstruction()`` geschickt (dieselbe
-Funktion, die Befund 41/42 bereits fuer T_gas_out/Y_gas_out nutzen) und dort als
-``outlet_temperature_celsius`` berichtet -- bei ``exhaust.outlet_duct_heat_loss_k=0.0``
-(aktueller Platzhalter-Default) numerisch bitgleich zu ``T_gas_out_celsius`` (== der
-Betttemperatur-Vorhersage selbst). ``data/target_names`` im Log traegt deshalb
-``bed_temperature_celsius``, nicht ``outlet_temperature_celsius`` -- das ist der real
-verwendete Trainingskanal; ``exhaust/outlet_duct_heat_loss_k`` und
-``exhaust/reported_channel`` machen maschinenlesbar, dass die Temperaturmetriken zusaetzlich
-unter dem Abluftnamen berichtet werden, ohne die beiden Groessen im Log zu vermischen.
+Therefore: training is against ``bed_temperature_celsius`` (the channel that really exists).
+For the report EVERY prediction is additionally passed through
+``evaluation.exhaust_reconstruction.evaluate_exhaust_reconstruction()`` (the same
+function that Befund 41/42 already use for T_gas_out/Y_gas_out) and reported there as
+``outlet_temperature_celsius`` -- with ``exhaust.outlet_duct_heat_loss_k=0.0``
+(current placeholder default) numerically bit-identical to ``T_gas_out_celsius`` (== the
+bed temperature prediction itself). ``data/target_names`` in the log therefore carries
+``bed_temperature_celsius``, not ``outlet_temperature_celsius`` -- that is the training channel
+actually used; ``exhaust/outlet_duct_heat_loss_k`` and
+``exhaust/reported_channel`` make machine-readable that the temperature metrics are additionally
+reported under the exhaust air name, without mixing the two quantities in the log.
 
-Environment-Variablen VOR jedem Torch-/NumPy-Import
+Environment variables BEFORE any torch/NumPy import
 -----------------------------------------------------
-``torch.set_num_threads(1)`` begrenzt nur Torchs eigene Intraop-Threads, nicht
-darunterliegende BLAS/OpenMP-Bibliotheken (Befund 43g, ``docs/04_stand_ap1.md`` --
-plausibelste, dort nicht abschliessend verifizierte Erklaerung fuer den ~3.6-4.9x
-Kontentions-Aufschlag im GRU/LSTM-Sweep). ``MKL_NUM_THREADS``/``OMP_NUM_THREADS`` muessen
-deshalb als Prozessumgebungsvariablen gesetzt werden, bevor die Bibliotheken initialisiert
-werden -- das geht nur VOR dem ersten Import, siehe unten.
+``torch.set_num_threads(1)`` only limits torch's own intra-op threads, not the
+underlying BLAS/OpenMP libraries (Befund 43g, ``docs/04_stand_ap1.md`` --
+the most plausible explanation, not conclusively verified there, for the ~3.6-4.9x
+contention overhead in the GRU/LSTM sweep). ``MKL_NUM_THREADS``/``OMP_NUM_THREADS`` must
+therefore be set as process environment variables before the libraries are initialised
+-- this is only possible BEFORE the first import, see below.
 
-Projektion: ``enforce_gas_velocity_projection`` bleibt AUS (Default) -- X2 misst die
-Vorhersageguete des Temperaturkanals, nicht die Wirkung der Projektion (Befund 46). Erwarteter
-Fingerprint nach Einfuehrung von ``ExhaustConfig`` (X1): ``6ecedc6bd993fb3d`` -- vor dem
-Pseudonymisierungs-Schnitt 2026-09-25: ``078572b3a7a0fb45``, siehe ``docs/ARCHIV.md``.
+Projection: ``enforce_gas_velocity_projection`` stays OFF (default) -- X2 measures the
+prediction quality of the temperature channel, not the effect of the projection (Befund 46).
+Expected fingerprint after the introduction of ``ExhaustConfig`` (X1): ``6ecedc6bd993fb3d`` --
+before the pseudonymisation cut 2026-09-25: ``078572b3a7a0fb45``, see ``docs/ARCHIV.md``.
 """
 
 from __future__ import annotations
@@ -104,10 +104,10 @@ BASELINE_FACTORIES = {
 
 
 def _excited_spec() -> DataSpec:
-    """``n_train_max=64``, dieselbe Konvention wie ``arch_gab_constant_holdout.jsonl``.
+    """``n_train_max=64``, the same convention as ``arch_gab_constant_holdout.jsonl``.
 
-    Befund 36, ``run_arch_constant_holdout_worker.py``. ``target_names`` abweichend: der
-    dritte Kanal ist hier ``bed_temperature_celsius`` statt ``d50_um``, siehe Moduldocstring.
+    Befund 36, ``run_arch_constant_holdout_worker.py``. ``target_names`` deviates: the
+    third channel here is ``bed_temperature_celsius`` instead of ``d50_um``, see module docstring.
     """
     return DataSpec(
         sample_time_s=25.0,
@@ -123,7 +123,7 @@ def _excited_spec() -> DataSpec:
 
 
 def _holdout_spec(excited: DataSpec) -> DataSpec:
-    """Konstantlauf-Pool, identisches Muster zu ``run_arch_constant_holdout_worker.py``."""
+    """Constant-run pool, identical pattern to ``run_arch_constant_holdout_worker.py``."""
     import dataclasses
 
     return dataclasses.replace(
@@ -132,7 +132,7 @@ def _holdout_spec(excited: DataSpec) -> DataSpec:
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=CONFIG_PATH)
     parser.add_argument("--output", type=Path, default=OUTPUT_PATH)
@@ -144,16 +144,16 @@ def parse_arguments() -> argparse.Namespace:
 def _verify_thread_environment_logged(
     record_params: dict[str, object], *, seed: int, require_device: bool
 ) -> None:
-    """Bricht ab, wenn die Y1-Diagnosefelder (dcdc41d/e164460) leer sind.
+    """Aborts if the Y1 diagnostic fields (dcdc41d/e164460) are empty.
 
-    Erste Gelegenheit, diese Felder im Echtbetrieb zu sehen (bisher nur in
-    ``befund42_tbed_exhaust_sweep.jsonl``, das den Kontentions-Befund 43g motiviert hat) --
-    vor ALLEN neun Fits (3 Seeds x 3 Modelle) prüfen, nicht erst am Ende.
+    First opportunity to see these fields in real operation (so far only in
+    ``befund42_tbed_exhaust_sweep.jsonl``, which motivated the contention finding 43g) --
+    check before ALL nine fits (3 seeds x 3 models), not only at the end.
 
-    ``model/net_actual_device`` nur bei ``require_device=True`` (GRU-Record) verlangt: die
-    Baselines (``PersistenceModel``/``StaticRegressionModel``) laufen nicht auf Torch, ihr
-    ``describe()`` traegt dieses Feld konstruktionsbedingt nicht -- ``super().describe()``
-    ohne Device-Information, siehe ``models/baselines.py``.
+    ``model/net_actual_device`` only required with ``require_device=True`` (GRU record): the
+    baselines (``PersistenceModel``/``StaticRegressionModel``) do not run on torch; their
+    ``describe()`` does not carry this field by construction -- ``super().describe()``
+    without device information, see ``models/baselines.py``.
     """
     required = ["torch/num_threads", "env/mkl_num_threads", "env/omp_num_threads"]
     if require_device:
@@ -171,11 +171,11 @@ def _verify_thread_environment_logged(
 def _verify_outlet_identity(
     exhaust_result: ExhaustReconstructionResult, *, seed: int, label: str
 ) -> None:
-    """``T_gas_out_celsius`` und ``outlet_temperature_celsius`` muessen bitgleich sein.
+    """``T_gas_out_celsius`` and ``outlet_temperature_celsius`` must be bit-identical.
 
-    Bei ``outlet_duct_heat_loss_k=0.0`` sind beide aus derselben Betttemperatur-Vorhersage
-    rekonstruiert -- sonst steckt in der Rekonstruktion mehr als der reine Verlustabzug, und
-    das muss VOR dem Berichten unter dem Abluftnamen auffallen.
+    With ``outlet_duct_heat_loss_k=0.0`` both are reconstructed from the same bed temperature
+    prediction -- otherwise the reconstruction contains more than the pure loss subtraction, and
+    that must be noticed BEFORE reporting under the exhaust air name.
     """
     for horizon in exhaust_result.horizons:
         direct = exhaust_result.rmse_run_median_physical["T_gas_out_celsius"][horizon]
@@ -214,11 +214,11 @@ def _log_model(
     checkpoint_run_uid: str | None,
     training_elapsed_s: float | None = None,
 ) -> dict[str, object]:
-    """Ein Modell gegen beide Testmengen auswerten und je einen ``RunRecord`` loggen.
+    """Evaluate one model against both test sets and log one ``RunRecord`` each.
 
-    Modulfunktion statt Closure in ``main()``: eine Closure ueber die Seed-Schleife wuerde
-    Schleifenvariablen einfangen (Ruff B023) -- hier stattdessen alles als explizite
-    Parameter, keine Mehrdeutigkeit ueber welchen Seed-Stand die Funktion sieht.
+    Module function instead of a closure in ``main()``: a closure over the seed loop would
+    capture loop variables (Ruff B023) -- here instead everything as explicit
+    parameters, no ambiguity about which seed state the function sees.
     """
     test_sets: tuple[tuple[str, SequenceDataset, GeneratedData], ...] = (
         ("excited", test_excited, excited),
@@ -263,7 +263,7 @@ def _log_model(
 
 
 def main() -> None:
-    """Drei Seeds: Persistenz + statische Baseline + GRU, je gegen zwei Testmengen."""
+    """Three seeds: persistence + static baseline + GRU, each against two test sets."""
     arguments = parse_arguments()
 
     import torch

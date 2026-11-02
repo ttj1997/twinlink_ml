@@ -164,13 +164,13 @@ def _evaluate(model: Any) -> ClosedRegretResult:
 
 
 def _mean_energy_vs_fixed(model: Any) -> dict[str, float]:
-    """DA1: mittlere rohe Energie der deterministischen Politik an den 25 Testkontexten
-    gegen den festen Befund-52-Betriebspunkt -- UNABHAENGIG von Zulaessigkeit.
+    """DA1: mean raw energy of the deterministic policy at the 25 test contexts
+    against the fixed Befund 52 operating point -- INDEPENDENT of feasibility.
 
-    Primaeres Kriterium fuer die ``--no-penalty``-Zellen (Auftrag: die XA1-Metrik ueber
-    zulaessige Aktionen ist dort nicht aussagefaehig, weil das energieoptimale Setzen ohne
-    Feuchtegrenze vermutlich unzulaessig ist) -- deshalb hier IMMER mitberechnet, auch mit
-    Strafe, fuer die direkte Vergleichbarkeit ueber die 2x2-Matrix.
+    Primary criterion for the ``--no-penalty`` cells (task: the XA1 metric over
+    feasible actions is not meaningful there, because the energy-optimal setting without
+    a moisture limit is presumably infeasible) -- therefore ALWAYS computed here, also with
+    penalty, for direct comparability across the 2x2 matrix.
     """
     eval_env = OperatingPointBanditEnv(_eval_env_config())
     points = _test_points()
@@ -240,7 +240,7 @@ def _make_checkpoint_callback(
                 )
                 result = _evaluate(self.model)
 
-                # XA2: Politik sichern -- SB3-natives Format, Pfad geht ins RunRecord.
+                # XA2: save the policy -- SB3-native format, the path goes into the RunRecord.
                 CHECKPOINT_DIR.mkdir(parents=True, exist_ok=True)
                 checkpoint_file = CHECKPOINT_DIR / f"{run_uid}_step{checkpoint:06d}.zip"
                 self.model.save(checkpoint_file)

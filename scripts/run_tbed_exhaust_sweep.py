@@ -1,14 +1,14 @@
-r"""Orchestriert den T_bed/Exhaust-Sweep (Befund 42): GRU/LSTM, 10 Seeds, parallel.
+r"""Orchestrates the T_bed/exhaust sweep (Befund 42): GRU/LSTM, 10 seeds, in parallel.
 
-Struktur identisch zu ``run_arch_constant_holdout_sweep.py`` (Befund 36) -- startet
-``run_tbed_exhaust_sweep_worker.py`` als unabhaengige Prozesse, ein Job je (Architektur,
-Seed)-Kombination, 20 insgesamt. Gestaffelter Start im ersten Batch (zwei Jobs, kurze
-Wartezeit, Pruefung des "Setup fertig"-Markers, erst dann der Rest) aus demselben
-Netzlaufwerk-/Konfigurationsrisiko-Grund wie in Befund 36 dokumentiert.
+Structure identical to ``run_arch_constant_holdout_sweep.py`` (Befund 36) -- starts
+``run_tbed_exhaust_sweep_worker.py`` as independent processes, one job per (architecture,
+seed) combination, 20 in total. Staggered start in the first batch (two jobs, short
+wait, check of the "Setup fertig" marker, only then the rest) for the same
+network-drive/configuration-risk reason as documented in Befund 36.
 
-Jeder Job wertet BEIDE Testmengen (angeregt + Konstantlauf-Holdout) aus und schreibt
-dafuer zwei Records in seine eigene JSONL-Datei -- Zusammenfuehrung mit
-Duplikat-run_uid-Pruefung wie im bestehenden Sweep.
+Each job evaluates BOTH test sets (excited + constant-run holdout) and writes
+two records for this into its own JSONL file -- merging with
+duplicate-run_uid check as in the existing sweep.
 """
 
 from __future__ import annotations
@@ -28,7 +28,7 @@ ARCHITECTURES = ("gru", "lstm")
 
 
 def _jobs() -> list[tuple[str, int]]:
-    """(Architektur, Seed) je Job."""
+    """(Architecture, seed) per job."""
     return [(architecture, seed) for seed in SEEDS for architecture in ARCHITECTURES]
 
 
@@ -86,9 +86,9 @@ def _run_batch(
     stagger_first: int,
     stagger_wait_s: float,
 ) -> list[tuple[str, int, int, Path]]:
-    """Einen Batch starten -- optional gestaffelt -- und auf Abschluss aller warten.
+    """Start one batch -- optionally staggered -- and wait for all to finish.
 
-    Rückgabe je Job: ``(architecture, seed, returncode, output_path)``.
+    Returns per job: ``(architecture, seed, returncode, output_path)``.
     """
     handles: list[tuple[subprocess.Popen[bytes], str, int, Path]] = []
 
@@ -147,7 +147,7 @@ def _run_batch(
 
 
 def _merge(outputs: list[Path], final_path: Path) -> None:
-    """Alle Job-JSONL-Dateien zusammenführen, mit Duplikat-run_uid-Pruefung."""
+    """Merge all job JSONL files, with duplicate-run_uid check."""
     seen_run_uids: dict[str, Path] = {}
     lines: list[str] = []
     for output in outputs:
@@ -176,7 +176,7 @@ def _merge(outputs: list[Path], final_path: Path) -> None:
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",
@@ -201,7 +201,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Sweep fahren: Batches starten, warten, zusammenführen."""
+    """Run the sweep: start batches, wait, merge."""
     arguments = parse_arguments()
     arguments.work_dir.mkdir(parents=True, exist_ok=True)
     python = sys.executable

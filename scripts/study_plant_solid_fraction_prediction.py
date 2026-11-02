@@ -1,44 +1,44 @@
-r"""R2/R3 (Befund 56 Korrektur): NA5 mit korrigiertem Luftstrom neu gerechnet, plus
-Feststoffanteil als VORHERSAGE statt als Anpassung.
+r"""R2/R3 (Befund 56 correction): NA5 recomputed with corrected air flow, plus
+solid fraction as a PREDICTION instead of a fit.
 
-Baut auf der R1-Korrektur in ``study_plant_validation.py`` auf (relative statt absolute
-Feuchte in der Nm3/h-Umrechnung, Faktor ~2.2 im Luftmassenstrom -- siehe dortiger
-Moduldocstring von ``_gas_velocity_m_per_s``). Zwei Teile:
+Builds on the R1 correction in ``study_plant_validation.py`` (relative instead of absolute
+humidity in the Nm3/h conversion, factor ~2.2 in the air mass flow -- see the
+module docstring there of ``_gas_velocity_m_per_s``). Two parts:
 
 R2
-    NA5 mit dem jetzt korrigierten Luftstrom und UNVERAENDERT 30 % Feststoff neu
-    gerechnet: Betttemperatur, Abweichung, Fluidisierungsmarge.
+    NA5 recomputed with the now corrected air flow and UNCHANGED 30 % solids:
+    bed temperature, deviation, fluidization margin.
 
 R3
-    Bei gemessenem Luftstrom und gemessener Zulufttemperatur legt die Betttemperatur im
-    Beharrungszustand im Wesentlichen den Wassergehalt der Suspension fest (die einzige
-    andere freie Groesse ist die Bettmasse, die nur die Flaeche/Fluidisierung beeinflusst,
-    nicht die Energiebilanz, siehe Moduldocstring von ``study_plant_validation``). Diese
-    Rechnung LOEST deshalb nicht nach der Betttemperatur (die ist Messwert), sondern NACH
-    dem Feststoffanteil, bei dem das Modell die gemessene Betttemperatur trifft -- eine
-    VORHERSAGE, keine Anpassung: der Feststoffanteil war vorher unbekannt, die
-    Betttemperatur ist der unabhaengige Messwert.
+    With measured air flow and measured inlet air temperature, the bed temperature in the
+    steady state essentially determines the water content of the suspension (the only
+    other free quantity is the bed mass, which only affects the area/fluidization,
+    not the energy balance, see the module docstring of ``study_plant_validation``). This
+    calculation therefore does NOT SOLVE for the bed temperature (that is a measured value), but FOR
+    the solid fraction at which the model hits the measured bed temperature -- a
+    PREDICTION, not a fit: the solid fraction was unknown beforehand, the
+    bed temperature is the independent measured value.
 
-    Fuer product 2 zusaetzlich: aus dem vorhergesagten Feststoffanteil und der im Leitsystem
-    genannten Suspensionsdichte (1339 kg/m3, product 2) die implizierte
-    Feststoffdichte ableiten (ideale Volumenadditivitaet, Wasserdichte bei
-    Suspensionstemperatur) -- ein erster, unabhaengiger Konsistenzhinweis, kein Beweis.
+    For product 2 additionally: from the predicted solid fraction and the suspension density
+    stated in the control system (1339 kg/m3, product 2), derive the implied
+    solids density (ideal volume additivity, water density at
+    suspension temperature) -- a first, independent consistency hint, not a proof.
 
-F1 (Befund 56 NB2-Erweiterung, extern angestossen)
-    R3 schliesst die Energiebilanz ueber das BETT (Luft bis T_bett) -- Befund 56 NA4 zeigt
-    aber, dass der Bett-Abluft-Versatz vermutlich Verdampfung OBERHALB des Betts ist, nicht
-    ein reiner Waermeverlust. Dann ist die vollstaendige Bilanz eine ueber den GANZEN
-    APPARAT (Luft bis zur gemessenen Ablufttemperatur `T_abluft`), nicht nur das Bett.
-    Diese Bilanz braucht keinen Beharrungszustands-Loeser (keine Bettmasse, keine
-    Fluidisierung) -- eine direkte algebraische Aufloesung nach dem Feststoffanteil, mit
-    denselben Stoffwerten wie im Grey-Box-Modell (`ProcessConfig().gas`/`.material`), bei
-    zwei Wandverlust-Annahmen: dem Modell-Platzhalter (`geometry.heat_loss_ua_w_per_k`,
-    aktuell 2.0 W/K, ergibt < 0.2 kW) und einer testweisen 30-kW-Annahme.
+F1 (Befund 56 NB2 extension, prompted externally)
+    R3 closes the energy balance over the BED (air down to T_bett) -- Befund 56 NA4 shows,
+    however, that the bed-to-exhaust offset is presumably evaporation ABOVE the bed, not
+    a pure heat loss. Then the complete balance is one over the WHOLE
+    APPARATUS (air down to the measured exhaust air temperature `T_abluft`), not only the bed.
+    This balance needs no steady-state solver (no bed mass, no
+    fluidization) -- a direct algebraic solution for the solid fraction, with
+    the same material properties as in the grey-box model (`ProcessConfig().gas`/`.material`), under
+    two wall-loss assumptions: the model placeholder (`geometry.heat_loss_ua_w_per_k`,
+    currently 2.0 W/K, gives < 0.2 kW) and a tentative 30-kW assumption.
 
-Rohdaten bleiben ausserhalb des Repos (NA1) -- Pfade ausschliesslich aus
-``TWINLINK_PLANT_DATA_PROD1`` / ``_PROD2``, wie in ``study_plant_validation.py``.
+Raw data stay outside the repo (NA1) -- paths exclusively from
+``TWINLINK_PLANT_DATA_PROD1`` / ``_PROD2``, as in ``study_plant_validation.py``.
 
-Aufruf::
+Usage::
 
     python scripts/study_plant_solid_fraction_prediction.py \
         --output artifacts/runs/study_plant_solid_fraction_prediction.json
@@ -87,13 +87,13 @@ _BASE_CONFIG = ProcessConfig()
 def _whole_apparatus_solid_fraction(
     point: spv.OperatingPoint, *, wall_loss_kw: float
 ) -> dict[str, object]:
-    """F1: Feststoffanteil aus einer direkten Energiebilanz ueber den GANZEN APPARAT
-    (Luft von `T_zuluft` bis zur gemessenen `T_abluft`), statt nur ueber das Bett wie in
-    :func:`_predict_solid_fraction`. Kein Beharrungszustands-Loeser -- die Bilanz ist
-    algebraisch nach dem Feststoffanteil aufloesbar, sobald `T_abluft` (statt `T_bett`)
-    die Referenztemperatur ist. Nimmt nahezu vollstaendige Verdampfung an (das im
-    Bett-Fall vorhergesagte Restfeuchte-Niveau ist < 1.5 % des Spruehwassers, Befund 56
-    NB2/R3) -- diese Vereinfachung wird hier nicht erneut geprueft.
+    """F1: solid fraction from a direct energy balance over the WHOLE APPARATUS
+    (air from `T_zuluft` to the measured `T_abluft`), instead of only over the bed as in
+    :func:`_predict_solid_fraction`. No steady-state solver -- the balance can be
+    solved algebraically for the solid fraction as soon as `T_abluft` (instead of `T_bett`)
+    is the reference temperature. Assumes nearly complete evaporation (the residual
+    moisture level predicted in the bed case is < 1.5 % of the spray water, Befund 56
+    NB2/R3) -- this simplification is not checked again here.
     """
     absolute_humidity = float(
         _BACKEND.to_numpy(
@@ -145,9 +145,9 @@ def _whole_apparatus_solid_fraction(
 def _solve_at_solid_fraction(
     point: spv.OperatingPoint, *, bed_mass_kg: float, solid_fraction: float
 ) -> tuple[float | None, dict[str, float] | None, str | None]:
-    """Beharrungszustand bei gegebenem Feststoffanteil -- korrigierter Luftstrom (R1),
-    sonst unveraendertes NA5-Protokoll. Gibt (T_bed, Diagnostics, Fehlermeldung) zurueck,
-    genau eines der ersten beiden ist ``None``."""
+    """Steady state at a given solid fraction -- corrected air flow (R1),
+    otherwise unchanged NA5 protocol. Returns (T_bed, diagnostics, error message),
+    exactly one of the first two is ``None``."""
     area = bed_mass_kg * 9.81 / spv._BED_PRESSURE_DROP_PA
     base_config = spv.build_plant_config(
         point, cross_section_area_m2=area, bed_mass_solid_setpoint_kg=bed_mass_kg
@@ -166,11 +166,11 @@ def _solve_at_solid_fraction(
 
 
 def _predict_solid_fraction(point: spv.OperatingPoint, *, bed_mass_kg: float) -> dict[str, object]:
-    """R3: Feststoffanteil-Vorhersage per Gitter-Scan + lineare Interpolation zwischen den
-    beiden Gitterpunkten, die die gemessene Betttemperatur einschliessen. Kein Newton/
-    Bisektion ueber eine moeglicherweise unstetige Erreichbarkeit (manche Feststoffanteile
-    liefern gar keinen Beharrungszustand, siehe R2-Ergebnis bei product 2) -- ein Gitter macht
-    sichtbar, WO die Kurve abbricht, statt einen Loeser dort blind suchen zu lassen."""
+    """R3: solid-fraction prediction by grid scan + linear interpolation between the
+    two grid points that bracket the measured bed temperature. No Newton/
+    bisection over a possibly discontinuous reachability (some solid fractions
+    yield no steady state at all, see the R2 result for product 2) -- a grid makes
+    visible WHERE the curve breaks off, instead of letting a solver search blindly there."""
     scan: list[dict[str, object]] = []
     for solid_fraction in _SOLID_FRACTION_GRID:
         t_bed, diagnostics, error = _solve_at_solid_fraction(
@@ -235,8 +235,8 @@ def _implied_solid_density(
     *,
     suspension_density_kg_per_m3: float = _MEASURED_SUSPENSION_DENSITY_PROD2_KG_PER_M3,
 ) -> float:
-    r"""Ideale Volumenadditivitaet: 1/rho_susp = w/rho_solid + (1-w)/rho_water,
-    aufgeloest nach rho_solid."""
+    r"""Ideal volume additivity: 1/rho_susp = w/rho_solid + (1-w)/rho_water,
+    solved for rho_solid."""
     inverse = (1.0 / suspension_density_kg_per_m3) - (
         (1.0 - solid_fraction) / _WATER_DENSITY_KG_PER_M3
     )

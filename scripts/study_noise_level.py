@@ -1,19 +1,20 @@
-r"""Rauschniveau als Versuchsfaktor und die Sättigungshöhe der Lernkurven (Schritt 5, 3).
+r"""Noise level as experimental factor and saturation level of the learning curves (step 5, 3).
 
-Aufruf::
+Usage::
 
     python scripts/study_noise_level.py --log artifacts/runs/noise.jsonl
 
-Zwei Zahlen, die zusammengehören:
+Two numbers that belong together:
 
-* ``nrmse`` gegen die Messung -- das, was an der Anlage prüfbar ist.
-* die **Rauschgrenze**: der Fehler, den ein perfektes Modell auf denselben Fenstern
-  erreicht. Sie wird ohne Modell berechnet, indem der deterministische Anteil der Messung
-  (Ausgangsgröße nach Sensordynamik, Rauschen null) als Vorhersage eingesetzt wird.
+* ``nrmse`` against the measurement -- what can be checked at the plant.
+* the **noise floor**: the error that a perfect model achieves on the same windows.
+  It is computed without a model by inserting the deterministic part of the measurement
+  (output after sensor dynamics, zero noise) as the prediction.
 
-Ohne die zweite Zahl ist eine Lernkurve, die bei 0.12 abflacht, nicht als Modellgrenze
-*oder* Rauschgrenze lesbar. Das Rauschniveau selbst ist ein Platzhalter (0.5 %) und offene
-Frage an Anwendungspartner -- diese Studie ersetzt die Messung nicht, sie zeigt, wie dringend sie ist.
+Without the second number, a learning curve that flattens at 0.12 cannot be read as a model
+limit *or* a noise floor. The noise level itself is a placeholder (0.5 %) and an open
+question to the application partner -- this study does not replace the measurement, it shows
+how urgent it is.
 """
 
 from __future__ import annotations
@@ -44,7 +45,7 @@ FACTORIES = {
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",
@@ -65,7 +66,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Studie fahren und Tabellen drucken."""
+    """Run the study and print tables."""
     arguments = parse_arguments()
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)

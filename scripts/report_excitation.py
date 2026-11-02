@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""Bewertung eines Anregungsdesigns -- vor der Datenproduktion auszuführen.
+"""Assessment of an excitation design -- to be run before data production.
 
-Das Skript ist als Abstimmungsgrundlage mit TUHH-A gedacht: es beantwortet in einer
-Bildschirmseite, ob ein Sampling-Design den Prozess anregt oder nur beschäftigt.
+The script is meant as a basis for coordination with TUHH-A: it answers on one
+screen page whether a sampling design excites the process or merely keeps it busy.
 
-Aufruf::
+Usage::
 
     python scripts/report_excitation.py conf/process/greybox_placeholder.yaml \
         --runs 16 --figure artifacts/excitation.png
 
-Die Verweilzeiten und der PRBS-Takt werden aus den Zeitkonstanten des Prozessmodells
-abgeleitet (``ExcitationConfig.from_time_constants``), nicht geraten. Nach jeder Änderung
-an der Prozess-Config ändern sie sich also mit.
+The dwell times and the PRBS clock are derived from the time constants of the process model
+(``ExcitationConfig.from_time_constants``), not guessed. After every change
+to the process config they therefore change along with it.
 """
 
 from __future__ import annotations
@@ -142,7 +142,7 @@ def _plot(schedule: object, trajectory: object, sample_time_s: float, path: Path
     path.parent.mkdir(parents=True, exist_ok=True)
     figure, axes = plt.subplots(4, 2, figsize=(14, 10))
 
-    # links: je ein Beispiellauf pro Signalart auf dem T_in-Kanal
+    # left: one example run per signal type on the T_in channel
     selected: list[int] = []
     for wanted in ("step", "prbs", "ramp"):
         matches = [index for index, k in enumerate(kinds) if k[0] == wanted]
@@ -163,7 +163,7 @@ def _plot(schedule: object, trajectory: object, sample_time_s: float, path: Path
     axes[3, 0].step(hours, actions[selected[0], :, 1], where="post", color="tab:orange", lw=0.8)
     axes[3, 0].set_ylabel(f"u_gas [m/s]\nLauf {selected[0]}: {kinds[selected[0]][1]}", fontsize=8)
 
-    # rechts: Leistungsdichte je Kanal und Zielgrößen
+    # right: power spectral density per channel and targets
     from scipy import signal as scipy_signal
 
     axis = axes[0, 1]

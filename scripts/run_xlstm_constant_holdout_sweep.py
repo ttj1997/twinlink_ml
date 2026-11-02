@@ -1,27 +1,27 @@
-r"""Orchestriert den xLSTM-Konstantlauf-Holdout-Sweep: 10 Seeds, parallel.
+r"""Orchestrates the xLSTM constant-run holdout sweep: 10 seeds, in parallel.
 
-Startet ``run_xlstm_constant_holdout_worker.py`` als unabhaengige Prozesse -- ein Job je
-Seed, 10 insgesamt (Baselines/GRU/LSTM liegen bereits vor, Befund 36). Kein
-Hyperparameter, kein Seed wird dadurch veraendert; nur die Wanduhrzeit sinkt. Struktur
-bewusst identisch zu ``run_mamba_constant_holdout_sweep.py`` (Befund 40, selbst wiederum
-nach ``run_arch_constant_holdout_sweep.py`` gebaut: gestaffelter Start,
-Merge-mit-Duplikatpruefung) -- nur auf xLSTM statt Mamba umgestellt.
+Starts ``run_xlstm_constant_holdout_worker.py`` as independent processes -- one job per
+seed, 10 in total (baselines/GRU/LSTM already exist, Befund 36). No
+hyperparameter and no seed is changed by this; only the wall-clock time drops. Structure
+deliberately identical to ``run_mamba_constant_holdout_sweep.py`` (Befund 40, itself in turn
+built after ``run_arch_constant_holdout_sweep.py``: staggered start,
+merge with duplicate check) -- only switched to xLSTM instead of Mamba.
 
-Gestaffelter Start (nur der erste Batch)
+Staggered start (first batch only)
 -----------------------------------------
-Dieselbe Begruendung wie im GRU/LSTM- und Mamba-Sweep: mehrere Prozesse, die
-gleichzeitig Checkpoints und JSONL-Teil-Dateien schreiben, sind eine andere
-Belastungsklasse als ein Einzelprozess-Benchmark. Erst zwei Jobs, kurze Wartezeit,
-Pruefung (Prozess lebt noch, "Setup fertig"-Marker im Log), dann der Rest.
+The same reasoning as in the GRU/LSTM and Mamba sweeps: several processes that
+simultaneously write checkpoints and partial JSONL files are a different
+load class than a single-process benchmark. First two jobs, a short wait,
+a check (process still alive, "Setup fertig" marker in the log), then the rest.
 
-Zusammenfuehren
+Merging
 -----------------
-Jeder Job schreibt in eine eigene JSONL-Datei; am Ende werden alle zusammengefuehrt, mit
-Pruefung auf doppelte ``run_uid`` (Abbruch bei Duplikat, kein stillschweigendes
-Uebergehen). Ziel-Datei bewusst NICHT ``arch_gab_constant_holdout.jsonl`` (die Befund-36-
-Datei bleibt unangetastet) -- eigene Datei
-``artifacts/runs/xlstm_gab_constant_holdout.jsonl``, die zusammen mit der Befund-36-Datei
-fuer die Vergleichstabelle gelesen wird.
+Each job writes to its own JSONL file; at the end all are merged, with a
+check for duplicate ``run_uid`` (abort on a duplicate, no silent
+passing over). Target file deliberately NOT ``arch_gab_constant_holdout.jsonl`` (the Befund 36
+file stays untouched) -- own file
+``artifacts/runs/xlstm_gab_constant_holdout.jsonl``, which is read together with the Befund 36
+file for the comparison table.
 """
 
 from __future__ import annotations
@@ -40,9 +40,9 @@ SEEDS = tuple(range(1, 11))
 
 
 def _parse_seeds(raw: str) -> list[int]:
-    """``--seeds`` als Komma-Liste parsen, z. B. ``"2,3,4"``.
+    """Parse ``--seeds`` as a comma list, e.g. ``"2,3,4"``.
 
-    Fuer Teil-Reruns (z. B. Seed 1 bereits als Einzelsonde gelaufen, nur 2..10 fehlen noch).
+    For partial reruns (e.g. seed 1 already run as a single probe, only 2..10 still missing).
     """
     return [int(part) for part in raw.split(",") if part.strip()]
 
@@ -80,15 +80,15 @@ def _launch(
     env = {
         **os.environ,
         "PYTHONIOENCODING": "utf-8",
-        # Bestaetigt (Diagnose in dieser Sitzung): torch.set_num_threads(1) im Worker
-        # begrenzt nur ATen/PyTorchs eigenen Intraop-Pool, NICHT Intel MKL/OpenMP
-        # darunter -- ohne diese Variablen liest MKL bei jedem Worker-Prozess
-        # unabhaengig mkl_get_max_threads()=8 (unbelastet gemessen), was bei 8-9
-        # gleichzeitigen Prozessen zu massiver Thread-Ueberzeichnung fuehrte (~7.2x
-        # langsamer als der unbelastete Einzellauf). Muessen als echte
-        # Prozessumgebungsvariablen VOR dem Interpreterstart gesetzt sein -- ein
-        # `os.environ[...] = ...` im Worker-Skript selbst kaeme zu spaet, MKL liest
-        # das beim Bibliotheks-Import.
+        # Confirmed (diagnosis in this session): torch.set_num_threads(1) in the worker
+        # only limits ATen/PyTorch's own intra-op pool, NOT Intel MKL/OpenMP
+        # underneath -- without these variables MKL reads, in every worker process,
+        # independently mkl_get_max_threads()=8 (measured unloaded), which with 8-9
+        # simultaneous processes led to massive thread oversubscription (~7.2x
+        # slower than the unloaded single run). Must be set as real
+        # process environment variables BEFORE the interpreter starts -- an
+        # `os.environ[...] = ...` in the worker script itself would come too late, MKL reads
+        # this at library import.
         "MKL_NUM_THREADS": "1",
         "OMP_NUM_THREADS": "1",
     }
@@ -116,9 +116,9 @@ def _run_batch(
     stagger_first: int,
     stagger_wait_s: float,
 ) -> list[tuple[int, int, Path]]:
-    """Einen Batch starten -- optional gestaffelt -- und auf Abschluss aller warten.
+    """Start one batch -- optionally staggered -- and wait for all to finish.
 
-    Rueckgabe je Job: ``(seed, returncode, output_path)``.
+    Returns per job: ``(seed, returncode, output_path)``.
     """
     handles: list[tuple[subprocess.Popen[bytes], int, Path]] = []
 
@@ -187,7 +187,7 @@ def _run_batch(
 
 
 def _merge(outputs: list[Path], final_path: Path) -> None:
-    """Alle Job-JSONL-Dateien zusammenfuehren, mit Duplikat-run_uid-Pruefung."""
+    """Merge all job JSONL files, with duplicate-run_uid check."""
     seen_run_uids: dict[str, Path] = {}
     lines: list[str] = []
     for output in outputs:
@@ -216,7 +216,7 @@ def _merge(outputs: list[Path], final_path: Path) -> None:
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",
@@ -250,7 +250,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Sweep fahren: Batches starten, warten, zusammenfuehren."""
+    """Run the sweep: start batches, wait, merge."""
     arguments = parse_arguments()
     arguments.work_dir.mkdir(parents=True, exist_ok=True)
     python = sys.executable

@@ -144,9 +144,9 @@ def _set_variant(recovery_mode: str | None, weighting: str | None) -> None:
 def _q_rec_kw(
     solution: SteadyStateSolution, base_config: ProcessConfig, *, recovery_mode: str
 ) -> float:
-    """Rueckgewinnbare Leistung aus DIESEM Beharrungszustand, Einzelpunkt-Formel (siehe
-    Moduldocstring, Abschnitt Verschaltung) -- Laborsimulator-Massenstrom, kein
-    Verbund-Massenstrom (Skalenvorbehalt)."""
+    """Recoverable power from THIS steady state, single-point formula (see
+    module docstring, section Verschaltung) -- lab simulator mass flow, not the
+    consortium mass flow (scale caveat)."""
     backend = NumpyBackend()
     t_out = solution.bed_temperature_celsius - base_config.exhaust.outlet_duct_heat_loss_k
     y_out = solution.outlet_humidity_kg_per_kg
@@ -165,8 +165,8 @@ def _q_rec_kw(
         )
 
     assert recovery_mode == "condensing"
-    # MA1-Formel (heatnetwork.balance.evaluate_cascade, recovery_mode="condensing"),
-    # hier als Einzelpunkt-Formel direkt aus thermo.py -- siehe Moduldocstring.
+    # MA1 formula (heatnetwork.balance.evaluate_cascade, recovery_mode="condensing"),
+    # here as a single-point formula directly from thermo.py -- see module docstring.
     y_sat_cold = float(
         backend.to_numpy(
             saturation_humidity_kg_per_kg(
@@ -190,8 +190,8 @@ def _q_rec_kw(
 
 
 def _net_objective(solution: SteadyStateSolution, base_config: ProcessConfig) -> dict[str, float]:
-    """Override fuer ``regret_module._objective_components`` (MA4) -- liest die aktive
-    Variante aus ``_VARIANT`` (im Pool-Initializer gesetzt)."""
+    """Override for ``regret_module._objective_components`` (MA4) -- reads the active
+    variant from ``_VARIANT`` (set in the pool initializer)."""
     assert _VARIANT is not None
     gross_kw = float(solution.diagnostics["energy_target"])
     q_rec_kw = _q_rec_kw(solution, base_config, recovery_mode=_VARIANT["recovery_mode"])
@@ -212,9 +212,9 @@ def _net_objective(solution: SteadyStateSolution, base_config: ProcessConfig) ->
 def _pool_initializer(
     base_config: ProcessConfig, recovery_mode: str | None, weighting: str | None
 ) -> None:
-    """Ein Initializer je Pool-Worker: setzt Basis-Config, aktive Variante UND den
-    Override-Hook in ``study_operating_point_regret`` -- gleiches Muster wie dessen
-    eigener ``_set_base_config``-Initializer (siehe dortigen Docstring)."""
+    """One initializer per pool worker: sets the base config, the active variant AND the
+    override hook in ``study_operating_point_regret`` -- the same pattern as its
+    own ``_set_base_config`` initializer (see the docstring there)."""
     regret_module._set_base_config(base_config)
     _set_variant(recovery_mode, weighting)
     regret_module._set_objective_value_fn(_net_objective if recovery_mode is not None else None)
@@ -233,10 +233,10 @@ def run_variant_study(
     recovery_mode: str | None,
     weighting: str | None,
 ) -> dict[str, Any]:
-    """Ein vollstaendiger BB1-BB3-Lauf (EINE Variante) -- Orchestrierung von
-    ``study_operating_point_regret.main()`` nachgebildet (gleiche Funktionen, gleiche
-    Reihenfolge, gleiches Muster wie ``probe_critical_moisture_sensitivity.
-    run_regret_study``), nur mit dem Netto-Objective-Hook statt einer variierten Config.
+    """One complete BB1-BB3 run (ONE variant) -- orchestration modelled on
+    ``study_operating_point_regret.main()`` (same functions, same
+    order, same pattern as ``probe_critical_moisture_sensitivity.
+    run_regret_study``), only with the net objective hook instead of a varied config.
     """
     bounds = regret_module.action_bounds(base_config)
     grid_points = regret_module.build_grid(base_config, grid_size)
@@ -255,11 +255,11 @@ def run_variant_study(
         f"\n=== {label}: Gitter {grid_size}x{grid_size} = {len(grid_points)} Punkte ===", flush=True
     )
 
-    # Gilt auch fuer den MAIN-Prozess selbst: find_fixed_operating_point() ruft dessen
-    # abschliessende Pro-Gitterpunkt-Auswertung direkt hier auf, nicht ueber den Pool (siehe
-    # study_operating_point_regret.find_fixed_operating_point) -- ohne diesen Aufruf bliebe
-    # regret_module._BASE_CONFIG im Hauptprozess auf None (nur die Pool-WORKER bekommen ihn
-    # ueber den Initializer gesetzt).
+    # Also applies to the MAIN process itself: find_fixed_operating_point() calls its
+    # final per-grid-point evaluation directly here, not via the pool (see
+    # study_operating_point_regret.find_fixed_operating_point) -- without this call
+    # regret_module._BASE_CONFIG would stay None in the main process (only the pool WORKERS get it
+    # set via the initializer).
     _pool_initializer(base_config, recovery_mode, weighting)
 
     with Pool(

@@ -1,12 +1,12 @@
-r"""Lernkurve: Fehler über Anzahl Trainingsläufe, mehrere Seeds, alle Baselines.
+r"""Learning curve: error over the number of training runs, several seeds, all baselines.
 
-Aufruf::
+Usage::
 
     python scripts/study_learning_curve.py --log artifacts/curve.jsonl --seeds 1 2 3
 
-Primäres Ergebnisformat von AP 1 (Meilenstein M2). Ausgegeben wird der Median über die
-Seeds mit Spannweite, nicht der Mittelwert: bei drei bis fünf Seeds ist die
-Normalverteilungsannahme nicht prüfbar.
+Primary result format of AP 1 (milestone M2). Output is the median over the
+seeds with range, not the mean: with three to five seeds the
+normality assumption cannot be checked.
 """
 
 from __future__ import annotations
@@ -44,7 +44,7 @@ FACTORIES = {
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",
@@ -68,7 +68,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Lernkurve rechnen und ausgeben."""
+    """Compute and print the learning curve."""
     arguments = parse_arguments()
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)

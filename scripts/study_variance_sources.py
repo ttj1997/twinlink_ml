@@ -1,17 +1,17 @@
-r"""Streuung nach Quelle zerlegen und das Auflösungsvermögen ausweisen (Schritt 5, 1+2).
+r"""Decompose the spread by source and state the resolving power (step 5, 1+2).
 
-Aufruf::
+Usage::
 
     python scripts/study_variance_sources.py --log artifacts/runs/variance.jsonl
 
-Bisher variierte ein Master-Seed Datensatz-Realisierung, Sensorrauschen und
-Modellinitialisierung gemeinsam. Das ist die konservative Angabe und bleibt die berichtete
-Kurve -- aber sie beantwortet nicht, ob eine Differenz zwischen zwei Architekturen aus dem
-Training oder aus der Datensatz-Realisierung kommt. Diese Studie variiert die drei Quellen
-einzeln (``SeedPlan``) und meldet drei Spannweiten getrennt.
+So far one master seed varied dataset realisation, sensor noise and
+model initialisation together. That is the conservative statement and remains the reported
+curve -- but it does not answer whether a difference between two architectures comes from the
+training or from the dataset realisation. This study varies the three sources
+individually (``SeedPlan``) and reports three ranges separately.
 
-Aus derselben Rechnung fällt das Auflösungsvermögen ab: die Streuung der **parameterfreien**
-Persistenz ist reine Datensatz-Realisierung und damit die untere Schranke jedes Vergleichs.
+The resolving power falls out of the same calculation: the spread of the **parameter-free**
+persistence is pure dataset realisation and thus the lower bound of every comparison.
 """
 
 from __future__ import annotations
@@ -41,7 +41,7 @@ FACTORIES = {
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",
@@ -61,7 +61,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Zerlegung rechnen und Bericht drucken."""
+    """Compute the decomposition and print the report."""
     arguments = parse_arguments()
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)

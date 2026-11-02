@@ -1,18 +1,18 @@
-r"""Wie viel Vergangenheit das Modell braucht (Schritt 6, Nebenstudie).
+r"""How much past the model needs (step 6, side study).
 
-Aufruf::
+Usage::
 
     python scripts/study_history_length.py --log artifacts/runs/history.jsonl
 
-Anlass: der Soft Sensor aus dem Vorprojekt (Kräuter et al.) erreicht seine Genauigkeit mit
-einer Historie von **zwei Abtastschritten**, also 4 s -- die Zeitinformation erreicht ihn
-nur über erste und zweite Ableitung der Inline-Messungen. Für eine Ein-Schritt-Schätzung
-bei Δt = 2 s ist das plausibel. Für einen Mehrschritt-Rollout über Minuten ist die Frage
-offen, und sie ist nicht durch Nachdenken zu beantworten, sondern durch Messen.
+Occasion: the soft sensor from the predecessor project (Kräuter et al.) reaches its accuracy with
+a history of **two sampling steps**, i.e. 4 s -- the temporal information reaches it
+only via the first and second derivative of the inline measurements. For a one-step estimate
+at Δt = 2 s that is plausible. For a multi-step rollout over minutes the question is
+open, and it cannot be answered by thinking but by measuring.
 
-Die Studie hält **Horizont und Abtastzeit fest** und variiert allein die Fensterhistorie.
-Berichtet wird in Sekunden, nicht in Schritten: nur so ist die Zahl mit der Historie des
-Vorprojekts und mit den Zeitkonstanten des Prozesses vergleichbar.
+The study keeps **horizon and sample time fixed** and varies only the window history.
+Reporting is in seconds, not in steps: only then is the number comparable with the history of the
+predecessor project and with the time constants of the process.
 """
 
 from __future__ import annotations
@@ -42,7 +42,7 @@ CONFIG_PATH = Path(__file__).resolve().parents[1] / "conf" / "process" / "greybo
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",
@@ -66,7 +66,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Historienlänge variieren, Rollout-Fehler berichten."""
+    """Vary the history length, report the rollout error."""
     arguments = parse_arguments()
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
@@ -95,9 +95,9 @@ def main() -> None:
     records = []
 
     for length in arguments.lengths:
-        # Die ARX-Ordnung wird mitgeführt: eine feste Ordnung 4 würde bei Historie 1 oder 2
-        # abbrechen, und ein Vergleich, in dem ein Modell die kurze Historie nicht nutzen
-        # *kann*, misst die Implementierung statt der Information.
+        # The ARX order is carried along: a fixed order 4 would abort at history 1 or 2,
+        # and a comparison in which a model *cannot* use the short history
+        # measures the implementation instead of the information.
         order = max(1, min(arguments.max_lags, length))
         spec = dataclasses.replace(base, history_length=length)
         local = {

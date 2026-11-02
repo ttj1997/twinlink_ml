@@ -1,32 +1,32 @@
-r"""Ein (xLSTM, Seed)-Job: trainieren, auf zwei Testmengen auswerten, Checkpoint sichern.
+r"""One (xLSTM, seed) job: train, evaluate on two test sets, save a checkpoint.
 
-Voller Konstantlauf-Holdout-Massstab (Befund 36) fuer xLSTM, direkt nach dem Muster von
-``run_mamba_constant_holdout_worker.py`` (Befund 40) -- Klaerung, ob die im reduzierten
-Einzelseed-Vergleich beobachtete ``energy_target``-Schwaeche (divergierende Optimierung
-nach Epoche 5, schlechter als Persistenz bei h=1) eine architektonische Eigenschaft ist
-oder bei ``n_train=64``/10 Seeds verschwindet. GRU/LSTM/Persistenz/static/ARX werden
-NICHT neu gerechnet -- die 100 Records in ``artifacts/runs/arch_gab_constant_holdout.jsonl``
-(5 Modelle x 10 Seeds x 2 Testmengen, Befund 36) bleiben massgeblich.
+Full constant-run holdout scale (Befund 36) for xLSTM, directly following the pattern of
+``run_mamba_constant_holdout_worker.py`` (Befund 40) -- clarification whether the
+``energy_target`` weakness observed in the reduced single-seed comparison (diverging optimisation
+after epoch 5, worse than persistence at h=1) is an architectural property
+or disappears at ``n_train=64``/10 seeds. GRU/LSTM/persistence/static/ARX are
+NOT recomputed -- the 100 records in ``artifacts/runs/arch_gab_constant_holdout.jsonl``
+(5 models x 10 seeds x 2 test sets, Befund 36) remain authoritative.
 
-**Ein Unterschied zum Mamba-Vorbild, bewusst:** ``training_diagnostics()``
-(``epochs_run``/``gradient_steps``/``train_loss_ratio_last10``, Befund 43) wird hier
-explizit mitgeloggt (``training/<key>/<target>``-Praefix, wie in
-``evaluation/experiments.py::run_architecture_comparison``). Der Mamba-Vorlage fehlt das
--- geprueft: weder ``arch_gab_constant_holdout.jsonl`` (Befund 36, vor Befund 43
-geschrieben) noch ``mamba_gab_constant_holdout.jsonl`` (Befund 40, nutzt denselben
-handgebauten ``_log_model``-Pfad statt ``run_architecture_comparison``) enthalten
-``"training/"``-Schluessel. Fuer diese Aufgabe -- explizit die Frage, ob das
-Trainingsverlaufsmuster bei ``energy_target`` ueber 10 Seeds anhaelt -- ist das kein
-optionales Extra, sondern der eigentliche Zweck des Laufs; deshalb hier ergaenzt, ohne
-``torch_sequence.py``/``composite.py``/``base.py`` anzufassen (die Methode existiert dort
-bereits generisch, nur der Logging-Aufruf fehlte in diesem Skriptmuster).
+**One difference from the Mamba template, deliberate:** ``training_diagnostics()``
+(``epochs_run``/``gradient_steps``/``train_loss_ratio_last10``, Befund 43) is
+explicitly logged here as well (``training/<key>/<target>`` prefix, as in
+``evaluation/experiments.py::run_architecture_comparison``). The Mamba template lacks this
+-- checked: neither ``arch_gab_constant_holdout.jsonl`` (Befund 36, written before Befund 43)
+nor ``mamba_gab_constant_holdout.jsonl`` (Befund 40, uses the same
+hand-built ``_log_model`` path instead of ``run_architecture_comparison``) contain
+``"training/"`` keys. For this task -- explicitly the question whether the
+training-history pattern for ``energy_target`` persists over 10 seeds -- this is not an
+optional extra but the actual purpose of the run; therefore added here, without
+touching ``torch_sequence.py``/``composite.py``/``base.py`` (the method already exists there
+generically, only the logging call was missing in this script pattern).
 
-xLSTM-Konfiguration: ``CompositeXLSTMSequenceModel()`` ohne Config-Override -- exakt der
-Stand aus dem reduzierten Vergleich (``hidden_size=64``, mLSTM-only, alle sechs
-dokumentierten Vereinfachungen aus ``models/xlstm.py`` unveraendert). KEINE Architektur-/
-Hyperparameter-Aenderung in diesem Skript.
+xLSTM configuration: ``CompositeXLSTMSequenceModel()`` without config override -- exactly the
+state from the reduced comparison (``hidden_size=64``, mLSTM-only, all six
+documented simplifications from ``models/xlstm.py`` unchanged). NO architecture/
+hyperparameter change in this script.
 
-Aufrufbar fuer einen Einzeltest::
+Callable for a single test::
 
     python scripts/run_xlstm_constant_holdout_worker.py --seed 1 \
         --output artifacts/runs/_xlstm_worker_1.jsonl
@@ -63,11 +63,11 @@ unten, unveraendert gelassen (nur gelesen, nie beschrieben)."""
 
 
 def _expected_from_existing(seed: int) -> dict[str, object]:
-    """Fingerprint/Split/Seeds/target_names fuer ``seed`` aus den geloggten Records lesen.
+    """Read fingerprint/split/seeds/target_names for ``seed`` from the logged records.
 
-    Identisch zu ``run_mamba_constant_holdout_worker._expected_from_existing`` -- inklusive
-    ``data/target_names`` aus dem Log gelesen, nicht hartkodiert (siehe dortiger Docstring
-    fuer die Begruendung).
+    Identical to ``run_mamba_constant_holdout_worker._expected_from_existing`` -- including
+    ``data/target_names`` read from the log, not hard-coded (see the docstring there
+    for the reasoning).
     """
     with EXISTING_RECORDS_PATH.open("r", encoding="utf-8") as handle:
         for raw_line in handle:
@@ -92,9 +92,9 @@ def _expected_from_existing(seed: int) -> dict[str, object]:
 
 
 def _check_expected(seed: int, expected: dict[str, object], actual: dict[str, object]) -> None:
-    """``expected`` (aus der Log-Datei) gegen ``actual`` pruefen, hart abbrechen bei Abweichung.
+    """Check ``expected`` (from the log file) against ``actual``, abort hard on a deviation.
 
-    Identisch zu ``run_mamba_constant_holdout_worker._check_expected``.
+    Identical to ``run_mamba_constant_holdout_worker._check_expected``.
     """
     mismatches = {k: (v, actual[k]) for k, v in expected.items() if v != actual[k]}
     if not mismatches:
@@ -137,7 +137,7 @@ def _check_expected(seed: int, expected: dict[str, object], actual: dict[str, ob
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--config", type=Path, default=CONFIG_PATH)
@@ -148,7 +148,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Ein Job: Datenkompatibilitaet pruefen, trainieren, zwei Testmengen auswerten."""
+    """One job: check data compatibility, train, evaluate two test sets."""
     arguments = parse_arguments()
 
     import torch

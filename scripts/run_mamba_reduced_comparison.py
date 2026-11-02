@@ -1,23 +1,23 @@
-r"""Schritt 2 (Mamba-Arbeitsstrang): verkleinerter Vergleich, 1 Seed, n_train=16.
+r"""Step 2 (Mamba work strand): reduced comparison, 1 seed, n_train=16.
 
-**Nur Mamba wird hier trainiert.** Vor diesem Skript wurde geprueft (Klartext-Diskussion
-in der Session zu diesem Befund), dass ``run_transformer_reduced_comparison.py``
-(Befund 37d, ``artifacts/runs/transformer_reduced_comparison.jsonl``) exakt dieselbe
-``DataSpec``, denselben ``master_seed=1`` und dieselbe ``greybox_gab_placeholder.yaml``
-verwendet -- bitgleich verifiziert an ``process/fingerprint``, ``split/digest`` und allen
-drei abgeleiteten Seeds (``seed/data``, ``seed/noise``, ``seed/model``). Die sechs dort
-bereits geloggten Records (persistence, static, arx, gru, lstm, transformer) werden
-deshalb UNVERAENDERT uebernommen, nicht neu berechnet -- das spart die ~55 Minuten
-GRU/LSTM/Transformer-Trainingszeit, die in Befund 37d bereits gemessen wurden.
+**Only Mamba is trained here.** Before this script it was checked (plain-text discussion
+in the session on this finding) that ``run_transformer_reduced_comparison.py``
+(Befund 37d, ``artifacts/runs/transformer_reduced_comparison.jsonl``) uses exactly the same
+``DataSpec``, the same ``master_seed=1`` and the same ``greybox_gab_placeholder.yaml``
+-- verified bit-identical on ``process/fingerprint``, ``split/digest`` and all
+three derived seeds (``seed/data``, ``seed/noise``, ``seed/model``). The six records
+already logged there (persistence, static, arx, gru, lstm, transformer) are
+therefore taken over UNCHANGED, not recomputed -- this saves the ~55 minutes of
+GRU/LSTM/Transformer training time already measured in Befund 37d.
 
-Ausgabe: ``artifacts/runs/mamba_reduced_comparison.jsonl`` mit allen sieben Records
-(sechs unveraendert aus Befund 37d kopiert, plus der neue Mamba-Record) --
-``transformer_reduced_comparison.jsonl`` selbst bleibt unangetastet.
+Output: ``artifacts/runs/mamba_reduced_comparison.jsonl`` with all seven records
+(six copied unchanged from Befund 37d, plus the new Mamba record) --
+``transformer_reduced_comparison.jsonl`` itself stays untouched.
 
-Standard-Produktionskonfiguration fuer Mamba, NICHT verkuerzt: ``CompositeMambaSequenceModel()``
-ohne Config-Override ausser dem eigenen Kapazitaets-Standard (``hidden_size=16,
-state_size=16, num_layers=1``, siehe ``composite.py``-Docstring) -- ``max_epochs=200``,
-``patience=20`` (Dataclass-Standard, identisch zu Befund 28/36/37).
+Standard production configuration for Mamba, NOT shortened: ``CompositeMambaSequenceModel()``
+without config override except its own capacity default (``hidden_size=16,
+state_size=16, num_layers=1``, see the ``composite.py`` docstring) -- ``max_epochs=200``,
+``patience=20`` (dataclass default, identical to Befund 28/36/37).
 """
 
 from __future__ import annotations
@@ -43,16 +43,16 @@ OUTPUT_PATH = REPO_ROOT / "artifacts" / "runs" / "mamba_reduced_comparison.jsonl
 SEED = 1
 N_TRAIN = 16
 
-# Bitgleich mit den in transformer_reduced_comparison.jsonl geloggten Werten verifiziert
-# (Session-Klartext-Check vor diesem Skript) -- Gegenprobe unten in main() wiederholt
-# denselben Vergleich, damit ein spaeterer Aufruf (z. B. nach einer Config-Aenderung)
-# nicht stillschweigend inkompatible Records zusammenfuehrt.
+# Verified bit-identical with the values logged in transformer_reduced_comparison.jsonl
+# (session plain-text check before this script) -- the cross-check below in main() repeats
+# the same comparison, so that a later call (e.g. after a config change)
+# does not silently merge incompatible records.
 #
-# Fingerprint aktualisiert von 82f65f576a2e5253 auf 40aae2b4526a5ed7: NumericsConfig.
-# enforce_gas_velocity_projection hinzugefuegt (Default AUS). ProcessConfig.fingerprint
-# hasht die gesamte Config, daher aendert sich der Wert auch bei unveraendertem Verhalten.
-# Aequivalenz belegt durch test_gas_velocity_projection_disabled_matches_legacy_baseline
-# (tests/test_gas_velocity_projection.py) -- siehe dort fuer den Bitgleichheits-Beleg.
+# Fingerprint updated from 82f65f576a2e5253 to 40aae2b4526a5ed7: NumericsConfig.
+# enforce_gas_velocity_projection added (default OFF). ProcessConfig.fingerprint
+# hashes the entire config, so the value changes even with unchanged behaviour.
+# Equivalence shown by test_gas_velocity_projection_disabled_matches_legacy_baseline
+# (tests/test_gas_velocity_projection.py) -- see there for the bit-identity evidence.
 EXPECTED = {
     "process/fingerprint": "40aae2b4526a5ed7",
     "split/digest": "5b9628a151344f37",
@@ -69,7 +69,7 @@ die drei bisherigen Schluessel."""
 
 
 def _spec() -> DataSpec:
-    """Identisch zu ``run_transformer_reduced_comparison._spec`` (Befund 37d)."""
+    """Identical to ``run_transformer_reduced_comparison._spec`` (Befund 37d)."""
     return DataSpec(
         sample_time_s=25.0,
         run_duration_s=28_800.0,
@@ -87,10 +87,10 @@ def _log(message: str) -> None:
 
 
 def _check_expected(actual: Mapping[str, object]) -> None:
-    """``EXPECTED`` gegen tatsaechliche Werte pruefen, hart abbrechen bei Abweichung.
+    """Check ``EXPECTED`` against actual values, abort hard on a deviation.
 
-    Eigene Funktion (nicht inline in ``main()``), damit die Schemapruefung ohne vollen
-    Datengenerierungs-/Trainingslauf testbar ist.
+    Separate function (not inline in ``main()``) so that the schema check is testable
+    without a full data-generation/training run.
     """
     mismatches = {k: (v, actual[k]) for k, v in EXPECTED.items() if v != actual[k]}
     if mismatches:
@@ -174,9 +174,9 @@ def main() -> None:
     )
     _log(f"-- Modell 'mamba': ausgewertet --\n{result.format()}")
 
-    # Sechs bestehende Records unveraendert kopieren (transformer_reduced_comparison.jsonl
-    # bleibt selbst unangetastet), dann den neuen Mamba-Record anhaengen (Logger ist
-    # anfuegend, siehe tracking.JsonlExperimentLogger-Docstring).
+    # Copy six existing records unchanged (transformer_reduced_comparison.jsonl
+    # itself stays untouched), then append the new Mamba record (the logger is
+    # appending, see the tracking.JsonlExperimentLogger docstring).
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy(REUSED_LOG_PATH, OUTPUT_PATH)
     with REUSED_LOG_PATH.open("r", encoding="utf-8") as handle:

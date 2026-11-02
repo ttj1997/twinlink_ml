@@ -1,20 +1,20 @@
-r"""Ein (Architektur, Seed)-Job fuer den T_bed/Exhaust-Sweep (Befund 42).
+r"""One (architecture, seed) job for the T_bed/exhaust sweep (Befund 42).
 
-Struktur identisch zu ``run_arch_constant_holdout_worker.py`` (Befund 36) -- Standard-
-Produktionskonfiguration (``greybox_gab_placeholder.yaml``, ``n_train=64``, ``horizon=36``,
-angeregte Testmenge PLUS fester Konstantlauf-Holdout-Pool ``HOLDOUT_SEED=999``)
-unveraendert uebernommen, nur um die vierte Zielgroesse (``bed_temperature_celsius``,
-expliziter Override, Befund 41f) und die End-zu-End-Exhaust-Metrik
-(``evaluation.exhaust_reconstruction``, Befund 42) erweitert. Fuer jede der zwei
-Testmengen wird ``evaluate_exhaust_reconstruction()`` mit dem PASSENDEN ``GeneratedData``-
-Objekt aufgerufen (``excited`` fuer die angeregte Testmenge, ``holdout`` fuer den
-Konstantlauf) -- die Selbstpruefung in ``exhaust_reconstruction.py`` (Befund 42, die dabei
-gefundene stille Fehlpaarungs-Luecke) wuerde eine Verwechslung dieser beiden sofort mit
-einem ``ValueError`` aufdecken.
+Structure identical to ``run_arch_constant_holdout_worker.py`` (Befund 36) -- standard
+production configuration (``greybox_gab_placeholder.yaml``, ``n_train=64``, ``horizon=36``,
+excited test set PLUS fixed constant-run holdout pool ``HOLDOUT_SEED=999``)
+taken over unchanged, only extended by the fourth target (``bed_temperature_celsius``,
+explicit override, Befund 41f) and the end-to-end exhaust metric
+(``evaluation.exhaust_reconstruction``, Befund 42). For each of the two
+test sets ``evaluate_exhaust_reconstruction()`` is called with the MATCHING ``GeneratedData``
+object (``excited`` for the excited test set, ``holdout`` for the
+constant run) -- the self-check in ``exhaust_reconstruction.py`` (Befund 42, the silent
+mispairing gap found in the process) would immediately expose a mix-up of these two with
+a ``ValueError``.
 
-Kein Checkpoint-Schreiben -- diese Aufgabe ist eine Bestandsaufnahme, keine Grundlage fuer
-spaetere Weiterverwendung trainierter Gewichte. Keine Baselines (Persistenz/static/ARX) --
-nicht Teil des bestaetigten Sweep-Umfangs.
+No checkpoint writing -- this task is a stock-taking, not a basis for
+later reuse of trained weights. No baselines (persistence/static/ARX) --
+not part of the confirmed sweep scope.
 """
 
 from __future__ import annotations
@@ -72,7 +72,7 @@ def _excited_spec() -> DataSpec:
 
 
 def _holdout_spec(excited: DataSpec) -> DataSpec:
-    """Konstantlauf-Pool, ``n_test`` an die Standard-Testmenge angeglichen (Befund 36)."""
+    """Constant-run pool, ``n_test`` matched to the standard test set (Befund 36)."""
     return dataclasses.replace(
         excited, n_train_max=2, n_val=2, n_test=excited.n_test, constant_run_fraction=1.0
     )
@@ -85,7 +85,7 @@ def _architecture_factory(label: str) -> Callable[[], CompositeSequenceModel]:
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--architecture", choices=ARCHITECTURE_LABELS, required=True)
     parser.add_argument("--seed", type=int, required=True)
@@ -96,7 +96,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Ein Job: trainieren, zwei Testmengen (je mit Vier-Ziele-NRMSE + Exhaust-Metrik) auswerten."""
+    """One job: train, evaluate two test sets (each with four-target NRMSE + exhaust metric)."""
     arguments = parse_arguments()
 
     import torch

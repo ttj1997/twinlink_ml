@@ -1,27 +1,27 @@
-r"""Schritt B (Session zu Befund 37): verkleinerter Vergleich, 1 Seed, n_train=16.
+r"""Step B (session on Befund 37): reduced comparison, 1 seed, n_train=16.
 
-Explizit reduziert gegenueber der vollen Lernkurve (3 Seeds, n_train=32) -- ein einzelner
-Datenpunkt, der die Transformer-Architektur (Befund 37, ``composite.py``) direkt gegen
-Baselines/GRU/LSTM auf **denselben** Daten stellt. n_train=16 ist die naechst kleinere
-Stuetzstelle der etablierten Lernkurve ``{8,16,32,64}`` (``study_learning_curve.py``),
-nicht willkuerlich gewaehlt.
+Explicitly reduced compared with the full learning curve (3 seeds, n_train=32) -- a single
+data point that sets the Transformer architecture (Befund 37, ``composite.py``) directly against
+baselines/GRU/LSTM on **the same** data. n_train=16 is the next smaller
+support point of the established learning curve ``{8,16,32,64}`` (``study_learning_curve.py``),
+not chosen arbitrarily.
 
-Standard-Produktionskonfiguration, NICHT verkuerzt (explizite Vorgabe): alle Fabriken ohne
-Config-Override, also ``max_epochs=200``, ``patience=20`` fuer GRU/LSTM/Transformer --
-identisch zu Befund 28/36. Eine asymmetrische Abkuerzung nur fuer den Transformer waere
-eine unkontrollierte methodische Abweichung.
+Standard production configuration, NOT shortened (explicit requirement): all factories without
+config override, i.e. ``max_epochs=200``, ``patience=20`` for GRU/LSTM/Transformer --
+identical to Befund 28/36. An asymmetric shortcut only for the Transformer would be
+an uncontrolled methodological deviation.
 
-Derselbe Datensatz-Aufbau wie im Konstantlauf-Holdout-Worker (``n_val=32, n_test=32`` fest,
-unabhaengig von ``n_train`` -- ``build_datasets``/``evaluate_point`` in
-``twinlink_ml.evaluation.experiments`` ziehen ``n_train`` als Praefix aus dem festen
-``n_train_max=64``-Pool, ``data.split.subset(n_train)``). Dasselbe Muster, das die
-Kalibrierung des Kostenmodells in der Schritt-A-Diagnose bestaetigt hat (11.55s
-vorhergesagt gegen 11.6s gemessen bei n_train=32, ``n_val=32``).
+The same dataset construction as in the constant-run holdout worker (``n_val=32, n_test=32`` fixed,
+independent of ``n_train`` -- ``build_datasets``/``evaluate_point`` in
+``twinlink_ml.evaluation.experiments`` take ``n_train`` as a prefix from the fixed
+``n_train_max=64`` pool, ``data.split.subset(n_train)``). The same pattern that
+confirmed the calibration of the cost model in the step-A diagnosis (11.55s
+predicted against 11.6s measured at n_train=32, ``n_val=32``).
 
-Fortschritts-Log: ``verbose=True`` an ``CompositeSequenceModel.fit`` fuer GRU/LSTM/
-Transformer (eine Zeile je Epoche, inkl. ``val_loss``/``stale``, siehe
-``TorchSequenceModel.fit``) plus eigene Start/Ende-Marker je Modell -- Konvention aus
-``run_arch_constant_holdout_worker.py``/``_sweep.py`` (dort ``.log``-Datei je Job).
+Progress log: ``verbose=True`` to ``CompositeSequenceModel.fit`` for GRU/LSTM/
+Transformer (one line per epoch, incl. ``val_loss``/``stale``, see
+``TorchSequenceModel.fit``) plus own start/end markers per model -- convention from
+``run_arch_constant_holdout_worker.py``/``_sweep.py`` (there a ``.log`` file per job).
 """
 
 from __future__ import annotations
@@ -61,9 +61,9 @@ FACTORIES = {
 
 
 def _spec() -> DataSpec:
-    """Wie ``_excited_spec`` im Konstantlauf-Holdout-Worker -- derselbe Pool-Aufbau.
+    """Like ``_excited_spec`` in the constant-run holdout worker -- the same pool construction.
 
-    ``n_val=32``/``n_test=32`` fest, ``n_train_max=64`` (Praefix ``n_train=16`` daraus).
+    ``n_val=32``/``n_test=32`` fixed, ``n_train_max=64`` (prefix ``n_train=16`` from it).
     """
     return DataSpec(
         sample_time_s=25.0,

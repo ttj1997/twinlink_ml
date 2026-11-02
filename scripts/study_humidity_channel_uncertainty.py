@@ -1,39 +1,39 @@
-r"""MA2: Unsicherheit des Feuchtekanals in kW -- Fehlerpropagation an EINEM Betriebspunkt.
+r"""MA2: uncertainty of the moisture channel in kW -- error propagation at ONE operating point.
 
-Anlass: Der Verbundpartner rechnet jetzt mit einem kondensierenden Wärmeübertrager (MA1,
-``heatnetwork``). Damit steigt die Bedeutung der Abluftbeladung ``Y_out`` -- im
-kondensierenden Modus liefert Feuchte zusätzliche LATENTE Rückgewinnung, statt nur den
-Taupunkt (und damit die sensible Kühlgrenze) zu heben. ``Y_out`` ist eine algebraische
-Funktion von Betttemperatur und Produktfeuchte (``simulation.exhaust.
-reconstruct_exhaust_state``), beides Größen, deren Vorhersagefehler in den
-Lernkurven-Datensätzen als ``rmse_run_median_physical`` bereits gemessen sind -- nicht neu
-zu ermitteln, nur zu propagieren.
+Occasion: the consortium partner now calculates with a condensing heat exchanger (MA1,
+``heatnetwork``). This raises the importance of the exhaust air loading ``Y_out`` -- in
+condensing mode, moisture delivers additional LATENT recovery instead of only raising the
+dew point (and thus the sensible cooling limit). ``Y_out`` is an algebraic
+function of bed temperature and product moisture (``simulation.exhaust.
+reconstruct_exhaust_state``), both quantities whose prediction errors are already measured in the
+learning-curve datasets as ``rmse_run_median_physical`` -- not to be
+determined anew, only to be propagated.
 
-Vorgehen (kein neues Modell, keine neue Physik -- reine Störrechnung an einem festen
-Referenzpunkt mit bereits vorhandenen Bausteinen):
+Procedure (no new model, no new physics -- a pure perturbation calculation at a fixed
+reference point with already existing building blocks):
 
-1. Referenzpunkt: Beharrungszustand von ``greybox_gab_placeholder.yaml`` bei NOMINALEN
-   Stell-/Störgrößen (``solve_steady_state`` ohne Variante) -- derselbe Nominalpunkt, auf
-   den auch ``simulation.exhaust``s Moduldocstring verweist (Befund 31).
-2. Betttemperatur und Produktfeuchte an diesem Punkt werden EINZELN um ihren gemessenen
-   Fehler gestört (siehe ``BED_TEMPERATURE_RMSE_K``/``PRODUCT_MOISTURE_RMSE_KG_PER_KG``
-   unten, mit Quellenangabe), dann BEIDE gleichzeitig in der ungünstigen
-   Vorzeichenkombination (die, die \|ΔQ_rec\| maximiert -- durch Ausprobieren aller vier
-   Vorzeichenkombinationen, nicht angenommen).
-3. Je Störung: ``reconstruct_exhaust_state`` liefert das gestörte ``Y_out``/``T_out`` neu
-   (Massenstrom und Zuluftfeuchte unverändert -- das sind Stell-/Störgrößen, keine
-   Vorhersagen). ``Q_rec`` wird daraus in BEIDEN Rückgewinnungsmodi neu berechnet
-   (sensibel: ``evaluation.recoverable_power.compute_recoverable_power_kw``; kondensierend:
-   dieselbe MA1-Formel wie ``heatnetwork.balance.evaluate_cascade``, hier direkt aus
-   ``thermo.py`` nachgebaut -- ein Einzelpunkt braucht keine Kaskade).
-4. Skalenvorbehalt (wie ``heatnetwork``/``evaluation.recoverable_power`` durchgehend):
-   dieselbe ΔT_out/ΔY_out wird bei BEIDEN Massenströmen ausgewertet --
-   ``dry_air_mass_flow_kg_per_s`` aus dem Beharrungszustand selbst (Laborsimulator,
-   ca. 0.03 kg/s) und ``DISTRICT_MASS_FLOW_KG_PER_S`` (Verbundmodell, 8 kg/s). Jede
-   District-Zahl ist eine Skalierungsrechnung, keine Anlagenaussage.
+1. Reference point: steady state of ``greybox_gab_placeholder.yaml`` at NOMINAL
+   actions/disturbances (``solve_steady_state`` without variant) -- the same nominal point
+   that ``simulation.exhaust``'s module docstring also refers to (Befund 31).
+2. Bed temperature and product moisture at this point are perturbed INDIVIDUALLY by their measured
+   error (see ``BED_TEMPERATURE_RMSE_K``/``PRODUCT_MOISTURE_RMSE_KG_PER_KG``
+   below, with source), then BOTH simultaneously in the unfavourable
+   sign combination (the one that maximises \|ΔQ_rec\| -- by trying all four
+   sign combinations, not assumed).
+3. Per perturbation: ``reconstruct_exhaust_state`` returns the perturbed ``Y_out``/``T_out`` anew
+   (mass flow and inlet air humidity unchanged -- these are actions/disturbances, not
+   predictions). ``Q_rec`` is recomputed from it in BOTH recovery modes
+   (sensible: ``evaluation.recoverable_power.compute_recoverable_power_kw``; condensing:
+   the same MA1 formula as ``heatnetwork.balance.evaluate_cascade``, rebuilt here directly from
+   ``thermo.py`` -- a single point needs no cascade).
+4. Scale caveat (as in ``heatnetwork``/``evaluation.recoverable_power`` throughout):
+   the same ΔT_out/ΔY_out is evaluated at BOTH mass flows --
+   ``dry_air_mass_flow_kg_per_s`` from the steady state itself (lab simulator,
+   approx. 0.03 kg/s) and ``DISTRICT_MASS_FLOW_KG_PER_S`` (consortium model, 8 kg/s). Every
+   district number is a scaling calculation, not a statement about a plant.
 
-Nicht Teil dieses Auftrags: ein neues Fehlermodell, eine Neubewertung der Lernkurven selbst
-(Befund 51/55 bleiben die Quelle), eine Kaskade mit mehreren Quellen/Senken.
+Not part of this task: a new error model, a re-evaluation of the learning curves themselves
+(Befund 51/55 remain the source), a cascade with several sources/sinks.
 """
 
 from __future__ import annotations
@@ -71,16 +71,16 @@ OUT_PATH = REPO_ROOT / "artifacts" / "runs" / "study_humidity_channel_uncertaint
 LAB_MASS_FLOW_LABEL = "lab_simulator"
 DISTRICT_MASS_FLOW_LABEL = "district_partner_model"
 
-# --- MA2a: verwendete Fehler je Kanal, mit Quelle ----------------------------------------
+# --- MA2a: errors used per channel, with source ----------------------------------------
 #
-# Quelle: artifacts/runs/arch_learning_curve_constant_trained.jsonl (Befund 55, Commit
-# 1b85ce4), Modell LSTM (bestes Modell je Kanal an diesem Budgetpunkt, siehe unten),
-# n_train=64 (groesstes getestetes Budget -- die guenstigste Naeherung an "genug
-# Betriebsdaten"), test_set="constant_holdout" (Konstantlauf-Holdout, HOLDOUT_SEED=999 --
-# der betriebsrelevante, weil er NICHT auf Anregungsexperimente angewiesen ist, siehe
-# Befund 55 Anlass), Horizont h=36, Median ueber 5 Seeds von
-# "rmse_run_median_physical/<kanal>/h36". Bewusst NICHT die "own_pool"/"excited"-Testmenge
-# (die pruefte Generalisierung auf angeregte Laeufe, hier irrelevant).
+# Source: artifacts/runs/arch_learning_curve_constant_trained.jsonl (Befund 55, commit
+# 1b85ce4), model LSTM (best model per channel at this budget point, see below),
+# n_train=64 (largest tested budget -- the most favourable approximation of "enough
+# operating data"), test_set="constant_holdout" (constant-run holdout, HOLDOUT_SEED=999 --
+# the operationally relevant one, because it does NOT depend on excitation experiments, see
+# Befund 55 occasion), horizon h=36, median over 5 seeds of
+# "rmse_run_median_physical/<kanal>/h36". Deliberately NOT the "own_pool"/"excited" test set
+# (which checked generalisation to excited runs, irrelevant here).
 BED_TEMPERATURE_RMSE_K = 0.5393090806307859
 """Median (5 Seeds) von rmse_run_median_physical/bed_temperature_celsius/h36, LSTM,
 n_train=64, test_set=constant_holdout, arch_learning_curve_constant_trained.jsonl."""
@@ -92,7 +92,7 @@ n_train=64, test_set=constant_holdout, arch_learning_curve_constant_trained.json
 
 @dataclass(frozen=True, slots=True)
 class ReferencePoint:
-    """Referenzbetriebspunkt (Nominalpunkt) samt rekonstruiertem Abluftzustand."""
+    """Reference operating point (nominal point) including the reconstructed exhaust air state."""
 
     bed_temperature_celsius: float
     particle_moisture_kg_per_kg: float
@@ -138,10 +138,10 @@ def _build_reference_point() -> ReferencePoint:
         dry_air_mass_flow_kg_per_s=backend.asarray(solution.dry_air_mass_flow_kg_per_s),
         inlet_absolute_humidity_kg_per_kg=backend.asarray(inlet_absolute_humidity),
     )
-    del t_gas_out  # == bed_temperature_celsius per Modellannahme, hier nicht gebraucht
+    del t_gas_out  # == bed_temperature_celsius by model assumption, not needed here
 
-    # Sanity-Check: reconstruct_exhaust_state() muss den Loeser bitgleich reproduzieren
-    # (siehe exhaust.py-Moduldocstring, "Gegen solve_steady_state() ... bitgleiche
+    # Sanity check: reconstruct_exhaust_state() must reproduce the solver bit for bit
+    # (see the exhaust.py module docstring, "Gegen solve_steady_state() ... bitgleiche
     # Uebereinstimmung").
     reconstructed_y = float(backend.to_numpy(y_gas_out))
     if abs(reconstructed_y - solution.outlet_humidity_kg_per_kg) > 1e-9:
@@ -170,7 +170,7 @@ def _reconstruct(
     bed_temperature_celsius: float,
     particle_moisture_kg_per_kg: float,
 ) -> tuple[float, float]:
-    """Abluft-Zustand bei gestoerter Betttemperatur/Produktfeuchte, sonst unveraendert."""
+    """Exhaust air state at perturbed bed temperature/product moisture, otherwise unchanged."""
     backend = NumpyBackend()
     _t_gas_out, y_out, t_out = reconstruct_exhaust_state(
         backend,
@@ -196,8 +196,8 @@ def _q_rec_condensing_kw(
     mass_flow_kg_per_s: float,
     cold_temperature_celsius: float,
 ) -> float:
-    """MA1-Formel (``heatnetwork.balance``) direkt aus ``thermo.py`` -- ein Einzelpunkt
-    braucht keine Kaskade, siehe Moduldocstring."""
+    """MA1 formula (``heatnetwork.balance``) directly from ``thermo.py`` -- a single point
+    needs no cascade, see module docstring."""
     backend = NumpyBackend()
     y_sat_cold = float(
         backend.to_numpy(

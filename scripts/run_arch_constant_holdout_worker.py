@@ -1,33 +1,33 @@
-r"""Ein (Architektur, Seed)-Job: trainieren, auf zwei Testmengen auswerten, Checkpoint sichern.
+r"""One (architecture, seed) job: train, evaluate on two test sets, save a checkpoint.
 
-Innerer Baustein von ``scripts/run_arch_constant_holdout_sweep.py``, der mehrere Aufrufe
-dieses Skripts als unabhängige Prozesse parallel startet -- siehe dort für die
-Orchestrierung. Eigenständig aufrufbar für einen Einzeltest::
+Inner building block of ``scripts/run_arch_constant_holdout_sweep.py``, which starts several calls
+of this script as independent processes in parallel -- see there for the
+orchestration. Callable on its own for a single test::
 
     python scripts/run_arch_constant_holdout_worker.py --architecture gru --seed 1 \
         --with-baselines --output artifacts/runs/_worker_gru_1.jsonl
 
-Zwei Testmengen, ein trainiertes Modell
+Two test sets, one trained model
 ----------------------------------------
-1. Die bisherige angeregte Testmenge aus demselben Pool wie das Training (Reproduktion
-   von Befund 28 unter der GAB-Isotherme und dem 900-s-Horizont aus Befund 35).
-2. Ein **fixer** Konstantlauf-Holdout-Pool (``constant_run_fraction=1.0``), mit **einem**
-   festen Seed über alle 20 Jobs hinweg (``HOLDOUT_SEED``) -- nicht pro Job neu gezogen.
-   Sonst vermischt die beobachtete Streuung über die zehn Trainings-Seeds zwei Quellen:
-   wie gut das Training bei diesem Seed gelang, und welche zufällige Realisierung der
-   konstanten Betriebsweise gerade gezogen wurde. In der Realität gibt es eine Anlage,
-   die konstant gefahren wird, nicht zehn verschiedene Konstantlauf-Welten.
+1. The previous excited test set from the same pool as the training (reproduction
+   of Befund 28 under the GAB isotherm and the 900-s horizon from Befund 35).
+2. A **fixed** constant-run holdout pool (``constant_run_fraction=1.0``), with **one**
+   fixed seed across all 20 jobs (``HOLDOUT_SEED``) -- not drawn anew per job.
+   Otherwise the observed spread over the ten training seeds mixes two sources:
+   how well the training went for this seed, and which random realisation of the
+   constant operation happened to be drawn. In reality there is one plant
+   that is operated constantly, not ten different constant-run worlds.
 
-Die Fensterung der zweiten Testmenge verwendet **die Skalierer des Trainings-Datensatzes
-dieses Laufs** (``train.scalers``), nicht neu geschätzte -- sonst wäre der Vergleich kein
-"dasselbe Modell, andere Testdaten" mehr. Dasselbe Prinzip wie
+The windowing of the second test set uses **the scalers of the training dataset
+of this run** (``train.scalers``), not newly estimated ones -- otherwise the comparison would no
+longer be "same model, different test data". The same principle as
 ``TrajectoryWindowDataset.from_trajectory(..., scalers=...)`` in ``build_datasets``,
-nur außerhalb davon direkt aufgerufen, weil ``build_datasets`` nur einen einzelnen
-zusammengehörigen Pool kennt.
+only called directly outside of it, because ``build_datasets`` only knows a single
+coherent pool.
 
-Baselines nur mit ``--with-baselines``: Persistenz/static/ARX sind unabhängig von der
-Architektur und würden bei zwei Jobs je Seed (gru, lstm) sonst doppelt berechnet und
-doppelt geloggt -- der Sweep aktiviert das Flag nur beim ersten Job jedes Seeds.
+Baselines only with ``--with-baselines``: persistence/static/ARX are independent of the
+architecture and would otherwise be computed twice and logged twice with two jobs per seed
+(gru, lstm) -- the sweep activates the flag only for the first job of each seed.
 """
 
 from __future__ import annotations
@@ -69,7 +69,7 @@ BASELINE_FACTORIES = {
 
 
 def _excited_spec(config_path: Path) -> DataSpec:
-    del config_path  # Config selbst bestimmt keine Spec-Werte, nur zur Signatur-Symmetrie
+    del config_path  # the config itself determines no spec values, only for signature symmetry
     return DataSpec(
         sample_time_s=25.0,
         run_duration_s=28_800.0,
@@ -83,11 +83,11 @@ def _excited_spec(config_path: Path) -> DataSpec:
 
 
 def _holdout_spec(excited: DataSpec) -> DataSpec:
-    """Konstantlauf-Pool, n_test an die Standard-Testmenge angeglichen (Befund-26/28-Konvention).
+    """Constant-run pool, n_test matched to the standard test set (Befund 26/28 convention).
 
-    ``n_train_max=2, n_val=2`` sind Dummy-Blöcke, nie benutzt -- ``IndexBlockSplitter``
-    verlangt ``n_train>=1, n_test>=1``, und ``_finalize`` zusätzlich ``train>=2`` je Split.
-    Nur ``.test`` wird gelesen.
+    ``n_train_max=2, n_val=2`` are dummy blocks, never used -- ``IndexBlockSplitter``
+    requires ``n_train>=1, n_test>=1``, and ``_finalize`` additionally ``train>=2`` per split.
+    Only ``.test`` is read.
     """
     import dataclasses
 
@@ -103,7 +103,7 @@ def _architecture_factory(label: str) -> Callable[[], CompositeSequenceModel]:
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--architecture", choices=ARCHITECTURE_LABELS, required=True)
     parser.add_argument("--seed", type=int, required=True)
@@ -120,7 +120,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Ein Job: trainieren, zwei Testmengen auswerten, Checkpoint + JSONL schreiben."""
+    """One job: train, evaluate two test sets, write checkpoint + JSONL."""
     arguments = parse_arguments()
 
     import torch
@@ -154,11 +154,11 @@ def main() -> None:
         scalers=train.scalers,
     )
 
-    # Marker fuer den gestaffelten Sweep-Start: signalisiert, dass Config, Datengenerierung
-    # und Fensterung (die Netzlaufwerk-/Konfigurationsfehler am ehesten zeigen wuerden)
-    # sauber durchliefen, bevor das lange Training beginnt. Der Orchestrator liest das aus
-    # der Log-Datei dieses Prozesses, nicht aus dem Prozessstatus allein (der waere nach
-    # wenigen Sekunden ohnehin nur "laeuft noch").
+    # Marker for the staggered sweep start: signals that config, data generation
+    # and windowing (which would most likely reveal network-drive/configuration errors)
+    # ran cleanly before the long training begins. The orchestrator reads this from
+    # the log file of this process, not from the process status alone (which after
+    # a few seconds would only say "still running" anyway).
     print(
         f"[{arguments.architecture} seed={arguments.seed}] Setup fertig "
         f"(Daten generiert, {len(holdout.split.test)} Konstantlauf-Testlaeufe), Training startet",
@@ -177,15 +177,15 @@ def main() -> None:
             result = evaluator.evaluate(model, test_dataset)
             params: dict[str, object] = {
                 **excited_spec.as_parameters(),
-                # data/train_constant_run_fraction wiederholt data/constant_run_fraction
-                # (aus derselben excited_spec) bewusst redundant -- NICHT als ueberfluessig
-                # entfernen. data/constant_run_fraction ist ein generisches Spec-Attribut und
-                # bleibt fuer JEDEN test_set-Wert in diesem Record identisch (auch fuer
-                # test_set="constant_holdout"), sagt also fuer sich genommen nichts ueber die
-                # Trainingsart aus. data/train_constant_run_fraction ist die explizite,
-                # eindeutig benannte Aussage "so trainiert" -- ohne sie waere ein
-                # konstant-trainierter Lauf von einem angeregt-trainierten anhand des Records
-                # nicht unterscheidbar (siehe Befund-Eintrag zu diesem Feld in
+                # data/train_constant_run_fraction repeats data/constant_run_fraction
+                # (from the same excited_spec) deliberately redundantly -- do NOT remove as
+                # superfluous. data/constant_run_fraction is a generic spec attribute and
+                # stays identical for EVERY test_set value in this record (also for
+                # test_set="constant_holdout"), so on its own it says nothing about the
+                # kind of training. data/train_constant_run_fraction is the explicit,
+                # unambiguously named statement "trained like this" -- without it a
+                # constant-trained run would be indistinguishable from an excited-trained one
+                # by its record (see the finding entry on this field in
                 # docs/04_stand_ap1.md).
                 "data/train_constant_run_fraction": excited_spec.constant_run_fraction,
                 "process/fingerprint": excited.process_config.fingerprint,

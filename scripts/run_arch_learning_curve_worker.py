@@ -1,40 +1,40 @@
-r"""Ein Seed-Job: Lernkurve ueber n_train in {8,16,32,64}, alle fuenf Architekturen.
+r"""One seed job: learning curve over n_train in {8,16,32,64}, all five architectures.
 
-Ersetzt (nicht: korrigiert) ``arch_composite.jsonl`` (Befund 33: git/commit="unknown",
-Config nicht rekonstruierbar) durch einen Datensatz unter dokumentierter, git-verfolgter
-Konfiguration. Struktur angelehnt an ``run_arch_constant_holdout_worker.py`` (zwei
-Testmengen je trainiertem Modell: angeregter Pool-Holdout und fixer Konstantlauf-Holdout),
-erweitert um die Budgetstaffelung aus ``evaluation.experiments.run_learning_curve``
-(verschachtelte Praefixe ``train[:n_train]`` derselben Pool-Realisierung je Seed, siehe
+Replaces (not: corrects) ``arch_composite.jsonl`` (Befund 33: git/commit="unknown",
+config not reconstructible) with a dataset under a documented, git-tracked
+configuration. Structure modelled on ``run_arch_constant_holdout_worker.py`` (two
+test sets per trained model: excited pool holdout and fixed constant-run holdout),
+extended by the budget staggering from ``evaluation.experiments.run_learning_curve``
+(nested prefixes ``train[:n_train]`` of the same pool realisation per seed, see
 ``RunSplit.subset``).
 
-Ein Prozess je Seed (nicht je (Seed, n_train)): die Datenerzeugung (Pool-Simulation,
-28800 s / 25 s = 1152 Schritte, 128 Laeufe) ist teuer und wird pro Seed genau einmal
-gemacht, dann fuer alle vier Budgetpunkte wiederverwendet -- exakt das Verschachtelungsprinzip,
-das die Zweierpotenzen-Vorgabe verlangt.
+One process per seed (not per (seed, n_train)): the data generation (pool simulation,
+28800 s / 25 s = 1152 steps, 128 runs) is expensive and is done exactly once per seed,
+then reused for all four budget points -- exactly the nesting principle
+that the powers-of-two requirement demands.
 
-Zielkanaele EXPLIZIT gesetzt (``TARGET_NAMES`` unten): ``DataSpec.target_names`` default
-reduziert auf zwei Groessen (``energy_target``, ``product_moisture_kg_per_kg``, siehe
-``evaluation/experiments.py``) -- dieser Lauf braucht zusaetzlich
-``bed_temperature_celsius``, sowohl als eigener Zielkanal als auch als Voraussetzung fuer
-``evaluate_exhaust_reconstruction`` (braucht ``bed_temperature_celsius``/
-``product_moisture_kg_per_kg`` in ``test.target_names``, siehe
-``evaluation/exhaust_reconstruction.py``). ``outlet_temperature_celsius`` ist selbst KEIN
-gueltiger Eintrag in ``target_names`` -- es ist die algebraische Rekonstruktion aus
-vorhergesagtem ``bed_temperature_celsius``/``product_moisture_kg_per_kg`` ueber
-``exhaust.reconstruct_exhaust_state`` (``exhaust/outlet_duct_heat_loss_k`` steuert den
-Versatz, hier unveraendert 0.0). Temperaturmetriken werden deshalb ZUSAETZLICH unter dem
-Abluftnamen geloggt (``exhaust_*``-Praefix), mit explizitem ``exhaust/outlet_duct_heat_loss_k``
-im Record.
+Target channels set EXPLICITLY (``TARGET_NAMES`` below): ``DataSpec.target_names`` by default
+reduces to two quantities (``energy_target``, ``product_moisture_kg_per_kg``, see
+``evaluation/experiments.py``) -- this run additionally needs
+``bed_temperature_celsius``, both as its own target channel and as a prerequisite for
+``evaluate_exhaust_reconstruction`` (needs ``bed_temperature_celsius``/
+``product_moisture_kg_per_kg`` in ``test.target_names``, see
+``evaluation/exhaust_reconstruction.py``). ``outlet_temperature_celsius`` itself is NOT a
+valid entry in ``target_names`` -- it is the algebraic reconstruction from
+predicted ``bed_temperature_celsius``/``product_moisture_kg_per_kg`` via
+``exhaust.reconstruct_exhaust_state`` (``exhaust/outlet_duct_heat_loss_k`` controls the
+offset, here unchanged 0.0). Temperature metrics are therefore ADDITIONALLY logged under the
+exhaust-air name (``exhaust_*`` prefix), with explicit ``exhaust/outlet_duct_heat_loss_k``
+in the record.
 
-``NumericsConfig.enforce_gas_velocity_projection`` wird hier EXPLIZIT auf ``True`` gesetzt
-(Default in ``NumericsConfig`` und in der YAML-Datei ist AUS) -- Fingerprint der
-resultierenden, tatsaechlich angewendeten Config (nach ``sample_time_s=25.0``-Ueberschreibung
-durch ``generate_data``) ist ``bddca37f716f5cfc`` (vor dem Pseudonymisierungs-Schnitt
-2026-09-25: ``2d2679eeed716577``, siehe ``docs/ARCHIV.md``; siehe auch ``docs/04_stand_ap1.md``,
-Fingerprint-Historie).
+``NumericsConfig.enforce_gas_velocity_projection`` is set EXPLICITLY to ``True`` here
+(the default in ``NumericsConfig`` and in the YAML file is OFF) -- the fingerprint of the
+resulting, actually applied config (after the ``sample_time_s=25.0`` override
+by ``generate_data``) is ``bddca37f716f5cfc`` (before the pseudonymisation cut
+2026-09-25: ``2d2679eeed716577``, see ``docs/ARCHIV.md``; see also ``docs/04_stand_ap1.md``,
+fingerprint history).
 
-Aufruf::
+Usage::
 
     python scripts/run_arch_learning_curve_worker.py --seed 1 \
         --output artifacts/runs/_learning_curve_work/_worker_seed1.jsonl
@@ -78,7 +78,7 @@ Seed neu gezogen."""
 
 BUDGET_POINTS = (8, 16, 32, 64)
 SEEDS_DEFAULT = (1, 2, 3, 4, 5)
-HORIZON = 36  # 900 s bei sample_time_s=25.0, Befund 35
+HORIZON = 36  # 900 s at sample_time_s=25.0, Befund 35
 
 TARGET_NAMES: tuple[str, str, str] = (
     "energy_target",
@@ -127,11 +127,11 @@ def _excited_spec() -> DataSpec:
 
 
 def _holdout_spec(excited: DataSpec) -> DataSpec:
-    """Konstantlauf-Pool, ``n_test`` an die Standard-Testmenge angeglichen.
+    """Constant-run pool, ``n_test`` matched to the standard test set.
 
-    ``target_names`` wird ueber ``dataclasses.replace`` von ``excited`` uebernommen, nicht
-    erneut aus dem Default konstruiert -- sonst waere genau der Fehler wieder da, den
-    BA0d vermeiden soll.
+    ``target_names`` is taken over from ``excited`` via ``dataclasses.replace``, not
+    constructed again from the default -- otherwise exactly the error that
+    BA0d is meant to avoid would be back.
     """
     return dataclasses.replace(
         excited, n_train_max=2, n_val=2, n_test=excited.n_test, constant_run_fraction=1.0
@@ -165,14 +165,14 @@ def _architecture_factory(label: str) -> Callable[[], CompositeSequenceModel]:
 def _build_model(
     architecture_factory: Callable[[], CompositeSequenceModel], net_max_epochs: int
 ) -> CompositeSequenceModel:
-    """Modell ueber die Architektur-Fabrik bauen, ``max_epochs`` bei Abweichung ersetzt.
+    """Build the model via the architecture factory, ``max_epochs`` replaced if it deviates.
 
-    Ruft die Fabrik ohne Argumente auf, um die architekturspezifischen Standardwerte
-    (z. B. Transformer/Mamba ``hidden_size=16``, siehe ``composite.py``) nicht hier
-    zu duplizieren -- nur ``max_epochs`` wird bei Abweichung vom Standard (200) ueber
-    ``dataclasses.replace`` ersetzt, alle anderen Konfigurationswerte bleiben die der
-    Fabrik. Bei ``net_max_epochs == 200`` (Default von ``--net-max-epochs``) identisch
-    zum bisherigen Verhalten.
+    Calls the factory without arguments so as not to duplicate the architecture-specific
+    defaults (e.g. Transformer/Mamba ``hidden_size=16``, see ``composite.py``)
+    here -- only ``max_epochs`` is replaced via ``dataclasses.replace`` if it deviates from
+    the default (200); all other configuration values stay those of the
+    factory. With ``net_max_epochs == 200`` (default of ``--net-max-epochs``) identical
+    to the previous behaviour.
     """
     from twinlink_ml.models.composite import CompositeSequenceModel
 
@@ -183,7 +183,7 @@ def _build_model(
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--config", type=Path, default=CONFIG_PATH)
@@ -224,7 +224,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Ein Seed: Pool einmal erzeugen, alle Budgetpunkte x alle Architekturen durchlaufen."""
+    """One seed: generate the pool once, run through all budget points x all architectures."""
     arguments = parse_arguments()
 
     import torch
@@ -292,15 +292,15 @@ def main() -> None:
             )
             params: dict[str, object] = {
                 **excited_spec.as_parameters(),
-                # data/train_constant_run_fraction wiederholt data/constant_run_fraction
-                # (aus derselben excited_spec) bewusst redundant -- NICHT als ueberfluessig
-                # entfernen. data/constant_run_fraction ist ein generisches Spec-Attribut und
-                # bleibt fuer JEDEN test_set-Wert in diesem Record identisch (auch fuer
-                # test_set="constant_holdout"), sagt also fuer sich genommen nichts ueber die
-                # Trainingsart aus. data/train_constant_run_fraction ist die explizite,
-                # eindeutig benannte Aussage "so trainiert" -- ohne sie waere ein
-                # konstant-trainierter Lauf von einem angeregt-trainierten anhand des Records
-                # nicht unterscheidbar (siehe Befund-Eintrag zu diesem Feld in
+                # data/train_constant_run_fraction repeats data/constant_run_fraction
+                # (from the same excited_spec) deliberately redundantly -- do NOT remove as
+                # superfluous. data/constant_run_fraction is a generic spec attribute and
+                # stays identical for EVERY test_set value in this record (also for
+                # test_set="constant_holdout"), so on its own it says nothing about the
+                # kind of training. data/train_constant_run_fraction is the explicit,
+                # unambiguously named statement "trained like this" -- without it a
+                # constant-trained run would be indistinguishable from an excited-trained one
+                # by its record (see the finding entry on this field in
                 # docs/04_stand_ap1.md).
                 "data/train_constant_run_fraction": excited_spec.constant_run_fraction,
                 "process/fingerprint": excited.process_config.fingerprint,

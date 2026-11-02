@@ -1,15 +1,15 @@
-r"""X3: rückgewinnbare Leistung Q_rec aus den X2-Checkpoints (Befund 50).
+r"""X3: recoverable power Q_rec from the X2 checkpoints (Befund 50).
 
-KEIN Training -- GRU wird ausschließlich aus den Checkpoints geladen
-(``artifacts/checkpoints/gru_seed{1,2,3}.pt``, erzeugt von
-``run_outlet_temperature_gru_protocol.py``). Persistenz/statische Baseline sind
-geschlossene Fits (kein Gradientenverfahren), hier frisch gegen dieselben, deterministisch
-reproduzierten Seed-Daten angepasst -- identisches Muster zu
+NO training -- the GRU is loaded exclusively from the checkpoints
+(``artifacts/checkpoints/gru_seed{1,2,3}.pt``, produced by
+``run_outlet_temperature_gru_protocol.py``). Persistence/static baseline are
+closed-form fits (no gradient method), fitted here afresh against the same, deterministically
+reproduced seed data -- identical pattern to
 ``probe_f3_f4_arch_holdout_inference.py``.
 
-Ausgewertet wird ausschließlich gegen bereits abgeschlossene X2-Ergebnisse (alle drei Seeds
-fertig, siehe ``artifacts/runs/outlet_temperature_gru_protocol.jsonl``) -- wie angewiesen
-nicht gegen Zwischenergebnisse.
+Evaluated exclusively against already completed X2 results (all three seeds
+finished, see ``artifacts/runs/outlet_temperature_gru_protocol.jsonl``) -- as instructed,
+not against intermediate results.
 """
 
 from __future__ import annotations

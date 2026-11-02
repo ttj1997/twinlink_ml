@@ -221,13 +221,13 @@ def _set_objective_value_fn(
 def _objective_components(
     solution: SteadyStateSolution, base_config: ProcessConfig
 ) -> dict[str, float]:
-    """Zielgröße plus Diagnosefelder für einen Beharrungszustand.
+    """Target plus diagnostic fields for a steady state.
 
-    Ohne Override (``_OBJECTIVE_VALUE_FN is None``, der Stand vor MA4): reine
-    Bruttoleistung, bitgleich zu ``solution.diagnostics["energy_target"]`` wie zuvor direkt
-    inline gelesen -- ``objective_value == gross_energy_target_kw``,
-    ``q_rec_kw``/``recovery_credit_kw`` beide 0.0. Mit Override (MA4-Netto-Varianten)
-    liefert die injizierte Funktion dieselben vier Schlüssel, mit
+    Without override (``_OBJECTIVE_VALUE_FN is None``, the state before MA4): pure
+    gross power, bit-identical to ``solution.diagnostics["energy_target"]`` as previously
+    read directly inline -- ``objective_value == gross_energy_target_kw``,
+    ``q_rec_kw``/``recovery_credit_kw`` both 0.0. With override (MA4 net variants)
+    the injected function returns the same four keys, with
     ``objective_value != gross_energy_target_kw``.
     """
     if _OBJECTIVE_VALUE_FN is not None:
@@ -248,7 +248,7 @@ def _suppress_placeholder_warning() -> None:
 def _penalized_energy(
     x: np.ndarray, t_amb: float, phi_amb: float, max_iterations: int, tolerance: float
 ) -> float:
-    """Zielfunktion für die Suche (BB2, je Gitterpunkt). Modul-Ebene für Picklebarkeit."""
+    """Objective function for the search (BB2, per grid point). Module level for picklability."""
     assert _BASE_CONFIG is not None
     t_in, u_gas, p_nozzle = x
     try:
@@ -276,21 +276,21 @@ def _penalized_energy(
 def optimize_grid_point(
     t_amb: float, phi_amb: float, bounds: list[tuple[float, float]], budget: OptimizationBudget
 ) -> dict[str, Any]:
-    """Ein Gitterpunkt (BB2) -- LÄUFT EINSTRÄNGIG (``de_workers=1``), absichtlich.
+    """One grid point (BB2) -- RUNS SINGLE-THREADED (``de_workers=1``), deliberately.
 
-    Parallelisiert wird NICHT hier (innerhalb der DE-Population eines einzelnen
-    Gitterpunkts), sondern in ``main()`` ÜBER die Gitterpunkte hinweg (``pool.
-    imap_unordered`` auf dieser Funktion) -- siehe Modul-Docstring, Abschnitt
-    "Laufzeit-Kompromiss", für die Messung, die diese Entscheidung begründet: Populations-
-    Parallelität beschleunigt nur die DE-Phase und lässt alle Kerne bis auf einen während
-    der (grundsätzlich seriellen) Nelder-Mead-Verfeinerung ungenutzt -- pro Gitterpunkt
-    genau das Muster "N Kandidaten parallel, danach einer allein, der so lange braucht wie
-    die parallele Phase zuvor". 25-49 Gitterpunkte sind dagegen echt unabhängig
-    voneinander: sie über den Pool zu verteilen hält alle Kerne während des GESAMTEN
-    Laufs (DE **und** Verfeinerung jedes einzelnen Punkts) beschäftigt und vermeidet
-    zusätzlich die Synchronisationsbarriere, die ``differential_evolution`` sonst am Ende
-    jeder Generation einlegt (eine langsame Population verzögert dort die gesamte
-    Generation, hier nur ihren eigenen Gitterpunkt).
+    Parallelisation happens NOT here (within the DE population of a single
+    grid point), but in ``main()`` ACROSS the grid points (``pool.
+    imap_unordered`` on this function) -- see module docstring, section
+    "Laufzeit-Kompromiss", for the measurement that justifies this decision: population
+    parallelism only speeds up the DE phase and leaves all cores but one idle during
+    the (inherently serial) Nelder-Mead refinement -- per grid point
+    exactly the pattern "N candidates in parallel, then one alone, taking as long as
+    the parallel phase before". 25-49 grid points, by contrast, are genuinely independent
+    of each other: distributing them over the pool keeps all cores busy during the ENTIRE
+    run (DE **and** refinement of every single point) and additionally avoids
+    the synchronisation barrier that ``differential_evolution`` otherwise inserts at the end
+    of each generation (a slow population delays the entire
+    generation there, here only its own grid point).
     """
     assert _BASE_CONFIG is not None
     args = (t_amb, phi_amb, budget.search_max_iterations, budget.search_tolerance)
@@ -300,9 +300,9 @@ def optimize_grid_point(
     best_x = refine_result.x if refine_result.fun <= de_result.fun else de_result.x
 
     t_in, u_gas, p_nozzle = (float(v) for v in best_x)
-    # Gleiche Präzision wie während der Suche (siehe ``evaluate_point``-Docstring) --
-    # eine höhere Präzision NUR für den Report-Aufruf war die Ursache der
-    # Bracket-Fehlschläge im ersten vollen Gitterlauf, nicht deren Heilmittel.
+    # Same precision as during the search (see ``evaluate_point`` docstring) --
+    # a higher precision ONLY for the report call was the cause of the
+    # bracket failures in the first full grid run, not their remedy.
     solve_failed = False
     try:
         solution = evaluate_point(
@@ -326,11 +326,11 @@ def optimize_grid_point(
         "inlet_temperature_celsius": t_in,
         "gas_velocity_m_per_s": u_gas,
         "nozzle_pressure_bar": p_nozzle,
-        # DE erschöpft bei diesem Budget planmäßig ``maxiter`` (siehe Modul-Docstring,
-        # "Laufzeit-Kompromiss") -- das ist KEIN Fehlschlag, solange die anschließende
-        # Verfeinerung konvergiert. ``converged`` bewertet deshalb nur die Verfeinerung
-        # (den Stand, der tatsächlich berichtet wird); ``de_converged`` bleibt als
-        # Diagnosefeld erhalten, ist aber für sich genommen kein Warnsignal.
+        # At this budget DE exhausts ``maxiter`` as planned (see module docstring,
+        # "Laufzeit-Kompromiss") -- this is NOT a failure as long as the subsequent
+        # refinement converges. ``converged`` therefore only assesses the refinement
+        # (the state that is actually reported); ``de_converged`` is kept as a
+        # diagnostic field, but on its own is no warning sign.
         "de_converged": bool(de_result.success),
         "de_message": str(de_result.message),
         "de_nit": int(de_result.nit),
@@ -377,11 +377,11 @@ def optimize_grid_point(
 def _grid_point_task(
     task: tuple[int, float, float, list[tuple[float, float]], OptimizationBudget],
 ) -> dict[str, Any]:
-    """Ein Element für ``pool.imap_unordered`` in ``main()`` -- ein Gitterpunkt komplett
-    (DE + Verfeinerung + finaler Löser-Aufruf), einsträngig in EINEM Worker-Prozess.
-    Der Index geht mit durch, weil ``imap_unordered`` die Ankunftsreihenfolge NICHT
-    garantiert -- ``compute_regret``/``compute_setpoint_spread`` erwarten aber dieselbe
-    Reihenfolge wie ``grid_points``.
+    """One element for ``pool.imap_unordered`` in ``main()`` -- one grid point complete
+    (DE + refinement + final solver call), single-threaded in ONE worker process.
+    The index is passed along because ``imap_unordered`` does NOT guarantee the order
+    of arrival -- ``compute_regret``/``compute_setpoint_spread`` however expect the same
+    order as ``grid_points``.
     """
     index, t_amb, phi_amb, bounds, budget = task
     start = time.perf_counter()
@@ -398,7 +398,7 @@ def _fixed_point_worker(
     max_iterations: int,
     tolerance: float,
 ) -> tuple[float, float] | None:
-    """Ein Gitterpunkt für einen festen Kandidaten -- Ziel des Pools in BB3(a)."""
+    """One grid point for a fixed candidate -- target of the pool in BB3(a)."""
     assert _BASE_CONFIG is not None
     t_in, u_gas, p_nozzle = x
     try:
@@ -431,11 +431,11 @@ def _fixed_point_objective(
     tolerance: float,
     energy_weight: float,
 ) -> float:
-    """``energy_weight`` ist absichtlich NICHT keyword-only: ``differential_evolution``
-    reicht ``args`` rein positional an die Zielfunktion durch (``func(x, *args)``,
-    siehe ``scipy._lib._util._FunctionWrapper``) -- ein keyword-only-Parameter hier
-    führte zu ``TypeError: takes 5 positional arguments but 6 were given``, weil das
-    fünfte ``args``-Element (der Gewichtungsfaktor) keinen keyword-Slot findet."""
+    """``energy_weight`` is deliberately NOT keyword-only: ``differential_evolution``
+    passes ``args`` purely positionally to the objective function (``func(x, *args)``,
+    see ``scipy._lib._util._FunctionWrapper``) -- a keyword-only parameter here
+    led to ``TypeError: takes 5 positional arguments but 6 were given``, because the
+    fifth ``args`` element (the weighting factor) finds no keyword slot."""
     tasks = [
         (tuple(float(v) for v in x), t_amb, phi_amb, max_iterations, tolerance)
         for t_amb, phi_amb in grid_points
@@ -460,7 +460,7 @@ def find_fixed_operating_point(
     budget: OptimizationBudget,
     pool: Pool,
 ) -> dict[str, Any]:
-    """BB3(a): fester Betriebspunkt, an jedem Gitterpunkt zulässig, minimale Mittelenergie."""
+    """BB3(a): fixed operating point, feasible at every grid point, minimum mean energy."""
     args = (grid_points, pool, budget.search_max_iterations, budget.search_tolerance, 1.0)
     de_result, refine_result, de_elapsed, refine_elapsed = _optimize(
         _fixed_point_objective, bounds, args, budget, de_workers=1
@@ -537,11 +537,11 @@ def verify_no_feasible_fixed_point_exists(
     budget: OptimizationBudget,
     pool: Pool,
 ) -> dict[str, Any]:
-    """Zweite Suche, NUR gegen die summierte Verletzung, zur Erhärtung von BB3(a).
+    """Second search, ONLY against the summed violation, to corroborate BB3(a).
 
-    Kein Beweis (kontinuierliche Box, keine erschöpfende Suche) -- aber die bestmögliche
-    Aussage ohne sie: bleibt das Minimum der Verletzung > 0, hat auch eine ausschließlich
-    auf Zulässigkeit zielende globale Suche keinen überall zulässigen Punkt gefunden.
+    No proof (continuous box, no exhaustive search) -- but the best possible
+    statement without one: if the minimum of the violation stays > 0, even a global search aimed
+    exclusively at feasibility has found no point that is feasible everywhere.
     """
     args = (grid_points, pool, budget.search_max_iterations, budget.search_tolerance, 0.0)
     de_result, refine_result, de_elapsed, refine_elapsed = _optimize(
@@ -652,14 +652,14 @@ def main() -> int:
     print(f"git/commit={env['git/commit']}  git/dirty={env['git/dirty']}")
     print("=" * 78)
 
-    # EIN Pool für den gesamten Lauf (BB2-Verteilung + BB3), niemals pro Aufruf neu erzeugt --
-    # siehe Docstring von ``optimize_grid_point``: mehrfach angelegte Pools über viele
-    # sequentielle ``differential_evolution``-Aufrufe hinweg haben im Test einen Deadlock
-    # verursacht (fork() mit Thread-Altlasten des vorherigen Pools).
+    # ONE pool for the entire run (BB2 distribution + BB3), never created anew per call --
+    # see the docstring of ``optimize_grid_point``: pools created repeatedly across many
+    # sequential ``differential_evolution`` calls caused a deadlock in testing
+    # (fork() with thread leftovers of the previous pool).
     #
-    # initializer/initargs statt Vererbung über fork(): setzt ``_BASE_CONFIG`` in jedem
-    # Worker explizit, unabhängig von der Startmethode (fork unter Linux, spawn unter
-    # Windows) -- s. Docstring von ``_BASE_CONFIG``.
+    # initializer/initargs instead of inheritance via fork(): sets ``_BASE_CONFIG`` in every
+    # worker explicitly, independently of the start method (fork under Linux, spawn under
+    # Windows) -- see the docstring of ``_BASE_CONFIG``.
     with Pool(workers, initializer=_set_base_config, initargs=(base_config,)) as pool:
         print(
             f"\n--- BB2: Optimierung je Gitterpunkt ({len(grid_points)} Punkte, über {workers} "

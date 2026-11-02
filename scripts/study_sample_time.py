@@ -1,20 +1,20 @@
-r"""Δt-Vorstudie: 5 / 15 / 25 / 60 s bei konstantem physikalischem Fenster, 900 s Horizont.
+r"""Δt preliminary study: 5 / 15 / 25 / 60 s at a constant physical window, 900 s horizon.
 
-Aufruf::
+Usage::
 
     python scripts/study_sample_time.py --config conf/process/greybox_gab_placeholder.yaml \
         --log artifacts/dt_study.jsonl
 
-Ergebnis ist eine Empfehlung für die Standard-Abtastzeit. Bewusst über die Baselines
-gefahren: die Δt-Empfehlung soll nicht von einer Architektur abhängen, und der
-Persistenz-Fehler ist das direkte Maß für die Schwierigkeit der Ein-Schritt-Aufgabe.
+The result is a recommendation for the standard sample time. Deliberately run over the baselines:
+the Δt recommendation should not depend on an architecture, and the
+persistence error is the direct measure of the difficulty of the one-step task.
 
-Horizont 900 s (statt der früheren 600 s): primärer Entscheidungshorizont angelehnt an die
-Viertelstunden-Taktung von Strommarkt-/Erneuerbaren-Signalen, nicht an eine Sekundenregelung
-des Bettes. Vierter Kandidat 15 s ergänzt (nicht ersetzt) die historische Basis {5, 25, 60}:
-τ1 ist unter der GAB-Isotherme auf ~30 s gestiegen, damit liegt 25 s nur noch bei
-τ1/Δt ≈ 1.2 statt komfortabel darunter -- 15 s deckt die schnellste Mode mit τ1/Δt ≈ 2.0
-wieder klarer auf (siehe docs/04_stand_ap1.md).
+Horizon 900 s (instead of the earlier 600 s): primary decision horizon modelled on the
+quarter-hour cycle of electricity-market/renewables signals, not on second-by-second control
+of the bed. A fourth candidate, 15 s, supplements (does not replace) the historical basis
+{5, 25, 60}: τ1 has risen to ~30 s under the GAB isotherm, so 25 s now lies only at
+τ1/Δt ≈ 1.2 instead of comfortably below it -- 15 s resolves the fastest mode with
+τ1/Δt ≈ 2.0 more clearly again (see docs/04_stand_ap1.md).
 """
 
 from __future__ import annotations
@@ -50,7 +50,7 @@ FACTORIES = {
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",
@@ -77,11 +77,11 @@ def parse_arguments() -> argparse.Namespace:
 def _sequence_length_context(
     config: ProcessConfig, sample_times_s: tuple[float, ...]
 ) -> dict[float, dict[str, float]]:
-    """τ1 und die daraus abgeleitete empfohlene Sequenzlänge je Δt-Kandidat.
+    """τ1 and the recommended sequence length derived from it per Δt candidate.
 
-    Ruft :func:`time_constant_report` je Kandidat mit dessen ``sample_time_s`` auf, statt
-    die Faustregel (5·τ1/Δt) von Hand nachzurechnen -- die Zahlen sollen aus demselben Code
-    kommen wie ``diagnostics.time_constant_report``, nicht aus einer zweiten Implementierung.
+    Calls :func:`time_constant_report` per candidate with its ``sample_time_s``, instead of
+    recomputing the rule of thumb (5·τ1/Δt) by hand -- the numbers should come from the same code
+    as ``diagnostics.time_constant_report``, not from a second implementation.
     """
     context: dict[float, dict[str, float]] = {}
     for sample_time in sample_times_s:
@@ -96,13 +96,13 @@ def _sequence_length_context(
 
 
 def _spread(records: list[RunRecord], label: str, key: str) -> tuple[float, float, float]:
-    """Median, Minimum, Maximum einer Metrik über alle Seeds eines Modells."""
+    """Median, minimum, maximum of a metric over all seeds of a model."""
     values = np.asarray([r.metrics[key] for r in records if r.params["model/label"] == label])
     return float(np.median(values)), float(np.min(values)), float(np.max(values))
 
 
 def main() -> None:
-    """Studie ausführen und Tabellen drucken."""
+    """Run the study and print tables."""
     arguments = parse_arguments()
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
@@ -115,7 +115,7 @@ def main() -> None:
         n_val=arguments.pool // 2,
         n_test=arguments.pool // 2,
         history_length=32,
-        horizon=36,  # 36*25s = 900s: primaerer Entscheidungshorizont, siehe Modul-Docstring
+        horizon=36,  # 36*25s = 900s: primary decision horizon, see module docstring
         stride=8,
     )
     logger = JsonlExperimentLogger(arguments.log) if arguments.log else None

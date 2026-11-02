@@ -1,34 +1,34 @@
-r"""Kapazitätsangepasste xLSTM-Variante -- Ergänzung zu ``study_architectures.py``.
+r"""Capacity-matched xLSTM variant -- complement to ``study_architectures.py``.
 
-Warum ein zweites, kleineres Skript statt eines neuen ``--hidden-size``-Flags in
+Why a second, smaller script instead of a new ``--hidden-size`` flag in
 ``study_architectures.py``
 -------------------------------------------------------------------------------
-``study_architectures.py`` fährt alle Kandidaten eines Labels mit derselben,
-architekturunabhängigen ``TorchSequenceConfig`` -- Kapazität ist dort bewusst kein
-Studienfaktor (Docstring von ``CompositeSequenceModel``, Grund 3). Für den
-xLSTM-Vergleich (``docs/04_stand_ap1.md``, Befund 29) ist genau das nötig: dieselbe
-Architektur (``core="xlstm"``) bei zwei verschiedenen ``hidden_size``-Werten, damit der
-Vergleich zu GRU/LSTM sowohl "gleiche Breite" als auch "gleiche Parameterzahl" abdeckt.
-Ein neues CLI-Flag in ``study_architectures.py`` hätte diese Kapazitätsfreiheit für
-*alle* Architekturen geöffnet -- genau die Freiheit, die dort bewusst nicht besteht.
-Dieses Skript ruft stattdessen dieselbe Bibliotheksfunktion
-(:func:`~twinlink_ml.evaluation.protocol.run_architecture_comparison`) mit einer
-selbst gebauten Fabrik-Abbildung auf, in der nur das Label ``xlstm`` steckt --
-``persistence``/``climatology`` laufen hier **nicht** noch einmal, die stehen bereits
-in der Zieldatei aus dem vorangegangenen Lauf mit ``--models xlstm persistence
+``study_architectures.py`` runs all candidates of a label with the same,
+architecture-independent ``TorchSequenceConfig`` -- capacity is deliberately not a
+study factor there (docstring of ``CompositeSequenceModel``, reason 3). For the
+xLSTM comparison (``docs/04_stand_ap1.md``, Befund 29) exactly that is needed: the same
+architecture (``core="xlstm"``) at two different ``hidden_size`` values, so that the
+comparison with GRU/LSTM covers both "same width" and "same parameter count".
+A new CLI flag in ``study_architectures.py`` would have opened this capacity freedom for
+*all* architectures -- exactly the freedom that deliberately does not exist there.
+This script instead calls the same library function
+(:func:`~twinlink_ml.evaluation.protocol.run_architecture_comparison`) with a
+self-built factory mapping that contains only the label ``xlstm`` --
+``persistence``/``climatology`` do **not** run again here; they are already
+in the target file from the preceding run with ``--models xlstm persistence
 climatology``.
 
-Parameter exakt wie der Referenzlauf
+Parameters exactly as in the reference run
 -------------------------------------
-Dieselbe ``DataSpec`` (Voreinstellungen: ``n_train_max=64``, ``horizon=24``,
-``run_duration_s=28800``, wie ``arch_composite.jsonl``), dieselbe ``SeedPlan``, dieselbe
-Prozess-Config, dieselben Stützstellen -- sonst wäre ein Vergleich der Kennzahlen über
-zwei Läufe hinweg nicht zulässig. Anders als ``study_architectures.py`` schreibt dieses
-Skript **anfügend** in eine bereits existierende Logdatei (``JsonlExperimentLogger`` ist
-ohnehin anfügend, siehe dort) -- der Aufruf setzt voraus, dass die Datei aus dem
-vorangehenden Lauf schon existiert.
+The same ``DataSpec`` (defaults: ``n_train_max=64``, ``horizon=24``,
+``run_duration_s=28800``, like ``arch_composite.jsonl``), the same ``SeedPlan``, the same
+process config, the same support points -- otherwise a comparison of the figures across
+two runs would not be admissible. Unlike ``study_architectures.py``, this
+script writes **appending** to an already existing log file (``JsonlExperimentLogger`` is
+appending anyway, see there) -- the call presupposes that the file from the
+preceding run already exists.
 
-Aufruf (Einzelpunkt-Stichprobe, siehe Befund 29)::
+Usage (single-point sample, see Befund 29)::
 
     python scripts/study_xlstm_wide.py --hidden-size 317 --label xlstm_h317 \
         --sizes 64 --seeds 1 2 3 --modes inline --sources joint --with-baselines \
@@ -63,14 +63,14 @@ _SOURCE_BY_NAME = {"joint": VarianceSource.JOINT, "model": VarianceSource.MODEL}
 
 
 def _existing_target_names(log_path: Path) -> tuple[str, ...] | None:
-    """``data/target_names`` des ersten Records in ``log_path``.
+    """``data/target_names`` of the first record in ``log_path``.
 
-    ``None`` bei leerer oder fehlender Datei.
+    ``None`` for an empty or missing file.
 
-    Dieses Skript haengt per Docstring-Vertrag an eine bereits bestehende Logdatei an
-    (z. B. eine Fortsetzung von ``study_architectures.py``). Ein anfuegender Lauf mit
-    einer anderen Zielkanalzahl als die bereits geloggten Records wuerde ein Log mit
-    uneinheitlicher Kanalzahl erzeugen -- wertlos, faellt spaeter niemandem auf.
+    By docstring contract this script appends to an already existing log file
+    (e.g. a continuation of ``study_architectures.py``). An appending run with
+    a different target channel count than the records already logged would produce a log with
+    inconsistent channel count -- worthless, and nobody notices later.
     """
     if not log_path.exists():
         return None
@@ -85,10 +85,10 @@ def _existing_target_names(log_path: Path) -> tuple[str, ...] | None:
 
 
 def _check_target_names_consistency(log_path: Path, target_names: tuple[str, ...]) -> None:
-    """Bricht hart ab, wenn ``log_path`` bereits Records mit anderer Zielkanalzahl traegt.
+    """Aborts hard if ``log_path`` already carries records with a different target channel count.
 
-    Eigene Funktion (nicht inline in ``main()``), damit die Schemapruefung ohne vollen
-    CLI-Aufruf testbar ist.
+    Separate function (not inline in ``main()``) so that the schema check is testable without a
+    full CLI call.
     """
     existing = _existing_target_names(log_path)
     if existing is not None and existing != target_names:
@@ -100,7 +100,7 @@ def _check_target_names_consistency(log_path: Path, target_names: tuple[str, ...
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=CONFIG_PATH)
     parser.add_argument("--hidden-size", type=int, required=True)
@@ -128,7 +128,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Nur den Kandidaten ``xlstm`` bei einer bestimmten Breite fahren."""
+    """Run only the candidate ``xlstm`` at a specific width."""
     arguments = parse_arguments()
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)

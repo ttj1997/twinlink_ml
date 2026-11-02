@@ -1,24 +1,24 @@
-r"""Architekturvergleich (Arbeitsplan Schritt 6), beide Beobachtbarkeits-Betriebsarten.
+r"""Architecture comparison (work plan step 6), both observability operating modes.
 
-Aufruf::
+Usage::
 
     python scripts/study_architectures.py --mode both --log artifacts/runs/architectures.jsonl
 
-Zwei Dinge, die dieses Skript anders macht als ein üblicher Vergleich:
+Two things this script does differently from a usual comparison:
 
-1. **Jede Differenz wird gegen die Auflösungsschwelle gehalten** (Schritt 5). Eine
-   Verbesserung unterhalb der Schwelle wird als "kein nachweisbarer Unterschied" gemeldet
-   und nicht als Prozentzahl, die dann in einen Vortrag wandert.
-2. **Beide Betriebsarten**: mit und ohne Inline-Messung der Qualitätsgrößen. Ob die
-   Produktfeuchte an der Zielanlage inline gemessen wird, ist offen; die Antwort ändert,
-   welche Baseline überhaupt definiert ist (Persistenz braucht die Messung,
-   Mittelwertvorhersage nicht).
+1. **Every difference is held against the resolution threshold** (step 5). An
+   improvement below the threshold is reported as "no detectable difference"
+   and not as a percentage that then travels into a presentation.
+2. **Both operating modes**: with and without inline measurement of the quality variables. Whether
+   product moisture is measured inline at the target plant is open; the answer changes
+   which baseline is defined at all (persistence needs the measurement,
+   mean prediction does not).
 
-Die Referenz, die zu schlagen ist, hängt von der Zielgröße ab und ist keine Wahl:
-``energy_target`` gegen den linearen ARX, ``product_moisture_kg_per_kg`` gegen die
-Persistenz (inline) bzw. die Mittelwertvorhersage (Soft Sensor). Bei der Feuchte ist der
-ARX schlechter als die Persistenz -- ihn dort als Referenz zu nehmen wäre eine zu niedrige
-Hürde.
+The reference to beat depends on the target and is not a choice:
+``energy_target`` against the linear ARX, ``product_moisture_kg_per_kg`` against
+persistence (inline) or the mean prediction (soft sensor). For moisture the
+ARX is worse than persistence -- taking it as the reference there would be too low a
+hurdle.
 """
 
 from __future__ import annotations
@@ -53,13 +53,13 @@ CONFIG_PATH = Path(__file__).resolve().parents[1] / "conf" / "process" / "greybo
 
 REFERENCE_BY_TARGET = {
     "energy_target": "arx",
-    "product_moisture_kg_per_kg": None,  # parameterfreie Referenz, siehe unten
+    "product_moisture_kg_per_kg": None,  # parameter-free reference, see below
     "d50_um": None,
 }
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",
@@ -81,7 +81,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Vergleich fahren und Verdikte drucken."""
+    """Run the comparison and print verdicts."""
     arguments = parse_arguments()
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
@@ -110,12 +110,12 @@ def main() -> None:
     for mode in modes:
         fully_observed = mode is ObservationMode.INLINE
         if arguments.models:
-            # Explizite Liste kann Modelle enthalten, die nur in einer Betriebsart gelten
-            # (z. B. persistence nur INLINE, climatology nur sinnvoll referenziert im
-            # SOFT_SENSOR-Fall). Ohne Filterung würde build_factories() bei --mode both
-            # in der zweiten Betriebsart abbrechen -- laut, aber nach bereits berechneten
-            # und schon geloggten Punkten der ersten Betriebsart. Die Filterung hier ist
-            # bewusst NICHT still: jedes ausgelassene Modell wird genannt.
+            # An explicit list can contain models that only apply in one operating mode
+            # (e.g. persistence only INLINE, climatology only meaningfully referenced in the
+            # SOFT_SENSOR case). Without filtering, build_factories() would abort with --mode both
+            # in the second operating mode -- loudly, but after points of the first operating
+            # mode already computed and logged. The filtering here is
+            # deliberately NOT silent: every omitted model is named.
             labels, skipped = [], []
             for label in arguments.models:
                 slot = by_label.get(label)

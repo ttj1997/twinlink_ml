@@ -1,56 +1,56 @@
-r"""Orchestriert den Lernkurven-Sweep: 5 Seeds, je 4 Budgetpunkte x N Architekturen, parallel.
+r"""Orchestrates the learning-curve sweep: 5 seeds, each 4 budget points x N archs, parallel.
 
-Startet ``run_arch_learning_curve_worker.py`` als unabhaengige Prozesse -- ein Job je Seed,
-fuenf insgesamt. Kein Hyperparameter, kein Seed wird dadurch veraendert; nur die Wanduhrzeit
-sinkt. Struktur bewusst identisch zu ``run_arch_constant_holdout_sweep.py`` (gestaffelter
-Start, Merge mit Duplikat-run_uid-Pruefung) -- nur die Job-Einheit ist der Seed statt
-(Architektur, Seed), weil ``run_arch_learning_curve_worker.py`` die Pool-Erzeugung je Seed
-einmal macht und dann alle vier Budgetpunkte intern durchlaeuft.
+Starts ``run_arch_learning_curve_worker.py`` as independent processes -- one job per seed,
+five in total. No hyperparameter and no seed is changed by this; only the wall-clock time
+drops. Structure deliberately identical to ``run_arch_constant_holdout_sweep.py`` (staggered
+start, merge with duplicate-run_uid check) -- only the job unit is the seed instead of
+(architecture, seed), because ``run_arch_learning_curve_worker.py`` does the pool generation once
+per seed and then runs through all four budget points internally.
 
-``MKL_NUM_THREADS``/``OMP_NUM_THREADS=1`` werden hier als PROZESS-Umgebungsvariablen an
-jeden Worker weitergegeben -- ``torch.set_num_threads(1)`` allein genuegt nicht (Faktor-4-
-Verlangsamung durch Thread-Ueberzeichnung bei paralleler Prozessausfuehrung, siehe
-``befund42_tbed_exhaust_sweep.jsonl``-Analyse).
+``MKL_NUM_THREADS``/``OMP_NUM_THREADS=1`` are passed here as PROCESS environment variables to
+every worker -- ``torch.set_num_threads(1)`` alone is not enough (factor-4
+slowdown through thread oversubscription with parallel process execution, see the
+``befund42_tbed_exhaust_sweep.jsonl`` analysis).
 
-Fortsetzbarkeit (OA2b, Transformer/xLSTM/Mamba-Erweiterung)
+Resumability (OA2b, Transformer/xLSTM/Mamba extension)
 -------------------------------------------------------------
-Der Worker bleibt UNVERAENDERT -- Fortsetzung ist reine Orchestrator-Logik, auf Ebene
-ganzer Seed-Jobs (nicht einzelner Architektur/Budget-Kombinationen): ein Seed-Job erzeugt
-in einem Prozess alle Architekturen x alle Budgetpunkte x beide Testmengen zusammen, ein
-Teilrerun einzelner Zellen innerhalb eines Seeds ist mit dem Worker in seiner jetzigen Form
-nicht moeglich. Der Auftragsschluessel eines Records ist deshalb
-``(master_seed, n_train, model/label, test_set)`` -- bitgleich aus einem bestehenden
-Record in ``arch_learning_curve_projected.jsonl`` abgelesen (``params["master_seed"]``,
-``params["n_train"]``, ``params["model/label"]``, ``params["test_set"]``). Es gibt in
-diesem Schema KEINE ``variance/replicate``/``variance/source``-Felder (die kommen aus
-einem anderen Protokoll, ``evaluation/resolution.py`` -- hier nicht einschlaegig).
+The worker stays UNCHANGED -- resuming is pure orchestrator logic, at the level of
+whole seed jobs (not individual architecture/budget combinations): one seed job generates
+all architectures x all budget points x both test sets together in one process; a
+partial rerun of individual cells within a seed is not possible with the worker in its current
+form. The task key of a record is therefore
+``(master_seed, n_train, model/label, test_set)`` -- read bit for bit from an existing
+record in ``arch_learning_curve_projected.jsonl`` (``params["master_seed"]``,
+``params["n_train"]``, ``params["model/label"]``, ``params["test_set"]``). There are
+NO ``variance/replicate``/``variance/source`` fields in this schema (they come from
+another protocol, ``evaluation/resolution.py`` -- not relevant here).
 
-Ein Seed gilt als vollstaendig, wenn fuer JEDE erwartete Kombination
-(``sizes`` x ``BASELINE_FACTORIES``/``ARCHITECTURE_LABELS`` des Workers x beide
-Testmengen) ein Record existiert -- dann wird dieser Seed uebersprungen (Default:
-``--resume`` an, siehe ``parse_arguments``). Fehlt auch nur eine Kombination, wird der
-GESAMTE Seed neu gerechnet (der Worker kennt keine Teilmenge), und dessen alte Records
-werden beim Merge verworfen, nicht mit den neuen vermischt -- sonst doppelte ``run_uid``
-oder inkonsistente Teilzustaende im selben Seed.
+A seed counts as complete if a record exists for EVERY expected combination
+(``sizes`` x ``BASELINE_FACTORIES``/``ARCHITECTURE_LABELS`` of the worker x both
+test sets) -- then this seed is skipped (default:
+``--resume`` on, see ``parse_arguments``). If even one combination is missing, the
+ENTIRE seed is recomputed (the worker knows no subset), and its old records
+are discarded at the merge, not mixed with the new ones -- otherwise duplicate ``run_uid``
+or inconsistent partial states within the same seed.
 
-PROVENIENZ-WACHE: ein fortgesetzter Datensatz, dessen Punkte teils vom alten, teils vom
-neuen ``git/commit`` stammen, ist als EINE Lernkurve wertlos. Deshalb wird beim Fortsetzen
-der ``git/commit`` der uebernommenen (vollstaendigen) Seeds gegen den aktuellen HEAD
-verglichen -- Abweichung bricht hart ab (beide Hashes in der Meldung), nur mit
-``--allow-commit-mismatch`` explizit uebersteuerbar. Ein dirty Arbeitsbaum bricht beim
-Fortsetzen ebenfalls hart ab (kein stilles Weiterlaufen -- anders als
-``environment_fingerprint()``, das dirty nur als Warnung behandelt).
+PROVENANCE GUARD: a resumed dataset whose points come partly from the old, partly from the
+new ``git/commit`` is worthless as ONE learning curve. Therefore, when resuming,
+the ``git/commit`` of the adopted (complete) seeds is compared against the current HEAD
+-- a mismatch aborts hard (both hashes in the message), overridable only explicitly with
+``--allow-commit-mismatch``. A dirty working tree also aborts hard when
+resuming (no silent continuation -- unlike
+``environment_fingerprint()``, which treats dirty only as a warning).
 
-Eine am Ende abgeschnittene Zeile in der bestehenden Log-Datei (Abbruch mitten im
-Schreiben) wird beim Einlesen verworfen, nicht als Fehler behandelt -- der zugehoerige
-Seed gilt dann als unvollstaendig und wird neu gerechnet.
+A line truncated at the end of the existing log file (abort in the middle of
+writing) is discarded on reading, not treated as an error -- the associated
+seed then counts as incomplete and is recomputed.
 
-Offener Punkt (SA4, docs/04_stand_ap1.md Befund 58/59): die Wache prueft nur beim
-``--resume``-START. Ein Commit, der WAEHREND eines bereits laufenden Sweeps landet (keine
-Fortsetzung, alle Jobs laufen schon), wird von ihr nicht erkannt -- genau so ist die
-Commit-Drift in Befund 58 entstanden, dort manuell bemerkt statt automatisch gefangen.
-Nur vermerkt, nicht behoben. Moegliche Ergaenzung fuer spaeter: eine Commit-Pruefung zu
-Beginn jedes Einzelfits im Worker, nicht nur im Orchestrator beim Start.
+Open point (SA4, docs/04_stand_ap1.md Befund 58/59): the guard only checks at the
+``--resume`` START. A commit that lands WHILE a sweep is already running (no
+resumption, all jobs already running) is not detected by it -- exactly how the
+commit drift in Befund 58 arose, noticed manually there instead of caught automatically.
+Only noted, not fixed. Possible addition for later: a commit check at the
+start of each individual fit in the worker, not only in the orchestrator at start-up.
 """
 
 from __future__ import annotations
@@ -75,11 +75,11 @@ TEST_SETS = ("excited", "constant_holdout")
 
 
 def _load_worker_module() -> types.ModuleType:
-    """``run_arch_learning_curve_worker.py`` als Modul laden, um die aktuelle
-    Architekturliste zu lesen (nicht hier dupliziert halten -- sonst laeuft die
-    Fortsetzungslogik dem Worker irgendwann leise davon). Kein ``torch``-Import zur
-    Ladezeit (der steckt im Worker in ``main()``, nicht auf Modulebene), also unbedenklich
-    fuer den Orchestrator, der selbst kein Torch braucht.
+    """Load ``run_arch_learning_curve_worker.py`` as a module to read the current
+    architecture list (do not keep it duplicated here -- otherwise the
+    resume logic will eventually drift away from the worker silently). No ``torch`` import at
+    load time (in the worker it sits in ``main()``, not at module level), so harmless
+    for the orchestrator, which itself needs no torch.
     """
     spec = importlib.util.spec_from_file_location(
         "_run_arch_learning_curve_worker_for_sweep", WORKER_SCRIPT
@@ -91,14 +91,14 @@ def _load_worker_module() -> types.ModuleType:
 
 
 def _expected_labels(architectures: list[str] | None, *, skip_baselines: bool) -> tuple[str, ...]:
-    """Welche Labels ein Seed-Job mit dieser Auswahl tatsaechlich erzeugt.
+    """Which labels a seed job with this selection actually produces.
 
-    Muss dieselbe Auswahl widerspiegeln, die ``--architectures``/``--skip-baselines`` an
-    den Worker durchreichen (siehe ``_launch``) -- sonst haelt ein Seed die Fortsetzung
-    faelschlich fuer unvollstaendig (oder faelschlich fuer vollstaendig), wenn absichtlich
-    nur eine Teilmenge gerechnet wird (z. B. nur die drei neuen Architekturen, ohne
-    GRU/LSTM/Baselines erneut zu erzeugen, die unter demselben Protokoll bereits in einem
-    anderen Datensatz vorliegen).
+    Must reflect the same selection that ``--architectures``/``--skip-baselines`` pass through
+    to the worker (see ``_launch``) -- otherwise a seed considers the resumption
+    wrongly incomplete (or wrongly complete) when deliberately
+    only a subset is computed (e.g. only the three new architectures, without
+    regenerating GRU/LSTM/baselines, which already exist under the same protocol in
+    another dataset).
     """
     worker = _load_worker_module()
     baseline_labels = () if skip_baselines else tuple(worker.BASELINE_FACTORIES)
@@ -120,15 +120,15 @@ def _expected_keys(
 def _read_existing_records(
     log_path: Path,
 ) -> tuple[list[dict], set[tuple[int, int, str, str]], str | None]:
-    """Bestehende Log-Datei einlesen, Auftragsschluessel je Record bilden.
+    """Read the existing log file, build the task key per record.
 
-    Toleriert eine abgeschnittene letzte Zeile (Abbruch mitten im Schreiben) -- die wird
-    verworfen, nicht als Fehler behandelt (der zugehoerige Seed gilt dann als
-    unvollstaendig ueber ``_expected_keys`` und wird neu gerechnet). Eine abgeschnittene
-    Zeile, die NICHT die letzte ist, ist dagegen ein echter Datei-Defekt und bricht ab.
+    Tolerates a truncated last line (abort in the middle of writing) -- it is
+    discarded, not treated as an error (the associated seed then counts as
+    incomplete via ``_expected_keys`` and is recomputed). A truncated
+    line that is NOT the last one, by contrast, is a real file defect and aborts.
 
-    Rueckgabe: (Records, Auftragsschluessel-Menge, erster gefundener ``git/commit`` mit
-    ``git/commit_available=True``, ``None`` wenn keiner vorhanden ist).
+    Returns: (records, set of task keys, first found ``git/commit`` with
+    ``git/commit_available=True``, ``None`` if there is none).
     """
     if not log_path.exists():
         return [], set(), None
@@ -246,9 +246,9 @@ def _run_batch(
     stagger_first: int,
     stagger_wait_s: float,
 ) -> list[tuple[int, int, Path]]:
-    """Einen Batch starten -- optional gestaffelt -- und auf Abschluss aller warten.
+    """Start one batch -- optionally staggered -- and wait for all to finish.
 
-    Rueckgabe je Job: ``(seed, returncode, output_path)``.
+    Returns per job: ``(seed, returncode, output_path)``.
     """
     handles: list[tuple[subprocess.Popen[bytes], int, Path]] = []
 
@@ -324,7 +324,7 @@ def _run_batch(
 
 
 def _merge(outputs: list[Path], final_path: Path) -> None:
-    """Alle Job-JSONL-Dateien zusammenfuehren, mit Duplikat-run_uid-Pruefung."""
+    """Merge all job JSONL files, with duplicate-run_uid check."""
     seen_run_uids: dict[str, Path] = {}
     lines: list[str] = []
     for output in outputs:
@@ -353,7 +353,7 @@ def _merge(outputs: list[Path], final_path: Path) -> None:
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",
@@ -423,7 +423,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def _check_provenance_for_resume(existing_commit: str | None, *, allow_mismatch: bool) -> None:
-    """Dirty-Arbeitsbaum und Commit-Drift hart abfangen, bevor irgendetwas gerechnet wird."""
+    """Catch a dirty working tree and commit drift hard, before anything is computed."""
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", DirtyWorkingTreeWarning)
         fingerprint = environment_fingerprint()
@@ -445,7 +445,7 @@ def _check_provenance_for_resume(existing_commit: str | None, *, allow_mismatch:
 
 
 def main() -> None:
-    """Sweep fahren: bereits vollstaendige Seeds ueberspringen, Rest starten, zusammenfuehren."""
+    """Run the sweep: skip seeds that are already complete, start the rest, merge."""
     arguments = parse_arguments()
     arguments.work_dir.mkdir(parents=True, exist_ok=True)
     python = sys.executable

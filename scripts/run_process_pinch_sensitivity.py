@@ -1,61 +1,61 @@
-r"""QA1-QA4: Bindeglied zwischen Prozessfahrweise und Waermeintegration.
+r"""QA1-QA4: link between process operation and heat integration.
 
-Prueft, ob und wie stark sich der Standort-Pinch mit der Fahrweise der Wirbelschichtlinie
-bewegt, und wie stark sich dadurch der minimale Brennstoffbedarf des Standorts aendert.
+Checks whether and how strongly the site pinch moves with the operating mode of the fluidized-bed
+line, and how strongly the minimum fuel demand of the site changes as a result.
 
-Ausgangspunkt (``run_pinch_benchmark.py``, Zweig ``lp-benchmark``): der Pinch sitzt in
-JEDER getesteten (T_kalt, dT_min)-Kombination exakt am Eintritt von Quelle 2
-(Wirbelschichtlinie, 81.42 C) -- genau die Linie, die dieses Projekt als Grey-Box-Modell
-abbildet. Diese Temperatur ist damit ueber die Prozesssollwerte verstellbar. Frage: wandert
-der Pinch, wenn die Wirbelschichtlinie anders gefahren wird, und wie aendert sich dadurch
-der minimale Brennstoffbedarf?
+Starting point (``run_pinch_benchmark.py``, branch ``lp-benchmark``): the pinch sits in
+EVERY tested (T_kalt, dT_min) combination exactly at the inlet of source 2
+(fluidized-bed line, 81.42 C) -- exactly the line that this project models as a grey-box
+model. This temperature can thus be adjusted via the process set points. Question: does
+the pinch move when the fluidized-bed line is operated differently, and how does
+the minimum fuel demand change as a result?
 
-QA1 -- Massstab: Anlagenparameter statt Skalierung
+QA1 -- scale: plant parameters instead of scaling
 ----------------------------------------------------
-Befund 52 (``artifacts/runs/bb1_bb3_operating_point_regret.json``) liegt im LABORMASSSTAB
-(~0.03 kg/s Luft) -- die dortigen optimalen Sollwerte werden hier NICHT uebernommen.
-Stattdessen: Befund 56/NA5 (``scripts/study_plant_validation.py``) hat gezeigt, dass das
-Grey-Box-Modell mit ANLAGENPARAMETERN die gemessene Betttemperatur beider F-5-
-Betriebspunkte (Anwendungspartner, Granulator D 3204) auf 0.4 bzw. 2.1 K trifft, mit
-EINEM Parametersatz fuer beide. Dieses Skript baut auf demselben Parametersatz auf
-(importiert ``build_plant_config``/``OperatingPoint`` direkt aus
-``study_plant_validation.py`` -- keine zweite Parametrisierung).
+Befund 52 (``artifacts/runs/bb1_bb3_operating_point_regret.json``) is at LAB SCALE
+(~0.03 kg/s air) -- the optimal set points from there are NOT adopted here.
+Instead: Befund 56/NA5 (``scripts/study_plant_validation.py``) showed that the
+grey-box model with PLANT PARAMETERS hits the measured bed temperature of both F-5
+operating points (application partner, granulator D 3204) to within 0.4 and 2.1 K,
+respectively, with ONE parameter set for both. This script builds on the same parameter set
+(imports ``build_plant_config``/``OperatingPoint`` directly from
+``study_plant_validation.py`` -- no second parametrisation).
 
-Anker: der product 1-Betriebspunkt (bessere Validierung, -0.4 K gegen -2.1 K bei product 2). Werte
-woertlich aus Befund 56/NA5 (24h-Mittel, ``scripts/study_plant_validation.py`` gegen die
-Rohdaten unter ``TWINLINK_PLANT_DATA_PROD1``, siehe NA1-Vertraulichkeit -- diese
-aggregierten 24h-Mittelwerte sind bereits in Befund 56 committet, z. B. die Spruehraten
-934/2118 kg/h in dessen NA4-Abschnitt):
+Anchor: the product 1 operating point (better validation, -0.4 K against -2.1 K for
+product 2). Values verbatim from Befund 56/NA5 (24h mean,
+``scripts/study_plant_validation.py`` against the raw data under
+``TWINLINK_PLANT_DATA_PROD1``, see NA1 confidentiality -- these aggregated 24h means are
+already committed in Befund 56, e.g. the spray rates 934/2118 kg/h in its NA4 section):
 
-    T_amb=4.9 C, T_zuluft=84.6 C, Luftmenge=33003 Nm3/h, Spruehrate=934 kg/h,
-    T_bett(gemessen)=67.3 C, Bettmasse=800 kg (muendliche Partnerangabe -- fuer T_bed
-    irrelevant, siehe Befund 56, setzt hier nur Querschnittsflaeche/Gasgeschwindigkeit).
+    T_amb=4.9 C, T_zuluft=84.6 C, air flow=33003 Nm3/h, spray rate=934 kg/h,
+    T_bett(measured)=67.3 C, bed mass=800 kg (oral statement by the partner -- irrelevant
+    for T_bed, see Befund 56, here only sets cross-section area/gas velocity).
 
-Quelle 1 (Spruehturm) bleibt FEST auf den Model_v3-Werten (PA2, ``lp-benchmark``):
-20 kg/s, 125.233 C, Y=0.06482 -- dieses Projekt bildet nur die Wirbelschichtlinie ab.
+Source 1 (spray tower) stays FIXED at the Model_v3 values (PA2, ``lp-benchmark``):
+20 kg/s, 125.233 C, Y=0.06482 -- this project only models the fluidized-bed line.
 
-QA2 -- Gitter ueber die drei Stellgroessen
+QA2 -- grid over the three actions
 ---------------------------------------------
-``build_plant_config`` setzt bereits die Anlagen-ActionConfig-Grenzen (Zulufttemperatur
-0-150 C, Gasgeschwindigkeit 0 bis max(6, 1.5*product 1-Nominalwert), Spruehrate 0-3000 kg/h).
-Grobes Gitter: je Groesse 3 Stufen bei 25/50/75 % der Spanne [minimum, maximum] -- NICHT
-die Randwerte selbst (0 kg/h Spruehrate oder 0 m/s Gasgeschwindigkeit sind entartete
-Betriebspunkte ohne Trocknung, numerisch nicht sinnvoll). 27 Punkte gesamt.
+``build_plant_config`` already sets the plant ActionConfig limits (inlet air temperature
+0-150 C, gas velocity 0 to max(6, 1.5*product 1 nominal value), spray rate 0-3000 kg/h).
+Coarse grid: 3 levels per quantity at 25/50/75 % of the span [minimum, maximum] -- NOT
+the boundary values themselves (0 kg/h spray rate or 0 m/s gas velocity are degenerate
+operating points without drying, numerically not meaningful). 27 points in total.
 
-QA3/QA4 -- Pinch und Zielkonflikt je Punkt
+QA3/QA4 -- pinch and trade-off per point
 ----------------------------------------------
-Je ZULAESSIGEM Punkt (``solution.feasible`` -- Fluidisierung, Saettigungsgrad,
-Partikelfeuchte-Plausibilitaet, siehe ``steady_state.py``): Pinch-Ziel
-(``heatnetwork.pinch``, dT_min=20 K, T_kalt=29.1 C wie im Hauptauftrag) mit Quelle 2 aus
-der Beharrungszustandsloesung (Ablufttemperatur = Betttemperatur, ``outlet_duct_heat_loss_k
-=0`` Konvention, keine kalibrierte Alternative vorhanden, siehe Befund 56 NA4).
-``energy_target``/``power_heater_kw`` (``diagnostics``, bereits im Loeser berechnet) je
-Punkt gegen den Pinch-Brennstoffbedarf gestellt (QA4) -- beide in unterschiedlichen
-Energietraegern (Prozessseite: Strom+evtl. Gas gemischt ueber vier Aggregate; Standort:
-Erdgas-Aequivalent), NICHT direkt aufaddierbar (dieselbe Vorsicht wie Befund 57i gegen eine
-unbegruendete kW-Summe ueber Energietraeger hinweg).
+For each FEASIBLE point (``solution.feasible`` -- fluidization, degree of saturation,
+particle moisture plausibility, see ``steady_state.py``): pinch target
+(``heatnetwork.pinch``, dT_min=20 K, T_kalt=29.1 C as in the main task) with source 2 from
+the steady-state solution (exhaust air temperature = bed temperature, ``outlet_duct_heat_loss_k
+=0`` convention, no calibrated alternative available, see Befund 56 NA4).
+``energy_target``/``power_heater_kw`` (``diagnostics``, already computed in the solver) per
+point set against the pinch fuel demand (QA4) -- the two in different
+energy carriers (process side: electricity + possibly gas mixed across four units; site:
+natural gas equivalent), NOT directly additive (the same caution as Befund 57i against an
+unjustified kW sum across energy carriers).
 
-Aufruf::
+Usage::
 
     python scripts/run_process_pinch_sensitivity.py \
         --output artifacts/runs/run_process_pinch_sensitivity.json
@@ -89,7 +89,7 @@ OUT_PATH = REPO_ROOT / "artifacts" / "runs" / "run_process_pinch_sensitivity.jso
 
 GAS = GasConfig()
 
-# --- QA1: Anlagenparameter, woertlich aus Befund 56/NA5 (product 1, bessere Validierung) -------
+# --- QA1: plant parameters, verbatim from Befund 56/NA5 (product 1, better validation) -------
 
 PROD1_AMBIENT_TEMPERATURE_C = 4.9
 PROD1_INLET_TEMPERATURE_C = 84.6
@@ -108,8 +108,8 @@ _BASE_OPERATING_POINT = OperatingPoint(
     ambient_temperature_c=PROD1_AMBIENT_TEMPERATURE_C,
     inlet_temperature_c=PROD1_INLET_TEMPERATURE_C,
     bed_temperature_measured_c=PROD1_BED_TEMPERATURE_MEASURED_C,
-    upper_position_measured_c=0.0,  # nicht verwendet von build_plant_config
-    outlet_temperature_measured_c=0.0,  # nicht verwendet von build_plant_config
+    upper_position_measured_c=0.0,  # not used by build_plant_config
+    outlet_temperature_measured_c=0.0,  # not used by build_plant_config
     process_air_flow_nm3_per_h=PROD1_PROCESS_AIR_FLOW_NM3_PER_H,
     spray_rate_kg_per_h=PROD1_SPRAY_RATE_KG_PER_H,
 )
@@ -120,7 +120,7 @@ _BASE_PLANT_CONFIG = build_plant_config(
     bed_mass_solid_setpoint_kg=BED_MASS_SOLID_SETPOINT_KG,
 )
 
-# --- QA2: Gitter, 25/50/75 % der ActionConfig-Spanne (siehe Moduldocstring) --------------
+# --- QA2: grid, 25/50/75 % of the ActionConfig span (see module docstring) --------------
 
 _GRID_FRACTIONS = (0.25, 0.5, 0.75)
 
@@ -142,7 +142,7 @@ SPRAY_RATE_LEVELS_KG_PER_H = _grid_levels(
     _BASE_PLANT_CONFIG.actions.spray_rate_kg_per_h.maximum,
 )
 
-# --- QA3: Pinch-Parameter, PA2-Datenfall (Quelle 1 fest, Senken unveraendert) ------------
+# --- QA3: pinch parameters, PA2 data case (source 1 fixed, sinks unchanged) ------------
 
 SOURCE_1_SPRUEHTURM = HeatSourceConfig("Q1", 20.0, 125.233, 0.06482)
 SINK_1 = HeatSinkConfig("S1", 20.0, 0.005, 15.0, 300.0)

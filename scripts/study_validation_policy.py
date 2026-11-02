@@ -43,7 +43,7 @@ FACTORIES = {
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",
@@ -63,7 +63,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Beide Betriebsarten fahren und die Differenz gegen die Auflösungsschwelle halten."""
+    """Run both operating modes and hold the difference against the resolution threshold."""
     arguments = parse_arguments()
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)

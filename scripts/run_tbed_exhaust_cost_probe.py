@@ -1,24 +1,24 @@
-r"""Kostenprobe (Schritt 1, Befund-41-Folgeaufgabe): T_bed bei Produktionsgroesse, plus
-End-zu-End-Guete der Abluft-Rueckrechnung.
+r"""Cost probe (step 1, Befund 41 follow-up task): T_bed at production size, plus
+end-to-end quality of the exhaust air back-calculation.
 
-Befund 41g hat ausdruecklich offengelassen, ob ``bed_temperature_celsius`` bei echter
-Trainingsgroesse (nicht dem 15-Epochen/n_train=8-Korrektheitslauf) gut genug vorhergesagt
-wird, um die Abluft-Ruckrechnung (``simulation.exhaust.reconstruct_exhaust_state()``)
-tatsaechlich nutzbar zu machen. Dieses Skript liefert genau diese eine Messung: ein
-GRU-Lauf, ein Seed, Standard-Produktionskonfiguration, vier Ziele (die drei etablierten
-plus ``bed_temperature_celsius`` als expliziter Override -- ``DataSpec.target_names``
-bleibt beim Drei-Ziele-Default, Befund 41f), dann sowohl die normale
-Vier-Ziele-NRMSE als auch die End-zu-End-Exhaust-Metrik aus
-``evaluation.exhaust_reconstruction`` (Massenstrom-Leck-Korrektur siehe dort).
+Befund 41g explicitly left open whether ``bed_temperature_celsius`` is predicted well enough
+at real training size (not the 15-epoch/n_train=8 correctness run) to make the
+exhaust air back-calculation (``simulation.exhaust.reconstruct_exhaust_state()``)
+actually usable. This script delivers exactly this one measurement: one
+GRU run, one seed, standard production configuration, four targets (the three established
+plus ``bed_temperature_celsius`` as an explicit override -- ``DataSpec.target_names``
+stays at the three-target default, Befund 41f), then both the normal
+four-target NRMSE and the end-to-end exhaust metric from
+``evaluation.exhaust_reconstruction`` (mass-flow leak correction, see there).
 
-Standard-Produktionskonfiguration identisch zu ``run_mamba_reduced_comparison.py``
+Standard production configuration identical to ``run_mamba_reduced_comparison.py``
 (Befund 40): ``greybox_gab_placeholder.yaml``, ``sample_time_s=25.0``,
 ``run_duration_s=28_800.0``, ``n_train_max=64``, ``n_val=32``, ``n_test=32``,
-``history_length=32``, ``horizon=36``, ``stride=8`` -- damit die Epochen-/Zeitwerte gegen
-die dort bereits gemessenen GRU/LSTM-Laeufe vergleichbar sind.
+``history_length=32``, ``horizon=36``, ``stride=8`` -- so that the epoch/time values are
+comparable against the GRU/LSTM runs already measured there.
 
-Nur eine Kostenprobe, kein Sweep: ein Seed, nur GRU (Transformer/Mamba bereits als
-ungeeignet dokumentiert, Befund 37/38/40 -- hier nicht erneut geprueft).
+Only a cost probe, no sweep: one seed, only GRU (Transformer/Mamba already documented as
+unsuitable, Befund 37/38/40 -- not checked again here).
 """
 
 from __future__ import annotations
