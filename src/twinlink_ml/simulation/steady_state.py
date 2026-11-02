@@ -1,64 +1,64 @@
-r"""Exakter Beharrungszustands-Löser für das Grey-Box-Modell.
+r"""Exact steady-state solver for the grey-box model.
 
-Warum eine Modulfunktion und keine dritte ABC-Implementierung
----------------------------------------------------------------
-``03_code_konventionen.md`` verlangt ABCs für die vier Kernabstraktionen, darunter
-``ProcessSimulator``. Ein Beharrungszustands-Löser ist aber keine Datenquelle -- er
-gehört nicht hinter dieselbe Schnittstelle wie ``rollout``. Eine eigene Abstraktion dafür
-wäre trotzdem denkbar (``SteadyStateSolver``), aber mit genau einer Implementierung ist
-sie Vorratsbau: Dyssol kann im stationären Fließschema-Modus (M7) einen zweiten Fall
-liefern, ohne dass klar ist, ob dessen Schnittstelle dieselbe Form hat (Dyssol liefert
-keine RHS-Funktion, gegen deren Nullstelle sich bisezieren ließe). Die Abstraktion wird
-gezogen, sobald der zweite Fall ansteht -- nicht vorher.
+Why a module function and not a third ABC implementation
+---------------------------------------------------------
+``03_code_konventionen.md`` requires ABCs for the four core abstractions, among them
+``ProcessSimulator``. A steady-state solver, however, is not a data source -- it
+does not belong behind the same interface as ``rollout``. An abstraction of its own for it
+would still be conceivable (``SteadyStateSolver``), but with exactly one implementation it is
+speculative building: Dyssol can deliver a second case in steady-state flowsheet mode (M7),
+without it being clear whether its interface has the same form (Dyssol delivers
+no RHS function whose root could be bisected for). The abstraction will be
+introduced as soon as the second case comes up -- not before.
 
-Warum das nominell vierdimensionale Problem sich reduziert
--------------------------------------------------------------
-Statt blind in 4D zu suchen, nutzt der Löser die Struktur der Bilanzen aus
+Why the nominally four-dimensional problem reduces
+--------------------------------------------------
+Instead of searching blindly in 4D, the solver uses the structure of the balances from
 ``greybox.py``:
 
-1. **Feststoffmasse** -- ``_product_mass_flow`` hat einen Vorsteueranteil
-   (``solid_inflow``), der die Regelabweichung im Beharrungszustand exakt zum
-   Verschwinden bringt: :math:`m_s = m_{s,\mathrm{soll}}` (``bed_mass_solid_setpoint_kg``).
-2. **Durchmesser/Partikelanzahl** -- folgen geschlossen aus der Zahlenbilanz. Mit
-   :math:`\dot m_{prod} = \dot m_{s,in}` (aus Punkt 1) reduziert sich :math:`\dot N = 0`
-   auf
+1. **Solid mass** -- ``_product_mass_flow`` has a feedforward part
+   (``solid_inflow``) that makes the control error vanish exactly at steady state:
+   :math:`m_s = m_{s,\mathrm{soll}}` (``bed_mass_solid_setpoint_kg``).
+2. **Diameter/particle count** -- follow in closed form from the number balance. With
+   :math:`\dot m_{prod} = \dot m_{s,in}` (from point 1), :math:`\dot N = 0` reduces
+   to
 
    .. math:: d_{50} = d_{\mathrm{nuc}}\,
        \left(\frac{\dot m_{spray}\,w_{solid} + \dot m_{seed}}
        {b_{\mathrm{nuc}}\,\dot m_{spray}\,w_{solid} + \dot m_{seed}}\right)^{1/3}
 
-   Für :math:`\dot m_{seed} = 0` reduziert sich das exakt auf
+   For :math:`\dot m_{seed} = 0` this reduces exactly to
    :meth:`~twinlink_ml.simulation.config.MaterialConfig.nucleation_limited_diameter_m`
-   (:math:`d_{50} = d_{\mathrm{nuc}}\,b_{\mathrm{nuc}}^{-1/3}`). Am Nominalpunkt von
-   ``greybox_placeholder.yaml`` ist die Keimbildung aus dem Sprühfeststoff
+   (:math:`d_{50} = d_{\mathrm{nuc}}\,b_{\mathrm{nuc}}^{-1/3}`). At the nominal point of
+   ``greybox_placeholder.yaml`` the nucleation from the spray solid is
    :math:`b_{\mathrm{nuc}}\,\dot m_{spray}\,w_{solid} \approx 3.6\,\mathrm{g/h}`
-   -- eine Keimzufuhr in dieser Größenordnung oder darüber verschiebt :math:`d_{50}`
-   spürbar (bei 50 g/h, dem 14-fachen: 750 µm -> 316 µm; bei 2 kg/h: 160 µm, unterhalb
-   des Fluidisierungsfensters). Das ist keine Fehlerquelle im Löser, sondern die
-   Modellstruktur -- das Zulässigkeitsflag fängt den Fall ab, siehe unten.
-3. **Wassermasse und Betttemperatur** -- beide verbleibenden Bilanzen sind bei festem
-   jeweils anderem Zustand monoton (:math:`\dot m_w` fällt monoton in :math:`m_w`,
-   :math:`\dot T_{bed}` fällt monoton in :math:`T_{bed}`). Zwei geschachtelte
-   Bisektionen genügen: außen über :math:`T_{bed}`, innen über die Partikelfeuchte
-   :math:`X_p = m_w/m_s` bei festem :math:`T_{bed}`. Kein Newton, kein Jacobi -- die
-   rechte Seite enthält ``clip``/``max``-Operationen (Sättigungsgrad, Zustandsboden)
-   und ist nicht überall differenzierbar.
+   -- a seed feed of this order of magnitude or above shifts :math:`d_{50}`
+   noticeably (at 50 g/h, 14 times that: 750 µm -> 316 µm; at 2 kg/h: 160 µm, below
+   the fluidization window). That is not an error source in the solver but the
+   model structure -- the feasibility flag catches the case, see below.
+3. **Water mass and bed temperature** -- both remaining balances are monotonic at a fixed
+   value of the respective other state (:math:`\dot m_w` falls monotonically in :math:`m_w`,
+   :math:`\dot T_{bed}` falls monotonically in :math:`T_{bed}`). Two nested
+   bisections suffice: outer over :math:`T_{bed}`, inner over the particle moisture
+   :math:`X_p = m_w/m_s` at fixed :math:`T_{bed}`. No Newton, no Jacobian -- the
+   right-hand side contains ``clip``/``max`` operations (saturation degree, state floor)
+   and is not differentiable everywhere.
 
-Beide Bisektionen rufen ausschließlich
+Both bisections call exclusively
 :meth:`~twinlink_ml.simulation.greybox.GreyBoxFluidBedGranulator.evaluate_derivative`
-auf -- dieselbe rechte Seite wie Integrator und ``time_constants``, keine zweite,
-abweichende Physik.
+-- the same right-hand side as the integrator and ``time_constants``, no second,
+deviating physics.
 
-Zulässigkeit ist ein Flag, keine Exception
--------------------------------------------
-Geprüft werden :math:`u_{mf}(d_{50}) < u_{gas} < u_t(d_{50})`, Sättigungsgrad
-:math:`\le 1` und ob die Partikelfeuchte im plausiblen Bereich
-:math:`[X_{eq}, X_{cr}]` liegt (oberhalb :math:`X_{cr}` signalisiert das Modell, dass
-die Trocknungskapazität für den gegebenen Sprühstrom nicht ausreicht). Harte Fehler gibt
-es nur an zwei Stellen: Batch-Betrieb (kein Beharrungszustand definiert) und eine
-verletzte Bracket-Vorzeichenbedingung (die Monotonieannahme selbst ist verletzt -- eine
-Bisektion würde sonst still den Bracket-Rand zurückgeben, und der landet unbemerkt als
-falscher Wert im Ergebnis).
+Feasibility is a flag, not an exception
+---------------------------------------
+Checked are :math:`u_{mf}(d_{50}) < u_{gas} < u_t(d_{50})`, saturation degree
+:math:`\le 1` and whether the particle moisture lies in the plausible range
+:math:`[X_{eq}, X_{cr}]` (above :math:`X_{cr}` the model signals that
+the drying capacity is insufficient for the given spray flow). Hard errors occur
+in only two places: batch operation (no steady state defined) and a
+violated bracket sign condition (the monotonicity assumption itself is violated -- a
+bisection would otherwise silently return the bracket edge, and that would end up unnoticed as a
+wrong value in the result).
 """
 
 from __future__ import annotations
@@ -118,25 +118,25 @@ _T = TypeVar("_T")
 
 @dataclass(frozen=True, slots=True)
 class SteadyStateSolution:
-    """Exakter Beharrungszustand des Grey-Box-Modells bei konstanter, nomineller Anregung.
+    """Exact steady state of the grey-box model under constant, nominal excitation.
 
-    ``diagnostics`` enthält alle Diagnosegrößen von
+    ``diagnostics`` contains all diagnostic variables of
     :meth:`~twinlink_ml.simulation.greybox.GreyBoxFluidBedGranulator.evaluate_derivative`
-    am Lösungspunkt, unverändert übernommen (Schlüssel wie in ``greybox._rhs``).
-    ``dry_air_mass_flow_kg_per_s``, ``outlet_humidity_kg_per_kg`` und
-    ``bed_temperature_celsius`` sind zusätzlich als explizite Felder geführt, ebenso die
-    neu abgeleiteten ``dew_point_celsius``, ``exhaust_sensible_kw`` und
-    ``exhaust_latent_kw`` -- gemeinsam bilden sie die Schnittstelle zum
-    Standort-Fließschema (Massenstrom / Feuchtebeladung / Temperatur je Luftstrom).
+    at the solution point, taken over unchanged (keys as in ``greybox._rhs``).
+    ``dry_air_mass_flow_kg_per_s``, ``outlet_humidity_kg_per_kg`` and
+    ``bed_temperature_celsius`` are additionally kept as explicit fields, as are the
+    newly derived ``dew_point_celsius``, ``exhaust_sensible_kw`` and
+    ``exhaust_latent_kw`` -- together they form the interface to the
+    site flowsheet (mass flow / moisture load / temperature per air stream).
 
-    Bezugszustand von ``exhaust_sensible_kw`` und ``exhaust_latent_kw``: **Umgebung**
-    (``T_amb``, Wasser flüssig) -- nicht Betttemperatur. Beide Größen beantworten "wie
-    viel Enthalpie trägt die Abluft über den Umgebungszustand hinaus", die Frage des
-    kondensierenden Wärmeübertragers zur Wärmerückgewinnung. Das ist ein anderer
-    Bezugszustand als ``heat_of_evaporation`` in ``greybox._rhs`` (dort: Betttemperatur,
-    die Frage "wie viel Wärme braucht das Bett für die Verdampfung") -- eine
-    Enthalpiegröße ohne genannten Bezugszustand ist keine physikalische Größe, deshalb
-    hier ausdrücklich benannt statt nur im Code sichtbar.
+    Reference state of ``exhaust_sensible_kw`` and ``exhaust_latent_kw``: **ambient**
+    (``T_amb``, liquid water) -- not bed temperature. Both quantities answer "how
+    much enthalpy does the exhaust air carry beyond the ambient state", the question of the
+    condensing heat exchanger for heat recovery. That is a different
+    reference state from ``heat_of_evaporation`` in ``greybox._rhs`` (there: bed temperature,
+    the question "how much heat does the bed need for evaporation") -- an
+    enthalpy quantity without a stated reference state is not a physical quantity, hence
+    named explicitly here instead of being visible only in the code.
     """
 
     state: FloatArray
@@ -211,40 +211,40 @@ def solve_steady_state(
     max_iterations: int = _DEFAULT_MAX_ITERATIONS,
     tolerance: float = _DEFAULT_TOLERANCE,
 ) -> SteadyStateSolution:
-    r"""Exakter Beharrungszustand bei nomineller Anregung, siehe Moduldocstring.
+    r"""Exact steady state under nominal excitation, see module docstring.
 
-    :param moisture_bracket_kg_per_kg: Bracket für die innere Bisektion (Partikelfeuchte).
-        Voreinstellung ``[X_eq, max(10*X_cr, 1.0)]`` -- weit genug, weil
-        :math:`\dot m_w \to -\infty` für :math:`X_p \to \infty` (der
-        Produktabzugsterm dominiert), also existiert ein Vorzeichenwechsel im Bracket,
-        sofern die Monotonieannahme selbst hält.
-    :param temperature_bracket_celsius: Bracket für die äußere Bisektion (Betttemperatur).
-        Voreinstellung aus den nominellen Stell-/Störgrößen abgeleitet (siehe Code).
-    :param max_iterations: Bisektionsschritte je Ebene (äußere Temperatur-, innere
-        Feuchte-Bisektion). WARNUNG an künftige Aufrufer: die Voreinstellung hier
-        (:data:`_DEFAULT_MAX_ITERATIONS`, 100) reproduziert Befund 52
+    :param moisture_bracket_kg_per_kg: bracket for the inner bisection (particle moisture).
+        Default ``[X_eq, max(10*X_cr, 1.0)]`` -- wide enough, because
+        :math:`\dot m_w \to -\infty` for :math:`X_p \to \infty` (the
+        product withdrawal term dominates), so a sign change exists in the bracket,
+        provided the monotonicity assumption itself holds.
+    :param temperature_bracket_celsius: bracket for the outer bisection (bed temperature).
+        Default derived from the nominal actions/disturbances (see code).
+    :param max_iterations: bisection steps per level (outer temperature, inner
+        moisture bisection). WARNING to future callers: the default here
+        (:data:`_DEFAULT_MAX_ITERATIONS`, 100) does NOT reproduce Befund 52
         (``scripts/study_operating_point_regret.py``,
-        ``artifacts/runs/bb1_bb3_operating_point_regret.json``) NICHT bitgleich -- mit
-        dieser Präzision scheitern 6 der 25 dort berichteten Gitterpunkte an einem
-        Bracket-Vorzeichenfehler in der äußeren Temperatur-Bisektion (empirisch geprüft,
-        siehe ``twinlink_ml.rl.env``-Moduldocstring). Ursache: an der unteren
-        Bracket-Grenze (``T_amb + 10``) liegt die wahre Nullstelle knapp außerhalb, und ob
-        der dort ausgewertete Residuenwert numerisches Rauschen mit positivem oder
-        negativem Vorzeichen zeigt, hängt von der Bisektionstiefe der INNEREN
-        Feuchte-Bisektion an genau diesem Punkt ab -- verschiedene Präzisionen können am
-        selben Bracket-Rand verschiedene Vorzeichen liefern. Befund 52 selbst berichtet
-        seine Gitterpunkte NICHT mit dieser Voreinstellung, sondern durchgehend mit der
-        SUCH-Präzision (``DEFAULT_SEARCH_MAX_ITERATIONS``/``DEFAULT_SEARCH_TOLERANCE``, 30
-        Schritte/1e-7 in ``study_operating_point_regret.py``) -- wer Befund 52 an einem
-        beliebigen Betriebspunkt reproduzieren will, muss dieselbe Präzision explizit
-        übergeben, nicht die Voreinstellung dieser Funktion.
-    :param tolerance: Abbruchtoleranz je Bisektionsebene, siehe ``max_iterations`` für die
-        Bitgleichheits-Warnung -- dieselbe Einschränkung gilt für :data:`_DEFAULT_TOLERANCE`.
-    :raises ValueError: im Batch-Betrieb -- ohne Produktaustrag wächst die Feststoffmasse
-        unbeschränkt, ein Beharrungszustand existiert nicht.
-    :raises RuntimeError: wenn eine der beiden Bisektionen an ihren Bracket-Rändern
-        keinen Vorzeichenwechsel vorfindet -- die Monotonieannahme ist für diese Config
-        verletzt, kein numerisches Detail.
+        ``artifacts/runs/bb1_bb3_operating_point_regret.json``) bit for bit -- with
+        this precision 6 of the 25 grid points reported there fail with a
+        bracket sign error in the outer temperature bisection (empirically checked,
+        see the ``twinlink_ml.rl.env`` module docstring). Cause: at the lower
+        bracket bound (``T_amb + 10``) the true root lies just outside, and whether
+        the residual value evaluated there shows numerical noise with a positive or
+        negative sign depends on the bisection depth of the INNER
+        moisture bisection at exactly this point -- different precisions can give
+        different signs at the same bracket edge. Befund 52 itself reports
+        its grid points NOT with this default but throughout with the
+        SEARCH precision (``DEFAULT_SEARCH_MAX_ITERATIONS``/``DEFAULT_SEARCH_TOLERANCE``, 30
+        steps/1e-7 in ``study_operating_point_regret.py``) -- whoever wants to reproduce
+        Befund 52 at an arbitrary operating point must pass the same precision explicitly,
+        not the default of this function.
+    :param tolerance: termination tolerance per bisection level, see ``max_iterations`` for the
+        bit-identity warning -- the same restriction applies to :data:`_DEFAULT_TOLERANCE`.
+    :raises ValueError: in batch operation -- without product discharge the solid mass grows
+        without bound; a steady state does not exist.
+    :raises RuntimeError: if one of the two bisections finds no sign change at its
+        bracket edges -- the monotonicity assumption is violated for this config,
+        not a numerical detail.
     """
     config = simulator.config
     if config.operation.mode == "batch":
@@ -268,10 +268,10 @@ def solve_steady_state(
     solid_fraction = float(disturbance[0, 2])
     ambient_temperature = float(disturbance[0, 0])
 
-    # -- Schritt 1: Feststoffmasse ------------------------------------------------
+    # -- Step 1: solid mass --------------------------------------------------------
     solid_mass = geometry.bed_mass_solid_setpoint_kg
 
-    # -- Schritt 2: Durchmesser/Partikelanzahl aus der Zahlenbilanz ---------------
+    # -- Step 2: diameter/particle count from the number balance --------------------
     spray_solid = spray_rate * solid_fraction
     seed_flow = operation.seed_mass_flow_kg_per_h / 3600.0
     solid_inflow = spray_solid + seed_flow
@@ -282,7 +282,7 @@ def solve_steady_state(
     bed_particle_mass = material.particle_density_kg_per_m3 * math.pi * diameter_m**3 / 6.0
     particle_count = solid_mass / bed_particle_mass
 
-    # -- Schritt 3: Wassermasse und Betttemperatur, geschachtelte Bisektion -------
+    # -- Step 3: water mass and bed temperature, nested bisection --------------------
     def evaluate(moisture: float, temperature: float) -> tuple[FloatArray, dict[str, float]]:
         water_mass = moisture * solid_mass
         state_np = np.array(
@@ -297,11 +297,11 @@ def solve_steady_state(
         }
         return derivative_np, diagnostics_scalar
 
-    # Untere Bracket-Grenze: konservative, zustandsunabhängige Schranke (dieselbe
-    # Logik wie greybox._floor's Sicherheitsraster-Fallback), nicht das exakte lokale
-    # X_eq -- vor der Bisektion ist phi_Abluft am Lösungspunkt noch nicht bekannt. Für
-    # ConstantIsotherm ist das exakt equilibrium_moisture_kg_per_kg (die Isotherme
-    # ignoriert phi/T), keine Verhaltensänderung gegenüber vorher.
+    # Lower bracket bound: conservative, state-independent bound (the same
+    # logic as greybox._floor's safety-grid fallback), not the exact local
+    # X_eq -- before the bisection phi_exhaust at the solution point is not yet known. For
+    # ConstantIsotherm this is exactly equilibrium_moisture_kg_per_kg (the isotherm
+    # ignores phi/T), no change in behaviour compared with before.
     isotherm = isotherm_from_material(material)
     phi_min, _phi_max, _t_min, t_max = sorption_safety_grid(
         backend, config.gas, config.actions, config.disturbances
@@ -335,13 +335,13 @@ def solve_steady_state(
         )
         return moisture, derivative_np, diagnostics_scalar
 
-    # Untere Grenze (Befund 78, Prüfbefund K1). Erster Versuch wie bisher ab ``T_amb + 10``.
-    # Liegt die Nullstelle darunter (Residuum an ``T_amb + 10`` und am oberen Rand negativ --
-    # der Fall, in dem der Löser vorher mit "kein Vorzeichenwechsel" scheiterte), wird das
-    # Rückfallintervall ``[T_amb + 0.5, T_amb + 10]`` durchsucht. Die frühere Begründung der
-    # 10-K-Marge (Kondensationsbranche nahe ``T_amb``) gilt nur UNTERHALB der Umgebungs-
-    # temperatur, siehe :data:`BED_TEMPERATURE_FALLBACK_MARGIN_K`. Ein übergebenes
-    # ``temperature_bracket_celsius`` wird unverändert verwendet, ohne Rückfall.
+    # Lower bound (Befund 78, review finding K1). First attempt as before from ``T_amb + 10``.
+    # If the root lies below (residual at ``T_amb + 10`` and at the upper edge negative --
+    # the case in which the solver previously failed with "no sign change"), the
+    # fallback interval ``[T_amb + 0.5, T_amb + 10]`` is searched. The earlier reasoning for the
+    # 10 K margin (condensation branch near ``T_amb``) holds only BELOW the ambient
+    # temperature, see :data:`BED_TEMPERATURE_FALLBACK_MARGIN_K`. A passed
+    # ``temperature_bracket_celsius`` is used unchanged, without fallback.
     default_bracket = temperature_bracket_celsius is None
     temperature_low, temperature_high = temperature_bracket_celsius or (
         ambient_temperature + BED_TEMPERATURE_SEARCH_MARGIN_K,
@@ -366,8 +366,8 @@ def solve_steady_state(
     low_value = high_value = None
     fallback_used = False
     if default_bracket:
-        # Dieselben Auswertungen in derselben Reihenfolge wie in ``_bisect_with_payload`` --
-        # sie werden dorthin durchgereicht, der Rechenweg ohne Rückfall bleibt bitgleich.
+        # The same evaluations in the same order as in ``_bisect_with_payload`` --
+        # they are passed through to it; the computation path without fallback stays bit-identical.
         low_value = temperature_residual(temperature_low)
         high_value = temperature_residual(temperature_high)
         if low_value[0] < 0.0 and high_value[0] < 0.0:
@@ -391,7 +391,7 @@ def solve_steady_state(
     water_mass = moisture * solid_mass
     state = np.array([solid_mass, water_mass, particle_count, temperature], dtype=np.float64)
 
-    # -- Skaliertes Residuum -------------------------------------------------------
+    # -- Scaled residual -------------------------------------------------------------
     scale = np.array(
         [
             max(abs(solid_mass), 1e-9),
@@ -402,11 +402,11 @@ def solve_steady_state(
     )
     residual_inf_norm = float(np.max(np.abs(derivative_np / scale)))
 
-    # -- Abgeleitete Felder ----------------------------------------------------------
-    # Bezugszustand: Umgebung (T_amb, Wasser flüssig) -- siehe Klassendocstring von
-    # SteadyStateSolution. Jeder Term nutzt die Feuchte seines eigenen Stroms: die
-    # Abluft trägt Y_out, deshalb dort gewichtet -- nicht Y_in wie bei der
-    # Heizerleistung in energy.py, deren Luftstrom noch nichts verdampft hat.
+    # -- Derived fields --------------------------------------------------------------
+    # Reference state: ambient (T_amb, liquid water) -- see class docstring of
+    # SteadyStateSolution. Each term uses the humidity of its own stream: the
+    # exhaust air carries Y_out, hence weighted there -- not Y_in as for the
+    # heater power in energy.py, whose air stream has not yet evaporated anything.
     gas = config.gas
     dry_air_flow = diagnostics_scalar["dry_air_mass_flow_kg_per_s"]
     outlet_humidity = diagnostics_scalar["outlet_humidity_kg_per_kg"]
@@ -466,9 +466,9 @@ def solve_steady_state(
         )
     if not saturation_degree <= 1.0 + 1e-9:
         reasons.append(f"Sättigungsgrad ({saturation_degree:.4f}) > 1")
-    # Im Beharrungspunkt ist phi_Abluft fest -- anders als bei der Bracket-Grenze oben
-    # (vor der Lösung) ist hier die exakte, zustandsabhängige Isotherme ohne
-    # Zusatzkosten nutzbar, keine konservative Konstante nötig.
+    # At the steady-state point phi_exhaust is fixed -- unlike the bracket bound above
+    # (before the solution), here the exact, state-dependent isotherm can be used at no
+    # extra cost; no conservative constant needed.
     relative_humidity_at_solution = relative_humidity_from_absolute_humidity(
         backend, gas, backend.asarray(outlet_humidity), backend.asarray(temperature)
     )
@@ -518,12 +518,12 @@ def _bisect_with_payload(
     low_value: tuple[float, _T] | None = None,
     high_value: tuple[float, _T] | None = None,
 ) -> tuple[float, _T]:
-    """Bisektion mit Nutzlast (z. B. abgeleitete Größen am jeweiligen Punkt).
+    """Bisection with payload (e.g. derived quantities at the respective point).
 
-    Prüft den Vorzeichenwechsel an den Bracket-Rändern **vor** der Iteration --
-    unterschiedliches Vorzeichen ist Vorbedingung, nicht Nebeneffekt. Ohne diese Prüfung
-    konvergiert eine Bisektion bei gleichem Vorzeichen still gegen einen der beiden
-    Bracket-Ränder, ohne dass das als Fehler sichtbar würde.
+    Checks the sign change at the bracket edges **before** the iteration --
+    different signs are a precondition, not a side effect. Without this check
+    a bisection with equal signs silently converges to one of the two
+    bracket edges without this becoming visible as an error.
     """
     f_low, payload_low = low_value if low_value is not None else residual_and_payload(low)
     f_high, payload_high = high_value if high_value is not None else residual_and_payload(high)
@@ -559,16 +559,16 @@ def _solve_dew_point(
     max_iterations: int,
     tolerance: float,
 ) -> float:
-    r"""Taupunkt der Abluft über dieselbe Sättigungsbeziehung wie ``thermo.py``.
+    r"""Dew point of the exhaust air via the same saturation relation as ``thermo.py``.
 
-    :math:`p_{partial} = Y\,p / (0.622 + Y)` (Umkehrung von
-    :func:`~twinlink_ml.simulation.thermo.absolute_humidity_kg_per_kg`), dann
-    :math:`T_{dp}` als Nullstelle von :math:`p_s(T) - p_{partial}` über
-    :func:`~twinlink_ml.simulation.thermo.saturation_pressure_pa` -- dieselbe
-    Buck-Korrelation, die ``_rhs`` für ``saturation_humidity_kg_per_kg`` verwendet. Die
-    Buck-Formel ist nicht geschlossen nach ``T`` invertierbar (transzendent), deshalb
-    numerisch über Bisektion; ``saturation_pressure_pa`` ist im gültigen Bereich streng
-    monoton in ``T``, also mit derselben Bisektionslogik wie die Hauptlösung lösbar.
+    :math:`p_{partial} = Y\,p / (0.622 + Y)` (inversion of
+    :func:`~twinlink_ml.simulation.thermo.absolute_humidity_kg_per_kg`), then
+    :math:`T_{dp}` as the root of :math:`p_s(T) - p_{partial}` via
+    :func:`~twinlink_ml.simulation.thermo.saturation_pressure_pa` -- the same
+    Buck correlation that ``_rhs`` uses for ``saturation_humidity_kg_per_kg``. The
+    Buck formula cannot be inverted for ``T`` in closed form (transcendental), hence
+    numerically via bisection; ``saturation_pressure_pa`` is strictly monotonic in ``T`` in the
+    valid range, so solvable with the same bisection logic as the main solution.
     """
     p_partial = (
         outlet_humidity_kg_per_kg

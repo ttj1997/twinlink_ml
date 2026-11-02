@@ -1,86 +1,86 @@
-r"""Reduziertes Grey-Box-Modell der Wirbelschichtsprühgranulation.
+r"""Reduced grey-box model of fluidized-bed spray granulation.
 
-Modellumfang
-------------
-Vier Zustände, ideal durchmischtes Bett (CSTR-Annahme), Gasphase quasistationär:
+Model scope
+-----------
+Four states, ideally mixed bed (CSTR assumption), gas phase quasi-stationary:
 
 .. math::
     \mathbf{x} = \bigl[m_s,\; m_w,\; N,\; T_{bed}\bigr]^{\mathsf T}
 
 ============ ================================================ ===========
-Zustand      Bedeutung                                        Einheit
+State        Meaning                                          Unit
 ============ ================================================ ===========
-:math:`m_s`  Feststoffmasse im Bett (trocken)                 kg
-:math:`m_w`  Wassermasse im Bett                              kg
-:math:`N`    Partikelanzahl                                   -
-:math:`T_bed` Betttemperatur                                  °C
+:math:`m_s`  Solid mass in the bed (dry)                      kg
+:math:`m_w`  Water mass in the bed                            kg
+:math:`N`    Particle count                                   -
+:math:`T_bed` Bed temperature                                 °C
 ============ ================================================ ===========
 
-Warum Anzahl und Masse statt :math:`d_{50}` als Zustand
---------------------------------------------------------
-:math:`d_{50}` folgt algebraisch aus den beiden Momenten:
+Why count and mass instead of :math:`d_{50}` as state
+------------------------------------------------------
+:math:`d_{50}` follows algebraically from the two moments:
 
 .. math:: d_{50} = \left(\frac{6\,m_s}{\pi\,\rho_p\,N}\right)^{1/3}
 
-Damit sind Massen- und Zahlenbilanz **linear** und im Integrator exakt erhalten -- die
-Unit-Tests auf Bilanzschluss werden trivial und scharf. Formuliert man stattdessen eine
-Wachstumsgleichung für :math:`d_{50}` direkt, ist die Massenerhaltung nur noch
-approximativ und Bilanzfehler wandern unbemerkt in die Trainingsdaten.
+Mass and number balance are thus **linear** and exactly conserved in the integrator -- the
+unit tests on balance closure become trivial and sharp. If one instead formulates a
+growth equation for :math:`d_{50}` directly, mass conservation is only
+approximate and balance errors migrate unnoticed into the training data.
 
-Das Layering-Wachstum aus ``02_prozess_setup.md``,
-:math:`G = 2\dot V_{fest}/A_{Partikel}`, ist in dieser Formulierung nicht postuliert,
-sondern eine Folgerung: mit :math:`A = 6 m_s/(\rho_p d)` ergibt sich für den reinen
-Layering-Fall
+The layering growth from ``02_prozess_setup.md``,
+:math:`G = 2\dot V_{fest}/A_{Partikel}`, is not postulated in this formulation
+but a consequence: with :math:`A = 6 m_s/(\rho_p d)` the pure
+layering case gives
 
 .. math:: \frac{\mathrm d d_{50}}{\mathrm d t}
     = \frac{\dot m_{spray}\, w_{solid}\, d_{50}}{3\, m_s}
     = \frac{2\,\dot V_{fest}}{A}
 
-Der Test ``test_layering_growth_matches_analytic_rate`` prüft genau diese Identität.
+The test ``test_layering_growth_matches_analytic_rate`` checks exactly this identity.
 
-Gasphase quasistationär
------------------------
-Die Verweilzeit des Gases im Bett liegt bei :math:`H/u \approx 0.3\,\mathrm{m} /
-1.6\,\mathrm{m/s} \approx 0.2\,\mathrm s`, also drei Größenordnungen unter der
-thermischen Zeitkonstante und weit unter jeder sinnvollen Abtastzeit. Die Abluftfeuchte
-wird deshalb algebraisch bestimmt statt als weiterer Zustand geführt. Das entfernt die
-steifste Mode aus dem System und erlaubt explizites RK4 mit vertretbarer Schrittweite.
+Gas phase quasi-stationary
+--------------------------
+The residence time of the gas in the bed is about :math:`H/u \approx 0.3\,\mathrm{m} /
+1.6\,\mathrm{m/s} \approx 0.2\,\mathrm s`, i.e. three orders of magnitude below the
+thermal time constant and far below any sensible sample time. The exhaust air humidity
+is therefore determined algebraically instead of being carried as a further state. This removes the
+stiffest mode from the system and allows explicit RK4 with an acceptable step size.
 
-Was das Modell bewusst **nicht** enthält
-----------------------------------------
-* Partikelgrößen*verteilung* -- nur zwei Momente. Die Projektzielgenauigkeit von 10 %
-  für die PSD ist mit diesem Modell **nicht** adressierbar; das bleibt Dyssol
-  (TUHH-A-AP 2) bzw. den Laborversuchen (AP 2) vorbehalten.
-* Agglomeration, Abrieb, Bruch. Der Nukleationsterm ist ein Platzhalter für
-  Überspray/Feingut.
-* Elutriation. Bei den Platzhalterwerten liegt :math:`u_{gas}` über der
-  Sinkgeschwindigkeit der Keime -- real würden diese in den Zyklon ausgetragen und
-  rückgeführt. Der Austrag ist nicht modelliert, ``u_t`` wird aber als Diagnose
-  mitgeführt.
+What the model deliberately does **not** contain
+------------------------------------------------
+* Particle size *distribution* -- only two moments. The project target accuracy of 10 %
+  for the PSD is **not** addressable with this model; that remains reserved for Dyssol
+  (TUHH-A-AP 2) or the lab experiments (AP 2).
+* Agglomeration, attrition, breakage. The nucleation term is a placeholder for
+  overspray/fines.
+* Elutriation. With the placeholder values :math:`u_{gas}` lies above the
+  terminal velocity of the seeds -- in reality these would be elutriated into the cyclone and
+  returned. The elutriation is not modelled, but ``u_t`` is carried along as a
+  diagnostic.
 
-  Das betrifft nicht nur den (gegen den Keimdurchmesser trivial immer verletzten) Fall
-  oben, sondern auch den Bezug auf den tatsächlichen Bett-d50: unter dem
-  Standard-Anregungsdesign (V0, GAB-Isotherme) verletzen 26.6 % der Läufe und 6.0 % der
-  Abtastpunkte :math:`u_{gas} > u_t(d_{50})` -- 59.4 % dieser Verletzungen im ersten
-  Laufviertel, Median des ersten Verletzungszeitpunkts 25 s (``docs/04_stand_ap1.md``,
+  This concerns not only the case above (trivially always violated against the seed diameter)
+  but also the reference to the actual bed d50: under the
+  default excitation design (V0, GAB isotherm) 26.6 % of the runs and 6.0 % of the
+  sample points violate :math:`u_{gas} > u_t(d_{50})` -- 59.4 % of these violations in the first
+  quarter of the run, median of the first violation time 25 s (``docs/04_stand_ap1.md``,
   Befund 46; ``scripts/probe_f1_reference_diameter.py``,
-  ``scripts/probe_sweep_contamination.py``). ``u_mf``/``u_terminal`` werden in
-  :meth:`GreyBoxFluidBedGranulator._rhs` **nach** der Zustandsableitung berechnet
-  (reine Diagnose, siehe dort) -- oberhalb ``u_terminal`` wird also für keinen der beiden
-  Bezugsdurchmesser eine andere Physik aktiviert, das Modell rechnet unverändert weiter.
+  ``scripts/probe_sweep_contamination.py``). ``u_mf``/``u_terminal`` are computed in
+  :meth:`GreyBoxFluidBedGranulator._rhs` **after** the state derivative
+  (pure diagnostics, see there) -- above ``u_terminal`` no different physics is thus activated
+  for either reference diameter; the model keeps computing unchanged.
 
-  ``numerics.enforce_gas_velocity_projection`` (Default AUS) verhindert das Anregen von
-  ``u_gas`` oberhalb dieses Fensters, indem :meth:`project_action` die Aktion VOR dem
-  Schritt auf ``[u_mf, u_terminal]`` clippt -- das ist eine Anregungs-Projektion, kein
-  Austragsterm: Elutriation bleibt weiterhin nicht modelliert, die Kommandierung von
-  Zuständen ausserhalb des validierten Fensters wird nur unterbunden. Siehe
-  ``scripts/probe_gas_velocity_projection.py`` für die gemessene Wirkung.
-* Tropfengrößenverteilung und damit jede echte Wirkung von ``p_nozzle`` auf den Prozess
-  (siehe Hinweis in ``energy.py``).
-* Räumliche Gradienten (Sprühzone vs. Trocknungszone).
+  ``numerics.enforce_gas_velocity_projection`` (default OFF) prevents exciting
+  ``u_gas`` above this window, in that :meth:`project_action` clips the action BEFORE the
+  step to ``[u_mf, u_terminal]`` -- that is an excitation projection, not an
+  elutriation term: elutriation still remains unmodelled; only commanding
+  states outside the validated window is prevented. See
+  ``scripts/probe_gas_velocity_projection.py`` for the measured effect.
+* Droplet size distribution and thus any real effect of ``p_nozzle`` on the process
+  (see note in ``energy.py``).
+* Spatial gradients (spray zone vs. drying zone).
 
-Diese Liste ist kein Mangel, sondern der Zweck: für den Architekturvergleich in AP 1
-zählt eine plausible **Dynamikstruktur**, nicht absolute Genauigkeit.
+This list is not a shortcoming but the purpose: for the architecture comparison in AP 1
+what counts is a plausible **dynamic structure**, not absolute accuracy.
 """
 
 from __future__ import annotations
@@ -123,11 +123,11 @@ _SECONDS_PER_HOUR: Final = 3600.0
 
 @dataclass(frozen=True, slots=True)
 class BedState:
-    """Lesbare Sicht auf den Zustandsvektor. Nur für Diagnose und Tests.
+    """Readable view of the state vector. Only for diagnostics and tests.
 
-    Die Integration läuft auf einem zusammenhängenden Array der Form
-    ``(batch, 4)`` -- eine Dataclass pro Zeitschritt und Batch-Element wäre um
-    Größenordnungen langsamer.
+    The integration runs on a contiguous array of shape
+    ``(batch, 4)`` -- a dataclass per time step and batch element would be
+    orders of magnitude slower.
     """
 
     solid_mass_kg: Array
@@ -146,18 +146,18 @@ class BedState:
 
 
 class GreyBoxFluidBedGranulator(ProcessSimulator):
-    """Physikalisch motivierte Datenquelle bis Dyssol verfügbar ist (~M21).
+    """Physically motivated data source until Dyssol is available (~M21).
 
-    :param config: vollständige Prozesskonfiguration
-    :param backend: Array-Backend; wird per Dependency Injection übergeben, damit
-        derselbe Physikcode für NumPy-Datengenerierung und differenzierbare
-        Torch-Rollouts dient. Ohne Angabe wird ``config.backend`` verwendet.
+    :param config: complete process configuration
+    :param backend: array backend; passed via dependency injection so that
+        the same physics code serves NumPy data generation and differentiable
+        Torch rollouts. If not given, ``config.backend`` is used.
     """
 
     def __init__(self, config: ProcessConfig, backend: ArrayBackend | None = None) -> None:
         config.warn_if_placeholder()
-        # Einmal pro Konstruktion, nicht pro step()/rollout()-Aufruf: rastert das
-        # Sicherheitsraster (200x100 Punkte) genau einmal, siehe
+        # Once per construction, not per step()/rollout() call: rasterises the
+        # safety grid (200x100 points) exactly once, see
         # sorption.validate_isotherm_against_critical_moisture.
         validate_isotherm_against_critical_moisture(config)
         self._config = config
@@ -204,14 +204,14 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
     def sample_time_s(self) -> float:
         return self._config.numerics.sample_time_s
 
-    # ------------------------------------------------------------------- Zustand
+    # ------------------------------------------------------------------- State
 
     def initial_state(self, n_batch: int) -> Array:
-        """Anfangszustand im nominellen Betriebspunkt.
+        """Initial state at the nominal operating point.
 
-        Setzt außerdem das Sensormodell zurück -- ein Rollout beginnt immer mit einem
-        eingeschwungenen Messpfad, sonst erzeugt die Sensordynamik einen Einschwingvorgang,
-        den das Sequenzmodell als scheinbare Prozessdynamik lernt.
+        Also resets the sensor model -- a rollout always starts with a
+        settled measurement path; otherwise the sensor dynamics produce a transient
+        that the sequence model learns as apparent process dynamics.
         """
         material = self._config.material
         geometry = self._config.geometry
@@ -243,17 +243,17 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
         diameter_m: FloatArray,
         bed_temperature_celsius: FloatArray,
     ) -> Array:
-        r"""Zustandsvektor aus physikalisch interpretierbaren Größen.
+        r"""State vector from physically interpretable quantities.
 
-        Umkehrung von :math:`d_{50} = (6 m_s / (\pi \rho_p N))^{1/3}`:
+        Inversion of :math:`d_{50} = (6 m_s / (\pi \rho_p N))^{1/3}`:
 
         .. math:: N = \frac{6\, m_s}{\pi\, \rho_p\, d_{50}^3}
 
-        Damit kann das Anregungsdesign Anfangsbedingungen in physikalischen Größen
-        streuen, ohne die Zustandskodierung zu kennen. Die Kenntnis darüber, dass
-        Partikelanzahl und nicht Durchmesser der Zustand ist, bleibt in dieser Klasse.
+        The excitation design can thus spread initial conditions in physical quantities
+        without knowing the state encoding. The knowledge that
+        particle count and not diameter is the state stays in this class.
 
-        Setzt außerdem das Sensormodell zurück -- wie :meth:`initial_state`.
+        Also resets the sensor model -- like :meth:`initial_state`.
         """
         material = self._config.material
         particle_mass = material.particle_density_kg_per_m3 * math.pi * diameter_m**3 / 6.0
@@ -269,10 +269,10 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
         self._filter_state = None
         return self._backend.asarray(state)
 
-    # ------------------------------------------------------------------- Schritt
+    # ------------------------------------------------------------------- Step
 
     def step(self, state: Array, action: Array, disturbance: Array) -> StepResult:
-        """Ein Abtastschritt mit Zero-Order-Hold auf Stell- und Störgrößen."""
+        """One sampling step with zero-order hold on actions and disturbances."""
         backend = self._backend
         numerics = self._config.numerics
         action = self._clip_action(action) if numerics.enforce_action_bounds else action
@@ -295,27 +295,27 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
         return StepResult(state=current, outputs=outputs, diagnostics=diagnostics)
 
     def measure(self, outputs: Array, rng: np.random.Generator) -> Array:
-        r"""Sensormodell: Verzögerungsglied erster Ordnung plus Rauschen.
+        r"""Sensor model: first-order lag element plus noise.
 
         .. math:: y_f[k] = a\, y_f[k-1] + (1-a)\, y[k], \qquad
                   a = \exp\!\left(-\frac{\Delta t}{\tau_{sens}}\right)
 
-        Hier -- und **nur** hier -- gehört das Verzögerungsglied erster Ordnung hin, das
-        ``02_prozess_setup.md`` als Modell der Bettträgheit nennt. Die Trägheit des Betts
-        selbst folgt bereits aus den Bilanzen (siehe :meth:`time_constants`); ein
-        zusätzlicher Filter darauf würde die Zeitkonstante doppelt zählen.
+        Here -- and **only** here -- is where the first-order lag element belongs that
+        ``02_prozess_setup.md`` names as a model of the bed inertia. The inertia of the bed
+        itself already follows from the balances (see :meth:`time_constants`); an
+        additional filter on top would count the time constant twice.
 
-        Warum das Sensormodell nicht optional sein sollte: auf rauschfreien Daten ist die
-        Ein-Schritt-Vorhersage nahezu trivial (Persistenz ist fast exakt), und der
-        Architekturvergleich degeneriert. Das Rauschniveau ist damit ein
-        **Versuchsparameter** der Lernkurven, kein Detail.
+        Why the sensor model should not be optional: on noise-free data the
+        one-step prediction is almost trivial (persistence is nearly exact), and the
+        architecture comparison degenerates. The noise level is thus an
+        **experimental parameter** of the learning curves, not a detail.
         """
         if not self._config.measurement.enabled:
             return outputs
         return self._filtered_noisy(outputs, rng)
 
     def reset_sensor(self) -> None:
-        """Filterzustand des Sensormodells verwerfen, siehe Basisklasse."""
+        """Discard the filter state of the sensor model, see base class."""
         self._filter_state = None
 
     def _filtered_noisy(self, outputs: Array, rng: np.random.Generator) -> Array:
@@ -336,18 +336,18 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
         )
         return backend.asarray(noisy)
 
-    # --------------------------------------------------------------- Rechte Seite
+    # --------------------------------------------------------------- Right-hand side
 
     def evaluate_derivative(
         self, state: Array, action: Array, disturbance: Array
     ) -> tuple[Array, dict[str, Array]]:
-        """Öffentliche Fassung von :meth:`_rhs`: Zeitableitungen an einem gegebenen Zustand.
+        """Public version of :meth:`_rhs`: time derivatives at a given state.
 
-        Für Diagnosen, die auf die rechte Seite der Bilanzen zugreifen müssen, ohne zu
-        integrieren -- namentlich den exakten Beharrungszustands-Löser in
-        :mod:`twinlink_ml.simulation.steady_state`, der Nullstellen von ``derivative``
-        sucht. Dyssol kann diesen Zugriff nicht liefern; die Methode ist deshalb bewusst
-        keine ABC-Vorgabe (siehe ``03_code_konventionen.md``, Abschnitt zu
+        For diagnostics that must access the right-hand side of the balances without
+        integrating -- namely the exact steady-state solver in
+        :mod:`twinlink_ml.simulation.steady_state`, which searches for roots of ``derivative``.
+        Dyssol cannot provide this access; the method is therefore deliberately
+        not an ABC requirement (see ``03_code_konventionen.md``, section on
         ``steady_state.py``).
         """
         return self._rhs(state, action, disturbance)
@@ -355,30 +355,29 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
     def _rhs(
         self, state: Array, action: Array, disturbance: Array
     ) -> tuple[Array, dict[str, Array]]:
-        r"""Zeitableitungen und Diagnosegrößen.
+        r"""Time derivatives and diagnostic variables.
 
-        Bilanzen
+        Balances
         --------
-        Feststoff
+        Solid
             .. math:: \dot m_s = \dot m_{spray} w_{solid} + \dot m_{seed} - \dot m_{prod}
-        Wasser
+        Water
             .. math:: \dot m_w = \dot m_{spray}(1 - w_{solid})
                       - \dot m_{evap} - \dot m_{prod} X_p
-        Partikelanzahl
+        Particle count
             .. math:: \dot N = \frac{b_{nuc}\dot m_{spray} w_{solid} + \dot m_{seed}}
                       {\rho_p \pi d_{nuc}^3/6}
                       - \frac{\dot m_{prod}}{\rho_p \pi d_{50}^3/6}
-        Enthalpie
+        Enthalpy
             .. math:: \bigl(m_s c_{p,s} + m_w c_{p,w}\bigr)\dot T_{bed}
                       = \dot m_L (c_{p,L} + Y_{in} c_{p,D})(T_{in} - T_{bed})
                       + \dot m_{spray} c_{p,susp}(T_{susp} - T_{bed})
                       - \dot m_{evap}\,\Delta h_v(T_{bed})
                       - UA\,(T_{bed} - T_{amb})
 
-        Alle abfließenden Ströme verlassen das Bett auf :math:`T_{bed}` und tragen
-        deshalb nicht zur Temperaturänderung bei -- exakt für den ideal durchmischten
-        Behälter, und der Grund, warum die Bilanz direkt in :math:`T_{bed}` geschrieben
-        werden darf.
+        All outgoing streams leave the bed at :math:`T_{bed}` and therefore do not
+        contribute to the temperature change -- exact for the ideally mixed
+        vessel, and the reason why the balance may be written directly in :math:`T_{bed}`.
         """
         backend = self._backend
         cfg = self._config
@@ -404,8 +403,8 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
         ) ** (1.0 / 3.0)
 
         recirculation = operation.exhaust_recirculation_fraction
-        # Guenstig genug, um pro _rhs-Aufruf frisch zu konstruieren (liest nur Felder aus
-        # material, keine Iteration) -- keine Caching-Notwendigkeit, siehe sorption.py.
+        # Cheap enough to construct afresh per _rhs call (reads only fields from
+        # material, no iteration) -- no need for caching, see sorption.py.
         isotherm = isotherm_from_material(material)
         if recirculation is None:
             inlet_absolute_humidity = absolute_humidity_kg_per_kg(
@@ -573,19 +572,19 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
         return derivative, diagnostics
 
     def _product_mass_flow(self, solid_inflow: Array, solid_mass: Array) -> Array:
-        r"""Produktabzug.
+        r"""Product withdrawal.
 
-        Kontinuierlich: P-Regler auf die Bettmasse, der die reale Füllstandsregelung
-        nachbildet.
+        Continuous: P controller on the bed mass, which mimics the real level
+        control.
 
         .. math:: \dot m_{prod} = \max\!\left(0,\;
             \dot m_{s,in} + \frac{m_s - m_{s,soll}}{\tau_{m}}\right)
 
-        Der Vorsteueranteil :math:`\dot m_{s,in}` verhindert eine bleibende Regelabweichung.
-        :math:`\tau_m` ist eine weitere, langsame Zeitkonstante des Systems und muss gegen
-        die realen Austragsintervalle der Anlage kalibriert werden -- bei Anwendungspartner
-        wahrscheinlich ein diskreter Austrag, also eher eine getaktete als eine
-        kontinuierliche Größe. Das ist eine bewusste Vereinfachung.
+        The feedforward part :math:`\dot m_{s,in}` prevents a steady-state control error.
+        :math:`\tau_m` is a further, slow time constant of the system and must be calibrated
+        against the real discharge intervals of the plant -- at the application partner
+        probably a discrete discharge, so rather a clocked than a
+        continuous variable. That is a deliberate simplification.
         """
         backend = self._backend
         if self._config.operation.mode == "batch":
@@ -594,19 +593,19 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
         correction = (solid_mass - setpoint) / self._config.operation.mass_control_time_constant_s
         return backend.maximum(solid_inflow + correction, 0.0)
 
-    # ------------------------------------------------------------------ Numerik
+    # ------------------------------------------------------------------ Numerics
 
     def _integrate(self, state: Array, action: Array, disturbance: Array, dt: float) -> Array:
-        """Ein interner Integrationsschritt.
+        """One internal integration step.
 
-        RK4 ist hier nicht Luxus: die Feuchtemode hat bei den Platzhalterwerten eine
-        Zeitkonstante von wenigen Sekunden, also in der Größenordnung der Abtastzeit.
-        Explizites Euler verlangt dann eine deutlich kleinere Schrittweite für dieselbe
-        Genauigkeit und ist unter dem Strich teurer.
+        RK4 is no luxury here: with the placeholder values the moisture mode has a
+        time constant of a few seconds, i.e. of the order of the sample time.
+        Explicit Euler then requires a clearly smaller step size for the same
+        accuracy and is more expensive on balance.
 
-        Die Untergrenze für :meth:`_floor` (zweite Schranke, siehe dort) wird einmal pro
-        internem Schritt aus der bereits berechneten rechten Seite am Schrittanfang
-        (``k1`` bzw. ``derivative``) gewonnen, nicht neu iteriert -- siehe
+        The lower bound for :meth:`_floor` (second bound, see there) is obtained once per
+        internal step from the already computed right-hand side at the start of the step
+        (``k1`` or ``derivative``), not iterated anew -- see
         :meth:`_local_equilibrium_moisture`.
         """
         if self._config.numerics.integrator == "euler":
@@ -630,20 +629,20 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
         )
 
     def _local_equilibrium_moisture(self, diagnostics: dict[str, Array], state: Array) -> Array:
-        r"""Lokales :math:`X_{eq}(\varphi, T)` am Schrittanfang -- Untergrenze für :meth:`_floor`.
+        r"""Local :math:`X_{eq}(\varphi, T)` at the step start -- lower bound for :meth:`_floor`.
 
-        Leichtgewichtige Variante von Option (i) aus der Schritt-0-Analyse: statt die
-        volle Störgröße durch ``_floor`` zu reichen (das hätte ``ProcessSimulator``s
-        Schnittstelle angefasst), wird die eine bereits in ``diagnostics`` vorhandene Zahl
-        (``outlet_humidity_kg_per_kg``) weiterverwendet, zusammen mit der Betttemperatur,
-        die ohnehin Teil von ``state`` ist. Kein zusätzlicher Berechnungsaufwand: die
-        Picard-Iteration in :func:`~.thermo.evaporation_rate_kg_per_s` hat
-        ``outlet_humidity_kg_per_kg`` für genau diesen Zustand bereits konvergiert.
+        Lightweight variant of option (i) from the step-0 analysis: instead of passing the
+        full disturbance through ``_floor`` (that would have touched ``ProcessSimulator``'s
+        interface), the one number already present in ``diagnostics``
+        (``outlet_humidity_kg_per_kg``) is reused, together with the bed temperature,
+        which is part of ``state`` anyway. No additional computational cost: the
+        Picard iteration in :func:`~.thermo.evaporation_rate_kg_per_s` has already converged
+        ``outlet_humidity_kg_per_kg`` for exactly this state.
 
-        Näherung, dokumentationswürdig: derselbe Wert wird für alle vier RK4-Stufen
-        wiederverwendet, nicht je Stufe neu berechnet -- exakt wären die Werte an
-        k2/k3/k4, aber ``_floor`` ist Sicherheitsnetz, kein Modellbestandteil (siehe
-        dort), und die Zwischenzustände liegen bei normaler Schrittweite nah an k1.
+        Approximation, worth documenting: the same value is reused for all four RK4 stages,
+        not recomputed per stage -- exact would be the values at
+        k2/k3/k4, but ``_floor`` is a safety net, not part of the model (see
+        there), and the intermediate states lie close to k1 at normal step size.
         """
         backend = self._backend
         material = self._config.material
@@ -655,41 +654,41 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
         return isotherm.equilibrium_moisture(backend, relative_humidity, bed_temperature)
 
     def _floor(self, state: Array, equilibrium_moisture_local: Array) -> Array:
-        r"""Zustandsprojektion auf den physikalisch zulässigen Bereich.
+        r"""State projection onto the physically feasible range.
 
-        Zwei Schranken:
+        Two bounds:
 
-        1. Massen und Partikelanzahl positiv. Ein explizites Verfahren kann bei großen
-           Schritten negative Werte erzeugen, und die Modellgleichungen (dritte Wurzel,
-           Division) sind dann undefiniert. Dass diese Schranke im Normalbetrieb nicht
-           greift, prüft ``test_state_floor_is_inactive_at_nominal_operation``.
-        2. :math:`m_w \ge X_{eq}(\varphi, T)\, m_s`, also Partikelfeuchte über der
-           lokalen Gleichgewichtsfeuchte -- siehe :meth:`_local_equilibrium_moisture`.
+        1. Masses and particle count positive. An explicit method can produce negative
+           values for large steps, and the model equations (cube root,
+           division) are then undefined. That this bound does not take effect in normal
+           operation is checked by ``test_state_floor_is_inactive_at_nominal_operation``.
+        2. :math:`m_w \ge X_{eq}(\varphi, T)\, m_s`, i.e. particle moisture above the
+           local equilibrium moisture -- see :meth:`_local_equilibrium_moisture`.
 
-        Die zweite Schranke ist ein **numerischer Sicherheitsnetz-Fall, kein
-        Modellbestandteil**, und der Grund dafür ist dokumentationswürdig: die
-        Verdampfungsrate verschwindet bei :math:`X_p = X_{eq}` mit einem Knick. Bei
-        heißer Zuluft und minimaler Sprührate fällt die Zeitkonstante der Feuchtemode auf
-        wenige Sekunden -- in die Größenordnung der internen Schrittweite. RK4 schießt
-        dann über den Knick hinaus, und weil die Rate darunter Null bleibt, kehrt der
-        Zustand nicht zurück. Der Constraint wäre also durch den Integrator verletzt,
-        nicht durch die Physik.
+        The second bound is a **numerical safety-net case, not part of the
+        model**, and the reason for it is worth documenting: the
+        evaporation rate vanishes at :math:`X_p = X_{eq}` with a kink. With
+        hot inlet air and minimal spray rate the time constant of the moisture mode falls to
+        a few seconds -- to the order of the internal step size. RK4 then overshoots
+        the kink, and because the rate stays zero below it, the
+        state does not return. The constraint would thus be violated by the integrator,
+        not by the physics.
 
-        Wer die Projektion weglässt, bekommt in genau diesem Betriebspunkt
-        Trainingsdaten mit negativer Übersättigung -- und ein Sequenzmodell, das lernt,
-        die Gleichgewichtsfeuchte zu unterschreiten. Ein monotones Netz oder eine
-        Output-Projektion im ML-Teil kann das nicht heilen, weil die Referenzdaten selbst
-        falsch sind. Diagnostisch erkennbar ist der Bereich am ``saturation_degree`` = 0.
+        Whoever omits the projection gets, at exactly this operating point,
+        training data with negative supersaturation -- and a sequence model that learns
+        to undershoot the equilibrium moisture. A monotonic network or an
+        output projection in the ML part cannot heal that, because the reference data themselves
+        are wrong. Diagnostically the region is recognisable by ``saturation_degree`` = 0.
 
-        Bei einer zustandsabhängigen Isotherme ist die einzige über den gesamten
-        erreichbaren Zustandsraum sichere *konstante* Untergrenze nahe null (eine
-        monoton in :math:`\varphi` steigende Isotherme geht bei :math:`\varphi\to 0`
-        selbst gegen null, und trockene/heiße Betriebspunkte erreichen sehr kleine
-        :math:`\varphi_{Abluft}`, siehe ``docs/04_stand_ap1.md`` Befund 34) --
-        ``equilibrium_moisture_local`` ist deshalb kein konstanter Wert mehr, sondern wird
-        pro Integrationsschritt aus dem tatsächlichen Zustand gewonnen
-        (:meth:`_local_equilibrium_moisture`), und bleibt dadurch auch in dieser Ecke
-        wirksam.
+        With a state-dependent isotherm the only *constant* lower bound that is safe over the
+        entire reachable state space is close to zero (an isotherm
+        monotonically increasing in :math:`\varphi` itself goes to zero for :math:`\varphi\to 0`,
+        and dry/hot operating points reach very small
+        :math:`\varphi_{Abluft}`, see ``docs/04_stand_ap1.md`` Befund 34) --
+        ``equilibrium_moisture_local`` is therefore no longer a constant value but is
+        obtained per integration step from the actual state
+        (:meth:`_local_equilibrium_moisture`), and thereby stays effective in this corner
+        as well.
         """
         backend = self._backend
         floor = self._config.numerics.state_floor
@@ -706,7 +705,7 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
         )
 
     def _clip_action(self, action: Array) -> Array:
-        """Box-Constraints der Stellgrößen. Für RL die harte Sicherheitsgrenze."""
+        """Box constraints of the actions. For RL the hard safety limit."""
         backend = self._backend
         bounds = self._config.actions.bounds
         return backend.stack(
@@ -717,34 +716,34 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
             axis=-1,
         )
 
-    # ------------------------------------------------------ Fluidisierungs-Projektion
+    # ------------------------------------------------------ Fluidization projection
 
     @property
     def projection_active(self) -> bool:
-        """Siehe ``ProcessSimulator.projection_active``. Liest den Config-Schalter."""
+        """See ``ProcessSimulator.projection_active``. Reads the config switch."""
         return self._config.numerics.enforce_gas_velocity_projection
 
     def project_action(self, state: Array, action: Array, disturbance: Array) -> Array:
-        r"""Projiziert ``gas_velocity_m_per_s`` auf ``[u_mf(d50), u_terminal(d50)]``.
+        r"""Projects ``gas_velocity_m_per_s`` onto ``[u_mf(d50), u_terminal(d50)]``.
 
-        Behebt die in Befund 46 (``docs/04_stand_ap1.md``, ``scripts/
-        probe_gas_velocity_projection.py``) beschriebene physikalische Unvollständigkeit:
-        oberhalb ``u_terminal`` fehlt ein Austragsterm, das Modell rechnet unverändert
-        weiter, obwohl die reale Anlage Feststoff in den Zyklon austragen würde. Betroffen
-        sind 26.6 % der Läufe / 6.0 % der Abtastpunkte des Standard-Anregungsdesigns.
+        Fixes the physical incompleteness described in Befund 46 (``docs/04_stand_ap1.md``,
+        ``scripts/probe_gas_velocity_projection.py``):
+        above ``u_terminal`` an elutriation term is missing; the model keeps computing unchanged
+        although the real plant would elutriate solid into the cyclone. Affected
+        are 26.6 % of the runs / 6.0 % of the sample points of the default excitation design.
 
-        Kein Sicherheitsabstand (Faktor 1.0) und kein anderer Kanal -- insbesondere bleibt
-        ``inlet_temperature_celsius`` unbeschränkt, weil dessen Betriebspunktvariation
-        Gegenstand von Befund 49 ist und nicht mitgekappt werden darf.
+        No safety margin (factor 1.0) and no other channel -- in particular
+        ``inlet_temperature_celsius`` stays unrestricted, because its operating point variation
+        is the subject of Befund 49 and must not be capped along with it.
 
-        Die Margen werden aus ``state``/``disturbance`` bestimmt, wie sie hier ankommen --
-        das ist Vertragssache des Aufrufers (``ProcessSimulator.rollout``): ``state`` muss
-        der wahre, unverrauschte Zustand VOR dem Integrationsschritt sein, nie eine Messung.
-        Dieselbe stoffspezifische Rechnung wie in :meth:`_rhs` (dort erst NACH der
-        Ableitung, rein diagnostisch, siehe Klassendocstring), hier aber VOR dem Schritt
-        aufgerufen -- deshalb eine eigene, kleine Methode statt Wiederverwendung der
-        _rhs-internen Zwischengrößen (die dort für andere Zwecke weiterverwendet werden und
-        eine Extraktion mit Regressionsrisiko für den bestehenden, getesteten Pfad wäre).
+        The margins are determined from ``state``/``disturbance`` as they arrive here --
+        that is the caller's contractual responsibility (``ProcessSimulator.rollout``): ``state``
+        must be the true, noise-free state BEFORE the integration step, never a measurement.
+        The same material-specific calculation as in :meth:`_rhs` (there only AFTER the
+        derivative, purely diagnostic, see class docstring), but called here BEFORE the step
+        -- hence a separate, small method instead of reusing the
+        _rhs-internal intermediate variables (which are reused there for other purposes, and
+        extracting them would be a regression risk for the existing, tested path).
         """
         if not self.projection_active:
             return action
@@ -762,12 +761,12 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
         )
 
     def _fluidization_margins(self, state: Array, disturbance: Array) -> tuple[Array, Array]:
-        """u_mf, u_terminal am gegebenen Zustand -- fuer :meth:`project_action`.
+        """u_mf, u_terminal at the given state -- for :meth:`project_action`.
 
-        Rechnung identisch zu den gleichnamigen Diagnosegrößen in :meth:`_rhs`, hier aber
-        direkt aus rohem ``state``/``disturbance`` aufrufbar (in :meth:`_rhs` bereits
-        zerlegte lokale Größen wie ``diameter``/``bed_temperature`` sind dort nicht
-        isoliert wiederverwendbar, ohne den bestehenden Pfad anzufassen).
+        Calculation identical to the diagnostic variables of the same name in :meth:`_rhs`, but
+        callable here directly from raw ``state``/``disturbance`` (local variables already
+        decomposed in :meth:`_rhs`, such as ``diameter``/``bed_temperature``, cannot be
+        reused there in isolation without touching the existing path).
         """
         backend = self._backend
         cfg = self._config
@@ -807,40 +806,40 @@ class GreyBoxFluidBedGranulator(ProcessSimulator):
         )
         return u_mf, u_terminal
 
-    # ---------------------------------------------------------------- Diagnostik
+    # ---------------------------------------------------------------- Diagnostics
 
     def nominal_action(self, n_batch: int = 1) -> FloatArray:
-        """Nominelle Stellgrößen als ``(batch, n_action)``."""
+        """Nominal actions as ``(batch, n_action)``."""
         return np.tile(
             np.array([b.nominal for b in self._config.actions.bounds], dtype=np.float64),
             (n_batch, 1),
         )
 
     def nominal_disturbance(self, n_batch: int = 1) -> FloatArray:
-        """Nominelle Störgrößen als ``(batch, n_disturbance)``."""
+        """Nominal disturbances as ``(batch, n_disturbance)``."""
         return np.tile(
             np.array([r.nominal for r in self._config.disturbances.ranges], dtype=np.float64),
             (n_batch, 1),
         )
 
     def time_constants(self, state: Array, action: Array, disturbance: Array) -> dict[str, float]:
-        r"""Zeitkonstanten aus den Eigenwerten der linearisierten Dynamik.
+        r"""Time constants from the eigenvalues of the linearised dynamics.
 
         .. math:: \tau_i = -\frac{1}{\mathrm{Re}(\lambda_i)},
                   \qquad \lambda_i \in \mathrm{spec}\!\left(
                   \frac{\partial \mathbf f}{\partial \mathbf x}\right)
 
-        Damit liefert das Grey-Box-Modell einen begründeten Platzhalter für die in
-        ``02_prozess_setup.md`` noch offene "dominante Zeitkonstante" -- und später ein
-        quantitatives Kriterium für die Kalibrierung gegen Dyssol: stimmen die
-        Zeitkonstanten, stimmt die für Sequenzmodelle relevante Dynamik.
+        The grey-box model thus provides a justified placeholder for the "dominant time
+        constant" still open in ``02_prozess_setup.md`` -- and later a
+        quantitative criterion for the calibration against Dyssol: if the
+        time constants match, the dynamics relevant for sequence models match.
 
-        Die Jacobi-Matrix wird per zentraler Differenz gebildet (relative Schrittweite
-        :math:`10^{-6}`). Mit dem Torch-Backend ließe sie sich exakt per Autograd
-        bestimmen; für eine Diagnosegröße ist der Unterschied irrelevant.
+        The Jacobian is formed by central differences (relative step size
+        :math:`10^{-6}`). With the Torch backend it could be determined exactly via autograd;
+        for a diagnostic variable the difference is irrelevant.
 
-        :returns: Zeitkonstanten in s, sortiert von schnell nach langsam, plus
-            ``stiffness_ratio`` als Verhältnis langsamste/schnellste Mode.
+        :returns: time constants in s, sorted from fast to slow, plus
+            ``stiffness_ratio`` as the ratio slowest/fastest mode.
         """
         backend = self._backend
         x0 = backend.to_numpy(state)[0]

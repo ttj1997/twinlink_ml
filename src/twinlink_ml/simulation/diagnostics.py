@@ -1,37 +1,37 @@
-r"""Diagnose des Prozessmodells -- Voraussetzung für einen interpretierbaren Vergleich.
+r"""Diagnostics of the process model -- prerequisite for an interpretable comparison.
 
-Die ersten drei Funktionen hier beantworten Fragen, die **vor** dem ersten
-Architekturvergleich geklärt sein müssen:
+The first three functions here answer questions that must be settled **before** the first
+architecture comparison:
 
-1. :func:`steady_state_report` -- liegt der Betriebspunkt überhaupt im plausiblen Bereich?
-2. :func:`time_constant_report` -- welche Zeitkonstanten hat das System, und welche
-   Sequenzlänge folgt daraus?
-3. :func:`static_explained_variance` -- **ist die Zielgröße überhaupt dynamisch?**
+1. :func:`steady_state_report` -- does the operating point lie in the plausible range at all?
+2. :func:`time_constant_report` -- which time constants does the system have, and which
+   sequence length follows from them?
+3. :func:`static_explained_variance` -- **is the target dynamic at all?**
 
-Eine vierte, :func:`mass_balance_residual`, beantwortet eine andere Frage -- nicht vor dem
-Architekturvergleich, sondern vor jedem Trainingslauf: schließt die Feststoffbilanz eines
-erzeugten Datensatzes innerhalb der numerischen Toleranz? Sie ist die Grundlage von
+A fourth, :func:`mass_balance_residual`, answers a different question -- not before the
+architecture comparison but before every training run: does the solid balance of a
+generated dataset close within the numerical tolerance? It is the basis of
 ``tests/test_greybox_balances.py::test_solid_balance_closes_within_tolerance_in_continuous_mode``
-und als Datensatz-Assertion gedacht (siehe ihr eigener Docstring), nicht als
-Datensatz-Report wie die ersten drei.
+and meant as a dataset assertion (see its own docstring), not as a
+dataset report like the first three.
 
-Zu Punkt 3, dem unangenehmsten
-------------------------------
-Wenn sich eine Zielgröße bereits durch eine statische Abbildung der aktuellen Stell- und
-Störgrößen erklären lässt, gibt es für ein Sequenzmodell nichts zu lernen. Der Vergleich
-GRU / xLSTM / Mamba / Transformer misst dann Optimierungsrauschen, und das Ergebnis ist
-beliebig -- ein Artefakt, das exakt so aussieht wie ein Resultat.
+On point 3, the most unpleasant one
+-----------------------------------
+If a target can already be explained by a static mapping of the current actions and
+disturbances, there is nothing for a sequence model to learn. The comparison
+GRU / xLSTM / Mamba / Transformer then measures optimisation noise, and the result is
+arbitrary -- an artifact that looks exactly like a result.
 
-Für die Momentanleistung des Grey-Box-Modells liegt dieser statische Anteil bei
-:math:`R^2 \approx 0.98`: die Heizleistung ist algebraisch in
-:math:`(T_{in}, u_{gas}, T_{amb})`, und der Prozesszustand wirkt nur über die Gasdichte
-und den Bettdruckverlust. Die dynamischen Größen sind die **Qualitätsgrößen**
-(Partikelfeuchte, Korngröße), nicht der Energieverbrauch.
+For the instantaneous power of the grey-box model this static share is about
+:math:`R^2 \approx 0.98`: the heater power is algebraic in
+:math:`(T_{in}, u_{gas}, T_{amb})`, and the process state acts only through the gas density
+and the bed pressure drop. The dynamic variables are the **quality variables**
+(particle moisture, particle size), not the energy consumption.
 
-Diese Kennzahl gehört deshalb in jeden Datensatz-Report, und die Baseline-Liste des
-Arbeitsplans braucht einen vierten Eintrag: eine **statische Regression** auf die
-aktuellen Eingänge. Persistenz ist für diese Zielgröße die falsche Referenz -- sie
-verliert jeden Stellgrößensprung und lässt damit jede Architektur gut aussehen.
+This metric therefore belongs in every dataset report, and the baseline list of the
+work plan needs a fourth entry: a **static regression** on the
+current inputs. Persistence is the wrong reference for this target -- it
+loses every action step and thus makes every architecture look good.
 """
 
 from __future__ import annotations
@@ -62,7 +62,7 @@ relativ lässt trotzdem Luft für andere Konfigurationen/Backends."""
 
 @dataclass(frozen=True, slots=True)
 class SteadyStateReport:
-    """Beharrungszustand bei konstanter, nomineller Anregung."""
+    """Steady state under constant, nominal excitation."""
 
     bed_temperature_celsius: float
     particle_moisture_kg_per_kg: float
@@ -81,7 +81,7 @@ class SteadyStateReport:
     """Zulässigkeitsflag des Lösers (Fluidisierungsfenster, Sättigung, Feuchtebereich)."""
 
     def format(self) -> str:
-        """Menschenlesbarer Bericht für Run-Logs und Abstimmung mit TUHH-A."""
+        """Human-readable report for run logs and coordination with TUHH-A."""
         shares = ", ".join(f"{k} {v:5.1%}" for k, v in self.power_shares.items())
         return (
             f"Betttemperatur          {self.bed_temperature_celsius:8.2f} °C\n"
@@ -100,16 +100,16 @@ class SteadyStateReport:
 
 
 def steady_state_report(simulator: GreyBoxFluidBedGranulator) -> SteadyStateReport:
-    """Exakter Beharrungszustand bei nomineller Anregung.
+    """Exact steady state under nominal excitation.
 
-    Ersetzt seit Schritt 3 die transiente Integration durch den exakten Löser aus
-    :mod:`twinlink_ml.simulation.steady_state`. Eine Simulationsdauer ist damit kein
-    Parameter mehr -- die frühere transiente Fassung berichtete bei
-    ``duration_s = 30 000 s`` einen Zwischenzustand statt des Beharrungszustands
-    (610.1 µm statt 750.0 µm bei d50, siehe ``docs/04_stand_ap1.md``, Befund A). Die
-    Signatur ist damit enger als zuvor: ein ``ProcessSimulator`` im Allgemeinen kann
-    keine rechte Seite liefern, gegen deren Nullstelle sich lösen ließe (Dyssol nicht),
-    der exakte Bericht ist deshalb auf :class:`GreyBoxFluidBedGranulator` beschränkt.
+    Since step 3 replaces the transient integration with the exact solver from
+    :mod:`twinlink_ml.simulation.steady_state`. A simulation duration is thus no longer a
+    parameter -- the earlier transient version reported, at
+    ``duration_s = 30 000 s``, an intermediate state instead of the steady state
+    (610.1 µm instead of 750.0 µm for d50, see ``docs/04_stand_ap1.md``, Befund A). The
+    signature is thus narrower than before: a ``ProcessSimulator`` in general cannot
+    supply a right-hand side whose root could be solved for (Dyssol cannot),
+    so the exact report is restricted to :class:`GreyBoxFluidBedGranulator`.
     """
     solution = solve_steady_state(simulator)
     total = solution.diagnostics["power_total_kw"]
@@ -139,15 +139,15 @@ def steady_state_report(simulator: GreyBoxFluidBedGranulator) -> SteadyStateRepo
 def _solid_residence_time_s(
     config: ProcessConfig, spray_rate_kg_per_h: float, solid_fraction: float
 ) -> float:
-    """Geschlossene Form der Feststoff-Verweilzeit (Befund 47/M1, ``docs/04_stand_ap1.md``).
+    """Closed form of the solid residence time (Befund 47/M1, ``docs/04_stand_ap1.md``).
 
-    Bettmasse-Sollwert (``geometry.bed_mass_solid_setpoint_kg``) geteilt durch den
-    stationären Feststoff-Zulauf am Linearisierungspunkt (Sprühsuspension plus
-    Saatgutstrom, dieselbe Bilanz wie ``GreyBoxFluidBedGranulator.evaluate_derivative``,
-    ``solid_inflow = spray_rate * solid_fraction + seed_flow``). Eine reine
-    Konfigurationskonstante am nominellen Betriebspunkt -- unabhängig von
-    ``bed_temperature_celsius``, solange Sprührate/Feststoffanteil/Bettmasse-Sollwert
-    unverändert bleiben (numerisch bestätigt an drei Beharrungszuständen, Befund 47/M1).
+    Bed mass set point (``geometry.bed_mass_solid_setpoint_kg``) divided by the
+    steady solid feed at the linearisation point (spray suspension plus
+    seed flow, the same balance as ``GreyBoxFluidBedGranulator.evaluate_derivative``,
+    ``solid_inflow = spray_rate * solid_fraction + seed_flow``). A pure
+    configuration constant at the nominal operating point -- independent of
+    ``bed_temperature_celsius`` as long as spray rate/solid fraction/bed mass set point
+    stay unchanged (numerically confirmed at three steady states, Befund 47/M1).
     """
     spray_solid_kg_per_s = spray_rate_kg_per_h / _SECONDS_PER_HOUR * solid_fraction
     seed_flow_kg_per_s = config.operation.seed_mass_flow_kg_per_h / _SECONDS_PER_HOUR
@@ -156,18 +156,18 @@ def _solid_residence_time_s(
 
 
 def _match_single_mode(taus: list[float], reference: float, *, rtol: float) -> int | None:
-    """Index in ``taus``, dessen Wert um weniger als ``rtol`` relativ von ``reference`` abweicht.
+    """Index in ``taus`` whose value deviates by less than ``rtol`` relative from ``reference``.
 
-    ``None`` bei keinem oder bei mehr als einem Treffer.
+    ``None`` for no match or for more than one match.
 
-    Rangposition (``tau_1_s`` .. ``tau_4_s``, sortiert von schnell nach langsam) ist
-    keine stabile Identität: welcher Rang der Feststoff-Regelkreis-Mode
-    (``mass_control_time_constant_s``, s. :func:`time_constant_report`) einnimmt, hängt
-    vom Betriebspunkt ab -- bei 60 °C Eintrittstemperatur Rang 2, bei 90/120 °C Rang 3
-    (numerisch geprüft). Deshalb Identifikation über den Zahlenwert der jeweiligen
-    geschlossenen Form, nicht über die Position in der sortierten Liste. Mehr als ein
-    Treffer (zwei Moden zufällig innerhalb der Toleranz) wird nicht geraten, sondern als
-    nicht identifizierbar behandelt.
+    The rank position (``tau_1_s`` .. ``tau_4_s``, sorted from fast to slow) is
+    no stable identity: which rank the solid control loop mode
+    (``mass_control_time_constant_s``, see :func:`time_constant_report`) takes depends
+    on the operating point -- at 60 °C inlet temperature rank 2, at 90/120 °C rank 3
+    (numerically checked). Hence identification via the numerical value of the respective
+    closed form, not via the position in the sorted list. More than one
+    match (two modes by chance within the tolerance) is not guessed but treated as
+    not identifiable.
     """
     matches = [i for i, tau in enumerate(taus) if math.isclose(tau, reference, rel_tol=rtol)]
     return matches[0] if len(matches) == 1 else None
@@ -176,42 +176,42 @@ def _match_single_mode(taus: list[float], reference: float, *, rtol: float) -> i
 def time_constant_report(
     simulator: GreyBoxFluidBedGranulator, *, mode_match_rtol: float = _MODE_MATCH_RTOL
 ) -> dict[str, float | str | None]:
-    """Zeitkonstanten im exakten Beharrungszustand plus abgeleitete Kennzahlen.
+    """Time constants at the exact steady state plus derived metrics.
 
-    Der Linearisierungspunkt kommt seit Schritt 3b aus dem exakten Löser
-    (:mod:`twinlink_ml.simulation.steady_state`) statt aus einer transienten
-    Integration -- dieselbe Begründung wie bei :func:`steady_state_report` (Befund A):
-    zwei verschiedene Vorstellungen vom Beharrungszustand im selben Modul wäre genau die
-    Divergenz, die dort vermieden wurde. Numerisch nahezu folgenlos (siehe
-    ``tests/test_diagnostics.py``): drei der vier Zeitkonstanten ändern sich relativ um
-    ~1e-10 (Rauschen zweier verschiedener Fließkomma-Pfade auf demselben Punkt), die
-    vierte (Feststoff-Regelkreis, Zeitkonstante = ``mass_control_time_constant_s``) ist
-    pfadunabhängig und bleibt bitgleich.
+    Since step 3b the linearisation point comes from the exact solver
+    (:mod:`twinlink_ml.simulation.steady_state`) instead of from a transient
+    integration -- the same reasoning as for :func:`steady_state_report` (Befund A):
+    two different notions of the steady state in the same module would be exactly the
+    divergence that was avoided there. Numerically almost without consequence (see
+    ``tests/test_diagnostics.py``): three of the four time constants change relatively by
+    ~1e-10 (noise of two different floating-point paths on the same point), the
+    fourth (solid control loop, time constant = ``mass_control_time_constant_s``) is
+    path-independent and stays bit-identical.
 
-    ``recommended_sequence_length_fast`` = ``ceil(5 * tau_schnellste / dt)``: Untergrenze
-    für die Abtastauflösung -- so viele Schritte braucht es, damit die schnellste Mode
-    überhaupt sichtbar ist. **KEINE Empfehlung für die Fensterlänge** -- dafür
-    ``recommended_sequence_length_coupled_slow`` verwenden. ``steps_for_slowest_mode``
-    (``ceil(3 * tau_langsamste / dt)``) rechnet dieselbe Faktor-3-Fensterlänge gegen die
-    langsamste ALLER vier Moden, einschließlich der Feststoff-Verweilzeit (Befund 47/M1,
-    ~16000 s) -- als Fensterlänge unbrauchbar groß, siehe ``docs/04_stand_ap1.md``,
+    ``recommended_sequence_length_fast`` = ``ceil(5 * tau_schnellste / dt)``: lower bound
+    for the sampling resolution -- this many steps are needed for the fastest mode
+    to be visible at all. **NOT a recommendation for the window length** -- use
+    ``recommended_sequence_length_coupled_slow`` for that. ``steps_for_slowest_mode``
+    (``ceil(3 * tau_langsamste / dt)``) computes the same factor-3 window length against the
+    slowest of ALL four modes, including the solid residence time (Befund 47/M1,
+    ~16000 s) -- unusably large as a window length, see ``docs/04_stand_ap1.md``,
     Befund 49.
 
-    Zwei der vier Moden sind reine Konfigurationskonstanten mit geschlossener Form,
-    unabhängig vom Betriebspunkt (Befund 47/M1): der Feststoff-Regelkreis
-    (``tau = mass_control_time_constant_s``) und die Feststoff-Verweilzeit (s.
-    :func:`_solid_residence_time_s`). Nur das verbleibende, gekoppelte Teilsystem
-    (Wassermasse, Betttemperatur) hängt vom Betriebspunkt ab und bestimmt damit die
-    tatsächlich nötige Fensterlänge -- ``tau_coupled_fast_s``/``tau_coupled_slow_s`` sind
-    dessen zwei Moden, per Wertevergleich identifiziert (s. :func:`_match_single_mode`,
-    Toleranz ``mode_match_rtol``), nicht per Rangposition in ``tau_1_s``..``tau_4_s``
-    (die bleiben unverändert erhalten, Rückwärtskompatibilität der Logs). Lässt sich eine
-    der beiden strukturellen Moden nicht eindeutig zuordnen (kein oder mehr als ein
-    Treffer innerhalb der Toleranz -- z. B. bei einer Konfiguration mit zufällig
-    zusammenfallenden Zeitkonstanten oder einer anderen Zustandszahl), bleiben
+    Two of the four modes are pure configuration constants with a closed form,
+    independent of the operating point (Befund 47/M1): the solid control loop
+    (``tau = mass_control_time_constant_s``) and the solid residence time (see
+    :func:`_solid_residence_time_s`). Only the remaining, coupled subsystem
+    (water mass, bed temperature) depends on the operating point and thus determines the
+    window length actually needed -- ``tau_coupled_fast_s``/``tau_coupled_slow_s`` are
+    its two modes, identified by value comparison (see :func:`_match_single_mode`,
+    tolerance ``mode_match_rtol``), not by rank position in ``tau_1_s``..``tau_4_s``
+    (those are kept unchanged, backward compatibility of the logs). If one of the
+    two structural modes cannot be assigned unambiguously (no or more than one
+    match within the tolerance -- e.g. for a configuration with coincidentally
+    coinciding time constants or a different number of states),
     ``tau_mass_control_s``/``tau_residence_s``/``tau_coupled_fast_s``/
-    ``tau_coupled_slow_s``/``recommended_sequence_length_coupled_slow`` auf ``None``,
-    mit einer Notiz in ``mode_identification_note``.
+    ``tau_coupled_slow_s``/``recommended_sequence_length_coupled_slow`` stay ``None``,
+    with a note in ``mode_identification_note``.
     """
     solution = solve_steady_state(simulator)
     backend = simulator.backend
@@ -278,22 +278,22 @@ def time_constant_report(
 def static_explained_variance(
     trajectory: Trajectory, *, quadratic: bool = True
 ) -> dict[str, float]:
-    r"""Anteil der Varianz jeder Ausgangsgröße, den eine statische Abbildung erklärt.
+    r"""Share of the variance of each output variable that a static mapping explains.
 
-    Regression von :math:`y[k]` auf :math:`(\mathbf u[k], \mathbf z[k])` -- ohne jede
-    Historie. Optional mit quadratischen Termen, um Nichtlinearität nicht mit Dynamik zu
-    verwechseln.
+    Regression of :math:`y[k]` on :math:`(\mathbf u[k], \mathbf z[k])` -- without any
+    history. Optionally with quadratic terms, so as not to confuse nonlinearity with
+    dynamics.
 
-    Lesart:
+    Reading:
 
-    * :math:`R^2 > 0.95` -- die Größe ist praktisch statisch. Ein Sequenzmodell kann hier
-      nichts zeigen; der Vergleich ist nicht aussagekräftig.
-    * :math:`R^2 < 0.8` -- es gibt echten dynamischen Anteil. Erst hier ist die Frage
-      "welche Architektur" sinnvoll gestellt.
+    * :math:`R^2 > 0.95` -- the variable is practically static. A sequence model can show
+      nothing here; the comparison is not meaningful.
+    * :math:`R^2 < 0.8` -- there is a real dynamic share. Only here is the question
+      "which architecture" sensibly posed.
 
-    Diese Kennzahl ist bewusst **vor** dem ersten Modelltraining zu berechnen, für jeden
-    Datensatz und jede Zielgröße. Sie kostet Sekunden und verhindert Monate an
-    Interpretation von Rauschen.
+    This metric is deliberately to be computed **before** the first model training, for every
+    dataset and every target. It costs seconds and prevents months of
+    interpreting noise.
     """
     n_runs, n_steps, _ = trajectory.actions.shape
     inputs = np.concatenate([trajectory.actions, trajectory.disturbances], axis=-1)
@@ -319,10 +319,10 @@ def static_explained_variance(
 
 
 def mass_balance_residual(trajectory: Trajectory, *, solid_index: int = IDX_SOLID_MASS) -> float:
-    """Relatives Restglied der integralen Feststoffbilanz eines Rollouts.
+    """Relative residual of the integral solid balance of a rollout.
 
-    Gedacht als Zusicherung für generierte Datensätze: ein Datensatz mit
-    Bilanzrestglied über :math:`10^{-6}` sollte nicht ins Training gehen.
+    Meant as an assertion for generated datasets: a dataset with a
+    balance residual above :math:`10^{-6}` should not go into training.
     """
     dt = float(trajectory.time_s[1] - trajectory.time_s[0])
     product = trajectory.diagnostics["product_mass_flow_kg_per_s"]

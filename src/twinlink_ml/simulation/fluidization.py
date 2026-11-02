@@ -1,16 +1,16 @@
-r"""Fluidisierungsfenster: Minimalfluidisierungs- und Austragsgeschwindigkeit.
+r"""Fluidization window: minimum fluidization velocity and terminal velocity.
 
-Warum das im Prozessmodell steht und nicht in einem Notebook
-------------------------------------------------------------
-Das Fluidisierungsfenster :math:`u_{mf}(d_{50}, T) < u_{gas} < u_t(d_{50}, T)` ist
-**zustandsabhängig**: es verschiebt sich, während die Partikel wachsen und die
-Betttemperatur sich ändert. Für den späteren RL-Teil heißt das, dass die
-Safety-Constraints keine konstanten Box-Grenzen sind, sondern eine Funktion des
-Zustands. Wer das erst beim RL-Design merkt, hat den Action-Space falsch definiert.
+Why this is in the process model and not in a notebook
+------------------------------------------------------
+The fluidization window :math:`u_{mf}(d_{50}, T) < u_{gas} < u_t(d_{50}, T)` is
+**state-dependent**: it shifts while the particles grow and the
+bed temperature changes. For the later RL part this means that the
+safety constraints are not constant box limits but a function of the
+state. Whoever notices this only at the RL design stage has defined the action space wrongly.
 
-Für ein Bett mit :math:`d_{50}` von 400 auf 750 µm wächst :math:`u_{mf}` um mehr als
-den Faktor 3. Ein fester unterer Grenzwert für ``u_gas``, der beim Start gültig ist,
-führt am Ende der Charge zum Zusammenbruch der Fluidisierung.
+For a bed with :math:`d_{50}` growing from 400 to 750 µm, :math:`u_{mf}` grows by more than
+a factor of 3. A fixed lower limit for ``u_gas`` that is valid at the start
+leads to the collapse of the fluidization at the end of the batch.
 """
 
 from __future__ import annotations
@@ -23,18 +23,18 @@ GRAVITY_M_PER_S2 = 9.80665
 
 
 def archimedes_number(
-    backend: ArrayBackend,  # noqa: ARG001 - gemeinsame Signatur aller Korrelationen
+    backend: ArrayBackend,  # noqa: ARG001 - common signature of all correlations
     material: MaterialConfig,
     diameter_m: Array,
     gas_density: Array,
     gas_viscosity: Array,
 ) -> Array:
-    r"""Archimedes-Zahl.
+    r"""Archimedes number.
 
     .. math:: Ar = \frac{\rho_g\, d^3 (\rho_p - \rho_g)\, g}{\mu^2}
 
-    ``backend`` bleibt in der Signatur, damit alle Korrelationen dieselbe haben und im
-    Aufrufer austauschbar sind -- hier wird es nicht gebraucht.
+    ``backend`` stays in the signature so that all correlations have the same one and are
+    interchangeable in the caller -- it is not needed here.
     """
     delta_rho = material.particle_density_kg_per_m3 - gas_density
     return gas_density * diameter_m**3 * delta_rho * GRAVITY_M_PER_S2 / gas_viscosity**2
@@ -48,15 +48,15 @@ def minimum_fluidization_velocity_m_per_s(
     temperature_celsius: Array,
     humidity_kg_per_kg: Array,
 ) -> Array:
-    r"""Minimalfluidisierungsgeschwindigkeit nach Wen & Yu.
+    r"""Minimum fluidization velocity according to Wen & Yu.
 
     .. math::
         Re_{mf} = \sqrt{33.7^2 + 0.0408\,Ar} - 33.7,
         \qquad u_{mf} = \frac{Re_{mf}\,\mu}{\rho_g\, d}
 
-    Die Korrelation setzt eine Bettporosität um 0.4 und kugelige Partikel voraus.
-    Für Granulate mit rauer Oberfläche liegt der reale Wert typisch 10-30 % höher --
-    einer der Punkte, die gegen Laborversuche in AP 2 zu kalibrieren sind.
+    The correlation assumes a bed porosity of about 0.4 and spherical particles.
+    For granules with a rough surface the real value is typically 10-30 % higher --
+    one of the points to be calibrated against lab experiments in AP 2.
     """
     rho_g = gas_density_kg_per_m3(backend, gas, temperature_celsius, humidity_kg_per_kg)
     mu = gas_viscosity_pa_s(backend, gas, temperature_celsius)
@@ -73,7 +73,7 @@ def terminal_velocity_m_per_s(
     temperature_celsius: Array,
     humidity_kg_per_kg: Array,
 ) -> Array:
-    r"""Sinkgeschwindigkeit nach Haider & Levenspiel (1989), formfaktorabhängig.
+    r"""Terminal velocity according to Haider & Levenspiel (1989), shape-factor dependent.
 
     .. math::
         d^{*} = d\left[\frac{g\,\rho_g(\rho_p-\rho_g)}{\mu^2}\right]^{1/3},
@@ -81,8 +81,8 @@ def terminal_velocity_m_per_s(
         u^{*}_t = \left[\frac{18}{(d^{*})^2}
         + \frac{2.335 - 1.744\,\phi}{\sqrt{d^{*}}}\right]^{-1}
 
-    mit :math:`u_t = u^{*}_t \left[\dfrac{g\,\mu\,(\rho_p-\rho_g)}{\rho_g^2}\right]^{1/3}`,
-    gültig für :math:`0.5 < \phi \le 1`.
+    with :math:`u_t = u^{*}_t \left[\dfrac{g\,\mu\,(\rho_p-\rho_g)}{\rho_g^2}\right]^{1/3}`,
+    valid for :math:`0.5 < \phi \le 1`.
     """
     rho_g = gas_density_kg_per_m3(backend, gas, temperature_celsius, humidity_kg_per_kg)
     mu = gas_viscosity_pa_s(backend, gas, temperature_celsius)
@@ -95,15 +95,15 @@ def terminal_velocity_m_per_s(
 
 
 def bed_pressure_drop_pa(bed_mass_kg: Array, cross_section_area_m2: float) -> Array:
-    r"""Druckverlust der fluidisierten Schicht.
+    r"""Pressure drop of the fluidized layer.
 
     .. math:: \Delta p_{bed} = \frac{m_{bed}\, g}{A}
 
-    Bemerkenswert und für die Zielgröße relevant: oberhalb von :math:`u_{mf}` ist der
-    Bettdruckverlust **unabhängig** von der Gasgeschwindigkeit -- er hängt nur an der
-    Bettmasse. Die Abhängigkeit der Ventilatorleistung von ``u_gas`` kommt daher aus dem
-    Volumenstrom und dem Anströmboden/Filter, nicht aus dem Bett. Wer das falsch
-    modelliert, bekommt eine qualitativ falsche Sensitivität
+    Remarkable and relevant for the target: above :math:`u_{mf}` the
+    bed pressure drop is **independent** of the gas velocity -- it depends only on the
+    bed mass. The dependence of the fan power on ``u_gas`` therefore comes from the
+    volume flow and the distributor plate/filter, not from the bed. Whoever models this wrongly
+    gets a qualitatively wrong sensitivity
     :math:`\partial \dot E / \partial u_{gas}`.
     """
     return bed_mass_kg * GRAVITY_M_PER_S2 / cross_section_area_m2

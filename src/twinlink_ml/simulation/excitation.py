@@ -1,53 +1,53 @@
-r"""Anregungsdesign (excitation design) für die Datengenerierung.
+r"""Excitation design for data generation.
 
-Warum das ein eigenes Modul mit Abstraktionen ist und nicht ein Skript
----------------------------------------------------------------------
-Das Anregungsdesign entscheidet darüber, **welche Aufgabe** die Sequenzmodelle später
-lernen. Es ist damit ein Versuchsparameter auf derselben Ebene wie die Architektur, und es
-muss versioniert, reproduzierbar und gegenüber TUHH-A dokumentierbar sein --
+Why this is a module of its own with abstractions and not a script
+------------------------------------------------------------------
+The excitation design decides **which task** the sequence models will later
+learn. It is thus an experimental parameter on the same level as the architecture, and it
+must be versioned, reproducible and documentable towards TUHH-A --
 ``02_prozess_setup.md``
-hält fest, dass das Sampling-Design abgestimmt sein muss, *bevor* dort 18 Monate lang
-Läufe produziert werden. Ein Skript, das ein paar ``rng.uniform``-Aufrufe enthält, ist
-keine Grundlage für dieses Gespräch.
+records that the sampling design must be agreed *before* runs are produced there for
+18 months. A script that contains a few ``rng.uniform`` calls is
+no basis for this conversation.
 
-Drei Entwurfsentscheidungen, die vom Arbeitsplan abweichen
-----------------------------------------------------------
-**1. Sobol statt Latin-Hypercube als Standard.** Für Lernkurven werden Datensätze mit
-5, 10, 25, 50, 100 Läufen gebraucht. Bei LHS ist ein 5er-Design kein Teil des
-100er-Designs: die Punkte müssen neu gezogen werden, und die Raumabdeckung ändert sich
-zwischen den Stützstellen der Lernkurve. Dann vermischt die Kurve zwei Effekte --
-Datenmenge und Abdeckungsqualität. Sobol-Folgen sind **verschachtelt** (nested): die
-ersten :math:`n` Punkte einer Sobol-Folge sind selbst eine Folge niedriger Diskrepanz.
-Die Lernkurven-Datensätze sind damit echte Teilmengen, und die Kurve misst nur noch die
-Datenmenge. ``test_sobol_design_is_nested`` prüft genau das, ``test_latin_hypercube_is_not_nested``
-den Gegensatz. LHS bleibt als Option erhalten.
+Three design decisions that deviate from the work plan
+------------------------------------------------------
+**1. Sobol instead of Latin hypercube as the default.** For learning curves, datasets with
+5, 10, 25, 50, 100 runs are needed. With LHS a 5-run design is not part of the
+100-run design: the points must be drawn anew, and the space coverage changes
+between the support points of the learning curve. The curve then mixes two effects --
+data amount and coverage quality. Sobol sequences are **nested**: the
+first :math:`n` points of a Sobol sequence are themselves a low-discrepancy sequence.
+The learning-curve datasets are thus true subsets, and the curve measures only the
+data amount. ``test_sobol_design_is_nested`` checks exactly that,
+``test_latin_hypercube_is_not_nested`` the opposite. LHS remains available as an option.
 
-**2. Ratenbegrenzung (slew rate limiting) ist Teil des Designs, nicht optional.**
-Ein PRBS springt in einem Abtastschritt über die halbe Stellgrößenspanne. Keine reale
-Zuluftregelung tut das. Ohne Ratenbegrenzung enthält der Datensatz Übergänge, die die
-Anlage nicht ausführen kann -- und weil im Grey-Box-Modell die Heizerdynamik fehlt
-(siehe Schritt 1), ist die Ratenbegrenzung derzeit der **einzige** Ort, an dem die
-Aktordynamik überhaupt repräsentiert ist.
+**2. Rate limiting (slew rate limiting) is part of the design, not optional.**
+A PRBS jumps in one sampling step across half the action span. No real
+inlet air control does that. Without rate limiting the dataset contains transitions that the
+plant cannot execute -- and because the heater dynamics are missing in the grey-box model
+(see step 1), rate limiting is currently the **only** place where the
+actuator dynamics are represented at all.
 
-Daraus folgt eine harte Entwurfsgrenze: die minimal realisierbare Umschaltzeit eines
-Kanals ist
+From this follows a hard design limit: the minimal realisable switching time of a
+channel is
 
 .. math:: t_{min} = \frac{\Delta u}{\dot u_{max}}
 
-Für die Zulufttemperatur mit den Platzhalterwerten (Spanne 60 K, 0.5 K/s) sind das 120 s
--- **mehr** als die thermische Zeitkonstante von 84 s. Über die volle Spanne ist die
-Sprungantwort des Betts also grundsätzlich nicht messbar. Wer die schnelle Dynamik anregen
-will, muss die Amplitude reduzieren. Deshalb ist die Amplitude hier ein
-Designparameter mit mehreren Stufen und keine Konstante.
+For the inlet air temperature with the placeholder values (span 60 K, 0.5 K/s) this is 120 s
+-- **more** than the thermal time constant of 84 s. Over the full span the
+step response of the bed is thus fundamentally not measurable. Whoever wants to excite the
+fast dynamics must reduce the amplitude. That is why the amplitude here is a
+design parameter with several levels and not a constant.
 
-**3. Anfangszustände werden mitvariiert.** Startet jeder Lauf bei
-:math:`d_{50} = 400\,\mu m` und wächst monoton, dann ist :math:`d_{50}` innerhalb eines
-Laufs praktisch eine Funktion des Zeitindex. Ein Modell mit Positionsinformation
-(Transformer mit Positional Encoding, aber auch ein RNN über die Sequenzposition) kann die
-langsame Mode dann aus der Schrittzahl "vorhersagen", ohne die Physik zu lernen. Das ist
-kein Leakage im Sinne überlappender Fenster, wirkt aber genauso: der Vergleich fällt zu
-Gunsten der Architektur mit dem stärksten Positionssignal aus. Gegenmittel ist die
-Streuung der Anfangsbedingungen über den Betriebsbereich.
+**3. Initial states are varied as well.** If every run starts at
+:math:`d_{50} = 400\,\mu m` and grows monotonically, then :math:`d_{50}` within a
+run is practically a function of the time index. A model with position information
+(Transformer with positional encoding, but also an RNN over the sequence position) can then
+"predict" the slow mode from the step count without learning the physics. That is
+not leakage in the sense of overlapping windows, but acts the same way: the comparison comes
+out in favour of the architecture with the strongest position signal. The countermeasure is the
+spread of the initial conditions over the operating range.
 """
 
 from __future__ import annotations
@@ -83,7 +83,7 @@ GasVelocityCap = Literal["none", "initial_diameter"]
 _SECONDS_PER_DAY: Final = 86_400.0
 _DEFAULT_RUN_DURATION_S: Final = 28_800.0
 
-# Rückkopplungspolynome maximaler Länge (m-Sequenzen), Registerlänge -> Abgriffe
+# Feedback polynomials of maximum length (m-sequences), register length -> taps
 _LFSR_TAPS: Final[dict[int, tuple[int, ...]]] = {
     7: (7, 6),
     8: (8, 6, 5, 4),
@@ -98,7 +98,7 @@ _LFSR_TAPS: Final[dict[int, tuple[int, ...]]] = {
 
 @dataclass(frozen=True, slots=True)
 class HoldTimeRange:
-    """Verweilzeitbereich einer Sprungfolge in Sekunden."""
+    """Hold time range of a step sequence in seconds."""
 
     minimum_s: float
     maximum_s: float
@@ -110,25 +110,25 @@ class HoldTimeRange:
 
 @dataclass(frozen=True, slots=True)
 class ExcitationConfig:
-    """Parameter des Anregungsdesigns.
+    """Parameters of the excitation design.
 
-    :param amplitude_levels: Amplituden als Anteil der Stellgrößenspanne. Mehrere Stufen
-        sind notwendig, nicht kosmetisch: kleine Amplituden erlauben schnelle
-        Umschaltungen innerhalb der Ratenbegrenzung und regen damit die schnellen Moden an,
-        große Amplituden decken den Betriebsraum ab. Ein einziger Amplitudenwert kann
-        nicht beides.
-    :param signal_weights: relative Häufigkeit der Signalarten. Wird pro Lauf **und pro
-        Kanal** unabhängig gezogen -- das dekorreliert die Kanäle, ohne sie künstlich zu
-        orthogonalisieren.
-    :param constant_run_fraction: Anteil Läufe mit konstanten Stellgrößen. Diese Läufe
-        sind für den Architekturvergleich uninformativ, aber die Referenz für
-        Beharrungszustände und für die Prüfung, ob ein Modell einen stationären Punkt
-        halten kann. Ohne sie fehlt im Datensatz jede Information darüber, wie der Prozess
-        aussieht, wenn nichts passiert. Bei ``1.0`` besteht der gesamte Datensatz aus
-        Konstantläufen -- das ist der Auswertungsdatensatz, der die reale Betriebsweise
-        der Referenzanlage abbildet (konstante Stellgrößen im laufenden Prozess). Er ist
-        Auswertungs-, nicht Trainingsdatensatz und für den Architekturvergleich allein
-        nicht geeignet.
+    :param amplitude_levels: amplitudes as a fraction of the action span. Several levels
+        are necessary, not cosmetic: small amplitudes allow fast
+        switching within the rate limit and thus excite the fast modes,
+        large amplitudes cover the operating space. A single amplitude value cannot
+        do both.
+    :param signal_weights: relative frequency of the signal kinds. Drawn independently per run
+        **and per channel** -- this decorrelates the channels without artificially
+        orthogonalising them.
+    :param constant_run_fraction: fraction of runs with constant actions. These runs
+        are uninformative for the architecture comparison, but the reference for
+        steady states and for checking whether a model can hold a stationary point.
+        Without them the dataset lacks any information about what the process
+        looks like when nothing happens. At ``1.0`` the entire dataset consists of
+        constant runs -- that is the evaluation dataset that reflects the real mode of operation
+        of the reference plant (constant actions in the running process). It is an
+        evaluation dataset, not a training dataset, and not suitable on its own for the
+        architecture comparison.
     """
 
     run_duration_s: float = _DEFAULT_RUN_DURATION_S
@@ -162,15 +162,15 @@ class ExcitationConfig:
 
     @property
     def prbs_period_s(self) -> float:
-        """Periodendauer der m-Sequenz.
+        """Period of the m-sequence.
 
-        Muss über der Einschwingzeit des Prozesses liegen, sonst wiederholt sich die
-        Anregung, bevor der Prozess auf sie geantwortet hat -- die tiefen Frequenzen
-        bleiben dann unangeregt, obwohl das Signal breitbandig aussieht.
+        Must lie above the settling time of the process, otherwise the excitation repeats
+        before the process has responded to it -- the low frequencies
+        then stay unexcited although the signal looks broadband.
         """
-        # int(...) vor der Multiplikation: typeshed typisiert int.__pow__ mit
-        # allgemeinem Exponenten als Any (negative Exponenten liefern in Python float),
-        # ohne den Cast würde die Any-Kante bis in den Rückgabewert durchschlagen.
+        # int(...) before the multiplication: typeshed types int.__pow__ with a
+        # general exponent as Any (negative exponents give float in Python);
+        # without the cast the Any edge would propagate into the return value.
         period_steps = int(2**self.prbs_register_length) - 1
         return period_steps * self.prbs_clock_s
 
@@ -183,28 +183,28 @@ class ExcitationConfig:
         sample_time_s: float,
         **overrides: object,
     ) -> ExcitationConfig:
-        r"""Konstruiert Verweilzeiten und Taktzeiten aus den Zeitkonstanten des Prozesses.
+        r"""Constructs hold times and clock times from the time constants of the process.
 
-        Regeln:
+        Rules:
 
-        * kürzeste Verweilzeit :math:`\approx 2\,\tau_{fast}` -- kürzer sieht man das
-          Einschwingen nicht, und die Anregung wirkt für die schnelle Mode wie Rauschen
-        * längste Verweilzeit :math:`\approx 3\sqrt{\tau_{fast}\tau_{slow}}`, damit auch
-          Beharrungszustände im Datensatz vorkommen
-        * PRBS-Takt :math:`\approx 2\,\tau_{fast}`, Registerlänge minimal so, dass die
-          Periode die **Laufdauer** übersteigt
+        * shortest hold time :math:`\approx 2\,\tau_{fast}` -- shorter, one does not see the
+          settling, and the excitation acts like noise for the fast mode
+        * longest hold time :math:`\approx 3\sqrt{\tau_{fast}\tau_{slow}}`, so that
+          steady states also occur in the dataset
+        * PRBS clock :math:`\approx 2\,\tau_{fast}`, register length minimal such that the
+          period exceeds the **run duration**
 
-        Warum das Periodenkriterium an der Laufdauer hängt und nicht an
-        :math:`\tau_{slow}`: mit :math:`\tau_{slow}/\tau_{fast} \approx 1700` wäre eine
-        Periode von :math:`3\tau_{slow}` bei einem Takt von :math:`2\tau_{fast}` nur mit
-        einem 12-Bit-Register erreichbar, und die langsamste Mode wäre damit pro Lauf
-        immer noch einmal angeregt. Das ist die falsche Rechnung: **die langsame Mode ist
-        innerhalb eines Laufs überhaupt nicht durch die Stellgrößen anregbar**, weil das
-        Partikelwachstum monoton ist und keine Rückführung besitzt. Sie wird über die
-        Streuung der Anfangsbedingungen zwischen den Läufen abgedeckt (siehe
-        :class:`InitialConditionDesign`). Für die Stellgrößenanregung ist deshalb nur
-        wichtig, dass sich die Sequenz innerhalb eines Laufs nicht wiederholt --
-        Wiederholung verschwendet Abtastpunkte, ohne neue Information zu liefern.
+        Why the period criterion depends on the run duration and not on
+        :math:`\tau_{slow}`: with :math:`\tau_{slow}/\tau_{fast} \approx 1700` a
+        period of :math:`3\tau_{slow}` at a clock of :math:`2\tau_{fast}` would only be
+        reachable with a 12-bit register, and the slowest mode would thus still be excited
+        only once per run. That is the wrong calculation: **the slow mode cannot be
+        excited by the actions within a run at all**, because the
+        particle growth is monotonic and has no feedback. It is covered by the
+        spread of the initial conditions between runs (see
+        :class:`InitialConditionDesign`). For the action excitation it is therefore only
+        important that the sequence does not repeat within a run --
+        repetition wastes sample points without delivering new information.
         """
         hold_minimum = max(2.0 * tau_fast_s, 4.0 * sample_time_s)
         geometric_mean = float(np.sqrt(tau_fast_s * tau_slow_s))
@@ -232,7 +232,7 @@ class ExcitationConfig:
 
 @dataclass(frozen=True, slots=True)
 class ExcitationSchedule:
-    """Fertiger Anregungsplan, direkt an :meth:`ProcessSimulator.rollout` übergebbar."""
+    """Finished excitation schedule, directly passable to :meth:`ProcessSimulator.rollout`."""
 
     run_id: tuple[str, ...]
     actions: FloatArray
@@ -265,12 +265,12 @@ class ExcitationSchedule:
         return int(self.actions.shape[1])
 
     def subset(self, n_runs: int) -> ExcitationSchedule:
-        """Verschachtelte Teilmenge für die Lernkurven-Stützstellen.
+        """Nested subset for the learning-curve support points.
 
-        Nur bei Sobol-Design ist die Teilmenge auch eine Folge niedriger Diskrepanz --
-        bei LHS wird hier lediglich abgeschnitten, was die Abdeckung verschlechtert. Der
-        Sampler steht deshalb in ``metadata`` und sollte beim Berichten der Lernkurve
-        mitgenannt werden.
+        Only with a Sobol design is the subset also a low-discrepancy sequence --
+        with LHS it is merely truncated here, which worsens the coverage. The
+        sampler is therefore in ``metadata`` and should be named when reporting the
+        learning curve.
         """
         if not 0 < n_runs <= self.n_runs:
             raise ValueError(f"n_runs muss in (0, {self.n_runs}] liegen")
@@ -284,15 +284,15 @@ class ExcitationSchedule:
         )
 
 
-# ----------------------------------------------------------------- Signalgeneratoren
+# ----------------------------------------------------------------- Signal generators
 
 
 class SignalGenerator(ABC):
-    """Erzeugt normierte Anregungssignale im Berech :math:`[0, 1]`.
+    """Generates normalised excitation signals in the range :math:`[0, 1]`.
 
-    Die Normierung ist die Umgehung aus dem Arbeitsplan für die noch fehlenden
-    Stellgrößenbereiche: das Design bleibt unverändert, wenn die echten Grenzen von
-    TUHH-A kommen -- getauscht wird nur die Denormierung.
+    The normalisation is the workaround from the work plan for the still missing
+    action ranges: the design stays unchanged when the real limits come from
+    TUHH-A -- only the denormalisation is swapped.
     """
 
     kind: SignalKind
@@ -301,18 +301,18 @@ class SignalGenerator(ABC):
     def generate(
         self, n_steps: int, sample_time_s: float, rng: np.random.Generator, amplitude: float
     ) -> FloatArray:
-        """Ein Signal der Länge ``n_steps`` mit Werten in :math:`[0, 1]`."""
+        """A signal of length ``n_steps`` with values in :math:`[0, 1]`."""
 
     @staticmethod
     def _band(rng: np.random.Generator, amplitude: float) -> tuple[float, float]:
-        """Zufälliges Amplitudenband der Breite ``amplitude`` innerhalb von [0, 1]."""
+        """Random amplitude band of width ``amplitude`` within [0, 1]."""
         half = 0.5 * amplitude
         centre = rng.uniform(half, 1.0 - half) if amplitude < 1.0 else 0.5
         return centre - half, centre + half
 
 
 class StepSequenceGenerator(SignalGenerator):
-    """Sprungfolge mit zufälligen Amplituden und Verweilzeiten."""
+    """Step sequence with random amplitudes and hold times."""
 
     kind: SignalKind = "step"
 
@@ -335,13 +335,13 @@ class StepSequenceGenerator(SignalGenerator):
 
 
 class PrbsGenerator(SignalGenerator):
-    r"""Pseudo-Rausch-Binärsignal aus einer m-Sequenz (maximum length sequence).
+    r"""Pseudo-random binary signal from an m-sequence (maximum length sequence).
 
-    Ein echtes Schieberegister und keine Bernoulli-Münze: die m-Sequenz hat ein
-    näherungsweise flaches Leistungsdichtespektrum bis zur halben Taktfrequenz und eine
-    bekannte Periode :math:`(2^n - 1)\,T_{clock}`. Eine Münze liefert im Mittel dasselbe
-    Spektrum, aber pro Realisierung eine unkontrollierte Verteilung der Umschaltabstände
-    -- bei fünf Läufen im Datensatz ist "im Mittel" keine nützliche Zusicherung.
+    A real shift register and not a Bernoulli coin: the m-sequence has an
+    approximately flat power spectral density up to half the clock frequency and a
+    known period :math:`(2^n - 1)\,T_{clock}`. A coin gives the same spectrum on average,
+    but per realisation an uncontrolled distribution of the switching intervals
+    -- with five runs in the dataset "on average" is no useful guarantee.
     """
 
     kind: SignalKind = "prbs"
@@ -365,7 +365,7 @@ class PrbsGenerator(SignalGenerator):
     def _maximum_length_sequence(self, n_bits: int, rng: np.random.Generator) -> NDArray[np.bool_]:
         taps = _LFSR_TAPS[self._length]
         register = np.ones(self._length, dtype=bool)
-        # zufälliger, aber nicht entarteter Startzustand
+        # random but non-degenerate initial state
         while True:
             candidate = rng.integers(0, 2, self._length).astype(bool)
             if candidate.any():
@@ -383,13 +383,13 @@ class PrbsGenerator(SignalGenerator):
 
 
 class RampGenerator(SignalGenerator):
-    """Stückweise lineare Rampen mit zufälligen Steigungen.
+    """Piecewise linear ramps with random slopes.
 
-    Rampen regen den Prozess anders an als Sprünge: bei einer Rampe folgt der Ausgang mit
-    einer konstanten Schleppabweichung, die direkt proportional zur Zeitkonstante ist. Für
-    ein Modell, das später Mehrschritt-Rollouts liefern soll, ist das die informativere
-    Anregungsform -- Sprünge sind bei der Ein-Schritt-Vorhersage leichter zu treffen, als
-    sie für den Rollout hergeben.
+    Ramps excite the process differently from steps: with a ramp the output follows with
+    a constant lag error that is directly proportional to the time constant. For
+    a model that is later to deliver multi-step rollouts, this is the more informative
+    form of excitation -- steps are easier to hit in one-step prediction than
+    they yield for the rollout.
     """
 
     kind: SignalKind = "ramp"
@@ -416,14 +416,14 @@ class RampGenerator(SignalGenerator):
 
 
 class ConstantGenerator(SignalGenerator):
-    """Konstantes Signal -- Referenzläufe für Beharrungszustände."""
+    """Constant signal -- reference runs for steady states."""
 
     kind: SignalKind = "constant"
 
     def generate(
         self,
         n_steps: int,
-        sample_time_s: float,  # noqa: ARG002 - Konstantsignal ist zeitunabhängig
+        sample_time_s: float,  # noqa: ARG002 - constant signal is time-independent
         rng: np.random.Generator,
         amplitude: float,
     ) -> FloatArray:
@@ -431,18 +431,18 @@ class ConstantGenerator(SignalGenerator):
         return np.full(n_steps, rng.uniform(lower, upper), dtype=np.float64)
 
 
-# ------------------------------------------------------------------- Ratenbegrenzung
+# ------------------------------------------------------------------- Rate limiting
 
 
 def apply_rate_limit(signal: FloatArray, max_rate_per_s: float, sample_time_s: float) -> FloatArray:
-    r"""Begrenzt die Änderungsrate eines Signals, Form ``(runs, steps)``.
+    r"""Limits the rate of change of a signal, shape ``(runs, steps)``.
 
     .. math:: |u[k] - u[k-1]| \le \dot u_{max}\,\Delta t
 
-    Wirkt wie ein nichtlinearer Tiefpass: das Spektrum eines ratenbegrenzten PRBS ist
-    nicht mehr flach, weil die Sprünge zu Rampen werden. Der Verlust an Bandbreite ist der
-    Preis für Realisierbarkeit und muss im Report sichtbar sein -- ``excitation_report``
-    weist Amplitude, realisierte Bandbreite und minimale Umschaltzeit deshalb gemeinsam aus.
+    Acts like a nonlinear low-pass filter: the spectrum of a rate-limited PRBS is
+    no longer flat, because the steps become ramps. The loss of bandwidth is the
+    price for realisability and must be visible in the report -- ``excitation_report``
+    therefore reports amplitude, realised bandwidth and minimal switching time together.
     """
     if signal.ndim != 2:
         raise ValueError("signal muss die Form (runs, steps) haben")
@@ -461,23 +461,23 @@ def apply_rate_limit(signal: FloatArray, max_rate_per_s: float, sample_time_s: f
 def quasi_random_points(
     n_points: int, n_dimensions: int, *, sampler: SamplerName, seed: int
 ) -> FloatArray:
-    """Punkte niedriger Diskrepanz im Einheitswürfel, Form ``(n_points, n_dimensions)``.
+    """Low-discrepancy points in the unit cube, shape ``(n_points, n_dimensions)``.
 
-    Sobol ist verschachtelt und damit für Lernkurven geeignet; LHS ist es nicht.
+    Sobol is nested and thus suitable for learning curves; LHS is not.
     """
     if sampler == "sobol":
         engine: qmc.QMCEngine = qmc.Sobol(d=n_dimensions, scramble=True, seed=seed)
     elif sampler == "lhs":
         engine = qmc.LatinHypercube(d=n_dimensions, seed=seed)
-    else:  # pragma: no cover - durch Literal-Typ abgedeckt
+    else:  # pragma: no cover - covered by the Literal type
         raise ValueError(f"Unbekannter Sampler {sampler!r}")
     return np.asarray(engine.random(n_points), dtype=np.float64)
 
 
-# --------------------------------------------------------------- Störgrößen-Designs
+# --------------------------------------------------------------- Disturbance designs
 
 
-# ----------------------------------------------------------- Gasgeschwindigkeits-Grenze
+# ----------------------------------------------------------- Gas velocity limit
 
 
 def gas_velocity_cap_from_initial_diameter(
@@ -529,7 +529,7 @@ def gas_velocity_cap_from_initial_diameter(
 
 
 class DisturbanceDesign(ABC):
-    """Erzeugt Störgrößen-Verläufe, Form ``(runs, steps, channels)``."""
+    """Generates disturbance trajectories, shape ``(runs, steps, channels)``."""
 
     @abstractmethod
     def build(
@@ -551,12 +551,12 @@ class DisturbanceDesign(ABC):
 
 
 class PiecewiseConstantDisturbanceDesign(DisturbanceDesign):
-    """Ein Störgrößen-Betriebspunkt pro Lauf, innerhalb des Laufs konstant.
+    """One disturbance operating point per run, constant within the run.
 
-    Sauber für die Identifikation: die Wirkung der Störgrößen ist zwischen den Läufen
-    identifizierbar, ohne dass sie mit der Aktordynamik verschränkt ist. Ungeeignet als
-    einziges Design, weil die Störgrößen im Betrieb innerhalb eines Laufs driften -- ein
-    Modell, das nur konstante Störgrößen gesehen hat, extrapoliert auf ihre Änderungsrate.
+    Clean for identification: the effect of the disturbances is identifiable between runs
+    without being entangled with the actuator dynamics. Unsuitable as the
+    only design, because in operation the disturbances drift within a run -- a
+    model that has only seen constant disturbances extrapolates in their rate of change.
     """
 
     def build(
@@ -564,8 +564,8 @@ class PiecewiseConstantDisturbanceDesign(DisturbanceDesign):
         space: DisturbanceSpaceConfig,
         unit_points: FloatArray,
         n_steps: int,
-        sample_time_s: float,  # noqa: ARG002 - Teil des gemeinsamen Design-Interfaces
-        rng: np.random.Generator,  # noqa: ARG002 - deterministisch aus unit_points
+        sample_time_s: float,  # noqa: ARG002 - part of the common design interface
+        rng: np.random.Generator,  # noqa: ARG002 - deterministic from unit_points
     ) -> FloatArray:
         low = np.array([r.minimum for r in space.ranges])
         high = np.array([r.maximum for r in space.ranges])
@@ -574,41 +574,41 @@ class PiecewiseConstantDisturbanceDesign(DisturbanceDesign):
 
 
 class DiurnalDisturbanceDesign(DisturbanceDesign):
-    r"""Tagesgang plus Ornstein-Uhlenbeck-Drift.
+    r"""Diurnal cycle plus Ornstein-Uhlenbeck drift.
 
     .. math::
         T_{amb}(t) = \bar T + A_T \sin\!\left(\frac{2\pi t}{86400} + \varphi\right) + \xi_T(t)
 
-    Die relative Feuchte erhält denselben Verlauf mit Phasenverschiebung
-    :math:`\varphi_{rel} = \pi` -- warme Tagesluft ist relativ trockener. Das ist
-    physikalisch richtig und methodisch unangenehm: eine deterministische
-    Antikorrelation zwischen zwei Eingängen macht deren Wirkungen einzeln nicht
-    identifizierbar. Der OU-Anteil bricht die Korrelation auf; ``excitation_report``
-    weist die realisierte Korrelation aus, damit die Entscheidung sichtbar bleibt.
+    The relative humidity gets the same course with a phase shift
+    :math:`\varphi_{rel} = \pi` -- warm daytime air is relatively drier. That is
+    physically correct and methodologically unpleasant: a deterministic
+    anticorrelation between two inputs makes their effects individually not
+    identifiable. The OU part breaks up the correlation; ``excitation_report``
+    reports the realised correlation so that the decision stays visible.
 
-    Der Tag/Nacht-Indikator aus ``02_prozess_setup.md`` entsteht damit implizit. Als
-    Feature für das Modell sollte er aus dem Zeitstempel als sin/cos-Paar gebildet werden,
-    nicht als Binärgröße -- ein Sprung um Mitternacht existiert im Prozess nicht.
+    The day/night indicator from ``02_prozess_setup.md`` thus arises implicitly. As a
+    feature for the model it should be formed from the timestamp as a sin/cos pair,
+    not as a binary variable -- a jump at midnight does not exist in the process.
 
-    Feststoffanteil der Suspension (Review E3, 2026-10-09)
-    ------------------------------------------------------
-    ``solid_fraction_process="diurnal"`` (Voreinstellung, Verhalten bis Befund 81) legt auch
-    ``suspension_solid_fraction`` auf den Tagesgang in Phase mit ``T_amb``: innerhalb eines
-    Laufs Korrelation im Median 0.71 (max. 0.94, ``broadband_derived``, 64 Läufe). Das baut
-    eine Verwechslung von Heizleistung und Wasserlast in die Daten. Der Feststoffanteil ist
-    kein Wetterkanal, sondern eine Eigenschaft der angesetzten Suspension.
-    ``"independent"``: der Kanal bekommt **keinen** Tagesgang, sondern einen eigenen
-    Ornstein-Uhlenbeck-Prozess (Standardabweichung ``solid_fraction_std_fraction`` mal
-    Spanne, Korrelationszeit ``drift_correlation_time_s``), unabhängig von ``T_amb`` und
-    ``RH``. Die Zufallszahlen werden an derselben Stelle gezogen wie bisher: ``T_amb`` und
-    ``RH`` sind für denselben Seed in beiden Betriebsarten bitgleich. Der Standardwert
-    ``0.09`` ist PLATZHALTER ohne Quelle; er ist so gewählt, dass die mittlere
-    Standardabweichung des Kanals **innerhalb eines Laufs von 8 h** der bisherigen
-    entspricht (64 Läufe, ``broadband_derived``, Seeds 11/12/13: 0.0140-0.0146 gegen
-    0.0135-0.0145), damit sich nur die Korrelation mit ``T_amb`` ändert und nicht die
-    Variabilität. Gemessen bei Seed 11: Korrelation innerhalb des Laufs im Median 0.03
-    statt 0.59 (Mittel 0.03 statt 0.56; |Korrelation| im Median 0.24 statt 0.59), weil zwei
-    langsame unabhängige Prozesse über 8 h zufällig korrelieren können.
+    Solid fraction of the suspension (review E3, 2026-10-09)
+    --------------------------------------------------------
+    ``solid_fraction_process="diurnal"`` (default, behaviour up to Befund 81) also puts
+    ``suspension_solid_fraction`` on the diurnal cycle in phase with ``T_amb``: within a
+    run a median correlation of 0.71 (max. 0.94, ``broadband_derived``, 64 runs). This builds
+    a confusion of heater power and water load into the data. The solid fraction is
+    not a weather channel but a property of the prepared suspension.
+    ``"independent"``: the channel gets **no** diurnal cycle but its own
+    Ornstein-Uhlenbeck process (standard deviation ``solid_fraction_std_fraction`` times
+    span, correlation time ``drift_correlation_time_s``), independent of ``T_amb`` and
+    ``RH``. The random numbers are drawn at the same place as before: ``T_amb`` and
+    ``RH`` are bit-identical for the same seed in both modes. The default value
+    ``0.09`` is a PLACEHOLDER without a source; it is chosen so that the mean
+    standard deviation of the channel **within a run of 8 h** matches the previous one
+    (64 runs, ``broadband_derived``, seeds 11/12/13: 0.0140-0.0146 against
+    0.0135-0.0145), so that only the correlation with ``T_amb`` changes and not the
+    variability. Measured at seed 11: correlation within the run with median 0.03
+    instead of 0.59 (mean 0.03 instead of 0.56; |correlation| median 0.24 instead of 0.59),
+    because two slow independent processes can correlate by chance over 8 h.
     """
 
     def __init__(
@@ -701,16 +701,16 @@ class DiurnalDisturbanceDesign(DisturbanceDesign):
         return path
 
 
-# --------------------------------------------------------- Anfangsbedingungs-Design
+# --------------------------------------------------------- Initial condition design
 
 
 @dataclass(frozen=True, slots=True)
 class InitialConditionRanges:
-    """Streubereich der Anfangszustände.
+    """Spread range of the initial states.
 
-    :param diameter_log_uniform: Streuung von :math:`d_{50}` logarithmisch statt linear.
-        Die Wachstumsrate ist proportional zu :math:`d_{50}`, also sind gleiche
-        *relative* Abstände die natürliche Metrik der langsamen Mode.
+    :param diameter_log_uniform: spread of :math:`d_{50}` logarithmic instead of linear.
+        The growth rate is proportional to :math:`d_{50}`, so equal
+        *relative* distances are the natural metric of the slow mode.
     """
 
     diameter_min_m: float = 250e-6
@@ -725,7 +725,7 @@ class InitialConditionRanges:
 
 
 class InitialConditionDesign:
-    """Streut die Anfangszustände über den Betriebsbereich."""
+    """Spreads the initial states over the operating range."""
 
     def __init__(self, ranges: InitialConditionRanges | None = None) -> None:
         self._ranges = ranges if ranges is not None else InitialConditionRanges()
@@ -742,12 +742,12 @@ class InitialConditionDesign:
         material: MaterialConfig,
         operation: OperationConfig,
     ) -> FloatArray:
-        """Physikalische Anfangsgrößen, Form ``(runs, 4)``.
+        """Physical initial quantities, shape ``(runs, 4)``.
 
-        Spaltenreihenfolge: Feststoffmasse [kg], Partikelfeuchte [kg/kg],
-        Durchmesser [m], Betttemperatur [°C]. Die Umrechnung in den Zustandsvektor
-        übernimmt ``GreyBoxFluidBedGranulator.state_from_physical``, damit die Kenntnis
-        der Zustandskodierung im Modell bleibt.
+        Column order: solid mass [kg], particle moisture [kg/kg],
+        diameter [m], bed temperature [°C]. The conversion into the state vector
+        is done by ``GreyBoxFluidBedGranulator.state_from_physical``, so that knowledge
+        of the state encoding stays in the model.
         """
         ranges = self._ranges
         moisture_low = (
@@ -780,30 +780,30 @@ class InitialConditionDesign:
         return np.stack([solid_mass, moisture, diameter, temperature], axis=-1)
 
 
-# --------------------------------------------------------------------- Gesamtdesign
+# --------------------------------------------------------------------- Overall design
 
 
 class ExcitationDesign(ABC):
-    """Erzeugt einen vollständigen Anregungsplan."""
+    """Generates a complete excitation schedule."""
 
     @abstractmethod
     def build(self, n_runs: int, *, seed: int) -> ExcitationSchedule: ...
 
 
 class MixedExcitationDesign(ExcitationDesign):
-    r"""Sprungfolgen, PRBS und Rampen auf den Stellgrößen, QMC auf Störgrößen und Start.
+    r"""Step sequences, PRBS and ramps on the actions, QMC on disturbances and start.
 
-    Zusammensetzung pro Lauf: für jeden Stellgrößenkanal wird unabhängig Signalart und
-    Amplitudenstufe gezogen. Warum unabhängig und nicht ein gemeinsames Design für alle
-    Kanäle: würden alle Kanäle gleichzeitig dieselbe Sprungfolge fahren, wären ihre
-    Wirkungen auf die Zielgröße kollinear und die partiellen Ableitungen
-    :math:`\\partial \\dot E/\\partial T_{in}` und
-    :math:`\\partial \\dot E/\\partial u_{gas}` nicht mehr trennbar. Genau diese
-    Ableitungen sollen die Monotonie-Constraints später erzwingen -- auf einem
-    kollinearen Datensatz ist das nicht überprüfbar.
+    Composition per run: for every action channel, signal kind and
+    amplitude level are drawn independently. Why independently and not one common design for all
+    channels: if all channels ran the same step sequence simultaneously, their
+    effects on the target would be collinear and the partial derivatives
+    :math:`\\partial \\dot E/\\partial T_{in}` and
+    :math:`\\partial \\dot E/\\partial u_{gas}` no longer separable. Exactly these
+    derivatives are what the monotonicity constraints are to enforce later -- on a
+    collinear dataset that cannot be checked.
 
-    :param sample_time_s: Abtastzeit; muss mit der des Simulators übereinstimmen
-    :param initial_condition_design: ``None`` schaltet die Streuung der Anfangszustände ab
+    :param sample_time_s: sample time; must match that of the simulator
+    :param initial_condition_design: ``None`` switches off the spread of the initial states
     """
 
     def __init__(
@@ -860,7 +860,7 @@ class MixedExcitationDesign(ExcitationDesign):
         return round(self._config.run_duration_s / self._sample_time_s)
 
     def build(self, n_runs: int, *, seed: int) -> ExcitationSchedule:
-        """Baut den Plan. Deterministisch in ``(config, n_runs, seed)``."""
+        """Builds the schedule. Deterministic in ``(config, n_runs, seed)``."""
         if n_runs < 1:
             raise ValueError("n_runs muss mindestens 1 sein")
         config = self._config
@@ -1007,24 +1007,24 @@ class MixedExcitationDesign(ExcitationDesign):
 
 
 def _constant_run_flags(n_runs: int, fraction: float) -> NDArray[np.bool_]:
-    r"""Verteilt die Konstantläufe gleichmäßig über die Design-Reihenfolge.
+    r"""Distributes the constant runs evenly over the design order.
 
-    Zuteilung nach dem gebrochenen Anteil: Lauf ``i`` ist konstant, wenn
-    :math:`(i f) \bmod 1 < f`. Damit hat **jedes Präfix** der Länge :math:`n` ungefähr
-    den Anteil ``fraction`` an Konstantläufen, und der erste liegt bei Index 0 -- eine
-    Zuteilung am Blockende hätte im Präfix der Länge 8 gar keinen geliefert.
+    Allocation by the fractional part: run ``i`` is constant if
+    :math:`(i f) \bmod 1 < f`. Thus **every prefix** of length :math:`n` has approximately
+    the fraction ``fraction`` of constant runs, and the first lies at index 0 -- an
+    allocation at the end of the block would have delivered none at all in the prefix of length 8.
 
-    Warum das nicht beliebig ist: die frühere Regel ``run < n_constant`` legte alle
-    Konstantläufe als Block an den Anfang. Bei ``fraction = 0.1`` und einem 32er-Design
-    enthielt die kleinste Lernkurven-Stützstelle ``subset(8)`` dadurch 3 von 8 Läufen
-    ohne jede Anregung -- 37 % statt 10 %. Zusätzlich landeten sie bei einem
-    Präfix-Block-Split vollständig in ``train``, sodass Validierung und Test keinen
-    einzigen Beharrungsreferenzlauf sahen. Beides verzerrt genau das linke Ende der
-    Lernkurve, also die Aussage zum Trainingsdatenbedarf.
+    Why this is not arbitrary: the earlier rule ``run < n_constant`` put all
+    constant runs as a block at the beginning. With ``fraction = 0.1`` and a 32-run design
+    the smallest learning-curve support point ``subset(8)`` thereby contained 3 of 8 runs
+    without any excitation -- 37 % instead of 10 %. In addition, with a
+    prefix-block split they all ended up in ``train``, so that validation and test did not see
+    a single steady-state reference run. Both distort exactly the left end of the
+    learning curve, i.e. the statement on the training data requirement.
 
-    Achtung: diese Änderung verschiebt die Signalarten gegenüber Datensätzen, die mit
-    einer früheren Version erzeugt wurden. Der Anregungs-Fingerprint bleibt gleich, weil
-    er nur die Konfiguration hasht -- vorhandene Läufe sind daher **neu zu erzeugen**.
+    Caution: this change shifts the signal kinds compared with datasets generated with
+    an earlier version. The excitation fingerprint stays the same, because
+    it hashes only the configuration -- existing runs must therefore be **regenerated**.
     """
     if not 0.0 <= fraction <= 1.0:
         raise ValueError("constant_run_fraction muss in [0, 1] liegen")
@@ -1042,17 +1042,17 @@ def _serialise(value: object) -> object:
     return value
 
 
-# ------------------------------------------------------------- Serialisierung
+# ------------------------------------------------------------- Serialisation
 
 
 def load_excitation_config(path: str | Path) -> ExcitationConfig:
-    """Lädt eine Anregungs-Config aus YAML.
+    """Loads an excitation config from YAML.
 
-    Auch wenn die Verweilzeiten üblicherweise über
-    :meth:`ExcitationConfig.from_time_constants` abgeleitet werden: der **aufgelöste**
-    Stand muss zu jedem Datensatz mitgeschrieben werden. Sonst ist eine Lernkurve später
-    nicht reproduzierbar, weil sich die abgeleiteten Werte mit jeder Änderung der
-    Prozess-Config mitverschieben.
+    Even if the hold times are usually derived via
+    :meth:`ExcitationConfig.from_time_constants`: the **resolved**
+    state must be recorded with every dataset. Otherwise a learning curve is later
+    not reproducible, because the derived values shift with every change of the
+    process config.
     """
     raw = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
     if not isinstance(raw, dict):
@@ -1073,7 +1073,7 @@ def load_excitation_config(path: str | Path) -> ExcitationConfig:
 
 
 def dump_excitation_config(config: ExcitationConfig, path: str | Path) -> None:
-    """Serialisiert die vollständig aufgelöste Anregungs-Config."""
+    """Serialises the fully resolved excitation config."""
     payload = {
         field.name: (
             {"minimum_s": value.minimum_s, "maximum_s": value.maximum_s}

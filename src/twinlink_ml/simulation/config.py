@@ -1,13 +1,13 @@
-"""Konfigurationsobjekte des Grey-Box-Prozessmodells.
+"""Configuration objects of the grey-box process model.
 
-Alle Zahlenwerte des Modells leben hier bzw. in ``conf/process/*.yaml`` -- keiner im Code.
-Grund: der Austausch der Platzhalter gegen echte Werte von TUHH-A / Anwendungspartner soll ein
-Diff in einer YAML-Datei sein, kein Eingriff in die Physik.
+All numerical values of the model live here or in ``conf/process/*.yaml`` -- none in the code.
+Reason: replacing the placeholders with real values from TUHH-A / application partner should be
+a diff in a YAML file, not an intervention in the physics.
 
-Einheiten stehen im Feldnamen (Konvention aus ``03_code_konventionen.md``).
-Intern rechnet das Modell in SI; die Umrechnung ingenieursüblicher Einheiten
-(kg/h, bar, °C) passiert an exakt einer Stelle: :meth:`ProcessConfig.to_si`-nahe
-Helfer in ``greybox.py``.
+Units are in the field name (convention from ``03_code_konventionen.md``).
+Internally the model computes in SI; the conversion of customary engineering units
+(kg/h, bar, °C) happens in exactly one place: :meth:`ProcessConfig.to_si`-like
+helpers in ``greybox.py``.
 """
 
 from __future__ import annotations
@@ -36,18 +36,18 @@ flow vanishes and the inlet humidity diverges (the water leaves only with the pu
 
 
 class PlaceholderConfigWarning(UserWarning):
-    """Wird beim Laden einer Config mit Platzhalterwerten ausgelöst.
+    """Raised when loading a config with placeholder values.
 
-    ``02_prozess_setup.md`` hält fest, dass eine Datei mit veralteten Zahlen schlechter
-    ist als keine, weil sie stillschweigend falsche Annahmen ins Modell trägt. Diese
-    Warnung macht aus der Konvention eine Zusicherung des Codes: ein Lauf mit
-    Platzhaltern ist nachträglich im Log identifizierbar.
+    ``02_prozess_setup.md`` records that a file with outdated numbers is worse
+    than none, because it silently carries wrong assumptions into the model. This
+    warning turns the convention into a guarantee of the code: a run with
+    placeholders is identifiable afterwards in the log.
     """
 
 
 @dataclass(frozen=True, slots=True)
 class Provenance:
-    """Herkunft der Zahlenwerte -- wandert in jeden Run-Log."""
+    """Origin of the numerical values -- goes into every run log."""
 
     status: ConfigStatus = "placeholder"
     description: str = ""
@@ -56,7 +56,7 @@ class Provenance:
 
 @dataclass(frozen=True, slots=True)
 class GeometryConfig:
-    """Apparategeometrie. Quelle: ``02_prozess_setup.md`` -> Abschnitt Anlagengeometrie."""
+    """Apparatus geometry. Source: ``02_prozess_setup.md`` -> section Plant geometry."""
 
     cross_section_area_m2: float = 0.0177
     bed_mass_solid_setpoint_kg: float = 2.0
@@ -69,7 +69,7 @@ class GeometryConfig:
 
 @dataclass(frozen=True, slots=True)
 class GasConfig:
-    """Eigenschaften der Fluidisierungsluft (feuchte Luft, ideal)."""
+    """Properties of the fluidization air (moist air, ideal)."""
 
     pressure_pa: float = 101_325.0
     r_specific_dry_air_j_per_kg_k: float = 287.06
@@ -85,7 +85,7 @@ class GasConfig:
 
 @dataclass(frozen=True, slots=True)
 class MaterialConfig:
-    """Stoffsystem. ``02_prozess_setup.md``: Stoffsystem ist noch TODO."""
+    """Material system. ``02_prozess_setup.md``: material system is still TODO."""
 
     particle_density_kg_per_m3: float = 1500.0
     sphericity: float = 0.9
@@ -93,26 +93,26 @@ class MaterialConfig:
     cp_water_liquid_j_per_kg_k: float = 4180.0
     cp_suspension_j_per_kg_k: float = 3500.0
     suspension_density_kg_per_m3: float = 1100.0
-    # Trocknungskinetik: normierte Trocknungskurve, linear fallende Rate
+    # Drying kinetics: normalised drying curve, linearly falling rate
     critical_moisture_kg_per_kg: float = 0.020
-    # Nominalwert/Anker der Gleichgewichtsfeuchte. Doppelrolle, unabhängig von
-    # sorption_isotherm_kind: (i) Eingang der Validierung gegen
-    # critical_moisture_kg_per_kg unten -- eine grobe, isothermenunabhängige
-    # Plausibilitätsschranke, keine Aussage über X_eq(phi,T); (ii) bei
-    # sorption_isotherm_kind="gab" der Ankerwert, an den die GAB-Parameter
-    # unten kalibriert sind (phi=0.5, T=gab_reference_temperature_celsius --
-    # siehe sorption.GabIsotherm). Bei sorption_isotherm_kind="constant" ist es
-    # zugleich der tatsächliche, zustandsunabhängige X_eq-Wert der Simulation.
+    # Nominal value/anchor of the equilibrium moisture. Dual role, independent of
+    # sorption_isotherm_kind: (i) input of the validation against
+    # critical_moisture_kg_per_kg below -- a coarse, isotherm-independent
+    # plausibility bound, no statement about X_eq(phi,T); (ii) with
+    # sorption_isotherm_kind="gab" the anchor value to which the GAB parameters
+    # below are calibrated (phi=0.5, T=gab_reference_temperature_celsius --
+    # see sorption.GabIsotherm). With sorption_isotherm_kind="constant" it is
+    # at the same time the actual, state-independent X_eq value of the simulation.
     equilibrium_moisture_kg_per_kg: float = 0.003
     max_saturation_degree: float = 0.60
     max_driving_humidity_kg_per_kg: float = 0.50
-    # Sorptionsisotherme der Trocknungskurve (siehe simulation.sorption).
-    # "constant" reproduziert equilibrium_moisture_kg_per_kg exakt als
-    # zustandsunabhängigen X_eq-Wert -- Default, rückwärtskompatibel: bestehende
-    # Configs ohne diese Felder laden unverändert. "gab" aktiviert die
-    # zustandsabhängige GAB-Isotherme unten; alle gab_*-Felder sind dann
-    # Pflicht (siehe __post_init__). GabIsotherm markiert sich selbst
-    # unabhängig von provenance.status als "placeholder" (siehe sorption.py).
+    # Sorption isotherm of the drying curve (see simulation.sorption).
+    # "constant" reproduces equilibrium_moisture_kg_per_kg exactly as a
+    # state-independent X_eq value -- default, backward compatible: existing
+    # configs without these fields load unchanged. "gab" activates the
+    # state-dependent GAB isotherm below; all gab_* fields are then
+    # mandatory (see __post_init__). GabIsotherm marks itself as "placeholder"
+    # independently of provenance.status (see sorption.py).
     sorption_isotherm_kind: SorptionIsothermKind = "constant"
     gab_monolayer_moisture_kg_per_kg: float | None = None
     gab_c_constant_at_reference_temperature: float | None = None
@@ -120,7 +120,7 @@ class MaterialConfig:
     gab_c_enthalpy_j_per_mol: float | None = None
     gab_k_enthalpy_j_per_mol: float | None = None
     gab_reference_temperature_celsius: float | None = None
-    # Populationsbilanz (reduziert auf zwei Momente)
+    # Population balance (reduced to two moments)
     nucleus_diameter_m: float = 150e-6
     nucleation_solid_fraction: float = 0.008
     initial_diameter_m: float = 400e-6
@@ -174,16 +174,16 @@ class MaterialConfig:
         self._validate_gab_fields()
 
     def _validate_gab_fields(self) -> None:
-        """Bei ``sorption_isotherm_kind == "gab"``: alle gab_*-Felder gesetzt und plausibel.
+        """With ``sorption_isotherm_kind == "gab"``: all gab_* fields set and plausible.
 
-        Rein lokale Prüfung (keine Abhängigkeit von ``sorption.py`` oder anderen
-        ``ProcessConfig``-Feldern) -- die weitergehende Prüfung, dass
-        ``critical_moisture_kg_per_kg`` über dem Maximum der Isotherme im
-        Sicherheitsraster liegt, braucht Aktions-/Störgrößengrenzen aus dem
-        umgebenden ``ProcessConfig`` und lebt deshalb in
-        ``sorption.validate_isotherm_against_critical_moisture`` -- siehe dort,
-        warum sie nicht hierher gehört (Abhängigkeitsrichtung: ``config.py``
-        bleibt frei von Imports aus ``sorption.py``/``thermo.py``).
+        Purely local check (no dependency on ``sorption.py`` or other
+        ``ProcessConfig`` fields) -- the further check that
+        ``critical_moisture_kg_per_kg`` lies above the maximum of the isotherm on the
+        safety grid needs action/disturbance bounds from the
+        enclosing ``ProcessConfig`` and therefore lives in
+        ``sorption.validate_isotherm_against_critical_moisture`` -- see there
+        why it does not belong here (dependency direction: ``config.py``
+        stays free of imports from ``sorption.py``/``thermo.py``).
         """
         if self.sorption_isotherm_kind != "gab":
             return
@@ -219,17 +219,17 @@ class MaterialConfig:
 
     @property
     def nucleation_limited_diameter_m(self) -> float:
-        r"""Beharrungsdurchmesser des Spezialfalls ohne Keimzufuhr.
+        r"""Steady-state diameter of the special case without seed feed.
 
-        Gilt nur für ``seed_mass_flow_kg_per_h == 0``. Aus der Zahlenbilanz im
-        Beharrungszustand folgt für diesen Fall
+        Holds only for ``seed_mass_flow_kg_per_h == 0``. From the number balance at
+        steady state it follows for this case that
 
         .. math:: d_{50,\mathrm{ss}} = d_{\mathrm{nuc}}\, b_{\mathrm{nuc}}^{-1/3}
 
-        Mit Keimzufuhr liefert der allgemeine Beharrungszustand einen anderen Wert --
-        siehe :mod:`twinlink_ml.simulation.steady_state`. Der Nukleationsanteil ist
-        damit **kein** freier Tuning-Parameter, sondern durch die Zielkorngröße
-        festgelegt. Siehe :func:`nucleation_fraction_for_target_diameter`.
+        With seed feed the general steady state gives a different value --
+        see :mod:`twinlink_ml.simulation.steady_state`. The nucleation fraction is
+        thus **not** a free tuning parameter but fixed by the target particle size.
+        See :func:`nucleation_fraction_for_target_diameter`.
         """
         if self.nucleation_solid_fraction == 0.0:
             return float("inf")
@@ -238,7 +238,7 @@ class MaterialConfig:
 
 @dataclass(frozen=True, slots=True)
 class EnergyConfig:
-    """Aggregate der Energiebilanz. Bestimmt die Zielgröße ``dE``."""
+    """Units of the energy balance. Determine the target ``dE``."""
 
     heater_efficiency: float = 0.98
     fan_efficiency: float = 0.55
@@ -277,19 +277,19 @@ class EnergyConfig:
 
 @dataclass(frozen=True, slots=True)
 class ExhaustConfig:
-    """Nachgelagerte Abluft-Schnittstelle: Rohrleitung/Filter zwischen Bett und Wärmeverbund.
+    """Downstream exhaust air interface: duct/filter between bed and heat integration system.
 
-    Bewusst eigener Abschnitt, nicht Teil von :class:`GeometryConfig`: dessen
-    ``heat_loss_ua_w_per_k`` ist ein Term der Bett-Enthalpiebilanz (``greybox._rhs``) und
-    verändert die simulierte Zustandstrajektorie. Felder hier wirken ausschließlich
-    nachgelagert in :func:`twinlink_ml.simulation.exhaust.reconstruct_exhaust_state` -- rein
-    algebraische Nachbearbeitung von bereits simuliertem/vorhergesagtem Zustand, kein
-    Zustand selbst und kein Eingang in ``_rhs``. Beide im selben Abschnitt zu führen würde
-    dazu einladen, sie versehentlich zu addieren oder den neuen Parameter fälschlich in der
-    ODE zu erwarten.
+    Deliberately a section of its own, not part of :class:`GeometryConfig`: its
+    ``heat_loss_ua_w_per_k`` is a term of the bed enthalpy balance (``greybox._rhs``) and
+    changes the simulated state trajectory. Fields here act exclusively
+    downstream in :func:`twinlink_ml.simulation.exhaust.reconstruct_exhaust_state` -- purely
+    algebraic post-processing of an already simulated/predicted state, not
+    state itself and no input to ``_rhs``. Keeping both in the same section would
+    invite adding them by mistake or wrongly expecting the new parameter in the
+    ODE.
 
-    STATUS: Platzhalter, keine Quelle -- Rohrleitungs-/Filterverlust zwischen Bett und
-    Wärmeübertrager, bislang nicht vermessen und nicht bei Anwendungspartner erfragt.
+    STATUS: placeholder, no source -- duct/filter loss between bed and
+    heat exchanger, so far not measured and not requested from the application partner.
     """
 
     outlet_duct_heat_loss_k: float = 0.0
@@ -315,7 +315,7 @@ class ExhaustConfig:
 
 @dataclass(frozen=True, slots=True)
 class OperationConfig:
-    """Betriebsart. ``02_prozess_setup.md``: kontinuierlich/Batch/Semi-Batch ist TODO."""
+    """Operating mode. ``02_prozess_setup.md``: continuous/batch/semi-batch is TODO."""
 
     mode: OperationMode = "continuous"
     mass_control_time_constant_s: float = 600.0
@@ -348,7 +348,7 @@ class OperationConfig:
 
 @dataclass(frozen=True, slots=True)
 class ActionBound:
-    """Box- und Ratenbegrenzung einer Stellgröße."""
+    """Box and rate limit of an action."""
 
     minimum: float
     maximum: float
@@ -370,11 +370,11 @@ class ActionBound:
 
 @dataclass(frozen=True, slots=True)
 class ActionSpaceConfig:
-    """Stellgrößenraum. Alle Werte TODO in ``02_prozess_setup.md`` -> Platzhalter.
+    """Action space. All values TODO in ``02_prozess_setup.md`` -> placeholders.
 
-    Die Normierung auf ``[0, 1]`` (siehe :meth:`normalise`) ist die Umgehung aus dem
-    Arbeitsplan: das Sampling-Design und die RL-Action-Bounds bleiben unverändert,
-    wenn die echten Bereiche eingesetzt werden.
+    The normalisation to ``[0, 1]`` (see :meth:`normalise`) is the workaround from the
+    work plan: the sampling design and the RL action bounds stay unchanged
+    when the real ranges are inserted.
     """
 
     inlet_temperature_celsius: ActionBound = field(
@@ -401,7 +401,7 @@ class ActionSpaceConfig:
 
 @dataclass(frozen=True, slots=True)
 class DisturbanceRange:
-    """Bereich einer Störgröße für das Latin-Hypercube-Sampling (Schritt 2)."""
+    """Range of a disturbance for the Latin hypercube sampling (step 2)."""
 
     minimum: float
     maximum: float
@@ -414,13 +414,13 @@ class DisturbanceRange:
 
 @dataclass(frozen=True, slots=True)
 class DisturbanceSpaceConfig:
-    """Exogene, messbare, nicht steuerbare Größen.
+    """Exogenous, measurable, non-controllable variables.
 
-    Der Tag/Nacht-Indikator aus ``02_prozess_setup.md`` ist bewusst **keine** physikalische
-    Eingangsgröße des Modells: er wirkt ausschließlich über ``T_amb`` und ``phi_amb``.
-    Als Feature für das Sequenzmodell wird er aus dem Zeitstempel abgeleitet
-    (sin/cos-Kodierung), nicht vom Simulator geliefert. Sonst bekommt das Modell einen
-    Eingang, der an der Realanlage keine kausale Wirkung hat.
+    The day/night indicator from ``02_prozess_setup.md`` is deliberately **not** a physical
+    input of the model: it acts exclusively through ``T_amb`` and ``phi_amb``.
+    As a feature for the sequence model it is derived from the timestamp
+    (sin/cos encoding), not supplied by the simulator. Otherwise the model gets an
+    input that has no causal effect on the real plant.
     """
 
     ambient_temperature_celsius: DisturbanceRange = field(
@@ -444,7 +444,7 @@ class DisturbanceSpaceConfig:
 
 @dataclass(frozen=True, slots=True)
 class NumericsConfig:
-    """Zeitliche Auflösung. ``02_prozess_setup.md``: Δt Dyssol ist TODO."""
+    """Temporal resolution. ``02_prozess_setup.md``: Δt Dyssol is TODO."""
 
     sample_time_s: float = 5.0
     substeps: int = 5
@@ -473,12 +473,12 @@ class NumericsConfig:
 
 @dataclass(frozen=True, slots=True)
 class MeasurementConfig:
-    """Sensormodell: Rauschen und Sensordynamik.
+    """Sensor model: noise and sensor dynamics.
 
-    Warum das nicht optional ist: das Rauschniveau bestimmt die Lernkurven stärker als
-    die Architektur. Auf rauschfreien Simulationsdaten sättigt jedes hinreichend große
-    Modell und der Vergleich wird bedeutungslos. Die Werte hier sind Platzhalter und
-    müssen aus den Anwendungspartner-Zeitreihen bzw. den Laborsensoren kalibriert werden.
+    Why this is not optional: the noise level determines the learning curves more strongly than
+    the architecture. On noise-free simulation data every sufficiently large
+    model saturates and the comparison becomes meaningless. The values here are placeholders and
+    must be calibrated from the application-partner time series or the lab sensors.
     """
 
     enabled: bool = True
@@ -497,7 +497,7 @@ class MeasurementConfig:
 
 @dataclass(frozen=True, slots=True)
 class ProcessConfig:
-    """Vollständige Konfiguration eines Simulationsexperiments."""
+    """Complete configuration of a simulation experiment."""
 
     provenance: Provenance = field(default_factory=Provenance)
     geometry: GeometryConfig = field(default_factory=GeometryConfig)
@@ -517,22 +517,22 @@ class ProcessConfig:
 
     @property
     def fingerprint(self) -> str:
-        """Stabiler Hash der aufgelösten Config -- gehört in jeden Run-Log.
+        """Stable hash of the resolved config -- belongs in every run log.
 
-        Gilt für die ANGEWENDETE Config (diese Instanz, so wie sie tatsächlich simuliert
-        wird), nicht für die Datei wie geladen: ``sample_time_s`` wird typischerweise von
-        ``DataSpec.sample_time_s`` überschrieben (siehe ``evaluation.experiments.generate_data``,
-        ``dataclasses.replace`` auf ``numerics`` vor dem Simulator-Aufbau), bevor der Fingerprint
-        gebildet wird. Ein Vergleich gegen den Fingerprint der unveränderten, per
-        ``load_process_config`` geladenen Datei (deren ``sample_time_s`` der YAML-Default ist)
-        liefert deshalb einen ANDEREN Hash als der der tatsächlich verwendeten Config.
+        Applies to the APPLIED config (this instance, as it is actually simulated),
+        not to the file as loaded: ``sample_time_s`` is typically overridden by
+        ``DataSpec.sample_time_s`` (see ``evaluation.experiments.generate_data``,
+        ``dataclasses.replace`` on ``numerics`` before the simulator is built), before the
+        fingerprint is formed. A comparison against the fingerprint of the unchanged file
+        loaded via ``load_process_config`` (whose ``sample_time_s`` is the YAML default)
+        therefore gives a DIFFERENT hash than that of the config actually used.
 
-        Berechnung über :func:`config_fingerprint` -- derselbe Algorithmus wie
-        :class:`~twinlink_ml.heatnetwork.config.HeatNetworkConfig`s Fingerprint, ein Hashing-
-        Verfahren für alle Config-Hierarchien im Projekt statt je Klasse neu gebaut.
+        Computed via :func:`config_fingerprint` -- the same algorithm as
+        :class:`~twinlink_ml.heatnetwork.config.HeatNetworkConfig`'s fingerprint, one hashing
+        procedure for all config hierarchies in the project instead of one built anew per class.
 
-        Dokumentarische Freitextfelder (``provenance.description``, ``provenance.
-        open_todos``) fließen NICHT ein -- siehe :func:`without_documentary_provenance`.
+        Documentary free-text fields (``provenance.description``, ``provenance.
+        open_todos``) do NOT enter -- see :func:`without_documentary_provenance`.
         """
         return config_fingerprint(self._fingerprint_payload())
 
@@ -541,16 +541,16 @@ class ProcessConfig:
 
     @property
     def section_fingerprints(self) -> dict[str, str]:
-        """Teil-Fingerprints je Config-Abschnitt, additiv zu :attr:`fingerprint`.
+        """Partial fingerprints per config section, in addition to :attr:`fingerprint`.
 
-        :attr:`fingerprint` ist ein monolithischer Hash über die gesamte Config -- bei
-        einer Abweichung zwischen zwei Configs (wie bei ``arch_composite.jsonl``,
-        Befund 33: ``process/fingerprint`` stimmt mit keiner aktuellen
-        ``conf/process/*.yaml`` überein) lässt sich damit nicht feststellen, WELCHER
-        Abschnitt abweicht, ohne jede Kombination durchzuprobieren. Diese Teil-Fingerprints
-        erlauben den direkten, abschnittsweisen Vergleich zweier :class:`ProcessConfig`
-        -Instanzen. ``fingerprint`` selbst bleibt unverändert und bitgleich zu bereits
-        geloggten Records; dies ist eine rein additive Erweiterung.
+        :attr:`fingerprint` is a monolithic hash over the entire config -- with
+        a deviation between two configs (as with ``arch_composite.jsonl``,
+        Befund 33: ``process/fingerprint`` matches none of the current
+        ``conf/process/*.yaml``) it cannot tell WHICH
+        section deviates without trying every combination. These partial fingerprints
+        allow the direct, section-wise comparison of two :class:`ProcessConfig`
+        instances. ``fingerprint`` itself stays unchanged and bit-identical to already
+        logged records; this is a purely additive extension.
         """
         sections = (
             "provenance",
@@ -600,14 +600,14 @@ wurden geprüft, im Zweifel blieb ein Feld im Hash:
 
 
 def without_documentary_provenance(payload: dict[str, Any]) -> dict[str, Any]:
-    """Entfernt :data:`_DOCUMENTARY_PROVENANCE_FIELDS` aus ``payload["provenance"]``.
+    """Removes :data:`_DOCUMENTARY_PROVENANCE_FIELDS` from ``payload["provenance"]``.
 
-    Arbeitet auf der vollen, verschachtelten ``to_dict()``-Form (mit ``"provenance"``-
-    Schlüssel) -- :func:`section_fingerprints_of` liest ``payload[section]`` danach aus
-    demselben, bereits bereinigten Dict, sodass ``section_fingerprints["provenance"]``
-    und :attr:`ProcessConfig.fingerprint` dieselbe Bereinigung sehen. Kein ``"provenance"``-
-    Schlüssel (z. B. ein einzelner, bereits extrahierter Abschnitt ohne Provenance) --
-    unverändert zurückgeben.
+    Works on the full, nested ``to_dict()`` form (with ``"provenance"``
+    key) -- :func:`section_fingerprints_of` then reads ``payload[section]`` from
+    the same, already cleaned dict, so that ``section_fingerprints["provenance"]``
+    and :attr:`ProcessConfig.fingerprint` see the same cleaning. No ``"provenance"``
+    key (e.g. a single, already extracted section without provenance) --
+    return unchanged.
     """
     if "provenance" not in payload or not isinstance(payload["provenance"], dict):
         return payload
@@ -646,19 +646,19 @@ def without_unset_optional_fields(payload: dict[str, Any]) -> dict[str, Any]:
 
 
 def config_fingerprint(payload: dict[str, Any]) -> str:
-    """Stabiler 16-stelliger Hex-Hash eines aufgelösten Config-``dict`` (``dataclasses.asdict``).
+    """Stable 16-digit hex hash of a resolved config ``dict`` (``dataclasses.asdict``).
 
-    Gemeinsamer Hashing-Algorithmus für alle Config-Hierarchien des Projekts
-    (:class:`ProcessConfig`, ``heatnetwork.config.HeatNetworkConfig``) -- ein Verfahren,
-    einmal geprüft (Stabilität, Sortierung der Schlüssel, ``str``-Fallback für nicht
-    JSON-native Typen), nicht je Config-Klasse per Copy-Paste neu gebaut. Extrahiert aus
-    :attr:`ProcessConfig.fingerprint`; identische Eingabe liefert identische Ausgabe wie
-    vor dieser Extraktion (reiner Refactor, kein neues Verhalten).
+    Common hashing algorithm for all config hierarchies of the project
+    (:class:`ProcessConfig`, ``heatnetwork.config.HeatNetworkConfig``) -- one procedure,
+    checked once (stability, sorting of keys, ``str`` fallback for non
+    JSON-native types), not rebuilt per config class by copy-paste. Extracted from
+    :attr:`ProcessConfig.fingerprint`; identical input gives identical output as
+    before this extraction (pure refactor, no new behaviour).
 
-    Erwartet, dass ``payload`` bereits von dokumentarischen Freitextfeldern bereinigt ist
-    (:func:`without_documentary_provenance`) -- diese Funktion selbst hasht, was man ihr
-    gibt, ohne eigene Kenntnis der Config-Struktur (bleibt so generisch für beliebige
-    Config-Hierarchien, wie der Docstring oben verspricht).
+    Expects ``payload`` to be already cleaned of documentary free-text fields
+    (:func:`without_documentary_provenance`) -- this function itself hashes what it is
+    given, without its own knowledge of the config structure (thus stays generic for arbitrary
+    config hierarchies, as the docstring above promises).
     """
     return str(
         hashlib.sha256(
@@ -668,10 +668,10 @@ def config_fingerprint(payload: dict[str, Any]) -> str:
 
 
 def section_fingerprints_of(payload: dict[str, Any], sections: tuple[str, ...]) -> dict[str, str]:
-    """:func:`config_fingerprint` je benanntem Abschnitt von ``payload``.
+    """:func:`config_fingerprint` per named section of ``payload``.
 
-    Gemeinsame Basis für :attr:`ProcessConfig.section_fingerprints` und die entsprechende
-    Eigenschaft auf ``HeatNetworkConfig`` -- siehe :func:`config_fingerprint`.
+    Common basis for :attr:`ProcessConfig.section_fingerprints` and the corresponding
+    property on ``HeatNetworkConfig`` -- see :func:`config_fingerprint`.
     """
     return {section: config_fingerprint(payload[section]) for section in sections}
 
@@ -679,7 +679,7 @@ def section_fingerprints_of(payload: dict[str, Any], sections: tuple[str, ...]) 
 def nucleation_fraction_for_target_diameter(
     target_diameter_m: float, nucleus_diameter_m: float
 ) -> float:
-    r"""Nukleationsanteil, der im Beharrungszustand die Zielkorngröße liefert.
+    r"""Nucleation fraction that gives the target particle size at steady state.
 
     .. math:: b_{\mathrm{nuc}} = \left(\frac{d_{\mathrm{nuc}}}{d_{50,\mathrm{soll}}}\right)^{3}
     """
@@ -689,11 +689,11 @@ def nucleation_fraction_for_target_diameter(
 
 
 def load_process_config(path: str | Path) -> ProcessConfig:
-    """Lädt eine YAML-Config in die Dataclass-Hierarchie.
+    """Loads a YAML config into the dataclass hierarchy.
 
-    Bewusst ohne Hydra-Abhängigkeit: die Dataclasses sind gültige Hydra-Structured-Configs
-    und können später per ``ConfigStore.store(node=ProcessConfig)`` registriert werden,
-    ohne dass sich das Schema ändert.
+    Deliberately without a Hydra dependency: the dataclasses are valid Hydra structured configs
+    and can later be registered via ``ConfigStore.store(node=ProcessConfig)``
+    without the schema changing.
     """
     raw = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
     if not isinstance(raw, dict):
@@ -704,14 +704,14 @@ def load_process_config(path: str | Path) -> ProcessConfig:
 
 
 def dump_process_config(config: ProcessConfig, path: str | Path) -> None:
-    """Serialisiert die vollständig aufgelöste Config (Reproduzierbarkeitsanforderung)."""
+    """Serialises the fully resolved config (reproducibility requirement)."""
     Path(path).write_text(
         yaml.safe_dump(config.to_dict(), sort_keys=False, allow_unicode=True), encoding="utf-8"
     )
 
 
 def _from_mapping(cls: type[T], data: dict[str, Any]) -> T:
-    """Rekursive, typgeleitete Konstruktion -- keine losen Dicts im Modellcode."""
+    """Recursive, type-driven construction -- no loose dicts in the model code."""
     if not is_dataclass(cls):
         raise TypeError(f"{cls} ist keine Dataclass")
     known = {f.name: f for f in fields(cls)}

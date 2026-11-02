@@ -1,21 +1,20 @@
-"""Array-Backend-Abstraktion für das Grey-Box-Prozessmodell.
+"""Array backend abstraction for the grey-box process model.
 
-Warum diese Abstraktion existiert
----------------------------------
-Das Prozessmodell hat zwei Verwendungen mit unterschiedlichen Anforderungen:
+Why this abstraction exists
+---------------------------
+The process model has two uses with different requirements:
 
-1. **Datengenerierung** für den Architekturvergleich (AP 1): braucht nur schnelle,
-   batchweise Auswertung. NumPy genügt.
-2. **RL-Environment / Gradientenprüfung** (ab Monat 5-6): profitiert von
-   Differenzierbarkeit (analytische Gradienten, Verifikation der Monotonie-Constraints
-   gegen die Ground Truth, differenzierbare MPC).
+1. **Data generation** for the architecture comparison (AP 1): needs only fast,
+   batched evaluation. NumPy suffices.
+2. **RL environment / gradient check** (from month 5-6): benefits from
+   differentiability (analytical gradients, verification of the monotonicity constraints
+   against the ground truth, differentiable MPC).
 
-Statt das Modell zweimal zu schreiben, wird jede Operation über ein schmales Protokoll
-gekapselt. Die Physik-Module kennen nur dieses Protokoll (Dependency Injection), nicht
-NumPy oder PyTorch. Die untestbare Fläche bleibt damit auf die ~20 Zeilen des jeweiligen
-Backends beschränkt.
+Instead of writing the model twice, every operation is encapsulated behind a narrow protocol.
+The physics modules know only this protocol (dependency injection), not NumPy or PyTorch.
+The untestable surface thus stays confined to the ~20 lines of the respective backend.
 
-Konvention: Arrays haben die Form ``(batch, ...)``. Ein einzelner Lauf ist ``batch=1``.
+Convention: arrays have the shape ``(batch, ...)``. A single run is ``batch=1``.
 """
 
 from __future__ import annotations
@@ -25,10 +24,10 @@ from typing import Any, Protocol, runtime_checkable
 import numpy as np
 from numpy.typing import NDArray
 
-# Laufzeit-Typ eines Feldes: np.ndarray oder torch.Tensor.
-# Absichtlich `Any`: ein echtes Protokoll für alle Arithmetik-Dunder brächte hier
-# keinen Erkenntnisgewinn, sondern nur Rauschen. Die Verträge stehen in den
-# Docstrings, die Einheiten in den Variablennamen.
+# Runtime type of an array: np.ndarray or torch.Tensor.
+# Deliberately `Any`: a real protocol for all arithmetic dunders would bring no
+# insight here, only noise. The contracts are in the docstrings, the units in the
+# variable names.
 Array = Any
 
 FloatArray = NDArray[np.float64]
@@ -36,7 +35,7 @@ FloatArray = NDArray[np.float64]
 
 @runtime_checkable
 class ArrayBackend(Protocol):
-    """Minimale Menge elementweiser Operationen, die das Prozessmodell benötigt."""
+    """Minimal set of elementwise operations that the process model needs."""
 
     name: str
 
@@ -75,7 +74,7 @@ class ArrayBackend(Protocol):
 
 
 class NumpyBackend:
-    """Primäres, vollständig getestetes Backend."""
+    """Primary, fully tested backend."""
 
     name = "numpy"
 
@@ -125,12 +124,12 @@ class NumpyBackend:
 
 
 class TorchBackend:
-    """Backend für differenzierbare Rollouts und GPU-Batches.
+    """Backend for differentiable rollouts and GPU batches.
 
-    Achtung: in der Entwicklungsumgebung ohne PyTorch nicht ausführbar und daher
-    **nicht durch die Testsuite gedeckt**. Vor der ersten Verwendung
-    ``pytest tests/ -k torch`` mit installiertem PyTorch laufen lassen; die
-    Physiktests sind backend-parametrisiert und decken dann auch diesen Pfad ab.
+    Caution: not executable in the development environment without PyTorch and therefore
+    **not covered by the test suite**. Before first use, run
+    ``pytest tests/ -k torch`` with PyTorch installed; the
+    physics tests are backend-parametrized and then cover this path as well.
     """
 
     name = "torch"
@@ -193,7 +192,7 @@ class TorchBackend:
 
 
 def get_backend(name: str) -> ArrayBackend:
-    """Erzeuge das Backend, damit Configs nur einen String enthalten müssen."""
+    """Create the backend so that configs need to contain only a string."""
     backends: dict[str, ArrayBackend] = {
         "numpy": NumpyBackend(),
         "torch": TorchBackend(),
