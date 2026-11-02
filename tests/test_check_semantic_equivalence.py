@@ -45,16 +45,16 @@ def test_added_docstring_where_none_was_is_equivalent_but_code_change_is_not() -
 
 def test_rename_map_is_applied_to_the_old_tree() -> None:
     old = (
-        "import m as heiss\n\n\ndef kalt(heiss_count: int, *, warm: int = 0) -> int:\n"
-        "    total = heiss_count + warm\n    return heiss.f(total, heiss_count=heiss_count)\n\n\n"
-        "kalt(1, warm=2)\nobj.heiss_count\n"
+        "import m as heiss\n\n\ndef kalt(anzahl_x: int, *, warm: int = 0) -> int:\n"
+        "    total = anzahl_x + warm\n    return heiss.f(total, anzahl_x=anzahl_x)\n\n\n"
+        "kalt(1, warm=2)\nobj.anzahl_x\n"
     )
     new = (
-        "import m as hot\n\n\ndef cold(hot_count: int, *, warm: int = 0) -> int:\n"
-        "    total = hot_count + warm\n    return hot.f(total, hot_count=hot_count)\n\n\n"
-        "cold(1, warm=2)\nobj.hot_count\n"
+        "import m as hot\n\n\ndef cold(count_x: int, *, warm: int = 0) -> int:\n"
+        "    total = count_x + warm\n    return hot.f(total, count_x=count_x)\n\n\n"
+        "cold(1, warm=2)\nobj.count_x\n"
     )
-    mapping = {"heiss": "hot", "kalt": "cold", "heiss_count": "hot_count"}
+    mapping = {"heiss": "hot", "kalt": "cold", "anzahl_x": "count_x"}
     assert cse.check_python_source(old, new, mapping) == ()
     assert cse.check_python_source(old, new)  # without the table the trees differ
 
@@ -160,8 +160,8 @@ def _entry(old: str, new: str, files: tuple[str, ...] = ("s.py",)) -> cse.Rename
 
 
 def test_valid_table_has_no_problems() -> None:
-    sources = {"s.py": "def f(kalt_count: int) -> int:\n    return kalt_count\n", "d.md": "x\n"}
-    assert cse.validate_rename_map([_entry("kalt_count", "cold_count")], sources) == []
+    sources = {"s.py": "def f(zahl_y: int) -> int:\n    return zahl_y\n", "d.md": "x\n"}
+    assert cse.validate_rename_map([_entry("zahl_y", "number_y")], sources) == []
 
 
 def test_table_must_be_injective() -> None:
