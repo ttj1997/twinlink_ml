@@ -127,7 +127,7 @@ there, so as not to complicate the network-wide configuration as long as only
 one study needs it). Enters the fingerprint, triggers the same
 `PlaceholderConfigWarning` as `dT_min`.
 
-## `dT_min` -- placeholder, with an open question to Swantje
+## `dT_min` -- placeholder, with an open question to the consortium partner
 
 Default: **20 K** (`heatnetwork.config.DEFAULT_MINIMUM_PINCH_K`). Rationale: the
 consortium partner models the intermediate circuit between exhaust air and process air as a black
