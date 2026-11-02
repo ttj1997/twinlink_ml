@@ -99,7 +99,7 @@ def test_fingerprints_are_complete(data) -> None:
     assert all(value not in ("", "unknown") for value in data.fingerprints.values())
 
 
-# ------------------------------------------------------------------ Sampling points
+# ------------------------------------------------------------------ Support points
 
 
 def test_datasets_share_training_scalers(data) -> None:
@@ -327,7 +327,7 @@ def test_gru_matches_persistence_when_untrained(data) -> None:
     """Residual parametrisation with a zero head must be exactly persistence.
 
     This justifies the choice of parametrisation: an untrained network starts on the
-    baseline instead of on a random mapping and, at the small sampling points, spends
+    baseline instead of on a random mapping and, at the small support points, spends
     no data on first finding the operating point.
     """
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig, TorchSequenceModel

@@ -359,7 +359,7 @@ def test_registry_declared_but_unimplemented_slots_fail_fast() -> None:
 
 
 def test_registry_factories_are_fresh_instances() -> None:
-    """A new instance per seed and sampling point -- otherwise state survives across.
+    """A new instance per seed and support point -- otherwise state survives across.
 
     learning-curve points and the left end of the curve is lifted.
     """

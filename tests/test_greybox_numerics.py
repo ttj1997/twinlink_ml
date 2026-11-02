@@ -259,7 +259,7 @@ def test_simulator_construction_rejects_gab_isotherm_with_low_critical_moisture(
 def test_simulator_construction_accepts_gab_isotherm_with_lab_level_critical_moisture(
     config: ProcessConfig,
 ) -> None:
-    """Counter-check: lab-level X_cr (0.200) constructs the simulator without error.
+    """Cross-check: lab-level X_cr (0.200) constructs the simulator without error.
 
     The same isotherm as in the failure case above, only with a non-critical X_cr.
     """
@@ -346,7 +346,7 @@ def test_gradient_flows_through_full_rk4_step_with_gab_isotherm(config: ProcessC
     """Differentiability through a complete RK4 step (substeps=1) with GAB.
 
     Active GAB isotherm, Picard iteration and k1-based floor via the
-    Torch backend -- torch.autograd.gradcheck plus an independent counter-check against central
+    Torch backend -- torch.autograd.gradcheck plus an independent cross-check against central
     finite differences via the NumPy backend. A point at which the floor does NOT engage (X_p
     clearly above X_eq), so that an exact gradient comparison makes sense -- at a
     floor-active point a kink (maximum()) has no unique gradient

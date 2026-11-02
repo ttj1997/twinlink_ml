@@ -257,7 +257,7 @@ def test_decomposition_and_threshold_are_computable(variance_records) -> None:
     assert all(value >= 0.0 for value in thresholds.values())
 
 
-# ----------------------------------------------------------------- Noise limit
+# ----------------------------------------------------------------- Noise floor
 
 
 def test_noise_floor_grows_with_the_noise_level(process_config) -> None:

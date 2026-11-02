@@ -1,8 +1,8 @@
 r"""Problem table algorithm: the thermodynamic minimum of supplementary heat.
 
 Answers a different question than ``balance.evaluate_cascade``: not "how much fuel
-does THIS wiring need", but "how much fuel does EVERY CONCEIVABLE
-wiring need at least" -- the yardstick against which ``evaluate_cascade`` results (and
+does THIS interconnection need", but "how much fuel does EVERY CONCEIVABLE
+interconnection need at least" -- the yardstick against which ``evaluate_cascade`` results (and
 every later controller) are measured. For the pure target problem (no network
 design, only the minimum heating/cooling demand) the problem table algorithm is exact and
 needs no solver -- an LP would only be needed for the question of which heat exchanger
@@ -41,7 +41,7 @@ Kemp, "Pinch Analysis and Process Integration")
 The lower bound, not a design rule
 ------------------------------------------
 The heating demand computed here assumes arbitrarily many, ideally matched
-heat exchangers. It is a LOWER BOUND for every real wiring with
+heat exchangers. It is a LOWER BOUND for every real interconnection with
 THE SAME approach temperature, not a statement about whether it is achievable with two exchangers.
 ``tests/test_heatnetwork_pinch.py::test_pinch_target_never_exceeds_the_best_of_six_cases``
 makes this inequality explicitly checkable.
@@ -147,7 +147,7 @@ def dew_point_of_source_celsius(source: HeatSourceConfig, gas: GasConfig) -> flo
 def _recoverable_power_to_floor_kw(
     source: HeatSourceConfig, gas: GasConfig, floor_temperature_celsius: float
 ) -> float:
-    r"""ONE sampling point of the enthalpy-temperature curve.
+    r"""ONE support point of the enthalpy-temperature curve.
 
     :math:`\dot Q_{rec}` when cooling ``source`` from its outlet temperature down to
     ``floor_temperature_celsius``. For this it calls ``balance.evaluate_cascade`` with

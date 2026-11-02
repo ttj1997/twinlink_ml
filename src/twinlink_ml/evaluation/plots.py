@@ -1,4 +1,4 @@
-r"""Figures for learning curves, variance decomposition and noise limit (step 5, item 5).
+r"""Figures for learning curves, variance decomposition and noise floor (step 5, item 5).
 
 Why this is a module and not notebook cells
 -------------------------------------------------
@@ -15,7 +15,7 @@ What every curve must carry
    :math:`n_{\text{train}}`, because it is not trained.
 3. The **resolution threshold** as a band around the best curve. Anything that lies
    inside it is not a result.
-4. The **saturation level** (noise limit) as the lower asymptote, where known.
+4. The **saturation level** (noise floor) as the lower asymptote, where known.
 
 Matplotlib is not a run-time dependency of the package (extra ``dev``); the import
 therefore only happens in the function call, so that ``import twinlink_ml`` does not fail
@@ -105,7 +105,7 @@ def plot_learning_curve(
         demonstrated with the number of replicates run.
     noise_floor
         Saturation level from :class:`~twinlink_ml.evaluation.protocol.NoiseFloor`. A
-        curve that flattens there has reached the noise limit and not the model limit.
+        curve that flattens there has reached the noise floor and not the model limit.
 
     The x-axis is logarithmic (learning-curve points are powers of two), the y-axis is
     not: the comparison with the threshold 1.0 -- better than the mean of the run itself --
@@ -226,7 +226,7 @@ def plot_noise_study(
     metric: str = DEFAULT_METRIC,
     ax: Any = None,
 ) -> Any:
-    """Error over the noise level, with the noise limit as a reference line.
+    """Error over the noise level, with the noise floor as a reference line.
 
     The gap between curve and limit is the share that a better model can still gain at
     all. If the curve runs parallel above the limit, the model error is independent of

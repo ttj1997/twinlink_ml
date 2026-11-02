@@ -1,4 +1,4 @@
-r"""Wiring source -> sink: which source feeds which sink, in which order.
+r"""Interconnection source -> sink: which source feeds which sink, in which order.
 
 Two implementations exist from the start (:class:`FixedRouting`,
 :class:`MatrixRouting`) -- the same threshold that ``sorption.SorptionIsotherm`` already draws
@@ -70,7 +70,7 @@ class HeatNetworkRouting(ABC):
 
 @dataclass(frozen=True, slots=True)
 class FixedRouting(HeatNetworkRouting):
-    """Fixed, configurable wiring -- the topology is in ``connections``.
+    """Fixed, configurable interconnection -- the topology is in ``connections``.
 
     :param connections: ``(Quellenname, Senkenname)`` pairs, given in any order
         (the actual processing order is nevertheless set by
@@ -96,7 +96,7 @@ class FixedRouting(HeatNetworkRouting):
 
 @dataclass(frozen=True, slots=True)
 class MatrixRouting(HeatNetworkRouting):
-    """Wiring from an assignment matrix -- the later RL action space.
+    """Interconnection from an assignment matrix -- the later RL action space.
 
     :param assignment: shape ``(n_sources, n_sinks)``, rows/columns in the order of
         ``network.sources``/``network.sinks``. An entry above ``threshold`` activates the

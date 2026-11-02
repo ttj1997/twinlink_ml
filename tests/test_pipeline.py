@@ -197,7 +197,7 @@ def test_constant_runs_are_spread_over_the_design() -> None:
     """Every prefix must have approximately the target share of constant runs.
 
     Regression against the old rule ``run < n_constant``: it placed all constant runs
-    as a block at the beginning, whereby the smallest learning-curve sampling point contained
+    as a block at the beginning, whereby the smallest learning-curve point contained
     37 % instead of 10 % excitation-free runs and a prefix-block split pushed them entirely
     into ``train``.
     """

@@ -29,7 +29,7 @@ reference point with already existing building blocks):
 4. Scale caveat (as in ``heatnetwork``/``evaluation.recoverable_power`` throughout):
    the same ΔT_out/ΔY_out is evaluated at BOTH mass flows --
    ``dry_air_mass_flow_kg_per_s`` from the steady state itself (lab simulator,
-   approx. 0.03 kg/s) and ``DISTRICT_MASS_FLOW_KG_PER_S`` (consortium model, 8 kg/s). Every
+   approx. 0.03 kg/s) and ``DISTRICT_MASS_FLOW_KG_PER_S`` (site-network model, 8 kg/s). Every
    district number is a scaling calculation, not a statement about a plant.
 
 Not part of this task: a new error model, a re-evaluation of the learning curves themselves

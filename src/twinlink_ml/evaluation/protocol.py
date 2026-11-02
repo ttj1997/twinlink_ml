@@ -233,7 +233,7 @@ def _run_grid(
     - ``extra_fn`` for replicate-dependent but side-effect-free record parameters
       (``run_variance_decomposition``\ 's ``variance/master_seed``).
     - ``on_variant`` for side effects after building a data variant, before the
-      ``n_train`` loop (``run_noise_study``\ 's noise limit at replicate 0).
+      ``n_train`` loop (``run_noise_study``\ 's noise floor at replicate 0).
     - ``on_point`` exclusively for progress events, immediately before
       ``evaluate_point`` (``run_architecture_comparison``\ 's ``on_point`` parameter).
 
@@ -374,7 +374,7 @@ class NoiseFloor:
     measurement can become better than that.
 
     Why this is necessary: without this number, a learning curve that flattens at 0.12
-    cannot be read as a model limit *or* a noise limit. With it the question is settled,
+    cannot be read as a model limit *or* a noise floor. With it the question is settled,
     and that before the first architecture comparison instead of after the tenth.
 
     The second, often overlooked part: ``against_truth`` measures the same perfect
@@ -459,11 +459,11 @@ def estimate_noise_floor(
     horizons: Sequence[int] | None = None,
     which: SplitName = SplitName.TEST,
 ) -> NoiseFloor:
-    """Noise limit on the same test split and in the same normalisation as the curve.
+    """Noise floor on the same test split and in the same normalisation as the curve.
 
     Deliberately via the windowing and not directly on the time series: the primary
     metric is normalised run-level over **windows**, and overlapping windows weight the
-    time axis differently than the raw data. A noise limit in a different normalisation
+    time axis differently than the raw data. A noise floor in a different normalisation
     than the curve would not be comparable -- and exactly that comparison is the purpose.
     """
     train, _, test = build_datasets(data, n_train)
@@ -521,13 +521,13 @@ def run_noise_study(
     cache: DataPoolCache | None = None,
     group: str = "noise_study",
 ) -> tuple[list[RunRecord], dict[float, NoiseFloor]]:
-    """Learning curves over several noise levels, plus the noise limit per level.
+    """Learning curves over several noise levels, plus the noise floor per level.
 
     The seeds vary jointly (axis ``JOINT``) -- within a noise study the decomposition by
     source is not the question, and the conservative spread is the right figure for the
     saturation level.
 
-    The return value is a pair: the records of the models and the model-free noise limits
+    The return value is a pair: the records of the models and the model-free noise floors
     per level. Separate, because the limit is **not** a model property and would be filed
     wrongly under a model name in a records log.
     """

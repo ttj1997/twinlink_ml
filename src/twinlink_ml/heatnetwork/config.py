@@ -133,7 +133,7 @@ Projekt :meth:`HeatNetworkConfig.warn_if_placeholder` aus.
 class HeatSourceConfig:
     r"""An exhaust air source (dryer line) with mass flow, outlet temperature, outlet humidity.
 
-    Fields either set directly (consortium model, approx. 8 kg/s) or taken from a simulated
+    Fields either set directly (site-network model, approx. 8 kg/s) or taken from a simulated
     exhaust air state (lab simulator, approx. 0.03 kg/s) -- see the ``balance.py``
     module docstring, section "Coupling to the simulator" (EA4), for the literal
     signature of :func:`~twinlink_ml.simulation.exhaust.reconstruct_exhaust_state` and the
@@ -148,7 +148,7 @@ class HeatSourceConfig:
         (``outlet_temperature_celsius`` from ``reconstruct_exhaust_state``), not the
         bed temperature (``bed_temperature_celsius``/``T_gas_out_celsius``). With
         ``ExhaustConfig.outlet_duct_heat_loss_k == 0.0`` (default) numerically identical,
-        but the contract at the consortium interface is the outlet duct (EA4).
+        but the contract at the site-network interface is the outlet duct (EA4).
     :param outlet_humidity_kg_per_kg: Absolute exhaust air humidity ``Y_out``.
     """
 
@@ -227,7 +227,7 @@ class HeatSinkConfig:
 class HeatNetworkConfig:
     r"""Complete configuration of the heat-network module: sources, sinks, cascade parameters.
 
-    Deliberately contains NO wiring rule (which source feeds which sink) --
+    Deliberately contains NO interconnection rule (which source feeds which sink) --
     that is behaviour, not a configuration value, and lives as an injectable component in
     ``routing.py`` (:class:`~twinlink_ml.heatnetwork.routing.HeatNetworkRouting`,
     dependency injection like ``SorptionIsotherm`` in ``simulation.sorption``). What lives

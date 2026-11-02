@@ -140,7 +140,7 @@ def test_sobol_design_is_nested() -> None:
 
 
 def test_latin_hypercube_is_not_nested() -> None:
-    """Counter-check: with LHS the coverage changes with the learning-curve sampling point."""
+    """Cross-check: with LHS the coverage changes with the learning-curve point."""
     full = quasi_random_points(64, 5, sampler="lhs", seed=7)
     small = quasi_random_points(8, 5, sampler="lhs", seed=7)
     assert not np.allclose(full[:8], small)
@@ -256,7 +256,7 @@ def test_config_from_time_constants_respects_fast_mode() -> None:
     assert config.hold_time.minimum_s >= 4.0 * 5.0
     assert config.hold_time.maximum_s > config.hold_time.minimum_s
     # The period must exceed the run duration -- repetition within a run
-    # wastes sampling points. The slow mode cannot be excited by the actions.
+    # wastes support points. The slow mode cannot be excited by the actions.
     assert config.prbs_period_s >= config.run_duration_s
 
 

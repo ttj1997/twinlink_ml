@@ -138,10 +138,10 @@ in the caller).
 (third return value, ``outlet_temperature_celsius``), NOT the bed temperature (first
 return value, ``T_gas_out_celsius``/``bed_temperature_celsius``). With
 ``outlet_duct_heat_loss_k = 0.0`` (default) both are numerically equal, but the contract at the
-consortium interface is the exhaust air temperature -- this distinction is already established
+site-network interface is the exhaust air temperature -- this distinction is already established
 in the repo (``exhaust.py``, contract-correction paragraph) and is not blurred again here.
 
-**Scale caveat.** The consortium model computes with about 8 kg/s of process air
+**Scale caveat.** The site-network model computes with about 8 kg/s of process air
 (``evaluation.recoverable_power.DISTRICT_MASS_FLOW_KG_PER_S``), the lab simulator with about
 0.03 kg/s (``dry_air_mass_flow_kg_per_s`` in ``data.trajectory.diagnostics``) -- two
 orders of magnitude. Every kW figure from coupling lab sources with consortium sinks (or
@@ -388,7 +388,7 @@ class SharedCap:
     stages of the group that appear in the stage list must not exceed ``power_kw``. The
     stages serve the limit in the order of the cascade (the first takes what it would get after
     pinch and dew point, at most the limit; the next one the rest). Pairs that are missing from the
-    stage list do nothing -- a wiring without these stages is not affected by the
+    stage list do nothing -- an interconnection without these stages is not affected by the
     limit. Without ``shared_caps`` the cascade is bit-identical to the state before E1.
     """
 
@@ -434,8 +434,8 @@ def evaluate_cascade(
 
     ``stages`` is an ordered list of ``(Quellenname, Senkenname)`` pairs, typically
     the result of ``routing.HeatNetworkRouting.route`` -- this function does not know
-    ``routing.py`` (dependency injection: the wiring is passed in fully resolved, not decided
-    here). Every stage is processed in the given order; sources and sinks
+    ``routing.py`` (dependency injection: the interconnection is passed in fully resolved, not
+    decided here). Every stage is processed in the given order; sources and sinks
     carry a running state (current temperature) that is passed on from stage to stage
     -- exactly the cascading of correction 2.
 
@@ -471,7 +471,7 @@ def evaluate_cascade(
     artifacts). In the default ``"along_exchanger"``, ``dT_min`` applies as the minimum over the
     whole counter-current exchanger, on the source profile with condensation from the dew point,
     see :mod:`~twinlink_ml.heatnetwork.approach`; ``profiles`` (optional) are pre-built
-    profiles per source (:func:`build_source_profiles`), so that many wirings of the same
+    profiles per source (:func:`build_source_profiles`), so that many interconnections of the same
     sources build them only once.
 
     :raises ValueError: if ``stages`` references a source/sink that does not appear in

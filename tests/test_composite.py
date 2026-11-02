@@ -432,7 +432,7 @@ def test_xlstm_stays_finite_over_long_rollout(process_config) -> None:
     over many steps (module docstring of ``xlstm.py``). Checked at two horizons
     (24, the project standard; 200, artificially extended) with **random**
     core initialisation (``max_epochs=0`` only zeroes the head, see the test above) over
-    several seeds -- no NaN/Inf, at no sampling point.
+    several seeds -- no NaN/Inf, at no support point.
     """
     from twinlink_ml.models.composite import CompositeSequenceModel
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig
@@ -478,7 +478,7 @@ def test_xlstm_forward_ignores_teacher_when_teacher_forcing_is_zero(data) -> Non
     via ``predict()``, which never passes ``teacher`` anyway (see the Transformer docstring)
     -- a leak exclusively in the training path would be invisible there. This test calls
     ``forward()`` directly in training mode and replaces the ``teacher`` tensor with
-    random noise -- bit-identical (``torch.equal``), no tolerance. The counter-check with
+    random noise -- bit-identical (``torch.equal``), no tolerance. The cross-check with
     ``teacher_forcing=1.0`` ensures that the test is not green by chance because
     ``teacher`` never arrives in the network at all.
     """
@@ -509,7 +509,7 @@ def test_xlstm_forward_ignores_teacher_when_teacher_forcing_is_zero(data) -> Non
         "Exposure-Bias-Leck"
     )
 
-    # Counter-check: with active teacher forcing the prediction MUST change, otherwise
+    # Cross-check: with active teacher forcing the prediction MUST change, otherwise
     # the test above would only be green by chance (e.g. because `teacher` is not wired at all).
     with_forcing = network(
         tensors["history"], tensors["future"], teacher=tensors["targets"], teacher_forcing=1.0
@@ -656,7 +656,7 @@ def test_transformer_forward_ignores_teacher_when_teacher_forcing_is_zero(data) 
     tensor with random noise and calls ``forward()`` directly in training mode --
     bit-identical (``torch.equal``), no tolerance. ``predict()`` does not check this: it never
     passes ``teacher`` anyway (see ``TorchSequenceModel.predict``), a leak in the
-    training loop itself would be invisible via the pure rollout test. The counter-check
+    training loop itself would be invisible via the pure rollout test. The cross-check
     with ``teacher_forcing=1.0`` ensures that the test is not green by chance because
     ``teacher`` never arrives in the network at all.
     """
@@ -689,7 +689,7 @@ def test_transformer_forward_ignores_teacher_when_teacher_forcing_is_zero(data) 
         "Exposure-Bias-Leck"
     )
 
-    # Counter-check: with active teacher forcing the prediction MUST change, otherwise
+    # Cross-check: with active teacher forcing the prediction MUST change, otherwise
     # the test above would only be green by chance (e.g. because `teacher` is not wired at all).
     with_forcing = network(
         tensors["history"], tensors["future"], teacher=tensors["targets"], teacher_forcing=1.0
@@ -897,7 +897,7 @@ def test_mamba_forward_ignores_teacher_when_teacher_forcing_is_zero(data) -> Non
     true target value, even if a ``teacher`` tensor is passed to ``forward()``.
     This test replaces exactly this tensor with random noise and calls ``forward()``
     directly in training mode -- bit-identical (``torch.equal``), no tolerance. The
-    counter-check with ``teacher_forcing=1.0`` ensures that the test is not green by chance
+    cross-check with ``teacher_forcing=1.0`` ensures that the test is not green by chance
     because ``teacher`` never arrives in the network at all.
     """
     import torch
@@ -929,7 +929,7 @@ def test_mamba_forward_ignores_teacher_when_teacher_forcing_is_zero(data) -> Non
         "Exposure-Bias-Leck"
     )
 
-    # Counter-check: with active teacher forcing the prediction MUST change, otherwise
+    # Cross-check: with active teacher forcing the prediction MUST change, otherwise
     # the test above would only be green by chance (e.g. because `teacher` is not wired at all).
     with_forcing = network(
         tensors["history"], tensors["future"], teacher=tensors["targets"], teacher_forcing=1.0

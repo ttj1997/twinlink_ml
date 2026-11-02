@@ -43,7 +43,7 @@ control, referenced via the tracking tool).
 - **Abstract base classes (ABC)** for the four core abstractions:
   - `ProcessSimulator` – delivers trajectories (grey-box model, later Dyssol adapter,
     later possibly a learned surrogate)
-  - `SequenceDataset` – windowing, normalization, splits
+  - `SequenceDataset` – windowing, normalisation, splits
   - `SequenceModel` – common interface for GRU/LSTM/xLSTM/Mamba/Transformer,
     incl. multi-step rollout
   - `Evaluator` – metrics and result formats
@@ -106,7 +106,7 @@ but follows the existing convention; see `04_stand_ap1.md`, Befund 34.
 - Commented and narrative: what is shown, what can be seen in it
 - Standard visualizations: trajectories of the process model, excitation signals,
   learning curves with spread band, rollout comparisons against ground truth
-- **Every learning curve carries its resolution threshold and, where known, its noise limit.** The
+- **Every learning curve carries its resolution threshold and, where known, its noise floor.** The
   band is part of the plot function in `evaluation/plots.py` and not of the caller —
   if the logic sits in the notebook cell, sooner or later a variant without the
   threshold band appears, and that one ends up in a talk.

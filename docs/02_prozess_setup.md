@@ -227,7 +227,7 @@ New in this version, because it changes the task and not just its implementation
 is too small because the pooled scatter contains the level differences between the runs,
 "and no model has to predict those, they are in the window history". The
 second half-sentence is a **precondition**: it holds only with inline measurement. Without it,
-the level is part of the task, and the run-level normalization additionally becomes unstable — for
+the level is part of the task, and the run-level normalisation additionally becomes unstable — for
 a run with small intrinsic scatter the denominator goes to zero. Measured: a
 parameter-free mean prediction reaches run-level medians above 3 with
 seed ranges above 19, whereas pooled it is a clean 1.01.

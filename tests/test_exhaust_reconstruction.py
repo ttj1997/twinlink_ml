@@ -16,7 +16,7 @@ Two independent error classes, two test groups:
    have been built from ``data.trajectory``/``data.split``). A first version did not check
    this -- with a coincidentally matching window count (e.g. training pool and constant-run
    holdout with the same ``n_test``) a mix-up would have run through without complaint and
-   silently delivered wrong numbers, no crash. Found through a targeted counter-check (wrong
+   silently delivered wrong numbers, no crash. Found through a targeted cross-check (wrong
    pair passed deliberately), not through a bug report.
 """
 
@@ -162,7 +162,7 @@ def test_evaluate_exhaust_reconstruction_rejects_mismatched_data_and_test() -> N
     ``data.trajectory``/``data.split`` -- with the same window count (here: both
     pools with ``n_test=4``) a mix-up ran through without complaint and would silently have
     delivered wrong numbers (diagnostics from the wrong pool, only formally indexed to match).
-    This counter-check reproduces exactly the mix-up that originally uncovered the error:
+    This cross-check reproduces exactly the mix-up that originally uncovered the error:
     ``excited`` (training pool) together with ``test_constant`` (constant-run test set).
     """
     from twinlink_ml.models.composite import CompositeGruSequenceModel
@@ -203,6 +203,6 @@ def test_evaluate_exhaust_reconstruction_rejects_mismatched_data_and_test() -> N
     evaluate_exhaust_reconstruction(model, excited, test_excited, horizons=(1, 8))
     evaluate_exhaust_reconstruction(model, holdout, test_constant, horizons=(1, 8))
 
-    # The actual counter-check: a swapped pair must fail.
+    # The actual cross-check: a swapped pair must fail.
     with pytest.raises(ValueError, match="stimmt nicht mit data.trajectory"):
         evaluate_exhaust_reconstruction(model, excited, test_constant, horizons=(1, 8))

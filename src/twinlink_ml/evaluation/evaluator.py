@@ -21,7 +21,7 @@ Two references per number
 plant. ``nrmse_truth`` measures against the noise-free output of the grey-box model. The
 difference between the two is the irreducible part and thus the **saturation level of the
 learning curve**. Without this second number, a learning curve that flattens at 0.12 is
-read as a model limit, although it may be the noise limit.
+read as a model limit, although it may be the noise floor.
 
 Run-level normalisation is the primary number, not the pooled one
 -----------------------------------------------------------------
@@ -117,7 +117,7 @@ def pooled_nrmse(
     diverging in between must not look good.
 
     A module function and not a method, so that the same normalisation convention can
-    also be used outside a model comparison -- for instance for the noise limit in
+    also be used outside a model comparison -- for instance for the noise floor in
     :mod:`twinlink_ml.evaluation.protocol`, which evaluates no model.
     """
     result: dict[str, dict[int, float]] = {name: {} for name in names}

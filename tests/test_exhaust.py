@@ -76,7 +76,7 @@ def test_reconstruction_matches_steady_state_reference_bitgenau(
 def test_reconstruction_matches_documented_befund_31_values(
     config: ProcessConfig, simulator: GreyBoxFluidBedGranulator, backend: ArrayBackend
 ) -> None:
-    """Counter-check against the documented table value (``docs/04_stand_ap1.md``, Befund 31)."""
+    """Cross-check against the documented table value (``docs/04_stand_ap1.md``, Befund 31)."""
     _t_gas_out, y_gas_out, _outlet_temperature, _solution = _reconstruct_at_solution(
         config, simulator, backend
     )
