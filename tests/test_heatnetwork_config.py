@@ -1,4 +1,4 @@
-"""Tests für ``heatnetwork/config.py`` -- Validierung, Fingerprint-Mechanik, Platzhalterwarnung."""
+"""Tests for ``heatnetwork/config.py`` -- validation, fingerprint mechanics, placeholder warning."""
 
 from __future__ import annotations
 

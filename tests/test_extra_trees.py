@@ -1,7 +1,7 @@
-"""Tests für :class:`~twinlink_ml.models.extra_trees.ExtraTreesModel`.
+"""Tests for :class:`~twinlink_ml.models.extra_trees.ExtraTreesModel`.
 
-Läuft nur mit installiertem scikit-learn (optionales Extra, siehe ``pyproject.toml``);
-ohne sklearn werden die Tests übersprungen, analog zu ``HAS_TORCH`` in
+Runs only with scikit-learn installed (optional extra, see ``pyproject.toml``);
+without sklearn the tests are skipped, analogous to ``HAS_TORCH`` in
 ``test_composite.py``.
 """
 
@@ -107,10 +107,10 @@ def test_extra_trees_rejects_short_history(pipeline) -> None:
 
 
 def test_extra_trees_feature_channels_exclude_unobserved_targets(pipeline) -> None:
-    """Nicht inline gemessene Zielgrößen dürfen keine Merkmale liefern.
+    """Targets not measured inline must not supply features.
 
-    Ihr Historienkanal ist konstant der Trainingsmittelwert -- eine Ableitung davon ist
-    eine Ableitung von Rauschen um eine Konstante, siehe Moduldocstring.
+    Their history channel is constantly the training mean -- a derivative of it is
+    a derivative of noise around a constant, see the module docstring.
     """
     trajectory, split = pipeline
     window = dataclasses.replace(WINDOW, observed_target_names=("energy_target",))
@@ -118,7 +118,7 @@ def test_extra_trees_feature_channels_exclude_unobserved_targets(pipeline) -> No
     model = ExtraTreesModel(n_estimators=5)
     model.fit(train, seed=0)
     n_exogenous = len(train.exogenous_names)
-    # energy_target (Index 0 der Zielgrößen) ist beobachtet, product_moisture (Index 1) nicht.
+    # energy_target (index 0 of the targets) is observed, product_moisture (index 1) is not.
     assert model._feature_channels == (*range(n_exogenous), n_exogenous)
 
 
@@ -158,7 +158,7 @@ def test_extra_trees_is_deterministic_given_seed(pipeline) -> None:
 
 
 def test_extra_trees_beats_climatology_on_energy(pipeline) -> None:
-    """Inhaltliche Mindestzusicherung, analog ``test_arx_beats_static_regression_on_energy``."""
+    """Minimum content guarantee, analogous to ``test_arx_beats_static_regression_on_energy``."""
     from twinlink_ml.evaluation import RolloutEvaluator
     from twinlink_ml.models import ClimatologyModel
 

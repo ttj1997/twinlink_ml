@@ -1,11 +1,11 @@
-"""Beweist, dass die autouse-Fixture ``_restore_torch_global_state`` das Leck eindämmt.
+"""Proves that the autouse fixture ``_restore_torch_global_state`` contains the leak.
 
-Torch-dtype-Leck aus ``test_greybox_numerics.py``, Fixture in conftest.py. Reihenfolge
-ist hier Teil des Tests, nicht nur Zufall: pytest sammelt Testfunktionen
-innerhalb einer Datei in Definitionsreihenfolge (kein Ordering-Plugin nötig). Die zweite
-Funktion unten läuft deshalb garantiert direkt nach der ersten -- genau die Reihenfolge,
-unter der das Leck ursprünglich reproduzierbar war (ein Test setzt global, der nächste
-sieht den unrückgängig gemachten Zustand).
+Torch dtype leak from ``test_greybox_numerics.py``, fixture in conftest.py. Order
+is part of the test here, not just chance: pytest collects test functions
+within a file in definition order (no ordering plugin needed). The second
+function below therefore runs guaranteed directly after the first -- exactly the order
+under which the leak was originally reproducible (one test sets globally, the next
+sees the state that was not undone).
 """
 
 from __future__ import annotations
@@ -19,25 +19,25 @@ HAS_TORCH = importlib.util.find_spec("torch") is not None
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_torch_default_dtype_leak_reproduced() -> None:
-    """Bildet das Leckverhalten nach: setzt den Default-Dtype, setzt ihn NICHT zurück.
+    """Mimics the leak behaviour: sets the default dtype, does NOT reset it.
 
-    Absichtlich kein try/finally hier -- genau das Fehlen davon ist der reproduzierte
-    Fehler aus den beiden betroffenen Gradiententests. Ob die Fixture ihn trotzdem
-    eindämmt, prüft die nächste Funktion in dieser Datei.
+    Deliberately no try/finally here -- exactly its absence is the reproduced
+    error from the two affected gradient tests. Whether the fixture nevertheless
+    contains it is checked by the next function in this file.
     """
     import torch
 
     torch.set_default_dtype(torch.float64)
-    assert torch.get_default_dtype() == torch.float64  # Leck tatsächlich aktiv
+    assert torch.get_default_dtype() == torch.float64  # leak actually active
 
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_torch_default_dtype_restored_after_leaking_test() -> None:
-    """Muss unmittelbar NACH ``test_torch_default_dtype_leak_reproduced`` stehen (s. o.).
+    """Must stand immediately AFTER ``test_torch_default_dtype_leak_reproduced`` (see above).
 
-    Läuft garantiert direkt nach der leckenden Funktion oben (Definitionsreihenfolge).
-    Schlägt dieser Test fehl, ist entweder die autouse-Fixture in conftest.py kaputt
-    oder die beiden Funktionen wurden versehentlich umsortiert.
+    Runs guaranteed directly after the leaking function above (definition order).
+    If this test fails, either the autouse fixture in conftest.py is broken
+    or the two functions were accidentally reordered.
     """
     import torch
 

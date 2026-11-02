@@ -1,7 +1,7 @@
-"""Tests der Stoffwert- und Fluidisierungskorrelationen gegen Literaturwerte.
+"""Tests of the property and fluidisation correlations against literature values.
 
-Diese Tests sind kein Selbstzweck: sie sind die einzige Stelle, an der eine falsch
-abgetippte Korrelation auffällt, bevor sie über 18 Monate in Trainingsdaten wandert.
+These tests are not an end in themselves: they are the only place where a wrongly
+typed correlation is noticed before it wanders into training data over 18 months.
 """
 
 from __future__ import annotations
@@ -59,7 +59,7 @@ def test_gas_properties_at_ambient(backend: ArrayBackend) -> None:
 
 
 def test_minimum_fluidization_velocity_sand_reference(backend: ArrayBackend) -> None:
-    """200 µm Sand, 20 °C: Literaturwert u_mf ~ 0.03-0.04 m/s."""
+    """200 µm sand, 20 °C: literature value u_mf ~ 0.03-0.04 m/s."""
     material = MaterialConfig(particle_density_kg_per_m3=2600.0)
     u_mf = float(
         minimum_fluidization_velocity_m_per_s(
@@ -70,7 +70,7 @@ def test_minimum_fluidization_velocity_sand_reference(backend: ArrayBackend) -> 
 
 
 def test_terminal_velocity_sand_reference(backend: ArrayBackend) -> None:
-    """200 µm Sand: u_t in der Größenordnung 1-2 m/s."""
+    """200 µm sand: u_t of the order of 1-2 m/s."""
     material = MaterialConfig(particle_density_kg_per_m3=2600.0, sphericity=1.0)
     u_t = float(
         terminal_velocity_m_per_s(
@@ -95,7 +95,7 @@ def test_fluidization_window_is_ordered_and_widens_with_size(backend: ArrayBacke
 
 
 def test_minimum_fluidization_velocity_grows_by_factor_three(backend: ArrayBackend) -> None:
-    """Begründet, warum die untere Grenze von u_gas zustandsabhängig sein muss."""
+    """Justifies why the lower limit of u_gas must be state-dependent."""
     gas, material = GasConfig(), MaterialConfig()
     small, large = np.array(400e-6), np.array(750e-6)
     args = (np.array(60.0), np.array(0.01))
@@ -107,10 +107,10 @@ def test_minimum_fluidization_velocity_grows_by_factor_three(backend: ArrayBacke
 
 
 def test_normalised_moisture_is_clipped(backend: ArrayBackend) -> None:
-    """Signatur erweitert (Schritt 2, Isotherme injiziert) -- Ergebnis bleibt identisch.
+    """Signature extended (step 2, isotherm injected) -- the result stays identical.
 
-    Mit ConstantIsotherm bleibt das Ergebnis identisch zum vorherigen Skalarverhalten,
-    relative_humidity/temperature sind hier beliebig (ConstantIsotherm ignoriert sie).
+    With ConstantIsotherm the result stays identical to the previous scalar behaviour,
+    relative_humidity/temperature are arbitrary here (ConstantIsotherm ignores them).
     """
     material = MaterialConfig()
     isotherm = ConstantIsotherm(material.equilibrium_moisture_kg_per_kg)
@@ -127,10 +127,10 @@ def test_normalised_moisture_is_clipped(backend: ArrayBackend) -> None:
 
 
 def test_outlet_humidity_never_exceeds_saturation(backend: ArrayBackend) -> None:
-    """Harte Grenze aus 02_prozess_setup.md -- hier strukturell, nicht per Projektion.
+    """Hard limit from 02_prozess_setup.md -- here structural, not via projection.
 
-    Bewusst mit absurd nassen Partikeln und minimalem Luftstrom getestet: gerade dann
-    müsste eine per Projektion nachgeschaltete Begrenzung greifen.
+    Deliberately tested with absurdly wet particles and minimal air flow: precisely then
+    a limit applied downstream via projection would have to engage.
     """
     gas, material = GasConfig(), MaterialConfig()
     rng = np.random.default_rng(0)
@@ -151,7 +151,7 @@ def test_outlet_humidity_never_exceeds_saturation(backend: ArrayBackend) -> None
     assert np.all(saturation_degree <= material.max_saturation_degree + 1e-12)
 
 
-# ------------------------------------------------ Picard-Iteration: Doppel-Backend
+# -------------------------------------------------- Picard iteration: dual backend
 
 
 _GAB_ISOTHERM_PLACEHOLDER = GabIsotherm(
@@ -163,9 +163,9 @@ _GAB_ISOTHERM_PLACEHOLDER = GabIsotherm(
     reference_temperature_celsius=62.0,
 )
 
-# Drei an frühere Betriebspunkte gekoppelte, feste Testpunkte (docs/04_stand_ap1.md,
-# Befund 34): synthetisches Knick-Szenario, Befund-31-Randpunkt (unzulässig, X_p=0.397),
-# echter Befund-31-Randpunkt (T_in=115°C/Spray=0.6kg/h, zulässig).
+# Three fixed test points coupled to earlier operating points (docs/04_stand_ap1.md,
+# Befund 34): synthetic kink scenario, Befund 31 edge point (infeasible, X_p=0.397),
+# real Befund 31 edge point (T_in=115°C/spray=0.6kg/h, feasible).
 _PICARD_TEST_POINTS = {
     "knick": {"y_in": 0.007261, "t_bed": 90.0, "dry_air_flow": 0.042514, "x_p": 0.004445},
     "befund31_unzulaessig": {
@@ -186,11 +186,11 @@ _PICARD_TEST_POINTS = {
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 @pytest.mark.parametrize("label", list(_PICARD_TEST_POINTS))
 def test_evaporation_rate_picard_matches_across_numpy_and_torch_backends(label: str) -> None:
-    """Die gedämpfte Picard-Iteration (alpha=0.7, n=5) muss backendunabhängig konvergieren.
+    """The damped Picard iteration (alpha=0.7, n=5) must converge independently of the backend.
 
-    Für Y_out muss sie auf NumPy- und Torch-Backend identisch konvergieren -- beide
-    rechnen float64 (TorchBackend castet explizit), keine Float32-Präzisionsdifferenz zu
-    erwarten, aber unabhängig geprüft.
+    For Y_out it must converge identically on the NumPy and Torch backends -- both
+    compute float64 (TorchBackend casts explicitly), no float32 precision difference to
+    be expected, but checked independently.
     """
     gas, material = GasConfig(), MaterialConfig(critical_moisture_kg_per_kg=0.200)
     point = _PICARD_TEST_POINTS[label]
@@ -217,14 +217,14 @@ def test_evaporation_rate_picard_matches_across_numpy_and_torch_backends(label: 
 def test_evaporation_rate_picard_converges_under_one_percent(
     label: str, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Konvergenz Iteration 4 gegen 5 -- separat von der Backend-Parität oben zu prüfen.
+    """Convergence of iteration 4 against 5 -- to check separately from the backend parity above.
 
-    Die Backend-Parität oben zeigt nur, dass beide Backends übereinstimmen, nicht dass
-    die Iteration konvergiert. Nach der branch-selektiven Dämpfungskorrektur (Dämpfung
-    nur im Trocknungszweig, siehe evaporation_rate_kg_per_s-Docstring) neu vermessen:
-    alle drei Punkte liegen unverändert unter 1 %, weil keiner der drei den
-    Kondensationszweig durchläuft (surplus > 0 bei allen dreien) -- die Korrektur
-    konnte ihre Werte also gar nicht verändern.
+    The backend parity above only shows that both backends agree, not that
+    the iteration converges. Re-measured after the branch-selective damping correction (damping
+    only in the drying branch, see the evaporation_rate_kg_per_s docstring):
+    all three points stay unchanged below 1 %, because none of the three passes through the
+    condensation branch (surplus > 0 for all three) -- the correction
+    could therefore not change their values at all.
     """
     import twinlink_ml.simulation.thermo as thermo_module
 

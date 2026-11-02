@@ -1,9 +1,9 @@
-"""Haelt die Fingerprint-Aequivalenztabelle exakt auf den drei nachgewiesenen Paaren fest.
+"""Pins the fingerprint equivalence table exactly to the three proven pairs.
 
-Siehe :mod:`twinlink_ml.utils.fingerprint_history` (Audit 2026-09-25) fuer den Nachweis.
-Die Tabelle ist geschlossen; ein Test, der das nicht erzwingt, waere nur so lange richtig,
-bis jemand in gutem Glauben einen vierten Eintrag ergaenzt, der nicht durch denselben
-Beleg gedeckt ist.
+See :mod:`twinlink_ml.utils.fingerprint_history` (audit 2026-09-25) for the evidence.
+The table is closed; a test that does not enforce this would only be right until
+someone in good faith adds a fourth entry that is not covered by the same
+evidence.
 """
 
 from __future__ import annotations

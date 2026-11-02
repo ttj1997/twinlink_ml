@@ -1,10 +1,10 @@
-"""Tests für Experimentkern, Tracking und GRU (Arbeitsplan Schritte 3 bis 5).
+"""Tests for the experiment core, tracking and GRU (work plan steps 3 to 5).
 
-Das GRU ist nur mit PyTorch prüfbar; die entsprechenden Tests überspringen sich ohne
-Torch. Ohne Torch geprüft wird trotzdem, dass das Paket importierbar bleibt und dass die
-Fehlermeldung verwertbar ist -- beides ist eine Zusicherung an Schritte 1 bis 4, die
-PyTorch nicht brauchen. Die übersprungenen Tests müssen auf einer Maschine mit Torch
-einmal grün laufen, **bevor** ein GRU-Ergebnis berichtet wird.
+The GRU is checkable only with PyTorch; the corresponding tests skip themselves without
+Torch. Without Torch it is nevertheless checked that the package stays importable and that
+the error message is usable -- both are a guarantee to steps 1 to 4, which do not need
+PyTorch. The skipped tests must run green once on a machine with Torch
+**before** a GRU result is reported.
 """
 
 from __future__ import annotations
@@ -65,7 +65,7 @@ def data(process_config):
     return generate_data(process_config, SMALL, master_seed=1)
 
 
-# ------------------------------------------------------------------------ Datensatz
+# ------------------------------------------------------------------------- Data set
 
 
 def test_pool_size_matches_specification(data) -> None:
@@ -85,10 +85,10 @@ def test_generation_depends_on_master_seed(process_config, data) -> None:
 
 
 def test_fingerprints_are_complete(data) -> None:
-    """Ohne diese vier ist ein Lernkurvenpunkt nicht rekonstruierbar.
+    """Without these four a learning-curve point cannot be reconstructed.
 
-    ``measurement/digest`` ist ab Schritt 5 dabei: mit dem Rauschniveau als
-    Versuchsfaktor unterscheiden sich zwei Datensätze bei gleichem Prozess-Fingerprint.
+    ``measurement/digest`` is included from step 5 on: with the noise level as an
+    experimental factor, two data sets differ despite the same process fingerprint.
     """
     assert set(data.fingerprints) == {
         "process/fingerprint",
@@ -99,7 +99,7 @@ def test_fingerprints_are_complete(data) -> None:
     assert all(value not in ("", "unknown") for value in data.fingerprints.values())
 
 
-# ------------------------------------------------------------------ Stützstellen
+# ------------------------------------------------------------------ Sampling points
 
 
 def test_datasets_share_training_scalers(data) -> None:
@@ -118,7 +118,7 @@ def test_support_points_are_nested_and_share_test_set(data) -> None:
 
 
 def test_scalers_are_refitted_per_support_point(data) -> None:
-    """Statistiken einmal über den Pool zu schätzen hebt genau das linke Kurvenende."""
+    """Estimating statistics once over the pool lifts exactly the left end of the curve."""
     small, _, _ = build_datasets(data, 4)
     large, _, _ = build_datasets(data, 8)
     assert not np.allclose(small.target_scaler.mean, large.target_scaler.mean)
@@ -140,7 +140,7 @@ def test_splits_stay_disjoint_over_all_support_points(data) -> None:
         assert len(sets[0] | sets[1] | sets[2]) == sum(len(item) for item in sets)
 
 
-# ---------------------------------------------------------------------- Lernkurve
+# ----------------------------------------------------------------- Learning curve
 
 
 def test_learning_curve_record_count(process_config) -> None:
@@ -156,10 +156,10 @@ def test_learning_curve_record_count(process_config) -> None:
 
 
 def test_persistence_is_invariant_to_training_size(process_config) -> None:
-    """Wächter über die Auswertung: ein parameterfreies Modell darf nicht lernen.
+    """Guard over the evaluation: a parameter-free model must not learn.
 
-    Ändert sich der Persistenz-Fehler mit ``n_train``, hängt die Testauswertung von der
-    Trainingsmenge ab -- also ein Leck oder ein Fehler in der Skalierer-Weitergabe.
+    If the persistence error changes with ``n_train``, the test evaluation depends on the
+    training set -- i.e. a leak or an error in passing on the scalers.
     """
     records = run_learning_curve(
         process_config,
@@ -225,7 +225,7 @@ def test_learning_curve_writes_one_log_line_per_record(process_config, tmp_path:
 
 
 def test_record_schema_includes_training_elapsed_s(data) -> None:
-    """G4c: Kostenfragen (A1) beantwortbar -- jeder Record trägt training/elapsed_s."""
+    """G4c: cost questions (A1) answerable -- every record carries training/elapsed_s."""
     records = evaluate_point(data, 4, {"persistence": PersistenceModel, "arx": LinearARXModel})
     assert len(records) == 2
     for record in records:
@@ -234,11 +234,11 @@ def test_record_schema_includes_training_elapsed_s(data) -> None:
         assert elapsed >= 0.0
 
 
-# ------------------------------------------------------------------ Δt-Vorstudie
+# ------------------------------------------------------------------ Δt pre-study
 
 
 def test_sample_time_study_keeps_physical_window_constant(process_config) -> None:
-    """Sonst mischt der Vergleich Abtastzeit und Modellhorizont."""
+    """Otherwise the comparison mixes sample time and model horizon."""
     records = run_sample_time_study(
         process_config,
         {"persistence": PersistenceModel},
@@ -271,10 +271,10 @@ def test_record_serialises_non_json_values() -> None:
 
 
 def test_jsonl_logger_appends_and_is_parsable(tmp_path: Path) -> None:
-    """Anfügend, damit ein Abbruch nach 40 von 45 Punkten die 40 behält.
+    """Appending, so that an abort after 40 of 45 points keeps the 40.
 
-    ``allow_missing_git=True``: dieser Test prüft die Anfüge-Mechanik, nicht die
-    Git-Provenienz (G4a) -- die Records tragen bewusst kein ``git/commit_available``.
+    ``allow_missing_git=True``: this test checks the append mechanics, not the
+    git provenance (G4a) -- the records deliberately carry no ``git/commit_available``.
     """
     path = tmp_path / "nested" / "log.jsonl"
     logger = JsonlExperimentLogger(path, allow_missing_git=True)
@@ -305,7 +305,7 @@ def test_environment_fingerprint_has_versions() -> None:
 
 
 def test_package_imports_without_torch() -> None:
-    """Schritte 1 bis 4 dürfen PyTorch nicht brauchen."""
+    """Steps 1 to 4 must not need PyTorch."""
     import twinlink_ml.data
     import twinlink_ml.evaluation
     import twinlink_ml.models
@@ -324,11 +324,11 @@ def test_gru_raises_actionable_error_without_torch() -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_gru_matches_persistence_when_untrained(data) -> None:
-    """Residual-Parametrisierung mit Nullkopf muss exakt Persistenz sein.
+    """Residual parametrisation with a zero head must be exactly persistence.
 
-    Das begründet die Wahl der Parametrisierung: ein untrainiertes Netz startet auf der
-    Baseline statt auf einer Zufallsabbildung und verbraucht an den kleinen Stützstellen
-    keine Daten, um den Arbeitspunkt erst zu finden.
+    This justifies the choice of parametrisation: an untrained network starts on the
+    baseline instead of on a random mapping and, at the small sampling points, spends
+    no data on first finding the operating point.
     """
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig, TorchSequenceModel
 
@@ -343,27 +343,27 @@ def test_gru_matches_persistence_when_untrained(data) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_gru_trains_and_moves_away_from_the_zero_init(data) -> None:
-    """Der Trainer funktioniert -- **nicht**, dass das GRU die Persistenz schlägt.
+    """The trainer works -- **not** that the GRU beats persistence.
 
-    Bewusst keine Generalisierungsbehauptung. Mit ``n_train = 8`` und einem einzigen Seed
-    liegt jeder Vergleich weit unter der Auflösungsschwelle aus Schritt 5 (13.2 % bei drei
-    Seeds; mit einem Seed ist noch weniger nachweisbar) -- ein Assert der Form
-    "GRU schlägt Persistenz" würde hier eine empirische Behauptung als Bestandsprüfung
-    verkleiden, die das Projekt selbst als nicht belastbar eingestuft hat. Genau dafür
-    existiert stattdessen ``study_architectures.py`` mit mehreren Seeds und
-    ``architecture_verdicts``, das die Schwelle mitliefert.
+    Deliberately no generalisation claim. With ``n_train = 8`` and a single seed
+    every comparison lies far below the resolution threshold from step 5 (13.2 % with three
+    seeds; with one seed even less is detectable) -- an assert of the form
+    "GRU beats persistence" would here disguise an empirical claim as a sanity check,
+    one that the project itself has classified as not reliable. Exactly for that,
+    ``study_architectures.py`` exists instead, with several seeds and
+    ``architecture_verdicts``, which supplies the threshold.
 
-    Was hier stattdessen geprüft wird -- deterministisch, ohne Trainingsglück:
+    What is checked here instead -- deterministically, without training luck:
 
-    1. Der Trainingsverlust am Ende ist niedriger als am Anfang (der Optimierer bewegt
-       sich tatsächlich in Richtung seines eigenen Ziels).
-    2. Die Gewichte weichen nach dem Training vom Nullinit ab (das Netz hat sich bewegt,
-       nicht nur `max_epochs`-mal denselben Punkt bestätigt).
-    3. Die Rollout-Vorhersage bleibt endlich und ist nicht die Persistenz-Baseline mehr
-       (das Training hat etwas verändert, ohne eine Richtung zu behaupten).
+    1. The training loss at the end is lower than at the start (the optimiser actually
+       moves towards its own objective).
+    2. The weights deviate from the zero init after training (the network has moved,
+       not just confirmed the same point `max_epochs` times).
+    3. The rollout prediction stays finite and is no longer the persistence baseline
+       (the training has changed something, without claiming a direction).
 
-    Ob ein GRU die Persistenz auf `energy_target` bei realistischem Seed-Budget schlägt,
-    ist eine Frage für die Lernkurve, nicht für diesen Test.
+    Whether a GRU beats persistence on `energy_target` with a realistic seed budget
+    is a question for the learning curve, not for this test.
     """
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig, TorchSequenceModel
 
@@ -391,7 +391,7 @@ def test_gru_trains_and_moves_away_from_the_zero_init(data) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_gru_rollout_does_not_see_future_targets(data) -> None:
-    """Dieselbe Zusicherung wie beim ARX: kein heimliches Fortschreiben der Wahrheit."""
+    """The same guarantee as for the ARX: no covert carrying forward of the truth."""
     import dataclasses
 
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig, TorchSequenceModel
@@ -418,10 +418,10 @@ def test_gru_prediction_is_deterministic(data) -> None:
 
 
 def test_static_regression_stays_competitive_on_energy(data) -> None:
-    """Inhaltlicher Wächter: ``energy_target`` ist algebraisch in den aktuellen Eingängen.
+    """Content guard: ``energy_target`` is algebraic in the current inputs.
 
-    Verschlechtert sich die statische Regression drastisch, stimmt etwas mit der
-    Zielgrößendefinition oder dem Anregungsdesign nicht.
+    If the static regression deteriorates drastically, something is wrong with the
+    target definition or the excitation design.
     """
     train, _, test = build_datasets(data, 8)
     model = StaticRegressionModel()
@@ -432,12 +432,12 @@ def test_static_regression_stays_competitive_on_energy(data) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_lstm_core_shares_the_trainer(data) -> None:
-    """Der Kern ist austauschbar: dasselbe Training, dieselbe Rollout-Semantik.
+    """The core is interchangeable: the same training, the same rollout semantics.
 
-    Wäre der Test rot, wäre die Open-Closed-Zusage von Schritt 6 verletzt -- eine neue
-    Architektur bräuchte dann doch eine Änderung am Trainingscode. ``xlstm`` seit
-    Schritt 6, Teil 2 (Befund 29, ``docs/04_stand_ap1.md``) dabei -- derselbe Trainer,
-    ohne ihn anzufassen (Modul-Docstring ``torch_sequence.py``).
+    If the test were red, the open-closed promise of step 6 would be violated -- a new
+    architecture would then need a change to the training code after all. ``xlstm`` included
+    since step 6, part 2 (Befund 29, ``docs/04_stand_ap1.md``) -- the same trainer,
+    without touching it (module docstring ``torch_sequence.py``).
     """
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig, TorchSequenceModel
 
@@ -455,16 +455,16 @@ def test_lstm_core_shares_the_trainer(data) -> None:
 
 # --------------------------------------------------------------------------- xLSTM
 #
-# Dieselben Bestandsprüfungen wie oben für GRU (Zeilen davor), hier auf
-# ``TorchSequenceModel`` (Einzelnetz-Ebene, nicht Verbund) für ``core="xlstm"``. Die
-# Verbund-spezifischen Zusicherungen (Kapselung der drei Teilnetze, Langzeit-
-# Rollout-Stabilität) stehen in ``tests/test_composite.py`` -- dort, wo ``xlstm`` über
-# ``registry.py`` tatsächlich verwendet wird.
+# The same sanity checks as above for GRU (preceding lines), here on
+# ``TorchSequenceModel`` (single-network level, not composite) for ``core="xlstm"``. The
+# composite-specific guarantees (encapsulation of the three sub-networks, long-term
+# rollout stability) are in ``tests/test_composite.py`` -- where ``xlstm`` is actually
+# used via ``registry.py``.
 
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_xlstm_matches_persistence_when_untrained(data) -> None:
-    """Dieselbe Residual-Invariante wie bei GRU, für den mLSTM-Kern."""
+    """The same residual invariant as for GRU, for the mLSTM core."""
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig, TorchSequenceModel
 
     train, _, test = build_datasets(data, 8)
@@ -480,7 +480,7 @@ def test_xlstm_matches_persistence_when_untrained(data) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_xlstm_rollout_does_not_see_future_targets(data) -> None:
-    """Dieselbe Zusicherung wie bei GRU: kein heimliches Fortschreiben der Wahrheit."""
+    """The same guarantee as for GRU: no covert carrying forward of the truth."""
     import dataclasses
 
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig, TorchSequenceModel
@@ -497,12 +497,12 @@ def test_xlstm_rollout_does_not_see_future_targets(data) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_xlstm_prediction_is_deterministic_and_seed_sensitive(data) -> None:
-    """Gleicher Seed -> bitgleich; verschiedener Seed -> verschieden, nach dem Training.
+    """Same seed -> bit-identical; different seed -> different, after training.
 
-    Wie ``test_composite_xlstm_prediction_is_reproducible_and_seed_sensitive`` in
-    ``test_composite.py``, hier auf Einzelnetz-Ebene: mit nullinitialisiertem Kopf
-    (``max_epochs=0``) ist jede Vorhersage unabhängig vom Seed exakt die Persistenz --
-    Seed-Empfindlichkeit ist erst nach dem Training prüfbar.
+    Like ``test_composite_xlstm_prediction_is_reproducible_and_seed_sensitive`` in
+    ``test_composite.py``, here at single-network level: with a zero-initialised head
+    (``max_epochs=0``) every prediction is exactly persistence, independent of the seed --
+    seed sensitivity can only be checked after training.
     """
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig, TorchSequenceModel
 
@@ -522,10 +522,10 @@ def test_xlstm_prediction_is_deterministic_and_seed_sensitive(data) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_untrained_network_equals_persistence(data) -> None:
-    """Nullinitialisierter Kopf = Persistenz, exakt.
+    """Zero-initialised head = persistence, exactly.
 
-    Die Vorgabe des Arbeitsplans für
-    alle Architekturen; ohne Torch ist sie nur am NARX geprüft (tests/test_step6.py).
+    The requirement of the work plan for
+    all architectures; without Torch it is checked only on the NARX (tests/test_step6.py).
     """
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig, TorchSequenceModel
 

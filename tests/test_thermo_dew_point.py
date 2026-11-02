@@ -1,9 +1,9 @@
-"""Tests für ``simulation.thermo.dew_point_celsius`` -- vektorisierte Taupunktbestimmung.
+"""Tests for ``simulation.thermo.dew_point_celsius`` -- vectorised dew-point determination.
 
-Gebraucht für X3 (``docs/04_stand_ap1.md``): Q_rec-Berechnung auf ganzen
-Vorhersage-Arrays. ``simulation.steady_state._solve_dew_point`` löst dieselbe Bisektion
-bereits skalar für den Beharrungszustands-Löser -- die Tests hier prüfen, dass die
-array-fähige, öffentliche Variante dasselbe Ergebnis liefert, nicht eine zweite Physik.
+Needed for X3 (``docs/04_stand_ap1.md``): Q_rec calculation on whole
+prediction arrays. ``simulation.steady_state._solve_dew_point`` already solves the same
+bisection in scalar form for the steady-state solver -- the tests here check that the
+array-capable, public variant yields the same result, not a second physics.
 """
 
 from __future__ import annotations
@@ -18,7 +18,7 @@ from twinlink_ml.simulation.thermo import dew_point_celsius, saturation_pressure
 
 
 def test_dew_point_matches_scalar_steady_state_solver() -> None:
-    """Bitnahe Übereinstimmung mit ``_solve_dew_point`` über mehrere Feuchtewerte."""
+    """Near-bitwise agreement with ``_solve_dew_point`` over several humidity values."""
     backend = NumpyBackend()
     gas = GasConfig()
     humidity = np.array([0.005, 0.0171, 0.03, 0.05])
@@ -36,7 +36,7 @@ def test_dew_point_matches_scalar_steady_state_solver() -> None:
 
 
 def test_dew_point_inverts_saturation_pressure() -> None:
-    """``p_s(T_dp)`` muss den aus ``Y`` berechneten Partialdruck reproduzieren."""
+    """``p_s(T_dp)`` must reproduce the partial pressure computed from ``Y``."""
     backend = NumpyBackend()
     gas = GasConfig()
     humidity = backend.asarray(np.array([0.01, 0.02, 0.04]))
@@ -49,7 +49,7 @@ def test_dew_point_inverts_saturation_pressure() -> None:
 
 
 def test_dew_point_increases_with_humidity() -> None:
-    """Monoton: mehr absolute Feuchte -> höherer Taupunkt (physikalisch notwendig)."""
+    """Monotonic: more absolute humidity -> higher dew point (physically necessary)."""
     backend = NumpyBackend()
     gas = GasConfig()
     humidity = backend.asarray(np.array([0.005, 0.015, 0.03, 0.05]))

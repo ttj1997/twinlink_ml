@@ -1,18 +1,18 @@
-"""Prueft ``local/denylist.txt`` gegen alle git-getrackten Dateien.
+"""Checks ``local/denylist.txt`` against all git-tracked files.
 
-Verhindert, dass reale Partner-/Personennamen (siehe ``local.example/README.md``)
-versehentlich wieder committet werden. ``local/`` existiert nur lokal beim Pflegenden
-des Repos und ist gitignored -- in Cloud-Sitzungen fehlt es normalerweise, dann wird
-dieser Test uebersprungen (er kann dort seine eigene Referenz nicht lesen).
+Prevents real partner/person names (see ``local.example/README.md``) from being
+accidentally committed again. ``local/`` exists only locally with the maintainer
+of the repo and is gitignored -- in cloud sessions it is normally missing, then
+this test is skipped (it cannot read its own reference there).
 
-Suchreihenfolge fuer ``denylist.txt``: ``$TWINLINK_LOCAL_DIR`` (wie bei den Partner-Tests),
-``<Repo>/local``, ``local/`` des Haupt-Checkouts (in einem Git-Worktree liegt ``local/``
-nur dort). Erst wenn keine der drei Stellen die Datei hat, wird uebersprungen.
+Search order for ``denylist.txt``: ``$TWINLINK_LOCAL_DIR`` (as with the partner tests),
+``<Repo>/local``, ``local/`` of the main checkout (in a git worktree ``local/`` lies
+only there). Only if none of the three locations has the file is the test skipped.
 
-Zeilen mit dem Praefix ``re:`` sind regulaere Ausdruecke (gross/klein-sensitiv, je Zeile
-angewandt, z.B. ``re:(?<![A-Za-z0-9])XYZ(?![A-Za-z0-9])`` fuer ein Kuerzel mit
-Wortgrenzen). Sie gelten nicht fuer ``artifacts/`` (aufgezeichneter Text von Laeufen).
-Alle anderen Zeilen sind wie bisher Teilstrings ohne Beachtung der Gross-/Kleinschreibung.
+Lines with the prefix ``re:`` are regular expressions (case-sensitive, applied per
+line, e.g. ``re:(?<![A-Za-z0-9])XYZ(?![A-Za-z0-9])`` for an abbreviation with
+word boundaries). They do not apply to ``artifacts/`` (recorded text of runs).
+All other lines are, as before, substrings matched case-insensitively.
 """
 
 from __future__ import annotations
@@ -41,7 +41,7 @@ def _repo_root() -> Path | None:
 
 
 def _main_checkout(repo_root: Path) -> Path | None:
-    """Erster Eintrag von ``git worktree list`` (der Haupt-Checkout), falls ermittelbar."""
+    """First entry of ``git worktree list`` (the main checkout), if determinable."""
     try:
         out = subprocess.run(
             ["git", "worktree", "list", "--porcelain"],
@@ -109,7 +109,7 @@ def test_denylist_terms_not_present_in_tracked_files() -> None:
         try:
             text = file_path.read_text(encoding="utf-8")
         except (UnicodeDecodeError, OSError):
-            continue  # Binaerdatei oder nicht lesbar -- kein Textinhalt zu pruefen
+            continue  # binary file or not readable -- no text content to check
         rel = file_path.relative_to(repo_root)
         lines = text.splitlines()
         lower_lines = [line.lower() for line in lines]

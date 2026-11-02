@@ -1,9 +1,9 @@
-"""Tests für den punktweisen Split (Kräuter-Vergleichsvariante, ``data/point_split.py``).
+"""Tests for the point-wise split (Kräuter comparison variant, ``data/point_split.py``).
 
-Schwerpunkt: die beiden Invarianten, auf die der Splitvergleich mit dem laufweisen
-Pfad angewiesen ist -- Fenster verschiedener Splits dürfen aus demselben Lauf stammen
-(das ist der ganze Punkt), aber der Skalierer darf ausschließlich aus den train-Fenstern
-stammen, nie aus val/test.
+Focus: the two invariants on which the split comparison with the run-level
+path depends -- windows of different splits may come from the same run
+(that is the whole point), but the scaler may come exclusively from the train windows,
+never from val/test.
 """
 
 from __future__ import annotations
@@ -45,7 +45,7 @@ WINDOW = WindowConfig(
 
 @pytest.fixture(scope="module")
 def trajectory_and_ids() -> tuple[object, tuple[str, ...]]:
-    """Kleiner, aber echter Datensatz -- derselbe Aufbau wie ``test_pipeline.pipeline``."""
+    """Small but real data set -- the same setup as ``test_pipeline.pipeline``."""
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
         base = load_process_config(CONFIG_PATH)
@@ -86,7 +86,7 @@ def _split(trajectory_and_ids, ratios=None, seed=1):
 
 
 def test_point_split_windows_of_same_run_can_land_on_both_sides(trajectory_and_ids) -> None:
-    """Der ganze Punkt des punktweisen Splits -- Gegenteil des laufweisen Verhaltens."""
+    """The whole point of the point-wise split -- the opposite of the run-level behaviour."""
     train, _, test = _split(trajectory_and_ids)
     assert set(train.run_ids) == set(test.run_ids)
     train_runs = {train.run_ids[i] for i in train._index[:, 0]}
@@ -108,10 +108,10 @@ def test_point_split_windows_are_disjoint(trajectory_and_ids) -> None:
 
 
 def test_point_split_scaler_comes_from_training_windows_only(trajectory_and_ids) -> None:
-    """Analog zu ``test_pipeline.test_test_scaler_comes_from_training_split``.
+    """Analogous to ``test_pipeline.test_test_scaler_comes_from_training_split``.
 
-    Ein Skalierer, der stattdessen aus dem Testanteil geschätzt wird, muss andere
-    Statistiken liefern -- sonst prüft der Test nichts.
+    A scaler estimated from the test share instead must yield different
+    statistics -- otherwise the test checks nothing.
     """
     train, _, test = _split(trajectory_and_ids)
     assert np.allclose(train.target_scaler.mean, test.target_scaler.mean)
@@ -137,12 +137,12 @@ def test_point_split_val_optional_when_ratio_zero(trajectory_and_ids) -> None:
 
 
 def test_point_split_rejects_degenerate_pool() -> None:
-    """Zu wenige Fenster im Testanteil -- ``min_per_split`` greift wie beim laufweisen Pfad.
+    """Too few windows in the test share -- ``min_per_split`` engages as in the run-level path.
 
-    Synthetische, minimale Trajektorie statt eines echten Rollouts: nur die Fensterzahl
-    zählt hier, nicht die Physik. ``seed=1``/``ratios`` sind vorab so gewählt (siehe
-    Kommentar), dass bei diesem winzigen Pool *jedes* Fenster nach ``train`` fällt --
-    ``test`` bleibt leer und muss den Fehler auslösen.
+    A synthetic, minimal trajectory instead of a real rollout: only the window count
+    matters here, not the physics. ``seed=1``/``ratios`` are chosen in advance (see the
+    comment) such that with this tiny pool *every* window falls into ``train`` --
+    ``test`` stays empty and must trigger the error.
     """
     n_steps = 20
     rng = np.random.default_rng(0)
@@ -160,16 +160,16 @@ def test_point_split_rejects_degenerate_pool() -> None:
             "disturbance_names": ("z1",),
         },
     )
-    # Verifiziert (siehe Docstring): mit diesem Seed/diesen Anteilen landet bei einem
-    # einzigen Lauf mit 20 Schritten jedes der 17 möglichen Fenster (history=3, horizon=1)
-    # in "train" -- "test" ist damit garantiert leer, nicht nur unwahrscheinlich klein.
+    # Verified (see the docstring): with this seed/these shares, for a
+    # single run with 20 steps every one of the 17 possible windows (history=3, horizon=1)
+    # lands in "train" -- "test" is thus guaranteed empty, not just improbably small.
     splitter = PointSplitter(seed=1, ratios=SplitRatios(0.99, 0.0, 0.01))
     with pytest.raises(SplitDegenerateError):
         windowed_point_split(trajectory, trajectory.run_id, WINDOW, splitter)
 
 
 def test_point_split_matches_run_level_dataset_shapes(trajectory_and_ids) -> None:
-    """Fensterform ist identisch zum laufweisen Pfad -- nur die Zuordnung unterscheidet sich."""
+    """Window shape is identical to the run-level path -- only the assignment differs."""
     train, _, _ = _split(trajectory_and_ids)
     batch = train.batch(range(min(16, train.n_windows)))
     n_exogenous = len(train.exogenous_names)

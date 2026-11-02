@@ -1,7 +1,7 @@
-"""OA2b: Fortsetzbarkeit von ``run_arch_learning_curve_sweep.py``.
+"""OA2b: resumability of ``run_arch_learning_curve_sweep.py``.
 
-``scripts/`` ist kein Package -- Laden per ``importlib.util.spec_from_file_location``,
-wie in ``test_script_target_names_schema.py``.
+``scripts/`` is not a package -- loading via ``importlib.util.spec_from_file_location``,
+as in ``test_script_target_names_schema.py``.
 """
 
 from __future__ import annotations
@@ -54,7 +54,7 @@ def test_read_existing_records_tolerates_truncated_last_line(tmp_path: Path) -> 
     complete = _record(seed=1, n_train=8, label="gru", test_set="excited", commit="abc123")
     with log_path.open("w", encoding="utf-8") as handle:
         handle.write(json.dumps(complete) + "\n")
-        handle.write('{"run_uid": "broken", "params": {"master_se')  # abgeschnitten, kein \n
+        handle.write('{"run_uid": "broken", "params": {"master_se')  # truncated, no \n
 
     records, keys, commit = module._read_existing_records(log_path)
 
@@ -70,7 +70,7 @@ def test_read_existing_records_raises_on_non_trailing_corruption(tmp_path: Path)
     log_path = tmp_path / "log.jsonl"
     complete = _record(seed=1, n_train=8, label="gru", test_set="excited", commit="abc123")
     with log_path.open("w", encoding="utf-8") as handle:
-        handle.write('{"run_uid": "broken", "params": {"master_se\n')  # NICHT die letzte Zeile
+        handle.write('{"run_uid": "broken", "params": {"master_se\n')  # NOT the last line
         handle.write(json.dumps(complete) + "\n")
 
     with pytest.raises(ValueError, match="echter Datei-Defekt"):
@@ -92,7 +92,7 @@ def test_resume_skips_exactly_the_complete_seed(tmp_path: Path) -> None:
         for label in labels
         for test_set in test_sets
     ]
-    # Seed 2 bleibt absichtlich unvollstaendig (ein Record fehlt).
+    # Seed 2 deliberately stays incomplete (one record is missing).
     records += [
         _record(seed=2, n_train=n_train, label=label, test_set=test_set, commit="deadbeef")
         for n_train in sizes
@@ -115,11 +115,11 @@ def test_resume_skips_exactly_the_complete_seed(tmp_path: Path) -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="Skript importiert torch-abhaengige Module")
 def test_expected_labels_reflects_architecture_selection() -> None:
-    """Auswahl per --architectures/--skip-baselines muss in den Auftragsschluessel einfliessen.
+    """Selection via --architectures/--skip-baselines must enter the task key.
 
-    Sonst haelt der Resume-Check einen absichtlich schlanken Lauf (z. B. nur die drei
-    neuen Architekturen, ohne GRU/LSTM/Baselines erneut zu rechnen) faelschlich fuer
-    unvollstaendig oder eine echte Luecke faelschlich fuer vollstaendig.
+    Otherwise the resume check wrongly considers a deliberately slim run (e.g. only the
+    three new architectures, without recomputing GRU/LSTM/baselines) incomplete, or a
+    real gap wrongly complete.
     """
     module = _load_script("run_arch_learning_curve_sweep")
 
@@ -144,11 +144,11 @@ def test_expected_labels_reflects_architecture_selection() -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="Skript importiert torch-abhaengige Module")
 def test_worker_architectures_flag_parses_correctly(monkeypatch: pytest.MonkeyPatch) -> None:
-    """``--architectures``/``--skip-baselines`` muessen ankommen und korrekt geparst werden.
+    """``--architectures``/``--skip-baselines`` must arrive and be parsed correctly.
 
-    ``main()`` liest sie direkt aus ``arguments`` (``for architecture in
-    arguments.architectures``, ``if not arguments.skip_baselines``), ein Parse-Fehler
-    waere hier schon sichtbar.
+    ``main()`` reads them directly from ``arguments`` (``for architecture in
+    arguments.architectures``, ``if not arguments.skip_baselines``), a parse error
+    would already be visible here.
     """
     module = _load_script("run_arch_learning_curve_worker")
 
@@ -192,7 +192,7 @@ def test_provenance_guard_rejects_commit_drift(monkeypatch: pytest.MonkeyPatch) 
     with pytest.raises(RuntimeError, match="new-head"):
         module._check_provenance_for_resume("old-commit", allow_mismatch=False)
 
-    # Mit explizitem Override keine Exception.
+    # With an explicit override, no exception.
     module._check_provenance_for_resume("old-commit", allow_mismatch=True)
 
 

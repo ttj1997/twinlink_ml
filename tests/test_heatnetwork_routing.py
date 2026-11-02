@@ -1,4 +1,4 @@
-"""Tests für ``heatnetwork/routing.py`` -- Verschaltung Quelle -> Senke."""
+"""Tests for ``heatnetwork/routing.py`` -- interconnection source -> sink."""
 
 from __future__ import annotations
 

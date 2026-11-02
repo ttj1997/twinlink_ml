@@ -1,9 +1,9 @@
-"""Numerik, Batch-Konsistenz, Determinismus und Config-Roundtrip.
+"""Numerics, batch consistency, determinism and config round trip.
 
-Der Schrittweiten-Test ist der wichtigste hier: ein Datensatz aus unterkonvergierten
-Läufen sieht vollkommen plausibel aus, enthält aber systematische Fehler, die das
-Sequenzmodell brav mitlernt. Der Fehler taucht dann erst beim Wechsel auf Dyssol-Daten
-auf -- als scheinbares Transferproblem.
+The step-size test is the most important one here: a data set from under-converged
+runs looks entirely plausible, but contains systematic errors that the
+sequence model dutifully learns along. The error then only shows up when switching to
+Dyssol data -- as an apparent transfer problem.
 """
 
 from __future__ import annotations
@@ -32,7 +32,7 @@ HAS_TORCH = importlib.util.find_spec("torch") is not None
 
 
 def test_step_size_convergence(config: ProcessConfig) -> None:
-    """Verdopplung der Substeps darf das Ergebnis kaum ändern."""
+    """Doubling the substeps must hardly change the result."""
     reference = None
     results = []
     for substeps in (5, 10, 20):
@@ -48,7 +48,7 @@ def test_step_size_convergence(config: ProcessConfig) -> None:
 
 
 def test_euler_needs_more_substeps_than_rk4(config: ProcessConfig) -> None:
-    """Begründung der Integratorwahl, nicht nur Behauptung."""
+    """Justification of the integrator choice, not just a claim."""
 
     def final_temperature(integrator: str, substeps: int) -> float:
         numerics = dataclasses.replace(config.numerics, integrator=integrator, substeps=substeps)
@@ -63,10 +63,10 @@ def test_euler_needs_more_substeps_than_rk4(config: ProcessConfig) -> None:
 
 
 def test_batch_dimension_is_independent(simulator: GreyBoxFluidBedGranulator) -> None:
-    """Batchweise Auswertung muss identisch zum Einzellauf sein.
+    """Batch-wise evaluation must be identical to the single run.
 
-    Sonst sind batchweise generierte Datensätze subtil verschieden von den einzeln
-    erzeugten Referenzläufen -- ein Fehler, der sich später kaum lokalisieren lässt.
+    Otherwise batch-wise generated data sets are subtly different from the individually
+    generated reference runs -- an error that can hardly be localised later.
     """
     n_steps = 120
     rng = np.random.default_rng(7)
@@ -94,7 +94,7 @@ def test_rollout_is_deterministic(simulator: GreyBoxFluidBedGranulator) -> None:
 
 
 def test_measurement_noise_does_not_bias_outputs(simulator: GreyBoxFluidBedGranulator) -> None:
-    """Das Sensormodell darf den Erwartungswert nicht verschieben."""
+    """The sensor model must not shift the expected value."""
     actions, disturbances = constant_excitation(simulator, 600)
     trajectory = simulator.rollout(actions, disturbances, seed=11)
     truth = trajectory.outputs[0, 300:, 1]
@@ -106,7 +106,7 @@ def test_measurement_noise_does_not_bias_outputs(simulator: GreyBoxFluidBedGranu
 def test_state_floor_is_inactive_at_nominal_operation(
     simulator: GreyBoxFluidBedGranulator,
 ) -> None:
-    """Die numerische Untergrenze darf im Normalbetrieb nie greifen."""
+    """The numerical lower bound must never engage in normal operation."""
     actions, disturbances = constant_excitation(simulator, 500)
     trajectory = simulator.rollout(actions, disturbances, seed=0)
     floor = simulator.config.numerics.state_floor
@@ -162,11 +162,11 @@ def test_config_roundtrip(config: ProcessConfig, tmp_path: Path) -> None:
 
 
 def test_section_fingerprints_cover_all_twelve_sections(config: ProcessConfig) -> None:
-    """G4b: alle zwoelf Abschnitte aus fingerprint/to_dict() sind vertreten.
+    """G4b: all twelve sections from fingerprint/to_dict() are represented.
 
-    ``exhaust`` seit der Einfuehrung von ``ExhaustConfig`` (Rohrleitungs-/Filterverlust
-    zwischen Bett und Waermeverbund, siehe ``simulation.exhaust.reconstruct_exhaust_state``)
-    ergaenzt -- zuvor elf Abschnitte.
+    ``exhaust`` added since the introduction of ``ExhaustConfig`` (duct/filter loss
+    between bed and heat recovery network, see ``simulation.exhaust.reconstruct_exhaust_state``)
+    -- previously eleven sections.
     """
     sections = config.section_fingerprints
     assert set(sections) == {
@@ -187,7 +187,7 @@ def test_section_fingerprints_cover_all_twelve_sections(config: ProcessConfig) -
 
 
 def test_section_fingerprint_isolates_changed_section(config: ProcessConfig) -> None:
-    """Nur der geänderte Abschnitt darf seinen Teil-Fingerprint ändern -- der Zweck von G4b."""
+    """Only the changed section may change its partial fingerprint -- the purpose of G4b."""
     changed = dataclasses.replace(
         config, geometry=dataclasses.replace(config.geometry, heat_loss_ua_w_per_k=999.0)
     )
@@ -201,14 +201,14 @@ def test_section_fingerprint_isolates_changed_section(config: ProcessConfig) -> 
 
 
 def test_section_fingerprints_do_not_change_overall_fingerprint(config: ProcessConfig) -> None:
-    """Additiv: section_fingerprints darf fingerprint selbst nicht beeinflussen."""
+    """Additive: section_fingerprints must not affect fingerprint itself."""
     fingerprint_before = config.fingerprint
     _ = config.section_fingerprints
     assert config.fingerprint == fingerprint_before
 
 
 def test_placeholder_config_warns(config: ProcessConfig) -> None:
-    """Die Zusicherung aus 02_prozess_setup.md, im Code verankert."""
+    """The guarantee from 02_prozess_setup.md, anchored in the code."""
     with pytest.warns(PlaceholderConfigWarning):
         GreyBoxFluidBedGranulator(config)
 
@@ -230,16 +230,16 @@ def test_config_validation_rejects_inconsistent_values(config: ProcessConfig) ->
 def test_simulator_construction_rejects_gab_isotherm_with_low_critical_moisture(
     config: ProcessConfig,
 ) -> None:
-    """Die Lücke aus Schritt 1: validate_isotherm_against_critical_moisture verdrahtet.
+    """The gap from step 1: validate_isotherm_against_critical_moisture wired up.
 
-    Existierte bereits, war aber nirgends verdrahtet -- eine Config mit
-    sorption_isotherm_kind='gab' und zu niedrigem critical_moisture_kg_per_kg muss bei
-    GreyBoxFluidBedGranulator.__init__ tatsächlich scheitern, nicht nur bei manuellem
-    Aufruf der Prüffunktion.
+    Already existed, but was not wired up anywhere -- a config with
+    sorption_isotherm_kind='gab' and too low a critical_moisture_kg_per_kg must actually fail
+    in GreyBoxFluidBedGranulator.__init__, not only when the check function is called
+    manually.
     """
     material = dataclasses.replace(
         config.material,
-        critical_moisture_kg_per_kg=0.05,  # über dem Anker (0.030), unter dem GAB-Maximum (~0.089)
+        critical_moisture_kg_per_kg=0.05,  # above anchor (0.030), below GAB maximum (~0.089)
         equilibrium_moisture_kg_per_kg=0.030,
         sorption_isotherm_kind="gab",
         gab_monolayer_moisture_kg_per_kg=0.020,
@@ -259,9 +259,9 @@ def test_simulator_construction_rejects_gab_isotherm_with_low_critical_moisture(
 def test_simulator_construction_accepts_gab_isotherm_with_lab_level_critical_moisture(
     config: ProcessConfig,
 ) -> None:
-    """Gegenprobe: Laborniveau-X_cr (0.200) konstruiert den Simulator ohne Fehler.
+    """Counter-check: lab-level X_cr (0.200) constructs the simulator without error.
 
-    Dieselbe Isotherme wie im Fehlerfall oben, nur mit unkritischem X_cr.
+    The same isotherm as in the failure case above, only with a non-critical X_cr.
     """
     material = dataclasses.replace(
         config.material,
@@ -278,15 +278,15 @@ def test_simulator_construction_accepts_gab_isotherm_with_lab_level_critical_moi
     ok_config = dataclasses.replace(config, material=material)
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
-        GreyBoxFluidBedGranulator(ok_config)  # darf nicht raisen
+        GreyBoxFluidBedGranulator(ok_config)  # must not raise
 
 
 def test_local_floor_at_nominal_never_below_envelope_reference(config: ProcessConfig) -> None:
-    """Konsistenztest für die envelope-transformierte Konstante (0.000203 kg/kg).
+    """Consistency test for the envelope-transformed constant (0.000203 kg/kg).
 
-    Docs/04_stand_ap1.md Befund 34: seit der k1-basierten Variante ist sie kein
-    Laufzeit-Fallback mehr, nur noch Referenzwert -- der lokale, aus dem Zustand
-    gewonnene Floor-Wert am Nominalpunkt muss immer klar darüber liegen.
+    Docs/04_stand_ap1.md Befund 34: since the k1-based variant it is no longer a
+    runtime fallback, only a reference value -- the local floor value obtained from the
+    state at the nominal point must always lie clearly above it.
     """
     from twinlink_ml.simulation.greybox import IDX_BED_TEMPERATURE
     from twinlink_ml.simulation.sorption import isotherm_from_material, sorption_safety_grid
@@ -338,21 +338,21 @@ def test_local_floor_at_nominal_never_below_envelope_reference(config: ProcessCo
         )[0]
     )
     assert envelope_reference < local_equilibrium_moisture
-    assert local_equilibrium_moisture / envelope_reference > 10.0  # Größenordnungsmarge
+    assert local_equilibrium_moisture / envelope_reference > 10.0  # order-of-magnitude margin
 
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_gradient_flows_through_full_rk4_step_with_gab_isotherm(config: ProcessConfig) -> None:
-    """Differenzierbarkeit durch einen vollständigen RK4-Schritt (substeps=1) mit GAB.
+    """Differentiability through a complete RK4 step (substeps=1) with GAB.
 
-    Aktive GAB-Isotherme, Picard-Iteration und k1-basiertem Floor über das
-    Torch-Backend -- torch.autograd.gradcheck plus unabhängige Gegenprobe gegen zentrale
-    Finite Differenzen über das NumPy-Backend. Punkt, an dem der Floor NICHT greift (X_p
-    klar über X_eq), damit ein exakter Gradientenabgleich sinnvoll ist -- an einem
-    floor-aktiven Punkt hat eine Knickstelle (maximum()) keinen eindeutigen Gradienten,
-    an dem FD und Autograd übereinstimmen müssten; dafür siehe stattdessen
-    ``test_gradient_stays_finite_at_floor_active_point`` (nur Endlichkeit, keine exakte
-    Übereinstimmung).
+    Active GAB isotherm, Picard iteration and k1-based floor via the
+    Torch backend -- torch.autograd.gradcheck plus an independent counter-check against central
+    finite differences via the NumPy backend. A point at which the floor does NOT engage (X_p
+    clearly above X_eq), so that an exact gradient comparison makes sense -- at a
+    floor-active point a kink (maximum()) has no unique gradient
+    on which FD and autograd would have to agree; for that see instead
+    ``test_gradient_stays_finite_at_floor_active_point`` (only finiteness, no exact
+    agreement).
     """
     import torch
 
@@ -385,7 +385,7 @@ def test_gradient_flows_through_full_rk4_step_with_gab_isotherm(config: ProcessC
 
     particle_mass = material.particle_density_kg_per_m3 * math.pi * (400e-6) ** 3 / 6.0
     solid_mass, particle_count, bed_temperature = 2.0, 2.0 / particle_mass, 70.0
-    m_w0_value = solid_mass * 0.05  # X_p=0.05, klar über dem lokalen X_eq bei diesem T
+    m_w0_value = solid_mass * 0.05  # X_p=0.05, clearly above the local X_eq at this T
     action_fixed = (90.0, 1.6, 1.5, 2.5)
     disturbance_fixed = (20.0, 0.50, 0.30)
 
@@ -430,20 +430,20 @@ def test_gradient_flows_through_full_rk4_step_with_gab_isotherm(config: ProcessC
     m_w_final.backward()
     autograd_gradient = m_w0_ad.grad.item()
 
-    assert autograd_gradient != 0.0  # Floor inaktiv an diesem Punkt -- echter Gradiententest
+    assert autograd_gradient != 0.0  # floor inactive at this point -- real gradient test
     assert autograd_gradient == pytest.approx(finite_difference_gradient, rel=1e-6)
 
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_gradient_stays_finite_at_floor_active_point(config: ProcessConfig) -> None:
-    """Kein Abgleich gegen Finite Differenzen verlangt, nur: der Gradient bleibt endlich.
+    """No comparison against finite differences required, only: the gradient stays finite.
 
-    An einer Knickstelle nicht zu erwarten (siehe
-    test_gradient_flows_through_full_rk4_step_with_gab_isotherm) -- kein NaN/Inf,
-    relevant für RL-Rollouts, die durch mehrere floor-aktive Schritte hindurch
-    differenzieren könnten. Regressionspunkt aus der Diversitäts-Kennzahl
-    (docs/04_stand_ap1.md, Befund 34): T_bed=T_amb=35°C, phi_amb=0,85, X_p0=0,0301 --
-    der Floor greift dort sichtbar (siehe
+    Not to be expected at a kink (see
+    test_gradient_flows_through_full_rk4_step_with_gab_isotherm) -- no NaN/Inf,
+    relevant for RL rollouts that might differentiate through several floor-active
+    steps. Regression point from the diversity metric
+    (docs/04_stand_ap1.md, Befund 34): T_bed=T_amb=35°C, phi_amb=0.85, X_p0=0.0301 --
+    the floor visibly engages there (see
     test_scattered_cold_start_below_local_equilibrium_is_floored_up).
     """
     import torch

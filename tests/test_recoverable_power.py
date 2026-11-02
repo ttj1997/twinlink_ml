@@ -1,8 +1,8 @@
-"""Tests für ``evaluation/recoverable_power.py`` -- Q_rec aus vorhergesagten Abluft-Größen.
+"""Tests for ``evaluation/recoverable_power.py`` -- Q_rec from predicted exhaust air quantities.
 
-Winzige Größen (``n_train_max=8``), analog zu ``tests/test_exhaust_reconstruction.py`` --
-geprüft wird die Verdrahtung, nicht die Vorhersagegüte einer echten Studie (X2/X3 laufen
-separat, siehe ``scripts/run_outlet_temperature_gru_protocol.py``).
+Tiny sizes (``n_train_max=8``), analogous to ``tests/test_exhaust_reconstruction.py`` --
+what is checked is the wiring, not the prediction quality of a real study (X2/X3 run
+separately, see ``scripts/run_outlet_temperature_gru_protocol.py``).
 """
 
 from __future__ import annotations
@@ -51,7 +51,7 @@ def _tiny_spec() -> DataSpec:
 
 
 def test_compute_recoverable_power_matches_manual_formula(backend: ArrayBackend) -> None:
-    """Direkter Formel-Abgleich, unabhängig vom Rekonstruktions-/Modell-Pfad."""
+    """Direct formula comparison, independent of the reconstruction/model path."""
     gas = GasConfig()
     outlet_temperature = backend.asarray(np.array([80.0, 60.0]))
     humidity = backend.asarray(np.array([0.02, 0.03]))
@@ -70,7 +70,7 @@ def test_compute_recoverable_power_matches_manual_formula(backend: ArrayBackend)
 
 
 def test_compute_recoverable_power_zero_for_saturated_air_at_margin() -> None:
-    """T_out genau auf Taupunkt+Marge -- Q_rec muss exakt 0 sein (Grenzfall der Formel)."""
+    """T_out exactly at dew point+margin -- Q_rec must be exactly 0 (formula's limiting case)."""
     backend = NumpyBackend()
     gas = GasConfig()
     humidity = backend.asarray(np.array([0.02]))
@@ -83,10 +83,10 @@ def test_compute_recoverable_power_zero_for_saturated_air_at_margin() -> None:
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_evaluate_recoverable_power_end_to_end_wiring() -> None:
-    """Verdrahtung: reconstruct_exhaust_arrays -> Q_rec -> NRMSE/RMSE liefert endliche Werte.
+    """Wiring: reconstruct_exhaust_arrays -> Q_rec -> NRMSE/RMSE yields finite values.
 
-    Kein echtes GRU-Training hier (X2/X3 laufen separat) -- ``PersistenceModel`` reicht für
-    die Verdrahtungsprüfung, ohne eine Vorhersagegüte-Aussage zu treffen.
+    No real GRU training here (X2/X3 run separately) -- ``PersistenceModel`` suffices for
+    the wiring check, without making a statement about prediction quality.
     """
     from twinlink_ml.models.baselines import PersistenceModel
 
@@ -113,17 +113,17 @@ def test_evaluate_recoverable_power_end_to_end_wiring() -> None:
     for horizon in result.horizons:
         assert np.isfinite(result.rmse_run_median_kw[horizon])
         assert result.rmse_run_median_kw[horizon] >= 0.0
-    # format() muss ohne Fehler laufen und alle Horizonte enthalten.
+    # format() must run without error and contain all horizons.
     formatted = result.format()
     assert "Q_rec" in formatted
 
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
 def test_evaluate_recoverable_power_rejects_mismatched_data_and_test() -> None:
-    """Dieselbe Fehlpaarungsprüfung wie ``evaluate_exhaust_reconstruction`` (Befund 42b).
+    """The same mismatch check as ``evaluate_exhaust_reconstruction`` (Befund 42b).
 
-    ``evaluate_recoverable_power`` baut auf ``reconstruct_exhaust_arrays`` auf, muss also
-    denselben Schutz erben, nicht neu implementieren.
+    ``evaluate_recoverable_power`` builds on ``reconstruct_exhaust_arrays``, so it must
+    inherit the same protection, not reimplement it.
     """
     from twinlink_ml.data.splits import SplitName
     from twinlink_ml.data.windows import TrajectoryWindowDataset

@@ -1,27 +1,27 @@
-r"""VA2: Orakelpruefung -- die Umgebung muss Befund 52 bitgleich reproduzieren.
+r"""VA2: oracle check -- the environment must reproduce Befund 52 bit-identically.
 
-Wichtigster Test dieses Auftrags (siehe Auftragstext): eine Umgebung, die das bekannte
-Optimum aus ``artifacts/runs/bb1_bb3_operating_point_regret.json`` nicht reproduziert, ist
-fuer RL wertlos. Drei Pruefungen:
+Most important test of this task (see the task text): an environment that does not reproduce
+the known optimum from ``artifacts/runs/bb1_bb3_operating_point_regret.json`` is
+worthless for RL. Three checks:
 
-a) Orakelaktionen an allen 25 Gitterpunkten -> Belohnung exakt ``-energy_target``.
-b) Fester Betriebspunkt an allen 25 Gitterpunkten -> Regret-Statistik (Median/P95/Max,
-   absolut und relativ) reproduziert die dokumentierten Werte.
-c) Zulaessigkeit an allen 25 Punkten fuer beide Aktionsmengen.
+a) Oracle actions at all 25 grid points -> reward exactly ``-energy_target``.
+b) Fixed operating point at all 25 grid points -> regret statistics (median/P95/max,
+   absolute and relative) reproduce the documented values.
+c) Feasibility at all 25 points for both action sets.
 
-Massstabsfrage (Duesendruck fest vs. je Punkt frei optimiert, siehe Auftrag "Achtung
-Massstab"): empirisch bitgleich (siehe ``test_fixed_nozzle_pressure_scale_is_negligible``)
--- der Duesendruck-Freiheitsgrad der Befund-52-Optima bewegt sich durchgehend in
-``[1.0002, 1.0111]`` bar, unterhalb der Clamp-Schwelle ``gas.pressure_pa / 1e5 = 1.01325``
-bar in ``energy.power_breakdown_kw`` (``max(pressure_ratio, 1 + 1e-12)``) -- der
-Atomiser-Anteil an ``energy_target`` ist in diesem gesamten Fenster exakt konstant (~0),
-unabhaengig vom genauen Duesendruck.
+Question of scale (nozzle pressure fixed vs. freely optimised per point, see the task "Caution:
+scale"): empirically bit-identical (see ``test_fixed_nozzle_pressure_scale_is_negligible``)
+-- the nozzle-pressure degree of freedom of the Befund 52 optima moves throughout in
+``[1.0002, 1.0111]`` bar, below the clamp threshold ``gas.pressure_pa / 1e5 = 1.01325``
+bar in ``energy.power_breakdown_kw`` (``max(pressure_ratio, 1 + 1e-12)``) -- the
+atomiser share of ``energy_target`` is exactly constant (~0) in this entire window,
+independent of the exact nozzle pressure.
 
-Loeser-Praezision: alle Aufrufe hier laufen ueber :meth:`OperatingPointBanditEnv.
-evaluate_operating_point`, die intern die SUCH-Praezision aus Befund 52 verwendet
-(``DEFAULT_SEARCH_MAX_ITERATIONS``/``DEFAULT_SEARCH_TOLERANCE``), nicht die Loeser-Defaults
--- siehe ``env.py``-Moduldocstring fuer die Begruendung (Bracket-Vorzeichenfehler bei 6 von
-25 Punkten mit den Loeser-Defaults, empirisch geprueft).
+Solver precision: all calls here go through :meth:`OperatingPointBanditEnv.
+evaluate_operating_point`, which internally uses the SEARCH precision from Befund 52
+(``DEFAULT_SEARCH_MAX_ITERATIONS``/``DEFAULT_SEARCH_TOLERANCE``), not the solver defaults
+-- see the ``env.py`` module docstring for the reasoning (bracket sign error at 6 of
+25 points with the solver defaults, checked empirically).
 """
 
 from __future__ import annotations
@@ -64,12 +64,12 @@ def env() -> OperatingPointBanditEnv:
 
 
 def test_config_fingerprint_matches_anchor_artifact(anchor: dict[str, Any]) -> None:
-    """Voraussetzung fuer jeden Vergleich unten: gleicher Ausgangspunkt wie Befund 52.
+    """Precondition for every comparison below: the same starting point as Befund 52.
 
-    ``anchor["config_fingerprint"]`` traegt den eingefrorenen Wert von vor dem
-    Pseudonymisierungs-Schnitt (siehe ``EXPECTED_CONFIG_FINGERPRINT``-Docstring in
-    ``env.py``) -- :func:`fingerprints_equivalent` erkennt beide als dieselbe numerische
-    Konfiguration.
+    ``anchor["config_fingerprint"]`` carries the frozen value from before the
+    pseudonymisation cut (see the ``EXPECTED_CONFIG_FINGERPRINT`` docstring in
+    ``env.py``) -- :func:`fingerprints_equivalent` recognises both as the same numerical
+    configuration.
     """
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
@@ -172,9 +172,9 @@ def test_va2b_fixed_point_regret_matches_befund_52(
     assert float(np.max(relative_arr)) == pytest.approx(
         documented["relative_pct"]["max"], rel=REL_TOLERANCE
     )
-    # Median 16.03 %, P95 22.2 %, Max 25.80 % -- Zahlen aus dem Auftrag, nur als
-    # zusaetzliche, lesbare Regressionsschranke (die obigen pytest.approx-Vergleiche
-    # gegen das Artefakt sind die eigentliche Pruefung).
+    # Median 16.03 %, P95 22.2 %, max 25.80 % -- numbers from the task, only as an
+    # additional, readable regression bound (the pytest.approx comparisons above
+    # against the artifact are the actual check).
     assert float(np.median(relative_arr)) == pytest.approx(16.03, abs=0.01)
     assert float(np.percentile(relative_arr, 95)) == pytest.approx(22.2, abs=0.1)
     assert float(np.max(relative_arr)) == pytest.approx(25.80, abs=0.01)
@@ -183,15 +183,15 @@ def test_va2b_fixed_point_regret_matches_befund_52(
 def test_fixed_nozzle_pressure_scale_is_negligible(
     env: OperatingPointBanditEnv, anchor: dict[str, Any]
 ) -> None:
-    """Auftrag, "Achtung Massstab".
+    """The task, "Caution: scale".
 
-    Duesendruck ist in der Umgebung fest, in den Befund-52-Optima frei -- quantifiziert die
-    resultierende Abweichung. Vergleicht ``energy_target`` bei ``FIXED_NOZZLE_PRESSURE_BAR``
-    (wie im Environment) gegen den jeweils PUNKTEIGENEN, frei optimierten Duesendruck --
-    beide sonst am identischen Betriebspunkt. Die 0.4 % Spannweite aus Befund 52
-    (``setpoint_spread.nozzle_pressure_bar``) bewegt sich vollstaendig unterhalb der
-    Clamp-Schwelle in ``power_breakdown_kw`` -- die Abweichung ist deshalb nicht nur
-    "innerhalb einer Toleranz", sondern numerisch nicht von Null unterscheidbar.
+    Nozzle pressure is fixed in the environment, free in the Befund 52 optima -- quantifies the
+    resulting deviation. Compares ``energy_target`` at ``FIXED_NOZZLE_PRESSURE_BAR``
+    (as in the environment) against the respective POINT-SPECIFIC, freely optimised nozzle
+    pressure -- both otherwise at the identical operating point. The 0.4 % spread from Befund 52
+    (``setpoint_spread.nozzle_pressure_bar``) lies entirely below the
+    clamp threshold in ``power_breakdown_kw`` -- the deviation is therefore not merely
+    "within a tolerance", but numerically indistinguishable from zero.
     """
     from twinlink_ml.simulation import GreyBoxFluidBedGranulator, operating_point
     from twinlink_ml.simulation.steady_state import solve_steady_state
@@ -222,8 +222,8 @@ def test_fixed_nozzle_pressure_scale_is_negligible(
         )
 
     max_abs_delta_kw = max(abs(delta) for delta in deltas_kw)
-    # Beobachtet: ~3.3e-16 kW (Gleitkommarauschen). 1e-9 kW Schranke laesst reichlich Marge,
-    # bleibt aber weit unter jeder physikalisch bedeutsamen Groessenordnung.
+    # Observed: ~3.3e-16 kW (floating-point noise). The 1e-9 kW bound leaves ample margin,
+    # but stays far below any physically meaningful order of magnitude.
     assert max_abs_delta_kw < 1.0e-9
     assert env._base_config.gas.pressure_pa / 1.0e5 > FIXED_NOZZLE_PRESSURE_BAR
 
