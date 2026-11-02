@@ -1,0 +1,241 @@
+{
+  "description": "Rename table of translation pass 2 (German identifiers -> English). Only names that never leave the process; old name -> new name, applied in the listed files. Checked by scripts/check_semantic_equivalence.py --validate-map.",
+  "renames": [
+    {
+      "old": "heiss_count",
+      "new": "hot_count",
+      "module": "scripts/probe_n1_regime_crosstab.py",
+      "scope": "parameter of _regime_fractions",
+      "files": [
+        "scripts/probe_n1_regime_crosstab.py"
+      ]
+    },
+    {
+      "old": "kalt_count",
+      "new": "cold_count",
+      "module": "scripts/probe_n1_regime_crosstab.py",
+      "scope": "parameter of _regime_fractions",
+      "files": [
+        "scripts/probe_n1_regime_crosstab.py"
+      ]
+    },
+    {
+      "old": "heiss_fraction",
+      "new": "hot_fraction",
+      "module": "scripts/probe_n1_regime_crosstab.py",
+      "scope": "local variable of _regime_fractions",
+      "files": [
+        "scripts/probe_n1_regime_crosstab.py"
+      ]
+    },
+    {
+      "old": "kalt_fraction",
+      "new": "cold_fraction",
+      "module": "scripts/probe_n1_regime_crosstab.py",
+      "scope": "local variable of _regime_fractions",
+      "files": [
+        "scripts/probe_n1_regime_crosstab.py"
+      ]
+    },
+    {
+      "old": "holdout_heiss",
+      "new": "holdout_hot",
+      "module": "scripts/probe_n1_regime_crosstab.py",
+      "scope": "local variable",
+      "files": [
+        "scripts/probe_n1_regime_crosstab.py"
+      ]
+    },
+    {
+      "old": "holdout_kalt",
+      "new": "holdout_cold",
+      "module": "scripts/probe_n1_regime_crosstab.py",
+      "scope": "local variable",
+      "files": [
+        "scripts/probe_n1_regime_crosstab.py"
+      ]
+    },
+    {
+      "old": "train_heiss",
+      "new": "train_hot",
+      "module": "scripts/probe_n1_regime_crosstab.py",
+      "scope": "local variable",
+      "files": [
+        "scripts/probe_n1_regime_crosstab.py"
+      ]
+    },
+    {
+      "old": "train_kalt",
+      "new": "train_cold",
+      "module": "scripts/probe_n1_regime_crosstab.py",
+      "scope": "local variable",
+      "files": [
+        "scripts/probe_n1_regime_crosstab.py"
+      ]
+    },
+    {
+      "old": "_design_geplant",
+      "new": "_design_scheduled",
+      "module": "scripts/probe_p1_p2_scheduled_fir.py",
+      "scope": "nested function (local), passed by reference",
+      "files": [
+        "scripts/probe_p1_p2_scheduled_fir.py"
+      ]
+    },
+    {
+      "old": "geplant_cell",
+      "new": "scheduled_cell",
+      "module": "scripts/probe_p1_p2_scheduled_fir.py",
+      "scope": "local variable",
+      "files": [
+        "scripts/probe_p1_p2_scheduled_fir.py"
+      ]
+    },
+    {
+      "old": "lokal_cell",
+      "new": "local_cell",
+      "module": "scripts/probe_p1_p2_scheduled_fir.py",
+      "scope": "local variable",
+      "files": [
+        "scripts/probe_p1_p2_scheduled_fir.py"
+      ]
+    },
+    {
+      "old": "standardized_geplant",
+      "new": "standardized_scheduled",
+      "module": "scripts/probe_p1_p2_scheduled_fir.py",
+      "scope": "local variable",
+      "files": [
+        "scripts/probe_p1_p2_scheduled_fir.py"
+      ]
+    },
+    {
+      "old": "moisture_heiss_pooled",
+      "new": "moisture_hot_pooled",
+      "module": "scripts/probe_p1_p2_scheduled_fir.py",
+      "scope": "local variable",
+      "files": [
+        "scripts/probe_p1_p2_scheduled_fir.py"
+      ]
+    },
+    {
+      "old": "moisture_heiss_lokal",
+      "new": "moisture_hot_local",
+      "module": "scripts/probe_p1_p2_scheduled_fir.py",
+      "scope": "local variable",
+      "files": [
+        "scripts/probe_p1_p2_scheduled_fir.py"
+      ]
+    },
+    {
+      "old": "moisture_heiss_geplant",
+      "new": "moisture_hot_scheduled",
+      "module": "scripts/probe_p1_p2_scheduled_fir.py",
+      "scope": "local variable",
+      "files": [
+        "scripts/probe_p1_p2_scheduled_fir.py"
+      ]
+    },
+    {
+      "old": "moisture_heiss_pooled_std",
+      "new": "moisture_hot_pooled_std",
+      "module": "scripts/probe_p1_p2_scheduled_fir.py",
+      "scope": "local variable",
+      "files": [
+        "scripts/probe_p1_p2_scheduled_fir.py"
+      ]
+    },
+    {
+      "old": "moisture_heiss_geplant_std",
+      "new": "moisture_hot_scheduled_std",
+      "module": "scripts/probe_p1_p2_scheduled_fir.py",
+      "scope": "local variable",
+      "files": [
+        "scripts/probe_p1_p2_scheduled_fir.py"
+      ]
+    },
+    {
+      "old": "moisture_heiss_control_std",
+      "new": "moisture_hot_control_std",
+      "module": "scripts/probe_p1_p2_scheduled_fir.py",
+      "scope": "local variable",
+      "files": [
+        "scripts/probe_p1_p2_scheduled_fir.py"
+      ]
+    },
+    {
+      "old": "moisture_heiss_pooled_r2",
+      "new": "moisture_hot_pooled_r2",
+      "module": "scripts/probe_p1_p2_scheduled_fir.py",
+      "scope": "local variable",
+      "files": [
+        "scripts/probe_p1_p2_scheduled_fir.py"
+      ]
+    },
+    {
+      "old": "moisture_heiss_geplant_r2",
+      "new": "moisture_hot_scheduled_r2",
+      "module": "scripts/probe_p1_p2_scheduled_fir.py",
+      "scope": "local variable",
+      "files": [
+        "scripts/probe_p1_p2_scheduled_fir.py"
+      ]
+    },
+    {
+      "old": "moisture_heiss_control_r2",
+      "new": "moisture_hot_control_r2",
+      "module": "scripts/probe_p1_p2_scheduled_fir.py",
+      "scope": "local variable",
+      "files": [
+        "scripts/probe_p1_p2_scheduled_fir.py"
+      ]
+    },
+    {
+      "old": "T_KALT_C",
+      "new": "T_COLD_C",
+      "module": "scripts/analyze_m0_line_b_network.py",
+      "scope": "module constant, also read as lb.T_KALT_C in scripts/check_review_a1_inventory.py",
+      "files": [
+        "scripts/analyze_m0_line_b_network.py",
+        "scripts/check_review_a1_inventory.py"
+      ]
+    },
+    {
+      "old": "t_kalt",
+      "new": "t_cold",
+      "module": "scripts/check_review_a1_cascade_approach.py",
+      "scope": "parameter (cascade_approach) / loop variable (inventory)",
+      "files": [
+        "scripts/check_review_a1_cascade_approach.py",
+        "scripts/check_review_a1_inventory.py"
+      ]
+    },
+    {
+      "old": "y_s_kalt",
+      "new": "y_s_cold",
+      "module": "scripts/check_review_a1_cascade_approach.py",
+      "scope": "local variable",
+      "files": [
+        "scripts/check_review_a1_cascade_approach.py"
+      ]
+    },
+    {
+      "old": "e_fest",
+      "new": "e_fixed",
+      "module": "scripts/probe_margin_energy_cost.py",
+      "scope": "local variable",
+      "files": [
+        "scripts/probe_margin_energy_cost.py"
+      ]
+    },
+    {
+      "old": "test_default_config_reproduces_va2_bitgleich",
+      "new": "test_default_config_reproduces_va2_bit_identical",
+      "module": "tests/test_bandit_env_reward_centering.py",
+      "scope": "test function (collected by pytest; only the node id changes)",
+      "files": [
+        "tests/test_bandit_env_reward_centering.py"
+      ]
+    }
+  ]
+}
