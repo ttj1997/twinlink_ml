@@ -1,37 +1,37 @@
-r"""N1: Regime-Kreuztabelle -- schlaegt ein lokal gefittetes FIR-Modell das gepoolte.
+r"""N1: regime cross-table -- does a locally fitted FIR model beat the pooled one.
 
-KEIN Netztraining -- reine OLS-Regression (``np.linalg.lstsq``), Datenbasis/Merkmalslogik
-unveraendert gegenueber ``scripts/probe_l1_clip_sensitivity.py`` (fp 82f65f576a2e5253,
-Δt=25 s, 3 Trainingspool-Seeds, fixer Konstantlauf-Holdout, FIR linear+quadratisch
-elementweise, OLS via ``lstsq``). KEINE Aenderung an ``src/``.
+NO network training -- pure OLS regression (``np.linalg.lstsq``), data basis/feature logic
+unchanged from ``scripts/probe_l1_clip_sensitivity.py`` (fp 82f65f576a2e5253,
+Δt=25 s, 3 training-pool seeds, fixed constant-run holdout, FIR linear+quadratic
+element-wise, OLS via ``lstsq``). NO change to ``src/``.
 
-Hintergrund: Befund 47 (``docs/04_stand_ap1.md``) zeigt an drei Beharrungszustaenden
-(Eintrittstemperatur 60/90/120 °C -> Betttemperatur 37.38/62.55/87.79 °C), dass die
-langsame Mode des Teilsystems (Wassermasse, Betttemperatur) stark vom Betriebspunkt
-abhaengt (37.0 s/1194.9 s, 30.2 s/359.9 s, 38.8 s/133.5 s -- schnelle Mode 30-39 s
-uebereinstimmend, langsame Mode um Faktor 9 verschieden). Hypothese: ein einzelnes LZI-
-Modell kann beide Regime nicht gleichzeitig abbilden -- die mechanistische Erklaerung
-dafuer, dass eine FIR-Regression auf gepoolten Daten bei ``product_moisture_kg_per_kg``
-schlecht abschneidet (Befund 47/48: R2_holdout 0.354 bei k=43), waehrend sie auf einer
-eingeschraenkten Teilmenge deutlich besser wird (Befund 48: 0.785, dort allerdings ueber
-die Verletzungsmaske, nicht ueber die hier verwendete Betriebspunkt-Regimegrenze).
+Background: Befund 47 (``docs/04_stand_ap1.md``) shows at three steady states
+(inlet temperature 60/90/120 °C -> bed temperature 37.38/62.55/87.79 °C) that the
+slow mode of the subsystem (water mass, bed temperature) depends strongly on the operating
+point (37.0 s/1194.9 s, 30.2 s/359.9 s, 38.8 s/133.5 s -- fast mode 30-39 s
+consistent, slow mode different by a factor of 9). Hypothesis: a single LTI
+model cannot represent both regimes at the same time -- the mechanistic explanation
+for why an FIR regression on pooled data performs poorly on ``product_moisture_kg_per_kg``
+(Befund 47/48: R2_holdout 0.354 at k=43), while it becomes clearly better on a
+restricted subset (Befund 48: 0.785, there however via the violation mask, not via the
+operating-point regime boundary used here).
 
-Regime-Definition, punktweise, getrennt von der Verletzungsmaske aus Befund 46:
+Regime definition, point-wise, separate from the violation mask of Befund 46:
     HEISS = bed_temperature_celsius > 70 °C
     KALT  = bed_temperature_celsius < 55 °C
-    dazwischen: Uebergangszone, verworfen.
+    in between: transition zone, discarded.
 
-Kreuztabelle bei k=43, fuer alle vier Ausgangskanaele: drei Modelle (auf HEISS, auf KALT,
-auf HEISS+KALT gepoolt gefittet) gegen zwei Auswertemengen (HEISS-Holdout, KALT-Holdout)
--- sechs Zellen je Kanal. Je Zelle: R2, Var(y) und Residuenvarianz in physikalischen
-Einheiten (Var(y) und Residuenvarianz sind Pflicht, weil R2 zwischen Zellen mit
-verschiedenen Auswertemengen nicht direkt vergleichbar ist), Anzahl Punkte, 3 Seeds,
-Median und Spannweite.
+Cross-table at k=43, for all four output channels: three models (fitted on HEISS, on KALT,
+on HEISS+KALT pooled) against two evaluation sets (HEISS holdout, KALT holdout)
+-- six cells per channel. Per cell: R2, Var(y) and residual variance in physical
+units (Var(y) and residual variance are mandatory, because R2 is not directly comparable
+between cells with different evaluation sets), number of points, 3 seeds,
+median and range.
 
-Zusatz bei k=143 (~ 3 * 1194.9 s / 25 s ~ 143.4, als runder Wert getestet; die exakte
-ceil(3*tau/dt) liegt bei 144, siehe N2/diagnostics.time_constant_report): nur die Zelle
-"KALT gefittet, KALT ausgewertet", Pruefung auf Saettigung des kalten Regimes bei
-ausreichend langem Fenster.
+Addition at k=143 (~ 3 * 1194.9 s / 25 s ~ 143.4, tested as a round value; the exact
+ceil(3*tau/dt) is 144, see N2/diagnostics.time_constant_report): only the cell
+"KALT fitted, KALT evaluated", check for saturation of the cold regime with a
+sufficiently long window.
 """
 
 from __future__ import annotations

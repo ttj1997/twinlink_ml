@@ -132,12 +132,12 @@ def test_trajectory_select_and_concatenate(simulator: GreyBoxFluidBedGranulator)
 
 
 def test_time_constants_span_several_decades(simulator: GreyBoxFluidBedGranulator) -> None:
-    """Der Befund, der die Sequenzlängenwahl bestimmt.
+    """The finding that determines the choice of sequence length.
 
-    Erwartet: Feuchte im Sekundenbereich, Temperatur ~Minute, Partikelgröße ~Stunden.
-    Die Spreizung über mehrere Dekaden ist kein Modellartefakt, sondern die zentrale
-    Eigenschaft des Prozesses -- und der Grund, warum eine einzelne "dominante
-    Zeitkonstante" die Sequenzlänge nicht festlegen kann.
+    Expected: moisture in the range of seconds, temperature ~minute, particle size ~hours.
+    The spread over several decades is not a model artifact but the central property of
+    the process -- and the reason why a single "dominant time constant" cannot fix the
+    sequence length.
     """
     state = simulator.initial_state(1)
     action = simulator.backend.asarray(simulator.nominal_action(1))

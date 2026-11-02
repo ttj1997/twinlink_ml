@@ -1,55 +1,55 @@
-r"""P1/P2: Arbeitspunktgeplantes FIR-Modell (GEPLANT) gegen eine Merkmalszahl-Kontrolle.
+r"""P1/P2: operating-point-scheduled FIR model (GEPLANT) against a feature-count control.
 
-KEIN Netztraining -- reine OLS-Regression (``np.linalg.lstsq``). Datenerzeugung,
-Split-Mechanik, Regime-Definition, FIR-Fensterlogik, k=43, 3 Trainingspool-Seeds und
-fixer Konstantlauf-Holdout werden unveraendert aus ``probe_n1_regime_crosstab.py``
-importiert (``_generate_pools``, ``_crosstab_for_k``, ``_fir_design``,
-``_fit_mode_keep_mask``) statt erneut abgetippt -- bitgleiche Datenbasis garantiert, kein
-Drift-Risiko. Import funktioniert, weil beide Skripte im selben ``scripts/``-Verzeichnis
-liegen (Python haengt beim Aufruf ``python scripts/x.py`` das Skriptverzeichnis vorn an
-``sys.path``); die importierte Datei hat keinen Modul-Seiteneffekt (``main()`` steht
-hinter ``if __name__ == "__main__"``). KEINE Aenderung an ``src/`` oder an
+NO network training -- pure OLS regression (``np.linalg.lstsq``). Data generation,
+split mechanics, regime definition, FIR window logic, k=43, 3 training-pool seeds and
+fixed constant-run holdout are imported unchanged from ``probe_n1_regime_crosstab.py``
+(``_generate_pools``, ``_crosstab_for_k``, ``_fir_design``,
+``_fit_mode_keep_mask``) instead of being typed out again -- bit-identical data basis
+guaranteed, no risk of drift. The import works because both scripts lie in the same
+``scripts/`` directory (on the call ``python scripts/x.py`` Python prepends the script
+directory to ``sys.path``); the imported file has no module side effect (``main()`` sits
+behind ``if __name__ == "__main__"``). NO change to ``src/`` or to
 ``probe_n1_regime_crosstab.py``.
 
-Hintergrund (Befund 49, ``docs/04_stand_ap1.md``): lokal gefittete FIR-Modelle schlagen
-das gepoolte Modell auf ``product_moisture_kg_per_kg`` deutlich (Faktor 66 in
-Residuenvarianz auf dem HEISS-Holdout). Offene Frage: Arbeitspunktabhaengigkeit der
-Parameter (dann genuegt ein arbeitspunktgeplantes lineares Modell) oder echte
-Zustandsabhaengigkeit der Dynamik (dann Begruendung fuer Sequenzmodelle)?
+Background (Befund 49, ``docs/04_stand_ap1.md``): locally fitted FIR models beat
+the pooled model on ``product_moisture_kg_per_kg`` clearly (factor 66 in
+residual variance on the HEISS holdout). Open question: operating-point dependence of the
+parameters (then an operating-point-scheduled linear model suffices) or genuine
+state dependence of the dynamics (then a justification for sequence models)?
 
-P1 -- GEPLANT: gepooltes FIR-Modell (k=43), dessen Merkmalssatz zusaetzlich die
-Wechselwirkung jedes linearen/quadratischen FIR-Merkmals mit der gemessenen
-``bed_temperature_celsius`` zum Zeitpunkt t enthaelt, plus ``bed_temperature_celsius(t)``
-selbst als Haupteffekt (Standardpraxis bei Interaktionsmodellen: Haupteffekt immer mit
-aufnehmen). Merkmalszahl verdoppelt sich dadurch exakt (siehe ``_fir_design_scheduled``).
+P1 -- GEPLANT: pooled FIR model (k=43) whose feature set additionally contains the
+interaction of every linear/quadratic FIR feature with the measured
+``bed_temperature_celsius`` at time t, plus ``bed_temperature_celsius(t)``
+itself as a main effect (standard practice for interaction models: always include the
+main effect). The feature count thereby doubles exactly (see ``_fir_design_scheduled``).
 
-WICHTIG fuer die Interpretation: ``bed_temperature_celsius(t)`` ist fuer die Kanaele
-``energy_target``, ``product_moisture_kg_per_kg`` und ``d50_um`` ein ANDERER Ausgangskanal
-als das Ziel -- keine autoregressive Ruckfuehrung des Zielkanals. Fuer das Ziel
-``bed_temperature_celsius`` selbst ist die Konstruktion dagegen autoregressiv (das Modell
-bekommt den Zielwert zum Vorhersagezeitpunkt direkt als Merkmal) -- die Zahl dort ist
-KEIN Beleg fuer Arbeitspunktplanung, sondern ein Leckage-Artefakt, und wird entsprechend
-gekennzeichnet.
+IMPORTANT for the interpretation: for the channels ``energy_target``,
+``product_moisture_kg_per_kg`` and ``d50_um``, ``bed_temperature_celsius(t)`` is a DIFFERENT
+output channel than the target -- no autoregressive feedback of the target channel. For the
+target ``bed_temperature_celsius`` itself, by contrast, the construction is autoregressive (the
+model receives the target value at the prediction time directly as a feature) -- the number
+there is NO evidence for operating-point scheduling but a leakage artifact, and is marked
+accordingly.
 
-P2 -- CONTROL: gepooltes FIR-Modell ohne Betriebspunktbezug, aber mit einem hoeheren k,
-sodass die Merkmalszahl mit GEPLANT vergleichbar ist (naechstliegendes k, siehe
-``_select_control_k``). Prueft, ob der GEPLANT-Gewinn reine Merkmalszahl ist statt
-Arbeitspunktbezug.
+P2 -- CONTROL: pooled FIR model without operating-point reference, but with a higher k,
+so that the feature count is comparable to GEPLANT (nearest k, see
+``_select_control_k``). Checks whether the GEPLANT gain is pure feature count rather than
+operating-point reference.
 
-Ausgewertet auf HEISS-Holdout und KALT-Holdout wie in N1: R2, Var(y) und
-Residuenvarianz in physikalischen Einheiten, Merkmalszahl, 3 Seeds, Median und Spannweite.
-POOLED und LOKAL (k=43) werden dafuer aus ``_crosstab_for_k`` (N1, unveraendert)
-mitberichtet, damit GEPLANT/CONTROL direkt daneben stehen.
+Evaluated on the HEISS holdout and the KALT holdout as in N1: R2, Var(y) and
+residual variance in physical units, feature count, 3 seeds, median and range.
+POOLED and LOKAL (k=43) are reported alongside for this from ``_crosstab_for_k`` (N1,
+unchanged), so that GEPLANT/CONTROL stand directly next to them.
 
-Q1 -- Konditionierung: je Trainings-Entwurfsmatrix (POOLED/GEPLANT/CONTROL, je Seed)
-Konditionszahl (``np.linalg.cond``), effektiver Rang (``np.linalg.matrix_rank``),
-Verhaeltnis groesste/kleinste Spaltennorm und der von ``lstsq`` gemeldete Rang (s.
-``_design_matrix_diagnostics``). Zusatz-Kontrollrechnung: dieselben drei Modelle mit
-spaltenweise standardisierten Merkmalen (Mittel 0, Std 1 je Trainings-Seed, Bias-Spalte
-ausgenommen, s. ``_standardize_design``) neu gefittet -- R2/Residuenvarianz auf beiden
-Holdouts, NICHT als neuer Standard der FIR-Pipeline gedacht, nur zur Kontrolle, ob der
-tief negative HEISS-R2 (u.a. ``product_moisture_kg_per_kg``) durch schlechte
-Konditionierung der Entwurfsmatrix miterklaerbar ist statt rein strukturell.
+Q1 -- conditioning: per training design matrix (POOLED/GEPLANT/CONTROL, per seed)
+condition number (``np.linalg.cond``), effective rank (``np.linalg.matrix_rank``),
+ratio of largest/smallest column norm and the rank reported by ``lstsq`` (see
+``_design_matrix_diagnostics``). Additional control computation: the same three models
+refitted with column-wise standardised features (mean 0, std 1 per training seed, bias
+column excluded, see ``_standardize_design``) -- R2/residual variance on both
+holdouts, NOT intended as a new standard of the FIR pipeline, only as a check whether the
+deeply negative HEISS R2 (among others ``product_moisture_kg_per_kg``) can be partly explained
+by poor conditioning of the design matrix rather than being purely structural.
 """
 
 from __future__ import annotations

@@ -1,39 +1,36 @@
-r"""Schritt 2 (xLSTM-Wiederaufnahme): Skalierungstest + Kostendiagnose, kein Volltraining.
+r"""Step 2 (xLSTM resumption): scaling test + cost diagnosis, no full training.
 
-Gleiches Muster wie ``diag_mamba_cost.py``/``diag_transformer_cost.py`` (Befund 37/38):
-zwei unabhaengige, real gemessene Fragen, kein neues Volltraining.
+Same pattern as ``diag_mamba_cost.py``/``diag_transformer_cost.py`` (Befund 37/38):
+two independent, actually measured questions, no new full training.
 
-(a) Skalierungstest, **ERGEBNISOFFEN** (anders als bei Mamba nicht als O(1) erwartet
-    vorgegeben -- die matrixwertige Zelle koennte sich anders verhalten, siehe
-    Schritt-0-Antwort d/Paper-Abschnitt 2.5: die Rechenkosten sind O(d^2) pro Schritt
-    durch die ``d x d``-Matrixzelle, aber das ist eine Aussage ueber die Kosten PRO
-    SCHRITT bei fester Groesse ``d``, nicht ueber das Wachstum UEBER DIE SEQUENZ bei
-    fester ``d`` -- das ist die hier gemessene, unabhaengige Frage). 68 sequenzielle
-    mLSTM-Schritte (32 Historie + 36 Horizont, Produktionsgroesse), Zeit je Einzelschritt
-    bei Position 1, 18, 30, 36 und zusaetzlich bei Position 68 (Sequenzende).
+(a) Scaling test, **OPEN-ENDED** (unlike for Mamba not stipulated as expected O(1) -- the
+    matrix-valued cell could behave differently, see step 0 answer d/paper section 2.5: the
+    computational cost is O(d^2) per step due to the ``d x d`` matrix cell, but that is a
+    statement about the cost PER STEP at fixed size ``d``, not about the growth OVER THE
+    SEQUENCE at fixed ``d`` -- that is the independent question measured here). 68
+    sequential mLSTM steps (32 history + 36 horizon, production size), time per single step
+    at position 1, 18, 30, 36 and additionally at position 68 (end of sequence).
 
-(b) Absolutwert, zwei unabhaengige Messmethoden (wie bei Mamba):
-    (b1) Direkter Pro-Schritt-Vergleich: GRU und LSTM (gleiches hidden_size) in
-         DERSELBEN sequenziellen Python-Schleife wie xLSTM -- fair, weil beide Seiten
-         denselben Python-Dispatch-Overhead pro Aufruf tragen.
-    (b2) Naeherung: volle ``Network.forward``-Zeit (alle 68 Schritte inkl. Concat/Head,
-         ueber den echten Trainer-Pfad) geteilt durch 68.
+(b) Absolute value, two independent measurement methods (as for Mamba):
+    (b1) Direct per-step comparison: GRU and LSTM (same hidden_size) in the SAME
+         sequential Python loop as xLSTM -- fair, because both sides carry the same
+         Python dispatch overhead per call.
+    (b2) Approximation: full ``Network.forward`` time (all 68 steps incl. concat/head,
+         via the real trainer path) divided by 68.
 
-(c) Realistische Zeitschaetzung fuer den reduzierten Vergleich (Schritt 3): aus der
-    ECHTEN, bereits gemessenen Schrittzeit bei Produktionsgroesse
-    (``diag_xlstm_memory.py``, ``hidden_size=16``, ``batch_size=256``: 0.070 s pro
-    ``forward``+``backward`` ueber alle 68 Schritte) hochgerechnet auf
-    ``batches_per_epoch=9`` (2176 Fenster / 256, aufgerundet), ``max_epochs=200``,
-    3 Teilnetze -- keine neue Zeitmessung noetig, nur eine Multiplikation der bereits
-    real gemessenen Zahl.
+(c) Realistic time estimate for the reduced comparison (step 3): from the REAL, already
+    measured step time at production size (``diag_xlstm_memory.py``, ``hidden_size=16``,
+    ``batch_size=256``: 0.070 s per ``forward``+``backward`` over all 68 steps)
+    extrapolated to ``batches_per_epoch=9`` (2176 windows / 256, rounded up),
+    ``max_epochs=200``, 3 sub-networks -- no new time measurement needed, only a
+    multiplication of the number already actually measured.
 
-``hidden_size=16``, wie in der Schritt-0-Antwort empfohlen (unproblematisch bei
-Produktionsgroesse, siehe ``diag_xlstm_memory.py``). Kleiner Datenumfang
-(``n_train_max=4, n_val=4, n_test=8``) fuer die Pro-Schritt-Zeitmessung selbst -- reicht
-fuer korrekte Tensorformen und eine grobe uS/Schritt-Schaetzung, ist NICHT die
-Produktionsgroesse (die ist bereits in ``diag_xlstm_memory.py`` gemessen). Keine
-Aenderung an ``torch_sequence.py``/``composite.py``/``xlstm.py`` -- reiner Lesezugriff
-auf bereits vorhandene Netz-Attribute (``network.core.layers``).
+``hidden_size=16``, as recommended in the step 0 answer (unproblematic at production size,
+see ``diag_xlstm_memory.py``). Small data volume (``n_train_max=4, n_val=4, n_test=8``) for
+the per-step time measurement itself -- sufficient for correct tensor shapes and a rough
+uS/step estimate, is NOT the production size (that is already measured in
+``diag_xlstm_memory.py``). No change to ``torch_sequence.py``/``composite.py``/``xlstm.py``
+-- pure read access to already existing network attributes (``network.core.layers``).
 """
 
 from __future__ import annotations

@@ -1,60 +1,60 @@
-r"""S1: Wirkung einer Projektion von gas_velocity_m_per_s auf [u_mf(d50), u_terminal(d50)].
+r"""S1: effect of a projection of gas_velocity_m_per_s onto [u_mf(d50), u_terminal(d50)].
 
-Messung VOR jeder Aenderung an ``src/`` -- entscheidet, ob S2/S3 (Schema-Erweiterung von
-``Trajectory``, Implementierung der Projektion in ``BaseSimulator.rollout``/``greybox.py``)
-ueberhaupt sinnvoll sind. Siehe ``docs/04_stand_ap1.md`` Befund 46 und
-``scripts/probe_sweep_contamination.py`` fuer den bisherigen Befund: 26.6 % der Laeufe und
-6.0 % der Abtastpunkte verletzen ``u_gas > u_terminal(d50)`` unter dem Standard-
-Anregungsdesign (Prozess-Fingerprint ``EXPECTED_FINGERPRINT`` unten -- die urspruengliche
-S1-Messung/das committete Artefakt liefen unter 82f65f576a2e5253, vor Einfuehrung von
-``NumericsConfig.enforce_gas_velocity_projection``; Aequivalenz zum aktuellen Fingerprint
-belegt durch ``test_gas_velocity_projection_disabled_matches_legacy_baseline``,
+Measurement BEFORE any change to ``src/`` -- decides whether S2/S3 (schema extension of
+``Trajectory``, implementation of the projection in ``BaseSimulator.rollout``/``greybox.py``)
+make sense at all. See ``docs/04_stand_ap1.md`` Befund 46 and
+``scripts/probe_sweep_contamination.py`` for the finding so far: 26.6 % of the runs and
+6.0 % of the sample points violate ``u_gas > u_terminal(d50)`` under the standard
+excitation design (process fingerprint ``EXPECTED_FINGERPRINT`` below -- the original
+S1 measurement/the committed artifact ran under 82f65f576a2e5253, before
+``NumericsConfig.enforce_gas_velocity_projection`` was introduced; equivalence to the current
+fingerprint shown by ``test_gas_velocity_projection_disabled_matches_legacy_baseline``,
 ``tests/test_gas_velocity_projection.py``).
 
-Reproduziert die bestehenden Schedules -- 3 Trainings-Seeds (1, 2, 3; dieselbe Default-
-Seedliste wie ``run_learning_curve``) mit ``n_train_max=64`` (DataSpec identisch zu
+Reproduces the existing schedules -- 3 training seeds (1, 2, 3; the same default seed
+list as ``run_learning_curve``) with ``n_train_max=64`` (DataSpec identical to
 ``run_arch_constant_holdout_worker._excited_spec``/``probe_sweep_contamination._spec``) plus
-ein konstanter Holdout-Pool (``HOLDOUT_SEED=999``, ``constant_run_fraction=1.0``, DataSpec
-identisch zu ``run_arch_constant_holdout_worker._holdout_spec``) -- und rollt jeden Pool
-zweimal aus:
+a constant holdout pool (``HOLDOUT_SEED=999``, ``constant_run_fraction=1.0``, DataSpec
+identical to ``run_arch_constant_holdout_worker._holdout_spec``) -- and rolls out every pool
+twice:
 
-1. unveraendert -- das ist bereits ``GeneratedData.trajectory`` aus ``generate_data``.
-2. mit einer HIER nachgebauten Projektion, NICHT in ``src/`` implementiert: unmittelbar vor
-   jedem ``step()``-Aufruf (also im Rollout-Takt von ``ProcessSimulator.rollout``, nicht pro
-   RK4-Teilschritt -- die Aktion ist ueber das Sample-Intervall ohnehin Zero-Order-Hold) wird
-   ``gas_velocity_m_per_s`` auf ``[u_mf, u_terminal]`` geclippt, berechnet aus dem WAHREN,
-   unverrauschten Zustand, der in diesen Schritt eingeht (nie aus einer Messung). ``u_mf``/
-   ``u_terminal`` kommen unveraendert aus ``simulation/fluidization.py`` -- exakt dieselbe
-   Rechnung wie in ``GreyBoxFluidBedGranulator._rhs`` (dort rein diagnostisch, siehe die
-   Modul-Docstrings von ``greybox.py``/``fluidization.py``).
+1. unchanged -- this is already ``GeneratedData.trajectory`` from ``generate_data``.
+2. with a projection re-implemented HERE, NOT implemented in ``src/``: immediately before
+   every ``step()`` call (i.e. at the rollout rate of ``ProcessSimulator.rollout``, not per
+   RK4 sub-step -- the action is zero-order hold over the sample interval anyway),
+   ``gas_velocity_m_per_s`` is clipped to ``[u_mf, u_terminal]``, computed from the TRUE,
+   noise-free state that enters this step (never from a measurement). ``u_mf``/
+   ``u_terminal`` come unchanged from ``simulation/fluidization.py`` -- exactly the same
+   computation as in ``GreyBoxFluidBedGranulator._rhs`` (purely diagnostic there, see the
+   module docstrings of ``greybox.py``/``fluidization.py``).
 
-Eigene Nachbau-Rollout-Schleife (``_rollout_with_optional_projection``) statt zweimal
-``ProcessSimulator.rollout`` aufzurufen, weil dessen Signatur keinen Projektions-Hook hat
-(das ist ja gerade die Luecke, die S1 vermisst) -- ``project=False`` wird gegen
-``GeneratedData.trajectory`` auf Bitgleichheit geprueft, um die Nachbau-Schleife selbst zu
-verifizieren, bevor ihr Ergebnis mit ``project=True`` als Messgrundlage dient.
+Own re-implemented rollout loop (``_rollout_with_optional_projection``) instead of calling
+``ProcessSimulator.rollout`` twice, because its signature has no projection hook
+(that is exactly the gap that S1 measures) -- ``project=False`` is checked against
+``GeneratedData.trajectory`` for bit-identity, to verify the re-implemented loop itself
+before its result with ``project=True`` serves as the basis of the measurement.
 
-Kriterium (f) (siehe Auftrag) prueft nach der Simulation, ob noch Punkte mit
-``u > u_terminal`` verbleiben -- erwartet exakt null. Falls nicht: die Diagnose in
-``greybox.py`` (``fluidization_margin_upper_m_per_s``) wird NACH der Integration eines
-Schritts berechnet (post-RK4-Zustand), waehrend die Projektion hier VOR dem Schritt
-clippt (wie in der Aufgabenstellung vorgegeben, am wahren Zustand vor dem Integrations-
-schritt) -- ``_analyse_group``/``main`` legen dafuer zusaetzlich ``projection_u_mf_pre_
-step_m_per_s``/``projection_u_terminal_pre_step_m_per_s`` in den Diagnostics der
-projizierten Trajektorie ab, um die beiden Zeitpunkte direkt vergleichen zu koennen
-(Feld ``f_root_cause``).
+Criterion (f) (see the task) checks after the simulation whether points with
+``u > u_terminal`` remain -- expected exactly zero. If not: the diagnostic in
+``greybox.py`` (``fluidization_margin_upper_m_per_s``) is computed AFTER the integration of a
+step (post-RK4 state), whereas the projection here clips BEFORE the step (as specified
+in the task, on the true state before the integration step) -- for this purpose,
+``_analyse_group``/``main`` additionally store ``projection_u_mf_pre_
+step_m_per_s``/``projection_u_terminal_pre_step_m_per_s`` in the diagnostics of the
+projected trajectory, so that the two points in time can be compared directly
+(field ``f_root_cause``).
 
-**Nachtrag T1** (nach Rueckfrage zu (f)): der Punktanteil aus (f) allein entscheidet
-nicht, ob die Restverletzung relevant ist -- der BETRAG tut das. ``f_residual_magnitude``
-(je Gruppe und gepoolt) misst deshalb die Ueberschreitung (u_gas - u_terminal) an den
-verletzenden Punkten absolut und relativ zu ``u_terminal``, zaehlt betroffene Laeufe und
-Punkte je Lauf, und ordnet die relative Ueberschreitung gegen die Korrelationsunsicherheit
-von Haider & Levenspiel (10-20 %, siehe ``fluidization.py``) ein: liegt das 95-Perzentil
-deutlich darunter, ist die Restverletzung innerhalb der Modellunsicherheit selbst und kein
-eigener physikalischer Sachverhalt. Eine abgeleitete Marge (T2) wird nur bei Bedarf und nur
-nach weiterer Ruecksprache umgesetzt, nicht hier.
+**Addendum T1** (after a follow-up question on (f)): the point fraction from (f) alone does
+not decide whether the residual violation is relevant -- the MAGNITUDE does.
+``f_residual_magnitude`` (per group and pooled) therefore measures the exceedance
+(u_gas - u_terminal) at the violating points, absolute and relative to ``u_terminal``, counts
+affected runs and points per run, and places the relative exceedance against the correlation
+uncertainty of Haider & Levenspiel (10-20 %, see ``fluidization.py``): if the 95th percentile
+lies clearly below it, the residual violation is within the model uncertainty itself and not
+a physical phenomenon of its own. A derived margin (T2) is implemented only if needed and only
+after further consultation, not here.
 
-KEIN Netztraining, KEIN Sweep, KEINE Aenderung an ``src/``.
+NO network training, NO sweep, NO change to ``src/``.
 """
 
 from __future__ import annotations
@@ -317,14 +317,14 @@ def _quarter_counts(mask: np.ndarray) -> dict[str, Any]:
 def _residual_violation_magnitude(
     violation_upper: np.ndarray, exceedance_abs: np.ndarray, u_terminal_post: np.ndarray
 ) -> dict[str, Any]:
-    """T1: Betrag der Restverletzung aus (f), nicht nur ihr Punktanteil.
+    """T1: magnitude of the residual violation from (f), not only its point fraction.
 
-    ``violation_upper``/``exceedance_abs``/``u_terminal_post`` haben alle Form
-    (n_runs, n_time). ``exceedance_abs`` ist ``max(0, u_gas - u_terminal)`` (ausserhalb
-    verletzender Punkte 0). Ordnet die relative Ueberschreitung zusaetzlich gegen die
-    Genauigkeit der Haider-&-Levenspiel-Korrelation selbst ein (10-20 %, siehe
-    ``fluidization.py``) -- eine Restverletzung unterhalb dieses Bands liegt innerhalb der
-    Unsicherheit von ``u_terminal`` selbst und ist kein eigener physikalischer Sachverhalt.
+    ``violation_upper``/``exceedance_abs``/``u_terminal_post`` all have shape
+    (n_runs, n_time). ``exceedance_abs`` is ``max(0, u_gas - u_terminal)`` (0 outside
+    violating points). Additionally places the relative exceedance against the
+    accuracy of the Haider & Levenspiel correlation itself (10-20 %, see
+    ``fluidization.py``) -- a residual violation below this band lies within the
+    uncertainty of ``u_terminal`` itself and is not a physical phenomenon of its own.
     """
     n_runs, n_time = violation_upper.shape
     n_violating_points = int(violation_upper.sum())
@@ -717,10 +717,10 @@ def main() -> None:
 
     abort_std = std_drop_fraction > STD_DROP_ABORT_FRACTION
     abort_hot = hot_before > 0.0 and hot_drop_fraction > HOT_FRACTION_DROP_ABORT_FRACTION
-    # (f) allein (Punktanteil != 0) ist NICHT das Abbruchkriterium -- Stellvertreter fuer
-    # "Projektion korrekt platziert", das T1 (Betrag der Restverletzung) klaert. Massgeblich
-    # ist, ob die relative Ueberschreitung ueber die Korrelationsunsicherheit von u_terminal
-    # selbst (10 %) hinausgeht -- siehe Rueckfrage/Antwort zu S1 und
+    # (f) alone (point fraction != 0) is NOT the abort criterion -- a proxy for
+    # "projection correctly placed", which T1 (magnitude of the residual violation) settles.
+    # What matters is whether the relative exceedance goes beyond the correlation uncertainty
+    # of u_terminal itself (10 %) -- see follow-up question/answer on S1 and
     # ``_residual_violation_magnitude``.
     abort_f = (
         f_residual_magnitude_pooled.get("n_violating_points", 0) > 0

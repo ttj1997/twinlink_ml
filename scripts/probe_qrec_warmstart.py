@@ -1,32 +1,31 @@
-r"""DB1: ist der nominale Anfangszustand die Ursache der Q_rec-Chargenmittel-Abweichung.
+r"""DB1: is the nominal initial state the cause of the Q_rec batch-mean deviation.
 
-Nachtrag zu Befund 54 (DA2c) -- KEIN neuer Sweep, nur eine zweite Chargenrollout-Variante
-am ohnehin schon gerechneten aktuellen Parameterwert (``tau_4 = 16000`` s, Config
-unveraendert, 3x3-Gitter aus ``artifacts/runs/probe_tau4_sensitivity.json``, dort bereits
-gerechnete Sollwerte je Gitterpunkt wiederverwendet -- keine neue BB1-BB3-Optimierung).
+Addendum to Befund 54 (DA2c) -- NO new sweep, only a second batch-rollout variant at the
+current parameter value that has already been computed anyway (``tau_4 = 16000`` s, config
+unchanged, 3x3 grid from ``artifacts/runs/probe_tau4_sensitivity.json``, set points per grid
+point already computed there are reused -- no new BB1-BB3 optimisation).
 
-Befund 54 (DA2c) fand: die chargengemittelte rueckgewinnbare Leistung ``Q_rec`` weicht bei
-``tau_4 = 16000`` s median 35.2 % vom stationaeren Wert ab, obwohl ``bed_temperature_
-celsius``/Feuchte am CHARGENENDE praktisch am Fixpunkt liegen (Befund 53b). Erklaerung
-dort: der NOMINALE Anfangszustand (``bed_temperature_celsius = 55`` C) liegt bei den
-meisten Gitterpunkten ueber dem stationaeren Fixpunkt (30-45 C) -- die Anfahrphase liefert
-eine waermere, zunaechst trockenere Abluft und zieht das Chargenmittel nach oben.
+Befund 54 (DA2c) found: the batch-averaged recoverable power ``Q_rec`` at ``tau_4 = 16000`` s
+deviates by a median of 35.2 % from the stationary value, although ``bed_temperature_
+celsius``/moisture at the END OF THE BATCH lie practically at the fixed point (Befund 53b).
+Explanation there: the NOMINAL initial state (``bed_temperature_celsius = 55`` C) lies above
+the stationary fixed point (30-45 C) at most grid points -- the start-up phase delivers a
+warmer, initially drier exhaust air and pulls the batch mean upwards.
 
-Dieses Skript prueft die Erklaerung direkt: derselbe Chargenrollout (28800 s,
-``Delta_t = 25`` s, Projektion an, dieselben je Gitterpunkt optimalen Sollwerte), aber mit
-dem BEHARRUNGSZUSTAND aus ``solve_steady_state`` als Anfangszustand statt dem nominalen
-(``operation.initial_bed_temperature_celsius = 55`` C etc.) -- alles andere unveraendert.
-``study_operating_point_regret.py``/``study_operating_point_transient.py`` per
-``importlib`` geladen, keine Zeile dort veraendert; ``rollout_constant_setpoint`` selbst
-akzeptiert keinen Anfangszustands-Parameter, deshalb hier eine eigene, duenne
-Rollout-Funktion mit identischer Aktions-/Stoergroessen-Kachelung, nur mit uebergebenem
-``initial_state``.
+This script checks the explanation directly: the same batch rollout (28800 s,
+``Delta_t = 25`` s, projection on, the same set points optimal per grid point), but with the
+STEADY STATE from ``solve_steady_state`` as initial state instead of the nominal one
+(``operation.initial_bed_temperature_celsius = 55`` C etc.) -- everything else unchanged.
+``study_operating_point_regret.py``/``study_operating_point_transient.py`` loaded via
+``importlib``, no line there changed; ``rollout_constant_setpoint`` itself does not accept an
+initial-state parameter, hence a separate, thin rollout function here with identical
+action/disturbance tiling, only with a passed ``initial_state``.
 
-Zusaetzlich berichtet: der Zeitpunkt (in s), ab dem die LAUFENDE (kumulative) Mittel-Q_rec
-dauerhaft innerhalb 5 % des stationaeren Werts bleibt -- je Gitterpunkt und Startvariante --
-als die Dauer des Anfahrvorgangs.
+Additionally reported: the point in time (in s) from which the RUNNING (cumulative) mean
+Q_rec stays permanently within 5 % of the stationary value -- per grid point and start
+variant -- as the duration of the start-up process.
 
-Aufruf::
+Invocation::
 
     python scripts/probe_qrec_warmstart.py \
         --output artifacts/runs/probe_qrec_warmstart.json
