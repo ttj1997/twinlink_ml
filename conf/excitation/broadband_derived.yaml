@@ -1,33 +1,33 @@
-# Anregungsdesign, abgeleitet aus den Zeitkonstanten des Grey-Box-Modells
-# (tau_fast 9.5 s, tau_slow 16000 s, dt 5 s) ueber
+# Excitation design, derived from the time constants of the grey-box model
+# (tau_fast 9.5 s, tau_slow 16000 s, dt 5 s) via
 # ExcitationConfig.from_time_constants.
 #
-# STATUS: abgeleitet aus PLATZHALTER-Zeitkonstanten. Nach jeder Aenderung an
-# conf/process/*.yaml neu erzeugen:
+# STATUS: derived from PLACEHOLDER time constants. Regenerate after every change to
+# conf/process/*.yaml:
 #
 #   python scripts/report_excitation.py conf/process/<datei>.yaml --runs 16
 #
-# Diese Datei ist die versionierte Fassung des aufgeloesten Stands. Sie gehoert zu jedem
-# erzeugten Datensatz -- eine Lernkurve ohne den zugehoerigen Anregungsstand ist nicht
-# reproduzierbar.
+# This file is the versioned form of the resolved state. It belongs to every
+# generated dataset -- a learning curve without the corresponding excitation state is not
+# reproducible.
 
-run_duration_s: 28800.0        # 8 h; deckt ~2 tau der Massenregelung, nicht das Kornwachstum
+run_duration_s: 28800.0        # 8 h; covers ~2 tau of the mass control, not the grain growth
 
 hold_time:
-  minimum_s: 20.0              # 2 * tau_fast, gleichzeitig 4 Abtastschritte
-  maximum_s: 1169.6            # 3 * geometrisches Mittel der Zeitkonstanten
+  minimum_s: 20.0              # 2 * tau_fast, at the same time 4 sampling steps
+  maximum_s: 1169.6            # 3 * geometric mean of the time constants
 
-prbs_register_length: 11       # Periode 2047 * 19 s = 10.8 h > Laufdauer
+prbs_register_length: 11       # period 2047 * 19 s = 10.8 h > run duration
 prbs_clock_s: 19.0             # 2 * tau_fast
 
 ramp_segment_time:
   minimum_s: 100.0
   maximum_s: 4678.5
 
-# Amplitudenstufen als Anteil der Stellgroessenspanne. Mehrere Stufen sind hier keine
-# Feinheit: die Ratenbegrenzung koppelt Amplitude und erreichbare Umschaltfrequenz ueber
-# t_switch = Amplitude / max. Aenderungsrate. Nur die kleine Stufe kommt in die Naehe der
-# schnellen Prozessmode.
+# Amplitude levels as a fraction of the action span. Several levels are not a
+# nicety here: the rate limit couples amplitude and achievable switching frequency via
+# t_switch = amplitude / max. rate of change. Only the small level comes close to the
+# fast process mode.
 amplitude_levels: [0.15, 0.35, 0.7, 1.0]
 
 signal_weights:
@@ -35,8 +35,8 @@ signal_weights:
   prbs: 0.3
   ramp: 0.3
 
-constant_run_fraction: 0.1     # Referenzlaeufe fuer Beharrungszustaende
+constant_run_fraction: 0.1     # reference runs for steady states
 
-apply_rate_limits: true        # aus, nur um den Effekt der Aktordynamik zu isolieren
-sampler: sobol                 # verschachtelt -> Lernkurven-Teilmengen bleiben gueltig
+apply_rate_limits: true        # off only to isolate the effect of the actuator dynamics
+sampler: sobol                 # nested -> learning-curve subsets stay valid
 randomise_initial_conditions: true
