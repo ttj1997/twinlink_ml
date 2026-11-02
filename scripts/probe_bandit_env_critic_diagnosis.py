@@ -66,9 +66,9 @@ def _suppress_placeholder_warning() -> None:
 
 
 def _find_checkpoint(step: int, run_uid: str | None) -> Path:
-    """Siehe ``probe_bandit_env_policy_inspection.py::_find_checkpoint`` -- ``run_uid``
-    fuer exakten Treffer statt mtime-basierter Auswahl, noetig bei parallel laufenden
-    Trainingslaeufen.
+    """See ``probe_bandit_env_policy_inspection.py::_find_checkpoint`` -- ``run_uid``
+    for an exact match instead of mtime-based selection, needed with training runs
+    running in parallel.
     """
     if run_uid is not None:
         path = CHECKPOINT_DIR / f"{run_uid}_step{step:06d}.zip"
@@ -170,7 +170,7 @@ def diagnose_checkpoint(path: Path, env: OperatingPointBanditEnv) -> dict[str, A
     q_corner_arr = np.asarray(q_corner)
     q_oracle_arr = np.asarray(q_oracle)
 
-    # (c) Proxy-Aktionen fuer "nie besucht", am ersten Kontext.
+    # (c) Proxy actions for "never visited", at the first context.
     obs0 = np.array(
         [points[0].ambient_temperature_celsius, points[0].ambient_relative_humidity],
         dtype=np.float32,

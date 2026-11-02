@@ -1,40 +1,40 @@
-r"""MA5: Sechs Verschaltungsfaelle des Partnermodells (Model_v3.xlsx) -- Reproduktion,
-Machbarkeit, machbare Optima.
+r"""MA5: six interconnection cases of the partner model (Model_v3.xlsx) -- reproduction,
+feasibility, feasible optima.
 
-Datengrundlage (vom Nutzer aus Model_v3.xlsx rekonstruiert, nicht im Repo dokumentiert --
-siehe Konversation, nicht ``docs/06_waermenetz.md``): zwei Abluftquellen (Q1 Spruehturm,
-Q2 Wirbelschicht), zwei Zuluftsenken (S1, S2), je eigene Kondensationstemperatur T_kalt
-PRO QUELLE (Q1: 10 C, Q2: 15 C) -- ``heatnetwork.config.HeatNetworkConfig.
-cold_temperature_celsius`` ist netzweit, nicht je Quelle, deshalb hier NICHT
-``heatnetwork.balance.evaluate_cascade`` direkt wiederverwendet, sondern derselbe
-Kaskadenalgorithmus (EA2/EA1-Formeln, siehe ``balance.py``-Moduldocstring) manuell mit
-Thermo-Primitiven nachgebaut, verallgemeinert auf ein T_kalt je Quelle. Reine
-Diagnose-/Abgleichrechnung, KEINE Aenderung an ``src/``.
+Data basis (reconstructed by the user from Model_v3.xlsx, not documented in the repo --
+see the conversation, not ``docs/06_waermenetz.md``): two exhaust air sources (Q1 spray tower,
+Q2 fluidized bed), two inlet air sinks (S1, S2), each with its own condensation temperature
+T_kalt PER SOURCE (Q1: 10 C, Q2: 15 C) -- ``heatnetwork.config.HeatNetworkConfig.
+cold_temperature_celsius`` is network-wide, not per source, therefore
+``heatnetwork.balance.evaluate_cascade`` is NOT reused directly here; instead the same
+cascade algorithm (EA2/EA1 formulas, see the ``balance.py`` module docstring) is rebuilt
+manually with thermo primitives, generalised to one T_kalt per source. Pure
+diagnostic/reconciliation computation, NO change to ``src/``.
 
-Formelfehler im Blatt (vom Nutzer identifiziert, hier nur nachvollzogen, nicht neu
-gefunden): ``Balances!E20``/``E27`` verrechnet die Verdampfungsenthalpie
-(``Inputs!I12 = 2501``, im Blatt als kJ/kg beschriftet) OHNE Umrechnung mit den
-J-basierten spezifischen Waermekapazitaeten -- effektiv wie 2501 J/kg statt 2.501e6 J/kg,
-Faktor 1000 zu klein. Zusaetzlich ein Vorzeichenfehler im Kondensatterm (Kondensat verlaesst
-die Bilanz, der Term muss subtrahiert werden). MA5a rechnet BEIDE Korrekturen nach und
-vergleicht gegen den unkorrigierten Blattwert -- die KORRIGIERTE Groesse ist danach die
-Grundlage fuer MA5b/MA5c, NICHT der Blattwert (Nutzeranweisung).
+Formula error in the sheet (identified by the user, only retraced here, not newly
+found): ``Balances!E20``/``E27`` combines the enthalpy of evaporation
+(``Inputs!I12 = 2501``, labelled in the sheet as kJ/kg) WITHOUT conversion with the
+J-based specific heat capacities -- effectively as 2501 J/kg instead of 2.501e6 J/kg,
+a factor of 1000 too small. In addition, a sign error in the condensate term (condensate
+leaves the balance, the term must be subtracted). MA5a recomputes BOTH corrections and
+compares against the uncorrected sheet value -- the CORRECTED quantity is thereafter the
+basis for MA5b/MA5c, NOT the sheet value (user instruction).
 
-Sechs Faelle (Quelle -> Senke, kaskadierte Faelle in Reihenfolge)::
+Six cases (source -> sink, cascaded cases in order)::
 
-    Fall 1  Q1->S1, Q2->S2                       (getrennt)
-    Fall 2  Q2->S1, Q1->S2                        (getrennt, vertauscht)
-    Fall 3  Q2 dann Q1 -> S1                       (kalte Quelle zuerst, S2 ohne Rueckgewinnung)
-    Fall 4  Q2 dann Q1 -> S2                       (S1 ohne Rueckgewinnung)
-    Fall 5  Q1 dann Q2 -> S1                       (heisse Quelle zuerst, S2 ohne Rueckgewinnung)
-    Fall 6  nur Q1 -> S2                           (Q2 ungenutzt, S1 ohne Rueckgewinnung)
+    Case 1  Q1->S1, Q2->S2                       (separate)
+    Case 2  Q2->S1, Q1->S2                        (separate, swapped)
+    Case 3  Q2 then Q1 -> S1                       (cold source first, S2 without recovery)
+    Case 4  Q2 then Q1 -> S2                       (S1 without recovery)
+    Case 5  Q1 then Q2 -> S1                       (hot source first, S2 without recovery)
+    Case 6  only Q1 -> S2                          (Q2 unused, S1 without recovery)
 
-MA5a -- Reproduktion (ohne Graedigkeitspruefung, ``minimum_pinch_k=0``)
-MA5b -- Machbarkeit je Waermeuebertragerstufe (Luftaustritt vs. Quelleneintritt derselben
-        Stufe -- ein reiner Energiebilanz-Kaskade ohne Graedigkeit kann das verletzen)
-MA5c -- Machbare Optima mit ``minimum_pinch_k=20`` (Sensitivitaet: 10)
+MA5a -- reproduction (without approach-temperature check, ``minimum_pinch_k=0``)
+MA5b -- feasibility per heat exchanger stage (air outlet vs. source inlet of the same
+        stage -- a pure energy-balance cascade without approach temperature can violate this)
+MA5c -- feasible optima with ``minimum_pinch_k=20`` (sensitivity: 10)
 
-Aufruf::
+Usage::
 
     python scripts/probe_six_case_reconciliation.py \
         --output artifacts/runs/probe_six_case_reconciliation.json
@@ -82,7 +82,7 @@ Sensitivitaet 10 K."""
 
 @dataclass(frozen=True, slots=True)
 class Source:
-    """Eine Abluftquelle mit ihrer EIGENEN Kondensationstemperatur (Model_v3.xlsx)."""
+    """An exhaust air source with its OWN condensation temperature (Model_v3.xlsx)."""
 
     name: str
     mass_flow_kg_per_s: float
@@ -93,7 +93,7 @@ class Source:
 
 @dataclass(frozen=True, slots=True)
 class Sink:
-    """Eine Zuluftsenke (Model_v3.xlsx)."""
+    """An inlet air sink (Model_v3.xlsx)."""
 
     name: str
     mass_flow_kg_per_s: float
@@ -151,9 +151,9 @@ def _dew_point(humidity_kg_per_kg: float) -> float:
 
 
 def source_available_power_kw(source: Source) -> dict[str, float]:
-    """MA1-Formel (heatnetwork.balance, recovery_mode='condensing'), direkt aus thermo.py,
-    hier mit dem QUELLENEIGENEN T_kalt -- die volle, ungekappte Verfuegbarkeit (kein Pinch,
-    keine Senkenkapazitaet)."""
+    """MA1 formula (heatnetwork.balance, recovery_mode='condensing'), directly from thermo.py,
+    here with the SOURCE'S OWN T_kalt -- the full, uncapped availability (no pinch,
+    no sink capacity)."""
     y_sat_cold = _saturation_humidity(source.cold_temperature_celsius)
     condensate_kg_per_s = max(0.0, source.outlet_humidity_kg_per_kg - y_sat_cold) * (
         source.mass_flow_kg_per_s
@@ -167,11 +167,11 @@ def source_available_power_kw(source: Source) -> dict[str, float]:
         source.outlet_temperature_celsius - source.cold_temperature_celsius
     )
     dew_point = _dew_point(source.outlet_humidity_kg_per_kg)
-    # Zusatzdiagnose (MA5, "Aufteilung nach Temperaturniveau"): wie viel des Angebots
-    # liegt OBERHALB des Taupunkts (hochwertige, rein sensible Waerme, in jedem
-    # Uebertrager-Design nutzbar) gegenueber UNTERHALB (sensibler Rest + die gesamte
-    # latente Waerme -- nur nutzbar, wenn tatsaechlich bis unter den Taupunkt gekuehlt
-    # wird, physikalisch niederwertiger).
+    # Additional diagnostic (MA5, "split by temperature level"): how much of the supply
+    # lies ABOVE the dew point (high-grade, purely sensible heat, usable in every
+    # exchanger design) versus BELOW (sensible remainder + all of the
+    # latent heat -- only usable if actually cooled below the dew point,
+    # physically lower-grade).
     q_above_dew_point_kw = (
         max(0.0, capacity_w_per_k * (source.outlet_temperature_celsius - dew_point)) / 1000.0
     )
@@ -189,16 +189,16 @@ def source_available_power_kw(source: Source) -> dict[str, float]:
 
 
 def evaluate_case(stages: tuple[tuple[str, str], ...], *, minimum_pinch_k: float) -> dict[str, Any]:
-    """Mehrstufige Kaskade, EA1/EA2-Algorithmus (``heatnetwork.balance.evaluate_cascade``)
-    manuell nachgebaut mit QUELLENEIGENEM T_kalt statt einem netzweiten Wert -- sonst
-    identische Mechanik: sensible Kuehlreserve zuerst, latenter Vorrat erst danach (MA1),
-    Grädigkeit ``minimum_pinch_k`` gegen die AKTUELLE (bereits abgekuehlte)
-    Quellentemperatur, nicht verbrauchte Quellenenthalpie bleibt fuer die naechste Stufe
-    verfuegbar (Korrektur 2).
+    """Multi-stage cascade, EA1/EA2 algorithm (``heatnetwork.balance.evaluate_cascade``)
+    rebuilt manually with the SOURCE'S OWN T_kalt instead of a network-wide value -- otherwise
+    identical mechanics: sensible cooling reserve first, latent store only afterwards (MA1),
+    approach temperature ``minimum_pinch_k`` against the CURRENT (already cooled)
+    source temperature, unconsumed source enthalpy remains available for the next stage
+    (correction 2).
 
-    :param minimum_pinch_k: ``0.0`` fuer MA5a/MA5b (keine Graedigkeitspruefung -- Senke
-        darf bis zur AKTUELLEN Quellentemperatur selbst aufheizen, nur durch verfuegbare
-        Energie begrenzt); ``20.0``/``10.0`` fuer MA5c.
+    :param minimum_pinch_k: ``0.0`` for MA5a/MA5b (no approach-temperature check -- the sink
+        may heat up to the CURRENT source temperature itself, limited only by available
+        energy); ``20.0``/``10.0`` for MA5c.
     """
     current_source_temperature = {name: s.outlet_temperature_celsius for name, s in SOURCES.items()}
     remaining_latent_kw = dict.fromkeys(SOURCES, 0.0)
@@ -253,10 +253,10 @@ def evaluate_case(stages: tuple[tuple[str, str], ...], *, minimum_pinch_k: float
                 "source_temperature_after_c": new_source_temperature,
                 "sink_temperature_after_c": new_sink_temperature,
                 "power_kw": power_actual_w / 1000.0,
-                # MA5b: physikalische Realisierbarkeit -- die Senke darf am ANDEREN Ende
-                # eines (auch idealen) Waermeuebertragers nicht heisser werden als die
-                # Quelle an dessen EINTRITT in diese Stufe (2. Hauptsatz). Eine reine
-                # Energiebilanz ohne diese Pruefung kann das (unbemerkt) verletzen.
+                # MA5b: physical realisability -- the sink at the OTHER end
+                # of an (even ideal) heat exchanger must not become hotter than the
+                # source at its INLET into this stage (2nd law). A pure
+                # energy balance without this check can violate this (unnoticed).
                 "feasibility_violation_k": max(0.0, new_sink_temperature - t_source),
             }
         )

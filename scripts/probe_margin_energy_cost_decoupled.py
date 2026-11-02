@@ -1,54 +1,54 @@
-r"""MA2: KA1 entkoppelt wiederholen -- Trocknungskinetik unveraendert (0,20 kg/kg), nur die
-Schwelle der Qualitaets-Nebenbedingung verschoben.
+r"""MA2: repeat KA1 decoupled -- drying kinetics unchanged (0.20 kg/kg), only the
+threshold of the quality constraint shifted.
 
-Anlass (MA1, siehe Befund 64 Nachtrag): `material.critical_moisture_kg_per_kg` hat im Modell
-eine DOPPELROLLE. Es ist (a) `X_cr` in `thermo.normalised_moisture` -- der Nenner der
-normierten Trocknungskurve, `span = X_cr - X_eq`, geht direkt in `evaporation_rate_kg_per_s`
-ein, also in die Physik von `solve_steady_state` selbst (Kommentar in `config.py`:
-"Trocknungskinetik: normierte Trocknungskurve, linear fallende Rate") -- UND (b) die
-Schwelle der Qualitaets-Nebenbedingung in `study_operating_point_regret.py::check_
-constraints` (dort ein GEWOEHNLICHES Funktionsargument, unabhaengig von der Config).
-`probe_margin_energy_cost.py` (KA1) hat wie `probe_critical_moisture_sensitivity.py`
-(Befund 54 DA1) `material.critical_moisture_kg_per_kg` selbst variiert -- damit beide Rollen
-gleichzeitig verschoben, nicht nur die Qualitaetsgrenze. Bei der RL-Agenten-Marge
-(0,0605 kg/kg) erschien deshalb eine reine Kinetik-Validierung (`sorption.py::validate_
-isotherm_against_critical_moisture`) als "unzulaessig", bevor irgendein Punkt geloest wurde
--- obwohl Befund 62 GA1 im SELBEN Modell (Kinetik unveraendert bei 0,20 kg/kg) tatsaechlich
-Produktfeuchten von 0,055-0,070 kg/kg gemessen hat.
+Motivation (MA1, see Befund 64 addendum): `material.critical_moisture_kg_per_kg` has a
+DUAL ROLE in the model. It is (a) `X_cr` in `thermo.normalised_moisture` -- the denominator of
+the normalised drying curve, `span = X_cr - X_eq`, enters `evaporation_rate_kg_per_s`
+directly, i.e. the physics of `solve_steady_state` itself (comment in `config.py`:
+"Drying kinetics: normalised drying curve, linearly falling rate") -- AND (b) the
+threshold of the quality constraint in `study_operating_point_regret.py::check_
+constraints` (an ORDINARY function argument there, independent of the config).
+`probe_margin_energy_cost.py` (KA1), like `probe_critical_moisture_sensitivity.py`
+(Befund 54 DA1), varied `material.critical_moisture_kg_per_kg` itself -- thereby shifting
+both roles at once, not only the quality limit. For the RL agent margin
+(0.0605 kg/kg), a pure kinetics validation (`sorption.py::validate_
+isotherm_against_critical_moisture`) therefore appeared as "infeasible" before any point was
+solved -- although Befund 62 GA1 in the SAME model (kinetics unchanged at 0.20 kg/kg) actually
+measured product moistures of 0.055-0.070 kg/kg.
 
-Dieses Skript entkoppelt die beiden Rollen, OHNE `study_operating_point_regret.py` zu
-aendern (weiterhin per `importlib` geladen, keine Zeile dort veraendert) und OHNE die
-ProcessConfig zu aendern (`material.critical_moisture_kg_per_kg` bleibt durchgehend 0,20 kg/kg
--- derselbe Fingerprint wie Befund 52/54/KA1s Basis-Config). Nur der Wert, der an `check_
-constraints(..., critical_moisture_kg_per_kg=...)` uebergeben wird -- ein gewoehnliches
-Funktionsargument dieser Funktion, unabhaengig von `_BASE_CONFIG` -- wird auf die jeweilige
-effektive Grenze gesetzt.
+This script decouples the two roles WITHOUT changing `study_operating_point_regret.py`
+(still loaded via `importlib`, no line changed there) and WITHOUT changing the
+ProcessConfig (`material.critical_moisture_kg_per_kg` stays at 0.20 kg/kg throughout
+-- the same fingerprint as the base config of Befund 52/54/KA1). Only the value passed to `check_
+constraints(..., critical_moisture_kg_per_kg=...)` -- an ordinary
+function argument of this function, independent of `_BASE_CONFIG` -- is set to the
+respective effective limit.
 
-Technisch: `study_operating_point_regret.py`s eigene Orchestrierung (`_penalized_energy`,
-`optimize_grid_point`, `_fixed_point_worker`) liest die Schwelle IMMER aus `_BASE_CONFIG.
-material.critical_moisture_kg_per_kg` -- fest verdrahtet, kein Injektionspunkt. Diese drei
-Funktionen werden deshalb hier NICHT verwendet; stattdessen komponiert dieses Skript
-`evaluate_point`, `check_constraints`, `_objective_components` und `_optimize` (alle vier
-unveraendert aus dem Modul importiert) zu einer eigenen, hier lebenden Zielfunktion, die die
-Schwelle als expliziten Parameter nimmt -- dasselbe Baukasten-Prinzip wie `_OBJECTIVE_VALUE_FN`
-in `study_operating_point_regret_net.py` (MA3/MA4), nur fuer die Nebenbedingung statt die
-Zielgroesse.
+Technically: `study_operating_point_regret.py`'s own orchestration (`_penalized_energy`,
+`optimize_grid_point`, `_fixed_point_worker`) ALWAYS reads the threshold from `_BASE_CONFIG.
+material.critical_moisture_kg_per_kg` -- hard-wired, no injection point. These three
+functions are therefore NOT used here; instead this script composes
+`evaluate_point`, `check_constraints`, `_objective_components` and `_optimize` (all four
+imported unchanged from the module) into its own objective function living here, which takes
+the threshold as an explicit parameter -- the same building-block principle as
+`_OBJECTIVE_VALUE_FN` in `study_operating_point_regret_net.py` (MA3/MA4), only for the
+constraint instead of the target.
 
-Nur BB2 (instanzweise Optima), wie KA1 -- kein BB3(a). Der feste Betriebspunkt (`E_fest`) und
-das Orakel bei der wahren Grenze (`E_Orakel(0,20)`, "oracle_anchor") sind von der Doppelrolle
-NICHT betroffen: bei Marge 0 fallen Kinetik-Parameter und Schwelle zusammen, es gibt keinen
-Unterschied zur entkoppelten Rechnung -- beide bleiben unveraendert aus Befund 52/54 (DA1)
-wiederverwendet. Die uebrigen sechs Grenzen (beide Softsensor-Margen, 0,18/0,15/0,12,
-Agentenmarge) werden hier neu gerechnet -- anders als in KA1 auch 0,15 kg/kg, weil DA1s
-0,15-Punkt ebenfalls die Kinetik mitverschoben hatte.
+Only BB2 (per-instance optima), as in KA1 -- no BB3(a). The fixed operating point (`E_fest`)
+and the oracle at the true limit (`E_Orakel(0,20)`, "oracle_anchor") are NOT affected by the
+dual role: at margin 0, kinetics parameter and threshold coincide, there is no
+difference from the decoupled computation -- both are reused unchanged from Befund 52/54 (DA1).
+The remaining six limits (both soft-sensor margins, 0.18/0.15/0.12,
+agent margin) are recomputed here -- unlike in KA1 also 0.15 kg/kg, because DA1's
+0.15 point had also shifted the kinetics along with it.
 
-Wiederverwendet aus `probe_margin_energy_cost.py` (KA1, unveraendert): Margen-Herkunft
-(`load_margin_sources`), Grenzendefinition (`build_boundary_definitions`), FA3-Referenz
-(`load_fa3_reference`), KA2-Aggregation (`compute_ka2_for_boundary`, `_pooled`,
-`_median_or_none`), Gitter-/Budget-Abgleich (`_assert_same_grid`, `_assert_same_budget`,
-`_grid_coordinates`). Nur der Gitterpunkt-Solver ist neu.
+Reused from `probe_margin_energy_cost.py` (KA1, unchanged): margin provenance
+(`load_margin_sources`), limit definition (`build_boundary_definitions`), FA3 reference
+(`load_fa3_reference`), KA2 aggregation (`compute_ka2_for_boundary`, `_pooled`,
+`_median_or_none`), grid/budget matching (`_assert_same_grid`, `_assert_same_budget`,
+`_grid_coordinates`). Only the grid point solver is new.
 
-Aufruf::
+Usage::
 
     python scripts/probe_margin_energy_cost_decoupled.py \
         --output artifacts/runs/probe_margin_energy_cost_decoupled.json
@@ -96,14 +96,14 @@ def _penalized_energy_decoupled(
     effective_critical_moisture_kg_per_kg: float,
     regret_module: ModuleType,
 ) -> float:
-    """Wie `study_operating_point_regret.py::_penalized_energy`, aber mit ENTKOPPELTER
-    Schwelle: `evaluate_point` loest gegen `regret_module._BASE_CONFIG` (Kinetik, immer
-    0,20 kg/kg), `check_constraints` prueft gegen `effective_critical_moisture_kg_per_kg`
-    (die Marge dieses Laufs) -- zwei verschiedene Werte, wo `_penalized_energy` nur einen
-    kennt. Modul-Ebene fuer Picklebarkeit (Windows-`spawn`) waere hier nicht noetig (nur
-    innerhalb dieses Skripts als Closure-Ersatz gebraucht), lebt aber trotzdem auf
-    Modulebene, weil `_optimize` sie an `differential_evolution`/`minimize` durchreicht,
-    die -- je nach `workers` -- ebenfalls pickeln koennen."""
+    """Like `study_operating_point_regret.py::_penalized_energy`, but with a DECOUPLED
+    threshold: `evaluate_point` solves against `regret_module._BASE_CONFIG` (kinetics, always
+    0.20 kg/kg), `check_constraints` checks against `effective_critical_moisture_kg_per_kg`
+    (the margin of this run) -- two different values, where `_penalized_energy` knows only
+    one. Module level for picklability (Windows `spawn`) would not be necessary here (only
+    needed within this script as a closure substitute), but it lives at module level anyway,
+    because `_optimize` passes it on to `differential_evolution`/`minimize`,
+    which -- depending on `workers` -- may also pickle."""
     assert regret_module._BASE_CONFIG is not None
     t_in, u_gas, p_nozzle = x
     try:
@@ -138,9 +138,9 @@ def _penalized_energy_decoupled_toplevel(
     tolerance: float,
     effective_critical_moisture_kg_per_kg: float,
 ) -> float:
-    """Top-Level-Wrapper (picklebar unter `spawn`) -- `regret_module` wird ueber das
-    Modul-Global `_REGRET_MODULE` aufgeloest, das der Pool-Initializer in jedem Worker
-    setzt (dasselbe Muster wie `regret_module._BASE_CONFIG`)."""
+    """Top-level wrapper (picklable under `spawn`) -- `regret_module` is resolved via the
+    module global `_REGRET_MODULE`, which the pool initializer sets in every worker
+    (the same pattern as `regret_module._BASE_CONFIG`)."""
     return _penalized_energy_decoupled(
         x,
         t_amb,
@@ -156,11 +156,11 @@ _REGRET_MODULE: ModuleType | None = None
 
 
 def _init_worker(base_config: ProcessConfig) -> None:
-    """Pool-Initializer: laedt `study_operating_point_regret.py` in JEDEM Worker frisch
-    (unabhaengig von der Startmethode, siehe `_load_regret_module`-Docstring dort) und setzt
-    `_BASE_CONFIG` -- identisch zu `regret_module._set_base_config`, nur zusaetzlich das
-    Modul-Global `_REGRET_MODULE` in diesem Skript gesetzt, damit die Top-Level-Zielfunktion
-    es findet."""
+    """Pool initializer: loads `study_operating_point_regret.py` freshly in EVERY worker
+    (independent of the start method, see the `_load_regret_module` docstring there) and sets
+    `_BASE_CONFIG` -- identical to `regret_module._set_base_config`, only additionally sets the
+    module global `_REGRET_MODULE` in this script, so that the top-level objective function
+    finds it."""
     global _REGRET_MODULE
     _REGRET_MODULE = ka1._load_regret_module()
     _REGRET_MODULE._set_base_config(base_config)
@@ -173,10 +173,10 @@ def optimize_grid_point_decoupled(
     budget: Any,
     effective_critical_moisture_kg_per_kg: float,
 ) -> dict[str, Any]:
-    """Wie `study_operating_point_regret.py::optimize_grid_point`, aber mit entkoppelter
-    Schwelle -- siehe `_penalized_energy_decoupled`. Ergebnis-Schema bewusst identisch zu
-    `optimize_grid_point`s Rueckgabe, damit `probe_margin_energy_cost.compute_ka2_for_
-    boundary` unveraendert weiterverwendet werden kann."""
+    """Like `study_operating_point_regret.py::optimize_grid_point`, but with a decoupled
+    threshold -- see `_penalized_energy_decoupled`. Result schema deliberately identical to
+    `optimize_grid_point`'s return value, so that `probe_margin_energy_cost.compute_ka2_for_
+    boundary` can be reused unchanged."""
     regret_module = _REGRET_MODULE
     assert regret_module is not None and regret_module._BASE_CONFIG is not None
     args = (
@@ -281,13 +281,13 @@ def run_oracle_grid_decoupled(
     effective_critical_moisture_kg_per_kg: float,
     label: str,
 ) -> list[dict[str, Any]]:
-    """`regret_module` wird vom Aufrufer durchgereicht statt hier neu geladen: jeder Aufruf
-    von `_load_regret_module()` ersetzt `sys.modules["study_operating_point_regret"]` durch
-    ein FRISCHES Modulobjekt (siehe dortigen Docstring) -- ein `OptimizationBudget`, das
-    gegen einen frueheren Ladevorgang erzeugt wurde, laesst sich danach nicht mehr pickeln
-    (`PicklingError: nicht dasselbe Objekt`, empirisch im Smoketest aufgetreten). Im
-    Hauptprozess wird das Modul deshalb GENAU EINMAL geladen (`main()`), hier nur
-    weiterverwendet."""
+    """`regret_module` is passed through by the caller instead of being reloaded here: every
+    call of `_load_regret_module()` replaces `sys.modules["study_operating_point_regret"]` with
+    a FRESH module object (see the docstring there) -- an `OptimizationBudget` that
+    was created against an earlier load can no longer be pickled afterwards
+    (`PicklingError: nicht dasselbe Objekt`, observed empirically in the smoke test). In the
+    main process the module is therefore loaded EXACTLY ONCE (`main()`), and only
+    reused here."""
     bounds = regret_module.action_bounds(base_config)
     grid_points = regret_module.build_grid(base_config, grid_size)
 
@@ -351,7 +351,7 @@ def main() -> int:
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)
         base_config = load_process_config(arguments.config)
-    # Kinetik bleibt UNVERAENDERT bei 0,20 kg/kg -- derselbe Fingerprint wie Befund 52/54/KA1.
+    # Kinetics stays UNCHANGED at 0.20 kg/kg -- the same fingerprint as Befund 52/54/KA1.
     assert (
         base_config.material.critical_moisture_kg_per_kg
         == ka1.CRITICAL_MOISTURE_REFERENCE_KG_PER_KG

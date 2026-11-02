@@ -132,8 +132,8 @@ dem in DA1 committeten -- reines Gleitkommarauschen erwartet, kein Toleranzbedar
 
 
 def _load_regret_module() -> ModuleType:
-    """Wie in `probe_critical_moisture_sensitivity.py`/`study_operating_point_transient.py`
-    -- siehe dort fuer die Begruendung des `sys.modules`-Eintrags vor `exec_module`."""
+    """As in `probe_critical_moisture_sensitivity.py`/`study_operating_point_transient.py`
+    -- see there for the rationale of the `sys.modules` entry before `exec_module`."""
     spec = importlib.util.spec_from_file_location(
         "study_operating_point_regret", REGRET_SCRIPT_PATH
     )
@@ -151,8 +151,8 @@ def _suppress_placeholder_warning() -> None:
 def build_variant_config(
     base: ProcessConfig, *, critical_moisture_kg_per_kg: float
 ) -> ProcessConfig:
-    """Wie in `probe_critical_moisture_sensitivity.py` -- nur `material.critical_moisture_
-    kg_per_kg` ueberschrieben, sonst unveraendert."""
+    """As in `probe_critical_moisture_sensitivity.py` -- only `material.critical_moisture_
+    kg_per_kg` overridden, otherwise unchanged."""
     material = dataclasses.replace(
         base.material, critical_moisture_kg_per_kg=critical_moisture_kg_per_kg
     )
@@ -168,8 +168,8 @@ def run_oracle_grid(
     budget: Any,
     label: str,
 ) -> list[dict[str, Any]]:
-    """KA1: NUR BB2 (instanzweise Optima je Gitterpunkt) -- kein BB3(a) (Auftrag: der feste
-    Betriebspunkt aus Befund 52/54 wird wiederverwendet, nicht neu gesucht)."""
+    """KA1: ONLY BB2 (per-instance optima per grid point) -- no BB3(a) (task: the fixed
+    operating point from Befund 52/54 is reused, not searched anew)."""
     regret_module._set_base_config(variant_config)
     bounds = regret_module.action_bounds(variant_config)
     grid_points = regret_module.build_grid(variant_config, grid_size)

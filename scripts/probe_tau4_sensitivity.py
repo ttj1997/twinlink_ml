@@ -1,53 +1,53 @@
-r"""DA2: haengen Befund 52/53 an der Feststoff-Verweilzeit ``tau_4`` (Bettmasse/Produktabzug).
+r"""DA2: do Befund 52/53 depend on the solids residence time ``tau_4`` (bed mass/product draw).
 
-Anlass: ``tau_4 = bed_mass_solid_setpoint_kg / solid_inflow`` betraegt im aktuellen Modell
-16000 s (4.4 h, siehe ``docs/04_stand_ap1.md``, geschlossene Form aus Befund 47/M1).
-``geometry.bed_mass_solid_setpoint_kg`` ist ein ungepruefter Platzhalter (Dateikopf
+Motivation: ``tau_4 = bed_mass_solid_setpoint_kg / solid_inflow`` is 16000 s in the current
+model (4.4 h, see ``docs/04_stand_ap1.md``, closed form from Befund 47/M1).
+``geometry.bed_mass_solid_setpoint_kg`` is an unchecked placeholder (file header
 ``conf/process/greybox_gab_placeholder.yaml``, TODO "SPE: Geometrie und Bettmasse der
-Laboranlage"). Befund 53 fand, dass die Charge (28800 s) den Beharrungszustand bei diesem
-tau_4 nur zu 83.5% erreicht und die chargengemittelte rueckgewinnbare Leistung Q_rec um 36%
-(Median) vom stationaeren Wert abweicht. Dieses Skript misst, wie stark DIESE Befunde von
-``tau_4`` abhaengen.
+Laboranlage"). Befund 53 found that the batch (28800 s) reaches the steady state at this
+tau_4 only to 83.5% and that the batch-averaged recoverable power Q_rec deviates by 36%
+(median) from the stationary value. This script measures how strongly THESE findings depend
+on ``tau_4``.
 
-Der einzige Knopf, um ``tau_4`` zu aendern, ohne den Feststoffzulauf selbst zu veraendern
-(``spray_rate`` ist laut Befund 52 bewusst FEST, siehe dortiger Docstring), ist
-``geometry.bed_mass_solid_setpoint_kg`` -- siehe ``_product_mass_flow`` in
-``src/twinlink_ml/simulation/greybox.py`` (woertlich unten zitiert) und die geschlossene
-Form in ``diagnostics._solid_residence_time_s``:
+The only knob to change ``tau_4`` without altering the solids inflow itself
+(``spray_rate`` is deliberately FIXED according to Befund 52, see the docstring there) is
+``geometry.bed_mass_solid_setpoint_kg`` -- see ``_product_mass_flow`` in
+``src/twinlink_ml/simulation/greybox.py`` (quoted verbatim below) and the closed
+form in ``diagnostics._solid_residence_time_s``:
 
     tau_4 = bed_mass_solid_setpoint_kg / (spray_rate_kg_per_h/3600 * solid_fraction + seed_flow)
 
-Geprueft (Nutzerrueckmeldung, vor diesem Lauf eingeholt): am Nominalpunkt bleiben d50,
-Fluidisierungsfenster (u_mf/u_terminal) und Gutsfeuchte EXAKT gleich, wenn NUR
-``bed_mass_solid_setpoint_kg`` variiert wird (solid_inflow unveraendert) -- die Kopplung ist
-strukturell, nicht numerisches Rauschen. ABER: die Bettmasse geht linear in den
-Schuettbett-Druckverlust ein (``bed_pressure_drop_pa``, ``simulation/energy.py``) und damit
-in die Ventilatorleistung -- am Nominalpunkt schwankt ``power_total_kw`` dadurch um bis zu
-4.6% ueber den vollen ``tau_4``-Bereich (4000..32000 s). Diese Kopplung ist reale
-Modellphysik (mehr Bettmasse -> mehr Druckverlust), kein Artefakt, und wird hier als
-NIVEAUVERSCHIEBUNG explizit mitberichtet (absolutes Energieniveau je Wert), nicht
-verschwiegen. Der Regret ist eine Differenz zweier Energien BEIM GLEICHEN ``tau_4`` --
-der gemeinsame Niveauversatz kuerzt sich darin weitgehend heraus; zur Kontrolle wird der
-relative Regret (bereits energie-normiert) mitgefuehrt.
+Checked (user feedback, obtained before this run): at the nominal point, d50,
+fluidization window (u_mf/u_terminal) and product moisture stay EXACTLY the same when ONLY
+``bed_mass_solid_setpoint_kg`` is varied (solid_inflow unchanged) -- the coupling is
+structural, not numerical noise. BUT: the bed mass enters the packed-bed pressure drop
+linearly (``bed_pressure_drop_pa``, ``simulation/energy.py``) and thereby
+the fan power -- at the nominal point ``power_total_kw`` therefore varies by up to
+4.6% over the full ``tau_4`` range (4000..32000 s). This coupling is real
+model physics (more bed mass -> more pressure drop), not an artifact, and is reported here
+explicitly as a LEVEL SHIFT (absolute energy level per value), not
+concealed. The regret is a difference of two energies AT THE SAME ``tau_4`` --
+the common level offset largely cancels out in it; as a control, the
+relative regret (already energy-normalised) is carried along.
 
-DA2(a) -- Stationaerer Regret je ``tau_4``
+DA2(a) -- stationary regret per ``tau_4``
 --------------------------------------------
-Wiederholt BB1-BB3 aus ``study_operating_point_regret.py`` (per ``importlib`` geladen,
-keine Zeile dort veraendert) fuer vier ``tau_4``-Werte: 4000, 8000, 16000 (aktuell),
-32000 s, auf einem 3x3- statt 5x5-Gitter (Laufzeitgrund, siehe Auftrag). Fuer den
-aktuellen Wert (16000 s, Config byte-identisch zur Basis-Config) wird zusaetzlich das
-committete 5x5-Ergebnis aus Befund 52 als Anker verglichen.
+Repeats BB1-BB3 from ``study_operating_point_regret.py`` (loaded via ``importlib``,
+no line changed there) for four ``tau_4`` values: 4000, 8000, 16000 (current),
+32000 s, on a 3x3 instead of a 5x5 grid (for runtime reasons, see the task). For the
+current value (16000 s, config byte-identical to the base config), the committed
+5x5 result from Befund 52 is additionally compared as an anchor.
 
-DA2(b)/(c) -- Chargenrollout je ``tau_4``
+DA2(b)/(c) -- batch rollout per ``tau_4``
 --------------------------------------------
-Wiederholt CB1 aus ``study_operating_point_transient.py`` (per ``importlib`` geladen,
-keine Zeile dort veraendert) fuer dieselben vier ``tau_4``-Werte: Rollout ueber 28800 s
-(Delta_t=25 s, Projektion an) je Gitterpunkt MIT DEN DORT (DA2a) optimalen Sollwerten,
-Endzustand gegen den frischen Beharrungszustand (b), ``Q_rec`` Chargenmittel gegen
-stationaer (c) -- dieselbe Rechnung wie Befund 53 (CB1), hier ueber vier ``tau_4``-Werte
-statt einem.
+Repeats CB1 from ``study_operating_point_transient.py`` (loaded via ``importlib``,
+no line changed there) for the same four ``tau_4`` values: rollout over 28800 s
+(Delta_t=25 s, projection on) per grid point WITH THE set points optimal THERE (DA2a),
+final state against the fresh steady state (b), ``Q_rec`` batch mean against
+stationary (c) -- the same computation as Befund 53 (CB1), here over four ``tau_4`` values
+instead of one.
 
-Aufruf::
+Usage::
 
     python scripts/probe_tau4_sensitivity.py \
         --output artifacts/runs/probe_tau4_sensitivity.json
@@ -90,9 +90,9 @@ EXPECTED_BASE_FINGERPRINT = "2acd06f38963c3af"
 
 
 def _load_module(name: str, path: Path) -> ModuleType:
-    """Wie ``study_operating_point_transient.py::_load_regret_module`` -- ``sys.modules``-
-    Eintrag VOR ``exec_module`` noetig, weil Dataclass-Felder ueber
-    ``sys.modules[cls.__module__]`` aufgeloest werden (Python 3.12)."""
+    """Like ``study_operating_point_transient.py::_load_regret_module`` -- ``sys.modules``
+    entry needed BEFORE ``exec_module``, because dataclass fields are resolved via
+    ``sys.modules[cls.__module__]`` (Python 3.12)."""
     spec = importlib.util.spec_from_file_location(name, path)
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
@@ -116,9 +116,9 @@ def solid_inflow_kg_per_s(config: ProcessConfig) -> float:
 
 
 def build_variant_config(base: ProcessConfig, *, tau4_s: float) -> tuple[ProcessConfig, float]:
-    """``geometry.bed_mass_solid_setpoint_kg`` so gesetzt, dass ``tau_4`` (geschlossene
-    Form) exakt ``tau4_s`` ergibt -- solid_inflow (spray_rate, solid_fraction, seed)
-    bleibt unveraendert (siehe Moduldocstring, Kopplungspruefung)."""
+    """``geometry.bed_mass_solid_setpoint_kg`` set so that ``tau_4`` (closed
+    form) yields exactly ``tau4_s`` -- solid_inflow (spray_rate, solid_fraction, seed)
+    stays unchanged (see the module docstring, coupling check)."""
     inflow = solid_inflow_kg_per_s(base)
     setpoint_kg = tau4_s * inflow
     geometry = dataclasses.replace(base.geometry, bed_mass_solid_setpoint_kg=setpoint_kg)
@@ -133,9 +133,9 @@ def run_regret_study(
     workers: int,
     label: str,
 ) -> dict[str, Any]:
-    """Identisch zu ``probe_critical_moisture_sensitivity.py::run_regret_study`` --
-    BB1-BB3-Orchestrierung nach dem Muster von ``study_operating_point_regret.main()``,
-    keine Budget-/Toleranzkonstante der wiederverwendeten Funktionen veraendert."""
+    """Identical to ``probe_critical_moisture_sensitivity.py::run_regret_study`` --
+    BB1-BB3 orchestration following the pattern of ``study_operating_point_regret.main()``,
+    no budget/tolerance constant of the reused functions changed."""
     regret_module._set_base_config(variant_config)
     budget = regret_module.OptimizationBudget(
         seed=0,
@@ -219,9 +219,9 @@ def run_transient_study(
     *,
     label: str,
 ) -> dict[str, Any]:
-    """CB1 aus ``study_operating_point_transient.py`` nachgebildet: je Gitterpunkt ein
-    28800s-Rollout (Delta_t=25s, Projektion an) mit den dort (DA2a) stationaer optimalen
-    Sollwerten, Endzustand + Q_rec gegen den frischen Beharrungszustand."""
+    """CB1 from ``study_operating_point_transient.py`` replicated: per grid point one
+    28800s rollout (Delta_t=25s, projection on) with the set points that are stationary
+    optimal there (DA2a), final state + Q_rec against the fresh steady state."""
     transient_config = transient_module.build_transient_config(variant_config)
     spray_rate = variant_config.actions.spray_rate_kg_per_h.nominal
     solid_fraction = variant_config.disturbances.suspension_solid_fraction.nominal

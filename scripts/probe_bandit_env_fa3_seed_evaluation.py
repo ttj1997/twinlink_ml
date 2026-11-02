@@ -1,30 +1,30 @@
-r"""FA3: Auswertung des FA2-Abschlusslaufs -- Median ueber drei Seeds.
+r"""FA3: evaluation of the FA2 final run -- median over three seeds.
 
-Liest die drei FA2-Lernkurven-JSONLs (``scripts/run_rl_bandit_learning_curve.py --seed
-{0,1,2} --solve-failure-penalty-kw 155.57896052362634``, MIT Strafe, siehe dessen
-Docstring fuer die exakten Aufrufe) und berichtet an jedem Auswertungspunkt
-(1000/2500/5000/10000), je Seed UND als Median ueber die drei Seeds:
+Reads the three FA2 learning-curve JSONLs (``scripts/run_rl_bandit_learning_curve.py --seed
+{0,1,2} --solve-failure-penalty-kw 155.57896052362634``, WITH penalty, see its
+docstring for the exact invocations) and reports at every evaluation point
+(1000/2500/5000/10000), per seed AND as the median over the three seeds:
 
-  - die XA1-korrigierte Metrik (Zulaessigkeitsrate, gepoolter Anteil geschlossenen
-    Regrets ueber zulaessige Aktionen, Verletzungen nach Nebenbedingung) -- direkt aus
-    den bereits geloggten RunRecords, KEINE Neuberechnung.
-  - denselben Anteil getrennt fuer Punkte mit Orakel-Optimum im Inneren/an einer
-    Aktionsschranke (XA3) -- ebenfalls bereits geloggt.
-  - die deterministischen Aktionen an den 25 Testkontexten, geladen aus den XA2-
-    Checkpoints (Pfad steht im RunRecord unter ``checkpoint/path``): Streuung ueber den
-    Kontext (Kollaps-Diagnostik wie AB3) und Abstand zur Orakelaktion, physikalisch UND
-    normiert.
+  - the XA1-corrected metric (feasibility rate, pooled closed-regret fraction
+    over feasible actions, violations by constraint) -- directly from
+    the already logged RunRecords, NO recomputation.
+  - the same fraction separately for points with the oracle optimum in the interior/at an
+    action bound (XA3) -- also already logged.
+  - the deterministic actions at the 25 test contexts, loaded from the XA2
+    checkpoints (path is in the RunRecord under ``checkpoint/path``): spread over the
+    context (collapse diagnostics as in AB3) and distance to the oracle action, physical AND
+    normalised.
 
-Zusaetzlich, an denselben 25 Testpunkten, zum Vergleich:
-  - Zufallsbaseline (YA1, wiederverwendet aus ``artifacts/runs/rl_bandit_random_
-    baseline.jsonl`` -- unveraendertes Environment/Testgitter, KEINE Neuberechnung).
-  - fester Betriebspunkt (Regret-Anteil per Konstruktion 0) und Orakel (per Konstruktion
-    1), hier frisch mit :func:`~twinlink_ml.rl.evaluate_policy` berechnet, keine
-    Behauptung aus Erinnerung.
+In addition, at the same 25 test points, for comparison:
+  - random baseline (YA1, reused from ``artifacts/runs/rl_bandit_random_
+    baseline.jsonl`` -- unchanged environment/test grid, NO recomputation).
+  - fixed operating point (regret fraction 0 by construction) and oracle (1 by
+    construction), computed freshly here with :func:`~twinlink_ml.rl.evaluate_policy`, no
+    claim from memory.
 
-Kernfrage (Auftrag, ein Satz): findet der Agent das beschraenkte Optimum?
+Core question (task, one sentence): does the agent find the constrained optimum?
 
-Aufruf::
+Usage::
 
     python scripts/probe_bandit_env_fa3_seed_evaluation.py \
         --output artifacts/runs/rl_bandit_fa3_seed_evaluation.json
@@ -82,7 +82,7 @@ def _median_or_nan(values: list[float]) -> float:
 
 
 def _load_seed_records(paths: tuple[Path, ...]) -> dict[int, dict[int, RunRecord]]:
-    """``seed -> {n_env_steps: RunRecord}``, ueber alle uebergebenen JSONL-Dateien."""
+    """``seed -> {n_env_steps: RunRecord}``, over all passed JSONL files."""
     by_seed: dict[int, dict[int, RunRecord]] = {}
     for path in paths:
         for record in read_jsonl(path):
@@ -95,12 +95,12 @@ def _load_seed_records(paths: tuple[Path, ...]) -> dict[int, dict[int, RunRecord
 def _inspect_checkpoint_actions(
     checkpoint_path: Path, env: OperatingPointBanditEnv, points: tuple[TestPoint, ...]
 ) -> dict[str, Any]:
-    """Deterministische Aktionen an den 25 Testkontexten -- Streuung und Orakelabstand.
+    """Deterministic actions at the 25 test contexts -- spread and oracle distance.
 
-    Gleiches Vorgehen wie ``probe_bandit_env_policy_inspection.py``s ``inspect_checkpoint``
-    (nicht importiert -- ``scripts/`` ist kein Package, siehe dortiger fehlender
-    ``__init__.py``), erweitert um den Abstand zur je Kontext EIGENEN Orakelaktion
-    (physikalisch UND normiert), das FEHLT dort und ist hier die eigentliche Frage.
+    Same procedure as ``probe_bandit_env_policy_inspection.py``'s ``inspect_checkpoint``
+    (not imported -- ``scripts/`` is not a package, see the missing ``__init__.py``
+    there), extended by the distance to each context's OWN oracle action
+    (physical AND normalised), which is MISSING there and is the actual question here.
     """
     from stable_baselines3 import SAC
 

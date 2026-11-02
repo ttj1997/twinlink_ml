@@ -98,10 +98,10 @@ def _suppress_placeholder_warning() -> None:
 
 
 def _make_random_policy(seed: int) -> Any:
-    """Identisch zu ``scripts/probe_bandit_env_random_baseline.py::_make_random_policy``
-    -- absichtlich dupliziert (eine Zeile) statt importiert, damit dieses Skript ohne
-    Abhaengigkeit vom YA1-Skript lesbar bleibt; beide muessen bei einer Aenderung
-    gemeinsam angepasst werden.
+    """Identical to ``scripts/probe_bandit_env_random_baseline.py::_make_random_policy``
+    -- deliberately duplicated (one line) instead of imported, so that this script stays
+    readable without a dependency on the YA1 script; both must be adapted together
+    when one changes.
     """
     rng = np.random.default_rng(seed)
 
@@ -113,7 +113,7 @@ def _make_random_policy(seed: int) -> Any:
 
 
 def measure_oracle_fixed_gap_kw() -> dict[str, float]:
-    """(a) ``E_fest - E_Orakel`` je Testpunkt, in kW."""
+    """(a) ``E_fest - E_Orakel`` per test point, in kW."""
     points = load_test_points()
     gaps = np.array([p.energy_fixed_kw - p.energy_oracle_kw for p in points])
     return {
@@ -128,7 +128,7 @@ def measure_oracle_fixed_gap_kw() -> dict[str, float]:
 def measure_feasible_random_energy_spread_kw(
     env: OperatingPointBanditEnv, n_repetitions: int
 ) -> dict[str, float]:
-    """(b) Spannweite der rohen Energie ueber ZULAESSIGE Zufallsaktionen (YA1-Ziehungen)."""
+    """(b) Range of the raw energy over FEASIBLE random actions (YA1 draws)."""
     feasible_energies: list[float] = []
     for seed in range(n_repetitions):
         result = evaluate_policy(env, _make_random_policy(seed))
@@ -147,7 +147,7 @@ def measure_feasible_random_energy_spread_kw(
 
 
 def measure_observed_penalty_kw(xa3_path: Path, penalty_weight_kw: float) -> dict[str, Any]:
-    """(c) Strafe fuer die in XA3 TATSAECHLICH beobachteten Bettemperaturverletzungen."""
+    """(c) Penalty for the bed temperature violations ACTUALLY observed in XA3."""
     if not xa3_path.exists():
         return {"available": False, "reason": f"{xa3_path} nicht gefunden"}
     records = [json.loads(line) for line in xa3_path.read_text(encoding="utf-8").splitlines()]

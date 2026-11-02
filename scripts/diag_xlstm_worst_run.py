@@ -1,23 +1,23 @@
-r"""Nachfrage zu Schritt 3.
+r"""Follow-up question on step 3.
 
-Ist NRMSE=21.53 (xLSTM, energy_target, h=36, worst run) ein
-Instabilitaets-Fall (NaN/Inf) oder nur ein schwerer Testlauf -- und ist er xLSTM-
-spezifisch oder teilen GRU/Mamba dieselbe Streuung auf demselben Lauf?
+Is NRMSE=21.53 (xLSTM, energy_target, h=36, worst run) an
+instability case (NaN/Inf) or just a hard test run -- and is it xLSTM-
+specific, or do GRU/Mamba share the same spread on the same run?
 
-Reproduziert exakt dieselben Daten/Seeds wie ``run_xlstm_reduced_comparison.py``
-(gleicher Fingerprint/Split/Seed-Check), trainiert xLSTM, GRU und Mamba erneut
-(deterministisch, ``torch.set_num_threads(1)`` -- reproduziert die bereits geloggten
-Werte bitgleich, dient hier als Sanity-Check UND als Quelle fuer die vollen
-Pro-Lauf-NRMSE-Arrays, die ``EvaluationResult`` nicht persistiert, nur Median/Min/Max).
+Reproduces exactly the same data/seeds as ``run_xlstm_reduced_comparison.py``
+(same fingerprint/split/seed check), trains xLSTM, GRU and Mamba again
+(deterministic, ``torch.set_num_threads(1)`` -- reproduces the already logged
+values bit for bit, serves here as a sanity check AND as the source of the full
+per-run NRMSE arrays, which ``EvaluationResult`` does not persist, only median/min/max).
 
-Fuer den Lauf mit der xLSTM-maximalen NRMSE (energy_target, h=36):
-  (a) rohe Vorhersagewerte auf Endlichkeit pruefen (np.isfinite, nicht nur "sieht
-      schlecht aus")
-  (b) GRU- und Mamba-NRMSE auf GENAU demselben run_index, derselbe Zielgroesse/Horizont
-      zeigen -- gemeinsam schwerer Lauf oder xLSTM-spezifisch?
+For the run with the xLSTM-maximal NRMSE (energy_target, h=36):
+  (a) check raw prediction values for finiteness (np.isfinite, not just "looks
+      bad")
+  (b) show GRU and Mamba NRMSE on EXACTLY the same run_index, same target/horizon
+      -- jointly hard run or xLSTM-specific?
 
-Kein Volltraining im Sinne einer neuen Kostenmessung -- exakt die Produktionsgroesse
-(n_train=16), weil das Phaenomen selbst nur bei Produktionsgroesse auftrat.
+No full training in the sense of a new cost measurement -- exactly the production size
+(n_train=16), because the phenomenon itself only occurred at production size.
 """
 
 from __future__ import annotations
@@ -43,11 +43,11 @@ CONFIG_PATH = REPO_ROOT / "conf" / "process" / "greybox_gab_placeholder.yaml"
 SEED = 1
 N_TRAIN = 16
 
-# Fingerprint aktualisiert von 82f65f576a2e5253 auf 40aae2b4526a5ed7: NumericsConfig.
-# enforce_gas_velocity_projection hinzugefuegt (Default AUS). ProcessConfig.fingerprint
-# hasht die gesamte Config, daher aendert sich der Wert auch bei unveraendertem Verhalten.
-# Aequivalenz belegt durch test_gas_velocity_projection_disabled_matches_legacy_baseline
-# (tests/test_gas_velocity_projection.py) -- siehe dort fuer den Bitgleichheits-Beleg.
+# Fingerprint updated from 82f65f576a2e5253 to 40aae2b4526a5ed7: NumericsConfig.
+# enforce_gas_velocity_projection added (default OFF). ProcessConfig.fingerprint
+# hashes the whole config, so the value changes even when behaviour is unchanged.
+# Equivalence shown by test_gas_velocity_projection_disabled_matches_legacy_baseline
+# (tests/test_gas_velocity_projection.py) -- see there for the bit-identity evidence.
 EXPECTED = {
     "process/fingerprint": "40aae2b4526a5ed7",
     "split/digest": "5b9628a151344f37",
@@ -140,7 +140,7 @@ def main() -> None:
         per_run_by_model[label] = {"prediction": prediction, "reference": reference, "runs": runs}
         raw_predictions_by_model[label] = (prediction, reference, runs)
 
-    # -------------------------------------------- (a) welcher run_index ist der schlimmste?
+    # -------------------------------------------- (a) which run_index is the worst?
     xlstm_pred, xlstm_ref, xlstm_runs = raw_predictions_by_model["xlstm"]
     unique_runs = np.unique(xlstm_runs)
     per_run_energy_h36 = []
@@ -161,7 +161,7 @@ def main() -> None:
     worst_run, worst_value = per_run_energy_h36[0]
     print(f"\nSchlimmster Lauf: run_index={int(worst_run)}, NRMSE={worst_value:.4f}")
 
-    # ---------------------------------------------------------------- (a) Endlichkeit pruefen
+    # ---------------------------------------------------------------- (a) check finiteness
     mask = xlstm_runs == worst_run
     worst_prediction = xlstm_pred[mask, :36, energy_index]
     worst_reference = xlstm_ref[mask, :36, energy_index]
@@ -182,7 +182,7 @@ def main() -> None:
     n_inf = int(np.isinf(worst_prediction).sum())
     print(f"  NaN-Werte: {n_nan}, Inf-Werte: {n_inf}")
 
-    # ------------------------------------------------ (b) GRU/Mamba auf demselben run_index
+    # ------------------------------------------------ (b) GRU/Mamba on the same run_index
     print(f"\n=== (b) GRU/Mamba auf DEMSELBEN run_index={int(worst_run)}, energy_target, h=36 ===")
     for label in ("xlstm", "gru", "mamba"):
         pred, ref, runs = raw_predictions_by_model[label]
@@ -192,7 +192,7 @@ def main() -> None:
             ref[run_mask, :36, energy_index : energy_index + 1],
             axis=(0, 1),
         )[0]
-        # Vergleich: NRMSE ueber ALLE anderen Laeufe (Median), zur Einordnung
+        # Comparison: NRMSE over ALL other runs (median), for context
         other_values = []
         for run in unique_runs:
             if run == worst_run:

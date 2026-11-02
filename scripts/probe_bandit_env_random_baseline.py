@@ -64,12 +64,11 @@ def _suppress_placeholder_warning() -> None:
 
 
 def _make_random_policy(seed: int) -> PolicyFn:
-    """Gleichverteilte Aktion in ``[-1, 1]^2``, EIN ``Generator`` je Wiederholung.
+    """Uniformly distributed action in ``[-1, 1]^2``, ONE ``Generator`` per repetition.
 
-    Der Generator wird bei Konstruktion einmal geseedet und dann ueber alle 25 Testpunkte
-    einer Wiederholung weiterverwendet (nicht je Aufruf neu geseedet) -- eine Wiederholung
-    ist damit EIN reproduzierbarer Ziehungsstrom ueber die 25 Punkte, keine 25 unabhaengig
-    geseedete Einzelziehungen.
+    The generator is seeded once at construction and then reused across all 25 test points
+    of a repetition (not reseeded per call) -- a repetition is thus ONE reproducible
+    stream of draws over the 25 points, not 25 independently seeded single draws.
     """
     rng = np.random.default_rng(seed)
 
@@ -101,10 +100,10 @@ def run_random_baseline(seeds: tuple[int, ...], output: Path) -> list[dict[str, 
 
 
 def summarise(all_metrics: list[dict[str, float]]) -> dict[str, dict[str, float]]:
-    """Median/Min/Max je Groesse ueber die Wiederholungen -- ``nan`` (z. B. ``pooled_
-    closed_regret_fraction`` bei 0 zulaessigen Aktionen in einer Wiederholung) wird
-    ausgeschlossen, ``*_n_defined`` zaehlt, wie viele der Wiederholungen einen definierten
-    Wert beigetragen haben.
+    """Median/min/max per quantity over the repetitions -- ``nan`` (e.g. ``pooled_
+    closed_regret_fraction`` with 0 feasible actions in a repetition) is
+    excluded, ``*_n_defined`` counts how many of the repetitions contributed a defined
+    value.
     """
     summary: dict[str, dict[str, float]] = {}
     for key in _SPREAD_KEYS:

@@ -1,53 +1,52 @@
-r"""Befund 63: Auflösungsvermögen auf den Achtergleich (Befund 51/58) angewendet, plus
-GRU-gegen-LSTM-Geschwindigkeitsfrage (Parameterzahl/Hidden-Size).
+r"""Befund 63: resolving power applied to the eight-way comparison (Befund 51/58), plus
+the GRU-versus-LSTM speed question (parameter count/hidden size).
 
-Reine Auswertung bereits committeter Artefakte, kein neuer Lauf, kein Training.
-Zwei unabhängige Fragen, in einem Skript, weil beide dieselbe Datenfamilie
+Pure evaluation of already committed artifacts, no new run, no training.
+Two independent questions, in one script, because both need the same data family
 (``arch_learning_curve_projected.jsonl`` + ``..._extended.jsonl``, Befund 51/58,
-protokollgleich, identische Thread-Einstellungen) brauchen.
+same protocol, identical thread settings).
 
-Teil A -- Geschwindigkeitsfrage (Auftrag: erklärt eine unterschiedliche Modellgröße,
-warum LSTM in Tabelle C der M2-Bestandsaufnahme schneller ist als GRU?).
-``model/n_parameters`` und ``model/net_hidden_size`` je Architektur bei ``n_train=64``
-lesen, nicht schätzen.
+Part A -- speed question (task: does a different model size explain
+why LSTM is faster than GRU in table C of the M2 inventory?).
+Read ``model/n_parameters`` and ``model/net_hidden_size`` per architecture at ``n_train=64``,
+do not estimate them.
 
-Teil B -- Auflösungsvermögen, ZWEI-STICHPROBEN-Verfahren (Korrektur einer Erstfassung, die
-nur die LSTM-Streuung nutzte, siehe Befund 63 Nachtrag). Für die tatsächlich gefahrenen 5
-Seeds (nicht die 3 aus der M2-Projektdefinition) wird aus der beobachteten
-Seed-zu-Seed-Streuung BEIDER verglichener Modelle (Kandidat UND Referenz,
-:class:`~twinlink_ml.evaluation.resolution.SeedSpread`, spannweitenbasiert) die kleinste
-nachweisbare relative Differenz berechnet:
+Part B -- resolving power, TWO-SAMPLE procedure (correction of a first version that
+used only the LSTM spread, see Befund 63 addendum). For the 5 seeds actually run
+(not the 3 from the M2 project definition), the smallest detectable relative difference is
+computed from the observed seed-to-seed spread of BOTH compared models (candidate AND
+reference, :class:`~twinlink_ml.evaluation.resolution.SeedSpread`, range-based):
 
 .. math::
    \Delta_{\min} = z_{1-\alpha/2}\,\sqrt{\frac{\hat\sigma_{\mathrm{Kandidat}}^2 +
    \hat\sigma_{\mathrm{Referenz}}^2}{n}}
 
-statt der Einstichproben-Näherung :math:`z\,\hat\sigma_{\mathrm{Referenz}}\,\sqrt{2/n}`, die
-implizit gleiche Streuung auf beiden Seiten unterstellt. Das ist bei Architekturen mit sehr
-unterschiedlicher Seed-zu-Seed-Robustheit (z. B. xLSTMs divergierende Optimierung auf
-`product_moisture_kg_per_kg`, Befund 58 OA5) nicht gegeben -- die Korrektur ändert deshalb
-tatsächlich Verdikte (Befund 63 Nachtrag dokumentiert, welche). LSTM bleibt die Referenz in
-jeder hier geprüften Aussage (nicht Persistenz: auf dem Konstantlauf-Holdout ist Persistenz
-über alle fünf Seeds bitgleich -- die Holdout-Läufe sind unabhängig vom `master_seed` fest,
-Persistenz hat keine trainierbaren Parameter -- ihre Streuung ist dort konstruktionsbedingt
-Null und liefert keine Schwelle).
+instead of the one-sample approximation :math:`z\,\hat\sigma_{\mathrm{Referenz}}\,\sqrt{2/n}`,
+which implicitly assumes equal spread on both sides. That does not hold for architectures with
+very different seed-to-seed robustness (e.g. xLSTM's diverging optimisation on
+`product_moisture_kg_per_kg`, Befund 58 OA5) -- the correction therefore does
+change verdicts (the Befund 63 addendum documents which). LSTM remains the reference in
+every claim checked here (not persistence: on the constant-run holdout, persistence is
+bit-identical across all five seeds -- the holdout runs are fixed independently of `master_seed`,
+persistence has no trainable parameters -- its spread there is zero by construction
+and yields no threshold).
 
-Primärmetrik ``rmse_run_median_physical`` (nicht ``nrmse_run_median``): alle hier geprüften
-Aussagen (Befund 58 OA5, Befund 59c, Tabelle A/B der M2-Bestandsaufnahme) sind bereits in
-dieser Metrik formuliert -- ein Metrikwechsel innerhalb derselben Prüfung würde eine neue
-Inkonsistenz einführen statt eine zu klären.
+Primary metric ``rmse_run_median_physical`` (not ``nrmse_run_median``): all claims checked
+here (Befund 58 OA5, Befund 59c, table A/B of the M2 inventory) are already formulated in
+this metric -- a change of metric within the same check would introduce a new
+inconsistency instead of resolving one.
 
-Geprüfte Aussagen, mit Quelle:
+Claims checked, with source:
 
-  - GRU vs. LSTM, je Kanal, je Testmenge, ``n_train=64`` (Tabelle A, M2-Bestandsaufnahme).
-  - Transformer vs. LSTM, ``bed_temperature_celsius``, Konstantlauf, 200 UND 600 Epochen
-    (Befund 58 OA5b / Befund 58-Nachtrag, "Faktor 1,026" / "Faktor 1,000").
-  - Transformer vs. LSTM, ``energy_target``, Konstantlauf, 200 UND 600 Epochen
-    (Befund 58-Nachtrag, "Faktor 1,082" / "Faktor 1,158").
-  - xLSTM vs. LSTM und Mamba vs. LSTM, je Kanal, je Testmenge, ``n_train=64``
-    ("bleiben deutlich zurück", Befund 58 Fazit).
+  - GRU vs. LSTM, per channel, per test set, ``n_train=64`` (table A, M2 inventory).
+  - Transformer vs. LSTM, ``bed_temperature_celsius``, constant run, 200 AND 600 epochs
+    (Befund 58 OA5b / Befund 58 addendum, "factor 1.026" / "factor 1.000").
+  - Transformer vs. LSTM, ``energy_target``, constant run, 200 AND 600 epochs
+    (Befund 58 addendum, "factor 1.082" / "factor 1.158").
+  - xLSTM vs. LSTM and Mamba vs. LSTM, per channel, per test set, ``n_train=64``
+    ("lag clearly behind", Befund 58 conclusion).
 
-Aufruf::
+Usage::
 
     python scripts/analyze_m2_resolution_verdicts.py \
         --output artifacts/runs/analyze_m2_resolution_verdicts.json
@@ -107,11 +106,11 @@ def _spread(values: list[float]) -> SeedSpread:
 def _verdict(
     *, candidate: str, candidate_values: list[float], reference: str, reference_values: list[float]
 ) -> dict[str, object]:
-    """Ein Vergleich, mitsamt Schwelle -- nie eine Zahl ohne die andere.
+    """One comparison, together with its threshold -- never one number without the other.
 
-    Zwei-Stichproben-Schwelle: nutzt die Streuung BEIDER Modelle (nicht nur der Referenz),
-    siehe Moduldocstring. `n` ist die Zahl der Seeds auf der Referenzseite -- in dieser
-    Auswertung fuer Kandidat und Referenz durchgehend gleich (5).
+    Two-sample threshold: uses the spread of BOTH models (not only of the reference),
+    see the module docstring. `n` is the number of seeds on the reference side -- in this
+    evaluation the same throughout for candidate and reference (5).
     """
     candidate_spread = _spread(candidate_values)
     reference_spread = _spread(reference_values)
@@ -164,7 +163,7 @@ def _part_a_parameter_count(records: list[RunRecord]) -> dict[str, object]:
     lstm_params = info["lstm"]["model/n_parameters"]
     same_hidden_size = info["gru"]["model/net_hidden_size"] == info["lstm"]["model/net_hidden_size"]
     parameter_ratio = lstm_params / gru_params
-    # Inferenzzeiten aus der M2-Bestandsaufnahme, Tabelle C (dieselbe Datenfamilie).
+    # Inference times from the M2 inventory, table C (same data family).
     inference_us_gru = 323.09
     inference_us_lstm = 182.83
     size_explains_speed = same_hidden_size and lstm_params < gru_params

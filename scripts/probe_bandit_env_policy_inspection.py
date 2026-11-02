@@ -1,22 +1,22 @@
-r"""AB3: was die XA3-Politik tatsaechlich tut -- reine Auswertung, KEIN Training.
+r"""AB3: what the XA3 policy actually does -- pure evaluation, NO training.
 
-Laedt die in XA2 gesicherten SAC-Checkpoints (``artifacts/checkpoints/rl_bandit_sac_
-learning_curve/``, per ``.gitignore`` nicht committet -- dieses Skript braucht einen
-vorherigen Lauf von ``scripts/run_rl_bandit_learning_curve.py``) bei zwei Schrittzahlen
-(Default 1000 und 10000) und berichtet fuer alle 25 Befund-52-Testkontexte die
-DETERMINISTISCHE Aktion (``model.predict(obs, deterministic=True)`` -- Mittelwert der
-tanh-gequetschten Gauss-Politik, KEINE stochastische Ziehung; dieselbe Einstellung wie in
+Loads the SAC checkpoints saved in XA2 (``artifacts/checkpoints/rl_bandit_sac_
+learning_curve/``, not committed via ``.gitignore`` -- this script needs a
+previous run of ``scripts/run_rl_bandit_learning_curve.py``) at two step counts
+(default 1000 and 10000) and reports for all 25 Befund 52 test contexts the
+DETERMINISTIC action (``model.predict(obs, deterministic=True)`` -- mean of the
+tanh-squashed Gaussian policy, NO stochastic draw; the same setting as in
 ``scripts/run_rl_bandit_learning_curve.py``/``twinlink_ml.rl.evaluation.evaluate_policy``,
-siehe Auftrag "Zusaetzlich: wird deterministisch oder stochastisch gezogen").
+see the task "In addition: is the draw deterministic or stochastic").
 
-Kernfragen (Auftrag):
-  - Gibt die Politik fuer alle 25 Kontexte (nahezu) dieselbe Aktion aus (Kollaps, den
-    Kontext ignorierend)?
-  - Liegt diese Aktion an einer Ecke (normierte Werte nahe +-1, tanh-Saettigung)?
-  - Welche Ecke -- insbesondere die "heisse" (hohe Zulufttemperatur, hohe
-    Gasgeschwindigkeit), die mit einem Energieminimierer nicht vereinbar waere?
+Core questions (task):
+  - Does the policy output (nearly) the same action for all 25 contexts (collapse,
+    ignoring the context)?
+  - Does this action lie at a corner (normalised values near +-1, tanh saturation)?
+  - Which corner -- in particular the "hot" one (high inlet air temperature, high
+    gas velocity), which would not be compatible with an energy minimiser?
 
-Aufruf::
+Usage::
 
     python scripts/probe_bandit_env_policy_inspection.py \
         --output artifacts/runs/rl_bandit_policy_inspection.json
@@ -55,14 +55,14 @@ def _suppress_placeholder_warning() -> None:
 
 
 def _find_checkpoint(step: int, run_uid: str | None) -> Path:
-    """Checkpoint fuer ``step`` im Verzeichnis (mehrere Laeufe moeglich, je mit eigenem
-    ``run_uid``-Praefix).
+    """Checkpoint for ``step`` in the directory (several runs possible, each with its own
+    ``run_uid`` prefix).
 
-    Mit ``run_uid``: exakter Treffer, NICHT mtime-basiert -- noetig, sobald mehrere
-    Trainingslaeufe GLEICHZEITIG laufen (DA1s 2x2-Matrix teils parallelisiert), weil dann
-    "zuletzt geschrieben" die Laeufe nicht mehr zuverlaessig unterscheidet. Ohne ``run_uid``
-    (Default): zuletzt geschriebene Datei, wie zuvor -- nur korrekt, wenn kein anderer Lauf
-    gleichzeitig schreibt.
+    With ``run_uid``: exact match, NOT mtime-based -- needed as soon as several
+    training runs run SIMULTANEOUSLY (DA1's 2x2 matrix partly parallelised), because then
+    "last written" no longer reliably distinguishes the runs. Without ``run_uid``
+    (default): last written file, as before -- only correct if no other run
+    writes at the same time.
     """
     if run_uid is not None:
         path = CHECKPOINT_DIR / f"{run_uid}_step{step:06d}.zip"

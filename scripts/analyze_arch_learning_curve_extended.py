@@ -1,23 +1,23 @@
-r"""OA5: Acht-Architekturen-Vergleich, GRU/LSTM/Baselines aus dem Ur-Datensatz (Befund 51)
-plus Transformer/xLSTM/Mamba aus der Erweiterung -- beide protokollgleich (identischer
-Fingerprint, Split, Seed-Buendel je master_seed, siehe OA3-Pilot-Pruefung), deshalb hier
-gemeinsam gelesen und ausgewertet, OHNE erneut zu trainieren.
+r"""OA5: eight-architecture comparison, GRU/LSTM/baselines from the original dataset (Befund 51)
+plus Transformer/xLSTM/Mamba from the extension -- both under the same protocol (identical
+fingerprint, split, seed bundle per master_seed, see the OA3 pilot check), therefore read
+and evaluated together here, WITHOUT training again.
 
-Liest ausschliesslich:
+Reads exclusively:
   - artifacts/runs/arch_learning_curve_projected.jsonl (persistence/static/arx/gru/lstm)
   - artifacts/runs/arch_learning_curve_projected_extended.jsonl (transformer/xlstm/mamba)
 
-Fuer jede (Architektur, Testmenge, Zielkanal, Horizont, Budgetpunkt)-Kombination: Median
-und Spannweite (Min..Max) von ``rmse_run_median_physical`` und ``nrmse_run_median`` ueber
-die 5 Seeds. Zusaetzlich:
-  - Monotonie der Lernkurve (Median ueber n_train) je Architektur/Kanal/Testmenge/Horizont
-    -- Verletzungen benannt, nicht nur gezaehlt (Persistenz konstruktionsbedingt
-    ausgenommen, kein Training auf n_train).
-  - Epochenobergrenze (OA5b): Anteil der Fits, die ``model/net_max_epochs`` erreichen,
-    je Architektur/Budgetpunkt/Kopf (nur die fuenf Torch-Architekturen, Baselines haben
-    keine Epochen).
+For every (architecture, test set, target channel, horizon, budget point) combination: median
+and range (min..max) of ``rmse_run_median_physical`` and ``nrmse_run_median`` over
+the 5 seeds. In addition:
+  - monotonicity of the learning curve (median over n_train) per architecture/channel/test
+    set/horizon -- violations named, not only counted (persistence excluded by
+    construction, no training on n_train).
+  - epoch cap (OA5b): share of fits that reach ``model/net_max_epochs``,
+    per architecture/budget point/head (only the five Torch architectures, baselines have
+    no epochs).
 
-Aufruf::
+Usage::
 
     python scripts/analyze_arch_learning_curve_extended.py
 """

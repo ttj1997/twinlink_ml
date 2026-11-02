@@ -1,29 +1,29 @@
-r"""HA1: Wie gross ist GA1s Sicherheitsmarge im Verhaeltnis zum Vorhersagefehler des
-Feuchte-Softsensors? Reine Auswertung, kein neuer Lauf, kein Training.
+r"""HA1: How large is GA1's safety margin relative to the prediction error of the
+moisture soft sensor? Pure evaluation, no new run, no training.
 
-Vorbereitung fuer die M2-Synthese (Frage F6 aus ``docs/08_synthese_m2_bestand.md``): die
-dortige Gegenueberstellung "Sicherheitsmarge des Agenten gegen die durch den
-Vorhersagefehler gerechtfertigte Marge" existierte bisher an keiner Stelle im Laborbuch als
-eigene Rechnung -- dieser Befund liefert sie, bevor sie in der Synthese zitiert werden darf.
+Preparation for the M2 synthesis (question F6 from ``docs/08_synthese_m2_bestand.md``): the
+comparison there, "safety margin of the agent against the margin justified by the
+prediction error", did not exist anywhere in the lab book as a calculation of its own so
+far -- this finding provides it before it may be cited in the synthesis.
 
-Verknuepft drei bereits committete Artefakte, ohne eines davon neu zu berechnen:
+Links three already committed artifacts without recomputing any of them:
 
-  - GA1s Sicherheitsmarge (``rl_bandit_ga1_safety_margin.json``,
-    ``median_across_seeds/moisture_margin_agent_binding_subset_kg_per_kg``): Median ueber
-    die 17 orakel-bindenden Kontexte je Seed, davon der Median ueber 3 Seeds.
-  - Vorhersagefehler des ANGEREGT trainierten LSTM-Softsensors (Befund 51/58, der fuer den
-    Feuchte-Softsensor empfohlene Trainingsfall), ``arch_learning_curve_projected.jsonl``,
+  - GA1's safety margin (``rl_bandit_ga1_safety_margin.json``,
+    ``median_across_seeds/moisture_margin_agent_binding_subset_kg_per_kg``): median over
+    the 17 oracle-binding contexts per seed, of that the median over 3 seeds.
+  - prediction error of the EXCITED-trained LSTM soft sensor (Befund 51/58, the training
+    case recommended for the moisture soft sensor), ``arch_learning_curve_projected.jsonl``,
     ``model=lstm``, ``n_train=64``, ``test_set=constant_holdout``,
-    ``rmse_run_median_physical/product_moisture_kg_per_kg/h36``, Median ueber 5 Seeds.
-  - Vorhersagefehler des KONSTANT trainierten LSTM-Softsensors (Befund 55, reine
-    Betriebsdaten), ``arch_learning_curve_constant_trained.jsonl``, dieselbe Zelle.
+    ``rmse_run_median_physical/product_moisture_kg_per_kg/h36``, median over 5 seeds.
+  - prediction error of the CONSTANT-trained LSTM soft sensor (Befund 55, pure
+    operating data), ``arch_learning_curve_constant_trained.jsonl``, the same cell.
 
-Konvention (in dieser Auswertung neu eingefuehrt, nicht aus einer Anlagen-/Normvorgabe
-abgeleitet): Sicherheitsfaktor = Marge / (3 x RMSE). Drei Standardabweichungen ist eine in
-der Statistik gebraeuchliche, aber hier bewusst gewaehlte Konvention -- keine Anlagen- oder
-Prozessgrenze.
+Convention (newly introduced in this evaluation, not derived from a plant or standard
+specification): safety factor = margin / (3 x RMSE). Three standard deviations is a
+convention common in statistics, but deliberately chosen here -- not a plant or
+process limit.
 
-Aufruf::
+Usage::
 
     python scripts/probe_bandit_env_ha1_margin_vs_prediction_error.py \
         --output artifacts/runs/rl_bandit_ha1_margin_vs_prediction_error.json
@@ -60,8 +60,8 @@ def _median(values: list[float]) -> float:
 
 
 def _lstm_moisture_error(jsonl_path: Path) -> dict[str, object]:
-    """Median-RMSE (physikalisch) von LSTM auf product_moisture_kg_per_kg,
-    n_train=64, test_set=constant_holdout, h=36, ueber alle vorhandenen Seeds."""
+    """Median RMSE (physical) of LSTM on product_moisture_kg_per_kg,
+    n_train=64, test_set=constant_holdout, h=36, over all available seeds."""
     values: list[float] = []
     for record in read_jsonl(jsonl_path):
         if record.tags.get("model") != "lstm":

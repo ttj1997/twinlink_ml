@@ -94,12 +94,12 @@ def _holdout_spec(excited: DataSpec) -> DataSpec:
 
 
 def _violation_mask(trajectory: Trajectory, material: MaterialConfig) -> np.ndarray:
-    """Punktweise Verletzungsmaske (d50-Basis, Kriterien wie D2/F1/Befund 46).
+    """Pointwise violation mask (d50 basis, criteria as in D2/F1/Befund 46).
 
-    Form ``(n_runs, n_steps)``. Unveraendert gegenueber
-    ``probe_e2_e3_e4_lag_depth.py`` -- haengt nicht an
-    ``max_driving_humidity_kg_per_kg``, damit die Maskierung ueber alle drei
-    Konfigurationen dieses Skripts vergleichbar bleibt.
+    Shape ``(n_runs, n_steps)``. Unchanged compared with
+    ``probe_e2_e3_e4_lag_depth.py`` -- does not depend on
+    ``max_driving_humidity_kg_per_kg``, so that the masking stays comparable across all three
+    configurations of this script.
     """
     diagnostics = trajectory.diagnostics
     output_names = trajectory.metadata["output_names"]
@@ -115,7 +115,7 @@ def _violation_mask(trajectory: Trajectory, material: MaterialConfig) -> np.ndar
 def _fir_design(
     actions: np.ndarray, k: int, *, point_mask: np.ndarray | None = None
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """FIR-Merkmalsmatrix, unveraendert gegenueber ``probe_e2_e3_e4_lag_depth.py``."""
+    """FIR feature matrix, unchanged compared with ``probe_e2_e3_e4_lag_depth.py``."""
     n_runs, n_steps, _n_actions = actions.shape
     run_idx_list = []
     t_idx_list = []
@@ -165,12 +165,12 @@ def _load_config(max_driving_humidity: float) -> ProcessConfig:
 def _clip_and_threshold_fractions(
     slices: list[tuple[np.ndarray, np.ndarray]], *, max_driving_humidity: float
 ) -> tuple[float, float]:
-    """Klippungsanteil und Anteil ``bed_temperature_celsius`` > Schwelle, ueber alle Punkte.
+    """Clipping share and share of ``bed_temperature_celsius`` > threshold, over all points.
 
-    ``slices`` sind ``(y_saturation, bed_temperature_celsius)``-Arrays, bereits auf
-    genau die Punkte geschnitten, die auch in die FIR-Regression eingehen (Holdout-
-    Testblock ``[4:36]``, Trainingspool-Bloecke ``[:64]``) -- nicht der volle erzeugte
-    Pool (der bei ``excited_spec`` auch ungenutzte val/test-Laeufe enthaelt).
+    ``slices`` are ``(y_saturation, bed_temperature_celsius)`` arrays, already cut to
+    exactly the points that also enter the FIR regression (holdout
+    test block ``[4:36]``, training pool blocks ``[:64]``) -- not the full generated
+    pool (which with ``excited_spec`` also contains unused val/test runs).
     """
     clip_hits = 0
     threshold_hits = 0
@@ -228,10 +228,10 @@ def run_for_max_driving_humidity(max_driving_humidity: float) -> dict:
         slices, max_driving_humidity=max_driving_humidity
     )
 
-    # Je Kanal (Ergebnis) eine eigene Liste -- die Entwurfsmatrizen unten sind
-    # kanalunabhaengig (haengen nur von Stell-/Stoergroessen ab) und werden je
-    # k/Seed/Maskierungsstufe genau EINMAL gebaut, dann ueber alle vier Kanaele
-    # wiederverwendet (Moduldocstring, AB2/AC1-Erweiterung).
+    # A separate list per channel (result) -- the design matrices below are
+    # channel-independent (depend only on actions/disturbances) and are built exactly ONCE
+    # per k/seed/masking level, then reused across all four channels
+    # (module docstring, AB2/AC1 extension).
     unmasked_by_channel: dict[str, list[dict[str, float]]] = {c: [] for c in TARGET_CHANNELS}
     masked_by_channel: dict[str, list[dict[str, float]]] = {c: [] for c in TARGET_CHANNELS}
     for k in K_VALUES_E3:

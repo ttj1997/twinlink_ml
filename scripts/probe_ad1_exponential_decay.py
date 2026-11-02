@@ -83,7 +83,7 @@ def _exponential_model(h: np.ndarray, floor: float, amplitude: float, tau: float
 
 
 def _fit_exponential(err_by_h: np.ndarray) -> dict[str, object]:
-    """Fit ``err(h) = floor + A*exp(-h*dt/tau)``, meldet Nichtkonvergenz statt abzustuerzen."""
+    """Fit ``err(h) = floor + A*exp(-h*dt/tau)``, reports non-convergence instead of crashing."""
     h = np.asarray(HORIZONS, dtype=np.float64)
     floor_guess = float(np.min(err_by_h))
     amplitude_guess = float(err_by_h[0] - floor_guess)

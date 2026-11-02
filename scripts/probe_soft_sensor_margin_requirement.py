@@ -1,14 +1,14 @@
-r"""GA1: Zwei zusaetzliche Stuetzstellen (0,19 / 0,185 kg/kg) fuer die 90-%-Interpolation aus
-Befund 64s entkoppeltem KA2-Ergebnis, und die Interpolation selbst (90 / 50 / 0 % Anteil des
-Regelungsgewinns).
+r"""GA1: Two additional support points (0.19 / 0.185 kg/kg) for the 90 % interpolation from
+Befund 64's decoupled KA2 result, and the interpolation itself (90 / 50 / 0 % share of the
+control gain).
 
-Anlass: neue Frage -- welche Genauigkeit braucht der Feuchte-Soft-Sensor, damit der
-Regelungsgewinn erhalten bleibt, und erreicht er sie im Bereich, in dem das Optimum liegt?
-Befund 64s entkoppeltes KA2-Ergebnis (`artifacts/runs/probe_margin_energy_cost_decoupled.json`,
-committed `dc5c1c4`/`daccb4f`) gibt den gepoolten verbleibenden Anteil des Regelungsgewinns an
-sieben Margen. Sortiert nach Marge:
+Motivation: a new question -- what accuracy does the moisture soft sensor need so that the
+control gain is preserved, and does it reach it in the range where the optimum lies?
+Befund 64's decoupled KA2 result (`artifacts/runs/probe_margin_energy_cost_decoupled.json`,
+committed `dc5c1c4`/`daccb4f`) gives the pooled remaining share of the control gain at
+seven margins. Sorted by margin:
 
-    Marge [kg/kg]   verbleibend
+    margin [kg/kg]  remaining
     0.0              1.0000   (oracle_anchor)
     0.0016282        0.9798   (excited_lstm_3rmse)
     0.0044651        0.9535   (constant_lstm_3rmse)
@@ -17,33 +17,33 @@ sieben Margen. Sortiert nach Marge:
     0.08            -0.1980   (grid_0.12)
     0.1395451       -2.2371   (rl_agent_margin)
 
-Die 90-%-Marke (linear interpoliert) faellt zwischen der Marge des konstant trainierten
-Softsensors (0,0044651 kg/kg, 95,35 % verbleibend) und dem Gitterpunkt bei 0,02 kg/kg
-(78,37 % verbleibend) -- eine Luecke von 0,0155 kg/kg Marge ohne Stuetzstelle dazwischen, und
-genau der Fall, den der Auftrag vorwegnimmt ("Stuetzstellen liegen zwischen 0.1955 und 0.18
-kg/kg"). Dieses Skript rechnet zwei weitere Stuetzstellen (`critical_moisture_kg_per_kg` =
-0,19 und 0,185, Margen 0,01 und 0,015 kg/kg) mit DERSELBEN entkoppelten Mechanik wie Befund 64
-MA2 (`probe_margin_energy_cost_decoupled.py`, unveraendert importiert -- keine Zeile dort
-geaendert) und interpoliert danach linear ueber alle neun Stuetzstellen (sieben aus MA2, zwei
-neu) fuer die 90-/50-/0-%-Marken.
+The 90 % mark (linearly interpolated) falls between the margin of the constant-trained
+soft sensor (0.0044651 kg/kg, 95.35 % remaining) and the grid point at 0.02 kg/kg
+(78.37 % remaining) -- a gap of 0.0155 kg/kg margin without a support point in between, and
+exactly the case the task anticipates ("support points lie between 0.1955 and 0.18
+kg/kg"). This script computes two further support points (`critical_moisture_kg_per_kg` =
+0.19 and 0.185, margins 0.01 and 0.015 kg/kg) with THE SAME decoupled mechanics as Befund 64
+MA2 (`probe_margin_energy_cost_decoupled.py`, imported unchanged -- no line changed
+there) and then interpolates linearly over all nine support points (seven from MA2, two
+new) for the 90/50/0 % marks.
 
-Materialkonfiguration unveraendert: `material.critical_moisture_kg_per_kg` bleibt 0,20 kg/kg
-(derselbe Fingerprint wie Befund 52/54/62/64) -- nur die an `check_constraints` uebergebene
-Schwelle variiert, exakt wie in MA2. Referenz (`E_Orakel(0,20)`, `E_fest`,
-`binding_at_reference`) unveraendert aus Befund 54 DA1 wiederverwendet, wie in KA1/MA2.
+Material configuration unchanged: `material.critical_moisture_kg_per_kg` stays 0.20 kg/kg
+(the same fingerprint as Befund 52/54/62/64) -- only the threshold passed to
+`check_constraints` varies, exactly as in MA2. Reference (`E_Orakel(0,20)`, `E_fest`,
+`binding_at_reference`) reused unchanged from Befund 54 DA1, as in KA1/MA2.
 
-Laufzeitschaetzung (vor dem Rechnen, wie im Auftrag verlangt): MA2s sechs neu gerechnete
-Stuetzstellen brauchten je ~430-510s Wandzeit (9-Punkte-Gitter, 16 Worker parallel, `max`
-ueber die 9 Punkte dominiert wegen `Pool.imap_unordered`) -- zwei weitere, aehnlich kleine
-Margen also ~15-20 min insgesamt, deutlich unter der 1-2h-Schwelle fuer "lange Laeufe"
+Runtime estimate (before computing, as required by the task): MA2's six newly computed
+support points took ~430-510s wall-clock time each (9-point grid, 16 workers in parallel, `max`
+over the 9 points dominates because of `Pool.imap_unordered`) -- two further, similarly small
+margins therefore ~15-20 min in total, clearly below the 1-2h threshold for "long runs"
 (CLAUDE.md).
 
-Nach dem Rechnen: `sigma_max = margin / 3` (dieselbe 3x-RMSE-Konvention wie Befund 62 HA1),
-und Reserve-Faktor `sigma_max(90%) / gemessener_Fehler` gegen die in Befund 64
-`margin_sources` bereits committeten RMSE-Mediane (angeregt trainiert: 0,000542738535806486
-kg/kg; konstant trainiert / aus Betriebsdaten: 0,001488358944129813 kg/kg).
+After computing: `sigma_max = margin / 3` (the same 3x RMSE convention as Befund 62 HA1),
+and reserve factor `sigma_max(90%) / gemessener_Fehler` against the RMSE medians already
+committed in Befund 64 `margin_sources` (excited-trained: 0.000542738535806486
+kg/kg; constant-trained / from operating data: 0.001488358944129813 kg/kg).
 
-Aufruf::
+Usage::
 
     python scripts/probe_soft_sensor_margin_requirement.py \
         --output artifacts/runs/probe_soft_sensor_margin_requirement.json
@@ -97,10 +97,10 @@ INTERPOLATION_TARGETS = (0.90, 0.50, 0.00)
 def _linear_interp_margin(
     points: list[tuple[float, float]], target_remaining: float
 ) -> dict[str, Any] | None:
-    """`points`: (margin, remaining), aufsteigend nach Marge sortiert (= absteigend nach
-    verbleibendem Anteil, wie im gesamten Datensatz beobachtet). Sucht das Intervall, in dem
-    `target_remaining` liegt, und interpoliert linear. `None`, falls ausserhalb des
-    abgedeckten Bereichs."""
+    """`points`: (margin, remaining), sorted ascending by margin (= descending by
+    remaining share, as observed in the whole dataset). Searches the interval in which
+    `target_remaining` lies and interpolates linearly. `None` if outside the
+    covered range."""
     for (m0, r0), (m1, r1) in itertools.pairwise(points):
         if (r0 >= target_remaining >= r1) or (r1 >= target_remaining >= r0):
             if r0 == r1:
@@ -261,7 +261,7 @@ def main() -> int:
             f"Gepoolte-Kosten={agg['pooled_cost_rel_pct']}%  Gepoolt-verbleibend={agg['pooled_remaining_fraction']}"
         )
 
-    # Gesamter Datensatz: sieben MA2-Stuetzstellen + zwei neue, aufsteigend nach Marge.
+    # Whole dataset: seven MA2 support points + two new ones, ascending by margin.
     merged_points: list[tuple[str, float, float]] = []
     for label, spec in ma2_artifact["ka1_boundaries"].items():
         remaining = ma2_artifact["ka2_cost_and_remaining_fraction"][label]["aggregate"]["all"][

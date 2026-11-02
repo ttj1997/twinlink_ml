@@ -53,10 +53,10 @@ from twinlink_ml.simulation import PlaceholderConfigWarning, load_process_config
 CONFIG_PATH = Path("conf") / "process" / "greybox_gab_placeholder.yaml"
 SEED = 1
 HIDDEN_SIZE = 16
-N_STEPS = 68  # 32 Historie + 36 Horizont, Produktionsgroesse (Befund 35)
+N_STEPS = 68  # 32 history + 36 horizon, production size (Befund 35)
 
-# Aus diag_xlstm_memory.py real gemessen (hidden_size=16, batch_size=256,
-# n_train=16 -> 2176 Fenster, forward+backward ueber alle 68 Schritte, EIN Teilnetz).
+# Actually measured in diag_xlstm_memory.py (hidden_size=16, batch_size=256,
+# n_train=16 -> 2176 windows, forward+backward over all 68 steps, ONE sub-network).
 MEASURED_STEP_SECONDS_H16_B256 = 0.070
 N_WINDOWS_N_TRAIN_16 = 2176
 BATCH_SIZE_PRODUCTION = 256
@@ -67,7 +67,7 @@ torch.set_num_threads(1)
 
 
 def _small_spec() -> DataSpec:
-    """Wie ``diag_mamba_cost._small_spec``/``diag_transformer_cost._small_spec``."""
+    """Like ``diag_mamba_cost._small_spec``/``diag_transformer_cost._small_spec``."""
     return DataSpec(
         sample_time_s=25.0,
         run_duration_s=28_800.0,
@@ -119,7 +119,7 @@ def main() -> None:
         combined_inputs.append(torch.cat([future[:, step, :], last], dim=-1))
     assert len(combined_inputs) == N_STEPS
 
-    # ------------------------------------------------------- (a) xLSTM, echte Pro-Schritt-Zeit
+    # ------------------------------------------------------- (a) xLSTM, real per-step time
     print(
         "\n=== (a) xLSTM: Pro-Schritt-Zeit ueber 68 sequenzielle mLSTM-Schritte (ERGEBNISOFFEN) ==="
     )
@@ -139,7 +139,7 @@ def main() -> None:
             xlstm_step_times.append(time.perf_counter() - start)
     _report_positions(xlstm_step_times)
 
-    # -------------------------------------------------- (b1) GRU/LSTM, dieselbe Schleifendisziplin
+    # -------------------------------------------------- (b1) GRU/LSTM, same loop discipline
     print("\n=== (b1) GRU/LSTM: dieselbe sequenzielle Schleife, direkter Pro-Schritt-Vergleich ===")
     rnn_means: dict[str, float] = {}
     for core_name, cell_cls in (("gru", torch.nn.GRU), ("lstm", torch.nn.LSTM)):
@@ -163,7 +163,7 @@ def main() -> None:
     for core_name, mean_time in rnn_means.items():
         print(f"  xLSTM/{core_name.upper()}: {xlstm_mean / mean_time:.2f}x")
 
-    # ------------------------------------------------------- (b2) Naeherung: volles Forward / 68
+    # ------------------------------------------------------- (b2) approximation: full forward / 68
     print("\n=== (b2) Gegenprobe (Naeherung): volle Network.forward-Zeit / 68 ===")
 
     def timed_full_forward(net: torch.nn.Module) -> float:
@@ -187,7 +187,7 @@ def main() -> None:
             f"{full_time / N_STEPS * 1e3:.4f} ms/Schritt (Naeherung)"
         )
 
-    # --------------------------------------- (c) Zeitschaetzung fuer den reduzierten Vergleich
+    # --------------------------------------- (c) time estimate for the reduced comparison
     print("\n=== (c) Zeitschaetzung Schritt 3 (reduzierter Vergleich, n_train=16, 1 Seed) ===")
     print(
         f"Grundlage: ECHT gemessener Trainingsschritt bei Produktionsgroesse "

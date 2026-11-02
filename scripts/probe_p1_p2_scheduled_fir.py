@@ -74,8 +74,8 @@ from probe_n1_regime_crosstab import (
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
-# actions, outputs, k, *, point_mask -> (design, run_idx, t_idx); s. _fir_design_scheduled
-# und _fir_design (N1) fuer die beiden konkreten Implementierungen.
+# actions, outputs, k, *, point_mask -> (design, run_idx, t_idx); see _fir_design_scheduled
+# and _fir_design (N1) for the two concrete implementations.
 DesignFn = Callable[..., tuple[np.ndarray, np.ndarray, np.ndarray]]
 
 
@@ -87,12 +87,12 @@ def _fir_design_scheduled(
     *,
     point_mask: np.ndarray | None = None,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """FIR-Merkmalsmatrix mit Betttemperatur-Interaktion.
+    """FIR feature matrix with bed temperature interaction.
 
-    Fensterlogik (Lags, ``point_mask``, Ausschluss leerer Laeufe) identisch zu
-    ``probe_n1_regime_crosstab._fir_design``, nur um die Wechselwirkungsspalten
-    ``[lin, quad] * T_bed(t)`` und den Haupteffekt ``T_bed(t)`` erweitert (vor der
-    abschliessenden Bias-Spalte).
+    Window logic (lags, ``point_mask``, exclusion of empty runs) identical to
+    ``probe_n1_regime_crosstab._fir_design``, only extended by the interaction columns
+    ``[lin, quad] * T_bed(t)`` and the main effect ``T_bed(t)`` (before the
+    final bias column).
     """
     n_runs, n_steps, _n_actions = actions.shape
     run_idx_list = []
@@ -128,10 +128,10 @@ def _design_plain(
     *,
     point_mask: np.ndarray | None = None,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Unveraenderte FIR-Merkmale, ``outputs`` nur fuer die ``DesignFn``-Signatur da.
+    """Unchanged FIR features, ``outputs`` only present for the ``DesignFn`` signature.
 
-    N1s ``_fir_design`` unveraendert -- gemeinsam fuer POOLED (k=``K_MAIN``) und CONTROL
-    (k=``k_control``) verwendet, beide ohne Betriebspunktbezug.
+    N1's ``_fir_design`` unchanged -- used jointly for POOLED (k=``K_MAIN``) and CONTROL
+    (k=``k_control``), both without reference to the operating point.
     """
     return _fir_design(actions, k, point_mask=point_mask)
 
@@ -141,10 +141,10 @@ def _n_features_plain(n_actions: int, k: int) -> int:
 
 
 def _select_control_k(n_actions: int, target_features: int) -> int:
-    """Naechstliegendes k, dessen unveraenderte FIR-Merkmalszahl target_features trifft.
+    """Nearest k whose unchanged FIR feature count matches target_features.
 
-    Sucht ueber k=1..399, keine geschlossene Form (die Merkmalszahl ist ungerade,
-    ``target_features`` i.A. gerade -- exakte Gleichheit ist nicht erreichbar).
+    Searches over k=1..399, no closed form (the feature count is odd,
+    ``target_features`` in general even -- exact equality cannot be reached).
     """
     best_k = 1
     best_diff = abs(_n_features_plain(n_actions, best_k) - target_features)
@@ -157,11 +157,11 @@ def _select_control_k(n_actions: int, target_features: int) -> int:
 
 
 def _design_matrix_diagnostics(design: np.ndarray) -> dict[str, float | int]:
-    """Konditionszahl, effektiver Rang, Spaltennorm-Verhaeltnis und lstsq-Rang.
+    """Condition number, effective rank, column norm ratio and lstsq rank.
 
-    Der von ``lstsq`` gemeldete Rang haengt nur von der Entwurfsmatrix ab (SVD-basiert,
-    unabhaengig von der rechten Seite `b`) -- ein Nullvektor als `b` liefert denselben Rang
-    wie ein echter Fit, ohne einen Zielkanal auszuzeichnen.
+    The rank reported by ``lstsq`` depends only on the design matrix (SVD-based,
+    independent of the right-hand side `b`) -- a zero vector as `b` yields the same rank
+    as a real fit, without singling out a target channel.
     """
     condition_number = float(np.linalg.cond(design))
     effective_rank = int(np.linalg.matrix_rank(design))
@@ -186,11 +186,11 @@ def _conditioning_report(
     design_fn: DesignFn,
     train_pools: dict[int, dict],
 ) -> list[dict[str, float | int | str]]:
-    """Konditionierungsdiagnostik der gepoolten Trainings-Entwurfsmatrix, je Seed.
+    """Conditioning diagnostics of the pooled training design matrix, per seed.
 
-    Dieselbe Maske (``_fit_mode_keep_mask(..., "pooled")``) wie beim eigentlichen Fit in
-    ``_pooled_variant_crosstab`` -- die Entwurfsmatrix ist Ziel-unabhaengig, daher reicht
-    eine Diagnostik je Seed statt je (Seed, Kanal).
+    The same mask (``_fit_mode_keep_mask(..., "pooled")``) as in the actual fit in
+    ``_pooled_variant_crosstab`` -- the design matrix is target-independent, so one
+    diagnostic per seed suffices instead of per (seed, channel).
     """
     reports: list[dict[str, float | int | str]] = []
     for seed in TRAIN_SEEDS:
@@ -207,10 +207,10 @@ def _conditioning_report(
 def _standardize_design(
     design_tr: np.ndarray, eval_designs: dict[str, np.ndarray]
 ) -> tuple[np.ndarray, dict[str, np.ndarray]]:
-    """Spaltenweise z-Standardisierung (Mittel 0, Std 1), aus den Trainingsdaten geschaetzt.
+    """Column-wise z-standardisation (mean 0, std 1), estimated from the training data.
 
-    Die letzte Spalte (Bias/Intercept, konstant 1) bleibt unveraendert: sie hat Std=0,
-    Standardisieren wuerde durch Null teilen und den Intercept zerstoeren.
+    The last column (bias/intercept, constant 1) stays unchanged: it has std=0,
+    standardising would divide by zero and destroy the intercept.
     """
     n_features = design_tr.shape[1]
     feature_cols = slice(0, n_features - 1)
@@ -241,12 +241,12 @@ def _pooled_variant_crosstab(
     eval_regimes: tuple[str, ...] = REGIMES,
     standardize: bool = False,
 ) -> dict[str, dict[str, dict]]:
-    """Gepooltes Fit-Modell (``fit_mode="pooled"``, s. N1), Merkmale aus ``design_fn``.
+    """Pooled fit model (``fit_mode="pooled"``, see N1), features from ``design_fn``.
 
-    ``standardize=True`` (Q1-Kontrollrechnung): Entwurfsmatrix je Seed spaltenweise
-    z-standardisiert (Statistik aus dem Trainingsfenster dieses Seeds, angewendet auf
-    Training UND Holdout desselben Seeds) -- deshalb werden die Holdout-Entwuerfe hier,
-    anders als im unstandardisierten Fall, JE SEED neu transformiert statt einmal vorab.
+    ``standardize=True`` (Q1 control computation): design matrix z-standardised column-wise
+    per seed (statistics from the training window of this seed, applied to
+    training AND holdout of the same seed) -- therefore the holdout designs are
+    transformed anew PER SEED here, unlike in the unstandardised case, instead of once upfront.
     """
     eval_designs_raw = {
         regime: design_fn(holdout_actions, holdout_outputs, k, point_mask=~holdout_masks[regime])

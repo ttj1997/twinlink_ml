@@ -88,7 +88,7 @@ def _holdout_spec(excited: DataSpec) -> DataSpec:
 def _fir_design(
     actions: np.ndarray, k: int, *, point_mask: np.ndarray | None = None
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """FIR-Merkmalsmatrix, unveraendert gegenueber ``probe_e2_e3_e4_lag_depth.py``."""
+    """FIR feature matrix, unchanged compared with ``probe_e2_e3_e4_lag_depth.py``."""
     n_runs, n_steps, _n_actions = actions.shape
     run_idx_list = []
     t_idx_list = []
@@ -120,7 +120,7 @@ def _load_config() -> ProcessConfig:
 
 
 def _regime_masks(bed_temperature: np.ndarray) -> dict[str, np.ndarray]:
-    """Punktweise Regime-Zugehoerigkeit (Form wie ``bed_temperature``), s. Modul-Docstring."""
+    """Pointwise regime membership (shape as ``bed_temperature``), see the module docstring."""
     return {
         "heiss": bed_temperature > HOT_THRESHOLD_CELSIUS,
         "kalt": bed_temperature < COLD_THRESHOLD_CELSIUS,

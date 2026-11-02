@@ -87,7 +87,7 @@ ALL_TARGETS = ("energy_target", "product_moisture_kg_per_kg", "d50_um")
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Kommandozeile."""
+    """Command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=CONFIG_PATH)
     parser.add_argument("--n-train", type=int, default=32)
@@ -105,11 +105,11 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def _soft_sensor_variant(base: DataSpec, target_names: tuple[str, ...]) -> DataSpec:
-    """Soft-Sensor-Spezifikation für eine gegebene Zielgrößenmenge.
+    """Soft-sensor specification for a given set of targets.
 
-    ``spec_for_mode`` beobachtet alles außer den beiden Qualitätsgrößen; für
-    ``target_names = ("energy_target",)`` ist das ohnehin die einzige vorhandene
-    Zielgröße, das Verhalten bleibt also konsistent zwischen (a) und (b).
+    ``spec_for_mode`` observes everything except the two quality variables; for
+    ``target_names = ("energy_target",)`` that is the only existing target anyway,
+    so the behaviour stays consistent between (a) and (b).
     """
     variant = dataclasses.replace(base, target_names=target_names)
     return spec_for_mode(variant, ObservationMode.SOFT_SENSOR)
@@ -118,7 +118,7 @@ def _soft_sensor_variant(base: DataSpec, target_names: tuple[str, ...]) -> DataS
 def _fit_and_evaluate(
     data: GeneratedData, n_train: int, model: SequenceModel, evaluator: RolloutEvaluator
 ) -> tuple[dict[int, float], object, float]:
-    """Fit, auswerten, und die reine ``fit``-Zeit zurückgeben (für den Kostenvergleich)."""
+    """Fit, evaluate, and return the pure ``fit`` time (for the cost comparison)."""
     train, validation, test = build_datasets(data, n_train, policy=ValidationPolicy.FIXED_POOL)
     start = time.perf_counter()
     model.fit(train, seed=data.seeds.model_seed, validation=validation)
@@ -128,7 +128,7 @@ def _fit_and_evaluate(
 
 
 def main() -> None:
-    """Beide Varianten über mehrere Seeds fahren und energy_target vergleichen."""
+    """Run both variants over several seeds and compare energy_target."""
     arguments = parse_arguments()
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", PlaceholderConfigWarning)

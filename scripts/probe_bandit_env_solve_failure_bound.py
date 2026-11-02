@@ -1,23 +1,23 @@
-r"""EA2: modusabhaengiger Loeserfehlschlag-Grenzwert -- reine Auswertung, kein Training.
+r"""EA2: mode-dependent solver-failure bound -- pure evaluation, no training.
 
-Befund 52s Sentinel (`_SOLVE_FAILURE_PENALTY_KW = 1.000.000`) ist vier bis fuenf
-Groessenordnungen ueber jeder anderen Belohnung im Aktionsraum (siehe EA1) -- ein moeglicher
-Kritiker-Vergiftungsmechanismus. Statt eines neu erfundenen festen Ersatzwerts (Auftrag,
-Nutzerentscheidung nach Rueckfrage): der Loeserfehlschlag-Grenzwert ist die SCHLECHTESTE
-Belohnung, die eine LOESBARE Aktion im jeweils AKTIVEN Modus ueber das bestehende
-13x9-Gitter (Nominalstoergroesse, dasselbe Gitter wie DA0(a)) tatsaechlich erreicht -- ein
-Loeserfehlschlag ist damit "so schlecht wie der schlechteste loesbare Betriebspunkt", in
-jedem Modus, ohne Ausreisser.
+Befund 52's sentinel (`_SOLVE_FAILURE_PENALTY_KW = 1.000.000`) is four to five
+orders of magnitude above any other reward in the action space (see EA1) -- a possible
+critic-poisoning mechanism. Instead of a newly invented fixed replacement value (task,
+user decision after a query): the solver-failure bound is the WORST
+reward that a SOLVABLE action actually reaches in the respective ACTIVE mode over the existing
+13x9 grid (nominal disturbance, the same grid as DA0(a)) -- a
+solver failure is thus "as bad as the worst solvable operating point", in
+every mode, without outliers.
 
-Zwei Werte, je Modus:
+Two values, per mode:
 
-* OHNE Strafe: minus die maximale rohe Energie ueber die loesbaren Gitterpunkte.
-* MIT Strafe: die schlechteste Summe aus Energie und Strafe ueber die loesbaren
-  Gitterpunkte (nicht notwendig derselbe Gitterpunkt wie ohne Strafe -- die Gutsfeuchte-
-  Verletzung am kalten/langsamen Rand kann schlechter sein als die Bettemperaturverletzung
-  an der heissen Ecke, siehe DA0(a)).
+* WITHOUT penalty: minus the maximum raw energy over the solvable grid points.
+* WITH penalty: the worst sum of energy and penalty over the solvable
+  grid points (not necessarily the same grid point as without penalty -- the product
+  moisture violation at the cold/slow edge can be worse than the bed temperature violation
+  at the hot corner, see DA0(a)).
 
-Aufruf::
+Usage::
 
     python scripts/probe_bandit_env_solve_failure_bound.py \
         --output artifacts/runs/rl_bandit_solve_failure_bound.json

@@ -47,13 +47,13 @@ CONFIG_PATH = Path("conf") / "process" / "greybox_gab_placeholder.yaml"
 SEED = 1
 HIDDEN_SIZE = 16
 STATE_SIZE = 16
-N_STEPS = 68  # 32 Historie + 36 Horizont, Produktionsgroesse (Befund 35)
+N_STEPS = 68  # 32 history + 36 horizon, production size (Befund 35)
 
 torch.set_num_threads(1)
 
 
 def _small_spec() -> DataSpec:
-    """Wie ``diag_transformer_cost._small_spec`` -- gleiche Groesse, direkt vergleichbar."""
+    """Like ``diag_transformer_cost._small_spec`` -- same size, directly comparable."""
     return DataSpec(
         sample_time_s=25.0,
         run_duration_s=28_800.0,
@@ -99,16 +99,16 @@ def main() -> None:
     print(f"n_exogenous={n_exogenous}, Batch: {history.shape[0]} Fenster")
     print(f"history_length={spec.history_length}, horizon={spec.horizon}, N_STEPS={N_STEPS}")
 
-    # Kombinierte 68-Schritt-Eingabesequenz -- feste Kanalbreite (n_exogenous + 1)
-    # ueber alle Schritte, wie im echten Rollout (Historie hat dieselbe Breite wie
-    # ``cat([future_exogenous, last])`` im Decoder/Horizont-Schritt).
+    # Combined 68-step input sequence -- fixed channel width (n_exogenous + 1)
+    # over all steps, as in the real rollout (history has the same width as
+    # ``cat([future_exogenous, last])`` in the decoder/horizon step).
     last = history[:, -1, n_exogenous:]
     combined_inputs = [history[:, t, :] for t in range(history.shape[1])]
     for step in range(future.shape[1]):
         combined_inputs.append(torch.cat([future[:, step, :], last], dim=-1))
     assert len(combined_inputs) == N_STEPS
 
-    # ------------------------------------------------------------ (a) Mamba, echte Pro-Schritt-Zeit
+    # ------------------------------------------------------------ (a) Mamba, real per-step time
     print("\n=== (a) Mamba: Pro-Schritt-Zeit ueber 68 sequenzielle SSM-Schritte ===")
     mamba_config = TorchSequenceConfig(
         core="mamba", hidden_size=HIDDEN_SIZE, state_size=STATE_SIZE, num_layers=1
@@ -128,7 +128,7 @@ def main() -> None:
             mamba_step_times.append(time.perf_counter() - start)
     _report_positions(mamba_step_times)
 
-    # -------------------------------------------------- (b1) GRU/LSTM, dieselbe Schleifendisziplin
+    # -------------------------------------------------- (b1) GRU/LSTM, same loop discipline
     print("\n=== (b1) GRU/LSTM: dieselbe sequenzielle Schleife, direkter Pro-Schritt-Vergleich ===")
     rnn_means: dict[str, float] = {}
     for core_name, cell_cls in (("gru", torch.nn.GRU), ("lstm", torch.nn.LSTM)):
@@ -152,7 +152,7 @@ def main() -> None:
     for core_name, mean_time in rnn_means.items():
         print(f"  Mamba/{core_name.upper()}: {mamba_mean / mean_time:.2f}x")
 
-    # ------------------------------------------------------- (b2) Naeherung: volles Forward / 68
+    # ------------------------------------------------------- (b2) approximation: full forward / 68
     print("\n=== (b2) Gegenprobe (Naeherung, wie beauftragt): volle Network.forward-Zeit / 68 ===")
 
     def timed_full_forward(net: torch.nn.Module) -> float:

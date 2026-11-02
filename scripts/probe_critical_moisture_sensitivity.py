@@ -68,9 +68,9 @@ EXPECTED_BASE_FINGERPRINT = "2acd06f38963c3af"
 
 
 def _load_regret_module() -> ModuleType:
-    """Wie ``study_operating_point_transient.py::_load_regret_module`` -- siehe dort fuer
-    die Begruendung des ``sys.modules``-Eintrags vor ``exec_module`` (Dataclass-
-    Feldaufloesung ueber ``sys.modules[cls.__module__]``)."""
+    """Like ``study_operating_point_transient.py::_load_regret_module`` -- see there for
+    the rationale of the ``sys.modules`` entry before ``exec_module`` (dataclass
+    field resolution via ``sys.modules[cls.__module__]``)."""
     spec = importlib.util.spec_from_file_location(
         "study_operating_point_regret", REGRET_SCRIPT_PATH
     )
@@ -102,10 +102,10 @@ def run_regret_study(
     workers: int,
     label: str,
 ) -> dict[str, Any]:
-    """BB1-BB3 fuer EINE Config, EIN Gittergroesse -- Orchestrierung von ``main()`` aus
-    ``study_operating_point_regret.py`` nachgebildet (gleiche Funktionen, gleiche
-    Reihenfolge), nur ohne dessen argparse/CLI-Druck. Kein Aufruf-Parameter der
-    wiederverwendeten Funktionen wird geaendert (Budget = Modul-Defaults)."""
+    """BB1-BB3 for ONE config, ONE grid size -- orchestration of ``main()`` from
+    ``study_operating_point_regret.py`` replicated (same functions, same
+    order), only without its argparse/CLI printing. No call parameter of the
+    reused functions is changed (budget = module defaults)."""
     regret_module._set_base_config(variant_config)
     budget = regret_module.OptimizationBudget(
         seed=0,

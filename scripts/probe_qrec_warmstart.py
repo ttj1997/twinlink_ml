@@ -94,10 +94,10 @@ def rollout_with_initial_state(
     run_id: str,
     initial_state: np.ndarray | None,
 ) -> Any:
-    """Wie ``study_operating_point_transient.rollout_constant_setpoint``, nur mit
-    optional uebergebenem ``initial_state`` statt dem dort fest verdrahteten nominalen
-    Start (dieses Modul selbst bleibt unveraendert, siehe Moduldocstring). ``None``
-    verwendet den nominalen Anfangszustand -- identisch zum Original."""
+    """Like ``study_operating_point_transient.rollout_constant_setpoint``, only with an
+    optionally passed ``initial_state`` instead of the nominal start hard-wired there
+    (that module itself stays unchanged, see the module docstring). ``None``
+    uses the nominal initial state -- identical to the original."""
     simulator = GreyBoxFluidBedGranulator(config)
     actions = np.tile(
         np.array([[t_in, u_gas, spray_rate, p_nozzle]], dtype=np.float64), (1, n_steps, 1)
@@ -105,7 +105,7 @@ def rollout_with_initial_state(
     disturbances = np.tile(
         np.array([[t_amb, phi_amb, solid_fraction]], dtype=np.float64), (1, n_steps, 1)
     )
-    nominal_state = simulator.initial_state(1)  # setzt zugleich das Sensormodell zurueck
+    nominal_state = simulator.initial_state(1)  # also resets the sensor model
     state = nominal_state if initial_state is None else initial_state
     return simulator.rollout(actions, disturbances, run_id=(run_id,), seed=0, initial_state=state)
 
@@ -123,9 +123,9 @@ def q_rec_series_kw(config: Any, trajectory: Any) -> np.ndarray:
 def convergence_time_s(
     running_mean: np.ndarray, steady_value: float, time_s: np.ndarray, *, band: float
 ) -> float:
-    """Erster Zeitpunkt, ab dem ``running_mean`` DAUERHAFT innerhalb ``band`` relativ zu
-    ``steady_value`` bleibt (rueckwaerts ab der letzten Verletzung gesucht) -- 0.0, falls nie
-    verletzt."""
+    """First time from which ``running_mean`` stays PERMANENTLY within ``band`` relative to
+    ``steady_value`` (searched backwards from the last violation) -- 0.0 if never
+    violated."""
     tolerance = band * abs(steady_value)
     violations = np.flatnonzero(np.abs(running_mean - steady_value) > tolerance)
     if violations.size == 0:

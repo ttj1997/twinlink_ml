@@ -72,12 +72,12 @@ def main() -> None:
 
     module._load_config = _load_config_projected
 
-    # Verifikation der Projektion: `config.fingerprint`, wie im Original-Ergebnis geloggt,
-    # ist der Fingerprint VOR generate_data()s sample_time_s-Ueberschreibung (5.0 s, YAML-
-    # Default) -- das Original loggt diesen Wert nur informativ, prueft ihn nirgends gegen
-    # eine Erwartung. Fuer BA0(c)/K1 zaehlt der TATSAECHLICH ANGEWENDETE Fingerprint (nach
-    # sample_time_s=25.0, wie generate_data ihn intern bildet) -- hier separat nachgebildet,
-    # nicht aus dem JSON gelesen.
+    # Verification of the projection: `config.fingerprint`, as logged in the original result,
+    # is the fingerprint BEFORE generate_data()'s sample_time_s override (5.0 s, YAML
+    # default) -- the original logs this value for information only, nowhere checks it against
+    # an expected value. For BA0(c)/K1 what counts is the ACTUALLY APPLIED fingerprint (after
+    # sample_time_s=25.0, as generate_data forms it internally) -- replicated separately here,
+    # not read from the JSON.
     probe_config = _load_config_projected(0.50)
     applied_config = dataclasses.replace(
         probe_config,
