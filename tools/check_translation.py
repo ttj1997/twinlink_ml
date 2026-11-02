@@ -1,32 +1,32 @@
 #!/usr/bin/env python3
-r"""Prueft, ob eine Uebersetzung nur Kommentare/Docstrings/Prosa geaendert hat.
+r"""Checks whether a translation changed only comments/docstrings/prose.
 
-Fuer die geplante Uebersetzung ins Englische (siehe ``CLAUDE.md``, Abschnitt
-Documentation) angelegt, bevor die erste Uebersetzung passiert -- Cloud-Sitzungen sollen
-das Werkzeug vorfinden, nicht es erst noch bauen muessen.
+Created for the planned translation into English (see ``CLAUDE.md``, section
+Documentation) before the first translation happens -- cloud sessions should
+find the tool in place, not have to build it first.
 
-Vergleicht den Arbeitsbaum gegen eine Git-Referenz (Standard ``HEAD``), je nach Endung:
+Compares the working tree against a Git reference (default ``HEAD``), depending on the suffix:
 
-* ``.py``: Syntaxbaum mit entfernten Docstrings vorher/nachher gleich (``ast.dump`` ohne
-  Attribute). HARTE Pruefung -- das beweist, dass nur Kommentare und Docstrings geaendert
-  wurden. Jede Abweichung wird so tief wie moeglich lokalisiert (Datei und Funktion/Klasse,
-  notfalls Modulebene) gemeldet, rekursiv: ein Elternknoten wird nur gemeldet, wenn KEIN
-  benanntes Kind selbst schon abweicht.
-* ``.yaml``/``.yml``: geparster Inhalt gleich. HARTE Pruefung -- mit EINER Ausnahme:
-  ``provenance.description``/``provenance.open_todos`` sind dieselben rein dokumentarischen
-  Freitextfelder, die ``twinlink_ml.simulation.config.without_documentary_provenance`` vom
-  Config-Fingerprint ausschliesst (siehe dort und ``docs/ARCHIV.md``) -- bewusst hier
-  dupliziert statt importiert, ``tools/`` bleibt ohne Abhaengigkeit vom Paket-Quellbaum.
-  Nur diese zwei Felder duerfen sich aendern (z. B. durch Uebersetzung), alle anderen
-  Werte bleiben eine harte Pruefung.
-* ``.md``: Inline-/Fenced-Code-Abschnitte (`` `...` ``/```` ```...``` ````) als Multimenge
-  gleich, HART -- Uebersetzung darf keinen Code beruehren. Zahlen ausserhalb von
-  Code-Abschnitten: deutsche Schreibweise vorher (Komma dezimal, Punkt Tausender) gegen
-  englische Schreibweise nachher (Punkt dezimal, Komma Tausender) als Werte verglichen;
-  Abweichungen werden nur GEMELDET, nicht als Fehler gewertet, weil die Schreibweise im
-  Bestand bereits gemischt ist (siehe Auftrag).
+* ``.py``: syntax tree with docstrings removed equal before/after (``ast.dump`` without
+  attributes). HARD check -- this proves that only comments and docstrings were
+  changed. Every deviation is localised as deeply as possible (file and function/class,
+  module level if need be) and reported, recursively: a parent node is only reported if NO
+  named child itself already deviates.
+* ``.yaml``/``.yml``: parsed content equal. HARD check -- with ONE exception:
+  ``provenance.description``/``provenance.open_todos`` are the same purely documentary
+  free-text fields that ``twinlink_ml.simulation.config.without_documentary_provenance`` excludes
+  from the config fingerprint (see there and ``docs/ARCHIV.md``) -- deliberately
+  duplicated here instead of imported, ``tools/`` stays without a dependency on the package
+  source tree. Only these two fields may change (e.g. through translation), all other
+  values remain a hard check.
+* ``.md``: inline/fenced code sections (`` `...` ``/```` ```...``` ````) equal as a multiset,
+  HARD -- translation must not touch any code. Numbers outside of
+  code sections: German notation before (decimal comma, thousands point) compared as values
+  against English notation after (decimal point, thousands comma);
+  deviations are only REPORTED, not counted as errors, because the notation in the
+  existing material is already mixed (see the task).
 
-Exit-Code ungleich 0 bei mindestens einem harten Verstoss.
+Exit code non-zero on at least one hard violation.
 """
 
 from __future__ import annotations
@@ -55,10 +55,10 @@ CHECKED_SUFFIXES = (".py", ".yaml", ".yml", ".md")
 
 @dataclass(frozen=True, slots=True)
 class Finding:
-    """Ein Fund: Datei, Art (hart/Hinweis) und Meldungstext."""
+    """A finding: file, kind (hard/info) and message text."""
 
     path: str
-    kind: str  # "hard" oder "info"
+    kind: str  # "hard" or "info"
     message: str
 
 
@@ -94,12 +94,12 @@ def _direct_named_children(node: ast.AST) -> dict[str, ast.AST]:
 def _localize_diffs(
     old_node: ast.AST, new_node: ast.AST, qualname: str, path: str, findings: list[Finding]
 ) -> None:
-    """Meldet die tiefstmoegliche(n) Stelle(n), an denen ``old_node``/``new_node`` abweichen.
+    """Reports the deepest possible location(s) at which ``old_node``/``new_node`` deviate.
 
-    Rekursiv: ein Knoten wird nur gemeldet, wenn keines seiner benannten Kinder
-    (Funktion/Klasse) selbst schon abweicht, sonst wird nur in die Kinder hinabgestiegen.
-    Verhindert, dass eine einzelne geaenderte Zeile in einer tief verschachtelten Methode
-    alle umschliessenden Klassen/Module ebenfalls als "abweichend" meldet.
+    Recursive: a node is only reported if none of its named children
+    (function/class) itself already deviates; otherwise only the children are descended into.
+    Prevents a single changed line in a deeply nested method from also reporting
+    all enclosing classes/modules as "deviating".
     """
     if _dump(old_node) == _dump(new_node):
         return
@@ -138,7 +138,7 @@ def _localize_diffs(
 
 
 def check_python(old: str, new: str, path: str) -> list[Finding]:
-    """Harte Pruefung: Syntaxbaum ohne Docstrings identisch (siehe Moduldocstring)."""
+    """Hard check: syntax tree without docstrings identical (see module docstring)."""
     try:
         old_tree = _strip_docstrings(ast.parse(old))
         new_tree = _strip_docstrings(ast.parse(new))
@@ -164,7 +164,7 @@ def _without_documentary_yaml_fields(data: Any) -> Any:
 
 
 def check_yaml(old: str, new: str, path: str) -> list[Finding]:
-    """Harte Pruefung: geparster Inhalt identisch ausserhalb dokumentarischer Felder."""
+    """Hard check: parsed content identical outside documentary fields."""
     try:
         old_data = _without_documentary_yaml_fields(yaml.safe_load(old))
         new_data = _without_documentary_yaml_fields(yaml.safe_load(new))
@@ -214,7 +214,7 @@ def _numbers(text: str, *, decimal: str, thousands: str) -> list[float]:
 
 
 def check_markdown(old: str, new: str, path: str) -> list[Finding]:
-    """Code-Abschnitte hart, Zahlenschreibweise ausserhalb von Code nur als Hinweis."""
+    """Code sections hard, number notation outside of code only as a notice."""
     findings: list[Finding] = []
     old_spans, old_remainder = _code_spans_and_remainder(old)
     new_spans, new_remainder = _code_spans_and_remainder(new)
@@ -278,7 +278,7 @@ def _changed_paths(ref: str, repo_root: Path) -> list[str]:
 
 
 def check_file(rel_path: str, ref: str, repo_root: Path) -> list[Finding]:
-    """Dispatcht auf die passende ``check_*``-Funktion nach Dateiendung."""
+    """Dispatches to the matching ``check_*`` function by file suffix."""
     old = _git_show(ref, rel_path, repo_root)
     new_path = repo_root / rel_path
     if old is None or not new_path.is_file():
@@ -296,7 +296,7 @@ def check_file(rel_path: str, ref: str, repo_root: Path) -> list[Finding]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """CLI-Einstiegspunkt -- siehe Moduldocstring fuer die Argumente."""
+    """CLI entry point -- see the module docstring for the arguments."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ref", default="HEAD", help="Git-Referenz, gegen die verglichen wird")
     parser.add_argument(
