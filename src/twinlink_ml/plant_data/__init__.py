@@ -1,4 +1,4 @@
-"""Messstellenzuordnung und Einlesen der Anlagendaten des Anwendungspartners."""
+"""Measuring-point mapping and reading of the application partner's plant data."""
 
 from .channels import (
     GRANULATOR_D3204_CHANNELS,

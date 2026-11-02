@@ -1,7 +1,7 @@
-"""Reinforcement-Learning-Umgebungen -- Bandit-Formulierung von Befund 52 zuerst.
+"""Reinforcement learning environments -- bandit formulation of Befund 52 first.
 
-Siehe :mod:`twinlink_ml.rl.env` fuer Umfang und bewusste Auslassungen (Speicher, mehrere
-Linien, Netto-Zielfunktion, Anlagenmassstab).
+See :mod:`twinlink_ml.rl.env` for scope and deliberate omissions (storage, several
+lines, net objective function, plant scale).
 """
 
 from .env import (

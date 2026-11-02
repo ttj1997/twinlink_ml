@@ -1,67 +1,67 @@
-r"""Ein eigenständiges Netz je Zielgröße, statt eines gemeinsamen (Befund 26).
+r"""One independent network per target, instead of a shared one (Befund 26).
 
-Warum, mit Verweis auf ``docs/04_stand_ap1.md``
+Why, with reference to ``docs/04_stand_ap1.md``
 ------------------------------------------------
-Befund 26 diagnostiziert negativen Transfer im Soft-Sensor-Betrieb:
-``torch_sequence.py`` trainiert alle Zielgrößen mit einem geteilten rekurrenten Zustand
-und einem einzigen Skalarverlust. Die beiden Qualitätsgrößen sind dort praktisch
-unlösbar (Befund 19); ihr Gradientenrauschen verschlechtert über den geteilten Zustand
-die sonst gute Lösung für ``energy_target`` -- gemessen als Faktor 14 im NRMSE
-(0.3422 gemeinsam trainiert gegen 0.0238 einzeln, ``n_train = 32``, Median über drei
-Seeds). Ein Fortsetzungsexperiment hat die Alternativursache -- das globale
-``gradient_clip`` -- ausgeschlossen: mit einer 100-fach höheren Clip-Norm blieb der
-Fehler bei 0.3574, keine Erholung Richtung 0.0238. Der geteilte Zustand selbst ist damit
-die verbleibende, nicht widerlegte Ursache.
+Befund 26 diagnoses negative transfer in soft sensor operation:
+``torch_sequence.py`` trains all targets with one shared recurrent state
+and a single scalar loss. The two quality variables are practically
+unsolvable there (Befund 19); their gradient noise degrades, via the shared state,
+the otherwise good solution for ``energy_target`` -- measured as a factor of 14 in NRMSE
+(0.3422 trained jointly against 0.0238 individually, ``n_train = 32``, median over three
+seeds). A follow-up experiment ruled out the alternative cause -- the global
+``gradient_clip``: with a 100-fold higher clip norm the error stayed
+at 0.3574, no recovery towards 0.0238. The shared state itself is thus
+the remaining, unrefuted cause.
 
-Drei Gründe für diese Umsetzung (Option 2 aus Befund 26) statt Verlustgewichtung
-(Option 1) oder eines der Zwei-Phasen-Vorschläge:
+Three reasons for this implementation (option 2 from Befund 26) instead of loss weighting
+(option 1) or one of the two-phase proposals:
 
-1. **Verlustgewichtung dämpft nur die Gradientenmagnitude.** Eine Gewichtung ändert, wie
-   stark eine Zielgröße im Skalarverlust zählt, aber nicht, dass ihr Gradient weiterhin
-   durch denselben rekurrenten Zustand läuft wie der von ``energy_target``. Die
-   Verschränkung in der geteilten Repräsentation -- der eigentliche Mechanismus aus
-   Befund 26 -- bliebe bestehen, nur schwächer.
-2. **Die klassischen Baselines sind bereits pro Zielgröße entkoppelt.** ``LinearARXModel``
-   und ``RandomFeatureNARX`` lösen ``(X^T X + \lambda I)^{-1} X^T Y`` über
-   :func:`~twinlink_ml.models.baselines._ridge_solve` mit einer mehrspaltigen
-   Zielgrößenmatrix ``Y``. Diese Normalgleichung zerfällt exakt in unabhängige
-   Regressionen je Spalte, weil ``gram = X^T X + \lambda I`` für alle Spalten identisch
-   ist und der Lösungsvektor je Spalte nur von der zugehörigen Spalte der rechten Seite
-   abhängt -- numerisch geprüft (Restdifferenz zur getrennten Lösung an
-   Maschinenpräzision, 1.1e-16). Der bisherige Vergleich GRU/LSTM gegen ARX im
-   Soft-Sensor-Betrieb war dadurch kein fairer Architekturvergleich: ARX war strukturell
-   nie demselben Transferrisiko ausgesetzt wie das gemeinsame Netz. Mit dieser Klasse
-   gilt dieselbe Entkopplung jetzt auch für GRU/LSTM.
-3. **Keine neuen Hyperparameter.** Bei wenigen Trainingsläufen (die Lernkurve beginnt bei
-   acht) ist jeder zusätzliche Hyperparameter selbst ein Freiheitsgrad, der kalibriert
-   werden müsste, ohne dafür Daten übrig zu haben -- eine zentrale Projektanforderung.
-   Verlustgewichtung nach Kendall et al. oder GradNorm hätten genau das gebraucht.
+1. **Loss weighting only dampens the gradient magnitude.** A weighting changes how
+   strongly a target counts in the scalar loss, but not the fact that its gradient still
+   runs through the same recurrent state as that of ``energy_target``. The
+   entanglement in the shared representation -- the actual mechanism from
+   Befund 26 -- would remain, only weaker.
+2. **The classical baselines are already decoupled per target.** ``LinearARXModel``
+   and ``RandomFeatureNARX`` solve ``(X^T X + \lambda I)^{-1} X^T Y`` via
+   :func:`~twinlink_ml.models.baselines._ridge_solve` with a multi-column
+   target matrix ``Y``. This normal equation decomposes exactly into independent
+   regressions per column, because ``gram = X^T X + \lambda I`` is identical for all columns
+   and the solution vector per column depends only on the corresponding column of the
+   right-hand side -- checked numerically (residual difference to the separate solution at
+   machine precision, 1.1e-16). The previous comparison GRU/LSTM against ARX in
+   soft sensor operation was therefore not a fair architecture comparison: ARX was structurally
+   never exposed to the same transfer risk as the shared network. With this class
+   the same decoupling now applies to GRU/LSTM as well.
+3. **No new hyperparameters.** With few training runs (the learning curve starts at
+   eight) every additional hyperparameter is itself a degree of freedom that would have to
+   be calibrated without having data left over for it -- a central project requirement.
+   Loss weighting after Kendall et al. or GradNorm would have needed exactly that.
 
-Was das kostet
+What this costs
 ---------------
-:class:`CompositeSequenceModel` sieht pro Zielgröße nur die eigene Historie, nicht die
-der anderen -- ein bewusster Kompromiss (siehe Klartext-Diskussion, die der
-Implementierung voranging, in der Session-Historie zu Befund 26): eine Architektur, die
-zusätzlich die Historie der jeweils anderen Zielgrößen einspeist, bräuchte entweder eine
-neue Kanalart in :mod:`twinlink_ml.data.windows` mit einer Platzhalterpolitik für den
-Rollout, oder eine gekoppelte Schritt-für-Schritt-Trainingsschleife, die
-``torch_sequence.py`` außerhalb der Datei dupliziert. Beides vergrößert den Eingriff
-erheblich und war nicht Teil dieser Entscheidung. Diese Klasse reproduziert stattdessen
-exakt das im Diagnoseexperiment geprüfte Fall (b): ``target_names = (eine Zielgröße,)``
-je Teilmodell.
+:class:`CompositeSequenceModel` sees per target only its own history, not that
+of the others -- a deliberate compromise (see the plain-language discussion that preceded the
+implementation, in the session history on Befund 26): an architecture that
+additionally feeds in the history of the respective other targets would need either a
+new channel type in :mod:`twinlink_ml.data.windows` with a placeholder policy for the
+rollout, or a coupled step-by-step training loop that
+duplicates ``torch_sequence.py`` outside that file. Both enlarge the intervention
+considerably and were not part of this decision. This class instead reproduces
+exactly case (b) checked in the diagnostic experiment: ``target_names = (eine Zielgröße,)``
+per submodel.
 
-Warum ``torch_sequence.py`` unverändert bleibt
------------------------------------------------
-Open-Closed, wie im Modul-Docstring von ``torch_sequence.py`` selbst begründet: eine
-neue Kombination aus bestehenden Bausteinen darf den Trainer nicht anfassen müssen.
-:class:`CompositeSequenceModel` hält ``n_targets`` unabhängige
-:class:`~twinlink_ml.models.torch_sequence.TorchSequenceModel`-Instanzen und einen
-generischen :class:`~twinlink_ml.data.windows.SequenceDataset`-Blick
-(:class:`_SingleTargetView`), der einen mehrspaltigen Datensatz auf eine Zielgröße
-reduziert. Die Reduktion ist keine Näherung: :meth:`Standardizer.fit
-<twinlink_ml.data.windows.Standardizer.fit>` schätzt Mittelwert und Streuung je Kanal
-unabhängig von den übrigen Kanälen, also ist ``scaler.select([i])`` bitgleich mit einer
-Anpassung, die von Grund auf nur auf diesem einen Kanal geschätzt worden wäre.
+Why ``torch_sequence.py`` remains unchanged
+-------------------------------------------
+Open-closed, as justified in the module docstring of ``torch_sequence.py`` itself: a
+new combination of existing building blocks must not need to touch the trainer.
+:class:`CompositeSequenceModel` holds ``n_targets`` independent
+:class:`~twinlink_ml.models.torch_sequence.TorchSequenceModel` instances and a
+generic :class:`~twinlink_ml.data.windows.SequenceDataset` view
+(:class:`_SingleTargetView`) that reduces a multi-column dataset to one target.
+The reduction is not an approximation: :meth:`Standardizer.fit
+<twinlink_ml.data.windows.Standardizer.fit>` estimates mean and spread per channel
+independently of the other channels, so ``scaler.select([i])`` is bit-identical to a
+fit that would have been estimated from scratch on this one channel only.
 """
 
 from __future__ import annotations
@@ -90,13 +90,13 @@ __all__ = [
 
 
 def _submodel_seed(seed: int, target: str) -> int:
-    """Teilmodell-Seed, SHA-256-abgeleitet wie :class:`~twinlink_ml.utils.seeding.SeedBundle`.
+    """Submodel seed, SHA-256-derived like :class:`~twinlink_ml.utils.seeding.SeedBundle`.
 
-    **Nicht** ``seed + index``: ``utils/seeding.py`` begründet den Wechsel von einer
-    linearen Ableitung zu SHA-256 ausdrücklich damit, dass benachbarte Master-Seeds sonst
-    korrelierte Teilseeds erzeugen -- dasselbe Argument gilt hier zwischen den
-    Zielgrößen-Teilmodellen. Der Zielgrößenname (nicht der Index) ist das Salt, damit der
-    Seed stabil bleibt, wenn sich die Reihenfolge von ``target_names`` ändert.
+    **Not** ``seed + index``: ``utils/seeding.py`` explicitly justifies the switch from a
+    linear derivation to SHA-256 by the fact that neighbouring master seeds otherwise produce
+    correlated sub-seeds -- the same argument applies here between the
+    target submodels. The target name (not the index) is the salt, so that the
+    seed stays stable if the order of ``target_names`` changes.
     """
     return _derive(seed, "composite_submodel", target)
 
@@ -104,7 +104,7 @@ def _submodel_seed(seed: int, target: str) -> int:
 def _select_target(
     batch: WindowBatch, history_columns: Sequence[int], target_index: int
 ) -> WindowBatch:
-    """``WindowBatch`` auf die Eingangskanäle und die eine Zielgröße eines Teilmodells kürzen."""
+    """Trim a ``WindowBatch`` to the input channels and the one target of a submodel."""
     return WindowBatch(
         history_inputs=batch.history_inputs[..., history_columns],
         future_exogenous=batch.future_exogenous,
@@ -120,13 +120,13 @@ def _select_target(
 
 
 class _SingleTargetView(SequenceDataset):
-    """Ein mehrspaltiger Datensatz, reduziert auf genau eine Zielgröße.
+    """A multi-column dataset, reduced to exactly one target.
 
-    Keine Neuberechnung aus der Trajektorie -- reine Kanalauswahl auf bereits
-    standardisierten Arrays des zugrundeliegenden Datensatzes, siehe Moduldocstring.
-    Funktioniert über die :class:`~twinlink_ml.data.windows.SequenceDataset`-Abstraktion,
-    nicht über ``TrajectoryWindowDataset``-Interna, und bleibt damit gültig für jede
-    künftige Implementierung dieser ABC.
+    No recomputation from the trajectory -- pure channel selection on already
+    standardised arrays of the underlying dataset, see module docstring.
+    Works via the :class:`~twinlink_ml.data.windows.SequenceDataset` abstraction,
+    not via ``TrajectoryWindowDataset`` internals, and thus stays valid for every
+    future implementation of this ABC.
     """
 
     def __init__(self, base: SequenceDataset, target_index: int) -> None:
@@ -172,22 +172,23 @@ class _SingleTargetView(SequenceDataset):
 
 
 class CompositeSequenceModel(SequenceModel):
-    r"""Ein :class:`TorchSequenceModel` je Zielgröße statt eines gemeinsamen Netzes.
+    r"""One :class:`TorchSequenceModel` per target instead of a shared network.
 
-    Siehe Moduldocstring für die Begründung (Befund 26, ``docs/04_stand_ap1.md``).
+    See the module docstring for the justification (Befund 26, ``docs/04_stand_ap1.md``).
 
-    Jedes Teilmodell bekommt einen über :func:`_submodel_seed` aus ``(seed, Zielgröße)``
-    abgeleiteten Seed -- deterministisch, aber ohne die Korrelation zwischen benachbarten
-    Teilseeds, die eine lineare Ableitung (``seed + i``) einführen würde (siehe
-    ``utils/seeding._derive``). Wer dieselbe Vorhersage mit einzeln aufgerufenen
-    ``TorchSequenceModel``-Instanzen reproduzieren will, verwendet dieselbe Funktion.
+    Each submodel receives a seed derived via :func:`_submodel_seed` from ``(seed, Zielgröße)``
+    -- deterministic, but without the correlation between neighbouring
+    sub-seeds that a linear derivation (``seed + i``) would introduce (see
+    ``utils/seeding._derive``). Whoever wants to reproduce the same prediction with individually
+    called ``TorchSequenceModel`` instances uses the same function.
 
     Parameters
     ----------
     config
-        Architektur und Optimierung, an jedes Teilmodell unverändert weitergereicht. Ein
-        Objekt für alle Zielgrößen -- unterschiedliche Kapazität je Zielgröße wäre ein
-        weiterer Freiheitsgrad, den dieses Modul bewusst nicht einführt (Grund 3 oben).
+        Architecture and optimisation, passed on unchanged to each submodel. One
+        object for all targets -- different capacity per target would be a
+        further degree of freedom that this module deliberately does not introduce (reason 3
+        above).
     """
 
     def __init__(self, config: TorchSequenceConfig | None = None) -> None:
@@ -200,28 +201,28 @@ class CompositeSequenceModel(SequenceModel):
 
     @property
     def name(self) -> str:
-        """Kurzname, mit ``composite_``-Vorsatz gegen Verwechslung mit dem alten Einzelnetz."""
+        """Short name, with ``composite_`` prefix against confusion with the old single network."""
         return (
             f"composite_{self._config.core}_h{self._config.hidden_size}_l{self._config.num_layers}"
         )
 
     @property
     def config(self) -> TorchSequenceConfig:
-        """Architektur- und Trainingsparameter, an jedes Teilmodell weitergereicht."""
+        """Architecture and training parameters, passed on to each submodel."""
         return self._config
 
     @property
     def n_parameters(self) -> int:
-        """Summe der trainierbaren Parameter aller Teilmodelle."""
+        """Sum of the trainable parameters of all submodels."""
         return sum(model.n_parameters for model in self._submodels.values())
 
     @property
     def training_history(self) -> dict[str, tuple[dict[str, float], ...]]:
-        """Trainingsverlauf je Zielgröße -- getrennte Netze, getrennte Kurven."""
+        """Training history per target -- separate networks, separate curves."""
         return {name: model.training_history for name, model in self._submodels.items()}
 
     def training_diagnostics(self) -> dict[str, Any]:
-        """Epochen-/Gradientenschritt-Kennzahlen je Teilmodell, mit Zielgrößen-Suffix."""
+        """Epoch/gradient-step metrics per submodel, with target suffix."""
         return {
             f"{key}/{target}": value
             for target, model in self._submodels.items()
@@ -229,13 +230,13 @@ class CompositeSequenceModel(SequenceModel):
         }
 
     def describe(self) -> dict[str, Any]:
-        """Konfiguration für das Tracking, dieselben ``net_*``-Schlüssel wie beim Einzelnetz.
+        """Configuration for tracking, the same ``net_*`` keys as for the single network.
 
-        ``net_actual_device`` wird vom ersten Teilmodell übernommen (``dict``-Iterationsreihenfolge
-        = Einfügereihenfolge, siehe :meth:`fit`) statt hier neu berechnet -- alle Teilmodelle
-        teilen dieselbe ``TorchSequenceConfig`` und lösen ``device=None`` deshalb identisch auf
-        (siehe :meth:`TorchSequenceModel.fit`), ein zweiter Blick auf jedes Teilnetz wäre
-        redundant. ``None`` vor dem ersten :meth:`fit`-Aufruf (``self._submodels`` noch leer).
+        ``net_actual_device`` is taken from the first submodel (``dict`` iteration order
+        = insertion order, see :meth:`fit`) instead of being recomputed here -- all submodels
+        share the same ``TorchSequenceConfig`` and therefore resolve ``device=None`` identically
+        (see :meth:`TorchSequenceModel.fit`); a second look at each subnetwork would be
+        redundant. ``None`` before the first :meth:`fit` call (``self._submodels`` still empty).
         """
         first_submodel = next(iter(self._submodels.values()), None)
         return {
@@ -257,16 +258,16 @@ class CompositeSequenceModel(SequenceModel):
         validation: SequenceDataset | None = None,
         verbose: bool = False,
     ) -> None:
-        """Ein Teilmodell je Zielgröße anpassen, unabhängig voneinander.
+        """Fit one submodel per target, independently of each other.
 
-        Keine Fallunterscheidung nach Beobachtbarkeits-Betriebsart: ``_SingleTargetView``
-        schneidet den bereits fertig gefensterten Datensatz zu, die Maskierung nicht
-        beobachteter Zielgrößen ist darin schon enthalten (siehe
-        :mod:`twinlink_ml.data.windows`). Dieselbe Schleife läuft also identisch in
-        ``INLINE`` und ``SOFT_SENSOR``.
+        No case distinction by observability operating mode: ``_SingleTargetView``
+        trims the already windowed dataset; the masking of unobserved
+        targets is already contained in it (see
+        :mod:`twinlink_ml.data.windows`). The same loop thus runs identically in
+        ``INLINE`` and ``SOFT_SENSOR``.
 
-        ``verbose`` nur an :meth:`TorchSequenceModel.fit` durchgereicht (siehe dort) --
-        kein Teil von ``TorchSequenceConfig``, ändert kein Trainingsverhalten.
+        ``verbose`` is only passed through to :meth:`TorchSequenceModel.fit` (see there) --
+        not part of ``TorchSequenceConfig``, changes no training behaviour.
         """
         self._target_names = train.target_names
         self._n_exogenous = len(train.exogenous_names)
@@ -287,7 +288,7 @@ class CompositeSequenceModel(SequenceModel):
         self._submodels = submodels
 
     def predict(self, batch: WindowBatch) -> FloatArray:
-        """Jedes Teilmodell auf seine eigene Spalte anwenden, Ergebnis in Zielreihenfolge."""
+        """Apply each submodel to its own column, result in target order."""
         if not self._submodels:
             raise RuntimeError("Modell ist nicht angepasst")
         predictions = []
@@ -297,10 +298,10 @@ class CompositeSequenceModel(SequenceModel):
             predictions.append(self._submodels[target].predict(sub_batch))
         return np.concatenate(predictions, axis=-1)
 
-    # ------------------------------------------------------------------ Persistenz
+    # ----------------------------------------------------------------- Persistence
 
     def state_dict(self) -> dict[str, dict[str, Any]]:
-        """Ein State-Dict je Teilmodell -- Befund 26, ein Netz je Zielgröße."""
+        """One state dict per submodel -- Befund 26, one network per target."""
         if not self._submodels:
             raise RuntimeError("Modell ist nicht angepasst")
         return {target: model.state_dict() for target, model in self._submodels.items()}
@@ -312,11 +313,11 @@ class CompositeSequenceModel(SequenceModel):
         target_names: Sequence[str],
         n_exogenous: int,
     ) -> None:
-        """Alle Teilmodelle aus gespeicherten Zuständen rekonstruieren, ohne zu trainieren.
+        """Reconstruct all submodels from saved states, without training.
 
-        Jedes Teilmodell bekommt dieselbe Architektur (``self._config``) wie beim
-        ursprünglichen Training und genau ein Ziel -- derselbe Aufbau wie in
-        :meth:`fit`, nur ohne den Trainingsschritt.
+        Each submodel receives the same architecture (``self._config``) as in the
+        original training and exactly one target -- the same setup as in
+        :meth:`fit`, only without the training step.
         """
         self._target_names = tuple(target_names)
         self._n_exogenous = n_exogenous
@@ -332,51 +333,51 @@ class CompositeSequenceModel(SequenceModel):
         self._submodels = submodels
 
 
-def CompositeGruSequenceModel(  # noqa: N802 - Fabrikname folgt dem Modell-Label
+def CompositeGruSequenceModel(  # noqa: N802 - factory name follows the model label
     config: TorchSequenceConfig | None = None,
 ) -> CompositeSequenceModel:
-    """GRU-Variante -- Fabrik für die Modellregistrierung."""
+    """GRU variant -- factory for the model registry."""
     return CompositeSequenceModel(config if config is not None else TorchSequenceConfig(core="gru"))
 
 
-def CompositeLstmSequenceModel(  # noqa: N802 - Fabrikname folgt dem Modell-Label
+def CompositeLstmSequenceModel(  # noqa: N802 - factory name follows the model label
     config: TorchSequenceConfig | None = None,
 ) -> CompositeSequenceModel:
-    """LSTM-Variante -- Fabrik für die Modellregistrierung."""
+    """LSTM variant -- factory for the model registry."""
     return CompositeSequenceModel(
         config if config is not None else TorchSequenceConfig(core="lstm")
     )
 
 
-def CompositeXLSTMSequenceModel(  # noqa: N802 - Fabrikname folgt dem Modell-Label
+def CompositeXLSTMSequenceModel(  # noqa: N802 - factory name follows the model label
     config: TorchSequenceConfig | None = None,
 ) -> CompositeSequenceModel:
-    """mLSTM-Variante (kein sLSTM) -- Fabrik für die Modellregistrierung.
+    """The mLSTM variant (no sLSTM) -- factory for the model registry.
 
-    Derselbe Grund für ein Verbundmodell wie bei GRU/LSTM (Befund 26): der geteilte
-    rekurrente Zustand schadet ``energy_target`` im Soft-Sensor-Betrieb, unabhängig vom
-    Kern. Siehe :mod:`twinlink_ml.models.xlstm` für die mLSTM-Gleichungen selbst.
+    The same reason for a composite model as for GRU/LSTM (Befund 26): the shared
+    recurrent state harms ``energy_target`` in soft sensor operation, independently of the
+    core. See :mod:`twinlink_ml.models.xlstm` for the mLSTM equations themselves.
     """
     return CompositeSequenceModel(
         config if config is not None else TorchSequenceConfig(core="xlstm")
     )
 
 
-def CompositeTransformerSequenceModel(  # noqa: N802 - Fabrikname folgt dem Modell-Label
+def CompositeTransformerSequenceModel(  # noqa: N802 - factory name follows the model label
     config: TorchSequenceConfig | None = None,
 ) -> CompositeSequenceModel:
-    """Transformer-Variante -- Fabrik für die Modellregistrierung.
+    """Transformer variant -- factory for the model registry.
 
-    Anders als bei GRU/LSTM/xLSTM ist ``hidden_size=64`` (Dataclass-Standardwert) für
-    diesen Kern **kein** angemessener Standard: ein einzelner Encoder-Layer bei
-    ``d_model=64`` hat allein rund 50000 Parameter (vier Attention-Projektionen plus
-    FFN-Block, ``torch_sequence._build_transformer_network``), mehr als das gesamte
-    Drei-Ziele-GRU-Verbundmodell aus Befund 28 zusammen (42819, ``docs/04_stand_ap1.md``).
-    Deshalb hier ein bewusst kleiner Standard (``hidden_size=16``, ``num_heads=2``,
-    ``num_layers=1``) statt des GRU/LSTM/xLSTM-Standards -- Kapazitäts-Matching gegen GRU
-    ist erst nach einer echten Kostenmessung eine Option, nicht per Formel (derselbe
-    Fallstrick, der beim capacity-matched xLSTM-Versuch bereits einmal >12h/Trainingspunkt
-    gekostet hat).
+    Unlike for GRU/LSTM/xLSTM, ``hidden_size=64`` (dataclass default) is **not** an
+    appropriate default for this core: a single encoder layer at
+    ``d_model=64`` alone has around 50000 parameters (four attention projections plus
+    FFN block, ``torch_sequence._build_transformer_network``), more than the entire
+    three-target GRU composite model from Befund 28 put together (42819, ``docs/04_stand_ap1.md``).
+    Hence a deliberately small default here (``hidden_size=16``, ``num_heads=2``,
+    ``num_layers=1``) instead of the GRU/LSTM/xLSTM default -- capacity matching against GRU
+    is only an option after a real cost measurement, not by formula (the same
+    pitfall that already once cost >12h/training point in the capacity-matched xLSTM
+    attempt).
     """
     return CompositeSequenceModel(
         config
@@ -385,19 +386,19 @@ def CompositeTransformerSequenceModel(  # noqa: N802 - Fabrikname folgt dem Mode
     )
 
 
-def CompositeMambaSequenceModel(  # noqa: N802 - Fabrikname folgt dem Modell-Label
+def CompositeMambaSequenceModel(  # noqa: N802 - factory name follows the model label
     config: TorchSequenceConfig | None = None,
 ) -> CompositeSequenceModel:
-    """Mamba-Variante (selektiver State-Space-Kern) -- Fabrik für die Modellregistrierung.
+    """Mamba variant (selective state-space core) -- factory for the model registry.
 
-    Anders als beim Transformer braucht Mamba kein reduziertes ``hidden_size`` gegen den
-    Dataclass-Standard: die Zelle (:mod:`twinlink_ml.models.mamba`) hat pro Block nur eine
-    Handvoll linearer Projektionen plus eine ``(d_inner, d_state)``-Matrix, keine
-    quadratisch in ``hidden_size`` wachsende Attention-Projektion. Trotzdem hier bewusst
-    klein gehalten (``hidden_size=16``, ``state_size=16``, ``num_layers=1``) --
-    Vergleichbarkeit mit dem Transformer-Standard (Befund 37) und derselbe Grundsatz wie
-    dort: Kapazität an kleinen Lernkurven-Stützstellen ist kein Startvorteil, den man sich
-    ungeprüft nimmt.
+    Unlike the Transformer, Mamba needs no reduced ``hidden_size`` compared with the
+    dataclass default: the cell (:mod:`twinlink_ml.models.mamba`) has only a
+    handful of linear projections per block plus a ``(d_inner, d_state)`` matrix, no
+    attention projection growing quadratically in ``hidden_size``. Nevertheless deliberately
+    kept small here (``hidden_size=16``, ``state_size=16``, ``num_layers=1``) --
+    comparability with the Transformer default (Befund 37) and the same principle as
+    there: capacity at small learning-curve support points is not a head start to be
+    taken unchecked.
     """
     return CompositeSequenceModel(
         config

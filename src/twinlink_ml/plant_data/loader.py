@@ -1,14 +1,14 @@
-r"""Einlesen der Anlagenexporte des Anwendungspartners.
+r"""Reading of the application partner's plant exports.
 
-Liest ausschliesslich -- schreibt nichts. Der Dateipfad ist ein Funktionsparameter,
-keine Konstante in diesem Modul: die Rohdaten (Kundendaten, siehe NA1/
-``docs/04_stand_ap1.md``) bleiben ausserhalb des Repos, Aufrufer uebergeben den Pfad
-(z. B. aus einer Umgebungsvariable im Treiberskript).
+Reads only -- writes nothing. The file path is a function parameter,
+not a constant in this module: the raw data (customer data, see NA1/
+``docs/04_stand_ap1.md``) stay outside the repo, callers pass the path
+(e.g. from an environment variable in the driver script).
 
-``openpyxl`` ist hierfuer eine echte Laufzeitabhaengigkeit (``pyproject.toml``,
-Extra ``plant-data``), nicht optional wie ``torch``/``sklearn``: ohne sie laesst sich
-kein Anlagenexport lesen. Trotzdem lazy importiert, damit der Rest des Pakets (Grey-Box-
-Modell, Training) ohne dieses Extra installierbar bleibt.
+``openpyxl`` is a real runtime dependency for this (``pyproject.toml``,
+extra ``plant-data``), not optional like ``torch``/``sklearn``: without it no
+plant export can be read. Nevertheless imported lazily, so that the rest of the package
+(grey-box model, training) remains installable without this extra.
 """
 
 from __future__ import annotations
@@ -19,8 +19,8 @@ from pathlib import Path
 
 __all__ = ["PlantTimeSeries", "load_plant_export"]
 
-# Beschriftungsfehler der Quelle: diese Tags tragen in Zeile 2 der Exportdatei die
-# Einheit "°C", sind aber Durchfluesse (m3/h) -- siehe channels.py-Moduldocstring.
+# Labelling error of the source: these tags carry the unit "°C" in row 2 of the export
+# file, but are flows (m3/h) -- see the channels.py module docstring.
 _UNIT_OVERRIDES: dict[str, str] = {
     "FIRAL-323805": "m3/h",
     "FIRAL-323604": "m3/h",
@@ -29,7 +29,7 @@ _UNIT_OVERRIDES: dict[str, str] = {
 
 @dataclass(frozen=True, slots=True)
 class PlantTimeSeries:
-    """Eine eingelesene 24h-Exportdatei, Spalten nach Messstellenkennzeichen."""
+    """One read-in 24h export file, columns by measuring-point tag."""
 
     timestamps: tuple[dt.datetime, ...]
     units: dict[str, str]
@@ -44,10 +44,10 @@ class PlantTimeSeries:
 
 
 def load_plant_export(path: str | Path) -> PlantTimeSeries:
-    """Liest einen 24h-Anlagenexport (Kopfzeile Tag, zweite Zeile Einheit, ab Zeile 3 Daten).
+    """Reads a 24h plant export (header row tag, second row unit, data from row 3).
 
-    :param path: Pfad zur ``.xlsx``-Datei, ausserhalb des Repos (siehe Moduldocstring).
-    :raises ValueError: wenn die Kopfzeile keine Spalte "Time" enthaelt.
+    :param path: path to the ``.xlsx`` file, outside the repo (see module docstring).
+    :raises ValueError: if the header row contains no column "Time".
     """
     import openpyxl
 

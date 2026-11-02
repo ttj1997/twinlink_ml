@@ -1,75 +1,75 @@
-r"""Rekurrente Architekturen (GRU, LSTM) hinter einem gemeinsamen Trainer.
+r"""Recurrent architectures (GRU, LSTM) behind a common trainer.
 
-Arbeitsplan Schritt 6. Bewusst **nach** den vier rechenfreien Modellen: das Interface ist
-von Persistenz, Mittelwertvorhersage, statischer Regression, linearem ARX und dem
-Zufallsmerkmal-NARX validiert, bevor es sich um ein neuronales Netz formen kann.
+Work plan step 6. Deliberately **after** the four computation-free models: the interface is
+validated by persistence, mean prediction, static regression, linear ARX and the
+random-feature NARX before it can shape itself around a neural network.
 
-Warum ein Modul und nicht ein Modul je Architektur
+Why one module and not one module per architecture
 --------------------------------------------------
-Der Arbeitsplan verlangt für Schritt 6, dass eine neue Architektur **keine Änderung an
-Trainings- oder Evaluationscode** erfordert (Open-Closed). Das ist nur einzuhalten, wenn
-Trainingsschleife, Rollout-Semantik, Residual-Kopf und Early Stopping *einmal* existieren
-und die Architektur ein austauschbarer Kern ist. ``core="gru"`` und ``core="lstm"``
-unterscheiden sich hier in vier Zeilen; xLSTM, Mamba und Transformer kommen als weitere
-Kerne dazu, ohne dass der Trainer angefasst wird. Wären es getrennte Module, unterschieden
-sich beim dritten Modell die Trainingsschleifen -- und ein Architekturvergleich, dessen
-Kandidaten verschieden trainiert werden, vergleicht die Trainingsschleifen.
+For step 6 the work plan demands that a new architecture requires **no change to
+training or evaluation code** (open-closed). This can only be kept if the
+training loop, rollout semantics, residual head and early stopping exist *once*
+and the architecture is an exchangeable core. ``core="gru"`` and ``core="lstm"``
+differ here in four lines; xLSTM, Mamba and Transformer are added as further
+cores without the trainer being touched. Were they separate modules, the training loops
+would differ by the third model -- and an architecture comparison whose
+candidates are trained differently compares the training loops.
 
-Drei Entwurfsentscheidungen mit Begründung
+Three design decisions with justification
 -----------------------------------------
-**Residual-Parametrisierung.** Der Kopf sagt nicht :math:`\hat y(t+h)` vorher, sondern die
-Änderung gegenüber dem letzten Wert:
+**Residual parametrisation.** The head does not predict :math:`\hat y(t+h)`, but the
+change relative to the last value:
 
 .. math:: \hat y(t+h) = \hat y(t+h-1) + \Delta_\theta\bigl(h_{t+h}\bigr)
 
-Damit ist ein Netz mit Nullgewichten **exakt** die Persistenz-Baseline. Das ist bei diesem
-Prozess kein kosmetischer Vorteil: Persistenz erreicht bei :math:`\Delta t = 25` s
-laufweise NRMSE 0.17 auf der Produktfeuchte, ein Netz mit direkter Ausgabe muss diesen
-Arbeitspunkt erst finden und verbraucht dafür an den kleinen Stützstellen der Lernkurve
-genau die Daten, um die es geht.
+A network with zero weights is thus **exactly** the persistence baseline. For this
+process that is not a cosmetic advantage: at :math:`\Delta t = 25` s persistence reaches
+run-level NRMSE 0.17 on product moisture; a network with direct output must first find this
+operating point and uses up for it, at the small support points of the learning curve,
+exactly the data that matter.
 
-**Kein Teacher Forcing (Voreinstellung 0.0).** Die Primärmetrik ist der
-Mehrschritt-Rollout-Fehler. Wird mit den wahren Vergangenheitswerten trainiert und mit
-den eigenen Vorhersagen ausgewertet, entsteht Exposure Bias -- das Modell hat den
-Zustandsraum, in den es im Rollout gerät, nie gesehen. Der Preis ist teureres Training
-(die Sequenz muss Schritt für Schritt durchlaufen werden) und ein schwierigeres
-Optimierungsproblem. ``teacher_forcing`` ist als Parameter vorhanden, weil ein Curriculum
-von 1.0 auf 0.0 bei langen Horizonten hilft, aber der Standard ist der ehrliche Fall.
+**No teacher forcing (default 0.0).** The primary metric is the
+multi-step rollout error. If training uses the true past values and evaluation
+the model's own predictions, exposure bias arises -- the model has never seen the
+state space it ends up in during the rollout. The price is more expensive training
+(the sequence has to be traversed step by step) and a harder
+optimisation problem. ``teacher_forcing`` exists as a parameter because a curriculum
+from 1.0 to 0.0 helps at long horizons, but the default is the honest case.
 
-**Ein Kern, kein Encoder-Decoder-Paar.** Historie und Horizont unterscheiden sich nur
-darin, woher die Zielgrößen-Eingänge kommen: aus der Messung oder aus der eigenen
-Vorhersage. Zwei getrennte Netze würden dieselbe Dynamik zweimal lernen müssen.
+**One core, no encoder-decoder pair.** History and horizon differ only
+in where the target inputs come from: from the measurement or from the model's own
+prediction. Two separate networks would have to learn the same dynamics twice.
 
-**Beobachtbarkeit braucht keinen Sonderpfad.** Im Soft-Sensor-Fall ist der Historienkanal
-der nicht gemessenen Zielgröße durch den Trainingsmittelwert ersetzt (siehe
-:mod:`twinlink_ml.data.windows`). Der Anker der Residual-Parametrisierung ist dann Null,
-das Netz startet ohne Niveauinformation und schreibt seinen eigenen Zustand fort. Hier
-liegt der einzige strukturelle Vorteil, den ein rollout-trainiertes Netz gegenüber dem
-NARX hat: es sieht seine eigenen Vorhersagen im Training und kann die Rückführung
-tatsächlich lernen. Ein auf Ein-Schritt-Fehler angepasstes Modell kann das nicht.
+**Observability needs no special path.** In the soft sensor case the history channel
+of the unmeasured target is replaced by the training mean (see
+:mod:`twinlink_ml.data.windows`). The anchor of the residual parametrisation is then zero,
+the network starts without level information and carries its own state forward. Here
+lies the only structural advantage a rollout-trained network has over the
+NARX: it sees its own predictions in training and can actually learn the
+feedback. A model fitted on one-step error cannot do that.
 
-Status -- ausdrücklich
----------------------
-Dieses Modul wurde inzwischen auf einer Maschine mit PyTorch ausgeführt (``04_stand_ap1.md``,
-Befund 24). Die Bestandsprüfungen halten: nullinitialisierter Kopf reproduziert die
-Persistenz exakt, GRU und LSTM teilen denselben Trainer, der Rollout blickt nicht in die
-Zukunft. **Nicht** geprüft ist damit, ob GRU oder LSTM die Persistenz bei realistischem
-Seed-Budget schlagen -- ein einzelner Trainingslauf mit einem Seed bei kleinem
-``n_train`` beantwortet das nicht, siehe die Auflösungsschwelle aus Schritt 5. Diese Frage
-ist Aufgabe der Lernkurve (``scripts/study_architectures.py``, mehrere Seeds), nicht eines
-Unit-Tests. Bis diese Lernkurve vorliegt, ist der Architekturvergleich weiterhin auch von
-``RandomFeatureNARX`` getragen, der ohne Torch läuft und über mehrere Seeds geprüft ist.
-Auf Maschinen ohne PyTorch überspringen sich die sechs Tests dieses Moduls weiterhin --
-das ist der vorgesehene Fallback, nicht ein Zeichen fehlender Reife.
+Status -- explicitly
+--------------------
+This module has by now been run on a machine with PyTorch (``04_stand_ap1.md``,
+Befund 24). The sanity checks hold: a zero-initialised head reproduces
+persistence exactly, GRU and LSTM share the same trainer, the rollout does not look into the
+future. What is **not** checked by this is whether GRU or LSTM beat persistence with a realistic
+seed budget -- a single training run with one seed at small
+``n_train`` does not answer that, see the resolution threshold from step 5. This question
+is the task of the learning curve (``scripts/study_architectures.py``, several seeds), not of a
+unit test. Until this learning curve is available, the architecture comparison is still also
+carried by ``RandomFeatureNARX``, which runs without Torch and is checked over several seeds.
+On machines without PyTorch the six tests of this module still skip themselves --
+this is the intended fallback, not a sign of missing maturity.
 
-``xLSTM`` (nur der mLSTM-Anteil, siehe :mod:`twinlink_ml.models.xlstm`) ist seit
-Schritt 6, Teil 2 implementiert und hängt sich hier über genau eine zusätzliche Zeile im
-``cell_type``-Dict von ``_build_network`` ein -- der Trainer selbst (``fit``, Rollout,
-Verlust, Early Stopping) ist dafür unverändert geblieben, wie im Docstring oben für
-jeden zusätzlichen Kern versprochen. ``Mamba`` (selektiver State-Space-Kern, siehe
-:mod:`twinlink_ml.models.mamba`) ist auf demselben Weg implementiert -- ebenfalls genau
-eine zusätzliche ``cell_type``-Zeile, kein Sonderzweig wie beim Transformer-Kern nötig,
-weil die SSM-Zelle wie GRU/LSTM/xLSTM einen fortgeschriebenen Zustand fester Größe hat.
+``xLSTM`` (only the mLSTM part, see :mod:`twinlink_ml.models.xlstm`) has been implemented since
+step 6, part 2 and hooks in here via exactly one additional line in the
+``cell_type`` dict of ``_build_network`` -- the trainer itself (``fit``, rollout,
+loss, early stopping) has remained unchanged for it, as promised in the docstring above for
+every additional core. ``Mamba`` (selective state-space core, see
+:mod:`twinlink_ml.models.mamba`) is implemented the same way -- likewise exactly
+one additional ``cell_type`` line, no special branch needed as for the Transformer core,
+because the SSM cell, like GRU/LSTM/xLSTM, has a carried-forward state of fixed size.
 """
 
 from __future__ import annotations
@@ -138,10 +138,10 @@ der Transformer-Decoder-Loop ist strukturell O(H²), Mamba soll das genau vermei
 
 
 def _require_torch() -> Any:
-    """PyTorch nachladen; verständlicher Fehler statt ``ModuleNotFoundError``."""
+    """Load PyTorch on demand; an understandable error instead of ``ModuleNotFoundError``."""
     try:
         import torch as torch_module
-    except ImportError as error:  # pragma: no cover - abhängig von der Umgebung
+    except ImportError as error:  # pragma: no cover - depends on the environment
         raise ImportError(
             "TorchSequenceModel braucht PyTorch: pip install 'twinlink-ml[torch]'"
         ) from error
@@ -150,59 +150,59 @@ def _require_torch() -> Any:
 
 @dataclass(frozen=True, slots=True)
 class TorchSequenceConfig:
-    """Architektur- und Trainingsparameter.
+    """Architecture and training parameters.
 
     Attributes
     ----------
     core
-        Kern: ``"gru"``, ``"lstm"``, ``"xlstm"`` (nur mLSTM, siehe
-        :mod:`twinlink_ml.models.xlstm`) oder ``"transformer"``. Alles andere --
-        Residual-Kopf, Rollout, Verlustgewichtung, Early Stopping -- ist kernunabhängig.
+        Core: ``"gru"``, ``"lstm"``, ``"xlstm"`` (mLSTM only, see
+        :mod:`twinlink_ml.models.xlstm`) or ``"transformer"``. Everything else --
+        residual head, rollout, loss weighting, early stopping -- is core-independent.
     hidden_size, num_layers
-        Größe des GRU/LSTM/xLSTM bzw. ``d_model``/Layerzahl des Transformer-Encoders und
-        -Decoders. An den kleinen Stützstellen der Lernkurve ist die Kapazität nicht der
-        begrenzende Faktor; klein anfangen. **Bei ``core="transformer"`` ist der
-        Dataclass-Standard 64 kein sinnvoller Ausgangspunkt** -- ein einzelner
-        Encoder-Layer bei ``d_model=64`` hat allein rund 50000 Parameter (vier
-        Attention-Projektionen plus FFN-Block), mehr als das gesamte
-        Drei-Ziele-GRU-Verbundmodell aus Befund 28 zusammen (42819). Muss bei
-        ``core="transformer"`` gerade sein (sinusoidale Positionskodierung).
+        Size of the GRU/LSTM/xLSTM, or ``d_model``/number of layers of the Transformer encoder and
+        decoder. At the small support points of the learning curve capacity is not the
+        limiting factor; start small. **For ``core="transformer"`` the
+        dataclass default 64 is not a sensible starting point** -- a single
+        encoder layer at ``d_model=64`` alone has around 50000 parameters (four
+        attention projections plus FFN block), more than the entire
+        three-target GRU composite model from Befund 28 put together (42819). Must be even for
+        ``core="transformer"`` (sinusoidal positional encoding).
     num_heads
-        Nur bei ``core="transformer"`` (Attention-Köpfe) und ``core="slstm"``/
-        ``"xlstm_mixed"`` (Köpfe der sLSTM-Schichten) verwendet. Muss ``hidden_size``
-        teilen. Bei den übrigen Kernen wirkungslos.
+        Only used for ``core="transformer"`` (attention heads) and ``core="slstm"``/
+        ``"xlstm_mixed"`` (heads of the sLSTM layers). Must divide ``hidden_size``.
+        Without effect for the other cores.
     state_size
-        Nur bei ``core="mamba"`` verwendet: Dimension des SSM-Zustands je Kanal
-        (:math:`d_{state}` in :mod:`twinlink_ml.models.mamba`), unabhängig von
-        ``hidden_size`` (:math:`d_{model}`). Referenz-Standard 16. Bei den übrigen Kernen
-        wirkungslos -- exakt nach dem Muster von ``num_heads``.
+        Only used for ``core="mamba"``: dimension of the SSM state per channel
+        (:math:`d_{state}` in :mod:`twinlink_ml.models.mamba`), independent of
+        ``hidden_size`` (:math:`d_{model}`). Reference default 16. Without effect for the other
+        cores -- exactly following the pattern of ``num_heads``.
     dropout
-        Nur wirksam bei ``num_layers > 1`` (GRU/LSTM/xLSTM) bzw. immer wirksam bei
-        ``core="transformer"`` (PyTorchs ``TransformerEncoderLayer``/``-DecoderLayer``
-        wenden Dropout unabhängig von der Layerzahl an).
+        Only effective for ``num_layers > 1`` (GRU/LSTM/xLSTM), or always effective for
+        ``core="transformer"`` (PyTorch's ``TransformerEncoderLayer``/``-DecoderLayer``
+        apply dropout independently of the number of layers).
     learning_rate, weight_decay, max_epochs, batch_size
-        Optimierung (AdamW). ``weight_decay`` gilt nicht ausnahmslos fuer jeden Parameter:
-        ``TorchSequenceModel._param_groups`` setzt ihn auf 0 fuer Parameter mit dem
-        Attribut ``_no_weight_decay=True`` -- aktuell nur ``A_log``/``D`` bei
-        ``core="mamba"`` (siehe :mod:`twinlink_ml.models.mamba`, Referenzkonvention aus
-        ``state-spaces/mamba``). Fuer alle anderen Kerne wirkungslos, da dort kein
-        Parameter so markiert ist -- bitgleich zum vorherigen einheitlichen AdamW-Aufruf.
+        Optimisation (AdamW). ``weight_decay`` does not apply without exception to every parameter:
+        ``TorchSequenceModel._param_groups`` sets it to 0 for parameters with the
+        attribute ``_no_weight_decay=True`` -- currently only ``A_log``/``D`` for
+        ``core="mamba"`` (see :mod:`twinlink_ml.models.mamba`, reference convention from
+        ``state-spaces/mamba``). Without effect for all other cores, since no
+        parameter is marked that way there -- bit-identical to the previous uniform AdamW call.
     patience
-        Early Stopping auf dem Validierungs-Rollout-Verlust. ``0`` schaltet es ab und
-        trainiert das feste Epochenbudget -- die Variante für die Kennzahl zum
-        Trainingsdatenbedarf, die keine zusätzlichen Validierungsläufe verbrauchen darf.
+        Early stopping on the validation rollout loss. ``0`` switches it off and
+        trains the fixed epoch budget -- the variant for the metric of
+        training data requirement, which must not use up additional validation runs.
     teacher_forcing
-        Anteil der Horizontschritte, in denen der wahre statt des vorhergesagten Wertes
-        eingespeist wird. Voreinstellung 0.0, siehe Modul-Docstring.
+        Fraction of horizon steps in which the true instead of the predicted value
+        is fed in. Default 0.0, see module docstring.
     horizon_weight_decay
-        Exponentielle Gewichtung des Verlusts über den Horizont. ``1.0`` gewichtet alle
-        Schritte gleich; Werte < 1 betonen kurze Horizonte. Bei 1.0 dominieren die späten
-        Schritte den Gradienten, weil ihr Fehler größer ist.
+        Exponential weighting of the loss over the horizon. ``1.0`` weights all
+        steps equally; values < 1 emphasise short horizons. At 1.0 the late
+        steps dominate the gradient, because their error is larger.
     gradient_clip
-        Norm-Clipping. Bei Rollout-Training über 24 Schritte ohne Teacher Forcing sind
-        Gradientenexplosionen der Regelfall, nicht die Ausnahme.
+        Norm clipping. In rollout training over 24 steps without teacher forcing,
+        gradient explosions are the rule, not the exception.
     device
-        ``"cpu"``, ``"cuda"`` oder ``None`` für automatische Wahl.
+        ``"cpu"``, ``"cuda"`` or ``None`` for automatic choice.
     """
 
     core: RecurrentCore = "gru"
@@ -267,12 +267,12 @@ class TorchSequenceConfig:
 
 
 class TorchSequenceModel(SequenceModel):
-    """Rekurrentes Netz mit autoregressivem Rollout und Residual-Kopf.
+    """Recurrent network with autoregressive rollout and residual head.
 
     Parameters
     ----------
     config
-        Kern, Architektur und Optimierung.
+        Core, architecture and optimisation.
     """
 
     def __init__(self, config: TorchSequenceConfig | None = None) -> None:
@@ -291,53 +291,53 @@ class TorchSequenceModel(SequenceModel):
 
     @property
     def name(self) -> str:
-        """Kurzname mit Kern und Kapazitätsangabe."""
+        """Short name with core and capacity."""
         return f"{self._config.core}_h{self._config.hidden_size}_l{self._config.num_layers}"
 
     @property
     def config(self) -> TorchSequenceConfig:
-        """Architektur- und Trainingsparameter, für Checkpoint-Persistenz."""
+        """Architecture and training parameters, for checkpoint persistence."""
         return self._config
 
     @property
     def n_parameters(self) -> int:
-        """Anzahl trainierbarer Parameter."""
+        """Number of trainable parameters."""
         if self._network is None:
             return 0
         return sum(p.numel() for p in self._network.parameters() if p.requires_grad)
 
     @property
     def training_history(self) -> tuple[dict[str, float], ...]:
-        """Verlust je Epoche, für die Diagnose der Lernkurven-Punkte."""
+        """Loss per epoch, for diagnosing the learning-curve points."""
         return tuple(self._history)
 
     _FLATTEN_WINDOW = 5
 
     def training_diagnostics(self) -> dict[str, Any]:
-        """Epochen-, Gradientenschritt- und Abflachungs-Kennzahl für das Tracking.
+        """Epoch, gradient-step and flattening metrics for tracking.
 
-        ``gradient_steps`` verwendet dieselbe Aufrundung wie
-        :meth:`~twinlink_ml.data.windows.SequenceDataset.iter_batches` (der letzte,
-        kleinere Batch zählt mit) -- eine Floor-Rechnung würde die reale Schrittzahl
-        systematisch unterschätzen.
+        ``gradient_steps`` uses the same rounding up as
+        :meth:`~twinlink_ml.data.windows.SequenceDataset.iter_batches` (the last,
+        smaller batch counts too) -- a floor calculation would systematically underestimate
+        the real number of steps.
 
-        ``train_loss_ratio_last10`` vergleicht den Mittelwert der letzten 5 Epochen
-        gegen den Mittelwert der 5 Epochen davor (Epochen 6-10 vor Schluss) -- **nicht**
-        Einzelpunkt gegen Einzelpunkt. Ein Zwei-Punkt-Vergleich (frühere Fassung) erwies
-        sich am realen `n_train=8`-LSTM-Lauf als irreführend: `product_moisture_kg_per_kg`
-        pendelte über die letzten 20 Epochen ohne Trend zwischen 0.000075 und 0.000105
-        (~±20 % relative Amplitude) -- der Zwei-Punkt-Quotient (1.074) hing dort vom
-        Zufall ab, auf welche Stelle der Schwankung die verglichenen Epochen gerade
-        fielen, nicht vom tatsächlichen Kurvenverlauf. Der gemittelte Fensterschnitt
-        federt genau dieses Epoche-zu-Epoche-Rauschen ab, ohne die Komplexität einer
-        Regressionssteigung einzuführen -- für eine Ja/Nein-Diagnose (abgeflacht oder
-        nicht) ausreichend. Nahe 1.0 heißt abgeflacht (Plateau), deutlich darunter heißt
-        der Verlust fiel an der Abbruchstelle noch -- dieselbe Unterscheidung wie in
-        Befund 38(e). Mit ``patience=20`` sind mindestens 21 Epochen garantiert, das
-        volle 10-Epochen-Fenster (zwei mal 5) ist also praktisch immer verfügbar; bei
-        kürzeren Verläufen (nur bei ``patience=0`` oder sehr kleinem ``max_epochs``
-        möglich) verkleinert sich das Fenster entsprechend, bei weniger als zwei Epochen
-        bleibt die Kennzahl neutral bei 1.0 (keine Grundlage für eine Aussage).
+        ``train_loss_ratio_last10`` compares the mean of the last 5 epochs
+        against the mean of the 5 epochs before (epochs 6-10 before the end) -- **not**
+        single point against single point. A two-point comparison (earlier version) proved
+        misleading on the real `n_train=8` LSTM run: `product_moisture_kg_per_kg`
+        oscillated without trend between 0.000075 and 0.000105 over the last 20 epochs
+        (~±20 % relative amplitude) -- the two-point quotient (1.074) depended there on
+        chance, on which point of the fluctuation the compared epochs happened to
+        fall, not on the actual course of the curve. The averaged window slice
+        cushions exactly this epoch-to-epoch noise, without introducing the complexity of a
+        regression slope -- sufficient for a yes/no diagnosis (flattened or
+        not). Close to 1.0 means flattened (plateau), clearly below means
+        the loss was still falling at the stopping point -- the same distinction as in
+        Befund 38(e). With ``patience=20`` at least 21 epochs are guaranteed, so the
+        full 10-epoch window (two times 5) is practically always available; for
+        shorter histories (only possible with ``patience=0`` or a very small ``max_epochs``)
+        the window shrinks accordingly; with fewer than two epochs
+        the metric stays neutral at 1.0 (no basis for a statement).
         """
         epochs_run = len(self._history)
         if epochs_run == 0:
@@ -381,18 +381,18 @@ class TorchSequenceModel(SequenceModel):
         }
 
     def describe(self) -> dict[str, Any]:
-        """Konfiguration für das Tracking.
+        """Configuration for tracking.
 
-        ``net_device`` ist der KONFIGURIERTE Wunsch (``TorchSequenceConfig.device``, kann
-        ``None`` sein); ``net_actual_device`` ist das zur Fit-Zeit TATSÄCHLICH verwendete
-        Gerät -- ``device=None`` löst in :meth:`fit` zu ``"cuda"`` auf, falls verfügbar,
-        sonst zu ``"cpu"`` (siehe dort), ohne dieses Feld wäre das bei einem CUDA-fähigen
-        Torch-Build nicht mehr rekonstruierbar (Anlass: ``befund42_tbed_exhaust_sweep.jsonl``,
-        Torch-Build mit CUDA-Unterstützung, kein Geräte-Feld im Log). ``None`` vor dem ersten
-        :meth:`fit`-Aufruf (``self._network`` noch nicht gebaut) -- alle aktuellen
-        Aufrufstellen rufen ``describe()`` erst danach auf (nach der Auswertung, die ein
-        trainiertes Modell voraussetzt); dieser Fall ist defensiv abgesichert, nicht
-        beobachtet, analog zu :attr:`n_parameters`.
+        ``net_device`` is the CONFIGURED wish (``TorchSequenceConfig.device``, may be
+        ``None``); ``net_actual_device`` is the device ACTUALLY used at fit time
+        -- ``device=None`` resolves in :meth:`fit` to ``"cuda"`` if available,
+        otherwise to ``"cpu"`` (see there); without this field that would no longer be
+        reconstructible with a CUDA-capable Torch build (occasion:
+        ``befund42_tbed_exhaust_sweep.jsonl``, Torch build with CUDA support, no device field in
+        the log). ``None`` before the first :meth:`fit` call (``self._network`` not yet built) --
+        all current call sites call ``describe()`` only afterwards (after the evaluation, which
+        presupposes a trained model); this case is guarded defensively, not
+        observed, analogous to :attr:`n_parameters`.
         """
         return {
             **super().describe(),
@@ -412,11 +412,11 @@ class TorchSequenceModel(SequenceModel):
         validation: SequenceDataset | None = None,
         verbose: bool = False,
     ) -> None:
-        """Trainieren, optional mit Early Stopping auf dem Validierungs-Rollout.
+        """Train, optionally with early stopping on the validation rollout.
 
-        ``verbose`` ist **kein** Teil von ``TorchSequenceConfig`` (also auch nicht im
-        Checkpoint-Schema) -- reiner Laufzeit-Diagnoseschalter für lange Läufe ohne
-        sonstige Fortschrittsausgabe, standardmäßig aus, ändert kein Trainingsverhalten.
+        ``verbose`` is **not** part of ``TorchSequenceConfig`` (and thus not in the
+        checkpoint schema either) -- a pure run-time diagnostic switch for long runs without
+        other progress output, off by default, changes no training behaviour.
         """
         torch_module = self._torch
         config = self._config
@@ -472,11 +472,11 @@ class TorchSequenceModel(SequenceModel):
                 optimizer.step()
                 total += float(loss.detach()) * batch.n_windows
                 count += batch.n_windows
-                # Rein diagnostisch (Befund 25, 04_stand_ap1.md): dieselbe Rechnung wie
-                # oben, nur vor der Mittelung über Zielgrößen aufgeschlüsselt. Auf dem
-                # bereits losgelösten `prediction`-Tensor berechnet, geht nicht in
-                # `loss.backward()` ein und ändert daher weder Gradienten noch Optimizer-
-                # Zustand -- reine Beobachtung, kein Eingriff.
+                # Purely diagnostic (Befund 25, 04_stand_ap1.md): the same calculation as
+                # above, only broken down before averaging over targets. Computed on the
+                # already detached `prediction` tensor, does not enter
+                # `loss.backward()` and therefore changes neither gradients nor optimizer
+                # state -- pure observation, no intervention.
                 with torch_module.no_grad():
                     per_target = self._weighted_mse_per_target(
                         prediction, tensors["targets"], weights
@@ -511,7 +511,7 @@ class TorchSequenceModel(SequenceModel):
             self._network.load_state_dict(best_state)
 
     def predict(self, batch: WindowBatch) -> FloatArray:
-        """Autoregressiver Rollout, Rückgabe standardisiert wie im Interface gefordert."""
+        """Autoregressive rollout, return value standardised as required by the interface."""
         if self._network is None:
             raise RuntimeError("Modell ist nicht angepasst")
         torch_module = self._torch
@@ -522,14 +522,14 @@ class TorchSequenceModel(SequenceModel):
             prediction = self._network(tensors["history"], tensors["future"])
         return np.asarray(prediction.cpu().numpy(), dtype=np.float64)
 
-    # ------------------------------------------------------------------ Persistenz
+    # ----------------------------------------------------------------- Persistence
 
     def state_dict(self) -> dict[str, Any]:
-        """Netzgewichte, losgelöst vom Rechengraphen -- für Checkpoint-Persistenz.
+        """Network weights, detached from the computation graph -- for checkpoint persistence.
 
-        CPU-Kopien, nicht die Live-Tensoren: ein gespeichertes Dict darf sich nicht mehr
-        ändern, wenn danach weitertrainiert würde (hier nicht der Fall, aber die Kopie
-        macht die Methode auch dann noch korrekt, wenn sich das ändert).
+        CPU copies, not the live tensors: a saved dict must no longer change
+        if training continued afterwards (not the case here, but the copy
+        keeps the method correct even if that changes).
         """
         if self._network is None:
             raise RuntimeError("Modell ist nicht angepasst")
@@ -540,13 +540,13 @@ class TorchSequenceModel(SequenceModel):
     def load_checkpoint(
         self, *, state_dict: dict[str, Any], target_names: Sequence[str], n_exogenous: int
     ) -> None:
-        """Netz aus einem gespeicherten Zustand rekonstruieren, ohne zu trainieren.
+        """Reconstruct the network from a saved state, without training.
 
-        Baut dieselbe Architektur wie :meth:`fit` (aus ``self._config``), dann werden
-        die Gewichte geladen -- kein Trainingsschritt, kein Seed nötig, die Gewichte
-        stehen bereits fest. ``target_names``/``n_exogenous`` kommen vom
-        Trainings-Datensatz des ursprünglichen Laufs, nicht aus dem Checkpoint-Schema
-        selbst (siehe :mod:`twinlink_ml.utils.checkpoints`).
+        Builds the same architecture as :meth:`fit` (from ``self._config``), then
+        the weights are loaded -- no training step, no seed needed, the weights
+        are already fixed. ``target_names``/``n_exogenous`` come from the
+        training dataset of the original run, not from the checkpoint schema
+        itself (see :mod:`twinlink_ml.utils.checkpoints`).
         """
         torch_module = self._torch
         self._target_names = tuple(target_names)
@@ -567,25 +567,25 @@ class TorchSequenceModel(SequenceModel):
         self._network.load_state_dict(state_dict)
         self._network.eval()
 
-    # ----------------------------------------------------------------------- intern
+    # --------------------------------------------------------------------- internal
 
     def _param_groups(self, weight_decay: float) -> list[dict[str, Any]]:
-        """Zwei Parametergruppen: ``weight_decay=0`` fuer als sensibel markierte Parameter.
+        """Two parameter groups: ``weight_decay=0`` for parameters marked as sensitive.
 
-        Generisch, kein Kern-Sonderfall hier: ein Parameter zaehlt als sensibel, wenn er
-        ein Attribut ``_no_weight_decay=True`` traegt -- exakt die Markierung, die die
-        Mamba-Referenzimplementierung (``state-spaces/mamba``, ``mamba_simple.py``) fuer
-        ``A_log``/``D`` setzt (siehe :mod:`twinlink_ml.models.mamba`). GRU/LSTM/xLSTM/
-        Transformer markieren nichts, fallen also vollstaendig in die zweite Gruppe --
-        bitgleiches Verhalten zum vorherigen ``AdamW(self._network.parameters(), ...)``
-        fuer jeden Kern ausser Mamba (siehe Tests in ``test_composite.py``, die das nach
-        diesem Umbau erneut bestaetigen).
+        Generic, no core special case here: a parameter counts as sensitive if it
+        carries an attribute ``_no_weight_decay=True`` -- exactly the marking that the
+        Mamba reference implementation (``state-spaces/mamba``, ``mamba_simple.py``) sets for
+        ``A_log``/``D`` (see :mod:`twinlink_ml.models.mamba`). GRU/LSTM/xLSTM/
+        Transformer mark nothing, so they fall entirely into the second group --
+        bit-identical behaviour to the previous ``AdamW(self._network.parameters(), ...)``
+        for every core except Mamba (see tests in ``test_composite.py``, which confirm this
+        again after this rework).
         """
-        assert self._network is not None  # nur intern, direkt nach dem Netzaufbau in fit() gerufen
+        assert self._network is not None  # internal only, called in fit() right after building
         no_decay = [p for p in self._network.parameters() if getattr(p, "_no_weight_decay", False)]
         decay = [p for p in self._network.parameters() if not getattr(p, "_no_weight_decay", False)]
         groups = [{"params": decay, "weight_decay": weight_decay}]
-        if no_decay:  # leere params-Liste liesse AdamW mit ValueError abbrechen
+        if no_decay:  # an empty params list would make AdamW abort with ValueError
             groups.append({"params": no_decay, "weight_decay": 0.0})
         return groups
 
@@ -614,12 +614,12 @@ class TorchSequenceModel(SequenceModel):
         return (squared.mean(dim=-1) * weights[None, :]).mean()
 
     def _weighted_mse_per_target(self, prediction: Any, target: Any, weights: Any) -> Any:
-        """Wie ``_weighted_mse``, nur vor der Mittelung über Zielgrößen aufgeschlüsselt.
+        """Like ``_weighted_mse``, only broken down before averaging over targets.
 
-        Rein diagnostisch (Befund 25, ``04_stand_ap1.md``): Rückgabe hat Form
-        ``(n_targets,)`` und mittelt sich zu ``_weighted_mse`` weg, weil dieselbe
-        Rechnung nur an anderer Stelle summiert. Nirgends im Rückgabepfad des Trainings
-        verwendet, ausschließlich fürs Logging.
+        Purely diagnostic (Befund 25, ``04_stand_ap1.md``): the return value has shape
+        ``(n_targets,)`` and averages out to ``_weighted_mse``, because the same
+        calculation only sums at a different place. Used nowhere in the training's return
+        path, exclusively for logging.
         """
         squared = (prediction - target) ** 2
         return (squared * weights[None, :, None]).mean(dim=(0, 1))
@@ -642,19 +642,19 @@ class TorchSequenceModel(SequenceModel):
 def _build_network(
     torch_module: Any, *, n_exogenous: int, n_targets: int, config: TorchSequenceConfig
 ) -> Any:
-    """Erzeugt das ``nn.Module``.
+    """Creates the ``nn.Module``.
 
-    Als Fabrik und nicht als Klasse auf Modulebene, weil ``nn.Module`` zur Definitionszeit
-    verfügbar sein müsste -- das Paket soll ohne PyTorch importierbar bleiben.
+    As a factory and not as a class at module level, because ``nn.Module`` would have to be
+    available at definition time -- the package is meant to remain importable without PyTorch.
 
-    ``core="transformer"`` zweigt vor dem ``cell_type``-Dict komplett ab
-    (:func:`_build_transformer_network`): das ``Network.forward()`` unten ist fest an das
-    ``(input, hidden)``-Aufrufmuster von ``nn.GRU``/``nn.LSTM``/dem mLSTM-Kern gebunden --
-    ``nn.TransformerEncoder``/``-Decoder`` haben dieses Aufrufmuster nicht, ein einzelner
-    zusätzlicher ``cell_type``-Eintrag wie bei xLSTM würde hier also nicht funktionieren.
-    Der Trainer (``TorchSequenceModel.fit``/``predict``/Persistenz) bleibt trotzdem
-    unverändert, weil er nur den ``forward(history, future_exogenous, teacher,
-    teacher_forcing) -> (batch, horizon, n_targets)``-Vertrag kennt, nicht diese Interna.
+    ``core="transformer"`` branches off entirely before the ``cell_type`` dict
+    (:func:`_build_transformer_network`): the ``Network.forward()`` below is tied to the
+    ``(input, hidden)`` call pattern of ``nn.GRU``/``nn.LSTM``/the mLSTM core --
+    ``nn.TransformerEncoder``/``-Decoder`` do not have this call pattern, so a single
+    additional ``cell_type`` entry as for xLSTM would not work here.
+    The trainer (``TorchSequenceModel.fit``/``predict``/persistence) nevertheless remains
+    unchanged, because it only knows the ``forward(history, future_exogenous, teacher,
+    teacher_forcing) -> (batch, horizon, n_targets)`` contract, not these internals.
     """
     if config.core == "transformer":
         return _build_transformer_network(
@@ -663,11 +663,11 @@ def _build_network(
 
     nn_module = torch_module.nn
 
-    # Lokaler Import, nicht auf Modulebene: dieselbe Begründung wie bei
-    # `_resolve_torch_factory` in `registry.py`, damit dieses Modul ohne Torch
-    # importierbar bleibt. Nur der Dict-Eintrag ist neu -- der Rest von
-    # `_build_network` und der gesamte Trainer bleiben unverändert (siehe Modul-
-    # Docstring, Abschnitt zu xLSTM/Mamba).
+    # Local import, not at module level: the same justification as for
+    # `_resolve_torch_factory` in `registry.py`, so that this module remains importable
+    # without Torch. Only the dict entry is new -- the rest of
+    # `_build_network` and the entire trainer remain unchanged (see module
+    # docstring, section on xLSTM/Mamba).
     from .mamba import build_mamba_core_class
     from .slstm import build_slstm_core_class, build_xlstm_mixed_core_class
     from .xlstm import build_xlstm_core_class
@@ -681,19 +681,19 @@ def _build_network(
         "xlstm_mixed": build_xlstm_mixed_core_class(torch_module, config.num_heads),
     }[config.core]
 
-    # Die Basisklasse ist eine Laufzeit-Attributzugriffskette (`torch_module.nn.Module`)
-    # und keine statisch auflösbare Typreferenz -- genau deshalb ist dieser ganze Block
-    # eine Fabrikfunktion und keine Modulebene-Klasse (siehe Docstring oben). Erst über
-    # eine explizit als `type` annotierte Zwischenvariable wird `class Network(base):`
-    # für mypy überhaupt als Klassenausdruck lesbar; die verbleibende Meldung (Subklasse
-    # von `Any`) ist bei einer zur Laufzeit geladenen Basisklasse unvermeidbar und der
-    # dafür vorgesehene Weg laut mypy-Dokumentation. Zur Laufzeit ist `base` exakt
-    # `torch.nn.Module`, ausgeführt und getestet auf einer Maschine mit PyTorch (siehe
-    # tests/test_experiments.py, HAS_TORCH-Gate).
+    # The base class is a run-time attribute access chain (`torch_module.nn.Module`)
+    # and not a statically resolvable type reference -- exactly for that reason this whole block
+    # is a factory function and not a module-level class (see docstring above). Only via
+    # an intermediate variable explicitly annotated as `type` does `class Network(base):`
+    # become readable as a class expression for mypy at all; the remaining message (subclass
+    # of `Any`) is unavoidable with a base class loaded at run time and is the
+    # intended way according to the mypy documentation. At run time `base` is exactly
+    # `torch.nn.Module`, run and tested on a machine with PyTorch (see
+    # tests/test_experiments.py, HAS_TORCH gate).
     base: type = nn_module.Module
 
     class Network(base):  # type: ignore[misc]
-        """Rekurrenter Kern über Historie und Horizont mit gemeinsamer Zelle."""
+        """Recurrent core over history and horizon with a shared cell."""
 
         def __init__(self) -> None:
             super().__init__()
@@ -705,8 +705,8 @@ def _build_network(
                 batch_first=True,
             )
             self.head = nn_module.Linear(config.hidden_size, n_targets)
-            # Nullinitialisierung des Kopfes: das untrainierte Netz ist damit exakt
-            # die Persistenz-Baseline, nicht eine zufällige Abbildung.
+            # Zero initialisation of the head: the untrained network is thus exactly
+            # the persistence baseline, not a random mapping.
             nn_module.init.zeros_(self.head.weight)
             nn_module.init.zeros_(self.head.bias)
 
@@ -717,11 +717,11 @@ def _build_network(
             teacher: Any | None = None,
             teacher_forcing: float = 0.0,
         ) -> Any:
-            """Historie kodieren, dann Schritt für Schritt fortschreiben.
+            """Encode the history, then continue step by step.
 
-            ``hidden`` ist beim GRU ein Tensor und beim LSTM ein Paar ``(h, c)``. Es wird
-            deshalb nirgends ausgepackt, sondern nur weitergegeben -- damit ist der Kern
-            wirklich austauschbar und nicht nur nominell.
+            ``hidden`` is a tensor for the GRU and a pair ``(h, c)`` for the LSTM. It is
+            therefore unpacked nowhere, only passed on -- this makes the core
+            really exchangeable and not just nominally.
             """
             _, hidden = self.core(history)
             last = history[:, -1, n_exogenous:]
@@ -743,13 +743,13 @@ def _build_network(
 
 
 def _sinusoidal_position_encoding(torch_module: Any, positions: Any, d_model: int) -> Any:
-    """Feste (nicht gelernte) Positionskodierung nach Vaswani et al. (2017).
+    """Fixed (not learned) positional encoding after Vaswani et al. (2017).
 
-    Keine Lernparameter -- passt sich ohne Neukalibrierung an eine spätere Änderung von
-    ``history_length``/``horizon`` an (Schritt-0-Diskussion, Punkt c: Grund 3 aus dem
-    ``composite.py``-Moduldocstring -- keine neuen Hyperparameter bei kleinen
-    Lernkurven-Stützstellen). ``positions`` ein 1D-Tensor beliebiger Länge; ``d_model``
-    muss gerade sein (validiert in ``TorchSequenceConfig.__post_init__``).
+    No learnable parameters -- adapts without recalibration to a later change of
+    ``history_length``/``horizon`` (step 0 discussion, point c: reason 3 from the
+    ``composite.py`` module docstring -- no new hyperparameters at small
+    learning-curve support points). ``positions`` is a 1D tensor of arbitrary length; ``d_model``
+    must be even (validated in ``TorchSequenceConfig.__post_init__``).
     """
     device = positions.device
     half = d_model // 2
@@ -767,28 +767,28 @@ def _sinusoidal_position_encoding(torch_module: Any, positions: Any, d_model: in
 def _build_transformer_network(
     torch_module: Any, *, n_exogenous: int, n_targets: int, config: TorchSequenceConfig
 ) -> Any:
-    r"""Encoder-Decoder-Transformer als Kern, mit demselben Rückgabevertrag wie die RNN-Kerne.
+    r"""Encoder-decoder Transformer as core, with the same return contract as the RNN cores.
 
-    **Sequenzielle Erzeugung, keine explizite kausale Maske** (Klartext-Diskussion vor der
-    Implementierung): bei ``teacher_forcing=0.0`` -- der Voreinstellung, siehe Moduldocstring
-    -- ist die Decoder-Eingabe an Schritt :math:`t>0` ausschließlich die eigene Vorhersage
-    aus Schritt :math:`t-1`, nie der wahre Zielwert; das gilt strukturell und nicht nur durch
-    eine Laufzeitprüfung, weil ``TorchSequenceModel.fit`` bei ``config.teacher_forcing == 0.0``
-    bereits ``teacher=None`` übergibt (kein Tensor mit Zukunftswerten liegt dann überhaupt
-    vor). Der Decoder attendiert bei Schritt ``t`` nur über die bislang tatsächlich erzeugte
-    Sequenz (Länge ``t + 1``) -- es gibt zu diesem Zeitpunkt keine "zukünftigen"
-    Decoder-Token, über die attendiert werden könnte, also ist die Kausalität durch die
-    wachsende Sequenz selbst gegeben, nicht durch eine Dreiecksmaske. ``H = 36`` sequenzielle
-    Teilaufrufe sind bei diesem ``d_model`` trivial billig (bestätigt in Schritt 1 durch die
-    reale Zeitmessung, nicht durch eine Kostenformel).
+    **Sequential generation, no explicit causal mask** (plain-language discussion before the
+    implementation): with ``teacher_forcing=0.0`` -- the default, see module docstring
+    -- the decoder input at step :math:`t>0` is exclusively the model's own prediction
+    from step :math:`t-1`, never the true target value; this holds structurally and not just via
+    a run-time check, because ``TorchSequenceModel.fit`` already passes ``teacher=None`` when
+    ``config.teacher_forcing == 0.0`` (no tensor with future values exists at all
+    then). At step ``t`` the decoder attends only over the sequence actually generated so far
+    (length ``t + 1``) -- at this point there are no "future"
+    decoder tokens that could be attended over, so causality is given by the
+    growing sequence itself, not by a triangular mask. ``H = 36`` sequential
+    sub-calls are trivially cheap at this ``d_model`` (confirmed in step 1 by the
+    real timing, not by a cost formula).
 
-    Der Encoder sieht die volle Historie **ungemaskiert** (zum Vorhersagezeitpunkt bereits
-    vollständig bekannt, siehe Schritt-0-Antwort zu Punkt b) -- nur der Decoder-Anteil ist
-    autoregressiv.
+    The encoder sees the full history **unmasked** (already completely known at the
+    prediction time, see the step 0 answer on point b) -- only the decoder part is
+    autoregressive.
 
-    Positionskodierung: sinusoidal, mit Segment-Offset (Historie: Positionen
-    ``0 .. history_length - 1``; Horizont: Positionen ``history_length ..
-    history_length + horizon - 1``), wie in Schritt 0 vorgeschlagen und bestätigt.
+    Positional encoding: sinusoidal, with segment offset (history: positions
+    ``0 .. history_length - 1``; horizon: positions ``history_length ..
+    history_length + horizon - 1``), as proposed and confirmed in step 0.
     """
     nn_module = torch_module.nn
     d_model = config.hidden_size
@@ -798,7 +798,7 @@ def _build_transformer_network(
     base: type = nn_module.Module
 
     class Network(base):  # type: ignore[misc]
-        """Encoder über die Historie, sequenzieller Decoder über den Horizont."""
+        """Encoder over the history, sequential decoder over the horizon."""
 
         def __init__(self) -> None:
             super().__init__()
@@ -820,9 +820,9 @@ def _build_transformer_network(
             )
             self.decoder = nn_module.TransformerDecoder(decoder_layer, num_layers=config.num_layers)
             self.head = nn_module.Linear(d_model, n_targets)
-            # Nullinitialisierung des Kopfes: dieselbe Residual-Äquivalenz wie bei
-            # GRU/LSTM/xLSTM -- das untrainierte Netz ist exakt die Persistenz-Baseline,
-            # unabhängig von der (zufälligen) Encoder-/Decoder-Initialisierung.
+            # Zero initialisation of the head: the same residual equivalence as for
+            # GRU/LSTM/xLSTM -- the untrained network is exactly the persistence baseline,
+            # independently of the (random) encoder/decoder initialisation.
             nn_module.init.zeros_(self.head.weight)
             nn_module.init.zeros_(self.head.bias)
 
@@ -833,7 +833,7 @@ def _build_transformer_network(
             teacher: Any | None = None,
             teacher_forcing: float = 0.0,
         ) -> Any:
-            """Historie ungemaskiert kodieren, dann Schritt für Schritt autoregressiv decodieren."""
+            """Encode the history unmasked, then decode autoregressively step by step."""
             device = history.device
             history_length = history.shape[1]
             horizon = future_exogenous.shape[1]
@@ -856,9 +856,9 @@ def _build_transformer_network(
                     torch_module, step_position, d_model
                 ).unsqueeze(0)
                 decoder_embeds.append(step_embed)
-                # Nur die bislang erzeugte Sequenz (Länge step + 1) -- siehe Docstring:
-                # keine "zukünftigen" Token existieren an dieser Stelle, also keine
-                # explizite kausale Maske nötig.
+                # Only the sequence generated so far (length step + 1) -- see docstring:
+                # no "future" tokens exist at this point, so no
+                # explicit causal mask is needed.
                 decoder_sequence = torch_module.cat(decoder_embeds, dim=1)
                 decoded = self.decoder(decoder_sequence, memory)
                 last = last + self.head(decoded[:, -1, :])
@@ -875,37 +875,37 @@ GruConfig = TorchSequenceConfig
 """Alter Name aus Schritt 3. Bleibt als Alias, damit vorhandene Skripte laufen."""
 
 
-def GruSequenceModel(  # noqa: N802 - Fabrikname folgt dem Modell-Label
+def GruSequenceModel(  # noqa: N802 - factory name follows the model label
     config: TorchSequenceConfig | None = None,
 ) -> TorchSequenceModel:
-    """GRU-Variante -- Fabrik für die Modellregistrierung."""
+    """GRU variant -- factory for the model registry."""
     return TorchSequenceModel(config if config is not None else TorchSequenceConfig(core="gru"))
 
 
-def LstmSequenceModel(  # noqa: N802 - Fabrikname folgt dem Modell-Label
+def LstmSequenceModel(  # noqa: N802 - factory name follows the model label
     config: TorchSequenceConfig | None = None,
 ) -> TorchSequenceModel:
-    """LSTM-Variante.
+    """LSTM variant.
 
-    Der Vergleich GRU gegen LSTM ist bei wenigen Trainingsläufen der interessantere Teil
-    des Paares: das LSTM hat mit dem Zellzustand einen zweiten, additiv fortgeschriebenen
-    Speicher und damit rund ein Drittel mehr Parameter bei gleicher Breite. Bei acht
-    Läufen ist Kapazität keine Ressource, sondern ein Risiko.
+    With few training runs, the comparison GRU against LSTM is the more interesting part
+    of the pair: with the cell state the LSTM has a second, additively updated
+    memory and thus around a third more parameters at the same width. With eight
+    runs, capacity is not a resource but a risk.
     """
     return TorchSequenceModel(config if config is not None else TorchSequenceConfig(core="lstm"))
 
 
-def XLSTMSequenceModel(  # noqa: N802 - Fabrikname folgt dem Modell-Label
+def XLSTMSequenceModel(  # noqa: N802 - factory name follows the model label
     config: TorchSequenceConfig | None = None,
 ) -> TorchSequenceModel:
-    """mLSTM-Variante (kein sLSTM) -- Fabrik für die Modellregistrierung.
+    """The mLSTM variant (no sLSTM) -- factory for the model registry.
 
-    Siehe :mod:`twinlink_ml.models.xlstm` für Gleichungen und dokumentierte
-    Vereinfachungen. Anders als bei GRU/LSTM ist die Kapazität bei gleicher
-    ``hidden_size`` hier **nicht** automatisch größer -- die mLSTM-Zelle hat keine
-    Zustand-zu-Zustand-Gewichtsmatrix (das ist gerade der Grund, warum sie
-    parallelisierbar ist), und bei der kleinen Eingangsdimension dieses Projekts
-    dominiert bei GRU/LSTM genau diese Matrix den Parameterhaushalt. Siehe
-    ``docs/04_stand_ap1.md`` für die gemessenen Zahlen.
+    See :mod:`twinlink_ml.models.xlstm` for equations and documented
+    simplifications. Unlike GRU/LSTM, the capacity at the same
+    ``hidden_size`` is **not** automatically larger here -- the mLSTM cell has no
+    state-to-state weight matrix (that is precisely the reason why it is
+    parallelisable), and at the small input dimension of this project
+    exactly this matrix dominates the parameter budget of GRU/LSTM. See
+    ``docs/04_stand_ap1.md`` for the measured numbers.
     """
     return TorchSequenceModel(config if config is not None else TorchSequenceConfig(core="xlstm"))

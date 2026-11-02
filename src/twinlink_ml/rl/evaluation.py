@@ -1,60 +1,60 @@
-r"""VA3/XA1: Bewertungsmetrik -- Anteil des geschlossenen Regrets.
+r"""VA3/XA1: evaluation metric -- fraction of the closed regret.
 
-.. math:: \text{geschlossen} = \frac{E_{fest} - E_{Agent}}{E_{fest} - E_{Orakel}}
+.. math:: \text{closed} = \frac{E_{fest} - E_{Agent}}{E_{fest} - E_{Orakel}}
 
-0 heisst: nicht besser als der feste Betriebspunkt. 1 heisst: das Optimum erreicht.
-Negativ heisst: schlechter als ein fester Betriebspunkt.
+0 means: no better than the fixed operating point. 1 means: the optimum reached.
+Negative means: worse than a fixed operating point.
 
-Testpunkte: die 25 Befund-52-Gitterpunkte aus ``artifacts/runs/bb1_bb3_operating_point_
-regret.json`` (:data:`~twinlink_ml.rl.env.ANCHOR_ARTIFACT_PATH`), DISJUNKT von den
-kontinuierlichen Trainingsziehungen gehalten -- siehe :func:`assert_disjoint_from_test_grid`
-fuer die Laufzeitpruefung und deren Docstring fuer die "Mass-Null"-Begruendung.
+Test points: the 25 Befund 52 grid points from ``artifacts/runs/bb1_bb3_operating_point_
+regret.json`` (:data:`~twinlink_ml.rl.env.ANCHOR_ARTIFACT_PATH`), kept DISJOINT from the
+continuous training draws -- see :func:`assert_disjoint_from_test_grid`
+for the run-time check and its docstring for the "measure zero" justification.
 
-XA1 -- Korrektur der urspruenglichen VA3-Metrik
---------------------------------------------------
-Die urspruengliche Fassung (``closed_fraction_median``/``p95``/``min``, weiterhin
-verfuegbar, siehe unten) mischte zwei Fehlerarten in einer Zahl: der PER-PUNKT-Quotient
-``(E_fest - E_Agent) / (E_fest - E_Orakel)`` wird auch fuer UNZULAESSIGE Aktionen gebildet
-und geht mit denselben in den Median wie zulaessige ein -- an Punkten mit ``E_fest`` nahe
-``E_Orakel`` (kleiner Nenner) kann ein einzelner Punkt den Median/das Minimum dominieren,
-ohne dass das an der Zahl selbst sichtbar waere (siehe WA3: Minimum -78786 bei einem
-einzigen Ausreisser).
+XA1 -- correction of the original VA3 metric
+--------------------------------------------
+The original version (``closed_fraction_median``/``p95``/``min``, still
+available, see below) mixed two kinds of error in one number: the PER-POINT quotient
+``(E_fest - E_Agent) / (E_fest - E_Orakel)`` is also formed for INFEASIBLE actions
+and enters the median with the same weight as feasible ones -- at points with ``E_fest`` close to
+``E_Orakel`` (small denominator) a single point can dominate the median/the minimum
+without this being visible in the number itself (see WA3: minimum -78786 from a
+single outlier).
 
-Drei Zahlen NEBENEINANDER, NIE EINZELN berichtet (:func:`evaluate_policy` liefert sie
-gemeinsam in :class:`ClosedRegretResult`, siehe dessen Docstring fuer die Begruendung,
-warum (b) ohne (a) irrefuehrend ist):
+Three numbers reported SIDE BY SIDE, NEVER SINGLY (:func:`evaluate_policy` returns them
+together in :class:`ClosedRegretResult`, see its docstring for the justification
+why (b) without (a) is misleading):
 
-a) ``feasibility_rate`` -- Zulaessigkeitsrate.
-b) ``pooled_closed_regret_fraction`` -- GEPOOLT, NUR ueber zulaessige Aktionen, auf der
-   ROHEN Energie ohne Strafterm:
+a) ``feasibility_rate`` -- feasibility rate.
+b) ``pooled_closed_regret_fraction`` -- POOLED, ONLY over feasible actions, on the
+   RAW energy without penalty term:
 
    .. math:: \frac{\sum_i (E_{fest,i} - E_{Agent,i})}{\sum_i (E_{fest,i} - E_{Orakel,i})}
-       \quad \text{Summe nur ueber zulaessige } i
+       \quad \text{sum only over feasible } i
 
-   Eine SUMME im Zaehler und Nenner ist gegen einzelne kleine Nenner robust (ein Ausreisser
-   kann die Summe nicht dominieren, wie er es bei einem Einzelquotienten koennte) --
-   deshalb gepoolt, nicht gemittelte Einzelquotienten.
-c) ``infeasible_violations`` -- je unzulaessiger (oder loeserfehlgeschlagener) Aktion,
-   welche Nebenbedingung um wie viel verletzt ist (siehe :class:`InfeasibleViolation`).
+   A SUM in numerator and denominator is robust against individual small denominators (an outlier
+   cannot dominate the sum, as it could with a single quotient) --
+   hence pooled, not averaged single quotients.
+c) ``infeasible_violations`` -- per infeasible (or solver-failed) action,
+   which constraint is violated by how much (see :class:`InfeasibleViolation`).
 
-WARUM (b) NIE OHNE (a): (b) zaehlt nur zulaessige Punkte -- eine Politik, die nur an den
-zwei leichtesten Punkten ueberhaupt zulaessig ist und dort zufaellig nah am Orakel liegt,
-zeigt ein perfektes (b), obwohl sie an 23 von 25 Punkten unbrauchbar ist. (a) macht diesen
-Fall sichtbar; ohne (a) ist (b) daher fuer sich genommen kein Ergebnis, sondern nur ein
-Teilausschnitt.
+WHY (b) NEVER WITHOUT (a): (b) counts only feasible points -- a policy that is feasible at all
+only at the two easiest points and happens to lie close to the oracle there
+shows a perfect (b), although it is useless at 23 of 25 points. (a) makes this
+case visible; without (a), (b) on its own is therefore not a result, but only a
+partial view.
 
-XA3 -- Trennung nach Lage des Orakel-Optimums
--------------------------------------------------
-Ein Teil der Befund-52-Optima liegt an einer Aktionsschranke (im warmen Regime: die
-Gasgeschwindigkeit an ihrer UNTEREN Schranke, 23 von 25 Punkten, siehe
-``test_bandit_env_evaluation.py``). Eine tanh-gequetschte Politik (SAC/TD3-Standard)
-erreicht eine Schranke nur asymptotisch -- ein geschlossener Anteil von 1.0 ist an diesen
-Punkten fuer diese Politikklasse STRUKTURELL nicht erreichbar, unabhaengig von der
-Trainingsqualitaet. (b) wird deshalb zusaetzlich getrennt fuer Punkte mit Orakel-Optimum im
-Inneren der Aktionsbox und Punkte mit Orakel-Optimum an einer Schranke berichtet
-(``pooled_closed_regret_fraction_interior``/``_boundary``), damit ein niedriger Gesamtwert
-nicht vorschnell als Politikversagen gelesen wird, wenn er tatsaechlich aus den
-Randpunkten kommt.
+XA3 -- separation by location of the oracle optimum
+---------------------------------------------------
+Some of the Befund 52 optima lie at an action bound (in the warm regime: the
+gas velocity at its LOWER bound, 23 of 25 points, see
+``test_bandit_env_evaluation.py``). A tanh-squashed policy (SAC/TD3 standard)
+reaches a bound only asymptotically -- a closed fraction of 1.0 is STRUCTURALLY unreachable
+at these points for this policy class, independently of the
+training quality. (b) is therefore additionally reported separately for points with the oracle
+optimum in the interior of the action box and points with the oracle optimum at a bound
+(``pooled_closed_regret_fraction_interior``/``_boundary``), so that a low overall value
+is not hastily read as policy failure when it actually comes from the
+boundary points.
 """
 
 from __future__ import annotations
@@ -84,7 +84,7 @@ Innenpunkte liegen > 7 % der Spanne vom Rand entfernt, siehe
 
 @dataclass(frozen=True, slots=True)
 class TestPoint:
-    """Ein Befund-52-Gitterpunkt mit den Referenzenergien und der Orakel-Aktion fuer VA3."""
+    """A Befund 52 grid point with the reference energies and the oracle action for VA3."""
 
     ambient_temperature_celsius: float
     ambient_relative_humidity: float
@@ -127,11 +127,11 @@ def load_test_points(artifact_path: Path = ANCHOR_ARTIFACT_PATH) -> tuple[TestPo
 
 
 def is_boundary_optimum(point: TestPoint, env: OperatingPointBanditEnv) -> bool:
-    """Ob die Orakel-Aktion dieses Testpunkts an einer Aktionsschranke liegt (XA3).
+    """Whether the oracle action of this test point lies at an action bound (XA3).
 
-    Geprueft werden BEIDE Aktionsdimensionen (nicht nur Gasgeschwindigkeit, obwohl das in
-    den aktuellen Platzhalterwerten die einzige betroffene ist) -- generisch, falls
-    kuenftige Config-Werte auch ``inlet_temperature_celsius`` an den Rand treiben.
+    BOTH action dimensions are checked (not only gas velocity, although in
+    the current placeholder values that is the only one affected) -- generic, in case
+    future config values also drive ``inlet_temperature_celsius`` to the edge.
     """
     gas_tol = _BOUNDARY_RELATIVE_TOLERANCE * env._gas_bound.span
     inlet_tol = _BOUNDARY_RELATIVE_TOLERANCE * env._inlet_bound.span
@@ -152,22 +152,22 @@ def assert_disjoint_from_test_grid(
     *,
     atol: float = 1.0e-9,
 ) -> None:
-    r"""Prueft, dass gezogene Trainingspunkte keinen der 25 Testpunkte exakt treffen.
+    r"""Checks that drawn training points do not exactly hit any of the 25 test points.
 
-    Bei stetiger Gleichverteilung (``OperatingPointBanditEnv.reset()`` ohne ``options``)
-    hat ein exaktes Treffen eines der endlich vielen, diskreten Testpunkte
-    Wahrscheinlichkeit null (Mass-Null-Ereignis auf einer kontinuierlichen Box) -- das ist
-    eine analytische Tatsache, keine, die ein einzelner Lauf beweisen koennte. Diese
-    Funktion macht daraus trotzdem eine LAUFZEITPRUEFUNG statt einer reinen Behauptung: sie
-    prueft die tatsaechlich gezogenen Trainingspunkte eines konkreten Laufs gegen den
-    Testsatz und schlaegt fehl, wenn einer davon (numerisch, innerhalb ``atol``)
-    zusammenfaellt -- z. B. bei einem Seed-Handling-Fehler, der versehentlich den
-    Testsatz statt einer Ziehung liefert.
+    Under a continuous uniform distribution (``OperatingPointBanditEnv.reset()`` without
+    ``options``) exactly hitting one of the finitely many, discrete test points has
+    probability zero (a measure-zero event on a continuous box) -- that is
+    an analytical fact, not one a single run could prove. This
+    function nevertheless turns it into a RUN-TIME CHECK instead of a mere claim: it
+    checks the actually drawn training points of a concrete run against the
+    test set and fails if one of them (numerically, within ``atol``)
+    coincides -- e.g. in the case of a seed-handling error that accidentally returns the
+    test set instead of a draw.
 
-    :param training_disturbances: Form ``(n, 2)``, Spalten ``[ambient_temperature_celsius,
-        ambient_relative_humidity]`` -- die tatsaechlich waehrend eines Trainingslaufs
-        gezogenen Stoergroessenpunkte.
-    :raises ValueError: wenn ein Trainingspunkt einem Testpunkt numerisch entspricht.
+    :param training_disturbances: shape ``(n, 2)``, columns ``[ambient_temperature_celsius,
+        ambient_relative_humidity]`` -- the disturbance points actually drawn during a
+        training run.
+    :raises ValueError: if a training point numerically equals a test point.
     """
     points = test_points if test_points is not None else load_test_points()
     test_array = np.array(
@@ -186,11 +186,11 @@ def assert_disjoint_from_test_grid(
 
 @dataclass(frozen=True, slots=True)
 class InfeasibleViolation:
-    """XA1(c): welche Nebenbedingung an einem unzulaessigen Testpunkt um wie viel verletzt ist.
+    """XA1(c): which constraint is violated by how much at an infeasible test point.
 
-    Alle ``*_violation``-Felder sind ``0.0``, wenn diese Nebenbedingung nicht bindet --
-    ``solve_failed=True`` bedeutet, dass gar keine Loesung existiert (Felder dann alle
-    ``0.0``, die Ursache steht in ``solve_failure_reason``).
+    All ``*_violation`` fields are ``0.0`` if this constraint does not bind --
+    ``solve_failed=True`` means that no solution exists at all (fields then all
+    ``0.0``, the cause is in ``solve_failure_reason``).
     """
 
     ambient_temperature_celsius: float
@@ -211,12 +211,12 @@ class InfeasibleViolation:
 def _group_metrics(
     entries: list[tuple[bool, float | None, float, float]],
 ) -> tuple[float, float]:
-    """Zulaessigkeitsrate und gepoolter geschlossener Anteil (XA1 a/b) fuer eine Gruppe.
+    """Feasibility rate and pooled closed fraction (XA1 a/b) for a group.
 
-    ``entries``: je Punkt ``(feasible, energy_agent_kw_oder_None, energy_fixed_kw,
-    energy_oracle_kw)``. Nicht geloeste Punkte (``energy_agent is None``) zaehlen als
-    unzulaessig und tragen nichts zur Summe bei -- exakt wie ein regulaer unzulaessiger
-    Punkt.
+    ``entries``: per point ``(feasible, energy_agent_kw_oder_None, energy_fixed_kw,
+    energy_oracle_kw)``. Unsolved points (``energy_agent is None``) count as
+    infeasible and contribute nothing to the sum -- exactly like a regularly infeasible
+    point.
     """
     if not entries:
         return float("nan"), float("nan")
@@ -234,14 +234,14 @@ def _group_metrics(
 
 @dataclass(frozen=True, slots=True)
 class ClosedRegretResult:
-    """Ergebnis von :func:`evaluate_policy` -- IMMER als Ganzes lesen, siehe Moduldocstring.
+    """Result of :func:`evaluate_policy` -- ALWAYS read as a whole, see module docstring.
 
-    ``pooled_closed_regret_fraction`` (XA1 b) ist ohne ``feasibility_rate`` (XA1 a)
-    irrefuehrend -- beide gehoeren zusammen berichtet. ``closed_fraction_median``/``p95``/
-    ``min`` sind die URSPRUENGLICHE VA3-Metrik, NENNEREMPFINDLICH (siehe Moduldocstring,
-    Abschnitt "XA1"): ein einzelner Testpunkt mit kleinem ``E_fest - E_Orakel`` kann sie
-    dominieren, ohne dass das an der Zahl selbst sichtbar waere. Weiterhin berichtet, aber
-    NICHT die primaere Kennzahl.
+    ``pooled_closed_regret_fraction`` (XA1 b) is misleading without ``feasibility_rate``
+    (XA1 a) -- both belong reported together. ``closed_fraction_median``/``p95``/
+    ``min`` are the ORIGINAL VA3 metric, DENOMINATOR-SENSITIVE (see module docstring,
+    section "XA1"): a single test point with a small ``E_fest - E_Orakel`` can
+    dominate them without this being visible in the number itself. Still reported, but
+    NOT the primary metric.
     """
 
     n_points: int
@@ -267,11 +267,11 @@ def evaluate_policy(
     policy: PolicyFn,
     test_points: tuple[TestPoint, ...] | None = None,
 ) -> ClosedRegretResult:
-    """VA3/XA1-Metrik fuer eine Policy, ausgewertet an den 25 Befund-52-Testpunkten.
+    """VA3/XA1 metric for a policy, evaluated at the 25 Befund 52 test points.
 
-    ``policy`` bekommt die Beobachtung direkt (kein ``env.reset()``/``env.step()``-
-    Rundlauf, um den Normierungs-Rundtrip nicht zweimal zu durchlaufen, siehe
-    ``env.py``s ``evaluate_operating_point``-Docstring fuer dieselbe Begruendung).
+    ``policy`` receives the observation directly (no ``env.reset()``/``env.step()``
+    round trip, so as not to go through the normalisation round trip twice, see the
+    ``evaluate_operating_point`` docstring in ``env.py`` for the same justification).
     """
     points = test_points if test_points is not None else load_test_points()
     closed_fractions: list[float] = []
@@ -455,11 +455,11 @@ def moisture_margin_at_oracle_binding_points(
 
 
 def flat_metrics(result: ClosedRegretResult) -> dict[str, float]:
-    """Skalare Sicht auf :class:`ClosedRegretResult`, fuer flache Ablagen (``RunRecord.metrics``).
+    """Scalar view of :class:`ClosedRegretResult`, for flat storage (``RunRecord.metrics``).
 
-    Gemeinsam verwendet von ``scripts/run_rl_bandit_learning_curve.py`` (WA3/XA3) und
-    ``scripts/probe_bandit_env_random_baseline.py`` (YA1) -- eine Stelle statt zweimal
-    dieselbe Aggregation.
+    Shared by ``scripts/run_rl_bandit_learning_curve.py`` (WA3/XA3) and
+    ``scripts/probe_bandit_env_random_baseline.py`` (YA1) -- one place instead of the same
+    aggregation twice.
     """
     moisture_violation = result.mean_moisture_violation_of_infeasible_kg_per_kg
     n_bed_temp = sum(1 for v in result.infeasible_violations if v.bed_temperature_violation_k > 0)
@@ -473,7 +473,7 @@ def flat_metrics(result: ClosedRegretResult) -> dict[str, float]:
     return {
         "n_points": float(result.n_points),
         "n_solve_failed": float(result.n_solve_failed),
-        # (a) und (b), IMMER zusammen -- siehe Moduldocstring, Abschnitt XA1.
+        # (a) and (b), ALWAYS together -- see module docstring, section XA1.
         "feasibility_rate": result.feasibility_rate,
         "pooled_closed_regret_fraction": result.pooled_closed_regret_fraction,
         "n_interior_points": float(result.n_interior_points),
@@ -482,8 +482,8 @@ def flat_metrics(result: ClosedRegretResult) -> dict[str, float]:
         "n_boundary_points": float(result.n_boundary_points),
         "feasibility_rate_boundary": result.feasibility_rate_boundary,
         "pooled_closed_regret_fraction_boundary": result.pooled_closed_regret_fraction_boundary,
-        # Urspruengliche VA3-Metrik, nennerempfindlich (siehe Moduldocstring) -- weiterhin
-        # berichtet, nicht mehr primaer.
+        # Original VA3 metric, denominator-sensitive (see module docstring) -- still
+        # reported, no longer primary.
         "closed_regret_fraction_median": result.closed_fraction_median,
         "closed_regret_fraction_p95": result.closed_fraction_p95,
         "closed_regret_fraction_min": result.closed_fraction_min,

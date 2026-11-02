@@ -1,15 +1,15 @@
-"""Modelle hinter dem gemeinsamen :class:`SequenceModel`-Interface.
+"""Models behind the common :class:`SequenceModel` interface.
 
-``GruSequenceModel`` wird bewusst **nicht** hier importiert: das Paket muss ohne PyTorch
-importierbar bleiben (Schritte 1-4 brauchen es nicht). Import bei Bedarf::
+``GruSequenceModel`` is deliberately **not** imported here: the package must remain
+importable without PyTorch (steps 1-4 do not need it). Import when needed::
 
     from twinlink_ml.models.torch_sequence import TorchSequenceConfig, TorchSequenceModel
 
-``ExtraTreesModel`` ist hier trotzdem direkt importiert (anders als die Torch-Modelle):
-sklearn wird erst in ``fit()`` importiert, die Klasse selbst ist torch-artig lazy und
-verlangt beim reinen Import kein sklearn. Sie ist **nicht** in
-``models/registry.py``/``MODEL_SLOTS`` registriert -- kein Kandidat des
-Architekturvergleichs, siehe ``extra_trees.py``-Moduldocstring.
+``ExtraTreesModel`` is nevertheless imported directly here (unlike the Torch models):
+sklearn is only imported in ``fit()``, the class itself is lazy in the torch manner and
+does not require sklearn on a mere import. It is **not** registered in
+``models/registry.py``/``MODEL_SLOTS`` -- not a candidate of the architecture
+comparison, see the ``extra_trees.py`` module docstring.
 """
 
 from .base import SequenceModel

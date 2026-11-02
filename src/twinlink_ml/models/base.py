@@ -1,16 +1,16 @@
-"""Abstraktion :class:`SequenceModel` -- gemeinsames Interface aller Vorhersagemodelle.
+"""Abstraction :class:`SequenceModel` -- common interface of all prediction models.
 
-Der Vertrag ist bewusst schmal und **rollout-zentriert**: ein Modell bekommt einen
-:class:`~twinlink_ml.data.windows.WindowBatch` und liefert die Zielgrößen über den
-gesamten Horizont. Es gibt keine separate Ein-Schritt-Methode, weil der
-Ein-Schritt-Fehler nur der Horizontschnitt :math:`h = 1` ist. Ein Interface mit zwei
-Methoden würde erlauben, dass Ein-Schritt- und Rollout-Pfad auseinanderlaufen -- der
-klassische Weg zu einem Modell, das die Nebenmetrik gewinnt und im Rollout divergiert.
+The contract is deliberately narrow and **rollout-centred**: a model receives a
+:class:`~twinlink_ml.data.windows.WindowBatch` and returns the targets over the
+entire horizon. There is no separate one-step method, because the
+one-step error is just the horizon slice :math:`h = 1`. An interface with two
+methods would allow the one-step and rollout paths to drift apart -- the
+classic route to a model that wins the secondary metric and diverges in the rollout.
 
-Reihenfolge in AP 1: dieses Interface wird zuerst von den drei rechenfreien Baselines
-implementiert (Persistenz, statische Regression, linearer ARX) und erst danach vom GRU.
-Umgekehrt formt sich das Interface um das neuronale Netz, und die Baselines passen nur
-mit Sonderfällen hinein.
+Order in AP 1: this interface is implemented first by the three computation-free baselines
+(persistence, static regression, linear ARX) and only afterwards by the GRU.
+The other way round, the interface shapes itself around the neural network, and the
+baselines only fit in with special cases.
 """
 
 from __future__ import annotations
@@ -25,12 +25,12 @@ __all__ = ["SequenceModel"]
 
 
 class SequenceModel(ABC):
-    """Vorhersagemodell für Zielgrößentrajektorien."""
+    """Prediction model for target trajectories."""
 
     @property
     @abstractmethod
     def name(self) -> str:
-        """Kurzname für Logs und Lernkurvenlegenden."""
+        """Short name for logs and learning-curve legends."""
 
     @abstractmethod
     def fit(
@@ -40,43 +40,43 @@ class SequenceModel(ABC):
         seed: int,
         validation: SequenceDataset | None = None,
     ) -> None:
-        """Anpassen an den Trainings-Datensatz.
+        """Fit to the training dataset.
 
         Parameters
         ----------
         train
-            Trainings-Datensatz. Alle Statistiken, die das Modell braucht, kommen aus
-            diesem Objekt -- nie aus dem vollen Lauf-Pool.
+            Training dataset. All statistics the model needs come from
+            this object -- never from the full run pool.
         seed
-            Modell-Seed aus dem ``SeedBundle``, getrennt von Daten- und Rausch-Seed.
+            Model seed from the ``SeedBundle``, separate from the data and noise seeds.
         validation
-            Optional für Early Stopping. Bei den analytischen Baselines ungenutzt; sie
-            haben keinen Trainingsverlauf, der gestoppt werden könnte.
+            Optional, for early stopping. Unused by the analytical baselines; they
+            have no training history that could be stopped.
         """
 
     @abstractmethod
     def predict(self, batch: WindowBatch) -> FloatArray:
-        """Zielgrößen über den Horizont, Form ``(batch, H, n_targets)``, standardisiert.
+        """Targets over the horizon, shape ``(batch, H, n_targets)``, standardised.
 
-        Standardisiert, nicht in Ingenieurseinheiten: die Rückrechnung gehört in den
-        Evaluator, der den Skalierer des Trainings-Datensatzes kennt. Sonst müsste jedes
-        Modell die Rückrechnung selbst korrekt implementieren.
+        Standardised, not in engineering units: the back-transformation belongs in the
+        evaluator, which knows the scaler of the training dataset. Otherwise every
+        model would have to implement the back-transformation correctly itself.
         """
 
     @property
     def n_parameters(self) -> int:
-        """Anzahl freier Parameter. Für die Einordnung der Lernkurven relevant."""
+        """Number of free parameters. Relevant for placing the learning curves."""
         return 0
 
     def describe(self) -> dict[str, Any]:
-        """Konfiguration für das Experiment-Tracking."""
+        """Configuration for experiment tracking."""
         return {"model": self.name, "n_parameters": self.n_parameters}
 
     def training_diagnostics(self) -> dict[str, Any]:
-        """Trainingsverlauf-Kennzahlen für das Tracking, leer ohne Trainingsschleife.
+        """Training-history metrics for tracking, empty without a training loop.
 
-        Modelle ohne iterative Optimierung (Persistenz, ARX, NARX, ...) haben keinen
-        Trainingsverlauf, der gestoppt werden könnte -- das leere Dict ist für sie
-        korrekt, nicht nur ein Platzhalter.
+        Models without iterative optimisation (persistence, ARX, NARX, ...) have no
+        training history that could be stopped -- the empty dict is correct for
+        them, not just a placeholder.
         """
         return {}

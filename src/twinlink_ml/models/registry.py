@@ -1,43 +1,42 @@
-r"""Modellregistrierung: die Architektur-Slots von Schritt 6.
+r"""Model registry: the architecture slots of step 6.
 
-Wozu eine Registrierung und nicht ein Dict im Skript
-----------------------------------------------------
-Der Arbeitsplan verlangt Open-Closed: eine neue Architektur hinzufügen darf keine Änderung
-an Trainings- oder Evaluationscode erfordern. Ein Dict im Treiberskript erfüllt das nicht,
-sobald es drei Treiber gibt -- dann steht in jedem eine eigene Auswahl, und zwei Studien
-vergleichen unterschiedliche Modellmengen unter demselben Namen.
+Why a registry and not a dict in the script
+-------------------------------------------
+The work plan demands open-closed: adding a new architecture must not require any change
+to training or evaluation code. A dict in the driver script does not fulfil this
+as soon as there are three drivers -- then each contains its own selection, and two studies
+compare different model sets under the same name.
 
-Hier steht jede Architektur **einmal**, mit ihrem Label, ihrer Fabrik und der Angabe, was
-sie braucht. Treiber fragen nach Labels; welche verfügbar sind, entscheidet die Umgebung.
+Here each architecture appears **once**, with its label, its factory and the statement of what
+it needs. Drivers ask for labels; which ones are available is decided by the environment.
 
-Warum ein Slot trotzdem eingetragen bleibt, auch als "nicht implementiert"
----------------------------------------------------------------------------
-Alle vier Architektur-Kandidaten (``gru``, ``lstm``, ``xlstm``, ``transformer``,
-``mamba``) sind inzwischen implementiert -- der Mechanismus für einen deklarierten, aber
-noch nicht geschriebenen Slot (``implemented=False``, ``ModelSlot.missing``/
-``is_available``) bleibt trotzdem Teil dieser Datei: eine künftige weitere Architektur
-reiht sich hier genauso ein. Der Alternativentwurf -- einen unfertigen Slot einfach
-weglassen -- verliert die Information, dass er zum Vergleich gehört; der andere
-Alternativentwurf -- ihn blind implementieren -- erzeugt Code, der fertig aussieht und
-es nicht ist. Ein Slot, der sagt "ich fehle noch und hier ist der Grund", ist beides
-nicht.
+Why a slot still stays registered, even as "not implemented"
+------------------------------------------------------------
+All four architecture candidates (``gru``, ``lstm``, ``xlstm``, ``transformer``,
+``mamba``) are implemented by now -- the mechanism for a declared but
+not yet written slot (``implemented=False``, ``ModelSlot.missing``/
+``is_available``) nevertheless remains part of this file: a future further architecture
+joins here in just the same way. The alternative design -- simply leaving out an
+unfinished slot -- loses the information that it belongs to the comparison; the other
+alternative design -- implementing it blindly -- produces code that looks finished and
+is not. A slot that says "I am still missing and here is the reason" is neither.
 
-``xlstm`` war bis Schritt 6, Teil 2 in dieser Lage und ist jetzt implementiert -- aber
-**nur** der mLSTM-Anteil (Beck et al. 2024), ausdrücklich kein sLSTM (siehe ``note``
-unten und :mod:`twinlink_ml.models.xlstm`). Wer über dieses Label einen vollständigen
-xLSTM mit sLSTM-Zweigen erwartet, bekommt ihn nicht -- die ``note`` sagt das an
-derselben Stelle, an der zuvor "nicht implementiert" stand.
+``xlstm`` was in this position until step 6, part 2 and is now implemented -- but
+**only** the mLSTM part (Beck et al. 2024), explicitly no sLSTM (see ``note``
+below and :mod:`twinlink_ml.models.xlstm`). Whoever expects a complete
+xLSTM with sLSTM branches via this label does not get it -- the ``note`` says so in
+the same place where "nicht implementiert" previously stood.
 
-``transformer`` war ebenfalls bis Schritt 6, Teil 2 nur deklariert und ist jetzt
-implementiert -- vollständig, keine Teilarchitektur wie bei xLSTM (siehe ``note`` unten
-und :func:`twinlink_ml.models.torch_sequence._build_transformer_network`).
+``transformer`` was likewise only declared until step 6, part 2 and is now
+implemented -- completely, not a partial architecture as with xLSTM (see ``note`` below
+and :func:`twinlink_ml.models.torch_sequence._build_transformer_network`).
 
-``mamba`` war zuletzt in dieser Lage (deklariert, ``implemented=False``) und ist jetzt
-implementiert -- als reine PyTorch-Rekurrenz, nicht über ``mamba-ssm`` (dessen
-Installation auf dieser Umgebung an fehlendem ``nvcc``/CUDA-Toolkit scheitert, geprüft
-in der Sitzung zu diesem Befund). Siehe ``note`` unten und
-:mod:`twinlink_ml.models.mamba` für die Gleichungen und dokumentierten
-Vereinfachungen.
+``mamba`` was last in this position (declared, ``implemented=False``) and is now
+implemented -- as a pure PyTorch recurrence, not via ``mamba-ssm`` (whose
+installation fails on this environment due to a missing ``nvcc``/CUDA toolkit, checked
+in the session on this finding). See ``note`` below and
+:mod:`twinlink_ml.models.mamba` for the equations and documented
+simplifications.
 """
 
 from __future__ import annotations
@@ -67,7 +66,7 @@ __all__ = [
 
 
 class ModelKind(str, Enum):
-    """Rolle eines Modells im Vergleich."""
+    """Role of a model in the comparison."""
 
     PARAMETER_FREE = "parameter_free"
     """Ohne angepasste Beziehung. Referenz für das Auflösungsvermögen."""
@@ -81,35 +80,35 @@ class ModelKind(str, Enum):
 
 @dataclass(frozen=True, slots=True)
 class ModelSlot:
-    """Ein Modell im Vergleich, samt Voraussetzungen.
+    """One model in the comparison, together with its prerequisites.
 
     Attributes
     ----------
     label
-        Kurzname, unter dem das Modell in Logs und Kurven erscheint. **Stabil halten** --
-        er ist Teil des Auswertungsvertrags (``model/label`` im Run-Log).
+        Short name under which the model appears in logs and curves. **Keep stable** --
+        it is part of the evaluation contract (``model/label`` in the run log).
     factory
-        Nullstellige Fabrik. Nullstellig, damit je Seed und Stützstelle eine frische
-        Instanz entsteht und kein Zustand über Lernkurvenpunkte hinweg lebt. ``None``
-        heißt: erst bei Bedarf über ``_resolve_torch_factory`` auflösen (siehe dort) --
-        so bleibt das Paket ohne Torch importierbar. Ob ein Slot mit ``factory=None``
-        tatsächlich aufrufbar ist, entscheidet **``implemented``**, nicht ``factory``
-        selbst: sonst wäre ein torchfrei-lazy registrierter Slot ununterscheidbar von
-        einem, der schlicht noch nicht geschrieben ist.
+        Zero-argument factory. Zero-argument, so that a fresh instance is created per seed and
+        support point and no state lives across learning-curve points. ``None``
+        means: resolve only when needed via ``_resolve_torch_factory`` (see there) --
+        this keeps the package importable without Torch. Whether a slot with ``factory=None``
+        is actually callable is decided by **``implemented``**, not by ``factory``
+        itself: otherwise a slot registered torch-free and lazily would be indistinguishable
+        from one that simply has not been written yet.
     kind
-        Rolle im Vergleich.
+        Role in the comparison.
     requires
-        Importnamen, die vorhanden sein müssen.
+        Import names that must be present.
     needs_full_observation
-        Ob das Modell eine Inline-Messung aller Zielgrößen braucht.
+        Whether the model needs an inline measurement of all targets.
     implemented
-        Ob der Slot überhaupt aufgerufen werden darf. ``False`` für deklarierte, aber noch
-        nicht geschriebene Architekturen -- unabhängig davon, ob ihre Abhängigkeiten
-        zufällig erfüllt sind. Aktuell kein Slot in dieser Lage (xLSTM, Transformer und
-        Mamba waren es, sind inzwischen implementiert); der Mechanismus bleibt für eine
-        künftige Architektur bestehen.
+        Whether the slot may be called at all. ``False`` for declared but not yet
+        written architectures -- regardless of whether their dependencies
+        happen to be satisfied. Currently no slot is in this position (xLSTM, Transformer and
+        Mamba were, and are implemented by now); the mechanism remains for a
+        future architecture.
     note
-        Begründung oder Status, erscheint im Bericht.
+        Justification or status, appears in the report.
     """
 
     label: str
@@ -122,12 +121,12 @@ class ModelSlot:
 
     @property
     def is_available(self) -> bool:
-        """Ob der Slot implementiert ist und alle Abhängigkeiten vorhanden sind."""
+        """Whether the slot is implemented and all dependencies are present."""
         return self.implemented and all(find_spec(name) is not None for name in self.requires)
 
     @property
     def missing(self) -> tuple[str, ...]:
-        """Fehlende Voraussetzungen."""
+        """Missing prerequisites."""
         return tuple(name for name in self.requires if find_spec(name) is None)
 
 
@@ -221,15 +220,15 @@ MODEL_SLOTS: tuple[ModelSlot, ...] = (
 
 
 def _resolve_torch_factory(label: str) -> object:
-    """Torch-Fabriken erst beim Zugriff importieren, damit das Paket torchfrei bleibt.
+    """Import the Torch factories only on access, so that the package stays torch-free.
 
-    ``gru``/``lstm`` lösen seit Befund 26 (``docs/04_stand_ap1.md``) auf
-    :class:`~twinlink_ml.models.composite.CompositeSequenceModel` auf, nicht mehr auf ein
-    einzelnes ``TorchSequenceModel`` mit gemeinsamem Verlust über alle Zielgrößen -- der
-    geteilte Zustand verschlechtert nachweisbar ``energy_target`` im Soft-Sensor-Betrieb.
-    Das alte Einzelnetz (``torch_sequence.GruSequenceModel``/``LstmSequenceModel``) bleibt
-    unverändert und direkt importierbar, nur ohne Registrierungs-Label -- unter anderem für
-    den Kostenvergleich in Befund 26.
+    Since Befund 26 (``docs/04_stand_ap1.md``), ``gru``/``lstm`` resolve to
+    :class:`~twinlink_ml.models.composite.CompositeSequenceModel`, no longer to a
+    single ``TorchSequenceModel`` with a shared loss over all targets -- the
+    shared state demonstrably degrades ``energy_target`` in soft sensor operation.
+    The old single network (``torch_sequence.GruSequenceModel``/``LstmSequenceModel``) remains
+    unchanged and directly importable, only without a registry label -- among other things for
+    the cost comparison in Befund 26.
     """
     from .composite import (
         CompositeGruSequenceModel,
@@ -255,7 +254,7 @@ def _slot_factory(slot: ModelSlot) -> object:
 
 
 def available_labels(*, fully_observed: bool = True) -> tuple[str, ...]:
-    """Labels, die in der aktuellen Umgebung und Betriebsart lauffähig sind."""
+    """Labels that can run in the current environment and operating mode."""
     return tuple(
         slot.label
         for slot in MODEL_SLOTS
@@ -264,7 +263,7 @@ def available_labels(*, fully_observed: bool = True) -> tuple[str, ...]:
 
 
 def baseline_labels(*, fully_observed: bool = True) -> tuple[str, ...]:
-    """Nur die Pflicht-Baselines -- alles außer den Architektur-Kandidaten."""
+    """Only the mandatory baselines -- everything except the architecture candidates."""
     return tuple(
         slot.label
         for slot in MODEL_SLOTS
@@ -277,11 +276,11 @@ def baseline_labels(*, fully_observed: bool = True) -> tuple[str, ...]:
 def build_factories(
     labels: tuple[str, ...] | None = None, *, fully_observed: bool = True
 ) -> Mapping[str, object]:
-    """Fabriken zu Labels, in der Reihenfolge der Registrierung.
+    """Factories for labels, in the order of registration.
 
-    Ein unbekanntes oder in dieser Betriebsart unzulässiges Label ist ein Fehler und keine
-    stille Auslassung: ein Vergleich, dem ein Kandidat fehlt, weil sein Name falsch
-    geschrieben war, sieht wie ein vollständiger Vergleich aus.
+    A label that is unknown or not permitted in this operating mode is an error and not a
+    silent omission: a comparison that lacks a candidate because its name was
+    misspelt looks like a complete comparison.
     """
     by_label = {slot.label: slot for slot in MODEL_SLOTS}
     wanted = labels if labels is not None else available_labels(fully_observed=fully_observed)
@@ -308,7 +307,7 @@ def build_factories(
 
 
 def describe_slots() -> str:
-    """Übersicht für den Bericht: was läuft, was fehlt, warum."""
+    """Overview for the report: what runs, what is missing, why."""
     lines = [f"{'Label':<14}{'Rolle':<16}{'Status':<28}Anmerkung"]
     for slot in MODEL_SLOTS:
         if not slot.implemented:
