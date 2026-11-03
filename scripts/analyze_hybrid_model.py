@@ -23,9 +23,10 @@ Set-up (fixed before the run; settings ``conf/hybrid_model/hybrid_model.yaml``)
 * **Task**: the one-step operating-point problem of Befund 113 (actions inlet temperature, gas
   velocity; context ambient temperature and humidity; limits moisture 0.15 kg/kg, bed 80 degC);
   steady state of a network = fixed point of its h36 map with the criterion of Befund 113; RTO by
-  grid (21 x 21) + two zoom levels (9 x 9) on the penalised objective of the oracle, the same for
-  every model and the oracle (decision of the project lead, 2026-11-03). Oracle = the truth with
-  margin 0.
+  grid (21 x 21) + zoom (9 x 9, three levels, recentred, from the 4 best coarse points; set after
+  the pilot's discretisation check, before the main run) on the penalised objective of the oracle,
+  the same for every model and the oracle (decision of the project lead, 2026-11-03). Oracle = the
+  truth with margin 0.
 * **Cases** (the same for every model, seed and ``n_train``; rotation committed in the config):
   per draw 5 interior contexts of the 25 Befund-52 grid points (100 cases) and 2 extrapolation
   contexts (a) outside the disturbance box of the data design (40 cases).

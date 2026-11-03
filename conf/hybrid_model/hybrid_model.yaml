@@ -32,7 +32,9 @@ refit:                         # M2, as M4 of Befund 107 (least squares on all o
 rto:                           # grid + zoom (decision of the project lead, 2026-11-03)
   coarse: 21
   zoom: 9
-  zoom_levels: 2
+  zoom_levels: 3               # 3 levels, recentring and 4 starts: set after the pilot's
+  max_moves: 50                # discretisation check (2 levels without recentring: up to 2.0 %
+  starts: 4                    # energy above the 8-start Nelder-Mead), before the main run
 
 margin:
   holding_share: 0.95          # the margin holds in >= 95 % of the cases INSIDE the training range

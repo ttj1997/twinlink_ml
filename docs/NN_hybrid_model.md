@@ -52,12 +52,21 @@ Steady state of a network: fixed point of its h36 map, criterion of Befund 113 u
 
 **Optimiser (decision of the project lead, 2026-11-03)**: grid + zoom instead of the 8-start
 Nelder-Mead of Befund 113 (that one costs about 1300 evaluations per solve, ~700 CPU-h with the
-margin search). Coarse grid 21 x 21 over the action box (shared by every margin), then two zoom
-levels of 9 x 9 around the best point (final spacing 0.19 K, 0.0053 m/s), on the penalised
+margin search). Coarse grid 21 x 21 over the action box (shared by every margin), then from each
+of the 4 best coarse points three zoom levels of 9 x 9, on every level recentred on its best point
+until it stays (final spacing 0.047 K, 0.0013 m/s; the best end point wins), on the penalised
 objective of the oracle (`E + 50 kW x normalised violation`, invalid point 1e6 kW); the same for
 every model and for the oracle (the truth, margin 0). The truth's steady state is computed by a
 batched version of the steady solver (`hybrid_model/steady_batch.py`), bit-identical to the bandit
 evaluation at the tested points.
+
+**Change after the pilot, before the main run.** The first version (one start, two zoom levels,
+no recentring) stayed up to 2.0 % energy above the 8-start Nelder-Mead in the pilot's
+discretisation check (`_hybrid_pilot_oracle.jsonl`, gitignored): the optimum lies on the moisture
+limit and moves along it to the edge of the box, where a fixed zoom window cannot follow, and in one
+case a second local optimum along the limit is cheaper. With recentring, 4 starts and 3 levels a
+scratch re-check of the same 10 cases gave at most 0.32 % (one case at the corner u = 0.8), the
+others at most 0.11 %; 8 starts changed nothing. The check of the main run is the one reported.
 
 **Discretisation check (addendum 1 of the request)**: at 10 interior cases the oracle once more by
 the 8-start Nelder-Mead of Befund 113 on the same objective; energy and slack difference reported;
