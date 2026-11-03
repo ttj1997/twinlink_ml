@@ -7,7 +7,8 @@ per hour; ``cp`` is 0 while the consumer stands still or has no demand.
   highest preheat the network water can give), ``cp`` = air flow x cp while the plant runs;
 * hall heating: return -> supply of the heating circuit, demand = peak x heating degree (heating
   limit to design temperature) x day/night factor (Befund 99/100 profile);
-* process water: return (fresh water) -> supply, constant.
+* process water: return (fresh water) -> supply, constant, or zero in the months ``months_off``
+  (post-hoc extension v2; calendar of 365 days).
 
 Campaigns: alternating renewal process of on (campaign) and off (standstill) periods, see
 :func:`campaign_schedule`.
@@ -33,6 +34,8 @@ __all__ = [
 
 FloatArray = NDArray[np.float64]
 BoolArray = NDArray[np.bool_]
+
+_MONTH_DAYS = np.array([31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31])
 
 _MID_MONTH_DAY = np.array(
     [15.5, 45.0, 74.5, 105.0, 135.5, 166.0, 196.5, 227.5, 258.0, 288.5, 319.0, 349.5]
@@ -178,12 +181,14 @@ def build_consumers(config: CampaignNetworkConfig, on: dict[str, BoolArray]) -> 
         )
     )
     w = config.water
+    month = np.searchsorted(np.cumsum(_MONTH_DAYS), (np.arange(n) // 24) % 365, side="right") + 1
+    water_on = ~np.isin(month, w.months_off)
     streams.append(
         ColdStream(
             name="water",
             t_in=w.return_celsius * ones,
             t_out=w.supply_celsius * ones,
-            cp=w.power_kw / (w.supply_celsius - w.return_celsius) * ones,
+            cp=w.power_kw / (w.supply_celsius - w.return_celsius) * water_on.astype(np.float64),
             gas_efficiency=w.gas_efficiency,
             stage_celsius=w.supply_celsius,
             group="water",

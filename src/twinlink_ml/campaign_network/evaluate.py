@@ -64,6 +64,7 @@ def evaluate_draw(
     power_levels: tuple[float, ...] | None = None,
     storage_levels: tuple[float, ...] | None = None,
     with_k3: bool = True,
+    with_k2b: bool = False,
 ) -> dict[str, Any]:
     """All configurations for every source power and storage size on one schedule draw."""
     powers = config.source.power_kw_levels if power_levels is None else power_levels
@@ -89,10 +90,15 @@ def evaluate_draw(
             "K2": {},
             "K3": {},
         }
+        if with_k2b:
+            row["K2b"] = {}
         for s in sizes:
             if s > 0.0:
                 r2 = run_k2(consumers, p, s, config)
                 row["K2"][f"{s:g}"] = key_figures(r2, consumers, p, config)
+                if with_k2b:
+                    r2b = run_k2(consumers, p, s, config, rule="k2b")
+                    row["K2b"][f"{s:g}"] = key_figures(r2b, consumers, p, config)
             if with_k3:
                 r3 = run_k3(consumers, p, s, config)
                 row["K3"][f"{s:g}"] = key_figures(r3, consumers, p, config)

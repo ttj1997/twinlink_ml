@@ -192,3 +192,94 @@ def test_key_figures_pump_and_co2(cfg) -> None:
     assert k["gas_kwh"] == pytest.approx(90.0 / 0.9)
     assert k["pump_electricity_kwh"] == pytest.approx(0.015 * 90.0)
     assert k["co2_net_kg"] == pytest.approx(0.201 * 100.0 - 0.366 * 0.015 * 90.0)
+
+
+# --- post-hoc extension v2: storage rule K2b, process water as a factor ------------------------
+
+
+@pytest.mark.parametrize(("a", "mode"), [(0.57, "independent"), (0.4, "joint"), (0.8, "joint")])
+def test_k3_ge_k2b_ge_k1_every_draw(cfg, a, mode) -> None:
+    short = _with(cfg, campaigns__hours=24 * 42)
+    for water in (0.0, 200.0):
+        raw = copy.deepcopy(short.raw)
+        raw["low_temperature"]["water"]["power_kw"] = water
+        c_cfg = from_raw(raw, "test")
+        for draw in range(2):
+            c = build_consumers(c_cfg, plant_schedules(c_cfg, a, mode, draw))
+            for p in (400.0, 800.0, 1200.0):
+                k1 = key_figures(run_k1(c, p, c_cfg), c, p, c_cfg)
+                for s in (2.0, 8.0, 24.0):
+                    k2b = key_figures(run_k2(c, p, s, c_cfg, rule="k2b"), c, p, c_cfg)
+                    k3 = key_figures(run_k3(c, p, s, c_cfg), c, p, c_cfg)
+                    for key in ("use_kwh", "co2_net_kg"):
+                        assert k2b[key] >= k1[key] - TOL_KWH
+                        assert k3[key] >= k2b[key] - TOL_KWH
+
+
+def test_k2b_without_storage_equals_k1(cfg) -> None:
+    c = build_consumers(cfg, plant_schedules(cfg, 0.57, "independent", 0))
+    r1 = run_k1(c, 800.0, cfg)
+    r2 = run_k2(c, 800.0, 0.0, cfg, rule="k2b")
+    for name in r1.duty_kw:
+        np.testing.assert_allclose(r2.duty_kw[name], r1.duty_kw[name], atol=1e-9)
+    with pytest.raises(ValueError):
+        run_k2(c, 800.0, 2.0, cfg, rule="other")
+
+
+@pytest.mark.parametrize("loss", [0.0, 0.1])
+def test_k2b_storage_by_hand(cfg, loss) -> None:
+    cfg = _with(cfg, storage__loss_per_h=loss)
+    p = 300.0
+    c = _toy(2, [0.0, 40.0])
+    r = run_k2(c, p, 24.0, cfg, rule="k2b")
+    assert key_figures(r, c, p, cfg)["use_kwh"] == pytest.approx(p + (1.0 - loss) * p, abs=1e-6)
+    # the discharge is limited by the deficit: demand 40 kW/K x 45 K = 1800 kW, so here by content
+    assert r.discharge_kw[1] == pytest.approx((1.0 - loss) * p, abs=1e-9)
+
+
+def test_k2b_discharge_capped_by_deficit(cfg) -> None:
+    # hour 1: demand 2 kW/K x 45 K = 90 kW, the source alone covers it -> no deficit, no discharge
+    p = 300.0
+    c = _toy(2, [0.0, 2.0])
+    r = run_k2(c, p, 24.0, cfg, rule="k2b")
+    assert r.discharge_kw[1] == 0.0
+    # the old rule K2 does not discharge either here (more water raises no duty)
+    assert run_k2(c, p, 24.0, cfg).discharge_kw[1] == 0.0
+
+
+def test_seasonal_process_water(cfg) -> None:
+    raw = copy.deepcopy(cfg.raw)
+    raw["low_temperature"]["water"].update({"power_kw": 200.0, "months_off": [5, 6, 7, 8, 9]})
+    seasonal = from_raw(raw, "test")
+    c = build_consumers(seasonal, plant_schedules(seasonal, 1.0, "independent", 0))
+    demand = c.by_name("water").demand_kw
+    day = np.arange(demand.size) // 24
+    off = (day >= 120) & (day < 273)  # 1 May (day 120) to 30 September (day 272)
+    assert np.all(demand[off] == 0.0)
+    np.testing.assert_allclose(demand[~off], 200.0)
+    assert seasonal.fingerprint != cfg.fingerprint
+
+
+def test_main_configuration_is_unchanged_for_v1(cfg) -> None:
+    import gzip
+    import json
+    from pathlib import Path
+
+    path = Path(__file__).resolve().parents[1] / "artifacts/runs/campaign_network_v1.json.gz"
+    with gzip.open(path, "rt", encoding="utf-8") as handle:
+        v1 = json.load(handle)
+    assert v1["fingerprints"]["main"] == cfg.fingerprint
+    assert cfg.water.months_off == ()
+    # the v1 cells a = 1 and a = 0.57 (independent, draw 0) at 400 kW are reproduced exactly
+    for key, a, mode in (
+        ("draw:main:1:independent:0", 1.0, "independent"),
+        ("draw:main:0.57:independent:0", 0.57, "independent"),
+    ):
+        old = v1["draws"][key]["powers"]["400"]
+        c = build_consumers(cfg, plant_schedules(cfg, a, mode, 0))
+        assert key_figures(run_k0(c, 400.0, cfg), c, 400.0, cfg)["use_kwh"] == old["K0"]["use_kwh"]
+        assert key_figures(run_k1(c, 400.0, cfg), c, 400.0, cfg)["use_kwh"] == old["K1"]["use_kwh"]
+        k2 = key_figures(run_k2(c, 400.0, 8.0, cfg), c, 400.0, cfg)
+        assert k2["co2_net_kg"] == old["K2"]["8"]["co2_net_kg"]
+        k3 = key_figures(run_k3(c, 400.0, 0.0, cfg), c, 400.0, cfg)
+        assert k3["use_kwh"] == pytest.approx(old["K3"]["0"]["use_kwh"], rel=1e-12)

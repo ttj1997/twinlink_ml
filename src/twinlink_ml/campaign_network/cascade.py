@@ -36,6 +36,21 @@ without foresight, hour by hour:
 
 Storage balance ``E[t+1] = (1 - loss) E[t] + c[t] - d[t]``, empty at the start. Because the cascade
 duties do not decrease with the water flow, K2 >= K1 in every stage and hour.
+
+**K2b** (post-hoc extension v2, rule fixed before its run; ``run_k2(..., rule="k2b")``) -- the same
+tank and the same charging as K2, another discharge:
+
+1. discharge only while an active stage (a consumer with demand in this hour) has a deficit at the
+   source flow (demand minus duty), and then exactly ``min(total deficit of the active stages,
+   content after losses, power limit)``; the discharged supply water enters the cascade at the top
+   and its return passes the stages like the supply water;
+2. otherwise charge as K2: the largest part of the source water whose removal lowers no stage
+   duty. In a tank that stores supply water this is exactly "only heat that would otherwise go to
+   the cooling tower after the cascade": the duties are unchanged, so the charged heat is taken
+   from the surplus. (A tank for warm return water is not modelled; it would not be comparable
+   with K3, whose tank stores supply water.)
+
+K2b >= K1 for the same reason as K2 (discharge only adds water, charging lowers no duty).
 """
 
 from __future__ import annotations
@@ -210,8 +225,11 @@ def run_k2(
     power_kw: float,
     storage_hours: float,
     config: CampaignNetworkConfig,
+    rule: str = "k2",
 ) -> CascadeResult:
-    """K2: cascade rule plus the storage rule of the module docstring."""
+    """K2 (``rule="k2"``) or K2b (``rule="k2b"``): cascade rule plus a storage rule (docstring)."""
+    if rule not in ("k2", "k2b"):
+        raise ValueError(f"unknown storage rule {rule!r}")
     stages = cascade_stages(consumers)
     n = stages[0].cp.size
     span = config.source.span_k
@@ -244,7 +262,17 @@ def run_k2(
         x = 0.0
         c = 0.0
         big_x = min(avail, dis_max)
-        if big_x > tol:
+        if rule == "k2b":
+            deficit = 0.0
+            for (ti, to, cp_c), q in zip(params, d0, strict=True):
+                if cp_c > 0.0 and to > ti:
+                    deficit += max(cp_c * (to - ti) - q, 0.0)
+            x = min(big_x, deficit)
+            if x > tol:
+                d0 = _cascade_scalar(params, cp0 + x / span, t_s, dt_min, floor)
+            else:
+                x = 0.0
+        elif big_x > tol:
             d_x = _cascade_scalar(params, cp0 + big_x / span, t_s, dt_min, floor)
             if sum(d_x) > sum(d0) + tol:
                 lo, hi = 0.0, big_x

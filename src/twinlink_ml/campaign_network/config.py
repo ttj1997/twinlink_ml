@@ -77,12 +77,16 @@ class HallSettings:
 
 @dataclass(frozen=True, slots=True)
 class WaterSettings:
-    """Process water (constant)."""
+    """Process water: constant, or zero in the months ``months_off`` (1 = January).
+
+    ``months_off`` is optional in the YAML (absent = constant, the setting of the run v1).
+    """
 
     power_kw: float
     supply_celsius: float
     return_celsius: float
     gas_efficiency: float
+    months_off: tuple[int, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -215,7 +219,13 @@ def from_raw(raw: dict[str, Any], variant: str = "main") -> CampaignNetworkConfi
             for p in air["plants"]
         ),
         hall=HallSettings(**{k: float(v) for k, v in low["hall"].items()}),
-        water=WaterSettings(**{k: float(v) for k, v in low["water"].items()}),
+        water=WaterSettings(
+            power_kw=float(low["water"]["power_kw"]),
+            supply_celsius=float(low["water"]["supply_celsius"]),
+            return_celsius=float(low["water"]["return_celsius"]),
+            gas_efficiency=float(low["water"]["gas_efficiency"]),
+            months_off=tuple(int(m) for m in low["water"].get("months_off", ())),
+        ),
         climate=ClimateSettings(
             monthly_mean_celsius=tuple(float(v) for v in cl["monthly_mean_celsius"]),
             daily_amplitude_k=float(cl["daily_amplitude_k"]),
