@@ -736,7 +736,13 @@ def main() -> int:
 
     require_code_location(ROOT)
     output = RUNS_DIR / f"{args.prefix}_{args.part}.jsonl"
-    require_clean_tree(ignore_paths=[output])
+    # The input artifacts (training records, the oracle of the same prefix) may still be
+    # uncommitted (size); they are left out of the clean-tree check and pinned by sha256 instead.
+    inputs = [RUNS_DIR / f"{args.training}.jsonl"]
+    if args.part != "oracle":
+        inputs.append(RUNS_DIR / f"{args.prefix}_oracle.jsonl")
+    inputs = [path for path in inputs if path.exists()]
+    require_clean_tree(ignore_paths=[output, *inputs])
     if output.exists() and not args.resume:
         raise SystemExit(f"{output} exists -- use --resume or a new prefix")
     done = done_keys(output)
@@ -764,9 +770,12 @@ def main() -> int:
         output,
         {
             "kind": "header",
-            "provenance": provenance("not used", ignore_paths=[output]),
+            "provenance": provenance("not used", ignore_paths=[output, *inputs]),
             "part": args.part,
             "training": args.training,
+            "inputs_sha256": {
+                path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs
+            },
             "config": cfg.raw,
             "n_jobs": len(jobs),
             "selection": {"models": args.only_models, "n": sizes, "seeds": seeds, "draws": draws},
