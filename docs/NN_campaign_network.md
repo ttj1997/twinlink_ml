@@ -190,3 +190,60 @@ heater and the dryer are outside the system boundary.
 **Questions for the partner.** Real schedules (campaign lengths, standstills, common shutdowns)
 of the plants that could join the network; process-water and hall demand over the year;
 compressor-water temperatures; which consumers could be connected at all.
+
+## 10. Post-hoc extension (2026-11-03)
+
+**Declared post hoc**, after the run v1 and its reading, on request of the project lead. v1 and its
+pre-registered reading (sections 4-9) stay unchanged and are the main statement. Driver
+`scripts/run_campaign_network_v2.py`, reading in the docstring of
+`scripts/analyze_campaign_network_v2.py` (both committed before the run, `9a76c12`; full suite
+1427 passed, 30 skipped, 1 xfailed), artifact `campaign_network_v2` (`git/dirty=False`, committed
+as `a9b2666`), reading `campaign_network_v2_analysis`. Main variant only (approach 10 K, supply
+80 degC), the same five schedule draws per cell (paired).
+
+**Factor process water:** 0 / 100 / 200 kW constant, and seasonal (200 kW October-April, 0 kW
+May-September). The level 200 kW is the v1 main configuration unchanged: same fingerprint, and
+it reproduces every K0 / K1 / K2 / K3 key figure of v1 exactly (6696 values, largest difference
+0.0). Process water 0 kW has no identically defined cell in v1.
+
+**Storage rule K2b** (docstring of `campaign_network/cascade.py`, fixed before the run): discharge
+only while an active stage has a deficit at the source flow, exactly min(deficit, content after
+losses, power limit), the discharged supply water passing the cascade from the top; charging as
+K2. In a tank that stores supply water (the tank of K2 and K3) the K2 charging already takes only
+heat that would otherwise reach the cooling tower (no stage duty lowered); a tank for warm return
+water was not modelled, because it would not be comparable with K3. K2 was computed unchanged
+alongside. Checks: 0 order violations (K3 >= K2b >= K1 and K3 >= K2 >= K1 >= K0 in every draw and
+level), every LP optimal.
+
+**V_N per process-water level** (median [min, max] over the draws, %, a = 0.57):
+
+| level | 400 kW independent | 400 kW joint | 800 kW independent | 800 kW joint | 1200 kW independent |
+| --- | --- | --- | --- | --- | --- |
+| 0 kW | 31.57 [27.74, 36.66] | 4.87 [4.13, 5.03] | 39.47 | 26.79 | 29.36 |
+| 100 kW | 37.55 | 16.24 | 46.45 | 32.51 | 36.63 |
+| 200 kW (= v1) | 42.08 | 27.60 | 52.75 | 38.19 | 43.78 |
+| seasonal | 37.45 | 18.46 | 46.09 | 34.03 | 37.49 |
+
+**Reading per level:** N1 in every (P, mode) at 100 kW, 200 kW and seasonal; at 0 kW N1 everywhere
+except **400 kW with joint standstills: between** (V_N 4.87 % at a = 0.57, 2.83 % at 0.8, 6.71 % at
+0.4; in the draws 4.13-5.03 %, so one draw reaches the N1 threshold). Overall N1 at every level.
+So the caveat of v1 holds only in part: without process water the network still pays clearly
+with independent standstills (plants B and C take what A cannot) and from 600 kW on; with a
+common shutdown at today's 400 kW only the hall heating is left and the benefit is measurable but
+small. At a = 1 nothing changes at 400 kW (1.60 % at every level).
+
+**Storage rule: RB1** (not "a simple rule suffices"): the median gap of K2b to K3 is above 1 % in
+174 of the 384 storage cells; the largest is 6.30 % (100 kW, independent, 800 kW, a = 0.8, 24 h);
+median over the cells 0.72 %. K2b is better than the old rule (water 200 kW: largest gap 5.74
+against 7.30 %, cell median 0.91 against 1.52 %; at 800 kW, a = 0.57, independent, 24 h: 5.72
+against 7.30 %), but not everywhere (worse than K2 in 22 cells at 0 kW, by at most 0.45 points;
+in 6 seasonal cells and 1 cell at 100 kW by less than 0.07 points). Decomposition (declared before
+the run), water 200 kW: cascade part (K1 against K3 without storage) up to 3.13 %; storage part of
+K2b up to 3.98 % (above 1 % in 26 of 96 cells), growing with the tank (largest 1.02 / 2.21 / 3.98 %
+at 2 / 8 / 24 h). **The v1 gap was therefore only partly due to the storage rule:** a part is the
+order of the cascade without storage (up to 3.13 %), and a storage part remains with the second rule
+without foresight (largest 2.93 / 5.03 / 3.98 / 3.02 % at 0 / 100 / 200 kW / seasonal). Whether a forecast of the standstills or another
+simple rule closes it is open.
+
+**Saturation (sweep, a = 1):** K1 saturates from 1200 / 1300 / 1400 / 1300 kW at 0 / 100 / 200 kW
+/ seasonal; the consumers can take 8887 / 9756 / 10 626 / 9891 MWh/a.
