@@ -47,6 +47,12 @@ Metrics, per (model, master seed, ``n_train``), at the truth
   chosen points; k is reported next to it.
 * **Energy relative to the oracle**: true energy at the chosen point at the model's parameter
   divided by the oracle energy of the case; median over the inside cases (main), also pooled sums.
+* **No valid point** (added after the pilot, before the main run): a model without a single valid
+  grid point in a case (no steady state / no valid fixed point anywhere -- in the pilot one member
+  of M4 at ``n_train`` 32 had an unstable moisture fixed point everywhere, which under the rule of
+  Befund 113 makes the ensemble invalid) gives no solution there: the case counts as NOT holding
+  and its energy is left out of the energy figures; the number of such cases is reported per model
+  and ``n_train``.
 * **Outside**: violation share (true moisture > 0.15 + 1e-4) at exactly the model's parameter on
   the outside cases (b) and on the extrapolation cases (a), separately; no margin search outside.
 * **Bias of the moisture**: predicted minus true moisture at the chosen points (median over cases)
@@ -154,15 +160,17 @@ def summarise_job(job: dict[str, Any]) -> dict[str, Any]:
         margin = _median([c["effective_margin"] for c in inside]) if job["reached"] else None
     else:
         margin = job["parameter"] if job["reached"] else None
-    r = [
-        1.0 + c["energy_excess_relative"] for c in inside if c["energy_excess_relative"] is not None
+    # cases without a valid model point give no solution: left out of the energy figures
+    priced = [
+        c
+        for c in inside
+        if c["predicted"]["valid"]
+        and c["energy_excess_relative"] is not None
+        and c["truth"]["energy_kw"] is not None
     ]
-    pooled_true = sum(
-        c["truth"]["energy_kw"] for c in inside if c["truth"]["energy_kw"] is not None
-    )
-    pooled_oracle = sum(
-        c["oracle_energy_kw"] for c in inside if c["truth"]["energy_kw"] is not None
-    )
+    r = [1.0 + c["energy_excess_relative"] for c in priced]
+    pooled_true = sum(c["truth"]["energy_kw"] for c in priced)
+    pooled_oracle = sum(c["oracle_energy_kw"] for c in priced)
 
     def share(rows: list[dict[str, Any]]) -> tuple[int, int]:
         return sum(not c["holds"] for c in rows), len(rows)
@@ -198,6 +206,7 @@ def summarise_job(job: dict[str, Any]) -> dict[str, Any]:
         "coarse_bias_b": bias(lambda b: b["kind"] == "interior" and not b["inside"]),
         "coarse_bias_a": bias(lambda b: b["kind"] == "a"),
         "model_invalid_at_action": sum(not c["predicted"]["valid"] for c in cases),
+        "model_invalid_inside": sum(not c["predicted"]["valid"] for c in inside),
     }
 
 

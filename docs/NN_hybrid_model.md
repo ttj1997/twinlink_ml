@@ -108,6 +108,12 @@ rank claim.
 * **Extrapolation**: per model and `n_train`, "margin holds outside" (<= 5 % violations, pooled over
   seeds), (a) and (b) separately.
 
+**No valid point (added after the pilot, before the main run).** In the pilot one member of M4 at
+`n_train` 32 had an unstable moisture fixed point at every point; under the rule of Befund 113
+(valid only if every head of every member is valid) M4 then has no valid point at all. The rule is
+kept. A case without a single valid grid point counts as not holding, its energy is left out of the
+energy figures, and the number of such cases is reported.
+
 ## 7. Budget rule and runs
 
 Wall-clock budget 30 h; above it, first `n_train` 32 is dropped, then M4 (the task order of the
