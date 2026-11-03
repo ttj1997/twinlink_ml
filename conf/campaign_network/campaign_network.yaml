@@ -1,0 +1,115 @@
+# Campaign network: does a heat network pay when the consumers do not run all the time?
+# (docs/NN_campaign_network.md, package twinlink_ml.campaign_network)
+#
+# STATUS: placeholder -- every number below is a study setting or a PLACEHOLDER with a reason; none
+# is a measured plant value. Roles only: one central waste-heat source (compressor station, water
+# as carrier, constant 24/7), the process-air preheaters of plants A, B, C, hall heating and
+# process water. Values of partner documents stay in local/; most values here are the
+# placeholders of the site pinch study (conf/site/site_placeholder.yaml, Befund 100), which is
+# only read, not changed. No plant numbers, names or products.
+
+version: 1
+
+source:
+  # Expansion path of the network (factor of the study, placeholder): 400 kW as used today,
+  # up to about 1200 kW of compressor heat (site_placeholder.yaml: compressor_station_kw band
+  # 400-1200, compressor_used_today_kw 400); 600 and 800 kW as intermediate steps.
+  power_kw_levels: [400.0, 600.0, 800.0, 1200.0]
+  # Supply temperature of the compressor cooling water. PLACEHOLDER 80 degC
+  # (site_placeholder.yaml compressor_hot_in_celsius, band 70-90); variant supply_70.
+  supply_celsius: 80.0
+  # Lowest return temperature to the compressor (the source water is not cooled below it; at a
+  # fixed water flow a colder return would lower the supply temperature). PLACEHOLDER 50 degC
+  # (site_placeholder.yaml compressor_hot_out_celsius, band 40-55).
+  floor_celsius: 50.0
+
+network:
+  # Minimum approach of every counter-current water-air and water-water exchanger. Main value
+  # 10 K, sensitivity 5 K (variant approach_5); reference Befund 114.
+  approach_k: 10.0
+  # Pump electricity per kWh of heat delivered through the network (site_placeholder.yaml
+  # network_pump_fraction 0.015, band 0.005-0.03, district-heating order of magnitude). Charged
+  # on every configuration, K0 included (its loop to plant A also needs a pump).
+  pump_fraction: 0.015
+
+process_air:
+  # Process-air preheaters of plants A, B, C (cold streams from the intake = ambient air up to
+  # supply - approach). Flows PLACEHOLDER inside the band of further lines of the site pinch study
+  # (generic_flow_nm3_per_h 10 000-30 000 Nm3/h); A at 20 000 Nm3/h takes about 430 kW at 10 degC
+  # ambient, i.e. about the 400 kW used today. B and C smaller so that the plants differ.
+  normal_density_kg_per_nm3: 1.293   # convention of Befund 91
+  cp_kj_per_kg_k: 1.006              # dry air
+  # The preheaters form the first stage of the cascade: their required temperature is the supply
+  # temperature of the main heater, above any network temperature (order only, PLACEHOLDER).
+  required_celsius: 150.0
+  plants:
+    - {name: A, flow_nm3_per_h: 20000.0, gas_efficiency: 0.90}
+    - {name: B, flow_nm3_per_h: 15000.0, gas_efficiency: 0.90}
+    - {name: C, flow_nm3_per_h: 10000.0, gas_efficiency: 0.90}
+
+low_temperature:
+  # Hall heating (seasonal; Befund 99/100 profile) and process water (constant 24/7), values of
+  # site_placeholder.yaml. Neither depends on the campaigns of A, B, C.
+  hall:
+    peak_kw: 200.0          # at the design temperature, night factor 1
+    supply_celsius: 50.0
+    return_celsius: 35.0
+    limit_celsius: 15.0     # heating limit temperature
+    design_celsius: -10.0   # design outdoor temperature
+    day_factor: 0.4         # 06-18 h; 1 from 18 to 06 h
+    gas_efficiency: 0.90
+  water:
+    power_kw: 200.0
+    supply_celsius: 60.0
+    return_celsius: 15.0
+    gas_efficiency: 0.90
+
+climate:
+  # Ambient (intake) temperature: monthly means of site_placeholder.yaml (northern Germany, order
+  # of magnitude), interpolated cyclically, plus a daily cosine (amplitude and hour of the maximum
+  # as in conf/storage_price/storage_price.yaml). Deterministic, no weather noise. PLACEHOLDER.
+  monthly_mean_celsius: [2.0, 2.5, 5.0, 9.0, 13.0, 16.0, 18.5, 18.0, 14.5, 10.0, 6.0, 3.0]
+  daily_amplitude_k: 4.0
+  hour_of_maximum: 15.0
+
+campaigns:
+  # Availability a = expected share of hours a process consumer runs (factor of the study).
+  availability_levels: [1.0, 0.8, 0.57, 0.4]
+  # Alternating on/off renewal process, 1 h step, one year (8760 h) after a burn-in of one year
+  # (random initial state). Campaign (on) duration uniform in on_days; standstill (off) duration
+  # uniform in on_days x (1 - a) / a, so the expected availability is exactly a. PLACEHOLDER
+  # 1-14 d (task); the realised availability of every draw is recorded.
+  on_days: [1.0, 14.0]
+  hours: 8760
+  burn_in_hours: 8760
+  # independent: every plant its own schedule; joint: A, B, C share plant A's schedule (e.g. a
+  # common plant holiday). Plant A's schedule is the same in both modes (paired).
+  modes: [independent, joint]
+  draws: 5
+  seed: 20261103
+
+storage:
+  # Stratified hot-water tank on the network loop: stores supply water at the supply temperature
+  # (charging diverts supply water before the consumers, discharging adds it), capacity in hours of
+  # the source power. Losses PLACEHOLDER 0.1 %/h of the content (inside the 0-0.5 %/h of Befund
+  # 99); discharge power at most the source power (the loop is sized for twice the source flow).
+  hours_levels: [0.0, 2.0, 8.0, 24.0]
+  loss_per_h: 0.001
+  discharge_max_fraction: 1.0
+
+carriers:
+  gas_co2_kg_per_kwh: 0.201           # carrier_energy (UBA, project description)
+  electricity_co2_kg_per_kwh: 0.366   # carrier_energy
+
+solver:
+  # K2 rule: bisection on the storage flow (relative tolerance of the predicate, iterations).
+  bisection_iterations: 48
+  duty_tolerance_kw: 1.0e-7
+  # K3: scipy linprog with HiGHS (dual simplex); the LP status is recorded per run.
+  lp_method: highs-ds
+
+variants:
+  # One-at-a-time sensitivity of the addendum of the task: approach 5 K (Befund 114 reference),
+  # supply 70 degC (compressor waste heat may lie below 80 degC depending on the cooling circuit).
+  - {name: approach_5, network: {approach_k: 5.0}}
+  - {name: supply_70, source: {supply_celsius: 70.0}}
