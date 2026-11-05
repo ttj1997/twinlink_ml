@@ -312,6 +312,15 @@ drop `clean_high`, then the L0 sensitivity.
 13. **Order pilot -> dry run -> main run.** The dry run needs the selected settings to exercise the main-run code
     path with the real configuration; the pilot itself is cheap and runs first.
 
+14. **Supersaturated truth under input errors (found by the dry run, before the main run; nothing changed).**
+    Admissibility is checked at the measured inputs (the test sets must be the same for every seed). With the
+    offsets of seed 2 (`T_in` -0.35 K, load +1.5 %, `X_s` -3.8 %, `Y_in` +1 g/kg) the plant at the TRUE inputs
+    exceeds 100 % RH of the bed exhaust in 9 / 12 / 7 / 9 of the 512 plant-like test points for P0 / P-loss /
+    P-air / P-eta (0 for P-moist and P-comb; largest RH 1.22, artifact `static_transfer_dryrun_v1`); no other seed,
+    test set, training point or condition is affected. The balance has no saturation limit, so the truth there is
+    the unlimited balance. Kept as is (the condition is descriptive; changing the sets would break the pairing);
+    to be read as a caveat of the plant-like cells of `inputerr_low`, seed 2.
+
 ## 13. Results
 
 (Added after the run.)
