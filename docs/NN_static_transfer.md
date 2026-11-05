@@ -1,7 +1,7 @@
 # NN -- Static surrogate of the dryer balance: pretraining on the partner balance and fine-tuning on few plant points, against calibration and a residual MLP
 
-Status: **design and pre-registered reading, committed BEFORE the pilot and the main run.** Results are added
-below this design after the run (section 13 onwards), numbers only from the artifacts named there. Branch
+Status: **run and evaluated.** Design and pre-registered reading (sections 1-12) were committed BEFORE the pilot
+and the main run (commit `360f858`); results added after the run (sections 13-14), numbers only from the artifacts named there. Branch
 `static-transfer` (from `master` cd712df), worktree `C:/twinlink_work/static_transfer`. The document number
 NN and the finding number ("Befund NN") are assigned by the managing session at the merge. Unattended run
 over night (decision of the project lead, 2026-11-05): no questions during the run; where the approval was
@@ -323,4 +323,175 @@ drop `clean_high`, then the L0 sensitivity.
 
 ## 13. Results
 
-(Added after the run.)
+Numbers only from the artifacts of 13.1; test sets named everywhere; `clean_low` unless noted; median over 5 seeds
+of the RMSE against the noise-free plant truth, units K, g/kg, kW per kg/s.
+
+### 13.1 Runs and provenance
+
+| Step | Artifact | Script commit, tree | Remarks |
+|---|---|---|---|
+| pilot | `artifacts/runs/static_transfer_pilot_v1.json` | `360f858`, clean | 868 s, 8 workers, 0 failures; three grid rounds |
+| selection into the YAML | commit `72f11b0` | - | checked by the main run against the pilot artifact |
+| dry run | `artifacts/runs/static_transfer_dryrun_v1.json` | `72f11b0`, clean | 90 of 90 units, 0 failures, peak memory 385 MB per worker; numbers no result (decision 14 comes from it) |
+| main run | `artifacts/runs/static_transfer_v1.json.gz` | `def4860`, clean | 90 units, 0 failures, 604 s wall time on 8 workers, peak 386 MB per worker; `def4860` = `72f11b0` plus the dry-run artifact and docs text |
+| analysis | `artifacts/runs/static_transfer_v1_analysis.json`, figures `docs/figures/static_transfer_v1_<plant>_<test set>.png` | reading of `360f858`, run at `e9e174f`, clean | |
+
+Full suite green on `360f858` and on `72f11b0` (logs in the gitignored `local/logs/` of the worktree). `.venv` of the
+main checkout via `tools/run_here.sh`; every record carries `code/root_checked`.
+
+### 13.2 Pilot (PP-st, pilot validation set)
+
+| Method | Selected setting | C | Remark |
+|---|---|---|---|
+| L1 | `prior_scale` 4 | 0.470 | interior in the first round |
+| L2 | lr 1e-2, 90 steps, weight decay 10 | 0.803 | interior after extensions (steps down twice, decay up once, lr up once) |
+| L3 | lr 3.3e-5, 300 steps, L2-SP 0 | 0.758 | interior after extensions (lr down twice); flat: the five best settings all have C 0.758 |
+| L4 | lr 3.3e-4, 10 000 steps, weight decay 0.1 | 4.818 | interior after extensions |
+
+No selection lies at an edge after the extensions. **The fine-tuning setting of L3 adapts very little** (300 steps at
+lr 3.3e-5); as in the A1 pilot (docs/17) it was chosen on a pilot plant of half the strength of the main plants
+(consequence on P-comb: 13.7).
+
+### 13.3 Deviation table, coverage, pretraining
+
+L0 against each plant, RMSE / primary sigma, interpolation set (`deviation_table`): P-loss `T_out` 11.0; P-air
+`T_out` 11.3, `Y_out` 4.2; P-eta power 2.3; P-moist `T_out` 3.5, `Y_out` 2.7; P-comb 18.3 / 7.0 / 2.3. **No plant is
+below 2 sigma on an affected target in any test set** (smallest: P-eta, power, plant-like set, 2.1). Coverage: all
+four test sets and all designs lie 100 % inside the pretraining box; admissible candidates per set 1024/1024
+(interpolation), 949/1024 (extrapolation), 1011/1024 (plant-like), 1024/1024 (product change). Pretraining (5 seeds):
+274-458 epochs, validation RMSE against the balance 0.057-0.090 K, 0.022-0.037 g/kg, 0.061-0.109 kW/(kg/s); zero-shot
+error of L3_0 on P0, interpolation: 0.041 K, 0.019 g/kg, 0.069 kW/(kg/s).
+
+### 13.4 Hypotheses (Holm per family; counts better / worse / unresolved)
+
+| | Family | Result | Counts (Holm) | Uncorrected |
+|---|---|---|---|---|
+| H1 | 108 | **supported** (as it must be, section 12 item 8) | 0 / 23 / 85 | 0 / 96 / 12 |
+| H2 | 24 | **supported**: L3 never better than L1 on P-loss | 0 / 13 / 11 | 0 / 23 / 1 |
+| H3 | 36 | **partly supported**: N* P-eta 16, P-moist 64, P-comb not reached | 9 / 6 / 21 | 15 / 7 / 14 |
+| H4 | 54 | **not supported**: one cell with L3 better than L2 | 1 / 2 / 51 | 10 / 8 / 36 |
+| H5 | 108 | **not supported**: neither (a) nor (b) | 38 / 0 / 70 | 101 / 1 / 6 |
+
+* **H1 (P0):** resolved worse than L0 per method: L4 9 cells, B2 9, L3 3, L2 1, B1 1, L1 0. The cost of learning where
+  there is nothing to learn (`T_out`, N = 2 / 8 / 64): L1 0.35 / 0.14 / 0.026 K, L2 0.66 / 0.47 / 0.072, L3 0.67 / 0.86
+  / 0.12, B1 0.42 / 0.21 / 0.061. The fine-tuned net is worse than its own zero-shot state (0.041 K) at every N:
+  fine-tuning on noisy points moves it away from the balance.
+* **H2 (P-loss, `T_out`, four test sets):** L3 is resolved WORSE than L1 in 13 of 24 cells, in every test set (median
+  of the paired difference -0.16 to -0.60 K in the interpolation set at N = 8-64, down to -1.56 K on the plant-like
+  set at N = 4). L1 recovers the heat loss (0.0196-0.0203 W/K per kg/h at N = 64, true 0.02).
+* **H3:** P-eta (power): L3 beats L1 from N = 16 (median 1.41-1.74 kW/(kg/s), 5 of 5 seeds), L1's constant efficiency
+  keeps a floor of 3.71. P-moist: N* = 64 (`T_out` from N = 32 by 0.20-0.27 K, `Y_out` only at 64 by 0.14 g/kg).
+  P-comb: not reached -- L3 is better on the power from N = 16 but resolved WORSE than L1 on `T_out` at every N
+  (median -0.82 to -1.27 K).
+* **H4:** one cell, P-air, N = 32, `Y_out`: L3 better than L2 by a median 0.108 g/kg (p = 0.0002, 5 of 5 seeds). L3 is
+  resolved worse than L2 on P-comb `T_out` at N = 32 and 64; every other cell unresolved. On all affected targets
+  jointly L3 beats L2 in no cell.
+* **H5 (extrapolation):** (a) L3 better than L4 only at N = 2 (9 of 36 cells: all affected targets of every plant at
+  N = 2; from N = 4 every cell unresolved). (b) L1 better in 29 of 72 cells (against L0 12 of 12, B1 8, L4 5, B2 4,
+  L2 0, L3 0): L1 is not resolved better than L2 or L3 at N <= 16 on P-loss and P-air, although its medians are lower
+  (13.7).
+
+### 13.5 Reading
+
+| Test set | `clean_low` | `clean_high` (descriptive) |
+|---|---|---|
+| **interpolation (primary)** | **R3**, R4 flag not set | R3 |
+| extrapolation | R3 | R3 |
+| plant-like | none (R4 flag set) | none (R4 flag set) |
+| product change | R3 | R3 |
+
+**Pre-registered reading: R3.** L3 beats L4 (all affected targets) at N = 2 on every deviating plant and at no larger
+N; it never beats L0, L1 and L4 jointly in a cell, and it never beats L2 on all affected targets jointly (reading
+family: 270 tests, 78 better / 6 worse / 186 unresolved). Pretraining therefore only carries the physics into a net at
+the smallest N; where the balance itself can be used at run time, L1, L2 or B1 do the same or better. On the
+plant-like set (supply air 75-95 degC, inside the pretraining box, outside every point the plant was trained on) L3
+does not even beat L4 in any cell: the R4 flag is set there, a contradiction of A1 in this set.
+
+### 13.6 Core figures per test set (family of 108 per set)
+
+Smallest N from which L2 (resp. L3) beats L1 on all affected targets ("-" = not within 64):
+
+| Test set | P-loss | P-air | P-eta | P-moist | P-comb |
+|---|---|---|---|---|---|
+| interpolation, L2 / L3 | - / - | - / - | 32 / 16 | 64 / - | - / - |
+| extrapolation, L2 / L3 | - / - | - / - | 32 / 32 | 32 / 64 | - / - |
+| plant-like, L2 / L3 | - / - | - / - | - / - | - / - | - / - |
+| product change, L2 / L3 | - / - | - / - | - / - | - / - | - / - |
+
+(H3 finds N* = 64 for P-moist, the core family does not: same cell, a family of 36 against 108 tests under Holm.)
+
+Residual error of L1 at N = 64 (affected targets):
+
+| Test set | P-loss `T` | P-air `T` / `Y` | P-eta power | P-moist `T` / `Y` | P-comb `T` / `Y` / power |
+|---|---|---|---|---|---|
+| interpolation | 0.047 | 0.167 / 0.019 | 3.71 | 0.45 / 0.235 | 0.351 / 0.224 / 3.71 |
+| extrapolation | 0.050 | 0.271 / 0.019 | 14.58 | 1.11 / 0.519 | 0.740 / 0.498 / 14.58 |
+| plant-like | 0.048 | 0.233 / 0.119 | 6.82 | 3.55 / 1.58 | 0.901 / 0.554 / 6.82 |
+| product change | 0.055 | 0.204 / 0.065 | 3.71 | 1.13 / 0.635 | 1.61 / 1.25 / 3.71 |
+
+L1 is exact where its structure contains the deviation (P-loss) and compensates where it does not (P-air at N = 64:
+false-air share 0.065-0.073 for the true 0.05 of false air plus 0.025 of atomising air; P-comb: heat loss 0.035-0.043
+and moisture excess 0.12-0.15 for the true 0.02 and 0.06); the floors are the costs of a wrong structure (P-eta power
+3.71 in the interpolation set, 14.6 in the extrapolation set).
+
+### 13.7 Learning curves (descriptive, interpolation, N = 2 / 8 / 64; figures in `docs/figures/`)
+
+| Plant, target | L0 | L1 | L2 | L3 | L4 | B1 | B2 |
+|---|---|---|---|---|---|---|---|
+| P-loss `T` | 5.49 | 0.43 / 0.20 / 0.047 | 0.95 / 0.62 / 0.19 | 0.80 / 0.65 / 0.21 | 11.8 / 0.67 / 0.25 | 0.92 / 0.93 / 0.91 | 12.3 / 0.61 / 0.15 |
+| P-air `Y` | 1.26 | 0.11 / 0.038 / 0.019 | 0.29 / 0.21 / 0.20 | 0.25 / 0.12 / 0.097 | 2.62 / 0.44 / 0.13 | 0.18 / 0.16 / 0.15 | 2.72 / 0.33 / 0.10 |
+| P-eta power | 7.33 | 4.52 / 4.17 / 3.71 | 3.84 / 3.50 / 1.94 | 3.89 / 2.56 / 2.02 | 20.3 / 8.44 / 2.02 | 4.02 / 3.27 / 3.13 | 21.1 / 5.19 / 2.13 |
+| P-moist `T` | 1.73 | 0.49 / 0.49 / 0.45 | 0.80 / 0.44 / 0.16 | 0.84 / 0.62 / 0.17 | 12.1 / 0.81 / 0.30 | 0.65 / 0.64 / 0.61 | 12.7 / 0.55 / 0.21 |
+| P-comb `T` | 9.17 | 0.75 / 0.44 / 0.35 | 2.25 / 0.89 / 0.26 | 2.03 / 1.50 / 1.17 | 10.4 / 0.69 / 0.29 | 2.23 / 2.22 / 2.20 | 10.8 / 0.56 / 0.18 |
+
+* At N = 2 the learned nets without physics (L4) and the linear ridge (B2) are useless (10-21 in every unit); from
+  N = 8-16 they reach L2 and L3 in interpolation. B2 has the lowest median on several cells at N = 64 (P-comb `T`
+  0.18 K) but falls apart outside the training range (plant-like P-comb `T` 8.8 K at N = 64).
+* L3 keeps a floor on P-comb `T` (about 1.2 K): its fine-tuning setting adapts too little for the strongest plant
+  (13.2).
+* Plant-like set: every learned method is worse than L0 on the P-eta power at N = 64 (L2 16.1, L3 13.7, L4 19.4 against
+  L0 4.03; L1 6.82).
+* Product change: L1's constant moisture excess does not carry over to the other solid fraction (P-moist `T` at N = 64:
+  L1 1.13 K, L2 0.23, L3 0.25; descriptive, no resolved core cell).
+
+### 13.8 Input errors (descriptive)
+
+Order of L1 / L2 / B1 by median RMSE, `inputerr_low` against `clean_low`, over 72 cells per plant (4 sets x 6 N x 3
+targets): changes in 40 (P0), 32 (P-loss), 18 (P-air), 41 (P-eta), 21 (P-moist), 19 (P-comb) cells. Of 168 changed
+pairwise verdicts (Holm per plant) 163 lose their resolution (135 better -> unresolved, 28 worse -> unresolved); 3
+become better and 2 worse. The offsets change sign from seed to seed, so they add scatter between the seeds and cost
+the paired test its resolution. In the medians L1 loses most where it was exact: P-loss `T` at N = 64 0.047 -> 0.173 K
+(L2 0.188 -> 0.194, B1 0.912 -> 0.932) -- the calibration absorbs the input offsets into its physical parameters. L0
+on P0: 0.847 K from the offsets alone. Caveat: decision 14 (seed 2, plant-like, 7-12 supersaturated points for four
+plants).
+
+### 13.9 L0 sensitivity to the input set (v4.1_2)
+
+Efficiency 70 % instead of 80 % and spray at 15 degC: on P0, interpolation, power 24.2 kW/(kg/s), `T_out` 0.41 K,
+`Y_out` 0. The input set moves the power by far more than any plant deviation of this study (P-eta 7.33); `T_out` and
+`Y_out` hardly.
+
+## 14. Reading and answer
+
+**Answer to the question (synthetic static plants, this input set, these strengths and noise levels).** A pretrained
+and fine-tuned MLP beats the balance-based alternatives jointly in no cell (reading R3):
+
+* Against L4 (from scratch) it wins only at N = 2 -- and on the plant-like set not even there.
+* Against L1 (calibration) it wins only where L1's structure lacks the deviation: the load-dependent heater efficiency
+  (power, from N = 16) and the variable product moisture (from N = 32-64). Where the deviation lies within L1's
+  parameters (heat loss, false air) it never wins and is often resolved worse.
+* Against L2 (balance plus residual MLP) it is resolved better in a single target cell (P-air, `Y_out`, N = 32) and on
+  all affected targets jointly never. L2 starts from the exact balance and does not need to learn what pretraining
+  teaches.
+
+In a static setting with the balance available at run time, pretraining is not the lever. The calibration of a few
+physical parameters (L1) is the best choice wherever the structure fits, at every N; a bias correction (B1) is a strong
+baseline at N <= 4; a residual model (L2) or the pretrained net (L3) adds value only for deviations outside L1's
+structure, from N = 16-64. Outside the trained operating range (plant-like set) no learned method is reliable; L1 is the
+only method that keeps the errors near those of the interpolation range for structures it contains.
+
+**What is not concluded.** The fine-tuning setting of L3 was selected on a milder pilot plant and adapts little (a
+floor of about 1.2 K on P-comb); a stronger fine-tuning might move L3 towards L2 but, by H4, hardly beyond it. All
+plants are variants of the same balance with placeholder strengths and noise. Five seeds give four degrees of freedom:
+"unresolved" is not "equal". The input-error condition varies the offset signs by seed and therefore mostly costs
+resolution. Stage 2 was not run (section 10); nothing here is a statement about plant A.
