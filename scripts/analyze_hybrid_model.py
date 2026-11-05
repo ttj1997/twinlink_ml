@@ -96,6 +96,18 @@ to every energy figure of the report.
 All ``n_train`` = 32 values are reported (learning curves); the readings use ``n_train`` <= 16. If the
 budget rule removes ``n_train`` 32 or M4, the reading is unchanged (it does not use them).
 
+**Addendum 2026-11-05 (decision of the project lead; committed after the failed margins run of
+a343840 and before any margin result exists).** A margin of a cell (model, master seed,
+``n_train``) counts as *determinable* only if at least 20 inside cases are pooled over the 20 draws;
+otherwise it is reported as "not determinable", not as a number. The number of inside cases is
+reported for every cell. Y0 rests on the determinable cells with ``n_train`` <= 16: medians over the
+determinable seeds; the paired comparison over the seeds determinable for both M1 and M3 (the
+inside cases do not depend on the model, so these are the same seeds), with at least 2 seeds,
+otherwise "not resolved" at that ``n_train``; an ``n_train`` without any determinable cell is reported
+as such and drops out of Y0. Y1 and Y2 use the same determinable cells. A draw without any inside
+case contributes nothing to the search (no search there); its cases are evaluated at the chosen
+parameter like all others.
+
     tools/run_here.sh scripts/analyze_hybrid_model.py --prefix hybrid_model_v1
 """
 
