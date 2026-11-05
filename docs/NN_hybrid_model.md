@@ -177,7 +177,19 @@ appended to).
   in calls of 256 points 2.2 GB with bit-identical predictions in every field.
 * **Worker processes reused** (7044da1): a fresh process per task costs 40-70 s of imports from
   the network drive (about 6-7 h over the main run); the memory peak in the records is the peak
-  of the worker process so far.
+  of the worker process so far. Checks requested by the project lead before the main run
+  (ffa30a9): every task starts with `reset_task_state()` (random, numpy and torch set to a fixed
+  seed, torch one thread, the cached study setup verified unchanged by the sha256 of its pickle);
+  maps, networks and evaluators are built in every task. Audit: no task draws from a global random
+  source, there is no module-level cache besides the setup, the networks predict in eval mode.
+  Fresh process against reused worker at the grid of the main run (one bisection step; scratch
+  check of 2026-11-05 on ffa30a9): search M1 s1 n4 d0, evaluation M3 s2 n8 d5, search M4 s3 n16
+  d10 and errors d4 s2, the reused worker after 2 to 5 other tasks: all four records bit-identical
+  (without elapsed time, memory and pid). The same comparison at the minimal grid is the test
+  `test_tasks_in_a_reused_worker_equal_fresh_processes`. Leak check: in the minimal dry run (about
+  300 tasks per worker) the running peak commit of every worker stays flat after the first quarter
+  of its tasks (rise over the second half 0 MB); since ffa30a9 the records and the log also carry
+  the current commit at the end of each task.
 
 **Dry run** (2026-11-05, 7044da1, clean tree; outputs gitignored: `_hybrid_dryrun_margins`,
 `_hybrid_memprobe_margins`, `_hybrid_dryrun_errors`). *Minimal* (1 bisection step, 3 x 3 grid, no
