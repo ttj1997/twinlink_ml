@@ -504,3 +504,43 @@ def test_scheduler_raises_over_rounds_and_resumes(tmp_path: Path) -> None:
     again = script.Scheduler(tmp_path / "again.jsonl", run, 0.6)
     again.add_cell(script.Cell("M0", 1, 4, (0, 1)), done)
     assert not again.ready and again.n_cells_done == 1 and not (tmp_path / "again.jsonl").exists()
+
+
+ROOT = Path(__file__).resolve().parents[1]
+_LOCAL_ARTIFACTS = (
+    ROOT / "artifacts" / "runs" / "hybrid_model_training_v1.jsonl",
+    ROOT / "artifacts" / "checkpoints" / "hybrid_model" / "hybrid_model_training_v1",
+)
+
+
+@pytest.mark.skipif(
+    not all(p.exists() for p in _LOCAL_ARTIFACTS),
+    reason="needs the local training records and checkpoints of the hybrid-model study",
+)
+def test_tasks_in_a_reused_worker_equal_fresh_processes(monkeypatch: pytest.MonkeyPatch) -> None:
+    # the spawned workers inherit the parent's sys.path; restored after the test
+    monkeypatch.syspath_prepend(str(ROOT / "scripts" / "verify"))
+    monkeypatch.syspath_prepend(str(ROOT / "scripts"))
+    import run_hybrid_evaluation as ev
+
+    run = ev.MarginRun(
+        "hybrid_model_v1_oracle",
+        "hybrid_model_training_v1",
+        GridSettings(coarse=3, zoom=3, zoom_levels=0, max_moves=1, starts=1),
+        BisectionSettings(0.12, 0.12),
+        BisectionSettings(10.0, 10.0),
+        256,
+    )
+    tasks = [
+        (ev.margin_search_task, (run, "M1", 1, 4, 0)),
+        (ev.margin_evaluate_task, (run, "M3", 2, 8, 5, 0, 0.01)),
+        (ev.margin_search_task, (run, "M4", 3, 16, 10)),
+    ]
+    warmup = [
+        (ev.margin_search_task, (run, "M2", 2, 32, 7)),
+        (ev.margin_evaluate_task, (run, "M4", 1, 32, 3, 0, 1.0)),
+    ]
+    result = ev.fresh_and_reused(tasks, warmup)
+    assert all(r["status"] == ["ok", "ok"] for r in result), result
+    assert all(r["one_reused_worker"] and r["fresh_pid"] != r["reused_pid"] for r in result)
+    assert all(r["identical"] for r in result), result

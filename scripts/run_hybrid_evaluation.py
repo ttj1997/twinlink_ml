@@ -52,6 +52,7 @@ import hashlib
 import json
 import math
 import os
+import pickle
 import sys
 import time
 import traceback
@@ -73,15 +74,45 @@ MODELS = ("M0", "M1", "M2", "M3", "M4")
 LIMIT_TOLERANCE = 1.0e-4  # moisture tolerance of the bandit's constraint check
 
 _SETUP: Any = None
+_SETUP_DIGEST: str | None = None
+TASK_SEED = 0  # global random sources at the start of every task (none is drawn from; audit)
 
 
 def setup() -> Any:
-    global _SETUP
+    """The study setup (configs, draws, cases), built once per process, checked every task."""
+    global _SETUP, _SETUP_DIGEST
     if _SETUP is None:
         from twinlink_ml.hybrid_model.study import build_setup
 
         _SETUP = build_setup()
+        _SETUP_DIGEST = _digest(_SETUP)
     return _SETUP
+
+
+def _digest(obj: object) -> str:
+    return hashlib.sha256(pickle.dumps(obj)).hexdigest()
+
+
+def reset_task_state() -> None:
+    """Start of every task in a (possibly reused) worker.
+
+    The global random sources (``random``, ``numpy``, ``torch``) are set to ``TASK_SEED`` and
+    torch to one thread; the cached setup must be unchanged since it was built (sha256 of its
+    pickle), else the task fails. Maps, networks (from their checkpoints) and evaluators are built
+    in every task. Audit of 2026-11-05: nothing in the oracle, margins or errors tasks draws from a
+    global random source (data generation uses its own seeded generators), there is no
+    module-level cache besides the setup, and the networks predict in eval mode.
+    """
+    import random
+
+    import torch
+
+    random.seed(TASK_SEED)
+    np.random.seed(TASK_SEED)  # noqa: NPY002 - resetting the global state is the purpose
+    torch.manual_seed(TASK_SEED)
+    torch.set_num_threads(1)
+    if _SETUP is not None and _digest(_SETUP) != _SETUP_DIGEST:
+        raise RuntimeError("the cached study setup changed between tasks")
 
 
 # --- shared helpers -----------------------------------------------------------------------------
@@ -741,7 +772,8 @@ def clean_tree_exceptions(
 
 
 def peak_memory_mb() -> dict[str, float]:
-    """Peak working set and peak commit (private bytes) of this process so far, in MB."""
+    """Peak working set and peak commit (private bytes) of this process so far, and the current
+    values (end of a task; a steady rise over the tasks of a worker would point to a leak), in MB."""
     if sys.platform == "win32":
         import ctypes
         from ctypes import wintypes
@@ -776,6 +808,8 @@ def peak_memory_mb() -> dict[str, float]:
         return {
             "peak_working_set_mb": counters.PeakWorkingSetSize / 2**20,
             "peak_commit_mb": counters.PeakPagefileUsage / 2**20,
+            "working_set_mb": counters.WorkingSetSize / 2**20,
+            "commit_mb": counters.PagefileUsage / 2**20,
         }
     import resource
 
@@ -786,6 +820,7 @@ def run_task(fn: Any, args: tuple[Any, ...]) -> dict[str, Any]:
     """Run one task in a worker; an exception becomes an error record (never lost)."""
     started = time.perf_counter()
     try:
+        reset_task_state()
         record = {"status": "ok", **fn(*args)}
     except BaseException:  # recorded and reported, the run goes on
         record = {"status": "error", "traceback": traceback.format_exc()}
@@ -793,6 +828,45 @@ def run_task(fn: Any, args: tuple[Any, ...]) -> dict[str, Any]:
     record["memory"] = peak_memory_mb()
     record["worker_pid"] = os.getpid()
     return record
+
+
+VOLATILE = ("elapsed_s", "memory", "worker_pid")
+
+
+def comparable(record: dict[str, Any]) -> str:
+    """A record without its run-time fields, as exact JSON (for bit-identity checks)."""
+    kept = {k: v for k, v in record.items() if k not in VOLATILE}
+    return json.dumps(kept, sort_keys=True, default=_default)
+
+
+def fresh_and_reused(
+    tasks: list[tuple[Any, tuple[Any, ...]]], warmup: list[tuple[Any, tuple[Any, ...]]]
+) -> list[dict[str, Any]]:
+    """Every task once in a fresh worker process and once in one reused worker.
+
+    The reused worker first runs ``warmup``, then the tasks in order (each after the ones before
+    it). Per task: both statuses, whether the records are identical (``comparable``), the pids.
+    """
+    fresh = []
+    for fn, args in tasks:
+        with ProcessPoolExecutor(max_workers=1) as pool:
+            fresh.append(pool.submit(run_task, fn, args).result())
+    with ProcessPoolExecutor(max_workers=1) as pool:
+        before = [pool.submit(run_task, fn, args).result() for fn, args in warmup]
+        reused = [pool.submit(run_task, fn, args).result() for fn, args in tasks]
+    pids = {r["worker_pid"] for r in [*before, *reused]}
+    return [
+        {
+            "key": f.get("key"),
+            "status": [f["status"], r["status"]],
+            "identical": comparable(f) == comparable(r),
+            "fresh_pid": f["worker_pid"],
+            "reused_pid": r["worker_pid"],
+            "reused_worker_ran_before": len(before) + i,
+            "one_reused_worker": len(pids) == 1,
+        }
+        for i, (f, r) in enumerate(zip(fresh, reused, strict=True))
+    ]
 
 
 def read_records(path: Path) -> list[dict[str, Any]]:
@@ -1094,6 +1168,7 @@ def main() -> int:
                     + (f", cells {sched.n_cells_done}/{n_cells}" if n_cells else "")
                     + f"] {key} {record['status']} {record['elapsed_s']:.0f} s"
                     f" worker {record.get('worker_pid')}"
+                    f" commit {mem.get('commit_mb', math.nan):.0f} MB"
                     f" peak commit {mem.get('peak_commit_mb', math.nan):.0f} MB"
                     f" peak ws {mem.get('peak_working_set_mb', math.nan):.0f} MB"
                     f" (wall {time.time() - started:.0f} s)",
