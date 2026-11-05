@@ -113,3 +113,15 @@ against the previous commit reports no deviation, fingerprint regression tests a
 
 Long runs (hours) belong on a local machine, not in cloud sessions; sweeps are resumable
 with `--resume`.
+
+- Long-running stages save results per unit (e.g. per draw) immediately, are resumable after
+  an interruption, and log progress per finished unit. A failure in one unit is logged; it
+  must not discard the results of other units.
+- Before a main run, a dry run covers ALL units at minimal cost, so that edge cases (empty
+  sets, extreme draws) surface in minutes, not after hours. A probe run on a single unit is
+  not sufficient for time or memory estimates.
+- CPU-bound runs use at most as many workers as physical cores. The dry or probe run reports
+  peak memory per worker; workers x peak must stay below 80 % of RAM.
+- The budget rule governs cuts decided before the main run. A running main run that exceeds
+  the budget continues as long as it demonstrably progresses; the overrun is documented as a
+  decision of the project lead.
