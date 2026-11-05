@@ -12,35 +12,52 @@ otherwise.
              by the 8-start Nelder-Mead of Befund 113 (``surrogate_env.multistart_minimize``, the
              fixed point of Befund 93 and 7 Sobol starts) on the same objective; energy and slack
              difference.                                         -> ``<prefix>_oracle``
-``margins``  per job (model, seed, ``n_train``), models M0 (prior knowledge), M1 (GRU), M2 (refit),
-             M3 (hybrid), M4 (hybrid ensemble): per case INSIDE the training range the needed
-             constraint parameter by bisection (``grid_rto.search_parameter``; M0-M3 a constant
-             margin m, M4 the factor k of ``mean + k std``); the parameter of the model = the 95 %
-             quantile over the inside cases of all 20 draws (raise rule of Befund 111 if the
-             holding share at it is below 95 %); then EVERY case (inside, outside (b), extrapolation
-             (a)) is optimised at that parameter and evaluated at the truth. Plus the box-wide
-             moisture bias on the coarse grid.                   -> ``<prefix>_margins``
+``margins``  per cell (model, master seed, ``n_train``), models M0 (prior knowledge), M1 (GRU), M2
+             (refit), M3 (hybrid), M4 (hybrid ensemble), split per draw since the failed run of
+             a343840 (decision of the project lead, 2026-11-05; the computation is unchanged,
+             ``hybrid_model/margin_tasks.py``): one SEARCH task per (cell, draw) -- per case INSIDE
+             the training range the needed constraint parameter by bisection (M0-M3 a constant
+             margin m, M4 the factor k of ``mean + k std``; a draw without any inside case has no
+             search) and the box-wide moisture bias on the coarse grid; once all 20 draws of a cell
+             are searched, the parameter of the cell = the 95 % quantile over its pooled inside
+             cases; then one EVALUATE task per (cell, draw, round) -- EVERY case (inside, outside
+             (b), extrapolation (a)) optimised at that parameter and evaluated at the truth; raise
+             rule of Befund 111 over the rounds. Every task record is written when the task ends
+             (``--resume`` continues), an exception is recorded per task (its cell stops, the others
+             go on), one fresh worker process per task (its memory peak is recorded); the cell
+             record (format of the former per-cell job) when the cell is done.
+                                                                -> ``<prefix>_margins_per_draw``
 ``errors``   per (draw, seed): one-step (h1) and rollout (h36) RMSE and bias in physical units of
              every model and ``n_train`` on the excited test set of the pool, on the constant-run
              holdout (seed 999; runs split by (b)) and on a constant-run holdout with the widened
              ambient ranges (runs outside the data box = (a)).    -> ``<prefix>_errors``
 
-    tools/run_here.sh scripts/run_hybrid_evaluation.py --part oracle --workers 14
-    tools/run_here.sh scripts/run_hybrid_evaluation.py --part margins --workers 14
-    tools/run_here.sh scripts/run_hybrid_evaluation.py --part errors --workers 14
+``--dry-run minimal`` (1 bisection step, 3 x 3 grid, no zoom) runs every task at minimal cost
+(edge cases such as empty case sets show before the main run); ``--dry-run coarse`` the same with
+the full coarse grid (the largest prediction batch, hence the memory peak). Dry runs write to a
+name starting with ``_`` (gitignored). The input artifacts training records and oracle may be
+uncommitted (``clean_tree_exceptions``); their sha256 is in the header.
+
+    tools/run_here.sh scripts/run_hybrid_evaluation.py --part oracle --workers 8
+    tools/run_here.sh scripts/run_hybrid_evaluation.py --part margins --workers 8
+    tools/run_here.sh scripts/run_hybrid_evaluation.py --part errors --workers 8
 """
 
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import hashlib
 import json
 import math
 import os
 import sys
 import time
+import traceback
 import warnings
 from concurrent.futures import FIRST_COMPLETED, ProcessPoolExecutor, wait
+from concurrent.futures.process import BrokenProcessPool
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -162,18 +179,6 @@ def _default(value: object) -> object:
     if isinstance(value, np.ndarray):
         return value.tolist()
     raise TypeError(type(value))
-
-
-def done_keys(path: Path) -> set[str]:
-    if not path.exists():
-        return set()
-    keys = set()
-    for line in path.read_text(encoding="utf-8").splitlines():
-        if line.strip():
-            row = json.loads(line)
-            if row.get("kind") == "job":
-                keys.add(row["key"])
-    return keys
 
 
 def finite(x: float) -> float | None:
@@ -332,8 +337,8 @@ def discretisation_job(i: int) -> dict[str, Any]:
 # --- part margins -------------------------------------------------------------------------------
 
 
-def load_oracle(prefix: str) -> dict[int, dict[str, Any]]:
-    path = ROOT / "artifacts" / "runs" / f"{prefix}_oracle.jsonl"
+def load_oracle(name: str) -> dict[int, dict[str, Any]]:
+    path = ROOT / "artifacts" / "runs" / f"{name}.jsonl"
     out = {}
     for line in path.read_text(encoding="utf-8").splitlines():
         if line.strip():
@@ -343,200 +348,202 @@ def load_oracle(prefix: str) -> dict[int, dict[str, Any]]:
     return out
 
 
-def margin_job(
-    prefix: str, training: str, model: str, seed: int, n: int, draws: tuple[int, ...]
-) -> dict[str, Any]:
+@dataclass(frozen=True)
+class MarginRun:
+    """What every margins task needs besides its cell and draw (settings of this run)."""
+
+    oracle: str
+    training: str
+    grid: Any  # GridSettings
+    constant: Any  # BisectionSettings of M0-M3
+    ensemble_k: Any  # BisectionSettings of M4
+    max_batch: int | None = None  # points per call of a map (memory; predictions unchanged)
+
+    def bisection(self, model: str) -> Any:
+        return self.ensemble_k if model == "M4" else self.constant
+
+
+def search_key(model: str, seed: int, n: int, draw: int) -> str:
+    return f"search_{model}_s{seed}_n{n}_d{draw:02d}"
+
+
+def evaluate_key(model: str, seed: int, n: int, round_: int, draw: int) -> str:
+    return f"evaluate_{model}_s{seed}_n{n}_r{round_}_d{draw:02d}"
+
+
+def cell_key(model: str, seed: int, n: int) -> str:
+    return f"margins_{model}_s{seed}_n{n}"
+
+
+def _draw_context(run: MarginRun, model: str, seed: int, n: int, draw: int) -> tuple[Any, ...]:
+    from twinlink_ml.hybrid_model.grid_rto import CaseEvaluator
+    from twinlink_ml.hybrid_model.study import case_arrays
+
+    s = setup()
+    cases = s.draw_cases(draw)
+    contexts, wide = case_arrays(cases)
+    oracle = load_oracle(run.oracle)[draw]
+    inside = np.array(oracle["coverage"][f"s{seed}_n{n}"]["inside"], dtype=bool)
+    records = training_records(run.training)
+    model_map = build_map(model, draw, seed, n, records)
+    model_ev = CaseEvaluator(model_map, contexts, wide, max_batch=run.max_batch)
+    truth_ev = CaseEvaluator(truth_map(draw), contexts, wide, max_batch=run.max_batch)
+    return s, cases, oracle, inside, model_ev, truth_ev
+
+
+def margin_search_task(run: MarginRun, model: str, seed: int, n: int, draw: int) -> dict[str, Any]:
+    """Needed parameter per inside case of one draw (none without any) and the coarse-grid bias."""
     import torch
 
-    from twinlink_ml.hybrid_model.grid_rto import (
-        CaseEvaluator,
-        _box,
-        grid_zoom,
-        search_parameter,
-        truth_holds,
-    )
-    from twinlink_ml.hybrid_model.study import case_arrays
+    from twinlink_ml.hybrid_model.margin_tasks import coarse_bias_draw, search_draw
 
     torch.set_num_threads(1)
     warnings.filterwarnings("ignore")
     started = time.perf_counter()
-    s = setup()
-    cfg = s.config
-    limit = cfg.quality_limit_kg_per_kg
-    oracle = load_oracle(prefix)
-    records = training_records(training)
-    is_k = model == "M4"
-    settings = cfg.margin_k if is_k else cfg.margin_constant
-
-    def limits_ks(p: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-        if is_k:
-            return np.full(p.shape, limit), p
-        return limit - p, np.zeros(p.shape)
-
-    per_draw: list[dict[str, Any]] = []
-    for draw in draws:
-        cases = s.draw_cases(draw)
-        contexts, wide = case_arrays(cases)
-        inside = np.array(oracle[draw]["coverage"][f"s{seed}_n{n}"]["inside"], dtype=bool)
-        model_ev = CaseEvaluator(build_map(model, draw, seed, n, records), contexts, wide)
-        truth_ev = CaseEvaluator(truth_map(draw), contexts, wide)
-        inside_idx = np.flatnonzero(inside)
-
-        def hold_at(
-            rows: np.ndarray,
-            p: np.ndarray,
-            _m: Any = model_ev,
-            _t: Any = truth_ev,
-            _i: np.ndarray = inside_idx,
-        ) -> np.ndarray:
-            lim, ks = limits_ks(p)
-            actions, _ = grid_zoom(_m, _i[rows], lim, ks, s.bounds, cfg.grid)
-            return truth_holds(_t.values(_i[rows], actions), limit)
-
-        result = search_parameter(hold_at, inside_idx.size, settings)
-        per_draw.append(
-            {
-                "draw": draw,
-                "cases": cases,
-                "contexts": contexts,
-                "wide": wide,
-                "inside": inside,
-                "model_ev": model_ev,
-                "truth_ev": truth_ev,
-                "needed": dict(zip(inside_idx.tolist(), result.needed.tolist(), strict=True)),
-                "n_solves": dict(zip(inside_idx.tolist(), result.n_solves.tolist(), strict=True)),
-            }
-        )
-
-    needed_all = np.array(
-        [v for entry in per_draw for v in entry["needed"].values()], dtype=np.float64
+    s, cases, _, inside, model_ev, truth_ev = _draw_context(run, model, seed, n, draw)
+    result = search_draw(
+        model_ev,
+        truth_ev,
+        inside,
+        limit=s.config.quality_limit_kg_per_kg,
+        is_k=model == "M4",
+        bounds=s.bounds,
+        grid=run.grid,
+        settings=run.bisection(model),
     )
-    n_inside = needed_all.size
-    ordered = np.sort(needed_all)
-    rank = max(1, math.ceil(cfg.holding_share * n_inside)) if n_inside else 0
-    parameter = float(ordered[rank - 1]) if n_inside else math.nan
-    candidates = [
-        parameter,
-        *sorted({float(v) for v in ordered if np.isfinite(v) and v > parameter}),
-    ]
-
-    def evaluate_all(p: float) -> list[dict[str, Any]]:
-        rows: list[dict[str, Any]] = []
-        for entry in per_draw:
-            k = len(entry["cases"])
-            idx = np.arange(k)
-            pv = np.full(k, p)
-            lim, ks = limits_ks(pv)
-            actions, j = grid_zoom(entry["model_ev"], idx, lim, ks, s.bounds, cfg.grid)
-            pred = entry["model_ev"].values(idx, actions)
-            tru = entry["truth_ev"].values(idx, actions)
-            holds = truth_holds(tru, limit)
-            for c, case in enumerate(entry["cases"]):
-                orc = oracle[entry["draw"]]["cases"][c]
-                e_true = tru["energy_kw"][c]
-                rows.append(
-                    {
-                        "draw": entry["draw"],
-                        "slot": case.slot,
-                        "kind": case.kind,
-                        "inside": bool(entry["inside"][c]),
-                        "action": actions[c].tolist(),
-                        "objective": float(j[c]),
-                        "predicted": {f: finite(pred[f][c]) for f in pred if f != "valid"}
-                        | {"valid": bool(pred["valid"][c])},
-                        "truth": {
-                            f: finite(tru[f][c])
-                            for f in ("energy_kw", "moisture_kg_per_kg", "bed_temperature_celsius")
-                        }
-                        | {"valid": bool(tru["valid"][c])},
-                        "holds": bool(holds[c]),
-                        "bed_violated": bool(
-                            tru["valid"][c] and tru["bed_temperature_celsius"][c] > 80.0 + 0.05
-                        ),
-                        "oracle_energy_kw": orc["energy_kw"],
-                        "energy_excess_relative": finite(
-                            (e_true - orc["energy_kw"]) / orc["energy_kw"]
-                        )
-                        if orc["energy_kw"]
-                        else None,
-                        "moisture_bias_at_action": finite(
-                            pred["moisture_kg_per_kg"][c] - tru["moisture_kg_per_kg"][c]
-                        ),
-                        # constant margin: m; ensemble: k * std at the chosen point
-                        "effective_margin": finite(
-                            (limit - lim[c])
-                            + (p if is_k else 0.0) * pred["moisture_std_kg_per_kg"][c]
-                        )
-                        if pred["valid"][c]
-                        else None,
-                    }
-                )
-        return rows
-
-    chosen = parameter
-    raised = 0
-    final_rows: list[dict[str, Any]] = []
-    reached = bool(n_inside) and np.isfinite(parameter)
-    if reached:
-        for p in candidates:
-            final_rows = evaluate_all(p)
-            share = np.mean([r["holds"] for r in final_rows if r["inside"]])
-            chosen = p
-            if share >= cfg.holding_share:
-                break
-            raised += 1
-    else:
-        # not reached: report the cases at the upper end of the search
-        final_rows = evaluate_all(settings.upper)
-        chosen = settings.upper
-
-    # box-wide moisture bias on the coarse grid (model minus truth, valid points of both)
-    coarse = _box(s.bounds, cfg.grid.coarse)
-    bias_rows = []
-    for entry in per_draw:
-        for c, case in enumerate(entry["cases"]):
-            cidx = np.full(coarse.shape[0], c)
-            pm = entry["model_ev"].values(cidx, coarse)
-            pt = entry["truth_ev"].values(cidx, coarse)
-            ok = pm["valid"] & pt["valid"]
-            diff = pm["moisture_kg_per_kg"][ok] - pt["moisture_kg_per_kg"][ok]
-            bias_rows.append(
-                {
-                    "draw": entry["draw"],
-                    "slot": case.slot,
-                    "kind": case.kind,
-                    "inside": bool(entry["inside"][c]),
-                    "n_valid": int(ok.sum()),
-                    "n_model_invalid": int((~pm["valid"]).sum()),
-                    "bias": finite(diff.mean()) if diff.size else None,
-                    "rmse": finite(np.sqrt(np.mean(diff**2))) if diff.size else None,
-                }
-            )
-    needed_rows = [
-        {"draw": e["draw"], "slot": int(c), "needed": finite(v), "n_solves": e["n_solves"][c]}
-        for e in per_draw
-        for c, v in e["needed"].items()
-    ]
+    bias = coarse_bias_draw(
+        model_ev, truth_ev, cases, inside, draw=draw, bounds=s.bounds, grid=run.grid
+    )
     return {
-        "key": f"margins_{model}_s{seed}_n{n}",
+        "key": search_key(model, seed, n, draw),
+        "task": "search",
         "model": model,
         "master_seed": seed,
         "n_train": n,
-        "draws": list(draws),
-        "parameter_kind": "k" if is_k else "margin",
-        "search": {"upper": settings.upper, "tolerance": settings.tolerance},
-        "n_inside": int(n_inside),
-        "quantile_rank": rank,
-        "parameter_quantile": finite(parameter),
-        "parameter": finite(chosen) if reached else None,
-        "reached": reached,
-        "raised": raised,
-        "needed": needed_rows,
-        "cases": final_rows,
-        "coarse_bias": bias_rows,
-        "n_predicted_model": int(sum(e["model_ev"].n_predicted for e in per_draw)),
-        "n_predicted_truth": int(sum(e["truth_ev"].n_predicted for e in per_draw)),
+        "draw": draw,
+        "n_inside": len(result.needed),
+        # needed: None = not reached within the upper end (inf)
+        "needed": [
+            {"draw": draw, "slot": int(c), "needed": finite(v), "n_solves": result.n_solves[c]}
+            for c, v in result.needed.items()
+        ],
+        "coarse_bias": bias,
+        "n_predicted_model": model_ev.n_predicted,
+        "n_predicted_truth": truth_ev.n_predicted,
         "elapsed_s": time.perf_counter() - started,
+    }
+
+
+def margin_evaluate_task(
+    run: MarginRun, model: str, seed: int, n: int, draw: int, round_: int, parameter: float
+) -> dict[str, Any]:
+    """Every case of one draw optimised at the cell's parameter of this round, at the truth."""
+    import torch
+
+    from twinlink_ml.hybrid_model.margin_tasks import evaluate_draw
+
+    torch.set_num_threads(1)
+    warnings.filterwarnings("ignore")
+    started = time.perf_counter()
+    s, cases, oracle, inside, model_ev, truth_ev = _draw_context(run, model, seed, n, draw)
+    rows = evaluate_draw(
+        model_ev,
+        truth_ev,
+        cases,
+        inside,
+        oracle["cases"],
+        parameter,
+        draw=draw,
+        limit=s.config.quality_limit_kg_per_kg,
+        is_k=model == "M4",
+        bounds=s.bounds,
+        grid=run.grid,
+    )
+    return {
+        "key": evaluate_key(model, seed, n, round_, draw),
+        "task": "evaluate",
+        "model": model,
+        "master_seed": seed,
+        "n_train": n,
+        "draw": draw,
+        "round": round_,
+        "parameter": parameter,
+        "cases": rows,
+        "n_predicted_model": model_ev.n_predicted,
+        "n_predicted_truth": truth_ev.n_predicted,
+        "elapsed_s": time.perf_counter() - started,
+    }
+
+
+@dataclass
+class Cell:
+    """Scheduling state of one cell (model, master seed, ``n_train``) of the margins part."""
+
+    model: str
+    seed: int
+    n: int
+    draws: tuple[int, ...]
+    search: dict[int, dict[str, Any]] = field(default_factory=dict)
+    rounds: list[dict[int, dict[str, Any]]] = field(default_factory=list)
+    parameter: Any = None  # CellParameter once every draw is searched
+    blocked: bool = False
+    finished: bool = False
+
+    @property
+    def key(self) -> str:
+        return cell_key(self.model, self.seed, self.n)
+
+    def needed(self) -> list[float]:
+        # JSON None = not reached = inf (finite() on the way out)
+        return [
+            math.inf if row["needed"] is None else row["needed"]
+            for d in self.draws
+            for row in self.search[d]["needed"]
+        ]
+
+    def shares(self) -> list[float]:
+        return [
+            float(np.mean([c["holds"] for d in self.draws for c in r[d]["cases"] if c["inside"]]))
+            if any(c["inside"] for d in self.draws for c in r[d]["cases"])
+            else math.nan
+            for r in self.rounds
+            if len(r) == len(self.draws)
+        ]
+
+
+def assemble_cell(cell: Cell, run: MarginRun, decision: Any) -> dict[str, Any]:
+    """The cell record in the format of the former per-cell job (read by the analysis)."""
+    p = cell.parameter
+    final = cell.rounds[-1]
+    settings = run.bisection(cell.model)
+    tasks = [cell.search[d] for d in cell.draws] + [r[d] for r in cell.rounds for d in cell.draws]
+    return {
+        "key": cell.key,
+        "model": cell.model,
+        "master_seed": cell.seed,
+        "n_train": cell.n,
+        "draws": list(cell.draws),
+        "parameter_kind": "k" if cell.model == "M4" else "margin",
+        "search": {"upper": settings.upper, "tolerance": settings.tolerance},
+        "n_inside": p.n_inside,
+        "quantile_rank": p.rank,
+        "parameter_quantile": finite(p.quantile),
+        "parameter": finite(decision.parameter) if p.reached else None,
+        "reached": p.reached,
+        "raised": decision.raised,
+        "rounds": [
+            {"round": i, "parameter": r[cell.draws[0]]["parameter"], "share_inside": s}
+            for i, (r, s) in enumerate(zip(cell.rounds, cell.shares(), strict=True))
+        ],
+        "needed": [row for d in cell.draws for row in cell.search[d]["needed"]],
+        "cases": [c for d in cell.draws for c in final[d]["cases"]],
+        "coarse_bias": [b for d in cell.draws for b in cell.search[d]["coarse_bias"]],
+        # summed over the tasks (each task predicts with its own cache)
+        "n_predicted_model": int(sum(t["n_predicted_model"] for t in tasks)),
+        "n_predicted_truth": int(sum(t["n_predicted_truth"] for t in tasks)),
+        "elapsed_s": float(sum(t["elapsed_s"] for t in tasks)),
+        "peak_commit_mb": max(t["memory"].get("peak_commit_mb", math.nan) for t in tasks),
+        "n_tasks": len(tasks),
     }
 
 
@@ -717,13 +724,223 @@ def errors_job(training: str, draw: int, seed: int) -> dict[str, Any]:
 # --- driver -------------------------------------------------------------------------------------
 
 
+def clean_tree_exceptions(
+    runs_dir: Path, output: Path, training: str, oracle: str | None
+) -> list[Path]:
+    """Paths the clean-tree check leaves out: the run's own output and exactly two inputs.
+
+    The inputs that may be uncommitted are the training records (12.6 MB, above the size rule)
+    and the oracle; their sha256 is pinned in the header instead. ``status_is_dirty`` exempts
+    only these exact UNTRACKED files; any other untracked or modified file still counts.
+    """
+    paths = [output, runs_dir / f"{training}.jsonl"]
+    if oracle is not None:
+        paths.append(runs_dir / f"{oracle}.jsonl")
+    return paths
+
+
+def peak_memory_mb() -> dict[str, float]:
+    """Peak working set and peak commit (private bytes) of this process, in MB."""
+    if sys.platform == "win32":
+        import ctypes
+        from ctypes import wintypes
+
+        class Counters(ctypes.Structure):
+            _fields_ = [  # noqa: RUF012
+                ("cb", wintypes.DWORD),
+                ("PageFaultCount", wintypes.DWORD),
+                ("PeakWorkingSetSize", ctypes.c_size_t),
+                ("WorkingSetSize", ctypes.c_size_t),
+                ("QuotaPeakPagedPoolUsage", ctypes.c_size_t),
+                ("QuotaPagedPoolUsage", ctypes.c_size_t),
+                ("QuotaPeakNonPagedPoolUsage", ctypes.c_size_t),
+                ("QuotaNonPagedPoolUsage", ctypes.c_size_t),
+                ("PagefileUsage", ctypes.c_size_t),
+                ("PeakPagefileUsage", ctypes.c_size_t),
+            ]
+
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        kernel32.GetCurrentProcess.restype = wintypes.HANDLE
+        kernel32.K32GetProcessMemoryInfo.argtypes = [
+            wintypes.HANDLE,
+            ctypes.POINTER(Counters),
+            wintypes.DWORD,
+        ]
+        counters = Counters()
+        counters.cb = ctypes.sizeof(Counters)
+        if not kernel32.K32GetProcessMemoryInfo(
+            kernel32.GetCurrentProcess(), ctypes.byref(counters), counters.cb
+        ):
+            return {}
+        return {
+            "peak_working_set_mb": counters.PeakWorkingSetSize / 2**20,
+            "peak_commit_mb": counters.PeakPagefileUsage / 2**20,
+        }
+    import resource
+
+    return {"peak_rss_mb": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024}
+
+
+def run_task(fn: Any, args: tuple[Any, ...]) -> dict[str, Any]:
+    """Run one task in a worker; an exception becomes an error record (never lost)."""
+    started = time.perf_counter()
+    try:
+        record = {"status": "ok", **fn(*args)}
+    except BaseException:  # recorded and reported, the run goes on
+        record = {"status": "error", "traceback": traceback.format_exc()}
+    record.setdefault("elapsed_s", time.perf_counter() - started)
+    record["memory"] = peak_memory_mb()
+    return record
+
+
+def read_records(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    return [
+        json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()
+    ]
+
+
+DRY_RUNS = {
+    # 1 bisection step (bracket = the whole interval: holds at 0, at the upper end, or neither),
+    # the smallest grid, no zoom -- every task runs once, at minimal cost
+    "minimal": {"coarse": 3, "zoom": 3, "zoom_levels": 0, "max_moves": 1, "starts": 1},
+    # as minimal but with the full coarse grid: the largest prediction batch of the main run
+    # (coarse grid x cases), hence its memory peak
+    "coarse": {"coarse": None, "zoom": 3, "zoom_levels": 0, "max_moves": 1, "starts": 1},
+}
+
+
+class Scheduler:
+    """Tasks of one part; the margins cells add their next tasks when a stage completes."""
+
+    def __init__(self, output: Path, run: MarginRun | None, holding_share: float) -> None:
+        self.output = output
+        self.run = run
+        self.holding_share = holding_share
+        self.ready: list[tuple[tuple[Any, ...], str, Any, tuple[Any, ...]]] = []
+        self.cells: dict[str, Cell] = {}
+        self.owner: dict[str, Cell] = {}
+        self.n_done = 0
+        self.n_errors = 0
+        self.n_cells_done = 0
+
+    def add(self, priority: tuple[Any, ...], key: str, fn: Any, args: tuple[Any, ...]) -> None:
+        self.ready.append((priority, key, fn, args))
+
+    def pop(self) -> tuple[str, Any, tuple[Any, ...]] | None:
+        """The next task by priority; tasks of a cell stopped by an error are dropped."""
+        self.ready.sort(key=lambda item: item[0])
+        while self.ready:
+            _, key, fn, args = self.ready.pop(0)
+            cell = self.owner.get(key)
+            if cell is None or not cell.blocked:
+                return key, fn, args
+        return None
+
+    # margins -----------------------------------------------------------------------------------
+
+    def add_cell(self, cell: Cell, done: dict[str, dict[str, Any]]) -> None:
+        self.cells[cell.key] = cell
+        for d in cell.draws:
+            key = search_key(cell.model, cell.seed, cell.n, d)
+            self.owner[key] = cell
+            if key in done:
+                cell.search[d] = done[key]
+            else:
+                self.add(
+                    self._priority(cell, "search"),
+                    key,
+                    margin_search_task,
+                    (self.run, cell.model, cell.seed, cell.n, d),
+                )
+        if len(cell.search) == len(cell.draws):
+            self._advance(cell, done)
+
+    def _priority(self, cell: Cell, stage: str) -> tuple[Any, ...]:
+        # evaluations first (they finish cells), then the most expensive searches
+        order = {"M4": 0, "M3": 1, "M1": 2, "M2": 3, "M0": 4}
+        return (0 if stage == "evaluate" else 1, order[cell.model], -cell.n, cell.seed)
+
+    def _advance(self, cell: Cell, done: dict[str, dict[str, Any]]) -> None:
+        from twinlink_ml.hybrid_model.margin_tasks import cell_parameter, next_round
+
+        assert self.run is not None
+        if cell.parameter is None:
+            cell.parameter = cell_parameter(cell.needed(), self.holding_share)
+        upper = self.run.bisection(cell.model).upper
+        while True:
+            decision = next_round(cell.parameter, cell.shares(), self.holding_share, upper)
+            if decision.done:
+                if cell.key not in done:
+                    self.write({"kind": "cell", **assemble_cell(cell, self.run, decision)})
+                cell.finished = True
+                self.n_cells_done += 1
+                return
+            r = len(cell.shares())
+            if len(cell.rounds) == r:
+                cell.rounds.append({})
+            missing = []
+            for d in cell.draws:
+                key = evaluate_key(cell.model, cell.seed, cell.n, r, d)
+                self.owner[key] = cell
+                if key in done:
+                    if done[key]["parameter"] != decision.parameter:
+                        raise SystemExit(
+                            f"{key}: recorded parameter differs from the recomputed one"
+                        )
+                    cell.rounds[r][d] = done[key]
+                elif d not in cell.rounds[r]:
+                    missing.append(d)
+            if len(cell.rounds[r]) == len(cell.draws):
+                continue  # the round is complete from the records: decide again
+            for d in missing:
+                self.add(
+                    self._priority(cell, "evaluate"),
+                    evaluate_key(cell.model, cell.seed, cell.n, r, d),
+                    margin_evaluate_task,
+                    (self.run, cell.model, cell.seed, cell.n, d, r, decision.parameter),
+                )
+            return
+
+    def complete(self, key: str, record: dict[str, Any]) -> None:
+        cell = self.owner.get(key)
+        if cell is None or cell.blocked:
+            return
+        if record["task"] == "search":
+            cell.search[record["draw"]] = record
+            if len(cell.search) == len(cell.draws):
+                self._advance(cell, {})
+        else:
+            cell.rounds[record["round"]][record["draw"]] = record
+            if len(cell.rounds[record["round"]]) == len(cell.draws):
+                self._advance(cell, {})
+
+    # bookkeeping -------------------------------------------------------------------------------
+
+    def write(self, record: dict[str, Any]) -> None:
+        append(self.output, record)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--part", choices=("oracle", "margins", "errors"), required=True)
     parser.add_argument("--prefix", default="hybrid_model_v1")
     parser.add_argument("--training", default="hybrid_model_training_v1")
-    parser.add_argument("--workers", type=int, default=14)
+    parser.add_argument(
+        "--name",
+        default=None,
+        help="output name (default <prefix>_<part>, margins: <prefix>_margins_per_draw)",
+    )
+    parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--dry-run", choices=tuple(DRY_RUNS), default=None)
+    parser.add_argument(
+        "--max-batch",
+        type=int,
+        default=256,
+        help="margins: points per map call (memory; 0 = one call per request)",
+    )
     parser.add_argument("--only-models", nargs="*", default=None)
     parser.add_argument("--only-n", type=int, nargs="*", default=None)
     parser.add_argument("--only-seeds", type=int, nargs="*", default=None)
@@ -732,84 +949,174 @@ def main() -> int:
 
     from _common import RUNS_DIR, provenance, require_clean_tree
 
+    from twinlink_ml.hybrid_model.grid_rto import BisectionSettings, GridSettings
     from twinlink_ml.utils.code_location import require_code_location
 
     require_code_location(ROOT)
-    output = RUNS_DIR / f"{args.prefix}_{args.part}.jsonl"
-    # The input artifacts (training records, the oracle of the same prefix) may still be
-    # uncommitted (size); they are left out of the clean-tree check and pinned by sha256 instead.
-    inputs = [RUNS_DIR / f"{args.training}.jsonl"]
-    if args.part != "oracle":
-        inputs.append(RUNS_DIR / f"{args.prefix}_oracle.jsonl")
-    inputs = [path for path in inputs if path.exists()]
-    require_clean_tree(ignore_paths=[output, *inputs])
+    default = (
+        f"{args.prefix}_margins_per_draw"
+        if args.part == "margins"
+        else f"{args.prefix}_{args.part}"
+    )
+    name = args.name or default
+    if args.dry_run and not name.startswith("_"):
+        raise SystemExit("a dry run writes to a name starting with '_' (gitignored)")
+    output = RUNS_DIR / f"{name}.jsonl"
+    oracle = None if args.part == "oracle" else f"{args.prefix}_oracle"
+    exempt = clean_tree_exceptions(RUNS_DIR, output, args.training, oracle)
+    require_clean_tree(ignore_paths=exempt)
     if output.exists() and not args.resume:
-        raise SystemExit(f"{output} exists -- use --resume or a new prefix")
-    done = done_keys(output)
+        raise SystemExit(f"{output} exists -- use --resume or a new name")
     s = setup()
     cfg = s.config
     seeds = args.only_seeds or list(cfg.master_seeds)
     sizes = args.only_n or list(cfg.n_train)
-    draws = args.only_draws if args.only_draws is not None else list(range(len(s.draws)))
-    jobs: list[tuple[str, tuple[Any, ...]]] = []
-    if args.part == "oracle":
-        jobs += [(f"discretisation_{i}", ("disc", i)) for i in range(cfg.discretisation_n_cases)]
-        jobs += [(f"oracle_d{d:02d}", ("oracle", d)) for d in draws]
-    elif args.part == "margins":
-        models = args.only_models or list(MODELS)
-        # most expensive first: M4, then the single networks, then the grey-box models
-        order = {"M4": 0, "M3": 1, "M1": 2, "M2": 3, "M0": 4}
-        for m in sorted(models, key=order.__getitem__):
-            for n in sorted(sizes, reverse=True):
-                for seed in seeds:
-                    jobs.append((f"margins_{m}_s{seed}_n{n}", ("margins", m, seed, n)))
-    else:
-        jobs += [(f"errors_d{d:02d}_s{seed}", ("errors", d, seed)) for d in draws for seed in seeds]
-    jobs = [j for j in jobs if j[0] not in done]
+    draws = tuple(args.only_draws if args.only_draws is not None else range(len(s.draws)))
+    grid, constant, ensemble_k = cfg.grid, cfg.margin_constant, cfg.margin_k
+    if args.dry_run:
+        over = dict(DRY_RUNS[args.dry_run])
+        over["coarse"] = over["coarse"] or cfg.grid.coarse
+        grid = GridSettings(**over)
+        constant = BisectionSettings(upper=constant.upper, tolerance=constant.upper)
+        ensemble_k = BisectionSettings(upper=ensemble_k.upper, tolerance=ensemble_k.upper)
+    run = MarginRun(
+        f"{args.prefix}_oracle", args.training, grid, constant, ensemble_k, args.max_batch or None
+    )
+
+    previous = read_records(output)
+    done = {
+        r["key"]: r
+        for r in previous
+        if r.get("kind") in ("task", "job", "cell") and r.get("status", "ok") == "ok"
+    }
+    inputs = [p for p in exempt[1:] if p.exists()]
     append(
         output,
         {
             "kind": "header",
-            "provenance": provenance("not used", ignore_paths=[output, *inputs]),
+            "provenance": provenance("not used", ignore_paths=exempt),
             "part": args.part,
             "training": args.training,
-            "inputs_sha256": {
-                path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs
-            },
+            "oracle": oracle,
+            "inputs_sha256": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs},
             "config": cfg.raw,
-            "n_jobs": len(jobs),
-            "selection": {"models": args.only_models, "n": sizes, "seeds": seeds, "draws": draws},
+            "dry_run": args.dry_run,
+            "settings": {
+                "grid": dataclasses.asdict(grid),
+                "constant": dataclasses.asdict(constant),
+                "ensemble_k": dataclasses.asdict(ensemble_k),
+                "max_batch": run.max_batch,
+            },
+            "workers": args.workers,
+            "selection": {
+                "models": args.only_models,
+                "n": sizes,
+                "seeds": seeds,
+                "draws": list(draws),
+            },
+            "resumed_with": len(done),
             "started": time.strftime("%Y-%m-%dT%H:%M:%S"),
         },
     )
-    print(f"{len(jobs)} jobs ({len(done)} done before)", flush=True)
-
-    def submit(pool: ProcessPoolExecutor, spec: tuple[Any, ...]) -> Any:
-        if spec[0] == "disc":
-            return pool.submit(discretisation_job, spec[1])
-        if spec[0] == "oracle":
-            return pool.submit(oracle_job, spec[1])
-        if spec[0] == "margins":
-            return pool.submit(margin_job, args.prefix, args.training, *spec[1:], tuple(draws))
-        return pool.submit(errors_job, args.training, *spec[1:])
+    sched = Scheduler(output, run, cfg.holding_share)
+    if args.part == "oracle":
+        for i in range(cfg.discretisation_n_cases):
+            if f"discretisation_{i}" not in done:
+                sched.add((0,), f"discretisation_{i}", discretisation_job, (i,))
+        for d in draws:
+            if f"oracle_d{d:02d}" not in done:
+                sched.add((1,), f"oracle_d{d:02d}", oracle_job, (d,))
+    elif args.part == "margins":
+        for m in args.only_models or list(MODELS):
+            for n in sizes:
+                for seed in seeds:
+                    sched.add_cell(Cell(m, seed, n, draws), done)
+    else:
+        for d in draws:
+            for seed in seeds:
+                if f"errors_d{d:02d}_s{seed}" not in done:
+                    sched.add(
+                        (0,), f"errors_d{d:02d}_s{seed}", errors_job, (args.training, d, seed)
+                    )
+    n_cells = len(sched.cells)
+    print(
+        f"{len(sched.ready)} tasks ready, {len(done)} records done before"
+        + (f", {n_cells} cells ({sched.n_cells_done} done)" if n_cells else ""),
+        flush=True,
+    )
 
     started = time.time()
-    with ProcessPoolExecutor(max_workers=args.workers) as pool:
-        pending = {submit(pool, spec): key for key, spec in jobs}
-        finished = 0
-        while pending:
-            complete, _ = wait(pending, return_when=FIRST_COMPLETED)
+    in_flight: dict[Any, str] = {}
+    broken = False
+    with ProcessPoolExecutor(max_workers=args.workers, max_tasks_per_child=1) as pool:
+        while (sched.ready and not broken) or in_flight:
+            while sched.ready and len(in_flight) < args.workers and not broken:
+                task = sched.pop()
+                if task is None:
+                    break
+                key, fn, task_args = task
+                in_flight[pool.submit(run_task, fn, task_args)] = key
+            if not in_flight:
+                break
+            complete, _ = wait(in_flight, return_when=FIRST_COMPLETED)
             for future in complete:
-                key = pending.pop(future)
-                record = {"kind": "job", **future.result()}
-                append(output, record)
-                finished += 1
+                key = in_flight.pop(future)
+                try:
+                    record = future.result()
+                except BrokenProcessPool:
+                    # a worker died (e.g. out of memory): every task in flight is lost; stop
+                    # scheduling, record the error, resume later
+                    broken = True
+                    record = {
+                        "status": "error",
+                        "traceback": traceback.format_exc(),
+                        "elapsed_s": 0.0,
+                        "memory": {},
+                    }
+                kind = "job" if args.part != "margins" else "task"
+                if record["status"] == "ok":
+                    sched.write({"kind": kind, **record})
+                    sched.n_done += 1
+                    if args.part == "margins":
+                        sched.complete(key, record)
+                else:
+                    sched.write({"kind": "error", "key": key, **record})
+                    sched.n_errors += 1
+                    cell = sched.owner.get(key)
+                    if cell is not None:
+                        cell.blocked = True
+                mem = record.get("memory", {})
                 print(
-                    f"[{finished}/{len(jobs)}] {key} {record['elapsed_s']:.0f} s (wall {time.time() - started:.0f} s)",
+                    f"{time.strftime('%Y-%m-%dT%H:%M:%S')} [{sched.n_done} done, {sched.n_errors} errors, "
+                    f"{len(sched.ready) + len(in_flight)} open"
+                    + (f", cells {sched.n_cells_done}/{n_cells}" if n_cells else "")
+                    + f"] {key} {record['status']} {record['elapsed_s']:.0f} s"
+                    f" peak commit {mem.get('peak_commit_mb', math.nan):.0f} MB"
+                    f" peak ws {mem.get('peak_working_set_mb', math.nan):.0f} MB"
+                    f" (wall {time.time() - started:.0f} s)",
                     flush=True,
                 )
-    append(output, {"kind": "footer", "runtime_s": time.time() - started})
-    return 0
+                if record["status"] != "ok":
+                    print(record["traceback"], flush=True)
+    blocked = [c.key for c in sched.cells.values() if c.blocked]
+    append(
+        output,
+        {
+            "kind": "footer",
+            "runtime_s": time.time() - started,
+            "n_done": sched.n_done,
+            "n_errors": sched.n_errors,
+            "cells_done": sched.n_cells_done,
+            "cells_blocked": blocked,
+            "pool_broken": broken,
+        },
+    )
+    print(
+        f"finished: {sched.n_done} tasks, {sched.n_errors} errors"
+        + (f", cells {sched.n_cells_done}/{n_cells}, blocked {blocked}" if n_cells else ""),
+        flush=True,
+    )
+    return 1 if sched.n_errors or broken else 0
 
 
 if __name__ == "__main__":

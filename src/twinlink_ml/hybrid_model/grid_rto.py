@@ -88,10 +88,23 @@ class CaseEvaluator:
 
     ``contexts (c, 2)`` and ``wide (c,)`` per case. Points are cached per case by their exact
     coordinates, so a grid point is predicted once per case however often the search visits it.
+    ``max_batch``: at most that many points per call of the map (``None``: one call per request).
+    It bounds the memory of the GRU fixed point (the coarse grid of five cases, 2205 points, needs
+    about 9.6 GB peak commit in one call, 2.2 GB in calls of 256, with bit-identical predictions;
+    check of 2026-11-05 before the rerun of the margins).
     """
 
-    def __init__(self, smap: SteadyMap, contexts: np.ndarray, wide: np.ndarray) -> None:
+    def __init__(
+        self,
+        smap: SteadyMap,
+        contexts: np.ndarray,
+        wide: np.ndarray,
+        max_batch: int | None = None,
+    ) -> None:
+        if max_batch is not None and max_batch < 1:
+            raise ValueError("max_batch >= 1")
         self.smap = smap
+        self.max_batch = max_batch
         self.contexts = np.asarray(contexts, dtype=np.float64)
         self.wide = np.asarray(wide, dtype=bool)
         self._cache: list[dict[tuple[float, float], tuple[float, ...]]] = [
@@ -111,15 +124,20 @@ class CaseEvaluator:
             # one request per point even if two cases share coordinates
             if not rows:
                 continue
-            idx = np.array(rows)
-            prediction = self.smap.predict(actions[idx], self.contexts[cases[idx]], wide=wide)
-            self.n_predicted += len(rows)
-            for j, i in enumerate(rows):
-                self._cache[cases[i]][keys[i]] = (
-                    *(float(getattr(prediction, f)[j]) for f in FIELDS),
-                    float(prediction.valid[j]),
-                )
+            step = self.max_batch or len(rows)
+            for start in range(0, len(rows), step):
+                chunk = rows[start : start + step]
+                idx = np.array(chunk)
+                prediction = self.smap.predict(actions[idx], self.contexts[cases[idx]], wide=wide)
+                self.n_predicted += len(chunk)
+                for j, i in enumerate(chunk):
+                    self._cache[cases[i]][keys[i]] = (
+                        *(float(getattr(prediction, f)[j]) for f in FIELDS),
+                        float(prediction.valid[j]),
+                    )
         out = np.array([self._cache[c][k] for c, k in zip(cases, keys, strict=True)])
+        if not keys:  # empty request (e.g. a draw without inside cases): empty columns
+            out = np.empty((0, len(FIELDS) + 1))
         result = {f: out[:, i] for i, f in enumerate(FIELDS)}
         result["valid"] = out[:, len(FIELDS)] > 0.5
         return result

@@ -108,6 +108,11 @@ as such and drops out of Y0. Y1 and Y2 use the same determinable cells. A draw w
 case contributes nothing to the search (no search there); its cases are evaluated at the chosen
 parameter like all others.
 
+Implementation of the addendum: a cell with fewer than ``MIN_INSIDE`` pooled inside cases has
+``determinable`` False and no margin, energy or holding share as a number; medians and paired
+comparisons use the determinable cells only (paired: at least 2 seeds). The margins are read from
+the cell records of ``<prefix>_margins_per_draw.jsonl`` (driver split per draw, same format).
+
     tools/run_here.sh scripts/analyze_hybrid_model.py --prefix hybrid_model_v1
 """
 
@@ -136,14 +141,16 @@ EQUIVALENCE = 0.10
 ABSOLUTE_FLOOR = 1.0e-4
 OUTSIDE_LIMIT = 0.05
 DISCRETISATION_THRESHOLD = 0.002
+MIN_INSIDE = 20  # addendum 2026-11-05: a margin is determinable from >= 20 pooled inside cases
+MIN_PAIRED_SEEDS = 2
 
 
-def jobs(path: Path) -> list[dict[str, Any]]:
+def jobs(path: Path, kind: str = "job") -> list[dict[str, Any]]:
     out = []
     for line in path.read_text(encoding="utf-8").splitlines():
         if line.strip():
             row = json.loads(line)
-            if row.get("kind") == "job":
+            if row.get("kind") == kind:
                 out.append(row)
     return out
 
@@ -168,7 +175,10 @@ def summarise_job(job: dict[str, Any]) -> dict[str, Any]:
     out_b = [c for c in cases if c["kind"] == "interior" and not c["inside"]]
     out_a = [c for c in cases if c["kind"] == "a"]
     upper = job["search"]["upper"]
-    if job["parameter_kind"] == "k":
+    determinable = job["n_inside"] >= MIN_INSIDE
+    if not determinable:
+        margin = None
+    elif job["parameter_kind"] == "k":
         margin = _median([c["effective_margin"] for c in inside]) if job["reached"] else None
     else:
         margin = job["parameter"] if job["reached"] else None
@@ -199,15 +209,20 @@ def summarise_job(job: dict[str, Any]) -> dict[str, Any]:
         "parameter_kind": job["parameter_kind"],
         "raised": job["raised"],
         "n_inside": job["n_inside"],
+        "determinable": determinable,
         "margin": margin,
         "margin_censored": margin
         if margin is not None
         else upper
-        if job["parameter_kind"] == "margin"
+        if job["parameter_kind"] == "margin" and determinable
         else None,
-        "holding_share_inside": float(np.mean([c["holds"] for c in inside])) if inside else None,
-        "energy_relative_median": _median(r),
-        "energy_excess_pooled": (pooled_true / pooled_oracle - 1.0) if pooled_oracle else None,
+        "holding_share_inside": float(np.mean([c["holds"] for c in inside]))
+        if inside and determinable
+        else None,
+        "energy_relative_median": _median(r) if determinable else None,
+        "energy_excess_pooled": (pooled_true / pooled_oracle - 1.0)
+        if pooled_oracle and determinable
+        else None,
         "violations_b": share(out_b),
         "violations_a": share(out_a),
         "bed_violations": sum(c["bed_violated"] for c in cases),
@@ -237,7 +252,7 @@ def curve(rows: list[dict[str, Any]], key: str) -> dict[str, Any]:
 def paired(cand: dict[int, float], ref: dict[int, float]) -> dict[str, Any] | None:
     from twinlink_ml.evaluation.paired_resolution import paired_comparison
 
-    if not cand or set(cand) != set(ref):
+    if len(cand) < MIN_PAIRED_SEEDS or set(cand) != set(ref):
         return None
     if any(v is None for v in [*cand.values(), *ref.values()]):
         return None
@@ -255,11 +270,15 @@ def paired(cand: dict[int, float], ref: dict[int, float]) -> dict[str, Any] | No
 
 
 def reading(table: dict[tuple[str, int], list[dict[str, Any]]]) -> dict[str, Any]:
+    # addendum 2026-11-05: determinable cells only
+    def cells(model: str, n: int) -> list[dict[str, Any]]:
+        return [r for r in table.get((model, n), []) if r["determinable"]]
+
     def per_seed(model: str, n: int, key: str) -> dict[int, float]:
-        return {r["seed"]: r[key] for r in table.get((model, n), [])}
+        return {r["seed"]: r[key] for r in cells(model, n)}
 
     def med(model: str, n: int, key: str) -> float | None:
-        return curve(table.get((model, n), []), key)["median"] if (model, n) in table else None
+        return curve(cells(model, n), key)["median"] if cells(model, n) else None
 
     y0_half, y0_resolved, y2_better, y1 = {}, {}, {}, {}
     for n in READING_N:
@@ -288,7 +307,12 @@ def reading(table: dict[tuple[str, int], list[dict[str, Any]]]) -> dict[str, Any
                     per_seed("M2", n, "margin_censored"), per_seed("M3", n, "margin_censored")
                 ),
             }
-    complete = all(v is not None for v in y0_half.values())
+    # an n_train without any determinable cell drops out (reported as such)
+    assessable = [n for n in READING_N if y0_half[n] is not None]
+    y0_half = {n: y0_half[n] for n in assessable}
+    y0_resolved = {n: y0_resolved[n] for n in assessable}
+    y2_better = {n: y2_better[n] for n in assessable}
+    complete = bool(assessable)
     y0 = (
         complete
         and all(y0_half.values())
@@ -297,7 +321,9 @@ def reading(table: dict[tuple[str, int], list[dict[str, Any]]]) -> dict[str, Any
     y0_unresolved = complete and all(y0_half.values()) and not y0
     y2 = complete and not any(y2_better.values())
     y1_holds = all(v is not None and v["margin_ok"] and v["energy_ok"] for v in y1.values())
-    if y0:
+    if not complete:
+        verdict = "not determinable (no n_train <= 16 with a determinable cell)"
+    elif y0:
         verdict = "Y0"
     elif y2:
         verdict = "Y2"
@@ -307,6 +333,8 @@ def reading(table: dict[tuple[str, int], list[dict[str, Any]]]) -> dict[str, Any
         verdict = "partial advantage (neither Y0 nor Y2)"
     return {
         "verdict_y0_y2": verdict,
+        "n_train_assessed": assessable,
+        "n_train_not_determinable": [n for n in READING_N if n not in assessable],
         "y1": bool(y1_holds),
         "y0_half_criterion": y0_half,
         "y0_paired_m3_vs_m1": y0_resolved,
@@ -319,16 +347,22 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--prefix", default="hybrid_model_v1")
     parser.add_argument("--training", default="hybrid_model_training_v1")
+    parser.add_argument("--margins", default=None, help="default <prefix>_margins_per_draw")
     parser.add_argument("--output", default=None)
     args = parser.parse_args()
 
     from _common import provenance, require_clean_tree
+    from run_hybrid_evaluation import clean_tree_exceptions
 
     output = RUNS / f"{args.output or args.prefix + '_analysis'}.json"
     if output.exists():
         raise SystemExit(f"{output} exists -- artifacts are never overwritten")
-    require_clean_tree()
-    margins = jobs(RUNS / f"{args.prefix}_margins.jsonl")
+    # the uncommitted training records are the only input exempt here (not read by the analysis)
+    exempt = clean_tree_exceptions(RUNS, output, args.training, None)
+    require_clean_tree(ignore_paths=exempt)
+    margins_name = args.margins or f"{args.prefix}_margins_per_draw"
+    margins_path = RUNS / f"{margins_name}.jsonl"
+    margins = jobs(margins_path, kind="cell")
     oracle_jobs = jobs(RUNS / f"{args.prefix}_oracle.jsonl")
     errors_path = RUNS / f"{args.prefix}_errors.jsonl"
     errors = jobs(errors_path) if errors_path.exists() else []
@@ -420,14 +454,19 @@ def main() -> int:
         for k, metrics in sorted(error_table.items())
     }
     payload = {
-        "provenance": provenance("not used"),
+        "provenance": provenance("not used", ignore_paths=exempt),
         "inputs": {
-            "margins": f"{args.prefix}_margins.jsonl",
+            "margins": margins_path.name,
             "oracle": f"{args.prefix}_oracle.jsonl",
             "errors": f"{args.prefix}_errors.jsonl" if errors else None,
-            "margin_headers": [
-                h["provenance"] for h in headers(RUNS / f"{args.prefix}_margins.jsonl")
-            ],
+            "margin_headers": [h["provenance"] for h in headers(margins_path)],
+        },
+        "inside_cases_per_cell": {
+            f"{r['model']}/s{r['seed']}/n{r['n_train']}": {
+                "n_inside": r["n_inside"],
+                "determinable": r["determinable"],
+            }
+            for r in rows
         },
         "reading": reading(table),
         "outside": outside,
