@@ -389,3 +389,118 @@ def test_chunked_predictions_equal_one_call() -> None:
     assert max(chunked.calls) <= 7 and sum(chunked.calls) == sum(whole.calls)
     with pytest.raises(ValueError):
         CaseEvaluator(_Bowl(), contexts, wide, max_batch=0)
+
+
+def _search_record(script: ModuleType, draw: int, needed: list[float]) -> dict:  # type: ignore[type-arg]
+    return {
+        "key": script.search_key("M0", 1, 4, draw),
+        "task": "search",
+        "draw": draw,
+        "needed": [
+            {"draw": draw, "slot": i, "needed": v, "n_solves": 1} for i, v in enumerate(needed)
+        ],
+        "coarse_bias": [],
+        "n_predicted_model": 1,
+        "n_predicted_truth": 1,
+        "elapsed_s": 1.0,
+        "memory": {"peak_commit_mb": 100.0},
+    }
+
+
+def _evaluate_record(
+    script: ModuleType, draw: int, round_: int, p: float, holds: list[bool]
+) -> dict:  # type: ignore[type-arg]
+    return {
+        "key": script.evaluate_key("M0", 1, 4, round_, draw),
+        "task": "evaluate",
+        "draw": draw,
+        "round": round_,
+        "parameter": p,
+        "cases": [
+            {"draw": draw, "slot": i, "inside": True, "holds": h} for i, h in enumerate(holds)
+        ],
+        "n_predicted_model": 1,
+        "n_predicted_truth": 1,
+        "elapsed_s": 1.0,
+        "memory": {"peak_commit_mb": 100.0},
+    }
+
+
+def test_scheduler_raises_over_rounds_and_resumes(tmp_path: Path) -> None:
+    script = _evaluation_script()
+    run = script.MarginRun(
+        "oracle",
+        "training",
+        GridSettings(),
+        BisectionSettings(0.12, 1e-4),
+        BisectionSettings(10.0, 0.01),
+    )
+    out = tmp_path / "margins.jsonl"
+    sched = script.Scheduler(out, run, 0.6)
+    sched.add_cell(script.Cell("M0", 1, 4, (0, 1)), {})
+    assert sorted(key for _, key, _, _ in sched.ready) == [
+        script.search_key("M0", 1, 4, 0),
+        script.search_key("M0", 1, 4, 1),
+    ]
+    sched.ready.clear()
+    sched.complete(script.search_key("M0", 1, 4, 0), _search_record(script, 0, [0.01, 0.02]))
+    assert not sched.ready  # waits for the other draw
+    sched.complete(script.search_key("M0", 1, 4, 1), _search_record(script, 1, [0.03]))
+    # 3 inside cases, rank ceil(0.6 * 3) = 2: quantile 0.02; candidates 0.02, 0.03
+    assert sorted((args[4], args[5], args[6]) for _, _, _, args in sched.ready) == [
+        (0, 0, 0.02),
+        (1, 0, 0.02),
+    ]
+    sched.ready.clear()
+    sched.complete(
+        script.evaluate_key("M0", 1, 4, 0, 0), _evaluate_record(script, 0, 0, 0.02, [True, False])
+    )
+    sched.complete(
+        script.evaluate_key("M0", 1, 4, 0, 1), _evaluate_record(script, 1, 0, 0.02, [False])
+    )
+    # share 1/3 < 0.6: round 1 at the next candidate
+    assert sorted((args[4], args[5], args[6]) for _, _, _, args in sched.ready) == [
+        (0, 1, 0.03),
+        (1, 1, 0.03),
+    ]
+    sched.ready.clear()
+    # stop here and resume from the records written so far (search + round 0, written by the
+    # driver loop; here written explicitly)
+    partial = [
+        _search_record(script, 0, [0.01, 0.02]),
+        _search_record(script, 1, [0.03]),
+        _evaluate_record(script, 0, 0, 0.02, [True, False]),
+        _evaluate_record(script, 1, 0, 0.02, [False]),
+    ]
+    resumed = script.Scheduler(tmp_path / "resumed.jsonl", run, 0.6)
+    resumed.add_cell(script.Cell("M0", 1, 4, (0, 1)), {r["key"]: r for r in partial})
+    assert sorted((args[4], args[5], args[6]) for _, _, _, args in resumed.ready) == [
+        (0, 1, 0.03),
+        (1, 1, 0.03),
+    ]
+    sched.complete(
+        script.evaluate_key("M0", 1, 4, 1, 0), _evaluate_record(script, 0, 1, 0.03, [True, True])
+    )
+    sched.complete(
+        script.evaluate_key("M0", 1, 4, 1, 1), _evaluate_record(script, 1, 1, 0.03, [True])
+    )
+    cells = [r for r in script.read_records(out) if r["kind"] == "cell"]
+    assert len(cells) == 1 and sched.n_cells_done == 1 and not sched.ready
+    cell = cells[0]
+    assert cell["parameter"] == 0.03 and cell["raised"] == 1 and cell["n_inside"] == 3
+    assert [r["parameter"] for r in cell["rounds"]] == [0.02, 0.03]
+    assert cell["rounds"][0]["share_inside"] == pytest.approx(1 / 3)
+    assert all(c["holds"] for c in cell["cases"])  # the cases of the final round
+    # a complete resume: nothing to do, no second cell record
+    done = {
+        r["key"]: r
+        for r in [
+            *partial,
+            _evaluate_record(script, 0, 1, 0.03, [True, True]),
+            _evaluate_record(script, 1, 1, 0.03, [True]),
+            cell,
+        ]
+    }
+    again = script.Scheduler(tmp_path / "again.jsonl", run, 0.6)
+    again.add_cell(script.Cell("M0", 1, 4, (0, 1)), done)
+    assert not again.ready and again.n_cells_done == 1 and not (tmp_path / "again.jsonl").exists()
