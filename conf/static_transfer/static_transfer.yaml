@@ -211,11 +211,11 @@ pilot:
 # Filled from the pilot artifact (rule: lowest mean criterion C, docs/NN section 5) BEFORE the
 # main run; the main run checks that these equal the selection recorded in that artifact.
 selected:
-  pilot_artifact: null
-  L1: null
-  L2: null
-  L3: null
-  L4: null
+  pilot_artifact: static_transfer_pilot_v1
+  L1: {prior_scale: 4.0}
+  L2: {learning_rate: 0.01, steps: 90.0, weight_decay: 10.0}
+  L3: {learning_rate: 3.3333333333333335e-05, sp_lambda: 0.0, steps: 300.0}
+  L4: {learning_rate: 0.0003333333333333333, steps: 10000.0, weight_decay: 0.1}
 
 statistics:
   alpha: 0.05                      # Holm per hypothesis family, two-sided paired t over seeds
