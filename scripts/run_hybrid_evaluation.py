@@ -24,8 +24,9 @@ otherwise.
              (b), extrapolation (a)) optimised at that parameter and evaluated at the truth; raise
              rule of Befund 111 over the rounds. Every task record is written when the task ends
              (``--resume`` continues), an exception is recorded per task (its cell stops, the others
-             go on), one fresh worker process per task (its memory peak is recorded); the cell
-             record (format of the former per-cell job) when the cell is done.
+             go on), the worker's pid and memory peak so far in every record and log line; the
+             cell record (format of the former per-cell job) when the cell is done. Workers are
+             reused (a fresh process costs about 40-70 s of imports from the network drive).
                                                                 -> ``<prefix>_margins_per_draw``
 ``errors``   per (draw, seed): one-step (h1) and rollout (h36) RMSE and bias in physical units of
              every model and ``n_train`` on the excited test set of the pool, on the constant-run
@@ -740,7 +741,7 @@ def clean_tree_exceptions(
 
 
 def peak_memory_mb() -> dict[str, float]:
-    """Peak working set and peak commit (private bytes) of this process, in MB."""
+    """Peak working set and peak commit (private bytes) of this process so far, in MB."""
     if sys.platform == "win32":
         import ctypes
         from ctypes import wintypes
@@ -790,6 +791,7 @@ def run_task(fn: Any, args: tuple[Any, ...]) -> dict[str, Any]:
         record = {"status": "error", "traceback": traceback.format_exc()}
     record.setdefault("elapsed_s", time.perf_counter() - started)
     record["memory"] = peak_memory_mb()
+    record["worker_pid"] = os.getpid()
     return record
 
 
@@ -1048,7 +1050,7 @@ def main() -> int:
     started = time.time()
     in_flight: dict[Any, str] = {}
     broken = False
-    with ProcessPoolExecutor(max_workers=args.workers, max_tasks_per_child=1) as pool:
+    with ProcessPoolExecutor(max_workers=args.workers) as pool:
         while (sched.ready and not broken) or in_flight:
             while sched.ready and len(in_flight) < args.workers and not broken:
                 task = sched.pop()
@@ -1091,6 +1093,7 @@ def main() -> int:
                     f"{len(sched.ready) + len(in_flight)} open"
                     + (f", cells {sched.n_cells_done}/{n_cells}" if n_cells else "")
                     + f"] {key} {record['status']} {record['elapsed_s']:.0f} s"
+                    f" worker {record.get('worker_pid')}"
                     f" peak commit {mem.get('peak_commit_mb', math.nan):.0f} MB"
                     f" peak ws {mem.get('peak_working_set_mb', math.nan):.0f} MB"
                     f" (wall {time.time() - started:.0f} s)",
