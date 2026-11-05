@@ -122,14 +122,82 @@ training driver puts these last). Scripts: `scripts/train_hybrid_model.py`,
 `scripts/analyze_hybrid_model.py`; tests `tests/test_hybrid_model.py`. Checkpoints
 `artifacts/checkpoints/hybrid_model/` (gitignored), copied to `C:/twinlink_runs/hybrid-model/`.
 
-## 8. Runs and controls
+## 8. Decisions without consultation and decisions of the project lead
+
+**Decisions of the project lead.**
+
+* 2026-11-03: grid + zoom instead of the 8-start Nelder-Mead (section 4); 5 interior contexts per
+  draw, rotated; extrapolation (a) and (b); M4 by bisection on k; the addendum of the request
+  (discretisation check, paired cases, margin only from inside cases, k <= 10).
+* 2026-11-04, **30-h budget rule**: the run is to finish provided it demonstrably works; no cut.
+  The budget was exceeded: the study started 2026-11-03 12:24 (training of de3079f, 1680 tasks,
+  done 22:32, log `hyb_main_train.log`: 36436 s wall); the oracle of a343840 ran 22:35-22:45;
+  the margins run of a343840 ran from 22:45 until it failed on 2026-11-05 04:50 (30.1 h; 40.4 h
+  since the start of the study). Nothing was cut. The run was continued on instruction; it failed
+  for the reason below, not by the budget rule.
+* 2026-11-05, **rerun of the margins** after that failure: (1) a draw without any inside case
+  has no margin search, its cases are evaluated at the chosen parameter, with a test for exactly
+  this case; (2) the driver split per draw (one task per draw, every record written at once,
+  `--resume`, errors recorded per task, progress with time and memory peak in the log, the
+  computation unchanged); (3) a dated addendum to the reading (committed in ac8173a before any
+  margin result): a margin is determinable only from >= 20 pooled inside cases per cell, the
+  number of inside cases reported per cell, Y0 on the determinable cells; (4) a dry run over all
+  tasks at minimal cost before the main run; (5) the main run in full (`n_train` 32 included, no
+  cut, running over the weekend approved), at most 8 workers (= physical cores), the sum of the
+  memory peaks below 80 % of the RAM; (6) the main run is started by the project lead.
+
+**The failed margins run of a343840.** For 8 (seed, `n_train`, draw) combinations (s1 n4: draws 9,
+14; s2 n4: draws 3, 8, 13, 18; s2 n8: draws 8, 13) no case of the draw is inside the training
+range; the search then called the evaluator with an empty case set (`IndexError`). The pilot (draw
+0) has inside cases everywhere and did not show it. After the first failed job the driver left its
+loop, while `ProcessPoolExecutor.shutdown(wait=True)` still ran every remaining job and discarded
+the results; the four idle workers seen at 03:40 had no job left. No margin result was written;
+the header of that run is kept (`hybrid_model_v1_margins.jsonl`, committed in 3207796, never to be
+appended to).
+
+**Decisions without consultation** (taken by the session, reported to the project lead).
+
+* Coverage threshold 0.2 (section 5), the optimiser change after the pilot (section 4) and the
+  rule for a model without a valid point (section 6), each before the main run.
+* **Clean-tree exception** (a343840, kept in 3c00410): the training records (12.6 MB) are above
+  the size rule of the request and stay uncommitted as JSONL; the evaluation exempts exactly its
+  own output and two inputs -- the training records and the oracle -- from the clean-tree check
+  (`clean_tree_exceptions` in `scripts/run_hybrid_evaluation.py`; test
+  `test_clean_tree_exception_is_exactly_the_output_and_the_two_inputs`: any other untracked file
+  and any modified tracked file still count) and pins their sha256 in its header; the analysis
+  exempts only the training records. Reason: the evaluation needs the training records as input,
+  and committing them needed the project lead's consent. The training records are committed as
+  gzip (`hybrid_model_training_v1.jsonl.gz`, 3207796, with consent); the sha256 of the
+  decompressed content equals the value pinned in the oracle header (e0cd7a0d...f2418b, checked
+  2026-11-05). The pinned hashes refer to the files as written on Windows (CRLF line ends); git
+  stores them with LF, so a checkout with other line-ending settings gives other bytes.
+* **Bounded prediction batches** (3c00410): `CaseEvaluator(max_batch=256)` in the margins tasks.
+  The coarse grid of five cases (2205 points) in one call of a GRU map needs about 9.6 GB peak
+  commit (M1 and M4, d0 s1 n32, scratch check of 2026-11-05), 8 workers would need about 77 GB;
+  in calls of 256 points 2.2 GB with bit-identical predictions in every field.
+* **Worker processes reused** (7044da1): a fresh process per task costs 40-70 s of imports from
+  the network drive (about 6-7 h over the main run); the memory peak in the records is the peak
+  of the worker process so far.
+
+**Dry run** (2026-11-05, 7044da1, clean tree; outputs gitignored: `_hybrid_dryrun_margins`,
+`_hybrid_memprobe_margins`, `_hybrid_dryrun_errors`). *Minimal* (1 bisection step, 3 x 3 grid, no
+zoom) over every margins task: 2400 tasks, 0 errors, 60 of 60 cells; 40 search tasks without any
+inside case (the 8 combinations above x 5 models) ran without a search and their cases were
+evaluated; pooled inside cases per cell 29 (s2 n4) to 94 (s1 n32), so every cell is determinable
+under the addendum; 10 cells took the "not reached" path; the raise over rounds did not occur (it is
+covered by `test_scheduler_raises_over_rounds_and_resumes`). *Memory probe* (full coarse grid, all
+models, s1 n32, draws 0-3): 40 tasks, 0 errors, peak commit 1246-1273 MB per worker, sum of the 8
+workers 10.1 GB (32 % of 31.2 GB). *Errors part* (complete, it has no reduced mode): 60 tasks,
+0 errors, 954-973 MB per worker, 43 min wall.
+
+## 9. Runs and controls
 
 (after the runs)
 
-## 9. Results
+## 10. Results
 
 (after the runs)
 
-## 10. Caveats
+## 11. Caveats
 
 (after the runs)
