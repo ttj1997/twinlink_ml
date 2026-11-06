@@ -1,0 +1,43 @@
+# Static transfer study, POST-HOC sensitivity v2 (decision of the project lead, 2026-11-06):
+# L3 with a stronger fine-tuning. Declared post hoc; the main reading R3 of v1 stays. Reading of
+# this sensitivity (pre-registered before its pilot and its run): docstring of
+# scripts/analyze_static_transfer_v2.py; docs/37_static_transfer.md section 15.
+#
+# Everything not named here is taken unchanged from v1: the YAML conf/static_transfer/
+# static_transfer.yaml (v1 settings of L1, L2, L4), the test sets and training designs as stored in
+# the v1 artifact, and the v1 pretrained nets (checkpoints of the v1 run).
+
+version: 2
+v1_run: static_transfer_v1                 # artifact artifacts/runs/<v1_run>.json.gz
+v1_checkpoints: artifacts/checkpoints/static_transfer/static_transfer_v1
+
+# Pilot plant at FULL strength, own mixture (placeholders; never in the main run). Strengths of
+# the order of the main plants (P-comb: heat loss 0.02, atomising 0.025, false air 0.05, eta peak
+# 0.85 / curvature 0.60, moisture 0.06 / 0.20), but other values and another efficiency shape.
+pilot_plant:
+  PP-full:
+    heat_loss_w_per_k_per_kg_h: 0.025
+    atomising_air_share: 0.02
+    atomising_air_celsius: 25.0
+    false_air_share: 0.06
+    efficiency: {peak: 0.86, load_at_peak: 1.05, curvature: 0.55}
+    moisture: {excess_nominal: 0.07, excess_max: 0.18}
+
+pilot:
+  seeds: [21, 22, 23]            # own seeds (designs 3000 + s, noise, pretraining 100 + s)
+  budgets: [4, 16]
+  validation_seed_offset: 21     # pilot validation set: Sobol scramble test_seed + 21, interpolation box
+  max_extensions: 2              # per dimension, same edge rule as v1 (0 is a natural bound)
+  grid:                          # L3 only (lr up to 1e-2, steps up to 5000, L2-SP off / on)
+    learning_rate: [1.0e-4, 3.0e-4, 1.0e-3, 3.0e-3, 1.0e-2]
+    steps: [300, 1000, 3000, 5000]
+    sp_lambda: [0.0, 1.0e-3, 1.0e-1]
+
+rerun:
+  condition: clean_low           # clean inputs, primary noise
+  test_sets: [interpolation, plant_like]   # reported; the unit scores all four (unchanged code)
+
+# Filled from the pilot-2 artifact BEFORE the rerun (own commit); the rerun checks it.
+selected:
+  pilot_artifact: static_transfer_pilot_v2
+  L3: {learning_rate: 0.0003, sp_lambda: 0.0, steps: 90.0}

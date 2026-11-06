@@ -1,0 +1,222 @@
+# Static transfer study: surrogate of the dryer balance -- pretraining on the partner balance and
+# fine-tuning on few plant points, against calibration and a residual MLP
+# (docs/37_static_transfer.md; reading pre-registered in the docstring of
+# scripts/analyze_static_transfer.py).
+#
+# STATUS: placeholder -- every number below is a study setting or a placeholder WITHOUT a
+# measured source, unless a source is named next to it. Synthetic plants only (stage 1).
+#
+# Intensive formulation (decision of the project lead, 2026-11-05): inputs are the inlet
+# temperature, the specific spray load M_s / M_g, the ambient temperature, the inlet humidity and
+# the solid fraction; targets are the exhaust temperature, the exhaust humidity and the heater
+# power per unit of dry-air flow (kW per kg/s = kJ per kg of dry air). The plant's dry-air flow is
+# the source's nominal one (100 kg/h); the heat loss is given per kg/h of air (see `plants`).
+
+version: 1
+
+seeds: [1, 2, 3, 4, 5]          # master seeds: design scramble, noise, input-error signs, nets
+budgets: [2, 4, 8, 16, 32, 64]  # plant points N, nested prefixes of one admissible Sobol stream
+
+# ---------------------------------------------------------------------------------------------
+# Source model: the adiabatic balance of the partner workbook (twinlink_ml.partner_v4_1.
+# dryer_block), dryer 2 (fluidised bed). Values as committed in docs/11 sections 12.1 and 13.1;
+# the workbook is NOT read at run time.
+source:
+  label: twinlink_excel_dryer2
+  note: "TwinLink Excel.xlsx, dryer 2; values of docs/11 section 13.1 (properties of 4.1_2)"
+  cp_gas_j_per_kg_k: 1006.0
+  cp_vapour_j_per_kg_k: 1906.0
+  cp_liquid_j_per_kg_k: 4185.0
+  cp_solid_j_per_kg_k: 1000.0
+  evaporation_enthalpy_0c_j_per_kg: 2.5e6
+  equilibrium_moisture_kg_per_kg: 0.002
+  heater_efficiency: 0.80
+  spray_temperature_celsius: 20.0
+  pressure_pa: 101325.0
+  air_kg_per_h: 100.0              # E10; the plant's (fixed) dry-air flow
+  nominal:                         # the source's operating point = centre of the plant's range
+    inlet_celsius: 150.0           # E12
+    spray_load_kg_per_kg: 0.03     # 3 kg/h spray / 100 kg/h air
+    ambient_celsius: 20.0          # E17
+    inlet_humidity_g_per_kg: 6.0
+    solid_fraction: 0.40
+
+# L0 sensitivity only (decision of the project lead): the input set of Model v4.1_2.xlsx,
+# dryer 2 (docs/11 sections 12.1 and 13.1). In the intensive formulation only the heater
+# efficiency (70 %) and the spray temperature (15 degC) differ from the source; the properties
+# are the same.
+sensitivity_source:
+  label: model_v4_1_2_dryer2
+  heater_efficiency: 0.70
+  spray_temperature_celsius: 15.0
+
+# ---------------------------------------------------------------------------------------------
+# Input boxes, order (inlet degC, spray load kg/kg, ambient degC, inlet humidity g/kg, solid
+# fraction). Placeholders unless noted.
+boxes:
+  pretraining:                     # T_in and X_s fixed by the project lead; the rest covers all sets
+    inlet_celsius: [60.0, 200.0]
+    spray_load_kg_per_kg: [0.010, 0.060]
+    ambient_celsius: [-10.0, 40.0]
+    inlet_humidity_g_per_kg: [0.5, 16.0]
+    solid_fraction: [0.35, 0.70]
+  interpolation:                   # the plant's operating range: training designs and test set
+    inlet_celsius: [130.0, 170.0]
+    spray_load_kg_per_kg: [0.024, 0.036]
+    ambient_celsius: [5.0, 30.0]
+    inlet_humidity_g_per_kg: [3.0, 10.0]
+    solid_fraction: [0.38, 0.42]
+  extrapolation_outer:             # test set = this box minus the interpolation box
+    inlet_celsius: [110.0, 190.0]
+    spray_load_kg_per_kg: [0.015, 0.045]
+    ambient_celsius: [-5.0, 35.0]
+    inlet_humidity_g_per_kg: [2.0, 14.0]
+    solid_fraction: [0.38, 0.42]
+  plant_like:                      # generic placeholders after docs/34: supply air about 75-95 degC,
+                                   # specific load from the request's placeholders (30 000 Nm3/h,
+                                   # 2 t/h) and the day factors of docs/34 4.1, solid-fraction band
+                                   # 0.60-0.70 of docs/34; dried or dry supply air
+    inlet_celsius: [75.0, 95.0]
+    spray_load_kg_per_kg: [0.020, 0.055]
+    ambient_celsius: [0.0, 25.0]
+    inlet_humidity_g_per_kg: [1.0, 6.0]
+    solid_fraction: [0.60, 0.70]
+  product_change:                  # interpolation box at another solid fraction (generic product 2)
+    inlet_celsius: [130.0, 170.0]
+    spray_load_kg_per_kg: [0.024, 0.036]
+    ambient_celsius: [5.0, 30.0]
+    inlet_humidity_g_per_kg: [3.0, 10.0]
+    solid_fraction: [0.58, 0.62]
+
+admissibility:
+  max_relative_humidity: 0.90      # bed exhaust of the source AND of every plant (placeholder)
+
+test_sets:
+  count: 512                       # points per test set
+  seed: 20261105                   # Sobol scramble of the test sets (+ index of the set)
+  design_seed_offset: 3000         # training design of seed s: Sobol scramble 3000 + s
+
+pretraining:
+  n_train: 8192
+  n_validation: 1024
+  seed_offset: 100                 # Sobol scramble 100 + s (train) and 200 + s (validation)
+  learning_rate: 1.0e-3
+  batch_size: 256
+  max_epochs: 500
+  patience: 40
+
+# ---------------------------------------------------------------------------------------------
+# Measurement noise on the targets (independent per point; the residual scatter of a stationary
+# block mean). Placeholders. The high level is 3 x the primary one.
+noise:
+  primary:
+    outlet_temperature_k: 0.5
+    outlet_humidity_g_per_kg: 0.3
+    heater_power_relative: 0.02
+  high_factor: 3.0
+
+# Unknown input offsets, fixed per seed, of the size of the "observed" scenarios (Befund 116,
+# docs/33 section 2: inlet +0.35 K, spray rate +1.5 %, solid fraction +3.8 % relative); the inlet
+# humidity offset of 1 g/kg is set by the project lead (no source). Magnitude fixed, sign drawn
+# per seed and quantity (conservative: full size in every seed).
+input_errors:
+  inlet_k: 0.35
+  spray_relative: 0.015
+  solid_fraction_relative: 0.038
+  inlet_humidity_g_per_kg: 1.0
+  sign_seed_offset: 7000
+
+conditions:                        # name: [noise level, input errors]
+  clean_low: [primary, false]      # primary condition of every hypothesis
+  clean_high: [high, false]        # descriptive
+  inputerr_low: [primary, true]    # descriptive: does the order L1 / L2 / B1 change?
+
+# ---------------------------------------------------------------------------------------------
+# Synthetic plants (stage 1). Strengths fixed before the run.
+plants:
+  P0: {}
+  P-loss:
+    heat_loss_w_per_k_per_kg_h: 0.02   # 2.0 W/K (laboratory placeholder, docs/11 9.6) at 100 kg/h
+  P-air:
+    atomising_air_share: 0.025         # of the process air, into the bed (docs/34: 1.7-2.7 %)
+    atomising_air_celsius: 25.0        # docs/34 placeholder
+    false_air_share: 0.05              # of the process air, into the exhaust before the sensors
+  P-eta:
+    efficiency: {peak: 0.85, load_at_peak: 0.90, curvature: 0.60}   # eta(0.4) = eta(1.4) = 0.70
+  P-moist:
+    moisture: {excess_nominal: 0.06, excess_max: 0.20}   # Langmuir-shaped in the exhaust RH
+  P-comb:
+    heat_loss_w_per_k_per_kg_h: 0.02
+    atomising_air_share: 0.025
+    atomising_air_celsius: 25.0
+    false_air_share: 0.05
+    efficiency: {peak: 0.85, load_at_peak: 0.90, curvature: 0.60}
+    moisture: {excess_nominal: 0.06, excess_max: 0.20}
+
+pilot_plant:                       # pilot only, never in the main run
+  PP-st:
+    heat_loss_w_per_k_per_kg_h: 0.01
+    atomising_air_share: 0.0125
+    atomising_air_celsius: 25.0
+    false_air_share: 0.025
+    efficiency: {peak: 0.83, load_at_peak: 1.00, curvature: 0.40}
+    moisture: {excess_nominal: 0.03, excess_max: 0.10}
+
+# Which targets each deviation acts on (fixed before the run; hypotheses are judged there) and
+# its family relative to the parameters of L1 (decision of the project lead).
+affected_targets:
+  P-loss: [outlet_temperature]
+  P-air: [outlet_temperature, outlet_humidity]
+  P-eta: [heater_power]
+  P-moist: [outlet_temperature, outlet_humidity]
+  P-comb: [outlet_temperature, outlet_humidity, heater_power]
+families:
+  P-loss: within
+  P-air: partial
+  P-eta: outside
+  P-moist: outside
+  P-comb: outside
+
+# ---------------------------------------------------------------------------------------------
+# Methods. Fixed a-priori scales (no statistic of any data, E3): inputs map the pretraining box
+# to [-1, 1]; targets (centre, scale) per target.
+scales:
+  target_centre: [80.0, 25.0, 130.0]       # degC, g/kg, kW/(kg/s)
+  target_scale: [40.0, 15.0, 50.0]
+  residual_scale: [2.0, 1.0, 5.0]          # L2: K, g/kg, kW/(kg/s)
+
+mlp:
+  hidden: [64, 64]
+  activation: tanh
+
+calibration:                       # L1: bounded MAP, residuals weighted by the primary noise
+  parameters:                      # name: [nominal, lower, upper, prior sigma]
+    heater_efficiency: [0.80, 0.40, 1.00, 0.10]
+    heat_loss_w_per_k_per_kg_h: [0.0, 0.0, 0.20, 0.02]
+    false_air_share: [0.0, 0.0, 0.50, 0.05]
+    moisture_excess_kg_per_kg: [0.0, 0.0, 0.30, 0.05]
+
+ridge_alphas_log10: [-6.0, 3.0, 19]   # B2: LOO over these penalties
+
+pilot:
+  seeds: [11, 12, 13]
+  budgets: [4, 16]
+  max_extensions: 2
+  grids:                               # one setting per method for every plant (as A1)
+    L1: {prior_scale: [0.25, 1.0, 4.0, 16.0]}
+    L2: {learning_rate: [1.0e-3, 3.0e-3, 1.0e-2], steps: [300, 1000, 3000], weight_decay: [1.0e-3, 1.0e-1, 10.0]}
+    L3: {learning_rate: [1.0e-4, 3.0e-4, 1.0e-3, 3.0e-3], steps: [100, 300, 1000, 3000], sp_lambda: [0.0, 1.0e-3, 1.0e-1]}
+    L4: {learning_rate: [1.0e-3, 3.0e-3, 1.0e-2], steps: [1000, 3000, 10000], weight_decay: [1.0e-5, 1.0e-3, 1.0e-1]}
+
+# Filled from the pilot artifact (rule: lowest mean criterion C, docs/37 section 5) BEFORE the
+# main run; the main run checks that these equal the selection recorded in that artifact.
+selected:
+  pilot_artifact: static_transfer_pilot_v1
+  L1: {prior_scale: 4.0}
+  L2: {learning_rate: 0.01, steps: 90.0, weight_decay: 10.0}
+  L3: {learning_rate: 3.3333333333333335e-05, sp_lambda: 0.0, steps: 300.0}
+  L4: {learning_rate: 0.0003333333333333333, steps: 10000.0, weight_decay: 0.1}
+
+statistics:
+  alpha: 0.05                      # Holm per hypothesis family, two-sided paired t over seeds
+  min_sign_agreement: 4            # same sign in at least 4 of 5 seeds
