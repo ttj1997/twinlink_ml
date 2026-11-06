@@ -39,5 +39,5 @@ rerun:
 
 # Filled from the pilot-2 artifact BEFORE the rerun (own commit); the rerun checks it.
 selected:
-  pilot_artifact: null
-  L3: null
+  pilot_artifact: static_transfer_pilot_v2
+  L3: {learning_rate: 0.0003, sp_lambda: 0.0, steps: 90.0}
