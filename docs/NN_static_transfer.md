@@ -548,6 +548,51 @@ between R2 and R3.
 4. The rerun reuses the v1 nets, designs and noise. The paired comparison with v1's other methods is exact; the
    check against v1 is recorded per unit.
 
-### 15.4 Results
+### 15.4 Results (post hoc)
 
-(Added after the run.)
+**Runs** (all on a clean tree; full suite green on `025dd1b` and on `a420fd6`):
+
+| Run | Artifact | Commit | Remarks |
+|---|---|---|---|
+| pilot 2 | `static_transfer_pilot_v2.json` | `025dd1b` | 361 s, 0 failures |
+| selection | v2 YAML | `a420fd6` | |
+| rerun | `static_transfer_v2.json.gz` | `a420fd6` | 30 units, 0 failures, 233 s on 8 workers; every other method equals v1 exactly (largest difference 0.0) |
+| analysis | `static_transfer_v2_analysis.json` | script `025dd1b`, run at `567addf` | |
+
+**Pilot 2 (PP-full).** The selected setting is lr 3e-4, 90 steps, L2-SP 0 (C 1.083). It is interior after
+extensions: lr down once, steps down twice. The setting of v1 has C 1.25 on this validation set, and the best
+setting with 1000 or more steps has C 1.108. **Even on the full-strength pilot plant the rule picks a short
+fine-tuning.** The step `lr x steps` is about 2.7 times that of v1 (0.027 against 0.010). The upper end of the
+grid (lr 1e-2, 5000 steps) is far worse (up to C 6.9).
+
+**Reading of the sensitivity (pre-registered, 15.2).**
+
+| Test set | Reading | Family counts (better / worse / unresolved) |
+|---|---|---|
+| **interpolation (primary)** | **R3** (R4 flag not set) | 78 / 0 / 192 |
+| plant-like | none (R4 flag set) | 10 / 0 / 260 |
+
+**R3 of v1 is robust against the stronger fine-tuning.** L3-v2 beats L4 at N = 2 on P-loss, P-air, P-eta and
+P-moist, and at no larger N. It never beats L0, L1 and L4 jointly, and it never beats L2 on all affected targets
+jointly.
+
+**Descriptive** (own families of 54, interpolation / plant-like):
+* **L3-v2 against L3-v1:** better only on P-comb `T_out` at N = 16-64, by a median 0.62-0.80 K on the
+  interpolation set and 2.55-2.78 K on the plant-like set. The floor of about 1.2 K of v1 is gone: L3-v2 reaches
+  0.40 K at N = 64 on the interpolation set.
+* **L3-v2 against L2:**
+  * interpolation: better in 2 cells (P-comb `Y_out`, N = 32 and 64, median 0.23-0.25 g/kg);
+  * plant-like: better in 1 cell (P-comb `Y_out`, N = 64) and worse in 1 (P-comb power, N = 32, median
+    -5.95 kW/(kg/s)).
+  * The single v1 cell in which L3 beat L2 (P-air, N = 32, `Y_out`) is not resolved with v2.
+* **Medians, interpolation, N = 2 / 8 / 64:**
+  * P-loss `T`: L3-v2 0.79 / 0.82 / 0.14 K, L1 0.43 / 0.20 / 0.047.
+  * P-eta power: L3-v2 3.89 / 3.79 / 1.97, L2 3.84 / 3.50 / 1.94.
+  * P-comb `T`: L3-v2 1.99 / 0.79 / 0.40, L1 0.75 / 0.44 / 0.35, L2 2.25 / 0.89 / 0.26.
+* **Plant-like set:** the stronger fine-tuning makes the power worse. P-eta at N = 64 is 15.8 against 13.7 for
+  v1 (L0 4.03, L1 6.82).
+
+**Conclusion of the sensitivity.** A fine-tuning setting chosen on a full-strength pilot plant removes the floor
+of L3 on the strongest plant. The reading does not change: R3 on the interpolation set, none on the plant-like
+set. The caveat "the fine-tuning of L3 adapts little" (section 14) is answered for the reading: a stronger setting
+brings L3 to the level of L2, not beyond it.

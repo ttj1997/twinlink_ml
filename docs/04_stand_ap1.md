@@ -10890,3 +10890,18 @@ Branch `static-transfer` (worktree `C:/twinlink_work/static_transfer`, from `mas
 **Reading.** In a static setting with the balance available at run time, pretraining is not the lever: calibrating a few physical parameters is best wherever the structure fits, a bias correction is a strong baseline at N <= 4, and a residual model or the pretrained net adds value only for deviations outside the calibrated structure, from N = 16-64. Outside the trained operating range no learned method is reliable.
 
 **Caveats.** (1) The fine-tuning setting of L3 (lr 3.3e-5, 300 steps, no L2-SP) was chosen on a milder pilot plant and adapts little; on P-comb it leaves a floor of about 1.2 K. (2) Synthetic plants that are variants of the same balance, placeholder strengths and noise, one input set. (3) Five seeds, four degrees of freedom. (4) Under input errors with the offsets of seed 2 the true exhaust is supersaturated at 7-12 of 512 plant-like test points of four plants (found by the dry run, kept, docs/NN decision 14). (5) Nothing here is a statement about plant A.
+
+### Addendum (2026-11-06) to Befund NN (static transfer): post-hoc sensitivity v2 -- a stronger fine-tuning of L3 removes its floor on the strongest plant but leaves the reading at R3; the entry above is unchanged
+
+**Declared post hoc** (decision of the project lead before the merge); R3 stays the main statement. Full text: `docs/NN_static_transfer.md` section 15 (design and reading committed in `025dd1b` before pilot 2 and the rerun).
+
+**Design.** Pilot 2 on a full-strength pilot plant with its own mixture (`PP-full`; 21.1 / 7.7 / 3.4 sigma from L0 on its own validation set), own seeds 21-23, own validation set. L3 grid: lr 1e-4 ... 1e-2 x steps 300 ... 5000 x L2-SP off / on, with the v1 edge rule. Rerun of L3 on the six plants x 5 seeds, `clean_low`, with the v1 nets, designs, noise and test sets. Every other method was recomputed as a check and equals v1 exactly.
+
+**Results** (`static_transfer_pilot_v2.json`, `static_transfer_v2.json.gz`, `static_transfer_v2_analysis.json`; clean tree; suite green before both run commits):
+* Selected setting: lr 3e-4, 90 steps, no L2-SP (interior). The step `lr x steps` is about 2.7 times that of v1; the v1 setting has C 1.25 against 1.083.
+* **Reading of the sensitivity: R3 on the interpolation set** (78 / 0 / 192 of 270), none on the plant-like set: **R3 of v1 is robust.**
+* Against L3-v1: better only on P-comb `T_out` at N = 16-64 (median 0.62-0.80 K). The v1 floor of about 1.2 K falls to 0.40 K at N = 64.
+* Against L2: better in 2 cells (P-comb `Y_out`, N = 32 and 64). The single v1 cell (P-air, N = 32) is not resolved with v2.
+* On the plant-like set the stronger fine-tuning makes the power worse (P-eta, N = 64: 15.8 against 13.7 kW/(kg/s) for v1).
+
+**Reading.** The caveat "the fine-tuning of L3 adapts little" is answered: a stronger setting brings L3 to the level of L2, not beyond it.
