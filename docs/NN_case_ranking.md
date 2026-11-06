@@ -117,6 +117,145 @@ gap 0.0053 kg/h between cases 1 and 2 in the partner mode.
 8. "Strictly best" requires a margin of at least 1e-9 kg/h to every other case; the practical threshold is never
    below the exact tie (relevant only where no case saves fuel).
 
-## 5. Results
+## 5. Runs
 
-(after the main run)
+Script commits `74a2c4b` (design, readings) and `7d3ff2b` (memory helper; full suite green on both). Dry runs
+`case_ranking_dryrun_v1` (at `816e2d5`; 419 units, 0 failures; the peak memory was not measured: bug in the helper,
+fixed in `7d3ff2b`) and `case_ranking_dryrun_v2` (at `7d3ff2b`; 419 units, 0 failures, 0 point errors, 126 MB per
+worker, projected 76 min with 8 workers); end-to-end test of the analysis on the dry run
+(`case_ranking_dryrun_v2_analysis`, no result). Main run `case_ranking_v1` (at `a9c16be`, clean tree, 419 units, 0
+failures, 0 point errors, 4312 s with 8 workers; arrays `case_ranking_v1.npz`); analysis `case_ranking_v1_analysis`
+(at `be37865`, clean tree) with the figures in `docs/figures/case_ranking/`.
+
+## 6. Results
+
+All numbers from `case_ranking_v1_analysis.json`. Shares with the 95 % Clopper-Pearson interval; fuel in kg/h.
+
+### 6.1 Admissibility and counted flags
+
+Box (`full`): 16 803 of 32 768 points admissible. Inadmissible 15 965: exhaust 1 above 90 % at 14 675 points, exhaust 2
+at 2 344 (both possible). No point failed in any mode; the admissible sets of the three modes are identical (0
+disagreements). The workbook neighbourhood is admissible throughout (8 192 of 8 192); plant-like 3 778 of 8 192; the
+rule's test stream 4 185 of 8 192. The inadmissible part is mostly dryer 1 (spray tower) at low supply air and high
+load (figure `..._cut2d_0_...`: below about 200 degC at the workbook load and solid fraction).
+
+Counted on the admissible points of the box (fixed flows), not excluded:
+
+* partner mode, medium above 99.974 degC: case 1 at 5 400 points, case 2 5 470, cases 3-6 6 236 to 7 298;
+* partner mode, a stage with negative recovery: cases 1 and 2 at 19 points, cases 3, 4, 5, 6 at 703, 982, 2 530,
+  3 048;
+* physical modes, a stage without driving force: cases 1 and 2 at 1 081 points, the cascades at 6 028 to 7 376
+  (unpressurised) and 6 725 to 8 975 (pressurised); no negative recovery.
+
+### 6.2 Readings of case 1 (primary: admissible points of the box)
+
+| Variant | Mode | case 1 strictly best | reading | best or practically equal | reading | 0.5 % / 2 % |
+|---|---|---|---|---|---|---|
+| fixed | partner | 0.740 [0.733, 0.747] | conditional | 0.854 [0.849, 0.859] | conditional | 0.801 / 0.934 |
+| fixed | unpressurised 95 (main) | 0.471 [0.464, 0.479] | **not robust** | 0.666 [0.659, 0.673] | conditional | 0.651 / 0.705 |
+| fixed | pressurised | 0.541 [0.533, 0.548] | conditional | 0.645 [0.637, 0.652] | conditional | 0.617 / 0.695 |
+| optimised | partner | 0.693 [0.673, 0.713] | conditional | 0.793 [0.775, 0.810] | conditional | 0.744 / 0.875 |
+| optimised | unpressurised 95 | 0.580 [0.559, 0.601] | conditional | 0.825 [0.808, 0.841] | conditional | 0.811 / 0.848 |
+| optimised | pressurised | 0.914 [0.901, 0.925] | conditional | 0.977 [0.970, 0.983] | conditional | 0.972 / 0.988 |
+
+No interval contains 0.99 or 0.50 (no reading "at the threshold"). The shares are stable over the nested prefixes: from
+2 096 admissible points on every share is within 0.007 of its value at 16 803 (figure `..._convergence.png`).
+
+Secondary sets (fixed flows):
+
+| Set | Mode | strictly best | reading | best or practically equal | reading |
+|---|---|---|---|---|---|
+| workbook neighbourhood | partner | 1.000 [0.9995, 1] | robust | 1.000 [0.9995, 1] | robust |
+| workbook neighbourhood | unpressurised 95 | 0.950 [0.945, 0.954] | conditional | 0.993 [0.991, 0.995] | robust |
+| workbook neighbourhood | pressurised | 0.977 [0.973, 0.980] | conditional | 0.997 [0.996, 0.998] | robust |
+| plant-like | partner | 0.976 [0.970, 0.980] | conditional | 0.994 [0.991, 0.996] | robust |
+| plant-like | unpressurised 95 | 0.779 [0.765, 0.792] | conditional | 0.951 [0.944, 0.958] | conditional |
+| plant-like | pressurised | 0.779 [0.765, 0.792] | conditional | 0.951 [0.944, 0.958] | conditional |
+
+(In the plant-like set the two physical modes give identical shares: dryer 2's supply air at 75-95 degC keeps the
+medium below the 95 degC limit wherever case 1 is decided.)
+
+### 6.3 Q1: no case is best in the whole admissible space
+
+In no mode and no variant is one case co-best at every admissible point of the box, neither with the exact nor with
+the practical tie. Case 1 has the largest co-best share everywhere (fixed: 0.740 / 0.636 / 0.592 for partner /
+unpressurised / pressurised; optimised: 0.693 / 0.798 / 0.965); its competitor is case 2 (fixed: 0.259 / 0.481 /
+0.411). The cascades are almost never the sole best: case 3 alone at 19 of 16 803 points (partner); in the physical
+modes they are co-best only in ties (`1=3=5` at 801 points, `2=3=5` at 233 / 223, all six equal at 47 points where no
+case saves anything). Only in the workbook neighbourhood is case 1 best at every point (partner, both variants;
+pressurised optimised).
+
+Median saving against case 0 (fixed, box): case 1 19.5 / 29.2 / 34.7 %, case 2 19.1 / 28.8 / 32.7 %, cascades 14.8 to
+16.6 / 16.7 to 20.2 / 20.9 to 26.1 % (partner / unpressurised / pressurised). Gap between places 1 and 2: median
+0.0036 / 0.0107 / 0.0132, 95th percentile 0.0105 / 0.0316 / 0.0562 kg/h.
+
+### 6.4 Q2: the boundary is the order of the two exhaust temperatures
+
+Depth-3 trees on the inputs and derived quantities, target "case 1 strictly best" (fixed flows), tested on the own
+stream (4 185 admissible points): test accuracy 0.978 (partner), 0.966 (unpressurised), 0.971 (pressurised); outside
+the practical tie 0.998 / 0.992 / 0.995; reading "describes the boundary" (>= 0.95) in all three modes, and also for the
+target "best or practically equal" (0.979 / 0.973 / 0.974) and in the optimised variant (0.955 to 0.986). The dominant
+quantity is the difference of the exhaust temperatures `dT = T_exhaust,1 - T_exhaust,2` (importance 0.90 / 0.59 /
+0.79). The effective leaves:
+
+* **physical modes**: case 1 where `dT > -0.54 K` (exhaust 1 at least as warm as exhaust 2) and exhaust 2 has heat
+  above ambient + 20 K; case 2 where exhaust 2 is the warmer one. Unpressurised, one small branch with exhaust 2
+  above 118.5 degC depends on the supply humidity (21.1 g/kg);
+* **partner mode**: case 1 where `dT > -15.5 K`; for `-27.1 K < dT <= -15.5 K` where exhaust 1 has more than 1.30 kW
+  above ambient + 20 K; below `-27.1 K` only with more than 2.71 kW and `dT > -44.6 K`. The partner model keeps case 1
+  even when exhaust 1 is 15 to 27 K colder than exhaust 2.
+
+Case 1 connects exhaust 1 (circuit 40 kg/h) with sink 1, case 2 crosses them. The rule is a description of where
+the rebuild ranks them, not physics. In the optimised variant the circuit flows absorb part of the temperature
+order; the pressurised tree then splits on the heat available in the two exhausts (accuracy 0.976).
+
+### 6.5 Q3: regret of always choosing case 1
+
+`F_1 - min_k F_k` over the admissible points of the box (median, 95th percentile, maximum):
+
+| Variant | Mode | kg/h | % of the best fuel | % of the best saving |
+|---|---|---|---|---|
+| fixed | partner | 0 / 0.0039 / 0.0082 | 0 / 0.51 / 1.54 | 0 / 2.3 / 5.9 |
+| fixed | unpressurised 95 | 0 / 0.0269 / 0.0416 | 0 / 4.15 / 10.13 | 0 / 10.6 / 16.7 |
+| fixed | pressurised | 0 / 0.0300 / 0.0495 | 0 / 4.94 / 10.50 | 0 / 9.8 / 14.9 |
+| optimised | partner | 0 / 0.0076 / 0.0135 | 0 / 1.04 / 2.60 | 0 / 3.3 / 6.3 |
+| optimised | unpressurised 95 | 0 / 0.0243 / 0.0390 | 0 / 3.42 / 9.13 | 0 / 8.4 / 16.7 |
+| optimised | pressurised | 0 / 0 / 0.0098 | 0 / 0 / 1.68 | 0 / 0 / 5.2 |
+
+(The relative-to-saving column leaves out the 47 points without any saving, 6 in the optimised set.) In the
+workbook neighbourhood the regret is 0 (partner; pressurised optimised) or at most 0.0114 kg/h (unpressurised, fixed).
+
+**Circuit flows against topology.** Case 1 at the workbook's flows against the best case at its optimised flows
+(same 2 096 points): median / 95th percentile / maximum 0.058 / 0.090 / 0.120 kg/h (partner), 0.024 / 0.056 / 0.086
+(unpressurised), 0.063 / 0.130 / 0.195 (pressurised). The median topology regret is 0 in every mode: choosing the
+circuit flows is worth more than choosing among the six drawings (as docs/11 section 13.7 suggested at the workbook
+point). In the partner mode 76 % of the optimised flows sit at the upper bound of 150 kg/h (its recovery grows with
+the flow up to the bound), so the partner number depends on the bound.
+
+### 6.6 Reading
+
+1. **The statement of the workbook ("case 1 is best") holds near the workbook point, not over the operating range.**
+   In the main variant (physical, unpressurised) case 1 is strictly best on 47 % of the admissible box (not robust)
+   and best or practically equal on 67 % (conditional). Near the workbook point it is best or practically equal on
+   99.3 % (robust in that reading).
+2. **The partner mode overstates the robustness of case 1** (strictly best 74 % against 47 % / 54 %) and reports a
+   gap between places 1 and 2 three to four times smaller than the physical modes.
+3. **The choice is between cases 1 and 2 and follows the order of the exhaust temperatures** (physical modes: the
+   warmer exhaust goes to sink 1); the cascades are not competitive in this box.
+4. **Always choosing case 1 costs little in the median and up to about 10 % of the fuel at the worst point**
+   (unpressurised: 95th percentile 0.027 kg/h, maximum 0.042 kg/h); the circuit flows matter more than the choice of
+   the drawing.
+
+### 6.7 Caveats
+
+* Model against model; no plant data. The box is a placeholder box (section 2); the supply air of dryer 1 has the
+  workbook point on its upper face.
+* About half of the box is inadmissible, almost entirely through dryer 1; the shares are shares of the admissible
+  part.
+* The rule is fitted on the same kind of points it describes (own test stream, but same box); it describes the
+  rebuild, not a plant.
+* Optimised variant: multistart Nelder-Mead on a bounded box; flat objectives (a stage without driving force) can
+  end at a bound without meaning. Partner mode: the optimum lies at the upper flow bound for most points.
+* Partner mode: the medium exceeds the boiling point at about one third of the admissible points for case 1 (flagged
+  as in docs/11 section 13.5).
+* Deterministic computation; the intervals cover only the sampling of the space.
