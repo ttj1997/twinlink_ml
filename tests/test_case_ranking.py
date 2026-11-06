@@ -247,6 +247,7 @@ def test_run_task_and_assemble_dry():
     t = ("cut1d", "fixed", "inlet_1_celsius", 0)
     res = run_task(cfg, t, dry_run=True)
     assert res["point_errors"] == 0 and len(res["points"]) == cfg.dry_run_points_per_chunk
+    assert res["peak_memory_mb"] > 0.0  # the dry run must report memory per worker
     arrays = assemble(cfg, {json.dumps(list(t)): res}, dry_run=True)
     fuel = arrays["fixed/cut1d_inlet_1_celsius/partner/fuel"]
     assert fuel.shape == (cfg.dry_run_points_per_chunk, 7)

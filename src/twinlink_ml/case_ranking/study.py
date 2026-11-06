@@ -8,13 +8,13 @@ that point (``error``) and does not discard the unit; a failing unit does not di
 
 from __future__ import annotations
 
-import ctypes
-import os
 import time
 import traceback
 from typing import Any
 
 import numpy as np
+
+from twinlink_ml.static_transfer.study import peak_memory_mb
 
 from .config import SET_NAMES, VARIANTS, CaseRankingConfig
 from .evaluator import CASES, MODES, FlowsheetCaseEvaluator, PointResult
@@ -30,34 +30,6 @@ __all__ = [
 ]
 
 Task = tuple[Any, ...]
-
-
-def peak_memory_mb() -> float:
-    """Peak resident memory of this process in MB (Windows: peak working set)."""
-    if os.name == "nt":
-
-        class _Counters(ctypes.Structure):
-            _fields_ = [  # noqa: RUF012 - ctypes layout
-                ("cb", ctypes.c_ulong),
-                ("PageFaultCount", ctypes.c_ulong),
-                ("PeakWorkingSetSize", ctypes.c_size_t),
-                ("WorkingSetSize", ctypes.c_size_t),
-                ("QuotaPeakPagedPoolUsage", ctypes.c_size_t),
-                ("QuotaPagedPoolUsage", ctypes.c_size_t),
-                ("QuotaPeakNonPagedPoolUsage", ctypes.c_size_t),
-                ("QuotaNonPagedPoolUsage", ctypes.c_size_t),
-                ("PagefileUsage", ctypes.c_size_t),
-                ("PeakPagefileUsage", ctypes.c_size_t),
-            ]
-
-        counters = _Counters()
-        counters.cb = ctypes.sizeof(_Counters)
-        handle = ctypes.windll.kernel32.GetCurrentProcess()
-        ctypes.windll.psapi.GetProcessMemoryInfo(handle, ctypes.byref(counters), counters.cb)
-        return counters.PeakWorkingSetSize / 1e6
-    import resource
-
-    return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1e3
 
 
 def task_list(config: CaseRankingConfig) -> list[Task]:
