@@ -495,3 +495,59 @@ floor of about 1.2 K on P-comb); a stronger fine-tuning might move L3 towards L2
 plants are variants of the same balance with placeholder strengths and noise. Five seeds give four degrees of freedom:
 "unresolved" is not "equal". The input-error condition varies the offset signs by seed and therefore mostly costs
 resolution. Stage 2 was not run (section 10); nothing here is a statement about plant A.
+
+## 15. Post-hoc sensitivity v2: L3 with a stronger fine-tuning (2026-11-06; DECLARED POST HOC)
+
+Decision of the project lead before the merge. **R3 (v1, sections 13-14) stays the main statement; v1 is unchanged.**
+This section up to 15.3 was committed BEFORE pilot 2 and the rerun.
+
+### 15.1 Why and what
+
+The fine-tuning setting of v1 was chosen on the half-strength pilot plant PP-st and adapts little (13.2, 13.7). The
+sensitivity asks whether a setting chosen on a full-strength pilot plant changes the reading. It decides only
+between R2 and R3.
+
+* **Pilot 2.** Pilot plant `PP-full` at full strength with its own mixture (heat loss 0.025 W/K per kg/h,
+  atomising air 2 % at 25 degC, false air 6 %, efficiency `0.86 - 0.55 (q - 1.05)^2`, moisture excess 0.07 /
+  maximum 0.18; placeholders). It is never part of the main run. Own seeds 21-23 (designs, noise, pretraining
+  121-123) and its own validation set (512 points of the interpolation box, scramble `test_seed + 21`). The
+  admissibility of this set and of the pilot designs uses the source, the six main plants and PP-full; the v1 test
+  sets are not rebuilt.
+* **Grid** (L3 only): lr 1e-4, 3e-4, 1e-3, 3e-3, 1e-2 x steps 300, 1000, 3000, 5000 x L2-SP 0 (off), 1e-3, 0.1 (on).
+  Selection: lowest C on the validation set (N = 4 and 16, as v1). If the selected value lies at an edge, the v1
+  edge rule extends that dimension (at most twice, geometric; 0 is a natural bound). Measured before this commit
+  (not a result): PP-full deviates from L0 on its validation set by 21.1 / 7.7 / 3.4 sigma (`T_out`, `Y_out`,
+  power), against 18.3 / 7.0 / 2.3 for P-comb on the interpolation set.
+* **Rerun.** Six plants x 5 seeds under `clean_low`, with the unit code of v1 unchanged and ONLY the L3 setting
+  replaced. It uses the v1 pretrained nets (v1 checkpoints, SHA-256 recorded) and the v1 test sets and training
+  designs as stored in the v1 artifact. Every other method is recomputed as a check: its errors must equal v1. A
+  scratch check before this commit reproduced one v1 unit (P-eta, seed 1, v1 setting) bit for bit, 1404 values with
+  difference 0.0. The read test sets are interpolation and plant-like; the unit scores all four.
+* **Files.** Config `conf/static_transfer/static_transfer_v2.yaml`, module `static_transfer/posthoc.py`, driver
+  `scripts/run_static_transfer_v2.py`, analysis `scripts/analyze_static_transfer_v2.py` (reading in its docstring).
+  Artifacts `static_transfer_pilot_v2.json`, `static_transfer_v2.json.gz`, `static_transfer_v2_analysis.json`.
+
+### 15.2 Pre-registered reading of the sensitivity
+
+* **Definitions** are those of v1: Holm per family, at least 4 of 5 seeds, every affected target.
+* **Family** per test set: L3-v2 against L0, L1, L2, L4 and B1, 270 tests. All methods except L3 take their values
+  from v1.
+* **Interpolation set (primary):**
+  * R3: R3 of v1 is robust against a stronger fine-tuning.
+  * R2: R3 of v1 depends on the fine-tuning setting; with the stronger setting the reading would be R2.
+  * R1 or none are reported as such.
+* **Plant-like set:** the same reading, reported beside it.
+* **Descriptive** (own families of 54): L3-v2 against L3-v1 and against L2 per set, and the learning curves.
+
+### 15.3 Decisions without asking (v2)
+
+1. "lr up to 1e-2, steps up to 5000 ... until the choice is interior": the named limits are the grid. The v1 edge
+   rule may extend beyond them, at most twice per dimension. Each extension is recorded.
+2. "L2-SP on/off": off = 0, on = the two v1 values 1e-3 and 0.1.
+3. The pilot plant's strengths are placeholders of the order of P-comb; the measured deviation is in 15.1.
+4. The rerun reuses the v1 nets, designs and noise. The paired comparison with v1's other methods is exact; the
+   check against v1 is recorded per unit.
+
+### 15.4 Results
+
+(Added after the run.)

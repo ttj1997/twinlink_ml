@@ -7,6 +7,7 @@ worktree) and is skipped without it.
 
 from __future__ import annotations
 
+import copy
 import dataclasses
 import math
 import os
@@ -362,3 +363,45 @@ def test_config_equals_the_partner_workbooks() -> None:
     assert ex2.material.heater_efficiency_percent / 100 == pytest.approx(sens.heater_efficiency)
     assert ex2.dryer_2.spray_temperature_celsius == pytest.approx(sens.spray_temperature_celsius)
     assert ex2.material.cp_gas_kj_per_kg_k * 1e3 == pytest.approx(sens.cp_gas_j_per_kg_k)
+
+
+# ----------------------------------------------------------------------------- post hoc v2
+def test_posthoc_config_and_contexts() -> None:
+    from twinlink_ml.static_transfer.posthoc import (
+        check_against_v1,
+        load_posthoc,
+        pilot_config,
+        rerun_config,
+    )
+
+    spec = load_posthoc()
+    assert spec.pilot_plant.name not in {p.name for p in CONFIG.plants}
+    assert spec.pilot_plant != dataclasses.replace(CONFIG.pilot_plant, name=spec.pilot_plant.name)
+    assert max(spec.grid["learning_rate"]) == 1e-2 and max(spec.grid["steps"]) == 5000
+    assert 0.0 in spec.grid["sp_lambda"] and max(spec.grid["sp_lambda"]) > 0.0
+    assert not set(spec.pilot_seeds) & (set(CONFIG.seeds) | {11, 12, 13})
+    pc = pilot_config(CONFIG, spec)
+    assert (
+        pc.plants == CONFIG.plants
+        and pc.boxes == CONFIG.boxes
+        and pc.pilot_plant == spec.pilot_plant
+    )
+    assert list(pc.raw["pilot"]["grids"]) == ["L3"]
+    rc = rerun_config(CONFIG, {"learning_rate": 1e-3, "steps": 1000, "sp_lambda": 0.0})
+    for m in ("L1", "L2", "L4"):
+        assert rc.selected(m) == CONFIG.selected(m)
+    assert rc.selected("L3") == {"learning_rate": 1e-3, "steps": 1000.0, "sp_lambda": 0.0}
+    assert CONFIG.selected("L3") != rc.selected("L3")  # the v1 config object is untouched
+
+    def err() -> dict:  # type: ignore[type-arg]
+        return {"interpolation": {"rmse": [1.0, 2.0, 3.0]}}
+
+    unit = {
+        "fixed": {"L0": err()},
+        "fitted": {"2": {"L1": {"test": err()}, "L3": {"test": err()}}},
+    }
+    other = copy.deepcopy(unit)
+    other["fitted"]["2"]["L3"]["test"]["interpolation"]["rmse"] = [9.0, 9.0, 9.0]
+    assert check_against_v1(other, unit)["max_abs_difference"] == 0.0
+    other["fitted"]["2"]["L1"]["test"]["interpolation"]["rmse"] = [1.0, 2.5, 3.0]
+    assert check_against_v1(other, unit)["max_abs_difference"] == pytest.approx(0.5)
