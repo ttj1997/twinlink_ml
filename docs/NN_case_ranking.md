@@ -97,7 +97,7 @@ free; reference static-transfer, Befund 120).
 (partner `1 < 2 < 3 < 5 < 4 < 6`, unpressurised `1 < 2 < 3 = 5 < 4 = 6`, pressurised `1 < 2 < 3 < 5 < 4 < 6`) and the
 gap 0.0053 kg/h between cases 1 and 2 in the partner mode.
 
-## 4. Decisions taken without asking (to be confirmed)
+## 4. Decisions taken without asking (confirmed by the project lead, 2026-11-09)
 
 1. Supply air of dryer 1 up to 300 degC as stated by the lead; the workbook point therefore lies on the upper face of
    that input (not strictly interior); the neighbourhood is one-sided there.

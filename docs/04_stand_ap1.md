@@ -10930,3 +10930,5 @@ Branch `case-ranking` (worktree `C:/twinlink_work/case_ranking`, from `master` `
 **Reading.** The statement of the workbook holds near its own input point, not over the operating range; the partner mode overstates the robustness of case 1 (74 % against 47 % strictly best). The choice is between cases 1 and 2 and follows the order of the exhaust temperatures.
 
 **Caveats.** (1) Placeholder box; the workbook point lies on the upper face of the supply air of dryer 1 (300 degC, lead). (2) About half of the box is inadmissible (dryer 1). (3) Partner mode: medium above the boiling point at 5 400 of the admissible points for case 1 (flagged); in the optimised partner variant 76 % of the flows sit at the upper bound of 150 kg/h. (4) Decisions taken without asking: docs/NN section 4. (5) Nothing here is a statement about plant A.
+
+**Decision of the project lead (2026-11-09; added after the fact, the entry above is unchanged).** The decisions taken without asking (docs/NN section 4, items 1-8) are confirmed. The exception from `DataSpec.new_study` (docs/12 section L) remains open.
