@@ -202,6 +202,57 @@ models, s1 n32, draws 0-3): 40 tasks, 0 errors, peak commit 1246-1273 MB per wor
 workers 10.1 GB (32 % of 31.2 GB). *Errors part* (complete, it has no reduced mode): 60 tasks,
 0 errors, 954-973 MB per worker, 43 min wall.
 
+**Course of the main run** (decisions of the project lead of 2026-11-06 and 2026-11-09).
+
+* **Start** (2026-11-06, "Start" of the project lead with a condition: start as soon as no run or
+  suite of the case-ranking study computes any more, at the latest at 19:30). A watcher
+  (`C:/twinlink_work/hyb_start_watch.ps1`, outside the repository) sampled every 60 s the process
+  tree below any process with `case_ranking` in its command line (busy above 5 CPU-s per minute)
+  and every other Python process (busy above 30 CPU-s per minute) and started after 10 quiet minutes
+  in a row. Start 2026-11-06 16:37:38 on 1e2a635, clean tree. Reason: no case-ranking run or suite
+  and no other Python process computing for 10 minutes (case-ranking processes had kept it back
+  until the sample of 16:27:38: 18 processes, 481 CPU-s per minute). Overlap at the start: only a `tail -f` on the case-ranking log (0 CPU-s per
+  minute), no computing process. Logged in `C:/twinlink_work/hyb_start_decision.log` and
+  `hyb_main_rerun.log`.
+* **Margins** (`hybrid_model_v1_margins_per_draw`): finished 2026-11-08 19:07:05, 181751 s wall
+  (50.5 h); 2400 tasks, 0 errors, 60 of 60 cells, no cell blocked. Per-worker memory: peak commit
+  1246-1326 MB, flat after the first tasks; the commit at the end of each task shows no steady rise
+  (slope per worker between -0.3 and +0.6 MB per task over about 292 tasks per worker). Integrity check of the output
+  (2026-11-09): 2462 lines, every line valid JSON, last line (footer) complete, no duplicate key;
+  nothing was cut.
+* **Abort of the errors stage and interruption.** The errors stage started at 19:07:07 and stopped
+  at 19:07:24 at the clean-tree check without writing anything: the margins output was untracked,
+  and the exceptions of the errors stage cover only its own output, the training records and the
+  oracle. The run chain ended there. The Claude Code session ended later through an expired
+  sign-in; that stopped the session's watcher, but no process of the run was running any more.
+  Interruption: 2026-11-08 19:07:24 to 2026-11-09 10:08:02 (about 15 h without computation); cause:
+  the chain of the session, which did not foresee that the margins output would be untracked when
+  the errors stage started (the dry runs wrote to gitignored names), not the end of the session.
+* **Decision of the project lead (2026-11-09)**: no new exception in the clean-tree check. The
+  margins file was committed packed (`hybrid_model_v1_margins_per_draw.jsonl.gz`, 3ad9ef6, 2.46 MB);
+  sha256 of the raw file noted before packing and checked against the unpacked content after
+  packing: d67336b5...2b7acff, identical. The raw file (15.4 MB) was copied to
+  `C:/twinlink_runs/hybrid-model/` (same sha256) and then removed from the worktree. The analysis
+  reads the packed file directly (`read_lines` and `records_path` in
+  `scripts/analyze_hybrid_model.py`, aafc95f, test `test_analysis_reads_the_packed_margins_file`);
+  the errors stage does not read the margins file. Full suite on aafc95f: 1417 passed, 30 skipped.
+  The errors stage was restarted detached from the Claude Code session (`Win32_Process.Create`, so
+  that an end of the session cannot end the run; script `C:/twinlink_work/hyb_errors_stage.sh`, log
+  `hyb_rerun_errors2.log`): start 2026-11-09 10:08:02 on aafc95f, clean tree, training records
+  matching the pinned sha256; finished 10:43:05, 2084 s, 60 tasks, 0 errors, peak commit
+  904-970 MB per worker. `--resume`: a task is recorded only when it is complete and a resume skips
+  exactly the keys with a complete `ok` record, so no finished task is computed again and a started
+  task without a record is computed again in full (`test_scheduler_raises_over_rounds_and_resumes`).
+  The margins needed no resume (complete); the errors stage started without any record.
+* **Decision without consultation (aafc95f)**: in the reuse check `fresh_and_reused` the fresh
+  processes now run while the reused worker is alive. Reason: the pid comparison of
+  `test_tasks_in_a_reused_worker_equal_fresh_processes` failed once in the full suite (3ad9ef6 plus
+  the reader change); a standalone rerun of the same check gave identical records, distinct pids
+  and one reused worker. With a single-worker pool only pid reuse by Windows explains the failure;
+  while the reused worker lives, its pid cannot be handed out again. The test now prints the
+  per-task result on failure. Results of the run are not affected (the function is used only by the
+  check and the test).
+
 ## 9. Runs and controls
 
 (after the runs)
