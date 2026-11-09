@@ -542,5 +542,54 @@ def test_tasks_in_a_reused_worker_equal_fresh_processes(monkeypatch: pytest.Monk
     ]
     result = ev.fresh_and_reused(tasks, warmup)
     assert all(r["status"] == ["ok", "ok"] for r in result), result
-    assert all(r["one_reused_worker"] and r["fresh_pid"] != r["reused_pid"] for r in result)
+    assert all(r["one_reused_worker"] and r["fresh_pid"] != r["reused_pid"] for r in result), result
     assert all(r["identical"] for r in result), result
+
+
+def _analysis_script() -> ModuleType:
+    path = Path(__file__).resolve().parents[1] / "scripts" / "analyze_hybrid_model.py"
+    spec = importlib.util.spec_from_file_location("analyze_hybrid_model_test", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_analysis_reads_the_packed_margins_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import gzip
+    import json
+
+    scripts = Path(__file__).resolve().parents[1] / "scripts"
+    monkeypatch.syspath_prepend(str(scripts))
+    monkeypatch.syspath_prepend(str(scripts / "verify"))
+    analysis = _analysis_script()
+    rows = [
+        {"kind": "header", "provenance": {"git/commit": "abc"}},
+        {"kind": "task", "key": "search_M1_s1_n4_d00", "status": "ok"},
+        {"kind": "cell", "key": "margins_M1_s1_n4", "parameter": 0.01},
+        {"kind": "footer", "n_done": 1},
+    ]
+    text = "".join(json.dumps(r) + "\n" for r in rows)
+    name = "hybrid_model_v1_margins_per_draw"
+    plain = tmp_path / f"{name}.jsonl"
+    packed = tmp_path / f"{name}.jsonl.gz"
+    plain.write_text(text, encoding="utf-8")
+    # plain file only: it is taken and read as before
+    assert analysis.records_path(tmp_path, name) == plain
+    expected_cells = analysis.jobs(plain, kind="cell")
+    expected_headers = analysis.headers(plain)
+    assert expected_cells == [rows[2]] and expected_headers == [rows[0]]
+    with gzip.open(packed, "wt", encoding="utf-8") as handle:
+        handle.write(text)
+    # both present: ambiguous, refused
+    with pytest.raises(SystemExit):
+        analysis.records_path(tmp_path, name)
+    plain.unlink()
+    # packed file only: taken, recognised by the suffix, same records
+    assert analysis.records_path(tmp_path, name) == packed
+    assert analysis.read_lines(packed) == text.splitlines()
+    assert analysis.jobs(packed, kind="cell") == expected_cells
+    assert analysis.headers(packed) == expected_headers

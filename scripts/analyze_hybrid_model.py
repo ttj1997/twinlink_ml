@@ -112,6 +112,9 @@ Implementation of the addendum: a cell with fewer than ``MIN_INSIDE`` pooled ins
 ``determinable`` False and no margin, energy or holding share as a number; medians and paired
 comparisons use the determinable cells only (paired: at least 2 seeds). The margins are read from
 the cell records of ``<prefix>_margins_per_draw.jsonl`` (driver split per draw, same format).
+Implementation note 2026-11-09: the margins file is committed packed
+(``<prefix>_margins_per_draw.jsonl.gz``, raw file outside the repository); ``records_path``
+takes the packed file when the plain one is absent and ``read_lines`` reads both forms.
 
     tools/run_here.sh scripts/analyze_hybrid_model.py --prefix hybrid_model_v1
 """
@@ -119,6 +122,7 @@ the cell records of ``<prefix>_margins_per_draw.jsonl`` (driver split per draw, 
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
 import math
 import sys
@@ -145,9 +149,25 @@ MIN_INSIDE = 20  # addendum 2026-11-05: a margin is determinable from >= 20 pool
 MIN_PAIRED_SEEDS = 2
 
 
+def read_lines(path: Path) -> list[str]:
+    """Lines of a JSONL file, plain or packed (``.gz``, recognised by the suffix)."""
+    if path.suffix == ".gz":
+        with gzip.open(path, "rt", encoding="utf-8") as handle:
+            return handle.read().splitlines()
+    return path.read_text(encoding="utf-8").splitlines()
+
+
+def records_path(runs: Path, name: str) -> Path:
+    """``<name>.jsonl``, or the packed ``<name>.jsonl.gz`` when only that exists (never both)."""
+    plain, packed = runs / f"{name}.jsonl", runs / f"{name}.jsonl.gz"
+    if plain.exists() and packed.exists():
+        raise SystemExit(f"both {plain.name} and {packed.name} exist -- keep one")
+    return packed if packed.exists() else plain
+
+
 def jobs(path: Path, kind: str = "job") -> list[dict[str, Any]]:
     out = []
-    for line in path.read_text(encoding="utf-8").splitlines():
+    for line in read_lines(path):
         if line.strip():
             row = json.loads(line)
             if row.get("kind") == kind:
@@ -158,7 +178,7 @@ def jobs(path: Path, kind: str = "job") -> list[dict[str, Any]]:
 def headers(path: Path) -> list[dict[str, Any]]:
     return [
         json.loads(line)
-        for line in path.read_text(encoding="utf-8").splitlines()
+        for line in read_lines(path)
         if line.strip() and json.loads(line).get("kind") == "header"
     ]
 
@@ -361,7 +381,7 @@ def main() -> int:
     exempt = clean_tree_exceptions(RUNS, output, args.training, None)
     require_clean_tree(ignore_paths=exempt)
     margins_name = args.margins or f"{args.prefix}_margins_per_draw"
-    margins_path = RUNS / f"{margins_name}.jsonl"
+    margins_path = records_path(RUNS, margins_name)
     margins = jobs(margins_path, kind="cell")
     oracle_jobs = jobs(RUNS / f"{args.prefix}_oracle.jsonl")
     errors_path = RUNS / f"{args.prefix}_errors.jsonl"

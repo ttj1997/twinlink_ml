@@ -846,13 +846,15 @@ def fresh_and_reused(
 
     The reused worker first runs ``warmup``, then the tasks in order (each after the ones before
     it). Per task: both statuses, whether the records are identical (``comparable``), the pids.
+    The fresh processes run while the reused worker is alive, so Windows cannot hand its pid
+    to one of them (pid reuse once made the pid comparison of the test fail, 2026-11-09).
     """
-    fresh = []
-    for fn, args in tasks:
-        with ProcessPoolExecutor(max_workers=1) as pool:
-            fresh.append(pool.submit(run_task, fn, args).result())
     with ProcessPoolExecutor(max_workers=1) as pool:
         before = [pool.submit(run_task, fn, args).result() for fn, args in warmup]
+        fresh = []
+        for fn, args in tasks:
+            with ProcessPoolExecutor(max_workers=1) as fresh_pool:
+                fresh.append(fresh_pool.submit(run_task, fn, args).result())
         reused = [pool.submit(run_task, fn, args).result() for fn, args in tasks]
     pids = {r["worker_pid"] for r in [*before, *reused]}
     return [
