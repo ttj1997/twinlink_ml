@@ -194,6 +194,18 @@ class StudySetup:
 
         return truth_config(self.steady_nominal, self.draw_values(draw))
 
+    def generate(self, config: ProcessConfig, spec: Any, seed: int) -> Any:
+        """Data pool of ``spec`` simulated with the truth ``config`` (as the Befund 94 pipeline).
+
+        The same call as ``run_arch_rerun_worker._generate``. A study whose truth is not the
+        grey-box model itself overrides this (:mod:`twinlink_ml.hybrid_structural.study`).
+        """
+        from twinlink_ml.evaluation.experiments import generate_data
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", PlaceholderConfigWarning)
+            return generate_data(config, spec, master_seed=seed)
+
     def wide(self, config: ProcessConfig) -> ProcessConfig:
         return widen(
             config,
