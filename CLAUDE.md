@@ -125,3 +125,8 @@ with `--resume`.
 - The budget rule governs cuts decided before the main run. A running main run that exceeds
   the budget continues as long as it demonstrably progresses; the overrun is documented as a
   decision of the project lead.
+- Main runs are started detached from the Claude Code process (own console, scheduled task
+  or WMI process creation, output to a log file), so that an ended session or an expired
+  sign-in does not stop them. Watchers may be session-bound.
+- Stage outputs are written directly as .json.gz (or packed by the chain between stages), so
+  that the working tree stays clean between stages.
