@@ -1,0 +1,88 @@
+# Case-ranking study: ranking of the six heat-recovery cases of the partner workbook
+# (TwinLink Excel.xlsx, docs/11 section 13) over the operating range
+# (docs/38_case_ranking.md; readings pre-registered in the docstring of
+# scripts/analyze_case_ranking.py).
+#
+# STATUS: placeholder -- every number below is a study setting or a placeholder WITHOUT a
+# measured source, unless a source is named next to it. Model against model; no plant data.
+# Fixed inputs (air and circuit flows, properties, calorific value, efficiency, spray
+# temperature) are the workbook's of docs/11 section 13.1, in twinlink_ml.case_ranking.workbook.
+
+version: 1
+
+# ---------------------------------------------------------------------------------------------
+# Box (decision of the project lead F3, 2026-11-06). Workbook point in brackets.
+box:
+  ambient_celsius: [-10.0, 40.0]          # [20] docs/37 pretraining box
+  ambient_relative_humidity: [0.20, 0.95] # [0.414 = 6 g/kg at 20 degC] lead (F1)
+  inlet_1_celsius: [60.0, 300.0]          # [300] dryer 1 = spray tower in the workbook: up to
+                                          # 300 degC (lead); lower bound 60 so that the plant-like
+                                          # 75-95 degC lie inside (docs/37 pretraining lower bound)
+  inlet_2_celsius: [60.0, 200.0]          # [150] dryer 2 = fluidised bed: up to ~200 degC (lead);
+                                          # 60-200 = docs/37 pretraining box
+  spray_load_1_kg_per_kg: [0.05, 0.15]    # [0.10] 0.5-1.5 x workbook value (lead)
+  spray_load_2_kg_per_kg: [0.015, 0.045]  # [0.03] 0.5-1.5 x workbook value (lead)
+  solid_fraction_1: [0.30, 0.70]          # [0.40] lead
+  solid_fraction_2: [0.30, 0.70]          # [0.40] lead
+
+# Named regions (secondary; the full box is primary).
+regions:
+  workbook_neighbourhood:
+    fraction_of_width: 0.10   # placeholder: workbook point +- 10 % of the box width per input,
+                              # cut at the box (inlet_1 is at the upper face: one-sided there)
+  plant_like:
+    inlet_2_celsius: [75.0, 95.0]  # docs/37 plant-like supply air; dryer 2 (fluidised bed, the
+                                   # type of plant A); every other input over the full box
+
+# ---------------------------------------------------------------------------------------------
+# Designs: scrambled Sobol streams (nested prefixes), one per set.
+designs:
+  seed: 20261106
+  fixed:                  # points per set, variant "fixed" (workbook circuit flows)
+    full: 32768
+    workbook_neighbourhood: 8192
+    plant_like: 8192
+    rule_test: 8192       # own stream (seed + 100), full box; test set of the rule of Q2
+  optimised:              # prefixes of the same streams, variant "optimised" (set after the
+    full: 4096            # timing of the dry run, before the main run)
+    workbook_neighbourhood: 1024
+    plant_like: 1024
+    rule_test: 2048
+  convergence_prefixes: [256, 512, 1024, 2048, 4096, 8192, 16384, 32768]
+
+# Cuts through the workbook point (figures only; no share or rank claim is read from them).
+cuts:
+  one_d_points: 97
+  one_d_points_optimised: 25
+  two_d_points: 49
+  two_d_pairs:
+    - [inlet_1_celsius, inlet_2_celsius]
+    - [inlet_1_celsius, spray_load_1_kg_per_kg]
+    - [inlet_2_celsius, spray_load_2_kg_per_kg]
+
+# ---------------------------------------------------------------------------------------------
+admissibility:
+  max_exhaust_relative_humidity: 0.90   # request; IAPWS-IF97 saturation, both exhausts
+  partner_medium_boiling_celsius: 99.974  # flagged, not excluded (docs/11 section 13.5)
+
+ties:
+  exact_kg_per_h: 1.0e-9                # docs/11 section 13
+  practical_fraction_of_saving: 0.01    # placeholder (lead F4): gap < 1 % of the saving of the
+                                        # best case against case 0
+  practical_sensitivity: [0.005, 0.02]  # lead F4
+
+optimiser:                 # variant "optimised" (lead F6)
+  bounds_kg_per_h: [20.0, 150.0]   # per circuit; the range of docs/11 section 10.6 (WU3)
+  grid: 5
+  starts: 3
+  max_evaluations_per_start: 60
+
+rule:
+  max_depth: 3
+  min_samples_leaf: 50
+  accuracy_reading: 0.95   # placeholder: the rule "describes" the boundary at >= 95 % on the test set
+
+run:
+  chunk_points: 256
+  max_workers: 8           # CLAUDE.md / request
+  dry_run_points_per_chunk: 2
