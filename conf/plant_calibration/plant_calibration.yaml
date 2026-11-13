@@ -1,0 +1,111 @@
+# Calibration of the grey-box model at plant A: identifiability first (docs/40_plant_calibration.md)
+#
+# STATUS: study settings, fixed before the first run on plant data (commit of the reading).
+# Every number below is a setting or a placeholder with its source, none is a measured plant
+# value. Data, stationary segments, roles and the plant-near parametrisation are those of
+# Befund 117 (conf/plant_scale/plant_scale.yaml, read unchanged); raw exports only through the
+# environment variables named there, channel tags only in the git-ignored role file.
+
+version: 1
+plant_scale_config: conf/plant_scale/plant_scale.yaml   # data, segments, placeholders (Befund 117)
+
+# Day -> product (day and product are confounded, docs/23, docs/34).
+products:
+  day_1: product_1
+  day_2: product_2
+
+# Sensor sigma for the normalisation and the weights (K). Per sensor the absolute temperature
+# noise of the process config's sensor model (0.2 K, the sensor model of Befund 116); the bed
+# temperature is the mean of six sensors, so sigma_bed = 0.2 / sqrt(6).
+sigma:
+  sensor_k: 0.2
+  bed_sensors: 6
+  exhaust_sensors: 1
+
+# Candidate parameters. nominal = value of the uncalibrated model (process config / switch off);
+# scale = plausible half-width used to normalise S (S_ij = dy_i/dtheta_j * scale_j / sigma_i);
+# bounds = calibration and profile range; step = relative central-difference step on the scale.
+# kind: "steady" parameters may be calibrated; "kinetics" are NEVER calibrated (request);
+# "dynamic" has no steady effect by construction (reported, never calibrated).
+parameters:
+  ua_bed_w_per_k:            # heat-loss UA of the bed balance (geometry.heat_loss_ua_w_per_k)
+    nominal: 0.0             # process config placeholder (calibrated per day in Befund 117)
+    scale: 1000.0            # order of the balance conductances of Befund 117 (1.0-2.3 kW/K)
+    bounds: [0.0, 20000.0]   # as Befund 117
+    kind: steady
+  offset_product_1_k:        # bed-to-exhaust distance of product 1 (switch, default off)
+    nominal: 0.0
+    scale: 5.0               # order of the offsets of Befund 117 (5.03 / 10.12 K)
+    bounds: [0.0, 30.0]      # as Befund 117
+    kind: steady
+    product: product_1
+  offset_product_2_k:        # bed-to-exhaust distance of product 2 (switch, default off)
+    nominal: 0.0
+    scale: 5.0
+    bounds: [0.0, 30.0]
+    kind: steady
+    product: product_2
+  freeboard_ua_w_per_k:      # heat transfer gas -> wall between bed and exhaust sensor
+    nominal: 0.0             # (term `heat_loss` of Befund 117, C1; decision of the project lead)
+    scale: 1000.0            # order of the C1 values of Befund 117 (1026 / 4206 W/K)
+    bounds: [0.0, 50000.0]   # as Befund 117
+    kind: steady
+  cp_solid_j_per_kg_k:       # effective heat capacity of the bed (material.cp_solid_j_per_kg_k)
+    nominal: 1200.0          # process config
+    scale: 600.0             # +-50 % (placeholder)
+    bounds: [600.0, 1800.0]
+    kind: dynamic
+  critical_moisture_kg_per_kg:   # kinetics (material), band of Befund 108 (sobol_steady.yaml)
+    nominal: 0.200
+    scale: 0.075             # half band 0.15-0.30
+    bounds: [0.150, 0.300]
+    kind: kinetics
+  max_saturation_degree:     # kinetics nu_max (material), band of Befund 108
+    nominal: 0.60
+    scale: 0.20              # half band 0.4-0.8
+    bounds: [0.40, 0.80]
+    kind: kinetics
+
+# Descriptive variant WITHOUT reading (decision of the project lead, 2026-11-13): one shared
+# bed-to-exhaust distance for both products instead of one per product (as C3 of Befund 117).
+shared_offset:
+  name: offset_shared_k
+  nominal: 0.0
+  scale: 5.0
+  bounds: [0.0, 30.0]
+
+sensitivity:
+  relative_step: 0.01        # central difference: +- 0.01 x scale, clipped to `bounds`
+                             # (one-sided where the value sits on a bound, e.g. UA = 0)
+  # Identifiability rules (Brun et al. 2001, Water Res. 35:3667), on the normalised matrix S:
+  #   delta_msqr_j = sqrt(mean_i S_ij^2)  (RMS output change in sigma per scale change)
+  #   gamma_K = 1 / sqrt(lambda_min(Sn_K^T Sn_K)), Sn = S with columns of unit length
+  #   rho_K = det(S_K^T S_K)^(1 / (2 |K|))
+  # A subset K is identifiable if every delta_msqr_j >= delta_min and gamma_K <= gamma_max.
+  delta_min: 1.0
+  gamma_max: 10.0
+  max_parameters: 3          # request: at most 3 calibrated parameters
+  # Selection of the calibrated set on a data set (one day, or both days for the profiles):
+  # largest identifiable subset (<= max_parameters) of the "steady" parameters; ties: largest
+  # rho_K, then the order of `parameters`.
+
+profile:
+  # Profile likelihood on both days jointly for the three parameters with the largest
+  # delta_msqr on the joint matrix (ties: order of `parameters`); profiled parameter fixed on the
+  # grid, the joint calibration set (minus the profiled parameter) re-fitted.
+  grid_points: 11            # evenly over `bounds`, plus the joint optimum
+  threshold_chi2: 3.84       # 95 %, one degree of freedom
+  # Two thresholds: with the sensor sigma, and with sigma rescaled by the fit
+  # (s^2 = SSR_min / (n - p)); the verdict uses the rescaled one (model error dominates).
+
+calibration:
+  tolerance_k: 2.0           # reading K0
+  max_nfev: 200
+  start:                     # starting values of the fit (clipped to bounds)
+    ua_bed_w_per_k: 500.0
+    offset_product_1_k: 5.0
+    offset_product_2_k: 5.0
+    freeboard_ua_w_per_k: 1000.0
+    offset_shared_k: 5.0
+
+workers: 8
