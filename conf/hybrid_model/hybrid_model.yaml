@@ -1,0 +1,116 @@
+# Hybrid model (prior knowledge + learned residual) against a pure GRU with few runs
+# (docs/39_hybrid_model.md). Pre-registered reading: docstring of scripts/analyze_hybrid_model.py.
+#
+# STATUS: placeholder -- every number below is a study setting or a placeholder, none is a
+# measured plant value. Fixed and committed before the first run (2026-11-03).
+#
+# Truth = the grey-box model of the Befund 94 pipeline with the material parameters of one of the
+# 20 draws of Befund 111 (read from the sensor-value config, not copied). Prior knowledge = the
+# same model with the nominal parameters.
+
+version: 1
+sensor_value_config: conf/sensor_value/sensor_value.yaml      # the 20 draws of Befund 111
+process_config: conf/process/greybox_gab_placeholder.yaml     # Befund 94 / 113 process
+quality_limit_kg_per_kg: 0.15                                 # PLACEHOLDER (as Befund 96/113)
+
+data:                          # Befund 94 pipeline, arm N (preset version 2), run-level splits
+  master_seeds: [1, 2, 3]
+  n_train: [4, 8, 16, 32]
+  max_epochs: 200              # GRU budget of Befund 94; M3/M4 the same architecture and budget
+
+models:
+  ensemble_members: 5          # M4: member 0 is the M3 network, 1-4 differ in the training seed
+  ensemble_seed_label: hybrid_model_ensemble
+
+refit:                         # M2, as M4 of Befund 107 (least squares on all outputs)
+  parameters: [critical_moisture_kg_per_kg, max_saturation_degree]
+  lower: [0.15, 0.20]          # critical moisture: hard lower end of the Sobol band (quality limit)
+  upper: [0.45, 1.00]          # nu_max: as the bounds of Befund 107 P2
+  max_nfev: 200
+  diff_step: 1.0e-4
+
+rto:                           # grid + zoom (decision of the project lead, 2026-11-03)
+  coarse: 21
+  zoom: 9
+  zoom_levels: 3               # 3 levels, recentring and 4 starts: set after the pilot's
+  max_moves: 50                # discretisation check (2 levels without recentring: up to 2.0 %
+  starts: 4                    # energy above the 8-start Nelder-Mead), before the main run
+
+margin:
+  holding_share: 0.95          # the margin holds in >= 95 % of the cases INSIDE the training range
+  constant: {upper: 0.12, tolerance: 1.0e-4}   # M0-M3: limit 0.15 - m
+  ensemble_k: {upper: 10.0, tolerance: 0.01}   # M4: mean + k std <= 0.15
+  outside_violation_limit: 0.05                # "margin holds outside" iff <= 5 % violations
+
+coverage:                      # classification (b), src/twinlink_ml/hybrid_model/coverage.py
+  threshold: 0.2
+
+cases:
+  # Interior contexts: indices into the 25 Befund-52 grid points (load_test_points order,
+  # index = 5 * i_T + i_phi). Draw d gets i_T = j, i_phi = (j + d) mod 5, j = 0..4: every draw
+  # sees every temperature and humidity level once, every grid point is used by 4 draws.
+  # The same cases for every model, seed and n_train (paired).
+  interior_grid_indices:
+    - [0, 6, 12, 18, 24]   # draw 0
+    - [1, 7, 13, 19, 20]   # draw 1
+    - [2, 8, 14, 15, 21]   # draw 2
+    - [3, 9, 10, 16, 22]   # draw 3
+    - [4, 5, 11, 17, 23]   # draw 4
+    - [0, 6, 12, 18, 24]   # draw 5
+    - [1, 7, 13, 19, 20]   # draw 6
+    - [2, 8, 14, 15, 21]   # draw 7
+    - [3, 9, 10, 16, 22]   # draw 8
+    - [4, 5, 11, 17, 23]   # draw 9
+    - [0, 6, 12, 18, 24]   # draw 10
+    - [1, 7, 13, 19, 20]   # draw 11
+    - [2, 8, 14, 15, 21]   # draw 12
+    - [3, 9, 10, 16, 22]   # draw 13
+    - [4, 5, 11, 17, 23]   # draw 14
+    - [0, 6, 12, 18, 24]   # draw 15
+    - [1, 7, 13, 19, 20]   # draw 16
+    - [2, 8, 14, 15, 21]   # draw 17
+    - [3, 9, 10, 16, 22]   # draw 18
+    - [4, 5, 11, 17, 23]   # draw 19
+  # Extrapolation (a): contexts outside the disturbance box of the data design
+  # (T_amb 5-35 degC, phi 0.25-0.85); draw d gets [d mod 4, (d + 2) mod 4] -- one temperature
+  # and one humidity extreme, every context used by 10 draws.
+  extrapolation_contexts:      # [T_amb degC, phi]
+    - [0.0, 0.50]
+    - [40.0, 0.50]
+    - [20.0, 0.10]
+    - [20.0, 0.95]
+  extrapolation_per_draw:
+    - [0, 2]   # draw 0
+    - [1, 3]   # draw 1
+    - [2, 0]   # draw 2
+    - [3, 1]   # draw 3
+    - [0, 2]   # draw 4
+    - [1, 3]   # draw 5
+    - [2, 0]   # draw 6
+    - [3, 1]   # draw 7
+    - [0, 2]   # draw 8
+    - [1, 3]   # draw 9
+    - [2, 0]   # draw 10
+    - [3, 1]   # draw 11
+    - [0, 2]   # draw 12
+    - [1, 3]   # draw 13
+    - [2, 0]   # draw 14
+    - [3, 1]   # draw 15
+    - [0, 2]   # draw 16
+    - [1, 3]   # draw 17
+    - [2, 0]   # draw 18
+    - [3, 1]   # draw 19
+  # Steady evaluation of the (a) contexts (truth, prior knowledge, refit): the process config with
+  # these disturbance ranges; only the bracket of the inner bisection depends on them. The data
+  # design and the interior cases keep the ranges of the process config.
+  widened_ambient_temperature_celsius: [0.0, 40.0]
+  widened_ambient_relative_humidity: [0.10, 0.95]
+
+discretisation_check:          # addendum 1 of the request: oracle grid+zoom against 8-start NM
+  n_cases: 10                  # interior cases (draw, slot) = (2 i, i mod 5), i = 0..9
+  energy_report_threshold: 0.002   # > 0.2 % -> the error stands next to every energy figure
+
+errors:                        # one-step / rollout errors, horizons of Befund 94
+  horizons: [1, 36]
+  test_sets: [excited, constant_holdout, constant_holdout_wide]
+  holdout_seed: 999            # the constant-run pool of Befund 94
