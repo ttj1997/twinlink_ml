@@ -115,6 +115,8 @@ the cell records of ``<prefix>_margins_per_draw.jsonl`` (driver split per draw, 
 Implementation note 2026-11-09: the margins file is committed packed
 (``<prefix>_margins_per_draw.jsonl.gz``, raw file outside the repository); ``records_path``
 takes the packed file when the plain one is absent and ``read_lines`` reads both forms.
+Implementation note 2026-11-13: the same holds for the errors file
+(``<prefix>_errors.jsonl.gz``).
 
     tools/run_here.sh scripts/analyze_hybrid_model.py --prefix hybrid_model_v1
 """
@@ -384,7 +386,7 @@ def main() -> int:
     margins_path = records_path(RUNS, margins_name)
     margins = jobs(margins_path, kind="cell")
     oracle_jobs = jobs(RUNS / f"{args.prefix}_oracle.jsonl")
-    errors_path = RUNS / f"{args.prefix}_errors.jsonl"
+    errors_path = records_path(RUNS, f"{args.prefix}_errors")
     errors = jobs(errors_path) if errors_path.exists() else []
 
     rows = [summarise_job(j) for j in margins]
@@ -478,7 +480,7 @@ def main() -> int:
         "inputs": {
             "margins": margins_path.name,
             "oracle": f"{args.prefix}_oracle.jsonl",
-            "errors": f"{args.prefix}_errors.jsonl" if errors else None,
+            "errors": errors_path.name if errors else None,
             "margin_headers": [h["provenance"] for h in headers(margins_path)],
         },
         "inside_cases_per_cell": {

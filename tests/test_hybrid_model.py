@@ -593,3 +593,28 @@ def test_analysis_reads_the_packed_margins_file(
     assert analysis.read_lines(packed) == text.splitlines()
     assert analysis.jobs(packed, kind="cell") == expected_cells
     assert analysis.headers(packed) == expected_headers
+
+
+def test_analysis_reads_the_packed_errors_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import gzip
+    import json
+
+    scripts = Path(__file__).resolve().parents[1] / "scripts"
+    monkeypatch.syspath_prepend(str(scripts))
+    monkeypatch.syspath_prepend(str(scripts / "verify"))
+    analysis = _analysis_script()
+    rows = [
+        {"kind": "header", "provenance": {"git/commit": "abc"}},
+        {"kind": "job", "key": "errors_d00_s1", "one_step": 0.1},
+        {"kind": "footer", "n_done": 1},
+    ]
+    name = "hybrid_model_v1_errors"
+    # neither file: the plain name, which does not exist (the analysis then has no errors)
+    assert not analysis.records_path(tmp_path, name).exists()
+    packed = tmp_path / f"{name}.jsonl.gz"
+    with gzip.open(packed, "wt", encoding="utf-8") as handle:
+        handle.write("".join(json.dumps(r) + "\n" for r in rows))
+    assert analysis.records_path(tmp_path, name) == packed
+    assert analysis.jobs(packed) == [rows[1]]
