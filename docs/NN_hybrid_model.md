@@ -1,7 +1,7 @@
 # NN -- Hybrid model (physics + learned residual) against a pure GRU with few runs: how much safety margin does it save?
 
 Status: design fixed and committed before the runs (sections 1-7); runs and results in sections
-8-10, added after the runs (numbers only from the artifacts named there). Branch `hybrid-model`
+8-11, added after the runs (numbers only from the artifacts named there). Branch `hybrid-model`
 (from `origin/master` 0106563). Finding number: open (assigned by the managing session at merge;
 lab book entry "Befund NN (number open)").
 
@@ -255,12 +255,157 @@ workers 10.1 GB (32 % of 31.2 GB). *Errors part* (complete, it has no reduced mo
 
 ## 9. Runs and controls
 
-(after the runs)
+| stage | script, commit | artifact | units, wall time |
+|---|---|---|---|
+| training | `train_hybrid_model.py`, de3079f | `hybrid_model_training_v1.jsonl.gz` (3207796) | 1680 tasks, 36438 s |
+| oracle + discretisation check | `run_hybrid_evaluation.py --part oracle`, a343840 | `hybrid_model_v1_oracle.jsonl` (3207796) | 20 draws + 10 check cases, 580 s |
+| margins | `--part margins`, 1e2a635 | `hybrid_model_v1_margins_per_draw.jsonl.gz` (3ad9ef6) | 2400 tasks, 0 errors, 60/60 cells, 181751 s |
+| errors | `--part errors`, aafc95f | `hybrid_model_v1_errors.jsonl.gz` (e3ac41f) | 60 tasks, 0 errors, 2084 s |
+| analysis | `analyze_hybrid_model.py`, f0d8120 | `hybrid_model_v1_analysis.json` (f7ad0be) | -- |
+
+Every artifact records `git/dirty=False` and the code location of its worktree. The sha256 of the
+training records and of the oracle are pinned in the headers of the margins and errors stages and
+match. The two packed artifacts were checked after packing (sha256 of the unpacked content equal to
+the raw file; raw files kept under `C:/twinlink_runs/hybrid-model/`). Checkpoints (gitignored):
+1440 files of the main training and 12 of the pilot, copied to `C:/twinlink_runs/hybrid-model/`
+(file names and total size, respectively sha256, checked).
+
+**Controls.**
+
+* Tests (`tests/test_hybrid_model.py`): M3 with a zero residual equals M0 exactly
+  (`test_m3_with_zero_residual_equals_m0_exactly`); M2 with the true parameters hits the truth,
+  steady and dynamic (`test_m2_with_true_parameters_hits_the_truth_steady`, `..._dynamic`); the
+  batched steady solver equals the bandit evaluation; the refit recovers the true parameters from
+  noise-free runs; the per-draw driver, the no-inside-case path, the raise rule, the resume and the
+  worker reuse (section 8). Full suite on f0d8120: 1418 passed, 30 skipped.
+* **Discretisation** (addendum 1): over the 10 check cases the oracle by grid + zoom differs from the
+  8-start Nelder-Mead by at most **0.317 %** in energy (one case; the other nine at most 0.113 %) and
+  at most 1.6e-4 kg/kg in slack. This is above 0.2 %, so every energy figure below is to be read with
+  this discretisation of the oracle (marked "disc. 0.317 %").
+* **Determinability** (addendum ac8173a): pooled inside cases per (seed, `n_train`) 29 (s2, n 4) to
+  94 (s1, n 32); every one of the 60 cells has at least 20 and is determinable; no `n_train` drops out.
+  The inside cases do not depend on the model.
+* The raise rule of Befund 111 was not needed in any cell (`raised` 0 everywhere); every cell is
+  decided at its first candidate or at the upper end ("not reached").
 
 ## 10. Results
 
-(after the runs)
+All numbers from `artifacts/runs/hybrid_model_v1_analysis.json`. Median over the 3 master seeds,
+range in brackets; margins in kg/kg; "not reached" counts as the upper end 0.12 (censored) as
+pre-registered, the number of such seeds is given. Test sets named per table.
+
+**Margin (95 % of the inside cases holding), M0-M3.**
+
+| `n_train` | inside cases (s1/s2/s3) | M0 | M1 | M2 | M3 |
+|---|---|---|---|---|---|
+| 4 | 36 / 29 / 38 | 0.0617 [0.0440, 0.12] (1 n.r.) | 0.1173 [0.0616, 0.12] (1 n.r.) | 0.0019 [0.0012, 0.0534] | 0.0375 [0.0180, 0.1192] |
+| 8 | 54 / 35 / 50 | 0.1071 [0.0440, 0.12] (1 n.r.) | 0.12 [0.0496, 0.12] (2 n.r.) | 0.0032 [0.0025, 0.0534] | 0.1089 [0.0111, 0.1195] |
+| 16 | 68 / 63 / 77 | 0.0622 [0.0602, 0.0623] | 0.0456 [0.0225, 0.0630] | 0.0039 [0.0035, 0.0057] | 0.0374 [0.0111, 0.12] (1 n.r.) |
+| 32 | 94 / 82 / 91 | 0.0622 [0.0444, 0.0622] | 0.0318 [0.0137, 0.0410] | 0.0032 [0.0031, 0.0034] | 0.0195 [0.0123, 0.12] (1 n.r.) |
+
+**M4** (ensemble, k on [0, 10]): k reached in 1 / 2 / 1 / 2 of 3 seeds at `n_train` 4 / 8 / 16 / 32;
+where reached, effective margin (median `k std` over the inside cases) 0.0125 (n 4), 0.0278
+[0.0074, 0.0481] (n 8), 0.0170 (n 16), 0.0066 [0.0054, 0.0078] (n 32), with k 3.04, 7.65, 8.09,
+3.89 (medians). Where k = 10 does not reach 95 %, the holding share at k = 10 is 0.734-0.944. M4 is
+not part of the reading.
+
+**Pre-registered reading (n_train 4, 8, 16; all cells determinable).**
+
+| `n_train` | half criterion `m_M3 <= 0.5 m_M1` | paired M3 vs M1: mean difference (M1 - M3), threshold, p | resolved |
+|---|---|---|---|
+| 4 | yes (0.0375 vs 0.1173) | 0.0414, 0.1049, 0.23 | no |
+| 8 | no (0.1089 vs 0.12) | 0.0167, 0.0487, 0.28 | no |
+| 16 | no (0.0374 vs 0.0456) | -0.0125, 0.1344, 0.73 | no |
+
+* **Y0 not met** (half criterion only at `n_train` 4, and not resolved there).
+* **Y2 holds** (verdict of the analysis: "Y2"): at no `n_train` <= 16 is the margin of M3 resolvably
+  smaller than that of M1. Pre-registered meaning: no advantage of the hybrid in this setting.
+* **Y1 not met**: the margin of M2 is not within 10 % of M3 at any `n_train` (M2 0.0019 / 0.0032 /
+  0.0039 against M3 0.0375 / 0.1089 / 0.0374); the energy part holds at `n_train` 4 and 16, not at 8
+  (relative energy below). Paired M2 vs M3 (margin): differences 0.0394 / 0.0601 / 0.0518 against
+  thresholds 0.0620 / 0.1212 / 0.1435, not resolved. Y1 is an equivalence statement; its failure
+  here means M2 and M3 are not equivalent, not that one ranks above the other.
+
+**Energy relative to the oracle** (median over the inside cases with a valid model point; disc.
+0.317 %).
+
+| `n_train` | M0 | M1 | M2 | M3 | M4 |
+|---|---|---|---|---|---|
+| 4 | 1.137 [1.098, 1.668] | 1.321 [1.059, 1.513] | 1.005 [1.003, 1.149] | 1.086 [1.035, 1.679] | 1.031 [1.027, 1.337] |
+| 8 | 1.407 [1.123, 1.628] | 1.285 [1.095, 1.409] | 1.008 [1.007, 1.154] | 1.464 [1.026, 1.702] | 1.031 [1.026, 1.107] |
+| 16 | 1.164 [1.153, 1.167] | 1.065 [1.033, 1.141] | 1.009 [1.008, 1.012] | 1.089 [1.022, 1.670] | 1.065 [1.040, 1.073] |
+| 32 | 1.157 [1.101, 1.159] | 1.066 [1.023, 1.086] | 1.007 [1.007, 1.007] | 1.059 [1.034, 1.712] | 1.059 [1.021, 1.069] |
+
+For cells that did not reach, the energy is the one at the upper end of the margin (or k = 10).
+
+**No valid model point.** M0-M2: none. M3: 0 / 1 / 11 / 14 cases (of them inside 0 / 0 / 6 / 10) at
+`n_train` 4 / 8 / 16 / 32, all in seed 1; M4: 0 / 2 / 33 / 30 (inside 0 / 0 / 17 / 19), seed 1 except 7
+(inside 5) in seed 3 at `n_train` 16.
+These cases count as not holding; they are the reason why M3 s1 does not reach at `n_train` 16
+(holding share 0.882 at 0.12) and 32 (0.883). Bed above 80.05 degC at the chosen point: M1 2
+(`n_train` 8), M3 5 / 2 / 1 / 3, M4 4 / 2 / 1 / 0 cases; M0 and M2 none.
+
+**Outside: violation share at exactly the model's parameter** (pooled over the seeds; (a) 120 cases
+per `n_train`, (b) 197 / 161 / 92 / 33 cases at `n_train` 4 / 8 / 16 / 32). "Holds" = share <= 5 %.
+
+| `n_train` | M0 (a) / (b) | M1 (a) / (b) | M2 (a) / (b) | M3 (a) / (b) | M4 (a) / (b) |
+|---|---|---|---|---|---|
+| 4 | 7.5 / 6.1 % | 9.2 / 7.6 % | 12.5 / 9.1 % | 9.2 / 11.2 % | 10.0 / 6.1 % |
+| 8 | 6.7 / 4.3 % (b holds) | 10.0 / 3.7 % (b holds) | 9.2 / 5.6 % | 10.8 / 4.3 % (b holds) | 12.5 / 6.2 % |
+| 16 | 8.3 / 5.4 % | 11.7 / 5.4 % | 5.0 / 1.1 % (both hold) | 10.8 / 5.4 % | 15.8 / 12.0 % |
+| 32 | 9.2 / 12.1 % | 25.0 / 18.2 % | 5.0 / 0.0 % (both hold) | 10.0 / 6.1 % | 21.7 / 18.2 % |
+
+**Moisture bias at the chosen point, inside cases** (predicted - true, kg/kg, median over seeds of
+the per-cell medians): M0 -0.0067 / -0.0026 / -0.0079 / -0.0079; M1 -0.0368 / -0.0222 / -0.0123 /
+-0.0046; M2 +0.0001 / +0.0002 / -0.0006 / -0.0003; M3 -0.0019 / -0.0010 / -0.0033 / -0.0011; M4
+-0.0019 / -0.0024 / -0.0025 / -0.0015 (`n_train` 4 / 8 / 16 / 32). Box-wide on the coarse grid,
+inside: M1 -0.0208 / -0.0093 / -0.0080 / -0.0029, M3 -0.0009 / 0.0000 / -0.0005 / -0.0001.
+
+**One-step and rollout error, product moisture** (RMSE kg/kg, median over 3 seeds x 20 draws, range
+in brackets; M0/M2 open-loop replay, so h1 and h36 are the same quantity at different windows).
+
+| `n_train` | excited test set, h36: M1 | M2 | M3 | M4 | constant-run holdout, h36: M1 | M2 | M3 |
+|---|---|---|---|---|---|---|---|
+| 4 | 0.0451 [0.0343, 0.0684] | 0.0097 [0.0004, 0.0694] | 0.0037 [0.0014, 0.0093] | 0.0034 | 0.0618 | 0.0161 | 0.0044 |
+| 8 | 0.0259 [0.0105, 0.0546] | 0.0120 [0.0003, 0.0694] | 0.0033 [0.0014, 0.0082] | 0.0031 | 0.0362 | 0.0235 | 0.0042 |
+| 16 | 0.0085 [0.0049, 0.0138] | 0.0013 [0.0003, 0.0261] | 0.0025 [0.0008, 0.0054] | 0.0025 | 0.0124 | 0.0016 | 0.0030 |
+| 32 | 0.0041 [0.0027, 0.0121] | 0.0010 [0.0003, 0.0028] | 0.0020 [0.0004, 0.0044] | 0.0020 | 0.0080 | 0.0013 | 0.0026 |
+
+M0 (no data): 0.0206 [0.0053, 0.0614] on the excited test set, 0.0284 on the constant-run holdout.
+At h1 M1 is 0.0008-0.0019 and M3 0.0008 (excited). On the constant-run holdout with widened ambient
+ranges (runs outside the data box, (a)) the figures differ from the plain holdout by at most 0.002
+(M1 0.0598 / 0.0364 / 0.0141 / 0.0085, M3 0.0045 / 0.0043 / 0.0032 / 0.0028). The full table
+(also inside / outside runs, bed temperature and energy target) is in the artifact under `errors`.
+
+**Answer to the question.** In this setting the hybrid model saves no resolvable safety margin
+against the pure GRU at `n_train` <= 16 (pre-registered reading Y2), although its rollout error of
+the moisture (h36) is 8-12 times smaller than that of the GRU at `n_train` 4 and 8 (excited test
+set).
+The refit of critical moisture and nu_max (M2) needs margins of 0.0019-0.0039 kg/kg (medians) and lies within
+1 % of the oracle energy in the median (disc. 0.317 %); it is not equivalent to the hybrid (Y1 not
+met), and the paired comparison M2 vs M3 is not resolved either.
 
 ## 11. Caveats
 
-(after the runs)
+* **Resolution.** Three master seeds give paired thresholds of 0.049-0.134 kg/kg for M3 vs M1, of the
+  order of the margins themselves. Y2 is the pre-registered reading ("not resolvably better"); it is
+  not a demonstration that M3 and M1 need the same margin.
+* **Censoring.** "Not reached" counts as 0.12. At `n_train` 8 two of three M1 seeds do not reach, so
+  the median of M1 there is the bound itself; the half criterion at 8 compares 0.1089 with this bound.
+* **Invalid fixed points.** The residual networks of M3 (seed 1) and the ensemble M4 lose valid
+  fixed points at `n_train` 16 and 32; those cases count as not holding and decide the "not reached"
+  of these cells. The margin then measures fixed-point validity as much as the moisture error.
+* **Truth family favours M2.** The truth is the same grey-box structure with other material
+  parameters, and M2 refits two of the seven varied parameters (critical moisture and nu_max, the
+  ones that dominate the mismatch per Befund 111). The small M2 margins are not to be expected at a
+  plant with a structural mismatch (Befund 117).
+* **Rollout error vs margin.** The much smaller rollout error of M3 does not show up as a smaller
+  margin: the margin is set by the steady state near the moisture limit at the 95 % quantile of the
+  inside cases, not by the mean trajectory error. This is a descriptive observation, not a
+  resolved rank.
+* Discretisation of the oracle 0.317 % in one of 10 check cases (stated with every energy figure).
+  Moisture limit 0.15 kg/kg is a placeholder; one-step operating-point problem only; one lab line;
+  20 draws; inside / outside by the Chebyshev threshold 0.2 chosen before the run.
+* Course of the run (section 8): the margins ran at 1e2a635, the errors at aafc95f (only the
+  analysis reader and the reuse check changed in between, no computation); the 15-h pause before the
+  errors stage had no effect on any result.
