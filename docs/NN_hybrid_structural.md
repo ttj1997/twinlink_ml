@@ -1,7 +1,7 @@
 # NN -- Hybrid against GRU against parameter refit with a STRUCTURALLY deviating truth
 
-Status: design, dry run and cut decision fixed and committed before the main run (sections 1-9);
-main run and results in sections 10-13, added after the run (numbers only from the artifacts named there). Branch
+Status: design, dry run and cut decision fixed and committed before the main run (sections 1-9, 001a6df);
+main run and results in sections 10-13, added after the run on 2026-11-14 (numbers only from the artifacts named there). Branch
 `hybrid-structural` (worktree `C:/twinlink_work/hybs`, from `origin/master` 68a805b). Finding
 number: open ("Befund NN (number open)" in the lab book); document number assigned at merge.
 Unattended run over the weekend of 2026-11-13; no merge, no push.
@@ -234,3 +234,146 @@ evaluations with the structural error, and cases that need more bisection steps.
 reserve is about 10 h, so the gate of decision 13 holds the cut ready inside the run: `n_train` 4
 is dropped from the margins if its part would start after 2026-11-15 15:00. The outcome of the
 gate is reported in section 10.
+
+## 10. Main run
+
+Started detached (`Win32_Process.Create`) on 2026-11-13 18:11:35 on 001a6df (code as d341793, on
+which the full suite ran; 001a6df adds this document only), clean tree at every stage start; ended
+2026-11-14 17:36:28: 23.4 h against a projection of about 50 h (the networks trained and
+evaluated faster than the per-task times of Befund 122 suggested). No stage needed a second run,
+no unit failed, nothing was cut: the gate of decision 13 was passed on 2026-11-14 12:59 and
+`n_train` 4 was added to the margins.
+
+| stage | artifact (commit) | units, wall time, memory peak per worker |
+|---|---|---|
+| training | `hybrid_structural_training_v1.jsonl.gz` (7d47c26) | 900 of 900 units, 0 errors, 24325 s, 772 MB |
+| oracle | `hybrid_structural_v1_oracle.jsonl.gz` (7763f10) | 30 of 30 tasks, 0 errors, 446 s, 423 MB |
+| errors | `hybrid_structural_v1_errors.jsonl.gz` (73bbec7) | 100 of 100 tasks, 0 errors, 2280 s, 899 MB |
+| margins | `hybrid_structural_v1_margins_per_draw.jsonl.gz` (56cecaa) | 2000 tasks (`n_train` 8, 16; 40437 s) + 1000 tasks (`n_train` 4; 16454 s), 0 errors, 75 of 75 cells, none blocked, 1.29 GB |
+| analysis | `hybrid_structural_v1_analysis.json` (2198bf3) | on 56cecaa, clean tree |
+
+The stage outputs were committed by the run chain between the stages (denylist test before each
+commit). The watcher wrote its blocks to `C:/twinlink_runs/hybrid-structural/status.log`; logs of
+the chain and the stages: `C:/twinlink_work/hybs_main_*.log` (outside the repository).
+Discretisation check of the optimiser against the oracle (10 cases): largest relative energy
+difference 0.0038, largest slack difference 0.00015 kg/kg.
+
+## 11. Results
+
+All numbers from `hybrid_structural_v1_analysis.json` unless another artifact is named.
+
+**Inside cases and determinability**: as in the table of section 9 (reproduced by the main run).
+Determinable seeds: 3 at `n_train` 4 (seeds 1, 3, 4), 4 at `n_train` 8 (1, 3, 4, 5), 5 at
+`n_train` 16.
+
+**Margins (kg/kg; median and range over the determinable seeds; "not reached" = 0.12) and energy
+at the determined margin relative to the oracle (median over the inside cases; median over the
+seeds).**
+
+| model | margin `n_train` 4 | 8 | 16 | energy 4 | 8 | 16 |
+|---|---|---|---|---|---|---|
+| M0 | 0 (0-0) | 0 (0-0) | 0 (0-0) | 1.311 | 1.307 | 1.295 |
+| M1 | 0.0779 (0-0.0841) | 0.0409 (0.0214-0.0520) | 0.0406 (0.0319-0.0469) | 1.164 | 1.090 | 1.082 |
+| M2 | 0.0067 (0-0.0172) | 0.0052 (0-0.0092) | 0.0061 (0-0.0094) | 1.118 | 1.091 | 1.091 |
+| M2b | 0.0155 (0.0092-0.0952) | 0.0085 (0.0039-0.0399) | 0.0072 (0.0060-0.0174) | 1.076 | 1.076 | 1.081 |
+| M3 | 0 (0-0.12) | 0 (0-0.0533) | 0 (0-0) | 1.178 | 1.154 | 1.162 |
+
+M3 at `n_train` 4, seed 1: 95 % not reached within 0.12 (counted as 0.12 in the paired test).
+
+M0 and M3 need no margin at `n_train` 16 because they
+predict the moisture at their own operating point too high (model minus truth, median over the
+seeds, inside cases: M0 +0.070, M3 +0.031, M2 +0.016, M2b +0.013, M1 -0.017 kg/kg at `n_train`
+16), and they pay for it in energy: M0 29.5 %, M3 16.2 % above the oracle, against 8.1-9.1 % for
+M1, M2 and M2b. This is the effect announced in section 2: the structural term makes the truth
+drier than the prior structure predicts.
+
+**Paired tests (reference minus M3, kg/kg; positive = M3 needs the smaller margin).**
+
+| family | `n_train` | seeds | mean difference | threshold (95 %) | p | p (Holm) | seeds with the sign of the mean | resolved |
+|---|---|---|---|---|---|---|---|---|
+| M3 vs M2 | 4 | 3 | -0.0320 | 0.1897 | 0.543 | 1.0 | 1 | no |
+| M3 vs M2 | 8 | 4 | -0.0084 | 0.0478 | 0.614 | 1.0 | 1 | no |
+| M3 vs M2 | 16 | 5 | +0.0055 | 0.0043 | 0.0234 | 0.0701 | 4 | no (Holm) |
+| M3 vs M2b | 4 | 3 | -0.00002 | 0.0539 | 0.999 | 1.0 | 1 | no |
+| M3 vs M2b | 8 | 4 | +0.0019 | 0.0166 | 0.741 | 1.0 | 3 | no |
+| M3 vs M2b | 16 | 5 | +0.0095 | 0.0059 | 0.0110 | 0.0329 | 5 | **yes** |
+
+The negative means at `n_train` 4 and 8 come from seed 1 alone (M3 0.12 and 0.0533 there); in the
+other seeds M3 needs the smaller margin.
+
+**Pre-registered reading: none of Z0, Z1, Z2 ("mixed").**
+
+* Z0 does not hold: at `n_train` 16 M3 needs a resolved smaller margin than M2b, but against M2
+  the difference (+0.0055, above its uncorrected threshold 0.0043, 4 of 5 seeds, the fifth a tie)
+  does not pass Holm (0.0701). Z0 fails by this one test.
+* Z1 does not hold: neither M2 nor M2b needs a resolved smaller margin than M3 at any `n_train`,
+  and their median margins lie above that of M3 at every `n_train`.
+* Z2 does not hold: one difference is resolved.
+
+What the data support: with this structural error the hybrid needs no margin where the two
+calibrations need 0.006-0.007 kg/kg (`n_train` 16), resolved against M2b only; the calibrations
+need the smaller energy. Neither "the residual pays off" nor "calibration stays the first choice"
+is shown in the pre-registered sense. With `n_train` 4 no difference could have been resolved
+(three seeds, section 9).
+
+**Without a reading.**
+
+* *Violation share outside the training range at the margin determined inside* (pooled over the
+  seeds; (a) 200 cases per `n_train`; (b) 363 / 277 / 207 cases at `n_train` 4 / 8 / 16; "holds" =
+  share <= 5 %), (a) / (b):
+
+  | `n_train` | M0 | M1 | M2 | M2b | M3 |
+  |---|---|---|---|---|---|
+  | 4 | 0 / 0 | 0 / 0.033 | 0.005 / 0.011 | 0.040 / 0.033 | 0.040 / 0.077 |
+  | 8 | 0 / 0 | 0.200 / 0.209 | 0.010 / 0.047 | 0.050 / 0.076 | 0.015 / 0.022 |
+  | 16 | 0 / 0 | 0.150 / 0.101 | 0.015 / 0.077 | 0.040 / 0.101 | 0 / 0.019 |
+
+  M1 does not hold outside at `n_train` 8 and 16; M2 and M2b do not hold in (b) at `n_train` 16
+  (M2b also at 8); M3 does not hold in (b) at `n_train` 4 and holds elsewhere; M0 holds everywhere.
+* *Rollout errors* (RMSE of the product moisture at horizon 36, kg/kg; median over the 100 jobs of
+  draw x seed), test set **excited** / test set **constant-run holdout**, `n_train` 4, 8, 16:
+  M0 0.0945 / 0.1200 (no training); M1 0.0137, 0.0046, 0.0022 / 0.0152, 0.0075, 0.0036; M2 0.0550,
+  0.0544, 0.0516 / 0.0507, 0.0507, 0.0504; M2b 0.0544, 0.0551, 0.0511 / 0.0542, 0.0544, 0.0500;
+  M3 0.0145, 0.0132, 0.0072 / 0.0178, 0.0156, 0.0085. Bed temperature (RMSE at horizon 36, excited
+  test set): M0 7.37 K, M2 and M2b 7.67-7.74 K, M1 2.16 / 1.18 / 0.65 K, M3 1.88 / 0.97 / 0.88 K.
+  The refit halves the moisture error of the prior model but cannot remove the 7 K of the bed
+  temperature; the constant bias does not lower the RMSE; in the rollout the pure GRU is at
+  `n_train` 8 and 16 better than the hybrid in the moisture. The smaller rollout error of M1 does
+  not give it the smaller margin.
+* *The refit runs into its bounds* (`hybrid_structural_training_v1.jsonl.gz`): of the 100 refits
+  per `n_train`, 62 / 61 / 66 (`n_train` 4 / 8 / 16) end at the lower bound of the critical
+  moisture (0.15) AND the upper bound of nu_max (1.0); the two parameters cannot absorb the
+  structural term. Moisture bias of M2b (median over the 100 refits, measured minus replay):
+  -0.0068 / -0.0044 / -0.0038 kg/kg, range down to -0.145 at `n_train` 4.
+* *M2 margin against Befund 122* (same seeds 1-3 there, `hybrid_model_v1_analysis.json`): medians
+  here 0.0067 / 0.0052 / 0.0061 against 0.0019 / 0.0032 / 0.0039 at `n_train` 4 / 8 / 16,
+  differences of the medians +0.0049 / +0.0020 / +0.0022 kg/kg. Paired on the common determinable
+  seeds the sign is not uniform (`n_train` 16: -0.0035, +0.0038, +0.0022). In the margin the
+  structural error costs M2 a few thousandths at most; a comparison of the energy with Befund 122
+  was not part of the request.
+
+## 12. Caveats
+
+1. The verdict hangs on one Holm-corrected test (M3 vs M2 at `n_train` 16, 0.0701); with five
+   seeds the thresholds (0.004-0.006 kg/kg at `n_train` 16) are of the order of the M2 margins.
+2. The zero margin of M3 and M0 is conservatism, not accuracy: both predict the moisture too high
+   at their operating point and use more energy. A ranking by margin alone favours a model that
+   errs to the safe side; margin and energy have to be read together. No reading on the energy was
+   pre-registered.
+3. Direction of the structural error: evaporation in the freeboard makes the bed drier than the
+   prior model predicts. A structural error of the other sign would turn the conservatism of M0
+   into violations; the result does not transfer to it.
+4. One share (0.30), constant over the operating range, emulated by the inputs; the real cause of
+   the bed-exhaust gap of plant A is open (Befund 117, Befund 123).
+5. `n_train` 4: three determinable seeds, no difference resolvable by the pre-registered rule;
+   `n_train` 8: four.
+6. Limit moisture 0.15 kg/kg and the kinetics are placeholders (as Befund 122); refit bounds as
+   Befund 122 -- the refit is at its bounds in about two thirds of the cases.
+7. Seed 1 of M3 (not reached at `n_train` 4, 0.0533 at `n_train` 8) drives the means at the small
+   `n_train`; cause not examined.
+
+## 13. Open
+
+* Decision of the project lead on the verdict "mixed" and on the finding number.
+* Not done here: `README` paragraph and the renumbering of this document (at merge); a reading
+  that weighs margin against energy; the cause of the M3 outlier of seed 1.
