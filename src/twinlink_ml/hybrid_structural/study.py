@@ -6,6 +6,13 @@ difference is the truth: :class:`StructuralSetup` simulates every data pool with
 :class:`~twinlink_ml.hybrid_structural.truth.FreeboardEvaporationGranulator` and evaluates the
 steady truth on :func:`~twinlink_ml.hybrid_structural.truth.steady_config`. Prior knowledge (the
 nominal configs, basis of M0, M2, M2b and M3) stays the model WITHOUT the freeboard term.
+
+The drivers of the study (``scripts/train_hybrid_structural.py``,
+``scripts/run_hybrid_structural_evaluation.py``) are also the drivers of the follow-up study
+docs/NN_hybrid_structural_2.md, whose truth errs to the other side: :func:`build_structural_setup`
+returns the set-up that ``structure.mode`` of the config names (``evaporation``: this module;
+``recirculation``: :mod:`twinlink_ml.hybrid_structural_2.study`). Every set-up describes its
+structural term for the records (``structure_record``) and names its study (``study_label``).
 """
 
 from __future__ import annotations
@@ -37,19 +44,22 @@ __all__ = [
 
 DEFAULT_CONFIG_PATH = REPO_ROOT / "conf" / "hybrid_structural" / "hybrid_structural.yaml"
 MODELS = ("M0", "M1", "M2", "M2b", "M3")
+STRUCTURE_MODES = ("evaporation", "recirculation")
 
 
 def load_structural_config(path: Path | str = DEFAULT_CONFIG_PATH) -> HybridStudyConfig:
     """The study config (schema of ``conf/hybrid_model/hybrid_model.yaml`` plus ``structure``)."""
     config = load_hybrid_config(path)
     structure = config.raw.get("structure")
-    if not isinstance(structure, dict) or structure.get("mode") != "evaporation":
-        raise ValueError("the structural study needs structure.mode = evaporation")
+    if not isinstance(structure, dict) or structure.get("mode") not in STRUCTURE_MODES:
+        raise ValueError(f"the structural study needs structure.mode in {STRUCTURE_MODES}")
     return config
 
 
 def freeboard_share(config: HybridStudyConfig) -> float:
     """The fixed share of the spray water evaporating above the bed (set before the runs)."""
+    if config.raw["structure"].get("mode") != "evaporation":
+        raise ValueError("the freeboard share belongs to structure.mode = evaporation")
     share = config.raw["structure"].get("share")
     if share is None:
         raise ValueError(
@@ -66,6 +76,15 @@ class StructuralSetup(StudySetup):
     """The study set-up of Befund 122 with the structurally deviating truth."""
 
     share: float
+
+    study_label = (
+        "hybrid against GRU against refit, structurally deviating truth "
+        "(docs/41_hybrid_structural.md)"
+    )
+
+    def structure_record(self) -> dict[str, Any]:
+        """The structural term of the truth, as written into every record."""
+        return {"mode": "evaporation", "share": self.share}
 
     def generate(self, config: ProcessConfig, spec: Any, seed: int) -> Any:
         """Data pool of ``spec`` simulated with the freeboard truth of ``config``."""
@@ -88,9 +107,18 @@ class StructuralSetup(StudySetup):
         return steady_config(super().steady_truth(draw), self.share)
 
 
-def build_structural_setup(config: HybridStudyConfig | None = None) -> StructuralSetup:
-    """Configs, draws and cases of the study, with the freeboard share of the config."""
+def build_structural_setup(config: HybridStudyConfig | None = None) -> Any:
+    """Configs, draws and cases of the study, with the structural term of the config.
+
+    ``structure.mode = evaporation`` (default config): :class:`StructuralSetup` with the freeboard
+    share. ``recirculation``: the set-up of the follow-up study
+    (:func:`twinlink_ml.hybrid_structural_2.study.build_recirculation_setup`).
+    """
     cfg = config if config is not None else load_structural_config()
+    if cfg.raw["structure"]["mode"] == "recirculation":
+        from twinlink_ml.hybrid_structural_2.study import build_recirculation_setup
+
+        return build_recirculation_setup(cfg)
     base = build_setup(cfg)
     fields = {f.name: getattr(base, f.name) for f in dataclasses.fields(base)}
     return StructuralSetup(**fields, share=freeboard_share(cfg))

@@ -65,16 +65,29 @@ DRY_REFIT_NFEV = 3
 Unit = tuple[int, int, int, str]
 
 _SETUP: Any = None
+_CONFIG_PATH: str | None = None  # None: the config of Befund 124; set by --config (follow-up study)
 _POOLS: dict[tuple[int, int], Any] = {}
+
+
+def use_config(path: str | None) -> None:
+    """Select the study config of this process (before the set-up is built)."""
+    global _CONFIG_PATH
+    if _SETUP is not None and path != _CONFIG_PATH:
+        raise RuntimeError("another study set-up is cached in this process")
+    _CONFIG_PATH = path
 
 
 def setup() -> Any:
     """The structural study set-up, built once per process."""
     global _SETUP
     if _SETUP is None:
-        from twinlink_ml.hybrid_structural.study import build_structural_setup
+        from twinlink_ml.hybrid_structural.study import (
+            build_structural_setup,
+            load_structural_config,
+        )
 
-        _SETUP = build_structural_setup()
+        config = load_structural_config(_CONFIG_PATH) if _CONFIG_PATH else None
+        _SETUP = build_structural_setup(config)
     return _SETUP
 
 
@@ -143,7 +156,7 @@ def run_unit(
         "n_train": n,
         "role": role,
         "draw_values": st.draw_values(d),
-        "structure": {"mode": "evaporation", "share": st.share},
+        "structure": st.structure_record(),
         "fingerprints": truth.fingerprints,
         "split_digest": truth.split.digest,
         "train_run_ids": train_ids,
@@ -210,10 +223,15 @@ def run_unit(
 
 
 def run_units(
-    name: str, checkpoint_root: str, dry: bool, units: list[Unit]
+    name: str,
+    checkpoint_root: str,
+    dry: bool,
+    units: list[Unit],
+    config_path: str | None = None,
 ) -> list[dict[str, Any]]:
     """Run the units of one task in a worker; a failing unit becomes an error record."""
     os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
+    use_config(config_path)
     import run_hybrid_evaluation as evaluation
     import torch
 
@@ -244,6 +262,11 @@ def main() -> int:
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--checkpoint-root", default=str(CHECKPOINT_ROOT))
+    parser.add_argument(
+        "--config",
+        default=None,
+        help="study config (default: conf/hybrid_structural/hybrid_structural.yaml)",
+    )
     parser.add_argument("--only-draws", type=int, nargs="*", default=None)
     parser.add_argument("--only-n", type=int, nargs="*", default=None)
     parser.add_argument("--only-seeds", type=int, nargs="*", default=None)
@@ -264,6 +287,8 @@ def main() -> int:
     if output.exists() and not args.resume:
         raise SystemExit(f"{output} exists -- use --resume or a new name")
     removed = repair_tail(output)
+    config_path = None if args.config is None else str(Path(args.config).resolve())
+    use_config(config_path)
     st = setup()
     config = st.config
     done = {
@@ -288,10 +313,9 @@ def main() -> int:
         {
             "kind": "header",
             "provenance": provenance("not used", ignore_paths=[output]),
-            "study": "hybrid against GRU against refit, structurally deviating truth "
-            "(docs/41_hybrid_structural.md)",
+            "study": st.study_label,
             "config": config.raw,
-            "structure": {"mode": "evaporation", "share": st.share},
+            "structure": st.structure_record(),
             "draws": list(st.draws),
             "n_units_planned": len(units),
             "dry_run": args.dry_run,
@@ -309,7 +333,7 @@ def main() -> int:
     broken = False
     with ProcessPoolExecutor(max_workers=args.workers) as pool:
         pending = {
-            pool.submit(run_units, args.name, args.checkpoint_root, args.dry_run, t): t
+            pool.submit(run_units, args.name, args.checkpoint_root, args.dry_run, t, config_path): t
             for t in tasks
         }
         while pending:

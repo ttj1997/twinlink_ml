@@ -60,6 +60,7 @@ import run_hybrid_evaluation as base  # noqa: E402 - needs the script directory 
 
 ROOT = SCRIPTS.parent
 PARTS = ("oracle", "margins", "errors")
+_CONFIG_PATH: str | None = None  # None: the config of Befund 124; set by --config (follow-up study)
 
 
 def setup() -> Any:
@@ -69,25 +70,35 @@ def setup() -> Any:
     puts the set-up of this study there (with its digest, checked at the start of every task by
     ``reset_task_state``). It fails if another set-up is already cached in this process.
     """
-    from twinlink_ml.hybrid_structural.study import StructuralSetup, build_structural_setup
+    from twinlink_ml.hybrid_structural.study import build_structural_setup, load_structural_config
 
     if base._SETUP is None:
-        base._SETUP = build_structural_setup()
+        config = load_structural_config(_CONFIG_PATH) if _CONFIG_PATH else None
+        base._SETUP = build_structural_setup(config)
         base._SETUP_DIGEST = base._digest(base._SETUP)
-    elif not isinstance(base._SETUP, StructuralSetup):
+    elif not hasattr(base._SETUP, "structure_record"):
         raise RuntimeError("another study set-up is cached in this process")
     return base._SETUP
 
 
-def _with_setup(fn: Any, args: tuple[Any, ...]) -> dict[str, Any]:
+def use_config(path: str | None) -> None:
+    """Select the study config of this process (before the set-up is built)."""
+    global _CONFIG_PATH
+    if base._SETUP is not None and path != _CONFIG_PATH:
+        raise RuntimeError("another study set-up is cached in this process")
+    _CONFIG_PATH = path
+
+
+def _with_setup(fn: Any, args: tuple[Any, ...], config_path: str | None = None) -> dict[str, Any]:
+    use_config(config_path)
     setup()
     result: dict[str, Any] = fn(*args)
     return result
 
 
-def run_task(fn: Any, args: tuple[Any, ...]) -> dict[str, Any]:
+def run_task(fn: Any, args: tuple[Any, ...], config_path: str | None = None) -> dict[str, Any]:
     """One task in a worker: set-up of this study first, then the task of Befund 122."""
-    return base.run_task(_with_setup, (fn, args))
+    return base.run_task(_with_setup, (fn, args, config_path))
 
 
 def output_name(part: str, prefix: str, name: str | None) -> str:
@@ -122,6 +133,11 @@ def main() -> int:
         type=int,
         default=256,
         help="margins: points per map call (memory; 0 = one call per request)",
+    )
+    parser.add_argument(
+        "--config",
+        default=None,
+        help="study config (default: conf/hybrid_structural/hybrid_structural.yaml)",
     )
     parser.add_argument("--only-models", nargs="*", default=None)
     parser.add_argument("--only-n", type=int, nargs="*", default=None)
@@ -160,6 +176,8 @@ def main() -> int:
         if (RUNS_DIR / path.name.removesuffix(".gz")).exists():
             raise SystemExit(f"{path.name} exists packed and plain -- keep the packed file")
     removed = repair_tail(output)
+    config_path = None if args.config is None else str(Path(args.config).resolve())
+    use_config(config_path)
     s = setup()
     cfg = s.config
     seeds = args.only_seeds or list(cfg.master_seeds)
@@ -185,14 +203,13 @@ def main() -> int:
         {
             "kind": "header",
             "provenance": provenance("not used", ignore_paths=[output]),
-            "study": "hybrid against GRU against refit, structurally deviating truth "
-            "(docs/41_hybrid_structural.md)",
+            "study": s.study_label,
             "part": args.part,
             "training": args.training,
             "oracle": oracle,
             "inputs_sha256": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs},
             "config": cfg.raw,
-            "structure": {"mode": "evaporation", "share": s.share},
+            "structure": s.structure_record(),
             "dry_run": args.dry_run,
             "settings": {
                 "grid": dataclasses.asdict(grid),
@@ -243,7 +260,7 @@ def main() -> int:
                 if task is None:
                     break
                 key, fn, task_args = task
-                in_flight[pool.submit(run_task, fn, task_args)] = key
+                in_flight[pool.submit(run_task, fn, task_args, config_path)] = key
             if not in_flight:
                 break
             complete, _ = wait(in_flight, return_when=FIRST_COMPLETED)
