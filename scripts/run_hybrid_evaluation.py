@@ -158,10 +158,21 @@ def fixed_inputs() -> Any:
     )
 
 
+def artifact_lines(name: str) -> list[str]:
+    """Lines of ``artifacts/runs/<name>.jsonl``, or of the packed ``<name>.jsonl.gz`` when the
+    plain file is absent (stage outputs written packed, docs/41_hybrid_structural.md)."""
+    plain = ROOT / "artifacts" / "runs" / f"{name}.jsonl"
+    if plain.exists():
+        return plain.read_text(encoding="utf-8").splitlines()
+    import gzip
+
+    with gzip.open(plain.with_name(plain.name + ".gz"), "rt", encoding="utf-8") as handle:
+        return handle.read().splitlines()
+
+
 def training_records(name: str) -> dict[str, dict[str, Any]]:
-    path = ROOT / "artifacts" / "runs" / f"{name}.jsonl"
     out: dict[str, dict[str, Any]] = {}
-    for line in path.read_text(encoding="utf-8").splitlines():
+    for line in artifact_lines(name):
         if line.strip():
             row = json.loads(line)
             if row.get("kind") == "task":
@@ -192,6 +203,12 @@ def build_map(model: str, draw: int, seed: int, n: int, records: dict[str, dict[
     if model == "M2":
         r = rec("M2")["refit"]
         return nominal_map(dict(zip(r["names"], r["theta"], strict=True)))
+    if model == "M2b":  # M2 plus the constant moisture bias of its training runs (docs/41)
+        from twinlink_ml.hybrid_structural.bias import BiasedMap
+
+        r = rec("M2")
+        fitted = nominal_map(dict(zip(r["refit"]["names"], r["refit"]["theta"], strict=True)))
+        return BiasedMap(fitted, r["moisture_bias_kg_per_kg"])
     if model == "M3":
         return HybridMap(nominal_map(), [load_network(rec("M3"))])
     if model == "M4":
@@ -274,7 +291,7 @@ def oracle_job(draw: int) -> dict[str, Any]:
     coverage: dict[str, Any] = {}
     spec = rerun_worker.arm_spec("N")
     for seed in cfg.master_seeds:
-        pool = rerun_worker._generate(s.data_truth(draw), spec, seed)
+        pool = s.generate(s.data_truth(draw), spec, seed)
         for n in cfg.n_train:
             r = run_rows(pool, list(pool.split.subset(n).train))
             samples = np.concatenate(
@@ -370,9 +387,8 @@ def discretisation_job(i: int) -> dict[str, Any]:
 
 
 def load_oracle(name: str) -> dict[int, dict[str, Any]]:
-    path = ROOT / "artifacts" / "runs" / f"{name}.jsonl"
     out = {}
-    for line in path.read_text(encoding="utf-8").splitlines():
+    for line in artifact_lines(name):
         if line.strip():
             row = json.loads(line)
             if row.get("kind") == "job" and row["key"].startswith("oracle_d"):
@@ -623,13 +639,13 @@ def errors_job(training: str, draw: int, seed: int) -> dict[str, Any]:
     truth_cfg = s.data_truth(draw)
     wide_truth_cfg = s.wide(truth_cfg)
     pools = {
-        "excited": (rerun_worker._generate(truth_cfg, spec, seed), s.data_nominal),
+        "excited": (s.generate(truth_cfg, spec, seed), s.data_nominal),
         "constant_holdout": (
-            rerun_worker._generate(truth_cfg, hspec, cfg.holdout_seed),
+            s.generate(truth_cfg, hspec, cfg.holdout_seed),
             s.data_nominal,
         ),
         "constant_holdout_wide": (
-            rerun_worker._generate(wide_truth_cfg, hspec, cfg.holdout_seed),
+            s.generate(wide_truth_cfg, hspec, cfg.holdout_seed),
             s.wide(s.data_nominal),
         ),
     }
@@ -669,7 +685,8 @@ def errors_job(training: str, draw: int, seed: int) -> dict[str, Any]:
             [own.trajectory.actions[rows][..., :2], own.trajectory.disturbances[rows][..., :2]],
             axis=-1,
         ).reshape(-1, 4)
-        theta = records[f"d{draw:02d}_s{seed}_n{n}_M2"]["refit"]
+        m2_record = records[f"d{draw:02d}_s{seed}_n{n}_M2"]
+        theta = m2_record["refit"]
         nets: dict[str, Any] = {}
         for role in ["M1", "M3"] + [f"M4m{j}" for j in range(1, cfg.ensemble_members)]:
             key = f"d{draw:02d}_s{seed}_n{n}_{role}"
@@ -702,6 +719,12 @@ def errors_job(training: str, draw: int, seed: int) -> dict[str, Any]:
                 "M0": (np.zeros_like(r_nom), r_nom),
                 "M2": (np.zeros_like(r_fit), r_fit),
             }
+            if "moisture_bias_kg_per_kg" in m2_record:  # M2b: constant on the moisture only
+                shift = np.zeros_like(r_fit)
+                shift[..., names.index("product_moisture_kg_per_kg")] = m2_record[
+                    "moisture_bias_kg_per_kg"
+                ]
+                preds["M2b"] = (shift, r_fit)
             if "M1" in nets:
                 preds["M1"] = (ds_truth.target_scaler.inverse(nets["M1"].predict(b_truth)), y_truth)
             res_preds = [
@@ -711,7 +734,7 @@ def errors_job(training: str, draw: int, seed: int) -> dict[str, Any]:
             ]
             if res_preds:
                 preds["M3"] = (res_preds[0], r_nom)
-            if len(res_preds) == cfg.ensemble_members:
+            if cfg.ensemble_members > 1 and len(res_preds) == cfg.ensemble_members:
                 preds["M4"] = (np.mean(res_preds, axis=0), r_nom)
             # run classification
             # window run index -> row of the trajectory batch (dataset rows follow the split order)
@@ -890,7 +913,13 @@ DRY_RUNS = {
 
 
 class Scheduler:
-    """Tasks of one part; the margins cells add their next tasks when a stage completes."""
+    """Tasks of one part; the margins cells add their next tasks when a stage completes.
+
+    ``model_order`` (most expensive first) and :meth:`write` are the points a driver with other
+    models or another output form overrides (``run_hybrid_structural_evaluation.py``).
+    """
+
+    model_order: dict[str, float] = {"M4": 0, "M3": 1, "M1": 2, "M2": 3, "M2b": 3.5, "M0": 4}  # noqa: RUF012
 
     def __init__(self, output: Path, run: MarginRun | None, holding_share: float) -> None:
         self.output = output
@@ -937,8 +966,7 @@ class Scheduler:
 
     def _priority(self, cell: Cell, stage: str) -> tuple[Any, ...]:
         # evaluations first (they finish cells), then the most expensive searches
-        order = {"M4": 0, "M3": 1, "M1": 2, "M2": 3, "M0": 4}
-        return (0 if stage == "evaluate" else 1, order[cell.model], -cell.n, cell.seed)
+        return (0 if stage == "evaluate" else 1, self.model_order[cell.model], -cell.n, cell.seed)
 
     def _advance(self, cell: Cell, done: dict[str, dict[str, Any]]) -> None:
         from twinlink_ml.hybrid_model.margin_tasks import cell_parameter, next_round

@@ -1,0 +1,2469 @@
+{
+ "provenance": {
+  "git/commit": "979cd1b1af9c598b9229a1fb22abaed849d312d8",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used"
+ },
+ "study": "hybrid against GRU against refit, structurally deviating truth",
+ "rule": {
+  "candidates": [
+   0.05,
+   0.1,
+   0.15,
+   0.2,
+   0.25,
+   0.3,
+   0.35,
+   0.4,
+   0.45,
+   0.5,
+   0.55,
+   0.6
+  ],
+  "target_gap_k": 7.5,
+  "accepted_gap_k": [
+   5.0,
+   10.0
+  ],
+  "point": "nominal commands and disturbances, nominal material parameters"
+ },
+ "selected_share": 0.3,
+ "selected_gap_k": 7.423768483700449,
+ "selected_within_accepted_band": true,
+ "reference_without_term": {
+  "share": 0.0,
+  "feasible": true,
+  "infeasibility_reasons": [],
+  "moisture_kg_per_kg": 0.03335841968791471,
+  "bed_temperature_celsius": 62.55016802480853,
+  "exhaust_temperature_celsius": 62.55016802480853,
+  "gap_k": 0.0,
+  "energy_target": 2.2838103998548305,
+  "power_total_kw": 2.2838103998548305,
+  "power_pump_plus_atomiser_share": 0.02508257730623383,
+  "freeboard_water_kg_per_h": 0.0
+ },
+ "candidates": [
+  {
+   "share": 0.05,
+   "feasible": true,
+   "infeasibility_reasons": [],
+   "moisture_kg_per_kg": 0.03105050068500719,
+   "bed_temperature_celsius": 63.56967673263526,
+   "exhaust_temperature_celsius": 62.35547602457852,
+   "gap_k": 1.2142007080567367,
+   "energy_target": 2.277105888283563,
+   "power_total_kw": 2.277105888283563,
+   "power_pump_plus_atomiser_share": 0.025152061667405964,
+   "freeboard_water_kg_per_h": 0.052500000000000005,
+   "moisture_shift_kg_per_kg": -0.00230791900290752,
+   "bed_temperature_shift_k": 1.0195087078267306,
+   "energy_target_shift_relative": -0.002935669078174663,
+   "draws": {
+    "n_feasible": 20,
+    "gap_k": {
+     "min": 1.2139928557584767,
+     "median": 1.2142506767725614,
+     "max": 1.2151073850369514
+    },
+    "moisture_kg_per_kg": {
+     "min": 0.026576373055032715,
+     "median": 0.032125936245877396,
+     "max": 0.0505541790108753
+    },
+    "moisture_shift_kg_per_kg": {
+     "min": -0.004059937336137839,
+     "median": -0.0024981628408099997,
+     "max": -0.0017217231784037515
+    },
+    "bed_temperature_shift_k": {
+     "min": 1.005701748118213,
+     "median": 1.0179867096167072,
+     "max": 1.024211606209633
+    },
+    "per_draw": [
+     {
+      "draw": 0,
+      "feasible": true,
+      "gap_k": 1.2140261147323486,
+      "moisture_kg_per_kg": 0.027292364400626025,
+      "moisture_shift_kg_per_kg": -0.0021374980130488136,
+      "bed_temperature_shift_k": 1.0207720027389655
+     },
+     {
+      "draw": 1,
+      "feasible": true,
+      "gap_k": 1.2144504581902424,
+      "moisture_kg_per_kg": 0.03642502862863996,
+      "moisture_shift_kg_per_kg": -0.002427199989241305,
+      "bed_temperature_shift_k": 1.0187403827723074
+     },
+     {
+      "draw": 2,
+      "feasible": true,
+      "gap_k": 1.2140928181767592,
+      "moisture_kg_per_kg": 0.02872825448827422,
+      "moisture_shift_kg_per_kg": -0.0022817832787414907,
+      "bed_temperature_shift_k": 1.0196285752235212
+     },
+     {
+      "draw": 3,
+      "feasible": true,
+      "gap_k": 1.2151073850369514,
+      "moisture_kg_per_kg": 0.0505541790108753,
+      "moisture_shift_kg_per_kg": -0.004059937336137839,
+      "bed_temperature_shift_k": 1.005701748118213
+     },
+     {
+      "draw": 4,
+      "feasible": true,
+      "gap_k": 1.2146814276007873,
+      "moisture_kg_per_kg": 0.04139397310244393,
+      "moisture_shift_kg_per_kg": -0.003066538413387415,
+      "bed_temperature_shift_k": 1.0136124116857559
+     },
+     {
+      "draw": 5,
+      "feasible": true,
+      "gap_k": 1.2142025030702115,
+      "moisture_kg_per_kg": 0.031089134426861575,
+      "moisture_shift_kg_per_kg": -0.002825796985013871,
+      "bed_temperature_shift_k": 1.0151876452121655
+     },
+     {
+      "draw": 6,
+      "feasible": true,
+      "gap_k": 1.2139928557584767,
+      "moisture_kg_per_kg": 0.026576373055032715,
+      "moisture_shift_kg_per_kg": -0.0017217231784037515,
+      "bed_temperature_shift_k": 1.024211606209633
+     },
+     {
+      "draw": 7,
+      "feasible": true,
+      "gap_k": 1.2143260002205594,
+      "moisture_kg_per_kg": 0.03374694124066099,
+      "moisture_shift_kg_per_kg": -0.0029028343346015756,
+      "bed_temperature_shift_k": 1.0146567064816736
+     },
+     {
+      "draw": 8,
+      "feasible": true,
+      "gap_k": 1.214223106574515,
+      "moisture_kg_per_kg": 0.031532573860431706,
+      "moisture_shift_kg_per_kg": -0.002716360721141245,
+      "bed_temperature_shift_k": 1.0161198303524088
+     },
+     {
+      "draw": 9,
+      "feasible": true,
+      "gap_k": 1.2142263390618737,
+      "moisture_kg_per_kg": 0.031602144151800404,
+      "moisture_shift_kg_per_kg": -0.0022434306342859825,
+      "bed_temperature_shift_k": 1.0200703365745767
+     },
+     {
+      "draw": 10,
+      "feasible": true,
+      "gap_k": 1.2140259400523234,
+      "moisture_kg_per_kg": 0.027288604004215896,
+      "moisture_shift_kg_per_kg": -0.0019514991306905025,
+      "bed_temperature_shift_k": 1.0223241702402674
+     },
+     {
+      "draw": 11,
+      "feasible": true,
+      "gap_k": 1.2145767531651614,
+      "moisture_kg_per_kg": 0.03914223700688907,
+      "moisture_shift_kg_per_kg": -0.003356802961294439,
+      "bed_temperature_shift_k": 1.0110940794970702
+     },
+     {
+      "draw": 12,
+      "feasible": true,
+      "gap_k": 1.214337385555197,
+      "moisture_kg_per_kg": 0.03399194752247442,
+      "moisture_shift_kg_per_kg": -0.002529683543104358,
+      "bed_temperature_shift_k": 1.0177819844571445
+     },
+     {
+      "draw": 13,
+      "feasible": true,
+      "gap_k": 1.2142947014421566,
+      "moisture_kg_per_kg": 0.033073391149316296,
+      "moisture_shift_kg_per_kg": -0.002504843280500421,
+      "bed_temperature_shift_k": 1.0179505118571797
+     },
+     {
+      "draw": 14,
+      "feasible": true,
+      "gap_k": 1.2140508335803588,
+      "moisture_kg_per_kg": 0.027824487460507995,
+      "moisture_shift_kg_per_kg": -0.0018115428270256487,
+      "bed_temperature_shift_k": 1.0235149648150355
+     },
+     {
+      "draw": 15,
+      "feasible": true,
+      "gap_k": 1.2145671169458438,
+      "moisture_kg_per_kg": 0.038934930354782446,
+      "moisture_shift_kg_per_kg": -0.0033260016570471063,
+      "bed_temperature_shift_k": 1.0113425187154235
+     },
+     {
+      "draw": 16,
+      "feasible": true,
+      "gap_k": 1.214258434119401,
+      "moisture_kg_per_kg": 0.03229288636804346,
+      "moisture_shift_kg_per_kg": -0.0024914824011195782,
+      "bed_temperature_shift_k": 1.0180290445683227
+     },
+     {
+      "draw": 17,
+      "feasible": true,
+      "gap_k": 1.2142429194257218,
+      "moisture_kg_per_kg": 0.03195898612371133,
+      "moisture_shift_kg_per_kg": -0.0024905265926688513,
+      "bed_temperature_shift_k": 1.0180229073762348
+     },
+     {
+      "draw": 18,
+      "feasible": true,
+      "gap_k": 1.2140640218158225,
+      "moisture_kg_per_kg": 0.028108384384972783,
+      "moisture_shift_kg_per_kg": -0.0019605484500176476,
+      "bed_temperature_shift_k": 1.0222834030238914
+     },
+     {
+      "draw": 19,
+      "feasible": true,
+      "gap_k": 1.2144607018271216,
+      "moisture_kg_per_kg": 0.03664543350964661,
+      "moisture_shift_kg_per_kg": -0.0032526997443270284,
+      "bed_temperature_shift_k": 1.01185813843216
+     }
+    ]
+   }
+  },
+  {
+   "share": 0.1,
+   "feasible": true,
+   "infeasibility_reasons": [],
+   "moisture_kg_per_kg": 0.028872605494779845,
+   "bed_temperature_celsius": 64.59701795417956,
+   "exhaust_temperature_celsius": 62.15954302444333,
+   "gap_k": 2.437474929736233,
+   "energy_target": 2.270398453857088,
+   "power_total_kw": 2.270398453857088,
+   "power_pump_plus_atomiser_share": 0.025221988874340445,
+   "freeboard_water_kg_per_h": 0.10500000000000001,
+   "moisture_shift_kg_per_kg": -0.004485814193134867,
+   "bed_temperature_shift_k": 2.046849929371035,
+   "energy_target_shift_relative": -0.005872617971524718,
+   "draws": {
+    "n_feasible": 20,
+    "gap_k": {
+     "min": 2.4371071452353092,
+     "median": 2.437559645659526,
+     "max": 2.439147557803828
+    },
+    "moisture_kg_per_kg": {
+     "min": 0.02493903839277168,
+     "median": 0.02977854514548081,
+     "max": 0.04675100651771342
+    },
+    "moisture_shift_kg_per_kg": {
+     "min": -0.00786310982929972,
+     "median": -0.004854374707317874,
+     "max": -0.0033590578406647864
+    },
+    "bed_temperature_shift_k": {
+     "min": 2.0201642553644206,
+     "median": 2.043882870097491,
+     "max": 2.055919214845119
+    },
+    "per_draw": [
+     {
+      "draw": 0,
+      "feasible": true,
+      "gap_k": 2.4371389186880705,
+      "moisture_kg_per_kg": 0.02527889914199845,
+      "moisture_shift_kg_per_kg": -0.004150963271676387,
+      "bed_temperature_shift_k": 2.0493390958301916
+     },
+     {
+      "draw": 1,
+      "feasible": true,
+      "gap_k": 2.4379669052036093,
+      "moisture_kg_per_kg": 0.03413308557900353,
+      "moisture_shift_kg_per_kg": -0.0047191430388777295,
+      "bed_temperature_shift_k": 2.0453492835423503
+     },
+     {
+      "draw": 2,
+      "feasible": true,
+      "gap_k": 2.437260340069038,
+      "moisture_kg_per_kg": 0.026577608464070507,
+      "moisture_shift_kg_per_kg": -0.004432429302945205,
+      "bed_temperature_shift_k": 2.047100405075639
+     },
+     {
+      "draw": 3,
+      "feasible": true,
+      "gap_k": 2.439147557803828,
+      "moisture_kg_per_kg": 0.04675100651771342,
+      "moisture_shift_kg_per_kg": -0.00786310982929972,
+      "bed_temperature_shift_k": 2.0201642553644206
+     },
+     {
+      "draw": 4,
+      "feasible": true,
+      "gap_k": 2.4383766370160203,
+      "moisture_kg_per_kg": 0.03851299382562107,
+      "moisture_shift_kg_per_kg": -0.005947517690210277,
+      "bed_temperature_shift_k": 2.035465236502887
+     },
+     {
+      "draw": 5,
+      "feasible": true,
+      "gap_k": 2.4374346418334483,
+      "moisture_kg_per_kg": 0.028441756152561743,
+      "moisture_shift_kg_per_kg": -0.005473175259313703,
+      "bed_temperature_shift_k": 2.038571913834346
+     },
+     {
+      "draw": 6,
+      "feasible": true,
+      "gap_k": 2.4371071452353092,
+      "moisture_kg_per_kg": 0.02493903839277168,
+      "moisture_shift_kg_per_kg": -0.0033590578406647864,
+      "bed_temperature_shift_k": 2.055919214845119
+     },
+     {
+      "draw": 7,
+      "feasible": true,
+      "gap_k": 2.437675875888459,
+      "moisture_kg_per_kg": 0.031021421681538132,
+      "moisture_shift_kg_per_kg": -0.00562835389372443,
+      "bed_temperature_shift_k": 2.0374952206756802
+     },
+     {
+      "draw": 8,
+      "feasible": true,
+      "gap_k": 2.43748473650934,
+      "moisture_kg_per_kg": 0.028977480119317313,
+      "moisture_shift_kg_per_kg": -0.005271454462255638,
+      "bed_temperature_shift_k": 2.0403011128013304
+     },
+     {
+      "draw": 9,
+      "feasible": true,
+      "gap_k": 2.4375325960970287,
+      "moisture_kg_per_kg": 0.029489286611474083,
+      "moisture_shift_kg_per_kg": -0.004356288174612304,
+      "bed_temperature_shift_k": 2.0479835079129316
+     },
+     {
+      "draw": 10,
+      "feasible": true,
+      "gap_k": 2.4371537423668173,
+      "moisture_kg_per_kg": 0.025437456569348187,
+      "moisture_shift_kg_per_kg": -0.003802646565558211,
+      "bed_temperature_shift_k": 2.052259607112603
+     },
+     {
+      "draw": 11,
+      "feasible": true,
+      "gap_k": 2.438141694337766,
+      "moisture_kg_per_kg": 0.036001658867443456,
+      "moisture_shift_kg_per_kg": -0.006497381100740052,
+      "bed_temperature_shift_k": 2.0306617691639417
+     },
+     {
+      "draw": 12,
+      "feasible": true,
+      "gap_k": 2.4377309457205243,
+      "moisture_kg_per_kg": 0.03161026562141607,
+      "moisture_shift_kg_per_kg": -0.0049113654441627075,
+      "bed_temperature_shift_k": 2.0435303402587124
+     },
+     {
+      "draw": 13,
+      "feasible": true,
+      "gap_k": 2.437646799146677,
+      "moisture_kg_per_kg": 0.03071050567403749,
+      "moisture_shift_kg_per_kg": -0.004867728755779226,
+      "bed_temperature_shift_k": 2.0438181935239186
+     },
+     {
+      "draw": 14,
+      "feasible": true,
+      "gap_k": 2.4372174582790933,
+      "moisture_kg_per_kg": 0.026118960435268943,
+      "moisture_shift_kg_per_kg": -0.003517069852264701,
+      "bed_temperature_shift_k": 2.054701073243166
+     },
+     {
+      "draw": 15,
+      "feasible": true,
+      "gap_k": 2.4381231830813874,
+      "moisture_kg_per_kg": 0.03580377454157141,
+      "moisture_shift_kg_per_kg": -0.006457157470258143,
+      "bed_temperature_shift_k": 2.0309808689458464
+     },
+     {
+      "draw": 16,
+      "feasible": true,
+      "gap_k": 2.437575547993518,
+      "moisture_kg_per_kg": 0.029948598233437963,
+      "moisture_shift_kg_per_kg": -0.004835770535725072,
+      "bed_temperature_shift_k": 2.0440202542806674
+     },
+     {
+      "draw": 17,
+      "feasible": true,
+      "gap_k": 2.4375437433255343,
+      "moisture_kg_per_kg": 0.029608492057523656,
+      "moisture_shift_kg_per_kg": -0.004841020658856523,
+      "bed_temperature_shift_k": 2.0439475466710633
+     },
+     {
+      "draw": 18,
+      "feasible": true,
+      "gap_k": 2.437231101931097,
+      "moisture_kg_per_kg": 0.026264889242877384,
+      "moisture_shift_kg_per_kg": -0.003804043592113046,
+      "bed_temperature_shift_k": 2.0523184186768617
+     },
+     {
+      "draw": 19,
+      "feasible": true,
+      "gap_k": 2.4379162885838426,
+      "moisture_kg_per_kg": 0.033591935171307624,
+      "moisture_shift_kg_per_kg": -0.006306198082666012,
+      "bed_temperature_shift_k": 2.032054149910323
+     }
+    ]
+   }
+  },
+  {
+   "share": 0.15,
+   "feasible": true,
+   "infeasibility_reasons": [],
+   "moisture_kg_per_kg": 0.026816453454329783,
+   "bed_temperature_celsius": 65.63220974699092,
+   "exhaust_temperature_celsius": 61.96226454665941,
+   "gap_k": 3.6699452003315116,
+   "energy_target": 2.263688059616297,
+   "power_total_kw": 2.263688059616297,
+   "power_pump_plus_atomiser_share": 0.025292363547382846,
+   "freeboard_water_kg_per_h": 0.15749999999999997,
+   "moisture_shift_kg_per_kg": -0.006541966233584929,
+   "bed_temperature_shift_k": 3.082041722182396,
+   "energy_target_shift_relative": -0.008810862863139923,
+   "draws": {
+    "n_feasible": 20,
+    "gap_k": {
+     "min": 3.6694602460906864,
+     "median": 3.6700586448020296,
+     "max": 3.672257196019835
+    },
+    "moisture_kg_per_kg": {
+     "min": 0.023380397205113333,
+     "median": 0.02762014842515473,
+     "max": 0.04318863485487317
+    },
+    "moisture_shift_kg_per_kg": {
+     "min": -0.011425481492139969,
+     "median": -0.007078603471288946,
+     "max": -0.004917699028323133
+    },
+    "bed_temperature_shift_k": {
+     "min": 3.0433547445753106,
+     "median": 3.0777055963577027,
+     "max": 3.095157532044084
+    },
+    "per_draw": [
+     {
+      "draw": 0,
+      "feasible": true,
+      "gap_k": 3.669460443391557,
+      "moisture_kg_per_kg": 0.023381795277042552,
+      "moisture_shift_kg_per_kg": -0.006048067136632286,
+      "bed_temperature_shift_k": 3.0857239088553
+     },
+     {
+      "draw": 1,
+      "feasible": true,
+      "gap_k": 3.6706723134402353,
+      "moisture_kg_per_kg": 0.031967049114786455,
+      "moisture_shift_kg_per_kg": -0.006885179503094807,
+      "bed_temperature_shift_k": 3.079836246771208
+     },
+     {
+      "draw": 2,
+      "feasible": true,
+      "gap_k": 3.669625370666303,
+      "moisture_kg_per_kg": 0.024550431709280035,
+      "moisture_shift_kg_per_kg": -0.006459606057735677,
+      "bed_temperature_shift_k": 3.0824389071585756
+     },
+     {
+      "draw": 3,
+      "feasible": true,
+      "gap_k": 3.672257196019835,
+      "moisture_kg_per_kg": 0.04318863485487317,
+      "moisture_shift_kg_per_kg": -0.011425481492139969,
+      "bed_temperature_shift_k": 3.0433547445753106
+     },
+     {
+      "draw": 4,
+      "feasible": true,
+      "gap_k": 3.6712142893807638,
+      "moisture_kg_per_kg": 0.035805240267041516,
+      "moisture_shift_kg_per_kg": -0.008655271248789828,
+      "bed_temperature_shift_k": 3.0655484955789802
+     },
+     {
+      "draw": 5,
+      "feasible": true,
+      "gap_k": 3.6698247524390624,
+      "moisture_kg_per_kg": 0.02596310300138409,
+      "moisture_shift_kg_per_kg": -0.007951828410491357,
+      "bed_temperature_shift_k": 3.070164542731675
+     },
+     {
+      "draw": 6,
+      "feasible": true,
+      "gap_k": 3.6694602460906864,
+      "moisture_kg_per_kg": 0.023380397205113333,
+      "moisture_shift_kg_per_kg": -0.004917699028323133,
+      "bed_temperature_shift_k": 3.095157532044084
+     },
+     {
+      "draw": 7,
+      "feasible": true,
+      "gap_k": 3.6701776200914153,
+      "moisture_kg_per_kg": 0.02846298850712608,
+      "moisture_shift_kg_per_kg": -0.008186787068136483,
+      "bed_temperature_shift_k": 3.06852252095581
+     },
+     {
+      "draw": 8,
+      "feasible": true,
+      "gap_k": 3.669911122325324,
+      "moisture_kg_per_kg": 0.0265750213718369,
+      "moisture_shift_kg_per_kg": -0.007673913209736052,
+      "bed_temperature_shift_k": 3.072562496906528
+     },
+     {
+      "draw": 9,
+      "feasible": true,
+      "gap_k": 3.6700414269990915,
+      "moisture_kg_per_kg": 0.027498171933939414,
+      "moisture_shift_kg_per_kg": -0.006347402852146973,
+      "bed_temperature_shift_k": 3.0837530590116558
+     },
+     {
+      "draw": 10,
+      "feasible": true,
+      "gap_k": 3.669502641490034,
+      "moisture_kg_per_kg": 0.023680808473991035,
+      "moisture_shift_kg_per_kg": -0.0055592946609153635,
+      "bed_temperature_shift_k": 3.08984149900283
+     },
+     {
+      "draw": 11,
+      "feasible": true,
+      "gap_k": 3.670827208158535,
+      "moisture_kg_per_kg": 0.03306407382357644,
+      "moisture_shift_kg_per_kg": -0.009434966144607065,
+      "bed_temperature_shift_k": 3.0586890777729536
+     },
+     {
+      "draw": 12,
+      "feasible": true,
+      "gap_k": 3.6703051976700607,
+      "moisture_kg_per_kg": 0.029366724112577076,
+      "moisture_shift_kg_per_kg": -0.007154906953001701,
+      "bed_temperature_shift_k": 3.0772518058478227
+     },
+     {
+      "draw": 13,
+      "feasible": true,
+      "gap_k": 3.670180130143102,
+      "moisture_kg_per_kg": 0.02848076968114041,
+      "moisture_shift_kg_per_kg": -0.007097464748676306,
+      "bed_temperature_shift_k": 3.0776179537519965
+     },
+     {
+      "draw": 14,
+      "feasible": true,
+      "gap_k": 3.669619910961586,
+      "moisture_kg_per_kg": 0.02451174672751598,
+      "moisture_shift_kg_per_kg": -0.0051242835600176645,
+      "bed_temperature_shift_k": 3.093578725203372
+     },
+     {
+      "draw": 15,
+      "feasible": true,
+      "gap_k": 3.670798009922997,
+      "moisture_kg_per_kg": 0.03285728568329378,
+      "moisture_shift_kg_per_kg": -0.00940364632853577,
+      "bed_temperature_shift_k": 3.058924223722954
+     },
+     {
+      "draw": 16,
+      "feasible": true,
+      "gap_k": 3.6700758626049677,
+      "moisture_kg_per_kg": 0.02774212491637005,
+      "moisture_shift_kg_per_kg": -0.007042243852792986,
+      "bed_temperature_shift_k": 3.077984386948174
+     },
+     {
+      "draw": 17,
+      "feasible": true,
+      "gap_k": 3.6700261255604474,
+      "moisture_kg_per_kg": 0.027389770522478592,
+      "moisture_shift_kg_per_kg": -0.0070597421939015866,
+      "bed_temperature_shift_k": 3.077793238963409
+     },
+     {
+      "draw": 18,
+      "feasible": true,
+      "gap_k": 3.6696224972744957,
+      "moisture_kg_per_kg": 0.024530072172558374,
+      "moisture_shift_kg_per_kg": -0.005538860662432057,
+      "bed_temperature_shift_k": 3.0901210091599296
+     },
+     {
+      "draw": 19,
+      "feasible": true,
+      "gap_k": 3.670497265898298,
+      "moisture_kg_per_kg": 0.030727213448561608,
+      "moisture_shift_kg_per_kg": -0.009170919805412028,
+      "bed_temperature_shift_k": 3.0605957643831516
+     }
+    ]
+   }
+  },
+  {
+   "share": 0.2,
+   "feasible": true,
+   "infeasibility_reasons": [],
+   "moisture_kg_per_kg": 0.024874379309379267,
+   "bed_temperature_celsius": 66.67527532322467,
+   "exhaust_temperature_celsius": 61.7635406035982,
+   "gap_k": 4.911734719626466,
+   "energy_target": 2.2569746687206518,
+   "power_total_kw": 2.2569746687206518,
+   "power_pump_plus_atomiser_share": 0.02536319036859869,
+   "freeboard_water_kg_per_h": 0.21000000000000002,
+   "moisture_shift_kg_per_kg": -0.008484040378535444,
+   "bed_temperature_shift_k": 4.12510729841614,
+   "energy_target_shift_relative": -0.01175041988419201,
+   "draws": {
+    "n_feasible": 20,
+    "gap_k": {
+     "min": 4.911113483143794,
+     "median": 4.911880224346884,
+     "max": 4.914572581422966
+    },
+    "moisture_kg_per_kg": {
+     "min": 0.021593977127430757,
+     "median": 0.025642621395406694,
+     "max": 0.03985189731226491
+    },
+    "moisture_shift_kg_per_kg": {
+     "min": -0.014762219034748225,
+     "median": -0.009178263959973785,
+     "max": -0.0064028717921102915
+    },
+    "bed_temperature_shift_k": {
+     "min": 4.07524610157509,
+     "median": 4.119477358931647,
+     "max": 4.141965532313634
+    },
+    "per_draw": [
+     {
+      "draw": 0,
+      "feasible": true,
+      "gap_k": 4.911113483143794,
+      "moisture_kg_per_kg": 0.021593977127430757,
+      "moisture_shift_kg_per_kg": -0.007835885286244081,
+      "bed_temperature_shift_k": 4.129954151333095
+     },
+     {
+      "draw": 1,
+      "feasible": true,
+      "gap_k": 4.912690119259686,
+      "moisture_kg_per_kg": 0.029918137014111036,
+      "moisture_shift_kg_per_kg": -0.008934091603770226,
+      "bed_temperature_shift_k": 4.122215394512807
+     },
+     {
+      "draw": 2,
+      "feasible": true,
+      "gap_k": 4.911311499093685,
+      "moisture_kg_per_kg": 0.022639653816668,
+      "moisture_shift_kg_per_kg": -0.008370383950347712,
+      "bed_temperature_shift_k": 4.12567261069114
+     },
+     {
+      "draw": 3,
+      "feasible": true,
+      "gap_k": 4.914572581422966,
+      "moisture_kg_per_kg": 0.03985189731226491,
+      "moisture_shift_kg_per_kg": -0.014762219034748225,
+      "bed_temperature_shift_k": 4.07524610157509
+     },
+     {
+      "draw": 4,
+      "feasible": true,
+      "gap_k": 4.913323118148149,
+      "moisture_kg_per_kg": 0.03325908999223463,
+      "moisture_shift_kg_per_kg": -0.01120142152359671,
+      "bed_temperature_shift_k": 4.103857599180003
+     },
+     {
+      "draw": 5,
+      "feasible": true,
+      "gap_k": 4.911501720717844,
+      "moisture_kg_per_kg": 0.023644112936406992,
+      "moisture_shift_kg_per_kg": -0.010270818475468454,
+      "bed_temperature_shift_k": 4.109982422170617
+     },
+     {
+      "draw": 6,
+      "feasible": true,
+      "gap_k": 4.911170528052608,
+      "moisture_kg_per_kg": 0.021895224441326175,
+      "moisture_shift_kg_per_kg": -0.0064028717921102915,
+      "bed_temperature_shift_k": 4.141965532313634
+     },
+     {
+      "draw": 7,
+      "feasible": true,
+      "gap_k": 4.911959685033388,
+      "moisture_kg_per_kg": 0.026062147449364997,
+      "moisture_shift_kg_per_kg": -0.010587628125897565,
+      "bed_temperature_shift_k": 4.107751517393012
+     },
+     {
+      "draw": 8,
+      "feasible": true,
+      "gap_k": 4.911629198932765,
+      "moisture_kg_per_kg": 0.024317225972808595,
+      "moisture_shift_kg_per_kg": -0.009931708608764356,
+      "bed_temperature_shift_k": 4.112928176448918
+     },
+     {
+      "draw": 9,
+      "feasible": true,
+      "gap_k": 4.911876035764955,
+      "moisture_kg_per_kg": 0.025620506815563278,
+      "moisture_shift_kg_per_kg": -0.008225067970523109,
+      "bed_temperature_shift_k": 4.12739692711682
+     },
+     {
+      "draw": 10,
+      "feasible": true,
+      "gap_k": 4.911192889905841,
+      "moisture_kg_per_kg": 0.022013313311168885,
+      "moisture_shift_kg_per_kg": -0.007226789823737513,
+      "bed_temperature_shift_k": 4.135109614827002
+     },
+     {
+      "draw": 11,
+      "feasible": true,
+      "gap_k": 4.912765689038146,
+      "moisture_kg_per_kg": 0.030317025280941396,
+      "moisture_shift_kg_per_kg": -0.012182014687242112,
+      "bed_temperature_shift_k": 4.095167864392977
+     },
+     {
+      "draw": 12,
+      "feasible": true,
+      "gap_k": 4.912185085508497,
+      "moisture_kg_per_kg": 0.027252133605076605,
+      "moisture_shift_kg_per_kg": -0.009269497460502173,
+      "bed_temperature_shift_k": 4.118958520115825
+     },
+     {
+      "draw": 13,
+      "feasible": true,
+      "gap_k": 4.912019136498053,
+      "moisture_kg_per_kg": 0.026376025010715502,
+      "moisture_shift_kg_per_kg": -0.009202209419101215,
+      "bed_temperature_shift_k": 4.119370085861078
+     },
+     {
+      "draw": 14,
+      "feasible": true,
+      "gap_k": 4.911378903969634,
+      "moisture_kg_per_kg": 0.02299558952679092,
+      "moisture_shift_kg_per_kg": -0.006640440760742723,
+      "bed_temperature_shift_k": 4.14017208008886
+     },
+     {
+      "draw": 15,
+      "feasible": true,
+      "gap_k": 4.912721924458758,
+      "moisture_kg_per_kg": 0.030086018974703373,
+      "moisture_shift_kg_per_kg": -0.01217491303712618,
+      "bed_temperature_shift_k": 4.0951877344707555
+     },
+     {
+      "draw": 16,
+      "feasible": true,
+      "gap_k": 4.9118844129288135,
+      "moisture_kg_per_kg": 0.02566473597525011,
+      "moisture_shift_kg_per_kg": -0.009119632793912924,
+      "bed_temperature_shift_k": 4.119937487835159
+     },
+     {
+      "draw": 17,
+      "feasible": true,
+      "gap_k": 4.9118144210142844,
+      "moisture_kg_per_kg": 0.025295194215533823,
+      "moisture_shift_kg_per_kg": -0.009154318500846356,
+      "bed_temperature_shift_k": 4.119584632002216
+     },
+     {
+      "draw": 18,
+      "feasible": true,
+      "gap_k": 4.911360057401033,
+      "moisture_kg_per_kg": 0.02289606974358058,
+      "moisture_shift_kg_per_kg": -0.00717286309140985,
+      "bed_temperature_shift_k": 4.1357113658341405
+     },
+     {
+      "draw": 19,
+      "feasible": true,
+      "gap_k": 4.912334616778594,
+      "moisture_kg_per_kg": 0.028041529906610123,
+      "moisture_shift_kg_per_kg": -0.011856603347363513,
+      "bed_temperature_shift_k": 4.097496251427799
+     }
+    ]
+   }
+  },
+  {
+   "share": 0.25,
+   "feasible": true,
+   "infeasibility_reasons": [],
+   "moisture_kg_per_kg": 0.023039319740460067,
+   "bed_temperature_celsius": 67.72624306336823,
+   "exhaust_temperature_celsius": 61.56327556862256,
+   "gap_k": 6.162967494745672,
+   "energy_target": 2.2502582445367794,
+   "power_total_kw": 2.2502582445367794,
+   "power_pump_plus_atomiser_share": 0.02543447408180942,
+   "freeboard_water_kg_per_h": 0.26249999999999996,
+   "moisture_shift_kg_per_kg": -0.010319099947454644,
+   "bed_temperature_shift_k": 5.176075038559702,
+   "energy_target_shift_relative": -0.014691305075142824,
+   "draws": {
+    "n_feasible": 20,
+    "gap_k": {
+     "min": 6.1622217341170185,
+     "median": 6.163139017963484,
+     "max": 6.166229754618136
+    },
+    "moisture_kg_per_kg": {
+     "min": 0.01990894216556523,
+     "median": 0.023759221710148763,
+     "max": 0.03672642038992576
+    },
+    "moisture_shift_kg_per_kg": {
+     "min": -0.017887695957087377,
+     "median": -0.01116062307292443,
+     "max": -0.007819373439162579
+    },
+    "bed_temperature_shift_k": {
+     "min": 5.115816979720478,
+     "median": 5.169225984364232,
+     "max": 5.196386203846259
+    },
+    "per_draw": [
+     {
+      "draw": 0,
+      "feasible": true,
+      "gap_k": 6.1622217341170185,
+      "moisture_kg_per_kg": 0.01990894216556523,
+      "moisture_shift_kg_per_kg": -0.009520920248109608,
+      "bed_temperature_shift_k": 5.182062546981285
+     },
+     {
+      "draw": 1,
+      "feasible": true,
+      "gap_k": 6.164144351267353,
+      "moisture_kg_per_kg": 0.027978134523793413,
+      "moisture_shift_kg_per_kg": -0.01087409409408785,
+      "bed_temperature_shift_k": 5.1725055356291705
+     },
+     {
+      "draw": 2,
+      "feasible": true,
+      "gap_k": 6.162443237822245,
+      "moisture_kg_per_kg": 0.020838775278983666,
+      "moisture_shift_kg_per_kg": -0.010171262488032046,
+      "bed_temperature_shift_k": 5.176835055569882
+     },
+     {
+      "draw": 3,
+      "feasible": true,
+      "gap_k": 6.166229754618136,
+      "moisture_kg_per_kg": 0.03672642038992576,
+      "moisture_shift_kg_per_kg": -0.017887695957087377,
+      "bed_temperature_shift_k": 5.115816979720478
+     },
+     {
+      "draw": 4,
+      "feasible": true,
+      "gap_k": 6.1648320766479685,
+      "moisture_kg_per_kg": 0.030863622024921898,
+      "moisture_shift_kg_per_kg": -0.013596889490909446,
+      "bed_temperature_shift_k": 5.15039340028153
+     },
+     {
+      "draw": 5,
+      "feasible": true,
+      "gap_k": 6.162595120190943,
+      "moisture_kg_per_kg": 0.021476322453201135,
+      "moisture_shift_kg_per_kg": -0.01243860895867431,
+      "bed_temperature_shift_k": 5.15804744131259
+     },
+     {
+      "draw": 6,
+      "feasible": true,
+      "gap_k": 6.16235746519348,
+      "moisture_kg_per_kg": 0.020478722794273888,
+      "moisture_shift_kg_per_kg": -0.007819373439162579,
+      "bed_temperature_shift_k": 5.196386203846259
+     },
+     {
+      "draw": 7,
+      "feasible": true,
+      "gap_k": 6.1631511425688785,
+      "moisture_kg_per_kg": 0.02381010900371621,
+      "moisture_shift_kg_per_kg": -0.012839666571546351,
+      "bed_temperature_shift_k": 5.155200948714196
+     },
+     {
+      "draw": 8,
+      "feasible": true,
+      "gap_k": 6.162766751923137,
+      "moisture_kg_per_kg": 0.022196742937436717,
+      "moisture_shift_kg_per_kg": -0.012052191644136234,
+      "bed_temperature_shift_k": 5.161427687608295
+     },
+     {
+      "draw": 9,
+      "feasible": true,
+      "gap_k": 6.163160296922818,
+      "moisture_kg_per_kg": 0.02384852992472669,
+      "moisture_shift_kg_per_kg": -0.009997044861359695,
+      "bed_temperature_shift_k": 5.178937509464845
+     },
+     {
+      "draw": 10,
+      "feasible": true,
+      "gap_k": 6.16234587981743,
+      "moisture_kg_per_kg": 0.020430089667161845,
+      "moisture_shift_kg_per_kg": -0.008810013467744553,
+      "bed_temperature_shift_k": 5.188108067492578
+     },
+     {
+      "draw": 11,
+      "feasible": true,
+      "gap_k": 6.164089699922123,
+      "moisture_kg_per_kg": 0.027748814040004,
+      "moisture_shift_kg_per_kg": -0.014750225928179508,
+      "bed_temperature_shift_k": 5.14009583222645
+     },
+     {
+      "draw": 12,
+      "feasible": true,
+      "gap_k": 6.163496129465166,
+      "moisture_kg_per_kg": 0.02525796546613983,
+      "moisture_shift_kg_per_kg": -0.011263665599438949,
+      "bed_temperature_shift_k": 5.168668063237476
+     },
+     {
+      "draw": 13,
+      "feasible": true,
+      "gap_k": 6.163289014076575,
+      "moisture_kg_per_kg": 0.024388748396986314,
+      "moisture_shift_kg_per_kg": -0.011189486032830404,
+      "bed_temperature_shift_k": 5.16910027206535
+     },
+     {
+      "draw": 14,
+      "feasible": true,
+      "gap_k": 6.1626159290217615,
+      "moisture_kg_per_kg": 0.02156366861502961,
+      "moisture_shift_kg_per_kg": -0.008072361672504032,
+      "bed_temperature_shift_k": 5.194509072846927
+     },
+     {
+      "draw": 15,
+      "feasible": true,
+      "gap_k": 6.164025930469684,
+      "moisture_kg_per_kg": 0.027481229679711866,
+      "moisture_shift_kg_per_kg": -0.014779702332117686,
+      "bed_temperature_shift_k": 5.139792388252431
+     },
+     {
+      "draw": 16,
+      "feasible": true,
+      "gap_k": 6.16312689335809,
+      "moisture_kg_per_kg": 0.023708334416581316,
+      "moisture_shift_kg_per_kg": -0.01107603435258172,
+      "bed_temperature_shift_k": 5.169900889293331
+     },
+     {
+      "draw": 17,
+      "feasible": true,
+      "gap_k": 6.163033833091184,
+      "moisture_kg_per_kg": 0.023317752603361722,
+      "moisture_shift_kg_per_kg": -0.011131760113018457,
+      "bed_temperature_shift_k": 5.169351696663114
+     },
+     {
+      "draw": 18,
+      "feasible": true,
+      "gap_k": 6.162566341107933,
+      "moisture_kg_per_kg": 0.02135552003608835,
+      "moisture_shift_kg_per_kg": -0.00871341279890208,
+      "bed_temperature_shift_k": 5.189113926933544
+     },
+     {
+      "draw": 19,
+      "feasible": true,
+      "gap_k": 6.163559949286466,
+      "moisture_kg_per_kg": 0.025525794493266266,
+      "moisture_shift_kg_per_kg": -0.01437233876070737,
+      "bed_temperature_shift_k": 5.1427742323349435
+     }
+    ]
+   }
+  },
+  {
+   "share": 0.3,
+   "feasible": true,
+   "infeasibility_reasons": [],
+   "moisture_kg_per_kg": 0.021304797776783863,
+   "bed_temperature_celsius": 68.78514651204753,
+   "exhaust_temperature_celsius": 61.36137802834708,
+   "gap_k": 7.423768483700449,
+   "energy_target": 2.2435387507173874,
+   "power_total_kw": 2.2435387507173874,
+   "power_pump_plus_atomiser_share": 0.02550621949272445,
+   "freeboard_water_kg_per_h": 0.31499999999999995,
+   "moisture_shift_kg_per_kg": -0.012053621911130848,
+   "bed_temperature_shift_k": 6.234978487239005,
+   "energy_target_shift_relative": -0.017633534351189084,
+   "draws": {
+    "n_feasible": 20,
+    "gap_k": {
+     "min": 7.422909931588606,
+     "median": 7.423905822715405,
+     "max": 7.427364674550688
+    },
+    "moisture_kg_per_kg": {
+     "min": 0.018320737067066363,
+     "median": 0.021782099081707543,
+     "max": 0.03379862082030031
+    },
+    "moisture_shift_kg_per_kg": {
+     "min": -0.02081549552671283,
+     "median": -0.013032340359457049,
+     "max": -0.009171644757541286
+    },
+    "bed_temperature_shift_k": {
+     "min": 6.165051917809876,
+     "median": 6.22698463089165,
+     "max": 6.258466034658738
+    },
+    "per_draw": [
+     {
+      "draw": 0,
+      "feasible": true,
+      "gap_k": 7.422909931588606,
+      "moisture_kg_per_kg": 0.018320737067066363,
+      "moisture_shift_kg_per_kg": -0.011109125346608476,
+      "bed_temperature_shift_k": 6.24208675338366
+     },
+     {
+      "draw": 1,
+      "feasible": true,
+      "gap_k": 7.425159762962792,
+      "moisture_kg_per_kg": 0.026139393373940167,
+      "moisture_shift_kg_per_kg": -0.012712835243941095,
+      "bed_temperature_shift_k": 6.230730275286476
+     },
+     {
+      "draw": 2,
+      "feasible": true,
+      "gap_k": 7.423146158574788,
+      "moisture_kg_per_kg": 0.01914183852864792,
+      "moisture_shift_kg_per_kg": -0.011868199238367794,
+      "bed_temperature_shift_k": 6.235964668891825
+     },
+     {
+      "draw": 3,
+      "feasible": true,
+      "gap_k": 7.427364674550688,
+      "moisture_kg_per_kg": 0.03379862082030031,
+      "moisture_shift_kg_per_kg": -0.02081549552671283,
+      "bed_temperature_shift_k": 6.165051917809876
+     },
+     {
+      "draw": 4,
+      "feasible": true,
+      "gap_k": 7.4258704890349705,
+      "moisture_kg_per_kg": 0.028608610044291938,
+      "moisture_shift_kg_per_kg": -0.015851901471539406,
+      "bed_temperature_shift_k": 6.205162273220424
+     },
+     {
+      "draw": 5,
+      "feasible": true,
+      "gap_k": 7.423235345245054,
+      "moisture_kg_per_kg": 0.0194518326824977,
+      "moisture_shift_kg_per_kg": -0.014463098729377746,
+      "bed_temperature_shift_k": 6.214386320849599
+     },
+     {
+      "draw": 6,
+      "feasible": true,
+      "gap_k": 7.423141731692283,
+      "moisture_kg_per_kg": 0.01912645147589518,
+      "moisture_shift_kg_per_kg": -0.009171644757541286,
+      "bed_temperature_shift_k": 6.258466034658738
+     },
+     {
+      "draw": 7,
+      "feasible": true,
+      "gap_k": 7.423881841534609,
+      "moisture_kg_per_kg": 0.021698757137988002,
+      "moisture_shift_kg_per_kg": -0.01495101843727456,
+      "bed_temperature_shift_k": 6.21089525919075
+     },
+     {
+      "draw": 8,
+      "feasible": true,
+      "gap_k": 7.423452559185307,
+      "moisture_kg_per_kg": 0.02020680023110509,
+      "moisture_shift_kg_per_kg": -0.01404213435046786,
+      "bed_temperature_shift_k": 6.2180956834018275
+     },
+     {
+      "draw": 9,
+      "feasible": true,
+      "gap_k": 7.424018881429809,
+      "moisture_kg_per_kg": 0.022175008587479998,
+      "moisture_shift_kg_per_kg": -0.011670566198606389,
+      "bed_temperature_shift_k": 6.238401746973921
+     },
+     {
+      "draw": 10,
+      "feasible": true,
+      "gap_k": 7.423084254077452,
+      "moisture_kg_per_kg": 0.018926668317901213,
+      "moisture_shift_kg_per_kg": -0.010313434817005186,
+      "bed_temperature_shift_k": 6.24888496736105
+     },
+     {
+      "draw": 11,
+      "feasible": true,
+      "gap_k": 7.4249321317187835,
+      "moisture_kg_per_kg": 0.025348480757190085,
+      "moisture_shift_kg_per_kg": -0.017150559210993423,
+      "bed_temperature_shift_k": 6.193476524197763
+     },
+     {
+      "draw": 12,
+      "feasible": true,
+      "gap_k": 7.424364577529317,
+      "moisture_kg_per_kg": 0.02337634145141222,
+      "moisture_shift_kg_per_kg": -0.013145289614166559,
+      "bed_temperature_shift_k": 6.226403504430209
+     },
+     {
+      "draw": 13,
+      "feasible": true,
+      "gap_k": 7.424115861647259,
+      "moisture_kg_per_kg": 0.022512033919950103,
+      "moisture_shift_kg_per_kg": -0.013066200509866614,
+      "bed_temperature_shift_k": 6.226839567866591
+     },
+     {
+      "draw": 14,
+      "feasible": true,
+      "gap_k": 7.4234533630149855,
+      "moisture_kg_per_kg": 0.020209594026585155,
+      "moisture_shift_kg_per_kg": -0.009426436260948488,
+      "bed_temperature_shift_k": 6.256621454067783
+     },
+     {
+      "draw": 15,
+      "feasible": true,
+      "gap_k": 7.424841864753496,
+      "moisture_kg_per_kg": 0.02503483536245367,
+      "moisture_shift_kg_per_kg": -0.017226096649375883,
+      "bed_temperature_shift_k": 6.192764828013537
+     },
+     {
+      "draw": 16,
+      "feasible": true,
+      "gap_k": 7.4239298038962005,
+      "moisture_kg_per_kg": 0.021865441025427083,
+      "moisture_shift_kg_per_kg": -0.012918927743735951,
+      "bed_temperature_shift_k": 6.22790120891807
+     },
+     {
+      "draw": 17,
+      "feasible": true,
+      "gap_k": 7.423810560978275,
+      "moisture_kg_per_kg": 0.021451032507332695,
+      "moisture_shift_kg_per_kg": -0.012998480209047484,
+      "bed_temperature_shift_k": 6.227129693916709
+     },
+     {
+      "draw": 18,
+      "feasible": true,
+      "gap_k": 7.423364735255554,
+      "moisture_kg_per_kg": 0.019901555636116907,
+      "moisture_shift_kg_per_kg": -0.010167377198873524,
+      "bed_temperature_shift_k": 6.250357424334254
+     },
+     {
+      "draw": 19,
+      "feasible": true,
+      "gap_k": 7.424305638195094,
+      "moisture_kg_per_kg": 0.02317152634882609,
+      "moisture_shift_kg_per_kg": -0.016726606905147545,
+      "bed_temperature_shift_k": 6.196453476028978
+     }
+    ]
+   }
+  },
+  {
+   "share": 0.35,
+   "feasible": true,
+   "infeasibility_reasons": [],
+   "moisture_kg_per_kg": 0.01966490319396549,
+   "bed_temperature_celsius": 69.85202433856259,
+   "exhaust_temperature_celsius": 61.15776060028423,
+   "gap_k": 8.694263738278359,
+   "energy_target": 2.2368161512638767,
+   "power_total_kw": 2.2368161512638767,
+   "power_pump_plus_atomiser_share": 0.02557843146924897,
+   "freeboard_water_kg_per_h": 0.36749999999999994,
+   "moisture_shift_kg_per_kg": -0.013693516493949221,
+   "bed_temperature_shift_k": 7.301856313754058,
+   "energy_target_shift_relative": -0.020577123474847525,
+   "draws": {
+    "n_feasible": 20,
+    "gap_k": {
+     "min": 8.693303984371006,
+     "median": 8.694351578881001,
+     "max": 8.69811338336465
+    },
+    "moisture_kg_per_kg": {
+     "min": 0.016823931318577144,
+     "median": 0.019924896760847122,
+     "max": 0.031055704173834867
+    },
+    "moisture_shift_kg_per_kg": {
+     "min": -0.02355841217317827,
+     "median": -0.014799490580922897,
+     "max": -0.010463886102856201
+    },
+    "bed_temperature_shift_k": {
+     "min": 7.222941475480127,
+     "median": 7.292791726902266,
+     "max": 7.328254095282318
+    },
+    "per_draw": [
+     {
+      "draw": 0,
+      "feasible": true,
+      "gap_k": 8.693303984371006,
+      "moisture_kg_per_kg": 0.016823931318577144,
+      "moisture_shift_kg_per_kg": -0.012605931095097694,
+      "bed_temperature_shift_k": 7.310069257478347
+     },
+     {
+      "draw": 1,
+      "feasible": true,
+      "gap_k": 8.695861968517626,
+      "moisture_kg_per_kg": 0.024394826617670527,
+      "moisture_shift_kg_per_kg": -0.014457402000210735,
+      "bed_temperature_shift_k": 7.296918091478517
+     },
+     {
+      "draw": 2,
+      "feasible": true,
+      "gap_k": 8.693547023718338,
+      "moisture_kg_per_kg": 0.017543396022690387,
+      "moisture_shift_kg_per_kg": -0.013466641744325325,
+      "bed_temperature_shift_k": 7.303104610776927
+     },
+     {
+      "draw": 3,
+      "feasible": true,
+      "gap_k": 8.69811338336465,
+      "moisture_kg_per_kg": 0.031055704173834867,
+      "moisture_shift_kg_per_kg": -0.02355841217317827,
+      "bed_temperature_shift_k": 7.222941475480127
+     },
+     {
+      "draw": 4,
+      "feasible": true,
+      "gap_k": 8.696568205624963,
+      "moisture_kg_per_kg": 0.026484518124802778,
+      "moisture_shift_kg_per_kg": -0.017975993391028566,
+      "bed_temperature_shift_k": 7.2681762164663155
+     },
+     {
+      "draw": 5,
+      "feasible": true,
+      "gap_k": 8.693553739044226,
+      "moisture_kg_per_kg": 0.017563274862565856,
+      "moisture_shift_kg_per_kg": -0.01635165654930959,
+      "bed_temperature_shift_k": 7.27903043516875
+     },
+     {
+      "draw": 6,
+      "feasible": true,
+      "gap_k": 8.693645265193872,
+      "moisture_kg_per_kg": 0.017834210130580265,
+      "moisture_shift_kg_per_kg": -0.010463886102856201,
+      "bed_temperature_shift_k": 7.328254095282318
+     },
+     {
+      "draw": 7,
+      "feasible": true,
+      "gap_k": 8.69428256099323,
+      "moisture_kg_per_kg": 0.019720615872093075,
+      "moisture_shift_kg_per_kg": -0.016929159703169487,
+      "bed_temperature_shift_k": 7.274864452866723
+     },
+     {
+      "draw": 8,
+      "feasible": true,
+      "gap_k": 8.6938165249124,
+      "moisture_kg_per_kg": 0.018341161259444898,
+      "moisture_shift_kg_per_kg": -0.015907773322128053,
+      "bed_temperature_shift_k": 7.282971685151836
+     },
+     {
+      "draw": 9,
+      "feasible": true,
+      "gap_k": 8.69457738643252,
+      "moisture_kg_per_kg": 0.02059323630764094,
+      "moisture_shift_kg_per_kg": -0.013252338478445445,
+      "bed_temperature_shift_k": 7.305821216821471
+     },
+     {
+      "draw": 10,
+      "feasible": true,
+      "gap_k": 8.693532000628586,
+      "moisture_kg_per_kg": 0.017498924304384097,
+      "moisture_shift_kg_per_kg": -0.011741178830522302,
+      "bed_temperature_shift_k": 7.317491933445126
+     },
+     {
+      "draw": 11,
+      "feasible": true,
+      "gap_k": 8.69542636346371,
+      "moisture_kg_per_kg": 0.023105788565073188,
+      "moisture_shift_kg_per_kg": -0.01939325140311032,
+      "bed_temperature_shift_k": 7.255319319472733
+     },
+     {
+      "draw": 12,
+      "feasible": true,
+      "gap_k": 8.694917559393197,
+      "moisture_kg_per_kg": 0.02160002262696334,
+      "moisture_shift_kg_per_kg": -0.014921608438615439,
+      "bed_temperature_shift_k": 7.2921934451909465
+     },
+     {
+      "draw": 13,
+      "feasible": true,
+      "gap_k": 8.694626829029062,
+      "moisture_kg_per_kg": 0.020739571662075088,
+      "moisture_shift_kg_per_kg": -0.01483866276774163,
+      "bed_temperature_shift_k": 7.292624352473354
+     },
+     {
+      "draw": 14,
+      "feasible": true,
+      "gap_k": 8.69401457608253,
+      "moisture_kg_per_kg": 0.018927400595573032,
+      "moisture_shift_kg_per_kg": -0.010708629691960611,
+      "bed_temperature_shift_k": 7.326544838423672
+     },
+     {
+      "draw": 15,
+      "feasible": true,
+      "gap_k": 8.695302546840665,
+      "moisture_kg_per_kg": 0.02273937465033024,
+      "moisture_shift_kg_per_kg": -0.01952155736149931,
+      "bed_temperature_shift_k": 7.254137137125838
+     },
+     {
+      "draw": 16,
+      "feasible": true,
+      "gap_k": 8.694420596768772,
+      "moisture_kg_per_kg": 0.02012917764960117,
+      "moisture_shift_kg_per_kg": -0.014655191119561865,
+      "bed_temperature_shift_k": 7.293970338112956
+     },
+     {
+      "draw": 17,
+      "feasible": true,
+      "gap_k": 8.69427194511065,
+      "moisture_kg_per_kg": 0.019689194322276015,
+      "moisture_shift_kg_per_kg": -0.014760318394104164,
+      "bed_temperature_shift_k": 7.292959101331178
+     },
+     {
+      "draw": 18,
+      "feasible": true,
+      "gap_k": 8.693879576686719,
+      "moisture_kg_per_kg": 0.018527799105525117,
+      "moisture_shift_kg_per_kg": -0.011541133729465313,
+      "bed_temperature_shift_k": 7.319474952337259
+     },
+     {
+      "draw": 19,
+      "feasible": true,
+      "gap_k": 8.694704960037058,
+      "moisture_kg_per_kg": 0.020970813723393655,
+      "moisture_shift_kg_per_kg": -0.01892731953057998,
+      "bed_temperature_shift_k": 7.258562680463854
+     }
+    ]
+   }
+  },
+  {
+   "share": 0.4,
+   "feasible": true,
+   "infeasibility_reasons": [],
+   "moisture_kg_per_kg": 0.018114266195527164,
+   "bed_temperature_celsius": 70.9269202368354,
+   "exhaust_temperature_celsius": 60.95233969305696,
+   "gap_k": 9.974580543778437,
+   "energy_target": 2.230090410564225,
+   "power_total_kw": 2.230090410564225,
+   "power_pump_plus_atomiser_share": 0.0256511149420714,
+   "freeboard_water_kg_per_h": 0.42000000000000004,
+   "moisture_shift_kg_per_kg": -0.015244153492387547,
+   "bed_temperature_shift_k": 8.376752212026872,
+   "energy_target_shift_relative": -0.023522088039366174,
+   "draws": {
+    "n_feasible": 20,
+    "gap_k": {
+     "min": 9.973531104964572,
+     "median": 9.974637215695125,
+     "max": 9.978612177567584
+    },
+    "moisture_kg_per_kg": {
+     "min": 0.015413587126114937,
+     "median": 0.018260095385264054,
+     "max": 0.028485665378768635
+    },
+    "moisture_shift_kg_per_kg": {
+     "min": -0.026128450968244503,
+     "median": -0.016467591939495374,
+     "max": -0.011700239480632299
+    },
+    "bed_temperature_shift_k": {
+     "min": 8.289482389567695,
+     "median": 8.366690858399721,
+     "max": 8.405800517730029
+    },
+    "per_draw": [
+     {
+      "draw": 0,
+      "feasible": true,
+      "gap_k": 9.973531104964572,
+      "moisture_kg_per_kg": 0.015413587126114937,
+      "moisture_shift_kg_per_kg": -0.014016275287559901,
+      "bed_temperature_shift_k": 8.386057235235853
+     },
+     {
+      "draw": 1,
+      "feasible": true,
+      "gap_k": 9.976377577390679,
+      "moisture_kg_per_kg": 0.022737891639566635,
+      "moisture_shift_kg_per_kg": -0.016114336978314627,
+      "bed_temperature_shift_k": 8.371102310385936
+     },
+     {
+      "draw": 2,
+      "feasible": true,
+      "gap_k": 9.973773911655911,
+      "moisture_kg_per_kg": 0.016038474642119882,
+      "moisture_shift_kg_per_kg": -0.01497156312489583,
+      "bed_temperature_shift_k": 8.378302583593324
+     },
+     {
+      "draw": 3,
+      "feasible": true,
+      "gap_k": 9.978612177567584,
+      "moisture_kg_per_kg": 0.028485665378768635,
+      "moisture_shift_kg_per_kg": -0.026128450968244503,
+      "bed_temperature_shift_k": 8.289482389567695
+     },
+     {
+      "draw": 4,
+      "feasible": true,
+      "gap_k": 9.977055763313608,
+      "moisture_kg_per_kg": 0.024482498100309308,
+      "moisture_shift_kg_per_kg": -0.019978013415522036,
+      "bed_temperature_shift_k": 8.339452972533365
+     },
+     {
+      "draw": 5,
+      "feasible": true,
+      "gap_k": 9.97368271578005,
+      "moisture_kg_per_kg": 0.01580377542963698,
+      "moisture_shift_kg_per_kg": -0.018111155982238464,
+      "bed_temperature_shift_k": 8.352015624880664
+     },
+     {
+      "draw": 6,
+      "feasible": true,
+      "gap_k": 9.973991272760372,
+      "moisture_kg_per_kg": 0.016597856752804167,
+      "moisture_shift_kg_per_kg": -0.011700239480632299,
+      "bed_temperature_shift_k": 8.405800517730029
+     },
+     {
+      "draw": 7,
+      "feasible": true,
+      "gap_k": 9.974485158389022,
+      "moisture_kg_per_kg": 0.017868813541142274,
+      "moisture_shift_kg_per_kg": -0.018780962034120288,
+      "bed_temperature_shift_k": 8.347143922850648
+     },
+     {
+      "draw": 8,
+      "feasible": true,
+      "gap_k": 9.973989805143525,
+      "moisture_kg_per_kg": 0.016594079879279237,
+      "moisture_shift_kg_per_kg": -0.017654854702293714,
+      "bed_temperature_shift_k": 8.356099812952209
+     },
+     {
+      "draw": 9,
+      "feasible": true,
+      "gap_k": 9.9749624685832,
+      "moisture_kg_per_kg": 0.019097029109179542,
+      "moisture_shift_kg_per_kg": -0.014748545676906845,
+      "bed_temperature_shift_k": 8.381232218152945
+     },
+     {
+      "draw": 10,
+      "feasible": true,
+      "gap_k": 9.973814523390807,
+      "moisture_kg_per_kg": 0.016142990896617363,
+      "moisture_shift_kg_per_kg": -0.013097112238289035,
+      "bed_temperature_shift_k": 8.393983431758443
+     },
+     {
+      "draw": 11,
+      "feasible": true,
+      "gap_k": 9.975706423252433,
+      "moisture_kg_per_kg": 0.021011205696003624,
+      "moisture_shift_kg_per_kg": -0.021487834272179884,
+      "bed_temperature_shift_k": 8.325639429996556
+     },
+     {
+      "draw": 12,
+      "feasible": true,
+      "gap_k": 9.975283241565116,
+      "moisture_kg_per_kg": 0.019922395155618333,
+      "moisture_shift_kg_per_kg": -0.016599235909960444,
+      "bed_temperature_shift_k": 8.366072035575485
+     },
+     {
+      "draw": 13,
+      "feasible": true,
+      "gap_k": 9.974950262125226,
+      "moisture_kg_per_kg": 0.019065620478307344,
+      "moisture_shift_kg_per_kg": -0.016512613951509374,
+      "bed_temperature_shift_k": 8.366496226528284
+     },
+     {
+      "draw": 14,
+      "feasible": true,
+      "gap_k": 9.974424040468463,
+      "moisture_kg_per_kg": 0.017711538651147614,
+      "moisture_shift_kg_per_kg": -0.01192449163638603,
+      "bed_temperature_shift_k": 8.404318721280788
+     },
+     {
+      "draw": 15,
+      "feasible": true,
+      "gap_k": 9.975541920842183,
+      "moisture_kg_per_kg": 0.020587962881234607,
+      "moisture_shift_kg_per_kg": -0.021672969130594945,
+      "bed_temperature_shift_k": 8.32394658973925
+     },
+     {
+      "draw": 16,
+      "feasible": true,
+      "gap_k": 9.974727822523974,
+      "moisture_kg_per_kg": 0.018493247981629303,
+      "moisture_shift_kg_per_kg": -0.016291120787533732,
+      "bed_temperature_shift_k": 8.368145408082626
+     },
+     {
+      "draw": 17,
+      "feasible": true,
+      "gap_k": 9.974546608866277,
+      "moisture_kg_per_kg": 0.018026942788898808,
+      "moisture_shift_kg_per_kg": -0.01642256992748137,
+      "bed_temperature_shift_k": 8.366885490271159
+     },
+     {
+      "draw": 18,
+      "feasible": true,
+      "gap_k": 9.974236277362486,
+      "moisture_kg_per_kg": 0.017228358729714337,
+      "moisture_shift_kg_per_kg": -0.012840574105276094,
+      "bed_temperature_shift_k": 8.396504040925663
+     },
+     {
+      "draw": 19,
+      "feasible": true,
+      "gap_k": 9.974892221049693,
+      "moisture_kg_per_kg": 0.018916273331924076,
+      "moisture_shift_kg_per_kg": -0.02098185992204956,
+      "bed_temperature_shift_k": 8.329135241955328
+     }
+    ]
+   }
+  },
+  {
+   "share": 0.45,
+   "feasible": true,
+   "infeasibility_reasons": [],
+   "moisture_kg_per_kg": 0.01664802084316729,
+   "bed_temperature_celsius": 72.00988273260307,
+   "exhaust_temperature_celsius": 60.74503518101308,
+   "gap_k": 11.264847551589995,
+   "energy_target": 2.2233614933842736,
+   "power_total_kw": 2.2233614933842736,
+   "power_pump_plus_atomiser_share": 0.025724274905794993,
+   "freeboard_water_kg_per_h": 0.4725,
+   "moisture_shift_kg_per_kg": -0.016710398844747423,
+   "bed_temperature_shift_k": 9.459714707794546,
+   "energy_target_shift_relative": -0.026468443472540182,
+   "draws": {
+    "n_feasible": 20,
+    "gap_k": {
+     "min": 11.26371993330168,
+     "median": 11.26489435407996,
+     "max": 11.268997786482181
+    },
+    "moisture_kg_per_kg": {
+     "min": 0.01408522420997208,
+     "median": 0.01675438220208073,
+     "max": 0.026077291236421198
+    },
+    "moisture_shift_kg_per_kg": {
+     "min": -0.02853682511059194,
+     "median": -0.0180416418826254,
+     "max": -0.012885063189678941
+    },
+    "bed_temperature_shift_k": {
+     "min": 9.364677752841999,
+     "median": 9.448730585739753,
+     "max": 9.491154117775125
+    },
+    "per_draw": [
+     {
+      "draw": 0,
+      "feasible": true,
+      "gap_k": 11.26371993330168,
+      "moisture_kg_per_kg": 0.01408522420997208,
+      "moisture_shift_kg_per_kg": -0.015344638203702759,
+      "bed_temperature_shift_k": 9.470102361468093
+     },
+     {
+      "draw": 1,
+      "feasible": true,
+      "gap_k": 11.266834317636878,
+      "moisture_kg_per_kg": 0.021162547635804434,
+      "moisture_shift_kg_per_kg": -0.01768968098207683,
+      "bed_temperature_shift_k": 9.45332085764818
+     },
+     {
+      "draw": 2,
+      "feasible": true,
+      "gap_k": 11.263956334325414,
+      "moisture_kg_per_kg": 0.01462253573018067,
+      "moisture_shift_kg_per_kg": -0.01638750203683504,
+      "bed_temperature_shift_k": 9.461610596205503
+     },
+     {
+      "draw": 3,
+      "feasible": true,
+      "gap_k": 11.268997786482181,
+      "moisture_kg_per_kg": 0.026077291236421198,
+      "moisture_shift_kg_per_kg": -0.02853682511059194,
+      "bed_temperature_shift_k": 9.364677752841999
+     },
+     {
+      "draw": 4,
+      "feasible": true,
+      "gap_k": 11.267464550853134,
+      "moisture_kg_per_kg": 0.02259438632253559,
+      "moisture_shift_kg_per_kg": -0.021866125193295755,
+      "bed_temperature_shift_k": 9.41901614586726
+     },
+     {
+      "draw": 5,
+      "feasible": true,
+      "gap_k": 11.263755876976617,
+      "moisture_kg_per_kg": 0.014166920972372241,
+      "moisture_shift_kg_per_kg": -0.019748010439503205,
+      "bed_temperature_shift_k": 9.433382002198414
+     },
+     {
+      "draw": 6,
+      "feasible": true,
+      "gap_k": 11.264304142537547,
+      "moisture_kg_per_kg": 0.015413033043757525,
+      "moisture_shift_kg_per_kg": -0.012885063189678941,
+      "bed_temperature_shift_k": 9.491154117775125
+     },
+     {
+      "draw": 7,
+      "feasible": true,
+      "gap_k": 11.264622711488677,
+      "moisture_kg_per_kg": 0.016137044590460295,
+      "moisture_shift_kg_per_kg": -0.020512730984802267,
+      "bed_temperature_shift_k": 9.427774253110499
+     },
+     {
+      "draw": 8,
+      "feasible": true,
+      "gap_k": 11.264104924095491,
+      "moisture_kg_per_kg": 0.014960254357101986,
+      "moisture_shift_kg_per_kg": -0.019288680224470965,
+      "bed_temperature_shift_k": 9.43752849782328
+     },
+     {
+      "draw": 9,
+      "feasible": true,
+      "gap_k": 11.265301978837734,
+      "moisture_kg_per_kg": 0.017680716715477045,
+      "moisture_shift_kg_per_kg": -0.016164858070609342,
+      "bed_temperature_shift_k": 9.464675814114116
+     },
+     {
+      "draw": 10,
+      "feasible": true,
+      "gap_k": 11.26405868153806,
+      "moisture_kg_per_kg": 0.014855153773909141,
+      "moisture_shift_kg_per_kg": -0.014384949360997257,
+      "bed_temperature_shift_k": 9.478415919203087
+     },
+     {
+      "draw": 11,
+      "feasible": true,
+      "gap_k": 11.265907149825736,
+      "moisture_kg_per_kg": 0.019055887811510668,
+      "moisture_shift_kg_per_kg": -0.02344315215667284,
+      "bed_temperature_shift_k": 9.40445789404265
+     },
+     {
+      "draw": 12,
+      "feasible": true,
+      "gap_k": 11.265590980975347,
+      "moisture_kg_per_kg": 0.018337449162089493,
+      "moisture_shift_kg_per_kg": -0.018184181903489284,
+      "bed_temperature_shift_k": 9.448078930691963
+     },
+     {
+      "draw": 13,
+      "feasible": true,
+      "gap_k": 11.265215841451024,
+      "moisture_kg_per_kg": 0.017484972226100577,
+      "moisture_shift_kg_per_kg": -0.01809326220371614,
+      "bed_temperature_shift_k": 9.448501830858618
+     },
+     {
+      "draw": 14,
+      "feasible": true,
+      "gap_k": 11.264807434359696,
+      "moisture_kg_per_kg": 0.0165568506732484,
+      "moisture_shift_kg_per_kg": -0.013079179614285244,
+      "bed_temperature_shift_k": 9.489986371457064
+     },
+     {
+      "draw": 15,
+      "feasible": true,
+      "gap_k": 11.265695188170511,
+      "moisture_kg_per_kg": 0.018574245076156994,
+      "moisture_shift_kg_per_kg": -0.02368668693567256,
+      "bed_temperature_shift_k": 9.402235369439609
+     },
+     {
+      "draw": 16,
+      "feasible": true,
+      "gap_k": 11.264981273800224,
+      "moisture_kg_per_kg": 0.016951913730913058,
+      "moisture_shift_kg_per_kg": -0.017832455038249977,
+      "bed_temperature_shift_k": 9.450468714340161
+     },
+     {
+      "draw": 17,
+      "feasible": true,
+      "gap_k": 11.264764593881083,
+      "moisture_kg_per_kg": 0.01645949115484552,
+      "moisture_shift_kg_per_kg": -0.017990021561534657,
+      "bed_temperature_shift_k": 9.448959340620888
+     },
+     {
+      "draw": 18,
+      "feasible": true,
+      "gap_k": 11.264561450852746,
+      "moisture_kg_per_kg": 0.015997819852130217,
+      "moisture_shift_kg_per_kg": -0.014071112982860214,
+      "bed_temperature_shift_k": 9.48148669220302
+     },
+     {
+      "draw": 19,
+      "feasible": true,
+      "gap_k": 11.265002877658013,
+      "moisture_kg_per_kg": 0.017001009486545746,
+      "moisture_shift_kg_per_kg": -0.02289712376742789,
+      "bed_temperature_shift_k": 9.408209015512625
+     }
+    ]
+   }
+  },
+  {
+   "share": 0.5,
+   "feasible": true,
+   "infeasibility_reasons": [],
+   "moisture_kg_per_kg": 0.015261754096535903,
+   "bed_temperature_celsius": 73.10096485724259,
+   "exhaust_temperature_celsius": 60.53576995858667,
+   "gap_k": 12.565194898655918,
+   "energy_target": 2.2166293647976287,
+   "power_total_kw": 2.2166293647976287,
+   "power_pump_plus_atomiser_share": 0.025797916420807917,
+   "freeboard_water_kg_per_h": 0.5249999999999999,
+   "moisture_shift_kg_per_kg": -0.01809666559137881,
+   "bed_temperature_shift_k": 10.55079683243406,
+   "energy_target_shift_relative": -0.029416205067404944,
+   "draws": {
+    "n_feasible": 20,
+    "gap_k": {
+     "min": 12.563908121624216,
+     "median": 12.56523268757256,
+     "max": 12.569407558802006
+    },
+    "moisture_kg_per_kg": {
+     "min": 0.012646723300758337,
+     "median": 0.015338543747065968,
+     "max": 0.02382016454720865
+    },
+    "moisture_shift_kg_per_kg": {
+     "min": -0.030793951799804486,
+     "median": -0.019526162508943404,
+     "max": -0.014023329221375405
+    },
+    "bed_temperature_shift_k": {
+     "min": 10.448537212288045,
+     "median": 10.538964169816154,
+     "max": 10.5843588635841
+    },
+    "per_draw": [
+     {
+      "draw": 0,
+      "feasible": true,
+      "gap_k": 12.564000651328783,
+      "moisture_kg_per_kg": 0.01283477809569367,
+      "moisture_shift_kg_per_kg": -0.01659508431798117,
+      "bed_temperature_shift_k": 10.562260556300771
+     },
+     {
+      "draw": 1,
+      "feasible": true,
+      "gap_k": 12.567361127470086,
+      "moisture_kg_per_kg": 0.019663165054280143,
+      "moisture_shift_kg_per_kg": -0.01918906356360112,
+      "bed_temperature_shift_k": 10.543615578989147
+     },
+     {
+      "draw": 2,
+      "feasible": true,
+      "gap_k": 12.564225344703715,
+      "moisture_kg_per_kg": 0.013291430337634393,
+      "moisture_shift_kg_per_kg": -0.01771860742938132,
+      "bed_temperature_shift_k": 10.553084678216749
+     },
+     {
+      "draw": 3,
+      "feasible": true,
+      "gap_k": 12.569407558802006,
+      "moisture_kg_per_kg": 0.02382016454720865,
+      "moisture_shift_kg_per_kg": -0.030793951799804486,
+      "bed_temperature_shift_k": 10.448537212288045
+     },
+     {
+      "draw": 4,
+      "feasible": true,
+      "gap_k": 12.567926976820964,
+      "moisture_kg_per_kg": 0.020812695411749592,
+      "moisture_shift_kg_per_kg": -0.023647816104081752,
+      "bed_temperature_shift_k": 10.50689528024435
+     },
+     {
+      "draw": 5,
+      "feasible": true,
+      "gap_k": 12.563908121624216,
+      "moisture_kg_per_kg": 0.012646723300758337,
+      "moisture_shift_kg_per_kg": -0.02126820811111711,
+      "bed_temperature_shift_k": 10.523173750829642
+     },
+     {
+      "draw": 6,
+      "feasible": true,
+      "gap_k": 12.564709210070383,
+      "moisture_kg_per_kg": 0.014274767012061061,
+      "moisture_shift_kg_per_kg": -0.014023329221375405,
+      "bed_temperature_shift_k": 10.5843588635841
+     },
+     {
+      "draw": 7,
+      "feasible": true,
+      "gap_k": 12.56482965291066,
+      "moisture_kg_per_kg": 0.01451952881714565,
+      "moisture_shift_kg_per_kg": -0.022130246758116912,
+      "bed_temperature_shift_k": 10.51680099127907
+     },
+     {
+      "draw": 8,
+      "feasible": true,
+      "gap_k": 12.564295880756866,
+      "moisture_kg_per_kg": 0.01343478081403475,
+      "moisture_shift_kg_per_kg": -0.0208141537675382,
+      "bed_temperature_shift_k": 10.527310180144127
+     },
+     {
+      "draw": 9,
+      "feasible": true,
+      "gap_k": 12.565725093576482,
+      "moisture_kg_per_kg": 0.016339121569634858,
+      "moisture_shift_kg_per_kg": -0.01750645321645153,
+      "bed_temperature_shift_k": 10.556197768189293
+     },
+     {
+      "draw": 10,
+      "feasible": true,
+      "gap_k": 12.564392789792237,
+      "moisture_kg_per_kg": 0.013631727234571251,
+      "moisture_shift_kg_per_kg": -0.015608375900335147,
+      "bed_temperature_shift_k": 10.570846802449978
+     },
+     {
+      "draw": 11,
+      "feasible": true,
+      "gap_k": 12.56616435445924,
+      "moisture_kg_per_kg": 0.017231659546991896,
+      "moisture_shift_kg_per_kg": -0.025267380421191612,
+      "bed_temperature_shift_k": 10.491801562072567
+     },
+     {
+      "draw": 12,
+      "feasible": true,
+      "gap_k": 12.565971471857054,
+      "moisture_kg_per_kg": 0.016839745252398054,
+      "moisture_shift_kg_per_kg": -0.019681885813180724,
+      "bed_temperature_shift_k": 10.538259135976489
+     },
+     {
+      "draw": 13,
+      "feasible": true,
+      "gap_k": 12.565554709423594,
+      "moisture_kg_per_kg": 0.015992904445846758,
+      "moisture_shift_kg_per_kg": -0.01958532998396996,
+      "bed_temperature_shift_k": 10.538692557796026
+     },
+     {
+      "draw": 14,
+      "feasible": true,
+      "gap_k": 12.565291725957891,
+      "moisture_kg_per_kg": 0.015458514136166472,
+      "moisture_shift_kg_per_kg": -0.014177516151367172,
+      "bed_temperature_shift_k": 10.583594424673493
+     },
+     {
+      "draw": 15,
+      "feasible": true,
+      "gap_k": 12.565898930059369,
+      "moisture_kg_per_kg": 0.01669234678904468,
+      "moisture_shift_kg_per_kg": -0.02556858522278487,
+      "bed_temperature_shift_k": 10.489050260295016
+     },
+     {
+      "draw": 16,
+      "feasible": true,
+      "gap_k": 12.565312123611577,
+      "moisture_kg_per_kg": 0.015499963362108344,
+      "moisture_shift_kg_per_kg": -0.019284405407054693,
+      "bed_temperature_shift_k": 10.540987572575773
+     },
+     {
+      "draw": 17,
+      "feasible": true,
+      "gap_k": 12.565057485868863,
+      "moisture_kg_per_kg": 0.01498251768246333,
+      "moisture_shift_kg_per_kg": -0.01946699503391685,
+      "bed_temperature_shift_k": 10.539235781836283
+     },
+     {
+      "draw": 18,
+      "feasible": true,
+      "gap_k": 12.564983034340464,
+      "moisture_kg_per_kg": 0.014831222950542275,
+      "moisture_shift_kg_per_kg": -0.015237709884448156,
+      "bed_temperature_shift_k": 10.574469301035947
+     },
+     {
+      "draw": 19,
+      "feasible": true,
+      "gap_k": 12.56517364918723,
+      "moisture_kg_per_kg": 0.015218573357965462,
+      "moisture_shift_kg_per_kg": -0.024679559896008174,
+      "bed_temperature_shift_k": 10.495826067828489
+     }
+    ]
+   }
+  },
+  {
+   "share": 0.55,
+   "feasible": true,
+   "infeasibility_reasons": [],
+   "moisture_kg_per_kg": 0.013951436529239334,
+   "bed_temperature_celsius": 74.20022364889775,
+   "exhaust_temperature_celsius": 60.324469342840835,
+   "gap_k": 13.875754306056912,
+   "energy_target": 2.2098939900311168,
+   "power_total_kw": 2.2098939900311168,
+   "power_pump_plus_atomiser_share": 0.02587204461619199,
+   "freeboard_water_kg_per_h": 0.5775,
+   "moisture_shift_kg_per_kg": -0.019406983158675378,
+   "bed_temperature_shift_k": 11.65005562408922,
+   "energy_target_shift_relative": -0.03236538804990652,
+   "draws": {
+    "n_feasible": 20,
+    "gap_k": {
+     "min": 13.874275750017262,
+     "median": 13.875741723259406,
+     "max": 13.879979657514134
+    },
+    "moisture_kg_per_kg": {
+     "min": 0.011237584879347905,
+     "median": 0.013928341702686255,
+     "max": 0.021704668627194654
+    },
+    "moisture_shift_kg_per_kg": {
+     "min": -0.032909447719818484,
+     "median": -0.02092525718322194,
+     "max": -0.015121166950890975
+    },
+    "bed_temperature_shift_k": {
+     "min": 11.541077177086123,
+     "median": 11.637449190138085,
+     "max": 11.685448940633165
+    },
+    "per_draw": [
+     {
+      "draw": 0,
+      "feasible": true,
+      "gap_k": 13.87450508518782,
+      "moisture_kg_per_kg": 0.011658550952084873,
+      "moisture_shift_kg_per_kg": -0.017771311461589966,
+      "bed_temperature_shift_k": 11.662591657230195
+     },
+     {
+      "draw": 1,
+      "feasible": true,
+      "gap_k": 13.878088178491026,
+      "moisture_kg_per_kg": 0.01823435317687734,
+      "moisture_shift_kg_per_kg": -0.02061787544100392,
+      "bed_temperature_shift_k": 11.642030815532536
+     },
+     {
+      "draw": 2,
+      "feasible": true,
+      "gap_k": 13.874713632266278,
+      "moisture_kg_per_kg": 0.012041349857756543,
+      "moisture_shift_kg_per_kg": -0.01896868790925917,
+      "bed_temperature_shift_k": 11.652784544056232
+     },
+     {
+      "draw": 3,
+      "feasible": true,
+      "gap_k": 13.879979657514134,
+      "moisture_kg_per_kg": 0.021704668627194654,
+      "moisture_shift_kg_per_kg": -0.032909447719818484,
+      "bed_temperature_shift_k": 11.541077177086123
+     },
+     {
+      "draw": 4,
+      "feasible": true,
+      "gap_k": 13.878576634445992,
+      "moisture_kg_per_kg": 0.019130593339043572,
+      "moisture_shift_kg_per_kg": -0.025329918176787772,
+      "bed_temperature_shift_k": 11.603125826118657
+     },
+     {
+      "draw": 5,
+      "feasible": true,
+      "gap_k": 13.874275750017262,
+      "moisture_kg_per_kg": 0.011237584879347905,
+      "moisture_shift_kg_per_kg": -0.02267734653252754,
+      "bed_temperature_shift_k": 11.621438922486078
+     },
+     {
+      "draw": 6,
+      "feasible": true,
+      "gap_k": 13.875332317229578,
+      "moisture_kg_per_kg": 0.013176929282545491,
+      "moisture_shift_kg_per_kg": -0.015121166950890975,
+      "bed_temperature_shift_k": 11.685448940633165
+     },
+     {
+      "draw": 7,
+      "feasible": true,
+      "gap_k": 13.875241895979926,
+      "moisture_kg_per_kg": 0.013010968081192648,
+      "moisture_shift_kg_per_kg": -0.023638807494069915,
+      "bed_temperature_shift_k": 11.614274391215389
+     },
+     {
+      "draw": 8,
+      "feasible": true,
+      "gap_k": 13.874698245435596,
+      "moisture_kg_per_kg": 0.012013106820379076,
+      "moisture_shift_kg_per_kg": -0.022235827761193875,
+      "bed_temperature_shift_k": 11.625500999281968
+     },
+     {
+      "draw": 9,
+      "feasible": true,
+      "gap_k": 13.876362431606374,
+      "moisture_kg_per_kg": 0.015067514647551657,
+      "moisture_shift_kg_per_kg": -0.01877806013853473,
+      "bed_temperature_shift_k": 11.65584827309928
+     },
+     {
+      "draw": 10,
+      "feasible": true,
+      "gap_k": 13.874946577302275,
+      "moisture_kg_per_kg": 0.012468922685551102,
+      "moisture_shift_kg_per_kg": -0.016771180449355296,
+      "bed_temperature_shift_k": 11.671333295837911
+     },
+     {
+      "draw": 11,
+      "feasible": true,
+      "gap_k": 13.876614982495703,
+      "moisture_kg_per_kg": 0.015530994520834895,
+      "moisture_shift_kg_per_kg": -0.026968045447348613,
+      "bed_temperature_shift_k": 11.587703068631328
+     },
+     {
+      "draw": 12,
+      "feasible": true,
+      "gap_k": 13.876556877525495,
+      "moisture_kg_per_kg": 0.015424361705161819,
+      "moisture_shift_kg_per_kg": -0.02109726936041696,
+      "bed_temperature_shift_k": 11.63666267690374
+     },
+     {
+      "draw": 13,
+      "feasible": true,
+      "gap_k": 13.876099580376142,
+      "moisture_kg_per_kg": 0.01458511877375187,
+      "moisture_shift_kg_per_kg": -0.020993115656064848,
+      "bed_temperature_shift_k": 11.637124126894633
+     },
+     {
+      "draw": 14,
+      "feasible": true,
+      "gap_k": 13.876005205798414,
+      "moisture_kg_per_kg": 0.014411915282291814,
+      "moisture_shift_kg_per_kg": -0.01522411500524183,
+      "bed_temperature_shift_k": 11.685191852246106
+     },
+     {
+      "draw": 15,
+      "feasible": true,
+      "gap_k": 13.876291219005466,
+      "moisture_kg_per_kg": 0.01493682352116076,
+      "moisture_shift_kg_per_kg": -0.02732410849066879,
+      "bed_temperature_shift_k": 11.58444231483358
+     },
+     {
+      "draw": 16,
+      "feasible": true,
+      "gap_k": 13.87585305344161,
+      "moisture_kg_per_kg": 0.014132670002411848,
+      "moisture_shift_kg_per_kg": -0.020651698766751186,
+      "bed_temperature_shift_k": 11.63975407375105
+     },
+     {
+      "draw": 17,
+      "feasible": true,
+      "gap_k": 13.875558527555803,
+      "moisture_kg_per_kg": 0.013592114006001143,
+      "moisture_shift_kg_per_kg": -0.020857398710379036,
+      "bed_temperature_shift_k": 11.637774253381536
+     },
+     {
+      "draw": 18,
+      "feasible": true,
+      "gap_k": 13.875630393077202,
+      "moisture_kg_per_kg": 0.013724013402960662,
+      "moisture_shift_kg_per_kg": -0.01634491943202977,
+      "bed_temperature_shift_k": 11.675502322255937
+     },
+     {
+      "draw": 19,
+      "feasible": true,
+      "gap_k": 13.87554262272409,
+      "moisture_kg_per_kg": 0.01356292272078347,
+      "moisture_shift_kg_per_kg": -0.026335210533190167,
+      "bed_temperature_shift_k": 11.59203242715634
+     }
+    ]
+   }
+  },
+  {
+   "share": 0.6,
+   "feasible": true,
+   "infeasibility_reasons": [],
+   "moisture_kg_per_kg": 0.012713333079489138,
+   "bed_temperature_celsius": 75.30771946015449,
+   "exhaust_temperature_celsius": 60.111060311802525,
+   "gap_k": 15.196659148351962,
+   "energy_target": 2.203155334210556,
+   "power_total_kw": 2.203155334210556,
+   "power_pump_plus_atomiser_share": 0.025946664693892247,
+   "freeboard_water_kg_per_h": 0.6299999999999999,
+   "moisture_shift_kg_per_kg": -0.020645086608425574,
+   "bed_temperature_shift_k": 12.75755143534596,
+   "energy_target_shift_relative": -0.0353160076902187,
+   "draws": {
+    "n_feasible": 20,
+    "gap_k": {
+     "min": 15.194996561228088,
+     "median": 15.196686373937382,
+     "max": 15.200853262076997
+    },
+    "moisture_kg_per_kg": {
+     "min": 0.009934264873357069,
+     "median": 0.012758837676193444,
+     "max": 0.01972198960247242
+    },
+    "moisture_shift_kg_per_kg": {
+     "min": -0.034892126744540716,
+     "median": -0.02224267838545397,
+     "max": -0.016186523106379924
+    },
+    "bed_temperature_shift_k": {
+     "min": 12.642321012530857,
+     "median": 12.744247050329847,
+     "max": 12.794827773104629
+    },
+    "per_draw": [
+     {
+      "draw": 0,
+      "feasible": true,
+      "gap_k": 15.195366791960467,
+      "moisture_kg_per_kg": 0.010553155335224742,
+      "moisture_shift_kg_per_kg": -0.018876707078450097,
+      "bed_temperature_shift_k": 12.77115901662043
+     },
+     {
+      "draw": 1,
+      "feasible": true,
+      "gap_k": 15.199146772162372,
+      "moisture_kg_per_kg": 0.016870661195441464,
+      "moisture_shift_kg_per_kg": -0.0219815674224398,
+      "bed_temperature_shift_k": 12.748610810698011
+     },
+     {
+      "draw": 2,
+      "feasible": true,
+      "gap_k": 15.19555560509935,
+      "moisture_kg_per_kg": 0.010868773556364916,
+      "moisture_shift_kg_per_kg": -0.020141264210650794,
+      "bed_temperature_shift_k": 12.760773218312949
+     },
+     {
+      "draw": 3,
+      "feasible": true,
+      "gap_k": 15.200853262076997,
+      "moisture_kg_per_kg": 0.01972198960247242,
+      "moisture_shift_kg_per_kg": -0.034892126744540716,
+      "bed_temperature_shift_k": 12.642321012530857
+     },
+     {
+      "draw": 4,
+      "feasible": true,
+      "gap_k": 15.199548451584931,
+      "moisture_kg_per_kg": 0.017541857994001674,
+      "moisture_shift_kg_per_kg": -0.02691865352182967,
+      "bed_temperature_shift_k": 12.707748888442865
+     },
+     {
+      "draw": 5,
+      "feasible": true,
+      "gap_k": 15.194996561228088,
+      "moisture_kg_per_kg": 0.009934264873357069,
+      "moisture_shift_kg_per_kg": -0.023980666538518377,
+      "bed_temperature_shift_k": 12.728229231676806
+     },
+     {
+      "draw": 6,
+      "feasible": true,
+      "gap_k": 15.196299121224065,
+      "moisture_kg_per_kg": 0.012111573127056543,
+      "moisture_shift_kg_per_kg": -0.016186523106379924,
+      "bed_temperature_shift_k": 12.794442629169822
+     },
+     {
+      "draw": 7,
+      "feasible": true,
+      "gap_k": 15.195996950738412,
+      "moisture_kg_per_kg": 0.011606500673255263,
+      "moisture_shift_kg_per_kg": -0.0250432749020073,
+      "bed_temperature_shift_k": 12.720249126526681
+     },
+     {
+      "draw": 8,
+      "feasible": true,
+      "gap_k": 15.195449246322859,
+      "moisture_kg_per_kg": 0.010690985945100241,
+      "moisture_shift_kg_per_kg": -0.02355794863647271,
+      "bed_temperature_shift_k": 12.732160481682655
+     },
+     {
+      "draw": 9,
+      "feasible": true,
+      "gap_k": 15.197346139029385,
+      "moisture_kg_per_kg": 0.013861532708043982,
+      "moisture_shift_kg_per_kg": -0.019984042078042406,
+      "bed_temperature_shift_k": 12.763681327621583
+     },
+     {
+      "draw": 10,
+      "feasible": true,
+      "gap_k": 15.195851118832145,
+      "moisture_kg_per_kg": 0.011362740134803092,
+      "moisture_shift_kg_per_kg": -0.017877363000103307,
+      "bed_temperature_shift_k": 12.779931446612949
+     },
+     {
+      "draw": 11,
+      "feasible": true,
+      "gap_k": 15.197397273241748,
+      "moisture_kg_per_kg": 0.013946992723028032,
+      "moisture_shift_kg_per_kg": -0.028552047245155476,
+      "bed_temperature_shift_k": 12.69220077912351
+     },
+     {
+      "draw": 12,
+      "feasible": true,
+      "gap_k": 15.197480935130159,
+      "moisture_kg_per_kg": 0.014086814974133196,
+      "moisture_shift_kg_per_kg": -0.022434816091445584,
+      "bed_temperature_shift_k": 12.743344020340857
+     },
+     {
+      "draw": 13,
+      "feasible": true,
+      "gap_k": 15.196984826928507,
+      "moisture_kg_per_kg": 0.013257664202509602,
+      "moisture_shift_kg_per_kg": -0.022320570227307115,
+      "bed_temperature_shift_k": 12.7438560117902
+     },
+     {
+      "draw": 14,
+      "feasible": true,
+      "gap_k": 15.19707740645591,
+      "moisture_kg_per_kg": 0.013412396273072986,
+      "moisture_shift_kg_per_kg": -0.016223634014460656,
+      "bed_temperature_shift_k": 12.794827773104629
+     },
+     {
+      "draw": 15,
+      "feasible": true,
+      "gap_k": 15.197011718613851,
+      "moisture_kg_per_kg": 0.013302609552677718,
+      "moisture_shift_kg_per_kg": -0.028958322459151836,
+      "bed_temperature_shift_k": 12.68846650596899
+     },
+     {
+      "draw": 16,
+      "feasible": true,
+      "gap_k": 15.196738364920343,
+      "moisture_kg_per_kg": 0.012845735233255523,
+      "moisture_shift_kg_per_kg": -0.021938633535907512,
+      "bed_temperature_shift_k": 12.746824705933903
+     },
+     {
+      "draw": 17,
+      "feasible": true,
+      "gap_k": 15.196402715748349,
+      "moisture_kg_per_kg": 0.012284726172779353,
+      "moisture_shift_kg_per_kg": -0.022164786543600826,
+      "bed_temperature_shift_k": 12.744638088869493
+     },
+     {
+      "draw": 18,
+      "feasible": true,
+      "gap_k": 15.196634382954421,
+      "moisture_kg_per_kg": 0.012671940119131364,
+      "moisture_shift_kg_per_kg": -0.017396992715859066,
+      "bed_temperature_shift_k": 12.784639473298256
+     },
+     {
+      "draw": 19,
+      "feasible": true,
+      "gap_k": 15.19624935007456,
+      "moisture_kg_per_kg": 0.012028382554172006,
+      "moisture_shift_kg_per_kg": -0.027869750699801632,
+      "bed_temperature_shift_k": 12.696877831977389
+     }
+    ]
+   }
+  }
+ ],
+ "runtime_s": 137.6079113483429
+}

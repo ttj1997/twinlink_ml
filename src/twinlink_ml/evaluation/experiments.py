@@ -352,8 +352,14 @@ def generate_data(
     *,
     master_seed: int | None = None,
     seeds: SeedBundle | None = None,
+    simulator_factory: Callable[[ProcessConfig], GreyBoxFluidBedGranulator] | None = None,
 ) -> GeneratedData:
     """Build the excitation, simulate, form the split.
+
+    ``simulator_factory`` (default: ``GreyBoxFluidBedGranulator``) builds the simulator of the
+    rollout from the config with the sample time of ``spec``; the excitation design always reads
+    the config. Used for a truth that deviates structurally from the grey-box model
+    (:mod:`twinlink_ml.hybrid_structural`); without it nothing changes.
 
     The initial states come from the excitation design and are translated into the state
     space via ``state_from_physical`` -- the design does not need to know the state
@@ -378,7 +384,11 @@ def generate_data(
             process_config,
             numerics=dataclasses.replace(process_config.numerics, sample_time_s=spec.sample_time_s),
         )
-        simulator = GreyBoxFluidBedGranulator(config)
+        simulator = (
+            GreyBoxFluidBedGranulator(config)
+            if simulator_factory is None
+            else simulator_factory(config)
+        )
 
     design = MixedExcitationDesign(
         ExcitationConfig(
