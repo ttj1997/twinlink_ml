@@ -34,7 +34,7 @@ structure:                     # the structural deviation of the truth (src/twin
   fraction_candidates: [0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60]
   target_bias_kg_per_kg: -0.05
   accepted_bias_kg_per_kg: [-0.07, -0.03]
-  fraction: null               # set by the rule above after the probe (artifacts/runs/hybrid_structural_2_strength_v1.json)
+  fraction: 0.35               # selected by the rule above: median bias -0.0523 kg/kg (artifacts/runs/hybrid_structural_2_strength_v1.json)
 
 data:                          # Befund 94 pipeline, arm N (preset version 2), run-level splits
   master_seeds: [1, 2, 3, 4, 5]
