@@ -209,3 +209,48 @@ The request ruled out questions; where it left room, the most conservative readi
    no other suite or run was active). Later commits before the main run add documentation only.
 9. **Post hoc part** in the same analysis artifact under its own key, labelled, never merged with
    the verdict of this study.
+
+## 9. Dry run, projection and cut decision
+
+**Dry run** (`C:/twinlink_work/hybs2_dry_chain.sh dry1`, commit 82c4863, clean tree, 8 workers,
+2026-11-16 11:20-14:43, outputs gitignored `_hybs2_dry1_*`), all units of every stage:
+
+| stage | units | errors | wall time | peak commit per worker |
+|---|---|---|---|---|
+| training (`--dry-run`) | 900 of 900 | 0 | 4111 s | 755 MB |
+| oracle and discretisation check (full) | 30 of 30 | 0 | 1737 s | 445 MB |
+| margins, minimal mode, `n_train` 8 and 16 | 2000 of 2000, 50 of 50 cells, none blocked | 0 | 1345 s | 499 MB |
+| margins, minimal mode, `n_train` 4 added with `--resume` | 1000 of 1000, 75 of 75 cells, none blocked | 0 | 704 s | 499 MB |
+| memory probe of the margins (coarse grid, seed 1, `n_train` 16, draws 0-7, five models) | 80 of 80 | 0 | 932 s | 1247 MB |
+| errors (full) | 100 of 100 | 0 | 3333 s | 904 MB |
+| analysis (incl. the post hoc part on the artifact of Befund 124) | written | 0 | 15 s | -- |
+
+Memory: 8 workers x 1247 MB = 10.0 GB, 31 % of the 31.9 GB RAM (limit 80 %). The tree was clean
+after the chain. The margins and energies of the dry run come from the minimal mode and are not
+results; they were not read. Two structural observations from the dry-run analysis: the five cells
+of seed 5 at `n_train` 4 have 17 inside cases (fewer than 20, not determinable; all other 70 cells
+have at least 20), so every test at `n_train` 4 has at most 4 pairs; the discretisation check of
+the oracle (grid + zoom against 8-start Nelder-Mead, 10 cases) shows up to 0.39 % energy
+difference, above the 0.2 % threshold, so this error stands next to every energy figure.
+
+**Projection** = stage times of the main run of Befund 124 (docs/41, section 10) x the ratio of
+the dry-run times here to the dry-run times there (the truth with recirculation is slower):
+
+| stage | Befund 124 main run | ratio dry here / dry there | projection |
+|---|---|---|---|
+| training | 24325 s | 4111 / 3826 = 1.07 | 26137 s |
+| oracle | 446 s | (dry run is the full stage) | 1737 s |
+| errors | 2280 s | (dry run is the full stage) | 3333 s |
+| margins `n_train` 8, 16 | 40437 s | 2049 / 1219 = 1.68 (minimal mode); 932 / 881 = 1.06 (memory probe) | 67975 s; 42782 s |
+| margins `n_train` 4 | 16454 s | as above | 27659 s; 17408 s |
+| sum | | | 35.2 h with the larger ratio; 25.4 h with the smaller |
+
+With a start at about 15:15 on Monday 2026-11-16 the main run ends between Tuesday about 16:40
+and Wednesday about 02:30, before Wednesday 07:00 in both cases.
+
+**Cut decision (before the main run): no cut from the start**; all five models and `n_train` 4, 8
+and 16 run. Guard as in Befund 124: the margins run `n_train` 8 and 16 first; `n_train` 4 is added
+only if that part starts before the gate **Tuesday 2026-11-17 20:00 (+01:00)** (07:00 minus the
+7.7 h of the larger projection for that part minus 3 h for analysis, full suite and documents). If
+the gate is missed, `n_train` 4 is dropped from the margins (budget rule, first cut); M0 is not
+cut after the start.
