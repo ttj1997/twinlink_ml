@@ -194,21 +194,23 @@ def test_drivers_take_the_config_and_refuse_a_second_set_up(
 # --- rule of the strength -----------------------------------------------------------------------
 
 
-def test_strength_rule_takes_the_median_closest_to_the_target_among_complete_candidates() -> None:
+def test_strength_rule_takes_the_median_of_the_steady_cases_closest_to_the_target() -> None:
     probe = _script("probe_hybrid_structural_2_strength")
 
     def row(fraction: float, median: float, missing: int = 0) -> dict[str, Any]:
         return {"fraction": fraction, "bias": {"median": median, "n_without_steady_truth": missing}}
 
     rows = [row(0.2, -0.01), row(0.3, -0.04), row(0.4, -0.055), row(0.5, -0.051, missing=2)]
-    assert probe.select(rows, -0.05)["fraction"] == 0.4  # 0.5 is closer but incomplete
+    # points without a steady truth are counted and reported, they do not exclude a candidate
+    assert probe.select(rows, -0.05)["fraction"] == 0.5
     tie = [row(0.3, -0.03125), row(0.4, -0.09375)]  # binary fractions: an exact tie
     assert probe.select(tie, -0.0625)["fraction"] == 0.3  # tie: the smaller fraction
     with pytest.raises(SystemExit):
-        probe.select([row(0.5, -0.05, missing=1)], -0.05)
+        probe.select([row(0.5, float("nan"), missing=100)], -0.05)
     s = probe.summary(np.array([-0.03, -0.05, np.nan, -0.07]))
     assert s["median"] == pytest.approx(-0.05) and s["n_without_steady_truth"] == 1
     assert s["n_cases"] == 4 and s["min"] == pytest.approx(-0.07)
+    assert s["median_missing_as_wettest"] == pytest.approx(-0.06)  # nan counted as the wettest
 
 
 # --- cost measure -------------------------------------------------------------------------------

@@ -23,11 +23,14 @@ structure:                     # the structural deviation of the truth (src/twin
   # Rule fixed BEFORE the fraction was computed (scripts/probe_hybrid_structural_2_strength.py).
   # Quantity: M0 (prior knowledge, margin 0) is optimised at each of the 100 interior cases (5 per
   # draw, 20 draws); at ITS operating point the bias = M0's predicted moisture minus the moisture
-  # of the truth (draw parameters + recirculation). Statistic: the median over the 100 cases.
-  # Among the candidates at which the truth has a steady state at every one of the 100 points, the
-  # fraction whose median bias is closest to the target, the middle of the band the request sets
-  # (M0 UNDERestimates the moisture by 0.03-0.07 kg/kg; mirror image of the +0.070 of Befund 124);
-  # ties: the smaller fraction. Only the moisture of M0 against the truth is looked at.
+  # of the truth (draw parameters + recirculation). Statistic: the median over the cases at which
+  # the truth has a steady state (the convention of the +0.070 of Befund 124). Among the
+  # candidates, the fraction whose median bias is closest to the target, the middle of the band
+  # the request sets (M0 UNDERestimates the moisture by 0.03-0.07 kg/kg; mirror image of Befund
+  # 124); ties: the smaller fraction. Only the moisture of M0 against the truth is looked at.
+  # AMENDED after a first probe run that wrote no artifact: the rule first committed (cb10bfd)
+  # admitted only candidates with a steady truth at all 100 points, which no candidate meets (nor
+  # the truth without the term, 4 points); see the docstring of the probe script.
   fraction_candidates: [0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60]
   target_bias_kg_per_kg: -0.05
   accepted_bias_kg_per_kg: [-0.07, -0.03]

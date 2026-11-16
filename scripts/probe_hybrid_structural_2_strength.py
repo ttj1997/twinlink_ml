@@ -17,10 +17,21 @@ Rule (committed in the config before this script ran)
   operating points are computed once.
 * Bias of a case = M0's predicted moisture at that point minus the moisture of the truth of the
   case's draw (draw parameters + recirculation at the candidate fraction) at the same point.
-* Among ``structure.fraction_candidates`` at which the truth has a steady state at every one of
-  the 100 points, the fraction whose MEDIAN bias over the 100 cases is closest to
-  ``structure.target_bias_kg_per_kg`` (-0.05, the middle of the band); ties: the smaller fraction.
-  The script fails if the selected median lies outside ``structure.accepted_bias_kg_per_kg``.
+* Among ``structure.fraction_candidates`` the fraction whose MEDIAN bias over the cases at which
+  the truth has a steady state is closest to ``structure.target_bias_kg_per_kg`` (-0.05, the
+  middle of the band); ties: the smaller fraction. The script fails if the selected median lies
+  outside ``structure.accepted_bias_kg_per_kg``.
+
+Amendment of the rule (cb10bfd -> this commit, AFTER a first run that wrote no artifact): the
+rule as first committed admitted only candidates at which the truth has a steady state at every
+one of the 100 points. No candidate meets that, and neither does the truth without the term (4 of
+the 100 points: at the lower end of the gas velocity the water balance of some draws has no
+steady state). The first run therefore stopped without a selection, after printing the medians of
+the candidates. The condition is dropped; the statistic is the median over the cases with a
+steady truth, which is how the +0.070 of Befund 124 was computed (median of the defined biases).
+A point without a steady truth lies on the wet side (the bed cannot evaporate the sprayed water);
+the artifact also reports the median with these points counted as the wettest
+(``median_missing_as_wettest``), without any rule.
 
 Only the moisture of M0 against the truth is computed and written: no energy of the truth, no
 oracle, no margin. Reported next to the choice, without any rule: per candidate the range and the
@@ -119,10 +130,12 @@ def truth_moisture(setup: Any, config: Any, draw: int, actions: np.ndarray) -> n
 def summary(bias: np.ndarray) -> dict[str, Any]:
     finite = bias[np.isfinite(bias)]
     q = np.quantile(finite, [0.0, 0.25, 0.5, 0.75, 1.0]) if finite.size else [np.nan] * 5
+    wettest = np.where(np.isfinite(bias), bias, -np.inf)  # no steady truth: wetter than any
     return {
         "n_cases": int(bias.size),
         "n_without_steady_truth": int(bias.size - finite.size),
         "median": float(q[2]),
+        "median_missing_as_wettest": float(np.median(wettest)) if bias.size else float("nan"),
         "min": float(q[0]),
         "q25": float(q[1]),
         "q75": float(q[3]),
@@ -146,9 +159,9 @@ def nominal_point(config: Any) -> dict[str, Any]:
 
 def select(rows: list[dict[str, Any]], target: float) -> dict[str, Any]:
     """The rule of the module docstring on the candidate rows."""
-    eligible = [r for r in rows if r["bias"]["n_without_steady_truth"] == 0]
+    eligible = [r for r in rows if np.isfinite(r["bias"]["median"])]
     if not eligible:
-        raise SystemExit("no candidate with a steady truth at every point")
+        raise SystemExit("no candidate with a steady truth at any point")
     return min(eligible, key=lambda r: (abs(r["bias"]["median"] - target), r["fraction"]))
 
 
@@ -184,7 +197,9 @@ def main() -> int:
             actions, predicted = points[d]
             b = predicted - truth_moisture(setup, truth_of(d), d, actions)
             values.append(b)
-            per_draw.append({"draw": d, "bias_kg_per_kg": b.tolist()})
+            per_draw.append(  # None: the truth has no steady state at that point
+                {"draw": d, "bias_kg_per_kg": [float(v) if np.isfinite(v) else None for v in b]}
+            )
         return np.concatenate(values), per_draw
 
     without, without_per_draw = bias_of(setup.steady_truth)
