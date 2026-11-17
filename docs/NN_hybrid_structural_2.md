@@ -254,3 +254,183 @@ only if that part starts before the gate **Tuesday 2026-11-17 20:00 (+01:00)** (
 7.7 h of the larger projection for that part minus 3 h for analysis, full suite and documents). If
 the gate is missed, `n_train` 4 is dropped from the margins (budget rule, first cut); M0 is not
 cut after the start.
+
+## 10. Main run
+
+Started detached (`Win32_Process.Create`) on 2026-11-16 14:48:00 on 587970c (code as 079508f, on
+which the full suite ran; the later commits add documentation only), clean tree at the start of
+every stage except the second part of the margins, which resumes into the not yet committed
+output of the first part (the chain commits the margins once, after both parts; as Befund 124).
+Ended 2026-11-17 19:33:16: 28.8 h, inside the projection of section 9 (25.4-35.2 h) and before
+Wednesday 07:00. No stage needed a second run, no unit failed, nothing was cut: the gate was
+passed on 2026-11-17 14:07 and `n_train` 4 was added to the margins.
+
+A first start at 14:45:32 on the same commit ended within about a minute, before any unit had
+finished and before anything was written: the project lead closed the two console windows of the
+chain and of the watcher, not knowing what they were. The chain log keeps the two lines of that
+start. The start at 14:48 is the main run.
+
+| stage | artifact (commit) | units, wall time, memory peak per worker |
+|---|---|---|
+| training | `hybrid_structural_2_training_v1.jsonl.gz` (748a479) | 900 of 900 units, 0 errors, 26171 s, 787 MB |
+| oracle | `hybrid_structural_2_v1_oracle.jsonl.gz` (f24fbb8) | 30 of 30 tasks, 0 errors, 1632 s, 447 MB |
+| errors | `hybrid_structural_2_v1_errors.jsonl.gz` (90f08f1) | 100 of 100 tasks, 0 errors, 3279 s, 919 MB |
+| margins | `hybrid_structural_2_v1_margins_per_draw.jsonl.gz` (7ffbd8e) | 2000 tasks (`n_train` 8, 16; 52660 s) + 1000 tasks (`n_train` 4; 19417 s), 0 errors, 75 of 75 cells, none blocked, 1318 MB |
+| analysis | `hybrid_structural_2_v1_analysis.json` (754f0d5) | reads the four artifacts above and, for the post hoc part, `hybrid_structural_v1_margins_per_draw.jsonl.gz` of Befund 124 |
+
+Watcher: status blocks every 6 h in `C:/twinlink_runs/hybrid-structural-2/status.log`; checkpoints
+in `C:/twinlink_runs/hybrid-structural-2/checkpoints/`.
+
+## 11. Results
+
+All figures from `hybrid_structural_2_v1_analysis.json`. Test cases: the interior and
+extrapolation cases of section 4; "inside" = inside the training range of the cell. Energy = energy
+of the truth at the operating point of the model relative to the oracle, median over the inside
+cases. The discretisation error of the oracle (grid + zoom against 8-start Nelder-Mead, 10 cases)
+is up to 0.39 % in energy (0.00023 kg/kg in slack); it stands next to every energy figure below.
+
+### 11.1 Pre-registered reading: E3 (nothing resolved)
+
+**Verdict E3.** None of the twelve tests is resolved; E0, E1 and E2 are not met. The reason is not
+small differences but missing pairs: **eleven of the twelve tests have fewer than 4 pairs of
+admissible cells and cannot be resolved** by the sign rule (4 of 5); the one resolvable test, M1
+against M2b at `n_train` 16 (4 pairs), is not resolved (M1 higher by 0.207 on average, threshold
+0.348, Holm 0.309, signs 3 of 4).
+
+| family | `n_train` | pairs (seeds) | mean difference reference - candidate | resolution threshold | p (Holm) | signs + / - | resolved |
+|---|---|---|---|---|---|---|---|
+| M3 vs M2b | 4 | 2 (1, 4) | -0.1803 | 0.1082 | 0.0901 | 0 / 2 | no (not resolvable) |
+| M3 vs M2b | 8 | 2 (3, 5) | -0.0594 | 0.8200 | 0.7945 | 1 / 1 | no (not resolvable) |
+| M3 vs M2b | 16 | 2 (2, 5) | -0.2240 | 2.0495 | 0.7945 | 0 / 2 | no (not resolvable) |
+| M3 vs M2 | 4 | 2 (1, 4) | -0.1778 | 0.0951 | 0.0803 | 0 / 2 | no (not resolvable) |
+| M3 vs M2 | 8 | 2 (3, 5) | -0.0611 | 0.8011 | 0.8018 | 1 / 1 | no (not resolvable) |
+| M3 vs M2 | 16 | 2 (2, 5) | -0.2231 | 2.0655 | 0.8018 | 0 / 2 | no (not resolvable) |
+| M1 vs M2b | 4 | 0 | -- | -- | -- | -- | no (not resolvable) |
+| M1 vs M2b | 8 | 2 (3, 5) | -0.0022 | 0.7277 | 0.9755 | 1 / 1 | no (not resolvable) |
+| M1 vs M2b | 16 | 4 (2, 3, 4, 5) | -0.2071 | 0.3479 | 0.3090 | 1 / 3 | no |
+| M1 vs M3 | 4 | 0 | -- | -- | -- | -- | no (not resolvable) |
+| M1 vs M3 | 8 | 2 (3, 5) | +0.0572 | 0.0923 | 0.1609 | 2 / 0 | no (not resolvable) |
+| M1 vs M3 | 16 | 2 (2, 5) | +0.0662 | 0.1122 | 0.1609 | 2 / 0 | no (not resolvable) |
+
+A negative difference means the candidate (first model) uses more energy than the reference.
+
+### 11.2 Admissibility (counted as pre-registered, no substitute value)
+
+Of 5 cells (seeds) per model and `n_train`: admissible / margin not reached within the upper end
+0.12 / not determinable (fewer than 20 inside cases; seed 5 at `n_train` 4).
+
+| model | `n_train` 4 | `n_train` 8 | `n_train` 16 | admissible of 15 |
+|---|---|---|---|---|
+| M0 | 3 / 1 / 1 | 3 / 2 / 0 | 5 / 0 / 0 | 11 |
+| M1 | 0 / 4 / 1 | 2 / 3 / 0 | 4 / 1 / 0 | 6 |
+| M2 | 3 / 1 / 1 | 5 / 0 / 0 | 5 / 0 / 0 | 13 |
+| M2b | 3 / 1 / 1 | 5 / 0 / 0 | 5 / 0 / 0 | 13 |
+| M3 | 2 / 2 / 1 | 2 / 3 / 0 | 2 / 3 / 0 | 6 |
+
+The two calibrations are admissible in every determinable cell but one; the hybrid and the GRU
+fail to hold the limit in >= 95 % of the inside cases within the largest allowed margin in 8 of
+their 14 determinable cells each, M0 in 3 of 14.
+
+### 11.3 Energy at the held limit and margins (admissible cells only)
+
+Energy relative to the oracle: median over the admissible seeds (minimum-maximum; number of
+seeds).
+
+| model | `n_train` 4 | `n_train` 8 | `n_train` 16 |
+|---|---|---|---|
+| M0 | 1.421 (1.354-1.430; 3) | 1.385 (1.115-1.431; 3) | 1.385 (1.111-1.427; 5) |
+| M1 | -- (0) | 1.197 (1.071-1.323; 2) | 1.368 (1.075-1.463; 4) |
+| M2 | 1.017 (1.015-1.368; 3) | 1.016 (1.011-1.403; 5) | 1.014 (1.012-1.407; 5) |
+| M2b | 1.015 (1.012-1.375; 3) | 1.016 (1.012-1.405; 5) | 1.014 (1.012-1.405; 5) |
+| M3 | 1.194 (1.187-1.201; 2) | 1.254 (1.136-1.373; 2) | 1.434 (1.400-1.468; 2) |
+
+Margin in kg/kg: median over the admissible seeds (minimum-maximum).
+
+| model | `n_train` 4 | `n_train` 8 | `n_train` 16 |
+|---|---|---|---|
+| M0 | 0.1186 (0.1127-0.1186) | 0.1127 (0.0700-0.1186) | 0.1148 (0.0700-0.1186) |
+| M1 | -- | 0.0903 (0.0736-0.1070) | 0.1100 (0.0521-0.1187) |
+| M2 | 0.0135 (0.0043-0.1077) | 0.0145 (0.0074-0.1106) | 0.0112 (0.0097-0.1100) |
+| M2b | 0.0128 (0.0064-0.1090) | 0.0145 (0.0083-0.1107) | 0.0124 (0.0106-0.1104) |
+| M3 | 0.0713 (0.0608-0.0818) | 0.0881 (0.0663-0.1099) | 0.1127 (0.1097-0.1157) |
+
+The calibrations are bimodal over the seeds: most cells hold the limit with a margin of about
+0.01 kg/kg at 1.1-1.7 % energy above the oracle, single cells (M2 and M2b: seed 3 at `n_train` 4,
+seeds 2 and 3 at `n_train` 8, seed 5 at `n_train` 16) need about 0.11 kg/kg and 37-41 % more
+energy. These comparisons are descriptive; none is resolved (section 11.1).
+
+### 11.4 Descriptive, without a reading
+
+**Violation share at margin 0** (inside cases of the determinable cells, pooled over seeds;
+`n_train` 4 / 8 / 16): M0 95.3 / 96.2 / 96.6 %, M1 79.1 / 91.1 / 94.3 %, M2 67.4 / 82.3 / 89.1 %,
+M2b 72.9 / 86.5 / 86.6 %, M3 59.7 / 73.8 / 66.0 %. The expectation of the project lead (M0 and M3
+above 5 %) holds; without a margin every model violates the limit in the majority of the cases.
+
+**Violation rates outside the training range** at the determined margin ("holds outside" = at
+most 5 % violations; (a) extrapolation contexts, 200 cases; (b) interior cases outside the
+coverage of the cell). (a), `n_train` 4 / 8 / 16: M0 7.5 / 7.5 / 7.5 %, M1 20.0 / 9.0 / 7.5 %,
+M2 9.5 / 9.0 / 8.5 %, M2b 10.0 / 10.0 / 9.0 %, M3 8.0 / 8.5 / 12.0 %. (b): M0 5.4 / 4.2 / 6.0 %,
+M1 13.6 / 6.5 / 6.0 %, M2 7.1 / 7.6 / 9.3 %, M2b 7.9 / 8.7 / 9.3 %, M3 5.4 / 6.1 / 10.7 %. The
+margin holds outside only for M0 in (b) at `n_train` 8.
+
+**Rollout error of the product moisture** (36 steps, RMSE in kg/kg, median over the 100 units;
+excited test set / constant-run holdout): M0 0.0362 / 0.0528 (bias -0.0157 / -0.0260); M1 0.0377 /
+0.0490, 0.0279 / 0.0383, 0.0107 / 0.0220 at `n_train` 4, 8, 16; M2 0.0380 / 0.0676, 0.0400 /
+0.0679, 0.0031 / 0.0045; M2b 0.0381 / 0.0678, 0.0401 / 0.0681, 0.0027 / 0.0045; M3 0.0054 /
+0.0064, 0.0046 / 0.0049, 0.0038 / 0.0044. The hybrid has the smallest rollout error at
+`n_train` 4 and 8 and is admissible least often: the rollout error on the test sets does not order
+the models as the held limit at their own optimised operating point does.
+
+**M2 refits at parameter bounds:** 56 / 58 / 29 of 100 refits at `n_train` 4 / 8 / 16 end at a
+bound of at least one parameter (critical moisture lower 4 / 7 / 10, upper 17 / 17 / 6; `nu_max`
+upper 35 / 34 / 13); none at a bound of both.
+
+## 12. Post hoc (not pre-registered for that data): the same measure on Befund 124
+
+Key `post_hoc_befund_124` of the analysis artifact: the cost measure, statistics and criteria of
+section 5 applied to the existing margins artifact of Befund 124 (structural error to the SAFE
+side); nothing was run anew. This part is not a verdict of this study and does not change the
+reading "mixed" of Befund 124, which was pre-registered on the margin.
+
+Read by the criteria of this study, that artifact gives **E0**: M2b has a resolved lower energy
+than M3 at `n_train` 16 (difference 0.0945, threshold 0.0411, Holm 0.0093, 5 of 5 seeds) and M3 is
+nowhere resolved lower. Also resolved at `n_train` 16: M2 lower than M3 (0.0850, threshold 0.0485,
+Holm 0.0247, 5 of 5) and M1 lower than M3 (0.0929, threshold 0.0637, Holm 0.0465, 5 of 5); M1
+against M2b is not resolved (0.0016, threshold 0.0283). The four tests at `n_train` 4 have fewer
+than 4 pairs. Admissibility there: every determinable cell except M3 at `n_train` 4, seed 1.
+Energy relative to the oracle (median, `n_train` 4 / 8 / 16): M0 1.311 / 1.307 / 1.295, M1 1.164 /
+1.090 / 1.082, M2 1.118 / 1.091 / 1.091, M2b 1.076 / 1.076 / 1.081, M3 1.178 / 1.153 / 1.162.
+
+Both directions side by side (the second post hoc): with the error to the unsafe side nothing is
+resolved because the learned models are mostly not admissible; with the error to the safe side
+the calibration with bias is resolved cheaper than the hybrid at `n_train` 16. "First choice in
+both directions" (E0) is therefore met post hoc for the safe side and NOT established for the
+unsafe side.
+
+## 13. Caveats
+
+- The verdict E3 rests on missing pairs, not on small differences. The pre-registered rule
+  excludes not admissible cells without a substitute value, so the statistics cannot express
+  that a model fails to hold the limit; the admissibility counts of section 11.2 carry that
+  information and have no pre-registered test.
+- The upper end of the margin (0.12 kg/kg at a limit of 0.15) is a setting of Befund 122; "not
+  reached" refers to it.
+- Energies of cells that need about 0.11 kg/kg lie 37-47 % above the oracle; at such margins the
+  comparison measures the cost of retreating from the limit, not model accuracy.
+- Discretisation error of the oracle up to 0.39 % energy, above the 0.2 % reporting threshold;
+  the differences among the calibrations at small margins (1.1-1.7 %) are of that order.
+- `n_train` 4: seed 5 is not determinable (17 inside cases); at most 4 pairs.
+- One structural term (exhaust recirculation, fraction 0.35), one strength; the rule for the
+  strength was amended once after medians were visible (section 2). Bed-exhaust gap 0 K by
+  construction; the heater power of the truth is lower than the prior computes.
+- Why M3 and M1 fail to hold the limit although their rollout errors are small was not
+  investigated; no cause is claimed.
+- Limit moisture and kinetics are placeholders; all data synthetic; no statement about a plant.
+
+## 14. Open
+
+- Cause of the missing admissibility of M3 and M1 (operating points the optimiser picks against
+  the cases of the test sets; seeds that need about 0.11 kg/kg also for the calibrations).
+- A pre-registered test on admissibility itself (share of cells that hold the limit), which the
+  reading of this study lacks.
+- Number of the finding and of this document: assigned by the managing session at the merge.
