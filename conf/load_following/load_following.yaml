@@ -1,0 +1,72 @@
+# Load-following study (docs/NN_load_following.md): throughput as a manipulated variable
+#
+# STATUS: placeholder -- every number below is a study setting or a placeholder, none is a
+# measured plant value. Line, control grid, moisture limit, margins search settings and the
+# ambient day profiles are those of the dynamic headroom study (Befund 105) and are READ from
+# its config, not repeated here; the price file, the tariff adder and the month split are those
+# of the price study (Befund 115) and are read from its config.
+
+version: 1
+headroom_config: conf/headroom/dynamic_headroom.yaml
+prices_config: conf/storage_price/storage_price.yaml
+
+throughput:
+  # Decision of the project lead (2026-11-17, item 2): main variant +-20 % around the nominal
+  # spray rate, cut with the admissible range of stage 0; the reading applies only here. The
+  # sensitivity "box" uses the whole admissible part of the ActionBound box (0.4-3.0 kg/h).
+  main_relative_band: 0.20
+  # Stage 0: grid of the spray rate over the ActionBound box and the bound at which a steady
+  # optimum has to exist at every weather grid point for a rate to count as admissible
+  # (limit - this margin; covers controller margins up to this value; placeholder).
+  stage0_step_kg_per_h: 0.05
+  stage0_feasibility_margin_kg_per_kg: 0.02
+  # Levels of the schedule C2 (and of the tuning of C1) across the band.
+  schedule_levels: 41
+
+day:
+  hours: 24
+  # Decision of the project lead (item 10): every day gets a tail of 1 h at the nominal
+  # throughput with the set points of C0; its cost counts for every controller and the moisture
+  # limit holds there too.
+  tail_hours: 1
+
+tariff:
+  # Tariff = day-ahead price + adder (prices_config). A floor keeps the tariff positive: with a
+  # negative tariff a dynamic programme is paid for wasting energy, which no steady-state
+  # controller would do (decision without asking, docs/NN section 13). Placeholder.
+  floor_eur_per_kwh: 0.01
+
+gas:
+  # Variant G (gas-fired heater): fuel price without CO2 and CO2 price of the Economics of
+  # Befund 101 (docs/32 section 2); emission factor = repository factor; heater efficiency =
+  # control.gas_heater_efficiency of the headroom config.
+  fuel_eur_per_kwh: 0.040
+  co2_eur_per_t: 55.0
+
+days:
+  seed: 20261117
+  # Stratified days: per month the days are sorted by their price spread (max - min of the
+  # tariff) into terciles (low, middle, high); this many days are drawn per tercile.
+  test_per_month_by_tercile: [3, 4, 3]        # 10 per test month, 40 days
+  training_per_month_by_tercile: [2, 1, 2]    # 5 per training month, 40 days (tuning of C1)
+
+rule:
+  # C1: grid of the quantile q and of the level spread (fraction of the band width).
+  quantile_grid: [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65,
+                  0.70, 0.75, 0.80, 0.85, 0.90, 0.95]
+  spread_grid_fraction_of_band: [0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1.0]
+
+mpc:
+  # C3: the day-horizon programme is re-solved at this interval; in between the set points come
+  # from the 2 h MPC of Befund 105 (R3) with the planned spray rate as a known input.
+  resolve_interval_h: 1
+
+margins:
+  critical_days: 8          # days with the largest C2 violation at margin 0 seed the subset
+  maximum_kg_per_kg: 0.12   # as the headroom driver
+
+weekly:
+  weeks_per_test_month: 4   # descriptive weekly target, C2 on the steady-state map only
+
+budget:
+  wall_clock_h: 30.0        # decision of the project lead (item 7)

@@ -1,10 +1,10 @@
 # NN -- Throughput as a manipulated variable: load following of the granulator under a time-varying price
 
-Status: **DRAFT for review by the project lead (2026-11-17). Nothing is committed, built or run.**
-Every threshold, band and budget below is a proposal; section 10 lists the decisions that have to be
-taken before the pre-registration is committed. Document number and finding number are open (the
-managing session assigns them at merge). Proposed branch `load-following`. **Scenario on
-placeholders, not a plant statement.**
+Status: **design fixed and committed before stage 0, the dry run and the main run** (sections 1-13;
+decisions of the project lead of 2026-11-17 in section 10). Runs and results follow in sections 14
+onwards, added after the runs (numbers only from the artifacts named there). Document number and
+finding number are open (the managing session assigns them at merge). Branch `load-following`
+(worktree, from `origin/master` ba02e0e). **Scenario on placeholders, not a plant statement.**
 
 ## 1. Why this study
 
@@ -33,8 +33,10 @@ or does it take a dynamic optimisation (MPC), and is an RL-against-MPC study jus
 ## 3. Line, truth model, placeholders
 
 Truth = the grey-box model (`GreyBoxFluidBedGranulator`, continuous mode, RK4, sample time 5 s),
-unchanged; no surrogate. Process config and line settings as in the headroom study
-(`conf/headroom/dynamic_headroom.yaml`), so that Befund 105 is the reference at fixed throughput:
+unchanged; no surrogate. Line settings, control grid, margin search and ambient profiles are READ
+from the headroom config (`conf/headroom/dynamic_headroom.yaml`, unchanged; a test compares its
+fingerprint with the artifact of Befund 105), so that Befund 105 is the reference at fixed
+throughput:
 
 * quality limit of the product moisture 0.15 kg/kg (placeholder) as a path condition at every truth
   sample, tolerance 1e-4 kg/kg; bed temperature <= 80 degC (placeholder) hard for the optimisers;
@@ -44,104 +46,124 @@ unchanged; no surrogate. Process config and line settings as in the headroom stu
 * rate limits of `ActionBound.max_rate_per_s`: 0.5 K/s inlet temperature, 0.05 m/s per s gas
   velocity, **0.02 (kg/h)/s spray rate**;
 * **new: the spray rate is a command**, box 0.4-3.0 kg/h (`ActionBound`, placeholder; the
-  laboratory range in `docs/02_prozess_setup.md` is 0.6-3.9 kg/h), nominal 1.5 kg/h. The admissible
-  part of the box is a result of stage 0, not an input.
+  laboratory range in `docs/02_prozess_setup.md` is 0.6-3.9 kg/h), nominal 1.5 kg/h.
 * Product withdrawal by the unchanged level control (P controller on the solids mass, set point
-  2.0 kg marked `TODO` in the config, time constant 600 s). The bed-mass set point is **not**
-  released (section 10, item 8). From these placeholders the mean residence time at the nominal
-  point is about 4.4 h (2.0 kg / (1.5 kg/h x 0.30); derived here, not a finding).
+  2.0 kg marked `TODO` in the config, time constant 600 s). **The bed-mass set point stays fixed**
+  (decision 8). From these placeholders the mean residence time at the nominal point is about 4.4 h
+  (2.0 kg / (1.5 kg/h x 0.30); derived here, not a finding).
 
-**Carrier of the heat.** The process config books the air heater as electric (efficiency 0.98,
-config comment: "at application partner possibly gas"). The headroom study booked CO2 with a
-gas-fired heater (efficiency 0.80, placeholder). The carrier decides how much of the power sees an
-electricity signal, so it is a factor of the design, not a setting (section 5).
+**Throughput bands (decision 2).** *Main* band: +-20 % around 1.5 kg/h, cut with the admissible
+range of stage 0; **the reading applies only here**. *Box*: the whole admissible part of the
+ActionBound box, a sensitivity with C0, C2 and C4 only and without a reading. Reason for the narrow
+main band: in the grey-box model the median particle diameter does not depend on the throughput, so
+large throughput steps would be free of any product cost that a real line would have.
 
-## 4. Signal, production target, scenarios
+## 4. Signal, production target, day and tail, days
 
-* **Price.** Day-ahead prices DE-LU 2024, hourly: the file, the tariff (price + 0.08 EUR/kWh,
-  placeholder) and the split of Befund 115 are reused unchanged (`docs/32_storage_price.md`,
-  section 3; raw file in `local/prices/`, SHA-256 in `conf/storage_price/storage_price.yaml`).
-  Training and tuning months Jan, Mar, Apr, Jun, Jul, Sep, Oct, Dec; **test months Feb, May, Aug,
-  Nov.** Nothing of a test month is used for tuning or selection. The environment guard of Befund 115
-  (no observation beyond the training months) is taken over together with its test.
-* **Price information** as in Befund 115: at hour `t` of day `D` the prices of `D` are known to its
-  end, later hours are forecast by the same hour of `D`.
-* **Gas price** (variant G below): 0.040 EUR/kWh + 55 EUR/t CO2 (the `Economics` of Befund 101, as
-  used in `docs/32`, section 2), constant.
-* **Production target.** Per calendar day the dry product equals that of the nominal point
-  (1.5 kg/h x 0.30 x 24 h of solids fed), a hard constraint of every optimiser and met by
-  construction by the rule. Variant: target per week (more freedom).
-* **Scenario = one day**, 24 h, common initial state = steady optimum at the nominal throughput.
-  Ambient air: the day profiles of the headroom family `ambient` (5 x 5 weather grid,
-  `DiurnalDisturbanceDesign`), assigned to the days by a seeded permutation; weather and price are
-  therefore independent (caveat, section 9).
-* **Days.** Proposal: 10 days per test month, drawn by seed and stratified by the terciles of the
-  daily price spread (40 test days); tuning on 40 training days drawn the same way. Whole months
-  are the alternative if the dry run shows that the budget allows it (section 10, item 5).
-* **No standstill.** The spray rate stays inside its box; stopping and restarting the line (hot
-  standby, start-up losses) is not in the model and not in this study.
+* **Price.** Day-ahead prices DE-LU 2024, hourly: the file, the adder (price + 0.08 EUR/kWh,
+  placeholder) and the month split of Befund 115 are read from `conf/storage_price/storage_price.yaml`
+  (raw file in `local/prices/`, SHA-256 checked). Training months Jan, Mar, Apr, Jun, Jul, Sep, Oct,
+  Dec; **test months Feb, May, Aug, Nov.** Nothing of a test month is used for tuning.
+* **Tariff floor** 0.01 EUR/kWh (placeholder; section 13, item 2).
+* **Price information** as in Befund 115: the prices of the day are known at its start; the hour of
+  the tail lies on the next day and is forecast by the same hour of the day itself. Costs are booked
+  with the true tariff.
+* **No CO2 signal** (decision 1).
+* **Production target per day** (decision 3): the suspension sprayed in the 24 h equals that of the
+  nominal point (1.5 kg/h x 24 h). A weekly target is reported descriptively only, with C2 on the
+  steady-state map, without a reading.
+* **Tail (decision 10).** Every day is followed by a tail of 1 h at the nominal throughput with the
+  set points of C0. Its cost counts for every controller, the moisture limit holds there too, and
+  MPC and preview plan to the end of the tail. A test shows that with a constant price the end of
+  the day gives no advantage (`test_no_advantage_from_the_end_of_the_day_at_a_constant_price`).
+* **Scenario = one day and its tail**, common initial state = steady optimum at the nominal
+  throughput (bound `limit - start_margin` of the headroom config). Ambient air: the day profiles of
+  the headroom family `ambient` (5 x 5 weather grid, `DiurnalDisturbanceDesign`), one grid point per
+  day by a seeded permutation; weather and price are therefore independent.
+* **Days (decision 5), rule fixed here before the dry run.** Candidate sets: *whole* = all days of
+  the four test months (121); *stratified* = 10 days per test month, drawn by seed from the
+  terciles of the daily price spread (3 low, 4 middle, 3 high; 40 days). **The whole test months
+  are used if the wall-clock time extrapolated after the dry run and the probe is at most 30 h,
+  otherwise the stratified days.** Extrapolation (`extrapolate_hours` in
+  `scripts/run_load_following.py`): from the probe (full-length days, three training days, parallel
+  load) the time per day-run of C3 and C4 and per day of a cheap run; counted day-runs with
+  `S = 1 + ceil(log2(0.05 / 2.5e-4)) = 9` evaluations per bisection, `K = 8` critical days and `N`
+  test days: C3 `K S + 3 N` (search on the subset, two verification passes, the constant-price
+  control), C4 `K S + 3 N`, C4 of the box `K S + 2 N`, cheap runs `N (6 S + 6)`; wall-clock =
+  1.25 x CPU time / workers + 0.3 h. If the stratified days are still above the budget, the weekly
+  part is dropped, then the box part (decision 7; `choose_days_and_parts`); the parts that carry
+  the reading are never cut. The choice is recorded in the probe artifact and in the chain log
+  before the main run. Tuning of C1: 5 days per training month drawn the same way (2 / 1 / 2 per tercile; 40 days).
+* **No standstill.** The spray rate stays inside its band; stopping and restarting the line is not
+  in the model and not in this study.
 
-## 5. Factor "carrier" (which power sees the signal)
+## 5. Factor "carrier" (decision 1)
 
-| variant | heater | priced by the hourly signal | meaning |
-|---|---|---|---|
-| **E** | electric, efficiency 0.98 (process config) | the whole power | electrified line; upper estimate |
-| **G** | gas, efficiency 0.80 (placeholder of `docs/24`) | fan, pump, atomiser only | plant-like today |
-
-Proposal: the pre-registered reading is taken on **E**; **G** is run with the rule and the
-schedule only and reported next to it as what is left with a gas-fired heater. A CO2 signal (hourly
-emission factor of the grid) is a third candidate; no data source is named in the repository, so it
-is not part of the draft (section 10, item 1).
+| variant | heater | priced by the hourly tariff | controllers | reading |
+|---|---|---|---|---|
+| **E** | electric, efficiency 0.98 (process config) | the whole power | C0-C4 | yes |
+| **G** | gas, efficiency 0.80 (placeholder of `docs/24`), fuel 0.040 EUR/kWh + 55 EUR/t CO2 (the `Economics` of Befund 101) | fan, pump, atomiser only | C0, C1, C2 | no, reported next to E |
 
 ## 6. Controllers
 
 All controllers command inlet temperature, gas velocity and spray rate, piecewise constant over
-5 min, and plan for `X <= limit - m` with their own margin `m` (section 7).
+5 min, and plan for `X <= limit - m` with their own margin `m` (section 7). They decide during the
+24 h of the day; the tail is the same law for all (section 13, item 1).
 
 | label | controller |
 |---|---|
-| C0 | **reference:** constant nominal throughput; inlet temperature and gas velocity from the steady optimum at the current disturbance (R1 of Befund 105) |
-| C1 | **price rule:** two throughput levels; the hour is cheap when its price is at most the `q`-quantile of the price information of the day; cheap hours run at the upper level, the others at the lower one, the levels chosen so that the daily target is met; set points from the steady optimum at the current throughput; `q` and the level spread tuned on the training days |
-| C2 | **schedule on the steady-state map:** per day one programme over the hourly throughput that minimises the priced steady-state power `P*(m_spray, disturbance)` under the daily target; no dynamics, no rate limits; re-solved every hour with the price information |
-| C3 | **economic MPC:** the dynamic model of the headroom study extended by the spray rate as a third control, priced objective, remaining daily target as a terminal constraint, horizon to the end of the day, re-solved every hour, true state measured, current disturbance held |
-| C4 | **perfect preview:** one dynamic programme per day with the true prices and disturbances, open loop (upper bound, as R2 of Befund 105) |
+| C0 | **reference:** constant nominal throughput; inlet temperature and gas velocity from the steady optimum at the current disturbance (R1 of Befund 105; reproduced by a test) |
+| C1 | **price rule:** two throughput levels fixed at the start of the day; the hour is cheap when its price is at most the `q`-quantile of the prices of the day; cheap hours run at the upper level, the others at the lower one, placed so that the daily target is met; set points from the steady optimum at the current disturbance and throughput; `q` and the level spread tuned on the training days (steady-state map) |
+| C2 | **schedule on the steady-state map:** at every full hour the exact programme over the hourly levels of the remaining day (41 levels across the band, dynamic programme over the level sum) on the steady power curve at the current disturbance (held), with the price information and the remaining target; no dynamics, no rate limits; set points as C1 |
+| C3 | **economic MPC:** at every full hour the dynamic programme (same model as the truth, spray rate as third control, priced objective, remaining target as terminal condition) from the true state over the rest of the day and the tail, current disturbance held; it fixes the spray rate. Every 5 min the 2 h MPC of Befund 105 (R3, unchanged optimiser) sets inlet temperature and gas velocity from the true state with the planned spray rate as a known input (section 13, item 3) |
+| C4 | **perfect preview:** one dynamic programme per day with the true prices and the true disturbance course, open loop; started at the schedule of C2 with the same information and never worse than it in its own model (upper bound, as R2 of Befund 105) |
 
-**Negative control.** With a constant price C2, C3 and C4 are run on the same days: the gap to C0
-then measures only the curvature of the steady-state map and the numerics, not the signal.
+**Negative control.** With a constant price (the reference tariff) C0, C2, C3 and C4 are run on the
+same days at their margins of the main family: the gap to C0 then measures the curvature of the
+steady-state map and the dynamics, not the signal.
 
-RL (SAC, TD3) is **not** part of this study; it would be the follow-up if the reading is T3
-(section 8).
+RL (SAC, TD3) is **not** part of this study; it would be the follow-up if the reading is T3.
 
 ## 7. Stages, margins, metric
 
-**Stage 0 -- steady-state map (minutes, no dynamics).** For every weather grid point and a grid of
-the spray rate over its box: the steady optimum of inlet temperature and gas velocity at the limit,
-its power by component, and the specific energy per kg of dry product. Reported: the admissible
-throughput range (where a steady state within the limits exists), the shape of the specific energy
-over the throughput, and the static gain `g_static = (J_C0 - J_C2) / J_C0` on the training days
-with margin 0. Stage 0 fixes the box of the following stages and nothing else.
+**Stage 0 -- steady-state map (minutes, no truth run).** For every weather grid point and a grid
+of the spray rate over the box (step 0.05 kg/h): the steady optimum at the limit, its power and
+heater share. *Admissible range:* the largest interval around the nominal rate in which a steady
+optimum exists at every weather point with the bound `limit - 0.02` (placeholder). From it the two
+bands. On the 40 training days (hourly mean of the true ambient air, margin 0): tuning of C1 and
+the static gain of the schedule against constant throughput, per band and carrier.
 
-**Stage 1 -- truth runs.** C0-C4 on the test days against the truth, 5 s samples.
+**Dry run (rule "Long runs").** All units of the main run on days shortened to 1 h plus the tail,
+on the whole test months, with a coarse margin tolerance (4e-3): surfaces failing units and
+reports time and peak memory per worker. Gate of the chain: no errored unit, workers x peak memory
+below 80 % of the RAM (also after the probe). **Probe:** C0-C4 on three training days of full length
+(smallest, median and largest price spread of the tuning days) at the fixed margin 0.005 under
+parallel load; gives the times of the extrapolation and the choice of the day set.
 
-**Margins (held constraint).** As in `docs/24`, section 5: every controller gets the smallest
-family-wide margin with which the path condition holds in all test days (bisection, tolerance
-2.5e-4 kg/kg; for C3 and C4 on a critical subset, verified on all days). The margins of Befund 105
-are not taken over: throughput moves are a disturbance the fixed-throughput study did not contain.
-C1 and C2 ignore the dynamics of their own throughput steps; what that costs appears as their
-margin. This follows the rule of `CLAUDE.md`: the reading is on the cost at the held constraint,
-not on the margin.
+**Main run -- truth runs** on the chosen test days, 5 s samples, parts in this order: main family
+(E, main band), decomposition (C0 at the margin of every other controller), constant-price control,
+variant G, weekly target, box.
 
-**Metric.** Cost in EUR per kg of dry product per day at the held path condition and the met
-target; reported next to it: energy, CO2 (repository factors 0.366 / 0.201 kg/kWh), the margin, the
-largest violation, the share of the time at a throughput bound, the excursion of the median
-particle diameter and of the fluidisation window (diagnostic only), solver failures, time per
-decision. Median and range over the days; gaps on the summed test-day costs,
-`gap(X, Y) = (J_X - J_Y) / J_Y`.
+**Margins (decision 9).** As in `docs/24`, section 5: every controller gets the smallest
+family-wide margin with which the path condition holds on all days of the family, tail included
+(bisection, tolerance 2.5e-4 kg/kg, bracket [0, 0.05], doubled up to 0.12). C0, C1, C2 on all days;
+C3 and C4 on a critical subset (the 8 days with the largest C2 violation at margin 0, bracket
+[0, 2 x C2 margin]) and verified on all days; failing days join the subset. The margins of Befund
+105 are not taken over. C1 and C2 ignore the dynamics of their own throughput steps; what that
+costs appears as their margin. The reading is on the cost at the held constraint, not on the
+margin (`CLAUDE.md`).
 
-## 8. Pre-registered reading (proposal; thresholds of `docs/24` and `docs/32`)
+**Metric.** Cost per kg of dry product: sum over the days of the cost of the day and its tail
+(hourly truth energy times the true tariff) divided by the sum of the dry product. Reported next
+to it: energy, the margin, the largest violation (day and tail), the deviation from the daily
+target, the share of the time at a throughput bound, the range of the median particle diameter and
+the smallest fluidisation margins (diagnostic only), solver failures and fall-backs, time per
+decision. `gap(X, Y) = (J_X - J_Y) / J_Y`.
 
-To be written into the docstring of `scripts/analyze_load_following.py` and committed before the
-first run of stage 1. On variant E, test days, first that applies:
+## 8. Pre-registered reading (thresholds: decision 4)
+
+Verbatim in the docstring of `scripts/analyze_load_following.py`, committed with this section. On
+variant E, main band, test days, first class that applies:
 
 | class | condition | consequence |
 |---|---|---|
@@ -151,15 +173,16 @@ first run of stage 1. On variant E, test days, first that applies:
 | **T3** | `gap(C2, C3) > 2 %` | the dynamics pay: MPC justified; an RL-against-MPC study is justified only if the gap exceeds 5 % |
 
 Every condition is also reported on its own, per test month and per tercile of the price spread.
-`gap(C3, C4)` is reported as the value of perfect information. If stage 0 gives
-`g_static < 2 %` **and** the admissible throughput range is narrower than +-10 % of the nominal
-value, stage 1 is run with C0, C2 and C4 only (decision before stage 1, logged).
+`gap(C3, C4)` is reported as the value of perfect information. Reduced stage 1 (decided by stage 0
+before any truth run): if the static gain on the training days is below 2 % **and** the admissible
+range is narrower than +-10 % of the nominal value, only C0, C2 and C4 are run; the reading is then
+T0 or "none (reduced)". The reading is invalid, and reported as such, if a margin search of the
+family did not converge or a unit of the family ended with an error.
 
 Expectation, declared as such and not a result: the spray rate crosses its whole box in about 130 s
 (box width over rate limit) and the moisture and temperature modes are 15-80 s (`docs/10`, a figure
-as supplied there, not matched to a finding), both short against an hourly price;
-T1 or T2 is the likely reading. The study is still needed, because the size of the static gain and
-the margin that the throughput steps cost are unknown.
+as supplied there, not matched to a finding), both short against an hourly price; T1 or T2 is the
+likely reading.
 
 ## 9. What the study will not show (caveats fixed beforehand)
 
@@ -169,27 +192,35 @@ the margin that the throughput steps cost are unknown.
 * **Continuous operation, no standstill, no batch.** The headroom test for batch operation
   (`docs/12`, section I, item 8) stays a follow-up of its own.
 * **True state measured**, no estimator, no measurement noise (as Befund 105; `docs/12` I.7).
-* **One year of prices, a constant tariff adder, weather independent of price.**
+* **One year of prices, a constant tariff adder, a tariff floor, weather independent of price.**
+* **Common start state.** Every run starts at the steady optimum with the start margin 0.01, above
+  the margins the controllers end with; a dynamic programme uses this once at the start of the day
+  (seen in the test of the tail on a 2 h day; small against a 24 h day).
 * **Placeholders:** the throughput box, the moisture limit, the minimum gas velocity, the bed-mass
-  set point, the heater efficiencies, the whole process config. Whether the moisture limit binds at
-  the plant is open (`docs/12` I.9).
+  set point, the heater efficiencies, the gas price, the whole process config. Whether the moisture
+  limit binds at the plant is open (`docs/12` I.9).
 
-## 10. Decisions needed from the project lead before the pre-registration
+## 10. Decisions of the project lead (2026-11-17)
 
-1. **Signal and carrier of the reading:** E (electric heater, whole power priced) as proposed, or G,
-   or a CO2 signal (then: which data source).
-2. **Throughput box:** the whole admissible part of 0.4-3.0 kg/h as proposed, or a narrower band
-   (for example the +-20 % of the stress family of Befund 105).
-3. **Production target:** per day as proposed; the weekly variant in or out.
-4. **Thresholds:** 2 % and 5 % as in `docs/24` and `docs/32`.
-5. **Test days:** 40 stratified days as proposed, or the four whole test months.
-6. **`DataSpec.new_study`:** the study generates no training data; an exception as for the headroom
-   and the static studies (`docs/12`, section L) has to be approved.
-7. **Budget (wall-clock):** proposal 30 h for stage 1, as in Befund 115; cuts are decided after the
-   dry run and before the main run.
-8. **Bed-mass set point** as a further degree of freedom (holdup as a buffer): proposal no.
-9. **Margins:** family-wide per controller as proposed (expensive for C3 and C4), or fixed
-   multiples of the Befund 105 margins as a cheaper, weaker alternative.
+1. Reading on variant E (electric heater, the whole power priced); G with C0, C1, C2 only, reported
+   next to it. No CO2 signal.
+2. Throughput: main variant +-20 % around 1.5 kg/h, cut with the admissible range of stage 0
+   (reading only here). Sensitivity "whole admissible box" with C0, C2, C4 only, without a reading.
+3. Production target per day. Weekly target descriptive only, C2 on the steady-state map.
+4. Thresholds 2 % and 5 %.
+5. Test days: whole test months if the extrapolation after the dry run gives at most 30 h, else the
+   40 stratified days; the rule committed before the dry run (section 4), the choice recorded after
+   the dry run and before the main run.
+6. Exception from `DataSpec.new_study` approved (the study generates no training data; precedent
+   `docs/12`, section L).
+7. Budget 30 h wall-clock. Order of cuts fixed beforehand: whole months -> 40 days, then the weekly
+   sensitivity, then the box sensitivity. Parts that carry the reading are not cut.
+8. The bed-mass set point stays fixed.
+9. Margins family-wide per controller.
+10. Day boundary: a tail of 1 h with the set points of C0 at the nominal point (section 4).
+
+Unattended run: no questions; where the instruction left room, the most conservative reading was
+taken and is listed in section 13. No merge, no push.
 
 ## 11. Questions for the application partner
 
@@ -202,21 +233,79 @@ the margin that the throughput steps cost are unknown.
 
 ## 12. Implementation and run plan
 
-* Package `src/twinlink_ml/load_following/`, settings `conf/load_following/load_following.yaml`
-  (frozen dataclasses, fingerprint), tests `tests/test_load_following.py`. The headroom package is
-  reused (`TruthPlant`, `SteadyStateOptimizer`, `DynamicOptimizer`, `symbolic`, `margin`); the third
-  control and the priced objective are added without changing the behaviour of the headroom study:
-  its config fingerprint and the reproduction of `dynamic_headroom_v2` stay as they are.
-* Tests fixed beforehand: with the spray rate pinned to the nominal value, C0 reproduces R1 and C3
-  the R3 commands of Befund 105 on a headroom scenario; at a constant price the daily target is met
-  and C2 equals C0 where the map is convex; the price guard of Befund 115.
-* Scripts `scripts/run_load_following.py` (stages, `--resume`, one unit = controller x day, saved
-  per unit, a failed unit is logged and does not discard the others) and
-  `scripts/analyze_load_following.py`; both committed before the run, clean tree,
-  `require_code_location(ROOT)`, outputs as `.json.gz`.
-* Dry run over **all** units with days shortened to a few hours, reporting time and peak memory per
-  worker (the first attempt of Befund 105 failed on memory with SX solvers: MX from the start);
-  workers at most the number of physical cores, workers x peak below 80 % of RAM.
-* Main run detached from the session, in a worktree with `tools/run_here.sh`.
-* Lab-book entry, `docs/12` sections I and J and the README paragraph at merge, by the managing
-  session.
+* Package `src/twinlink_ml/load_following/` (`config`, `market`, `steady`, `stage0`, `dynamic`,
+  `truth`, `controllers`, `study`, `memory`), settings `conf/load_following/load_following.yaml`,
+  tests `tests/test_load_following.py`. **The headroom package is not changed**: it is imported
+  (`SteadyStateOptimizer`, `DynamicOptimizer`, `symbolic_derivative`, `ramp_mean`, the margin
+  bisections, the weather grid); the truth with three commands and the programme with the spray
+  rate as a control are new modules next to it.
+* Tests fixed beforehand and written: with the spray rate held the interval function is the
+  headroom one (1e-12) and the programme gives the headroom optimum; the truth with three commands
+  is the headroom truth at the nominal spray rate (bit for bit); C0 reproduces the R1 commands on a
+  headroom scenario; C3 with the spray rate pinned reproduces the energy of R3 on the same day;
+  the headroom and process fingerprints equal those recorded in `dynamic_headroom_v2`; the schedule
+  is exact against brute force and flat at a constant price where the cost is convex; the daily
+  target is met; training and test days come from disjoint months and the tail is forecast from the
+  day itself; the tail removes the end-of-day effect.
+* Scripts `scripts/run_load_following.py` (stages `stage0`, `dryrun`, `probe`, `main`; `--resume`;
+  one unit = controller x day x margin, saved as soon as it is finished; a failed unit is logged
+  and recorded, it does not discard the others) and `scripts/analyze_load_following.py`; clean
+  tree, code location checked by `provenance()`, outputs as `.json.gz`.
+* Workers: 8 (physical cores of the run machine); the dry run and the probe report the peak
+  memory per worker, workers x peak must stay below 80 % of the 32 GB.
+* Order: commit (this document, code, tests, reading) -> stage 0 -> full suite -> dry run -> probe
+  and choice of the day set -> main run detached from the session, in the worktree with
+  `tools/run_here.sh`. Full suite, dry run, probe and main run start only when no run of another
+  study computes on the machine (checked every 10 min; waiting and start times are logged). From
+  the full suite on, the steps run as one chain outside the session
+  (`C:/twinlink_work/loadf_chain.sh`, log `C:/twinlink_work/loadf_chain.log`), which commits the
+  output of every stage on the branch before the next stage starts (denylist test first).
+
+## 13. Decisions taken without asking (unattended run; the most conservative reading each time)
+
+1. **Tail law.** "Set points of C0 at the nominal point" is implemented as the law of C0 itself:
+   nominal spray rate, inlet temperature and gas velocity from the steady optimum at the current
+   disturbance, **with the family-wide margin of C0** -- the same commands for every controller,
+   applied by the runner and not by the controller. C4 plans with the tail commands of the true
+   disturbance course, C3 with those at the current disturbance. (A fixed set point of the nominal
+   disturbance would violate the limit on warm, humid days.)
+2. **Tariff floor 0.01 EUR/kWh.** With a negative tariff the dynamic programmes would be paid for
+   wasting energy, which C0-C2 never do; the gap would then measure an artefact of the tariff
+   placeholder. The floor applies to every controller and to the booking; the number of hours it
+   changes is recorded in the stage-0 artifact.
+3. **C3 has two layers.** With an hourly programme applied open loop C3 would react to the
+   disturbance twelve times more slowly than C0-C2 (steady optimum every 5 min) and pay for it in
+   margin; the gap C2-C3 would then be biased towards "the dynamics add nothing". The unchanged R3
+   optimiser of Befund 105 gives C3 the same 5 min feedback.
+4. **C4 starts at the C2 schedule** computed with the same perfect information and never takes a
+   plan its own model rates worse (non-convex problem; safeguard of R2 in Befund 105, counted).
+5. **Production target in suspension mass**, measured on the realised (rate-limited) spray rate of
+   the truth; C2 and C3 plan with the remaining target; C2 takes the remainder exactly in the last
+   hour. The metric is normalised by the dry product, so small deviations do not move it.
+6. **Programme numerics.** The target is a chain over the cumulative mass (a dense row made the
+   Jacobian eight times as expensive at 60 intervals); only the two most recent horizon lengths are
+   kept per worker (memory).
+7. **Tuning of C1 on the steady-state map**, not on the truth: 40 training days, hourly mean of the
+   true ambient air, margin 0; ties go to the smaller spread and quantile.
+8. **Variant G: set points not re-optimised.** Inlet temperature and gas velocity stay those of
+   minimum total power; only the throughput schedule uses the gas-electricity cost. Cheap, the same
+   for C0-C2, and declared.
+9. **Admissible range of stage 0** with the bound `limit - 0.02`, so that margins up to 0.02 keep a
+   steady optimum at every weather point.
+10. **Critical subset and bracket of the expensive searches** as in the headroom driver; an errored
+    unit counts as holding in the search and makes the reading invalid.
+11. **Constant-price control at the margins of the main family** (no own search); its violations
+    are reported.
+12. **Decomposition added** (C0 at the margin of every other controller), cheap, to separate the
+    margin share from the schedule share as in `docs/24`, section 6.
+13. **Weekly target on the first four whole weeks of every test month**, whichever day set is
+    chosen (steady-state map only; with stratified days there are no whole weeks).
+14. **Dry run and probe** as in section 7 (the rule "Long runs" asks for all units at minimal cost
+    and forbids estimating from a single unit; shortened days cannot give the times of full-length
+    programmes, so the times come from the probe).
+15. **Disclosure (development order).** Before this commit, development checks produced numbers that
+    are not artifacts: a smoke run of stage 0 (training days only: admissible range, the tuned rule,
+    the static gain, which lies above the 2 % of the reduction rule in the main band), and smoke
+    runs of the five controllers at the fixed margin 0.005 on two days shortened to 3 h, which lie
+    in test months (days 40 and 131). The thresholds are those of the project lead; neither the
+    config nor the reading was changed after these numbers were seen.
