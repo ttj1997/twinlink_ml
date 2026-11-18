@@ -53,6 +53,12 @@ surrogate = [
 sensitivity = [
     "SALib>=1.5,<1.7",
 ]
+# Only for twinlink_ml.api (framework-independent module interface, docs/NN_module_api.md):
+# request and response schemas and the manifest of the model bundle. The package imports neither
+# torch nor casadi; a service names the extra it needs (torch, optimal-control) when it is called.
+api = [
+    "pydantic>=2.10,<3",
+]
 dev = [
     "pytest>=8.0,<9",
     "pytest-cov>=5.0",
