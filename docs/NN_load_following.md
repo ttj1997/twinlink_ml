@@ -1,8 +1,10 @@
 # NN -- Throughput as a manipulated variable: load following of the granulator under a time-varying price
 
-Status: **design fixed and committed before stage 0, the dry run and the main run** (sections 1-13;
-decisions of the project lead of 2026-11-17 in section 10). Runs and results follow in sections 14
-onwards, added after the runs (numbers only from the artifacts named there). Document number and
+Status: **run finished 2026-11-18; pre-registered reading T1 (valid): a price rule suffices.**
+Sections 1-13 are the design, fixed and committed before stage 0, the dry run and the main run
+(decisions of the project lead of 2026-11-17 in section 10) and unchanged since. Sections 14-18,
+added after the runs, hold the course of the run, the results, the reading and the open points
+(numbers only from the artifacts named there). Document number and
 finding number are open (the managing session assigns them at merge). Branch `load-following`
 (worktree, from `origin/master` ba02e0e). **Scenario on placeholders, not a plant statement.**
 
@@ -309,3 +311,199 @@ taken and is listed in section 13. No merge, no push.
     runs of the five controllers at the fixed margin 0.005 on two days shortened to 3 h, which lie
     in test months (days 40 and 131). The thresholds are those of the project lead; neither the
     config nor the reading was changed after these numbers were seen.
+
+## 14. Course of the run (added 2026-11-18)
+
+Artifacts under `artifacts/runs/`, each written on a clean tree and committed before the next stage
+started; times from the chain log `C:/twinlink_work/loadf_chain.log` (outside the repository).
+
+| step | time (2026-11-17/18) | result | artifact, commit |
+|---|---|---|---|
+| stage 0 | before the chain | section 15.1 | `load_following_v1_stage0.json.gz`, driver 050eb1e, commit 97df41c |
+| chain started detached | 17th, 19:18:54 | waited 21 min for the free machine (the chain of another study was still computing), free at 19:39:56 | -- |
+| full suite | 19:39:57 - 20:12:39 | 1549 passed, 32 skipped | on 97df41c |
+| dry run, all units, days of 1 h plus tail, whole test months | 20:13:40 - 20:52:09 | 5531 units, 0 errors, peak 304 MB per worker, 38.2 min | `load_following_v1_dryrun.json.gz`, commit c35c300 |
+| probe, three training days of full length | 20:54:04 - 21:28:41 | C3 1679 s, C4 234 s, cheap run 35 s per day-run; peak 425 MB per worker | `load_following_v1_probe.json.gz`, commit fb0affc |
+| **choice of the day set** (logged 21:29:34, before the main run) | -- | extrapolation: whole test months 50.7 h, stratified days 21.5 h, budget 30 h -> **the 40 stratified days**, all six parts kept | probe artifact, field `probe` |
+| main run | 17th, 21:30:35 - 18th, 20:05:01 | 3094 units, 0 errors, 22.57 h, peak 555 MB per worker (8 workers: 4443 MB of 31 912 MB RAM) | `load_following_v1.json.gz`, driver fb0affc, commit c509190 |
+| analysis | 20:06 | reading T1, valid | `load_following_v1_analysis.json`, commit 53552b6 |
+
+Parts of the main run (hours): main family 15.65, decomposition 0.11, constant-price control 4.41,
+variant G 0.76, weekly 0.05, box 1.59. The budget of 30 h was kept; nothing was cut after the
+choice of the day set.
+
+**Deviation from the extrapolation (22.57 h against 21.5 h).** The margin search of C3 needed a
+second pass. The search on the 8 critical days ended at 0.000696 kg/kg; the verification on all
+days failed there, the failing days joined the subset (13 days in the second search according to
+the stage log: 59, 144, 224, 232 and 324 were added), and the search restarted from the upper end
+of the bracket. It converged at 0.003791 (bracket [0.003570, 0.003791], 17 evaluations in all) and
+was verified on all 40 days. C3 ran 246 day-runs in all parts against 192 planned; the mean was
+1634 s per day-run (largest 5077 s). In the constant-price control the day-runs of C3 took longer
+than in the main family (seen in the stage log; the cause was not investigated -- the hourly
+programme is flat at a constant price, see section 16.1, and test runs of other sessions computed on
+the machine in the afternoon of the 18th).
+
+## 15. Results (variant E, main band, the 40 stratified test days, true prices)
+
+All numbers from `load_following_v1_analysis.json` unless another artifact is named.
+
+### 15.1 Stage 0 (`load_following_v1_stage0.json.gz`)
+
+* Admissible range: the whole box, 0.4-3.0 kg/h, at all 25 weather points with the bound
+  `limit - 0.02`. Bands: main 1.2-1.8 kg/h, box 0.4-3.0 kg/h.
+* The moisture limit binds at the nominal point at 25 of 25 weather points.
+* Day sets: 40 training days, 40 stratified test days, 121 days in the whole test months. The tariff
+  floor changes 11 hours of the year. Reference tariff 0.1572 EUR/kWh; gas heat 0.0511 EUR/kWh.
+* Rule C1, tuned on the training days: quantile 0.5, level spread 0.6 kg/h (the whole main band),
+  for both carriers.
+* Static gain of the schedule against constant throughput on the **training** days (steady-state
+  map, margin 0, no truth run): main band 2.82 % (E) and 0.76 % (G); box 8.52 % (E) and 2.21 % (G).
+  The reduction rule of section 8 did not apply.
+
+### 15.2 Main family
+
+| | margin (kg/kg) | cost (EUR per kg dry product) | gain against C0 | energy, 40 days (kWh) | largest violation (kg/kg) |
+|---|---|---|---|---|---|
+| C0 constant throughput | 0.00547 | 0.40633 | -- | 1132.9 | 0 |
+| C1 price rule | 0.00742 | 0.39792 | 2.07 % | 1135.3 | 9.3e-5 |
+| C2 schedule on the map | 0.00742 | 0.39795 | 2.06 % | 1135.3 | 7.7e-5 |
+| C3 economic MPC | 0.00379 | 0.39463 | 2.88 % | 1125.9 | 0 |
+| C4 perfect preview | 0.00023 | 0.39053 | 3.89 % | 1115.0 | 0 |
+
+All five margin searches converged (tolerance 2.5e-4); the violations of C1 and C2 lie inside the
+tolerance of the path condition (1e-4), none in the tail. No errored unit, no failed set point, no
+failed programme and no fall-back to the starting plan in this family. The daily target is met
+within 8.4e-5 (relative, largest: C2). C1 runs half of the time at each end of the band (shares
+0.50 / 0.50), C2 0.47 / 0.47: the exact schedule is practically the two-level rule. (For C3 and C4
+the field "share at a bound" is 0 and is not interpreted here; whether their courses lie just
+inside the bounds was not checked.) The rule and the schedule use slightly **more** energy than C0
+and cost less: the gain is a shift in time, not a saving. The median particle diameter is 750 um in
+every run (it does not depend on the operating point in this model; section 9). Largest bed
+temperature 48.1 (C0) to 58.9 degC (C4), below the 80 degC bound.
+
+### 15.3 The pre-registered conditions
+
+| condition | value | holds |
+|---|---|---|
+| T0: `(J_C0 - J_C4) / J_C0 < 2 %` | 3.89 % | no |
+| **T1: `gap(C1, C3) <= 2 %`** | **0.83 %** | **yes -> reading T1** |
+| T2: `gap(C2, C3) <= 2 %` | 0.84 % | yes (not reached, T1 applies first) |
+| T3: `gap(C2, C3) > 2 %` | 0.84 % | no; an RL study is not justified (threshold 5 %) |
+| value of perfect information, `gap(C3, C4)` | 1.05 % | reported |
+
+The reading is valid: every margin search converged and no unit ended with an error.
+
+Per test month and per tercile of the daily price spread the reading is T1 everywhere:
+
+| | Feb | May | Aug | Nov | low | middle | high |
+|---|---|---|---|---|---|---|---|
+| headroom C0 -> C4 | 2.86 % | 4.28 % | 4.93 % | 3.49 % | 3.03 % | 3.88 % | 5.16 % |
+| gain C1 against C0 | 1.14 % | 2.57 % | 2.98 % | 1.61 % | 1.27 % | 2.02 % | 3.31 % |
+| gain C3 against C0 | 1.92 % | 3.35 % | 3.83 % | 2.44 % | 2.09 % | 2.82 % | 4.10 % |
+| `gap(C1, C3)` | 0.79 % | 0.80 % | 0.88 % | 0.85 % | 0.84 % | 0.82 % | 0.83 % |
+| `gap(C2, C3)` | 0.79 % | 0.80 % | 0.91 % | 0.85 % | 0.84 % | 0.83 % | 0.85 % |
+| `gap(C3, C4)` | 0.96 % | 0.98 % | 1.16 % | 1.09 % | 0.97 % | 1.10 % | 1.11 % |
+
+The gain grows with the price spread; the gaps between the controllers do not.
+
+### 15.4 Decomposition: margin share and schedule share
+
+C0 run at the margin of the other controller separates what the controller gains by its margin
+(`(J_C0 - J_C0@m) / J_C0`) from what it gains by moving the throughput (`(J_C0@m - J_X) / J_C0`):
+
+| | margin share | schedule share | sum |
+|---|---|---|---|
+| C1 | -0.48 % | 2.55 % | 2.07 % |
+| C2 | -0.48 % | 2.54 % | 2.06 % |
+| C3 | +0.40 % | 2.48 % | 2.88 % |
+| C4 | +1.24 % | 2.65 % | 3.89 % |
+
+The schedule share is about 2.5 % for every controller. What separates the MPC from the rule is the
+margin: the rule pays 0.48 % for its larger margin (its throughput steps ignore the dynamics), the
+MPC gains 0.40 % by a smaller one; in moving the throughput the MPC is not better than the rule
+(2.48 % against 2.55 %).
+
+## 16. Controls and sensitivities (no reading)
+
+### 16.1 Constant price (negative control; margins of the main family, no own search)
+
+| | cost (EUR/kg) | gain against C0 | largest violation |
+|---|---|---|---|
+| C0 | 0.39576 | -- | 0 |
+| C2 | 0.39651 | -0.19 % | 1.08e-3 (one day, 320) |
+| C3 | 0.39384 | +0.49 % | 2.3e-4 (one day, 324, in the tail) |
+| C4 | 0.38860 | +1.81 % | 0 |
+
+Without a price signal the schedule gains nothing; the MPC gains 0.49 % and the preview 1.81 %.
+Against the 2.88 % and 3.89 % with the true prices: a part of the gain of the dynamic controllers
+does not come from the signal (smaller margin, weather, the common start state of section 9). Two
+limits of this control: C2 and C3 each violate the limit on one day at the margins taken over
+(section 13, item 11), so their two numbers are not costs at a held constraint; and in 19 hourly
+programmes of C3 the solver failed and the starting plan was used (none in the main family). With a
+constant price C2 is not flat: it runs 37 % / 40 % of the time at the lower / upper end of the band
+(field of the main artifact, part `control`), following the weather on the steady-state map.
+
+### 16.2 Variant G (gas heater; C0, C1, C2 with their own margin search)
+
+Cost 0.16722 (C0), 0.16728 (C1), 0.16735 EUR/kg (C2): the rule and the schedule are 0.04 % and
+0.08 % **more expensive** than constant throughput; margins 0.00742 for both, converged. With a gas
+heater only fan, pump and atomiser are priced by the hour (the heater carries 96 % of the energy),
+and what the schedule gains there is less than its larger margin costs. Load following by
+throughput does not pay with a gas heater in this model.
+
+### 16.3 Whole box 0.4-3.0 kg/h (C0, C2, C4)
+
+| | margin (kg/kg) | cost (EUR/kg) | gain against C0 |
+|---|---|---|---|
+| C0 (as in the main family) | 0.00547 | 0.40633 | -- |
+| C2 | 0.03047 | 0.39829 | 1.98 % |
+| C4 | 0.00024 | 0.36991 | 8.96 % |
+
+Both searches converged; largest violations 8.5e-5 (C2) and 3.0e-5 (C4), inside the tolerance. The
+picture differs from the main band: the schedule on the steady-state map needs a margin of 0.030
+for its large steps and gains no more than in the narrow band (1.98 % against 2.06 %), while the
+preview gains 8.96 %. In the box the gap between the schedule and the upper bound is therefore
+large (0.39829 against 0.36991 EUR/kg). **This is not a reading:** C1 and C3 were not run in the
+box (decision 2), and large throughput moves are free of any product cost in this model
+(section 9). It marks where the reading T1 stops carrying.
+
+### 16.4 Weekly target (steady-state map only, margin 0, 16 whole weeks of the test months)
+
+Gain of the schedule against constant throughput with the daily target / with a weekly target:
+variant E 3.00 % / 3.61 %, variant G 0.85 % / 1.07 %. Freeing the target from the day to the week
+adds about 0.6 percentage points on the map with the electric heater.
+
+## 17. Reading and what it does and does not say
+
+**T1: a price rule suffices; neither a schedule, an MPC nor RL is justified for load following by
+throughput on this line model.** In words:
+
+1. With an electric heater, an hourly day-ahead price and a daily target, moving the throughput
+   within +-20 % lowers the cost per kg at the held moisture limit by 2.07 % with a two-level rule
+   and by at most 3.89 % with perfect preview.
+2. The MPC is 0.83 % cheaper than the rule; that difference is the margin, not the schedule
+   (section 15.4). The same mechanism and order of size as at fixed throughput (Befund 105, quoted
+   in section 1: 0.55 % from the dynamics).
+3. The gap is below the 2 % of the reading in every test month and every tercile, and far below the
+   5 % that would justify an RL-against-MPC study.
+4. The expectation declared in section 8 (T1 or T2) was met.
+
+What it does not say (observed in this run, in addition to section 9):
+
+* **The gain is small.** The headroom is above the 2 % of T0, but the gain of the rule itself is
+  below 2 % in February (1.14 %), November (1.61 %) and in the low tercile (1.27 %).
+* **40 stratified days, not the whole test months** (rule of decision 5; 50.7 h extrapolated).
+* **With a gas heater nothing is gained** (section 16.2); the reading is on variant E.
+* **Outside the narrow band the pattern changes** (section 16.3). Whether a dynamic controller pays
+  in a wide band is not answered here and depends on what the line and the product allow
+  (section 11, first three questions).
+* **The constant-price control is not clean** for C2 and C3 (section 16.1).
+* All quantities are placeholders or synthetic; no statement about a plant.
+
+## 18. Open for the project lead
+
+1. Acceptance of the reading T1 and of the decisions taken without asking (section 13, 15 items).
+2. Whether the wide band is followed up (C1 and C3 in the box), which only makes sense once the
+   application partner has answered the questions of section 11 on turn-down and product change.
+3. Merge: document number, finding number, `docs/12` and README are assigned by the managing
+   session; the branch `load-following` is neither merged nor pushed.
