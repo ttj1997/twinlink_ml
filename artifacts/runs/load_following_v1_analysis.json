@@ -1,0 +1,644 @@
+{
+ "provenance": {
+  "git/commit": "c5091901a1aa3ce7d21ef2979e5859d49f012f53",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used",
+  "git/dirty_ignored_paths": [
+   "C:\\twinlink_work\\loadf\\artifacts\\runs\\load_following_v1_analysis.json"
+  ]
+ },
+ "source": "load_following_v1.json.gz",
+ "source_commit": "fb0affc746d2e9231c74983cddc486dd1a4ada1b",
+ "smoke": false,
+ "days": "stratified",
+ "n_days": 40,
+ "thresholds": {
+  "reading": 0.02,
+  "rl_study": 0.05
+ },
+ "reduced_stage1": false,
+ "margins": {
+  "C0": 0.0054687500000000005,
+  "C1": 0.007421875,
+  "C2": 0.007421875,
+  "C4": 0.00023193359375,
+  "C3": 0.0037906646728515622
+ },
+ "reading": {
+  "J": {
+   "C0": 0.4063298547528317,
+   "C1": 0.3979165432163416,
+   "C2": 0.39795046428679515,
+   "C3": 0.3946321464953238,
+   "C4": 0.3905322573066396
+  },
+  "headroom_preview": 0.0388787514907111,
+  "T0": false,
+  "gap_C1_C3": 0.008322679108091216,
+  "gap_C2_C3": 0.008408635284633783,
+  "gap_C3_C4": 0.010498208821365136,
+  "gain_C1_vs_C0": 0.020705619924501553,
+  "gain_C2_vs_C0": 0.020622138314531843,
+  "gain_C3_vs_C0": 0.028788699921209412,
+  "T1": true,
+  "T2": true,
+  "T3": false,
+  "rl_study_justified": false,
+  "reading": "T1",
+  "valid": true,
+  "invalid_reasons": {
+   "margin_not_converged": [],
+   "errored_units": 0
+  }
+ },
+ "per_month": {
+  "2": {
+   "J": {
+    "C0": 0.37598262349900813,
+    "C1": 0.3716858954960504,
+    "C2": 0.3716691378192598,
+    "C3": 0.36875454858718376,
+    "C4": 0.36523303399350937
+   },
+   "headroom_preview": 0.02859065508256691,
+   "T0": false,
+   "gap_C1_C3": 0.007949317290044488,
+   "gap_C2_C3": 0.007903873303374205,
+   "gap_C3_C4": 0.00964182936896385,
+   "gain_C1_vs_C0": 0.011427996227514626,
+   "gain_C2_vs_C0": 0.011472566576629832,
+   "gain_C3_vs_C0": 0.01922449193145607,
+   "T1": true,
+   "T2": true,
+   "T3": false,
+   "rl_study_justified": false,
+   "reading": "T1"
+  },
+  "5": {
+   "J": {
+    "C0": 0.3966510864782009,
+    "C1": 0.3864403616593189,
+    "C2": 0.38646740312653655,
+    "C3": 0.3833815545901204,
+    "C4": 0.3796636712631347
+   },
+   "headroom_preview": 0.04282709866218855,
+   "T0": false,
+   "gap_C1_C3": 0.007978493051051187,
+   "gap_C2_C3": 0.008049027136204473,
+   "gap_C3_C4": 0.00979257065764643,
+   "gain_C1_vs_C0": 0.025742334174705915,
+   "gain_C2_vs_C0": 0.025674159730869756,
+   "gain_C3_vs_C0": 0.033453915394253596,
+   "T1": true,
+   "T2": true,
+   "T3": false,
+   "rl_study_justified": false,
+   "reading": "T1"
+  },
+  "8": {
+   "J": {
+    "C0": 0.39460681690709676,
+    "C1": 0.38282806905219285,
+    "C2": 0.3829490031049627,
+    "C3": 0.3794884987224854,
+    "C4": 0.3751481011287034
+   },
+   "headroom_preview": 0.049311656425273,
+   "T0": false,
+   "gap_C1_C3": 0.008800188519414451,
+   "gap_C2_C3": 0.009118864983067434,
+   "gap_C3_C4": 0.011569824239342061,
+   "gain_C1_vs_C0": 0.029849326849508032,
+   "gain_C2_vs_C0": 0.029542859633057656,
+   "gain_C3_vs_C0": 0.03831235938372217,
+   "T1": true,
+   "T2": true,
+   "T3": false,
+   "rl_study_justified": false,
+   "reading": "T1"
+  },
+  "11": {
+   "J": {
+    "C0": 0.45807889212702074,
+    "C1": 0.4507125003002696,
+    "C2": 0.4507169841626302,
+    "C3": 0.44690374747634115,
+    "C4": 0.4420841048907032
+   },
+   "headroom_preview": 0.034917101641702225,
+   "T0": false,
+   "gap_C1_C3": 0.008522534987536853,
+   "gap_C2_C3": 0.00853256815997251,
+   "gap_C3_C4": 0.010902094267400778,
+   "gain_C1_vs_C0": 0.01608105493039944,
+   "gain_C2_vs_C0": 0.016071266523996885,
+   "gain_C3_vs_C0": 0.024395676907943697,
+   "T1": true,
+   "T2": true,
+   "T3": false,
+   "rl_study_justified": false,
+   "reading": "T1"
+  }
+ },
+ "per_tercile": {
+  "low": {
+   "J": {
+    "C0": 0.4285563294416038,
+    "C1": 0.42312901620641674,
+    "C2": 0.42313083670309776,
+    "C3": 0.41959746887936095,
+    "C4": 0.4155547331126003
+   },
+   "headroom_preview": 0.030338126952748987,
+   "T0": false,
+   "gap_C1_C3": 0.008416512464881325,
+   "gap_C2_C3": 0.008420851139006022,
+   "gap_C3_C4": 0.009728527783764127,
+   "gain_C1_vs_C0": 0.012664177057561394,
+   "gain_C2_vs_C0": 0.012659929082310653,
+   "gain_C3_vs_C0": 0.020904744479952043,
+   "T1": true,
+   "T2": true,
+   "T3": false,
+   "rl_study_justified": false,
+   "reading": "T1"
+  },
+  "middle": {
+   "J": {
+    "C0": 0.39692108225395545,
+    "C1": 0.38888625386131087,
+    "C2": 0.38892737977122593,
+    "C3": 0.38570926403326117,
+    "C4": 0.38150686239071985
+   },
+   "headroom_preview": 0.038834470005232366,
+   "T0": false,
+   "gap_C1_C3": 0.008236747530584952,
+   "gap_C2_C3": 0.00834337164815221,
+   "gap_C3_C4": 0.011015271432358758,
+   "gain_C1_vs_C0": 0.02024288643731901,
+   "gain_C2_vs_C0": 0.020139274128087345,
+   "gain_C3_vs_C0": 0.028246970800913037,
+   "T1": true,
+   "T2": true,
+   "T3": false,
+   "rl_study_justified": false,
+   "reading": "T1"
+  },
+  "high": {
+   "J": {
+    "C0": 0.38610332766667826,
+    "C1": 0.3733305987754278,
+    "C2": 0.37340001613544516,
+    "C3": 0.37026787860635124,
+    "C4": 0.36619432752400916
+   },
+   "headroom_preview": 0.051563917521727454,
+   "T0": false,
+   "gap_C1_C3": 0.008271633447125636,
+   "gap_C2_C3": 0.008459112199748316,
+   "gap_C3_C4": 0.011124014699749843,
+   "gain_C1_vs_C0": 0.03308111579467434,
+   "gain_C2_vs_C0": 0.03290132620198455,
+   "gain_C3_vs_C0": 0.041013500598466,
+   "T1": true,
+   "T2": true,
+   "T3": false,
+   "rl_study_justified": false,
+   "reading": "T1"
+  }
+ },
+ "controllers": {
+  "C0": {
+   "days": 40,
+   "errors": 0,
+   "margin": 0.0054687500000000005,
+   "tail_margin": 0.0054687500000000005,
+   "cost_e_per_kg": 0.4063298547528317,
+   "cost_g_per_kg": 0.16721528033715985,
+   "energy_kwh_per_day_median": 28.63569733831134,
+   "energy_kwh_total": 1132.9423212411446,
+   "co2_kg_all_electric": 414.6568895742589,
+   "heater_share_of_energy": 0.9610410501964624,
+   "max_violation": 0.0,
+   "max_violation_tail": 0.0,
+   "max_bed_temperature": 48.12394144560481,
+   "production_deviation_max_abs": 1.5543122344752192e-15,
+   "share_at_low_mean": 0.0,
+   "share_at_high_mean": 0.0,
+   "d50_um_range": [
+    750.0000000000001,
+    750.0000000000001
+   ],
+   "fluidisation_margin_min": [
+    0.569192402423218,
+    1.8587582588964267
+   ],
+   "setpoint_failures": 0,
+   "tail_failures": 0,
+   "plan_failures": 0,
+   "fallback_to_guess": 0,
+   "decide_s_per_decision_mean": 0.0020793814757528,
+   "decide_s_per_decision_max": 0.005588500003796071,
+   "reset_s_mean": 4.5499909901991485e-07,
+   "search_converged": true,
+   "search_bracket": [
+    0.0052734375,
+    0.0054687500000000005
+   ],
+   "search_evaluations": 10
+  },
+  "C1": {
+   "days": 40,
+   "errors": 0,
+   "margin": 0.007421875,
+   "tail_margin": 0.0054687500000000005,
+   "cost_e_per_kg": 0.3979165432163416,
+   "cost_g_per_kg": 0.1672789824935299,
+   "energy_kwh_per_day_median": 28.65018130195349,
+   "energy_kwh_total": 1135.2717099764445,
+   "co2_kg_all_electric": 415.5094458513787,
+   "heater_share_of_energy": 0.9615449806921366,
+   "max_violation": 9.293731236179048e-05,
+   "max_violation_tail": 0.0,
+   "max_bed_temperature": 50.37665378711108,
+   "production_deviation_max_abs": 4.6296296296266526e-05,
+   "share_at_low_mean": 0.5,
+   "share_at_high_mean": 0.5,
+   "d50_um_range": [
+    750.0000000000001,
+    750.0000000000001
+   ],
+   "fluidisation_margin_min": [
+    0.56905280816464,
+    1.5753017273243466
+   ],
+   "setpoint_failures": 0,
+   "tail_failures": 0,
+   "plan_failures": 0,
+   "fallback_to_guess": 0,
+   "decide_s_per_decision_mean": 0.002129178142270879,
+   "decide_s_per_decision_max": 0.005697999964468181,
+   "reset_s_mean": 4.761500167660415e-05,
+   "search_converged": true,
+   "search_bracket": [
+    0.0072265625,
+    0.007421875
+   ],
+   "search_evaluations": 10
+  },
+  "C2": {
+   "days": 40,
+   "errors": 0,
+   "margin": 0.007421875,
+   "tail_margin": 0.0054687500000000005,
+   "cost_e_per_kg": 0.39795046428679515,
+   "cost_g_per_kg": 0.16730909093367827,
+   "energy_kwh_per_day_median": 28.65018130190286,
+   "energy_kwh_total": 1135.3428599066165,
+   "co2_kg_all_electric": 415.5354867258216,
+   "heater_share_of_energy": 0.9614615069267947,
+   "max_violation": 7.668610156438826e-05,
+   "max_violation_tail": 0.0,
+   "max_bed_temperature": 50.376653805570555,
+   "production_deviation_max_abs": 8.42978395060312e-05,
+   "share_at_low_mean": 0.4729166666666666,
+   "share_at_high_mean": 0.4666666666666666,
+   "d50_um_range": [
+    750.0000000000001,
+    750.0000000000001
+   ],
+   "fluidisation_margin_min": [
+    0.5690528081644146,
+    1.5847630234278252
+   ],
+   "setpoint_failures": 0,
+   "tail_failures": 0,
+   "plan_failures": 0,
+   "fallback_to_guess": 0,
+   "decide_s_per_decision_mean": 0.008157382230729126,
+   "decide_s_per_decision_max": 0.12455770000815392,
+   "reset_s_mean": 5.549998604692519e-07,
+   "search_converged": true,
+   "search_bracket": [
+    0.0072265625,
+    0.007421875
+   ],
+   "search_evaluations": 10
+  },
+  "C3": {
+   "days": 40,
+   "errors": 0,
+   "margin": 0.0037906646728515622,
+   "tail_margin": 0.0054687500000000005,
+   "cost_e_per_kg": 0.3946321464953238,
+   "cost_g_per_kg": 0.16614377789892595,
+   "energy_kwh_per_day_median": 28.46016853270173,
+   "energy_kwh_total": 1125.9283446609386,
+   "co2_kg_all_electric": 412.0897741459035,
+   "heater_share_of_energy": 0.9603282992970762,
+   "max_violation": 0.0,
+   "max_violation_tail": 0.0,
+   "max_bed_temperature": 52.020502864788526,
+   "production_deviation_max_abs": 4.810652486364475e-07,
+   "share_at_low_mean": 0.0,
+   "share_at_high_mean": 0.0,
+   "d50_um_range": [
+    750.0000000000001,
+    750.0000000000001
+   ],
+   "fluidisation_margin_min": [
+    0.5685269679572058,
+    1.3507990845339481
+   ],
+   "setpoint_failures": 0,
+   "tail_failures": 0,
+   "plan_failures": 0,
+   "fallback_to_guess": 0,
+   "decide_s_per_decision_mean": 6.074574664817526,
+   "decide_s_per_decision_max": 532.8717471999698,
+   "reset_s_mean": 4.060001811012626e-06,
+   "search_converged": true,
+   "search_bracket": [
+    0.0035696029663085938,
+    0.0037906646728515622
+   ],
+   "search_evaluations": 17
+  },
+  "C4": {
+   "days": 40,
+   "errors": 0,
+   "margin": 0.00023193359375,
+   "tail_margin": 0.0054687500000000005,
+   "cost_e_per_kg": 0.3905322573066396,
+   "cost_g_per_kg": 0.1646541277358057,
+   "energy_kwh_per_day_median": 28.207040605910045,
+   "energy_kwh_total": 1115.0437407152276,
+   "co2_kg_all_electric": 408.1060091017733,
+   "heater_share_of_energy": 0.9599422856181311,
+   "max_violation": 0.0,
+   "max_violation_tail": 0.0,
+   "max_bed_temperature": 58.915267855290885,
+   "production_deviation_max_abs": 1.2362001859944627e-06,
+   "share_at_low_mean": 0.0,
+   "share_at_high_mean": 0.0,
+   "d50_um_range": [
+    750.0000000000001,
+    750.0000000000001
+   ],
+   "fluidisation_margin_min": [
+    0.5684494154712334,
+    1.47785560595438
+   ],
+   "setpoint_failures": 0,
+   "tail_failures": 0,
+   "plan_failures": 0,
+   "fallback_to_guess": 0,
+   "decide_s_per_decision_mean": 4.521345484439128e-06,
+   "decide_s_per_decision_max": 2.9999995604157448e-05,
+   "reset_s_mean": 134.14858111249924,
+   "search_converged": true,
+   "search_bracket": [
+    0.0,
+    0.00023193359375
+   ],
+   "search_evaluations": 9
+  }
+ },
+ "errors_total": 0,
+ "units_run": 3094,
+ "runtime_h": 22.570034005641936,
+ "part_runtime_h": {
+  "main": 15.649977652231852,
+  "decomposition": 0.10912410603629218,
+  "control": 4.408355055981212,
+  "gas": 0.7563747634490331,
+  "weekly": 0.054737455646197,
+  "box": 1.59113089799881
+ },
+ "peak_memory_mb_per_worker": [
+  547.4453125,
+  549.09765625,
+  549.4375,
+  552.85546875,
+  553.51171875,
+  554.43359375,
+  554.80859375,
+  555.390625
+ ],
+ "seconds_per_day_run": {
+  "C0": {
+   "mean": 22.327065616428133,
+   "max": 26.476448000001255,
+   "n": 560
+  },
+  "C1": {
+   "mean": 23.12944095900035,
+   "max": 27.025542619999033,
+   "n": 800
+  },
+  "C2": {
+   "mean": 25.982486069758213,
+   "max": 29.312024680001194,
+   "n": 1240
+  },
+  "C4": {
+   "mean": 238.5432066193572,
+   "max": 899.7644263000111,
+   "n": 248
+  },
+  "C3": {
+   "mean": 1633.67391337561,
+   "max": 5076.834981599997,
+   "n": 246
+  }
+ },
+ "decomposition": {
+  "C1": {
+   "margin_share": -0.004760373792613831,
+   "schedule_share": 0.025465993717115384,
+   "C0_at_margin_cost_per_kg": 0.40826413674455364
+  },
+  "C2": {
+   "margin_share": -0.004760373792613831,
+   "schedule_share": 0.025382512107145674,
+   "C0_at_margin_cost_per_kg": 0.40826413674455364
+  },
+  "C4": {
+   "margin_share": 0.012380633650450059,
+   "schedule_share": 0.026498117840261043,
+   "C0_at_margin_cost_per_kg": 0.4012992336798963
+  },
+  "C3": {
+   "margin_share": 0.00403104668405508,
+   "schedule_share": 0.024757653237154332,
+   "C0_at_margin_cost_per_kg": 0.4046919201391977
+  }
+ },
+ "control_constant_price": {
+  "J": {
+   "C0": 0.3957641595629954,
+   "C2": 0.3965061044636099,
+   "C4": 0.3885995633208273,
+   "C3": 0.39384115159622635
+  },
+  "gain_vs_C0": {
+   "C0": 0.0,
+   "C2": -0.001874714732718043,
+   "C4": 0.01810319623201673,
+   "C3": 0.004858974518795296
+  },
+  "max_violation": {
+   "C0": 0.0,
+   "C2": 0.0010761390820448191,
+   "C4": 0.0,
+   "C3": 0.0002303250377428956
+  }
+ },
+ "gas": {
+  "J": {
+   "C0": 0.16721528033715985,
+   "C1": 0.16728279251342434,
+   "C2": 0.16735063175009798
+  },
+  "gain_vs_C0": {
+   "C1": -0.000403744060521075,
+   "C2": -0.0008094440452165728
+  },
+  "margins": {
+   "C1": 0.007421875,
+   "C2": 0.007421875
+  },
+  "converged": {
+   "C1": true,
+   "C2": true
+  },
+  "E_controllers_booked_as_gas": {
+   "C0": 0.16721528033715985,
+   "C1": 0.1672789824935299,
+   "C2": 0.16730909093367827,
+   "C3": 0.16614377789892595,
+   "C4": 0.1646541277358057
+  }
+ },
+ "box": {
+  "J": {
+   "C0": 0.4063298547528317,
+   "C2": 0.3982885000338246,
+   "C4": 0.3699133369255761
+  },
+  "gain_vs_C0": {
+   "C2": 0.019790213849530183,
+   "C4": 0.08962304246486529
+  },
+  "margins": {
+   "C2": 0.03046875,
+   "C4": 0.000238037109375
+  },
+  "converged": {
+   "C2": true,
+   "C4": true
+  },
+  "controllers": {
+   "C2": {
+    "days": 40,
+    "errors": 0,
+    "margin": 0.03046875,
+    "tail_margin": 0.0054687500000000005,
+    "cost_e_per_kg": 0.3982885000338246,
+    "cost_g_per_kg": 0.17516849151368888,
+    "energy_kwh_per_day_median": 30.080731541863322,
+    "energy_kwh_total": 1198.3921762796886,
+    "co2_kg_all_electric": 438.611536518366,
+    "heater_share_of_energy": 0.9656036000887521,
+    "max_violation": 8.508369962118012e-05,
+    "max_violation_tail": 0.0,
+    "max_bed_temperature": 55.006599996674055,
+    "production_deviation_max_abs": 0.0011383101851847321,
+    "share_at_low_mean": 0.0,
+    "share_at_high_mean": 0.16666666666666666,
+    "d50_um_range": [
+     750.0000000000001,
+     750.0000000000001
+    ],
+    "fluidisation_margin_min": [
+     0.5688577262791837,
+     0.9868258785432209
+    ],
+    "setpoint_failures": 0,
+    "tail_failures": 0,
+    "plan_failures": 0,
+    "fallback_to_guess": 0,
+    "decide_s_per_decision_mean": 0.011976562247941223,
+    "decide_s_per_decision_max": 0.15221590001601726,
+    "reset_s_mean": 7.374983397312462e-07,
+    "search_converged": true,
+    "search_bracket": [
+     0.0302734375,
+     0.03046875
+    ],
+    "search_evaluations": 10
+   },
+   "C4": {
+    "days": 40,
+    "errors": 0,
+    "margin": 0.000238037109375,
+    "tail_margin": 0.0054687500000000005,
+    "cost_e_per_kg": 0.3699133369255761,
+    "cost_g_per_kg": 0.16273090009712587,
+    "energy_kwh_per_day_median": 27.88334578550836,
+    "energy_kwh_total": 1105.3571546364346,
+    "co2_kg_all_electric": 404.5607185969351,
+    "heater_share_of_energy": 0.9601975549822414,
+    "max_violation": 3.037646176520803e-05,
+    "max_violation_tail": 0.0,
+    "max_bed_temperature": 56.76060109116703,
+    "production_deviation_max_abs": 3.2354755769015142e-06,
+    "share_at_low_mean": 0.0,
+    "share_at_high_mean": 0.0,
+    "d50_um_range": [
+     750.0000000000001,
+     750.0000000000001
+    ],
+    "fluidisation_margin_min": [
+     0.5683652602800467,
+     0.9744407337045189
+    ],
+    "setpoint_failures": 0,
+    "tail_failures": 0,
+    "plan_failures": 0,
+    "fallback_to_guess": 0,
+    "decide_s_per_decision_mean": 4.493576175769299e-06,
+    "decide_s_per_decision_max": 2.9199989512562752e-05,
+    "reset_s_mean": 97.26543511250202,
+    "search_converged": true,
+    "search_bracket": [
+     0.0,
+     0.000238037109375
+    ],
+    "search_evaluations": 11
+   }
+  }
+ },
+ "weekly": {
+  "E": {
+   "weeks": 16,
+   "gain_daily_target": 0.03003659297831492,
+   "gain_weekly_target": 0.036131823245684765
+  },
+  "G": {
+   "weeks": 16,
+   "gain_daily_target": 0.008526636328147008,
+   "gain_weekly_target": 0.01065872373772896
+  }
+ }
+}
