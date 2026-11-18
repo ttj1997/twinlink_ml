@@ -1,0 +1,150 @@
+{
+  "$defs": {
+    "ValueRange": {
+      "additionalProperties": false,
+      "description": "Closed interval of a quantity, in the unit named by the key it is stored under.",
+      "properties": {
+        "maximum": {
+          "title": "Maximum",
+          "type": "number"
+        },
+        "minimum": {
+          "title": "Minimum",
+          "type": "number"
+        }
+      },
+      "required": [
+        "minimum",
+        "maximum"
+      ],
+      "title": "ValueRange",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Self-description of the heat-distribution service.",
+  "properties": {
+    "advisory_only": {
+      "const": true,
+      "default": true,
+      "title": "Advisory Only",
+      "type": "boolean"
+    },
+    "api_version": {
+      "title": "Api Version",
+      "type": "string"
+    },
+    "minimum_approach_k": {
+      "title": "Minimum Approach K",
+      "type": "number"
+    },
+    "model_fingerprint": {
+      "title": "Model Fingerprint",
+      "type": "string"
+    },
+    "model_label": {
+      "title": "Model Label",
+      "type": "string"
+    },
+    "model_scope": {
+      "title": "Model Scope",
+      "type": "string"
+    },
+    "modes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Modes",
+      "type": "array"
+    },
+    "parameter_status": {
+      "enum": [
+        "placeholder",
+        "partially_calibrated",
+        "calibrated"
+      ],
+      "title": "Parameter Status",
+      "type": "string"
+    },
+    "pump_electricity_fraction": {
+      "description": "Pump electricity per unit of heat delivered.",
+      "title": "Pump Electricity Fraction",
+      "type": "number"
+    },
+    "required_extras": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Required Extras",
+      "type": "array"
+    },
+    "sample_time_s": {
+      "title": "Sample Time S",
+      "type": "number"
+    },
+    "schema_version": {
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "service": {
+      "title": "Service",
+      "type": "string"
+    },
+    "source_return_floor_celsius": {
+      "title": "Source Return Floor Celsius",
+      "type": "number"
+    },
+    "source_supply_temperature_celsius": {
+      "title": "Source Supply Temperature Celsius",
+      "type": "number"
+    },
+    "stateless": {
+      "const": true,
+      "default": true,
+      "title": "Stateless",
+      "type": "boolean"
+    },
+    "storage_loss_per_h": {
+      "description": "Share of the content lost per hour.",
+      "title": "Storage Loss Per H",
+      "type": "number"
+    },
+    "storage_rules": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Storage Rules",
+      "type": "array"
+    },
+    "valid_input_ranges": {
+      "additionalProperties": {
+        "$ref": "#/$defs/ValueRange"
+      },
+      "title": "Valid Input Ranges",
+      "type": "object"
+    }
+  },
+  "required": [
+    "service",
+    "api_version",
+    "schema_version",
+    "model_fingerprint",
+    "model_label",
+    "model_scope",
+    "parameter_status",
+    "required_extras",
+    "valid_input_ranges",
+    "modes",
+    "storage_rules",
+    "sample_time_s",
+    "source_supply_temperature_celsius",
+    "source_return_floor_celsius",
+    "minimum_approach_k",
+    "storage_loss_per_h",
+    "pump_electricity_fraction"
+  ],
+  "title": "HeatDistributionDescription",
+  "type": "object",
+  "x-schema-version": "1.0"
+}

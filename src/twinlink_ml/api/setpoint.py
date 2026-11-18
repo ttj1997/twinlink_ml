@@ -41,6 +41,7 @@ from ..headroom.config import HeadroomStudyConfig, load_headroom_config, study_p
 from ..simulation.config import ActionBound, ProcessConfig
 from .base import (
     API_VERSION,
+    LAB_LINE_SCOPE,
     SCHEMA_VERSION,
     NoSolutionError,
     Notice,
@@ -182,10 +183,12 @@ class SetpointService(Service[SetpointRequest, SetpointResponse]):
         process: ProcessConfig,
         *,
         optimizer_factory: OptimizerFactory = _default_optimizer_factory,
+        model_scope: str = LAB_LINE_SCOPE,
     ) -> None:
         self._study = study
         self._process = process
         self._optimizer_factory = optimizer_factory
+        self._scope = model_scope
 
     @classmethod
     def from_config(
@@ -213,6 +216,7 @@ class SetpointService(Service[SetpointRequest, SetpointResponse]):
             schema_version=SCHEMA_VERSION,
             model_fingerprint=self.model_fingerprint,
             model_label="steady_state_optimizer",
+            model_scope=self._scope,
             parameter_status=self._process.provenance.status,
             required_extras=("api", "optimal-control"),
             valid_input_ranges=_model_ranges(self._process),
@@ -245,6 +249,7 @@ class SetpointService(Service[SetpointRequest, SetpointResponse]):
                 api_version=API_VERSION,
                 model_fingerprint=self.model_fingerprint,
                 model_label="steady_state_optimizer",
+                model_scope=self._scope,
                 parameter_status=process.provenance.status,
                 notices=tuple(self._range_notices(request)),
             ),

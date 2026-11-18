@@ -12,6 +12,7 @@ import pytest
 
 from _api_common import N_TRAIN, SAMPLE_TIME_S, datasets, generated
 from twinlink_ml.api import BundleIntegrityError, ModelBundle, build_bundle, fit_bundle, load_bundle
+from twinlink_ml.api.base import LAB_LINE_SCOPE as LAB
 from twinlink_ml.api.bundle import (
     BUNDLE_FORMAT_VERSION,
     MANIFEST_NAME,
@@ -38,6 +39,7 @@ def test_manifest_describes_data_and_code(arx_bundle: ModelBundle) -> None:
     assert manifest.bundle_format_version == BUNDLE_FORMAT_VERSION
     assert manifest.model_kind == "linear_arx"
     assert manifest.sample_time_s == SAMPLE_TIME_S
+    assert manifest.model_scope == LAB == "lab line, grey-box"
     assert manifest.window.future_actions == "planned"
     assert manifest.data_spec["data/new_study_version"] == NEW_STUDY_PRESET_VERSION
     assert manifest.data_fingerprints == data.fingerprints
@@ -176,7 +178,11 @@ def test_a_fitted_research_arx_can_be_bundled() -> None:
     research = LinearARXModel(n_lags_target=3, n_lags_exogenous=1)
     research.fit(train, seed=0)
     bundle = build_bundle(
-        research, train, sample_time_s=SAMPLE_TIME_S, parameter_status="placeholder"
+        research,
+        train,
+        sample_time_s=SAMPLE_TIME_S,
+        parameter_status="placeholder",
+        model_scope=LAB,
     )
     assert bundle.manifest.model_settings == {
         "n_lags_target": 3,
@@ -192,7 +198,13 @@ def test_unsupported_model_is_rejected() -> None:
     model = PersistenceModel()
     model.fit(train, seed=0)
     with pytest.raises(TypeError, match="cannot be bundled"):
-        build_bundle(model, train, sample_time_s=SAMPLE_TIME_S, parameter_status="placeholder")
+        build_bundle(
+            model,
+            train,
+            sample_time_s=SAMPLE_TIME_S,
+            parameter_status="placeholder",
+            model_scope=LAB,
+        )
 
 
 @pytest.mark.skipif(not HAS_TORCH, reason="PyTorch nicht installiert")
@@ -207,7 +219,7 @@ def test_restored_network_predicts_like_the_trained_one(tmp_path: Path) -> None:
     )
     trained.fit(train, seed=5, validation=validation)
     bundle = build_bundle(
-        trained, train, sample_time_s=SAMPLE_TIME_S, parameter_status="placeholder"
+        trained, train, sample_time_s=SAMPLE_TIME_S, parameter_status="placeholder", model_scope=LAB
     )
     assert bundle.manifest.model_kind == "composite_torch"
     assert bundle.manifest.model_label == trained.name

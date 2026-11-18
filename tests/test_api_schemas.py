@@ -26,8 +26,31 @@ from twinlink_ml.simulation import ProcessConfig
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_DIR = ROOT / "docs" / "api"
 
-UNIT_SUFFIXES = ("_celsius", "_k", "_m_per_s", "_kg_per_h", "_bar", "_kg_per_kg", "_kw", "_s")
-DIMENSIONLESS = {"ambient_relative_humidity", "suspension_solid_fraction"}
+UNIT_SUFFIXES = (
+    "_celsius",
+    "_k",
+    "_m_per_s",
+    "_kg_per_h",
+    "_nm3_per_h",
+    "_bar",
+    "_kg_per_kg",
+    "_kw",
+    "_kwh",
+    "_kw_per_k",
+    "_kg",
+    "_s",
+    "_per_h",
+)
+DIMENSIONLESS = {
+    "ambient_relative_humidity",
+    "suspension_solid_fraction",
+    "utilisation",
+    "replaced_supply_efficiency",
+    "pump_electricity_fraction",
+    "weighted_squared_residual_sum",
+    "hit_rate_physical_unpressurised",
+    "hit_rate_physical_pressurised",
+}
 
 SERIES = {name: [1.0, 2.0, 3.0] for name in EXOGENOUS_FIELDS}
 
@@ -147,8 +170,9 @@ def test_every_physical_field_carries_its_unit() -> None:
     checked = 0
     for model in _schema_models():
         for name, field in model.model_fields.items():
-            if "float" not in str(field.annotation):
-                continue
+            annotation = str(field.annotation)
+            if "float" not in annotation or "dict" in annotation:
+                continue  # the keys of a dictionary carry the units
             checked += 1
             assert name.endswith(UNIT_SUFFIXES) or name in DIMENSIONLESS, (
                 f"{model.__name__}.{name} names no unit"

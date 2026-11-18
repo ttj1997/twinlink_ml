@@ -171,6 +171,7 @@ class ForecastService(Service[ForecastRequest, ForecastResponse]):
             schema_version=SCHEMA_VERSION,
             model_fingerprint=manifest.fingerprint,
             model_label=manifest.model_label,
+            model_scope=manifest.model_scope,
             parameter_status=manifest.parameter_status,
             required_extras=("api", "torch")
             if manifest.model_kind == "composite_torch"
@@ -243,6 +244,7 @@ class ForecastService(Service[ForecastRequest, ForecastResponse]):
                 api_version=API_VERSION,
                 model_fingerprint=used.manifest.fingerprint,
                 model_label=used.manifest.model_label,
+                model_scope=used.manifest.model_scope,
                 parameter_status=used.manifest.parameter_status,
                 notices=tuple(notices),
             ),

@@ -3,9 +3,12 @@
 Conventions
 -----------
 * **Units are part of the field name** (``_celsius``, ``_k``, ``_m_per_s``, ``_kg_per_h``,
-  ``_bar``, ``_kg_per_kg``, ``_kw``, ``_s``). The two dimensionless quantities
-  (``ambient_relative_humidity``, ``suspension_solid_fraction``) are fractions between 0 and 1;
-  they keep the names of the process configuration.
+  ``_nm3_per_h``, ``_bar``, ``_kg_per_kg``, ``_kw``, ``_kwh``, ``_kw_per_k``, ``_kg``, ``_s``,
+  ``_per_h``). Dimensionless quantities are named as what they are: the fractions
+  ``ambient_relative_humidity`` and ``suspension_solid_fraction`` keep the names of the process
+  configuration; ``utilisation``, ``replaced_supply_efficiency`` and
+  ``pump_electricity_fraction`` are ratios; ``weighted_squared_residual_sum`` is a sum of squared
+  residuals in units of the sensor sigma.
 * **No plant, partner or channel names.** The fields are roles of the process model. Which plant
   channel feeds a role is decided outside this package, in a role file of the kind of
   ``conf/plant/plant_local.yaml.example``.
@@ -14,10 +17,12 @@ Conventions
 * Every request carries ``schema_version``; every response carries ``meta``
   (:class:`~twinlink_ml.api.base.ResponseMeta`).
 
-Schema version 1 covers the interface of the laboratory line of the grey-box model: four
-manipulated variables, three disturbances, three predicted quantities. A model with other channels
-(for example a soft sensor with measured process responses as inputs, ``docs/29``) needs a new
-schema version and is rejected by the services of this version.
+Schema version 1 covers, for the forecast and the set point, the interface of the laboratory
+line of the grey-box model: four manipulated variables, three disturbances, three predicted
+quantities. A model with other channels (for example a soft sensor with measured process responses
+as inputs, ``docs/29``) needs a new schema version and is rejected by the services of this version.
+The calibration works on the roles of the plant-near steady model, the heat distribution on cold
+streams on an hourly grid.
 """
 
 from __future__ import annotations
@@ -32,15 +37,33 @@ __all__ = [
     "EXOGENOUS_FIELDS",
     "TARGET_FIELD_OF_MODEL_NAME",
     "AppliedLimits",
+    "CalibratedParameters",
+    "CalibrationDescription",
+    "CalibrationRequest",
+    "CalibrationResponse",
     "ForecastDescription",
     "ForecastRequest",
     "ForecastResponse",
+    "HeatDistributionDescription",
+    "HeatDistributionMode",
+    "HeatDistributionRequest",
+    "HeatDistributionResponse",
+    "HeatKeyFigures",
+    "HeatSink",
     "MeasuredTargetSeries",
     "ObservationMode",
     "ProcessInputSeries",
+    "RecoveryCaseDescription",
+    "RecoveryCaseRequest",
+    "RecoveryCaseResponse",
     "SetpointDescription",
     "SetpointRequest",
     "SetpointResponse",
+    "SinkHeat",
+    "SteadySection",
+    "StorageRule",
+    "TemperatureBias",
+    "TemperatureErrors",
     "TimedSetpoint",
 ]
 
@@ -254,3 +277,277 @@ class SetpointDescription(ServiceDescription):
     fixed_nozzle_pressure_bar: float
     default_bed_temperature_limit_celsius: float
     setpoints_per_response: int
+
+
+# ------------------------------------------------------------------- calibration
+
+
+class SteadySection(ApiModel):
+    """Means of one stationary section of plant operation.
+
+    The roles are those of the plant-near model (Befund 117): intake air, process air, atomising
+    air, supply air, spray rate, and the two measured temperatures the model is compared with.
+    """
+
+    product: str = Field(description="Role of the product, as named by the service description.")
+    ambient_temperature_celsius: float
+    process_air_flow_nm3_per_h: float = Field(gt=0.0)
+    atomising_air_flow_nm3_per_h: float = Field(ge=0.0)
+    supply_air_temperature_celsius: float
+    spray_rate_kg_per_h: float = Field(gt=0.0)
+    bed_temperature_celsius: float
+    exhaust_temperature_celsius: float
+
+
+class CalibrationRequest(VersionedRequest):
+    """Stationary sections, and optionally the parameters to calibrate on them.
+
+    Without ``calibrate_parameters`` the answer is the constant bias per measured quantity, the
+    default. Parameters are calibrated only when they are named.
+    """
+
+    sections: tuple[SteadySection, ...] = Field(min_length=1)
+    calibrate_parameters: tuple[str, ...] = ()
+
+    @model_validator(mode="after")
+    def _distinct_parameters(self) -> CalibrationRequest:
+        if len(set(self.calibrate_parameters)) != len(self.calibrate_parameters):
+            raise ValueError("calibrate_parameters contains a name twice")
+        return self
+
+
+class TemperatureBias(ApiModel):
+    """Mean of measured minus model over the sections, per measured quantity."""
+
+    bed_temperature_bias_k: float
+    exhaust_temperature_bias_k: float
+
+
+class TemperatureErrors(ApiModel):
+    """Model minus measured over the sections: root mean square and largest absolute error."""
+
+    bed_temperature_rms_k: float
+    bed_temperature_maximum_k: float
+    exhaust_temperature_rms_k: float
+    exhaust_temperature_maximum_k: float
+
+
+class CalibratedParameters(ApiModel):
+    """Result of the weighted least-squares fit; the keys of ``values`` carry the units."""
+
+    values: dict[str, float]
+    at_bound: tuple[str, ...]
+    weighted_squared_residual_sum: float
+    n_residuals: int
+    evaluations: int
+    solver_message: str
+    errors: TemperatureErrors
+
+
+class CalibrationResponse(ApiModel):
+    """Bias of the uncalibrated model, its errors, and the calibrated parameters when asked for.
+
+    ``calibration_fingerprint`` identifies this result (model, bias and parameters); a caller that
+    stores the result stores the fingerprint with it.
+    """
+
+    meta: ResponseMeta
+    n_sections: int
+    model_bed_temperature_celsius: _Series
+    model_exhaust_temperature_celsius: _Series
+    bias: TemperatureBias
+    errors_uncalibrated: TemperatureErrors
+    errors_with_bias: TemperatureErrors
+    parameters: CalibratedParameters | None = None
+    calibration_fingerprint: str
+
+
+class CalibrationDescription(ServiceDescription):
+    """Self-description of the calibration service."""
+
+    products: tuple[str, ...]
+    calibratable_parameters: tuple[str, ...]
+    maximum_parameters: int
+    bed_temperature_sigma_k: float
+    exhaust_temperature_sigma_k: float
+
+
+# ------------------------------------------------------------- heat distribution
+
+HeatDistributionMode = Literal["cascade_rule", "planning"]
+"""``cascade_rule``: assignment hour by hour without foresight (rule of Befund 118).
+``planning``: one linear programme over the whole request with the on/off plan (Befund 119)."""
+
+StorageRule = Literal["k2", "k2b"]
+"""Discharge rule of the tank in the mode ``cascade_rule`` (Befund 118 and its addendum)."""
+
+
+class HeatSink(ApiModel):
+    """A consumer of network heat: a cold stream from inlet to outlet temperature, hour by hour.
+
+    ``heat_capacity_flow_kw_per_k`` is the flow while the consumer runs; ``running`` says in which
+    hours it does (default: always). ``group`` joins consumers that are parallel branches of one
+    cascade stage; they need the same temperatures and the same required temperature.
+    """
+
+    name: str = Field(pattern=r"^[A-Za-z][A-Za-z0-9_]*$", max_length=40)
+    group: str | None = Field(default=None, pattern=r"^[A-Za-z][A-Za-z0-9_]*$", max_length=40)
+    required_temperature_celsius: float
+    inlet_temperature_celsius: _Series
+    outlet_temperature_celsius: _Series
+    heat_capacity_flow_kw_per_k: _Series
+    replaced_supply_efficiency: float = Field(
+        gt=0.0, le=1.0, description="Efficiency of the heat supply the network heat replaces."
+    )
+    running: tuple[bool, ...] | None = None
+
+    @model_validator(mode="after")
+    def _equal_lengths(self) -> HeatSink:
+        lengths = {
+            len(self.inlet_temperature_celsius),
+            len(self.outlet_temperature_celsius),
+            len(self.heat_capacity_flow_kw_per_k),
+        }
+        if self.running is not None:
+            lengths.add(len(self.running))
+        if len(lengths) != 1 or next(iter(lengths)) < 1:
+            raise ValueError(f"sink {self.name!r}: all series need the same, positive length")
+        if min(self.heat_capacity_flow_kw_per_k) < 0.0:
+            raise ValueError(f"sink {self.name!r}: a heat-capacity flow is negative")
+        return self
+
+    @property
+    def n_samples(self) -> int:
+        """Number of hours of every series."""
+        return len(self.inlet_temperature_celsius)
+
+
+class HeatDistributionRequest(VersionedRequest):
+    """One source of waste heat, the consumers and, with a tank, how it is operated.
+
+    The grid is hourly. ``storage_capacity_kwh = 0`` means no tank; ``storage_content_kwh`` is the
+    content of the tank at the beginning of the first hour (default: empty). The content after
+    every hour comes back in the response, so the state of the tank stays with the caller.
+    """
+
+    mode: HeatDistributionMode = "cascade_rule"
+    sample_time_s: float = Field(default=3600.0, gt=0.0)
+    source_power_kw: float = Field(gt=0.0)
+    storage_capacity_kwh: float = Field(default=0.0, ge=0.0)
+    storage_content_kwh: float = Field(default=0.0, ge=0.0)
+    storage_rule: StorageRule = "k2"
+    sinks: tuple[HeatSink, ...] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def _consistent(self) -> HeatDistributionRequest:
+        names = [sink.name for sink in self.sinks]
+        if len(set(names)) != len(names):
+            raise ValueError("sink names must be distinct")
+        if len({sink.n_samples for sink in self.sinks}) != 1:
+            raise ValueError("all sinks need series of the same length")
+        if self.storage_content_kwh > self.storage_capacity_kwh:
+            raise ValueError("storage_content_kwh exceeds storage_capacity_kwh")
+        return self
+
+
+class SinkHeat(ApiModel):
+    """Heat delivered to one consumer, hour by hour."""
+
+    name: str
+    heat_delivered_kw: _Series
+
+
+class HeatKeyFigures(ApiModel):
+    """Sums over the request (the key figures of Befund 118)."""
+
+    source_energy_kwh: float
+    heat_used_kwh: float
+    utilisation: float = Field(description="Heat used as a fraction of the source energy.")
+    replaced_gas_kwh: float
+    co2_replaced_gas_kg: float
+    pump_electricity_kwh: float
+    co2_pump_kg: float
+    co2_net_saving_kg: float
+    storage_charged_kwh: float
+    storage_discharged_kwh: float
+    storage_content_end_kwh: float
+
+
+class HeatDistributionResponse(ApiModel):
+    """Assignment (mode ``cascade_rule``) or planned operation (mode ``planning``).
+
+    ``sink_heat`` is ``null`` in the mode ``planning``: the reduced model of the planning knows
+    the heat used per hour, not its split to the consumers. ``storage_content_kwh`` has one entry
+    more than the other series (content before the first and after every hour).
+    """
+
+    meta: ResponseMeta
+    mode: HeatDistributionMode
+    sample_time_s: float
+    sink_heat: tuple[SinkHeat, ...] | None = None
+    total_heat_used_kw: _Series
+    storage_charge_kw: _Series
+    storage_discharge_kw: _Series
+    storage_content_kwh: _Series
+    key_figures: HeatKeyFigures
+    lp_failures: int | None = None
+
+
+class HeatDistributionDescription(ServiceDescription):
+    """Self-description of the heat-distribution service."""
+
+    modes: tuple[str, ...]
+    storage_rules: tuple[str, ...]
+    sample_time_s: float
+    source_supply_temperature_celsius: float
+    source_return_floor_celsius: float
+    minimum_approach_k: float
+    storage_loss_per_h: float = Field(description="Share of the content lost per hour.")
+    pump_electricity_fraction: float = Field(
+        description="Pump electricity per unit of heat delivered."
+    )
+
+
+# ------------------------------------------------------------------ recovery case
+
+
+class RecoveryCaseRequest(VersionedRequest):
+    """Exhaust temperatures of the two dryers of the workbook arrangement, and the ambient air."""
+
+    exhaust_1_temperature_celsius: float
+    exhaust_2_temperature_celsius: float
+    ambient_temperature_celsius: float
+
+
+class RecoveryCaseResponse(ApiModel):
+    """Recommended heat-recovery case with what the recommendation rests on.
+
+    ``recommended_case``: 1 (each exhaust to its own sink), 2 (crossed), or ``null`` where the
+    study names no case. ``case_1_expected_best`` is the statement the hit rates refer to.
+    """
+
+    meta: ResponseMeta
+    recommended_case: Literal[1, 2] | None
+    case_1_expected_best: bool
+    exhaust_temperature_difference_k: float
+    exhaust_2_usable_excess_k: float = Field(
+        description="Exhaust 2 minus ambient minus the offset of the rule; positive: usable heat."
+    )
+    reference: str
+    valid_for: str
+    hit_rate_physical_unpressurised: float
+    hit_rate_physical_pressurised: float
+    hit_rate_basis: str
+
+
+class RecoveryCaseDescription(ServiceDescription):
+    """Self-description of the recovery-case rule."""
+
+    cases: tuple[int, ...]
+    difference_threshold_k: float
+    usable_excess_offset_k: float
+    reference: str
+    valid_for: str
+    hit_rate_physical_unpressurised: float
+    hit_rate_physical_pressurised: float
+    hit_rate_basis: str

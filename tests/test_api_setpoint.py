@@ -95,6 +95,7 @@ def test_response_says_what_it_is(service: SetpointService, process: ProcessConf
         API_VERSION,
         SCHEMA_VERSION,
     )
+    assert meta.model_scope == service.describe().model_scope == "lab line, grey-box"
     assert meta.parameter_status == process.provenance.status == "placeholder"
     assert meta.advisory_only is True
     assert meta.notices == ()

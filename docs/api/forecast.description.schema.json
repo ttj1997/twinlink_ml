@@ -75,6 +75,10 @@
       "title": "Model Label",
       "type": "string"
     },
+    "model_scope": {
+      "title": "Model Scope",
+      "type": "string"
+    },
     "observation_mode": {
       "enum": [
         "inline",
@@ -145,6 +149,7 @@
     "schema_version",
     "model_fingerprint",
     "model_label",
+    "model_scope",
     "parameter_status",
     "required_extras",
     "valid_input_ranges",

@@ -12,8 +12,9 @@ Three properties hold for every service and are part of the contract, not of an 
 * **Advisory.** Every response carries ``advisory_only = true``: the digital twin recommends, it
   does not change operating parameters of a plant.
 * **Labelled.** Every response names the schema version, the fingerprint of the model that
-  produced it and the status of the process parameters behind that model (``placeholder`` for
-  every model in the repository at the time of writing).
+  produced it, the plant and model it stands for (``model_scope``) and the status of the process
+  parameters behind that model (``placeholder`` for every model in the repository at the time of
+  writing).
 """
 
 from __future__ import annotations
@@ -26,7 +27,11 @@ from pydantic import BaseModel, ConfigDict, field_validator
 
 __all__ = [
     "API_VERSION",
+    "LAB_LINE_SCOPE",
+    "PARTNER_WORKBOOK_SCOPE",
+    "PLANT_A_SCOPE",
     "SCHEMA_VERSION",
+    "SITE_NETWORK_SCOPE",
     "ApiModel",
     "BundleIntegrityError",
     "MissingExtraError",
@@ -50,6 +55,14 @@ API_VERSION = "1.0.0"
 SCHEMA_VERSION = "1.0"
 """Version of the request and response schemas, ``major.minor``. A request is accepted when its
 major version equals the major version of the service; a minor version only adds optional fields."""
+
+LAB_LINE_SCOPE = "lab line, grey-box"
+PLANT_A_SCOPE = "plant A, plant-near model"
+SITE_NETWORK_SCOPE = "site heat network, campaign-network model"
+PARTNER_WORKBOOK_SCOPE = "partner workbook rebuild"
+"""Which plant or line and which model a service computes with (``model_scope`` of every
+description and response). The services do not share one model: a result of one scope must not be
+applied to another (a calibration of plant A is not a correction of the laboratory line)."""
 
 ParameterStatus = Literal["placeholder", "partially_calibrated", "calibrated"]
 """Status of the process parameters behind a model, the values of
@@ -169,6 +182,7 @@ class ResponseMeta(ApiModel):
     api_version: str
     model_fingerprint: str
     model_label: str
+    model_scope: str
     parameter_status: ParameterStatus
     advisory_only: Literal[True] = True
     notices: tuple[Notice, ...] = ()
@@ -182,6 +196,7 @@ class ServiceDescription(ApiModel):
     schema_version: str
     model_fingerprint: str
     model_label: str
+    model_scope: str
     parameter_status: ParameterStatus
     advisory_only: Literal[True] = True
     stateless: Literal[True] = True

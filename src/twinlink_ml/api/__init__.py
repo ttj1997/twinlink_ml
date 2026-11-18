@@ -2,14 +2,16 @@
 
 A narrow, stable layer above the research code (``docs/NN_module_api.md``): services behind one
 ABC, requests and responses as versioned pydantic models with JSON Schemas, and a model-bundle
-format for the trained models. The research code is only imported, never changed.
+format for the trained models. The package imports the research code and holds no copy of
+its arithmetic.
 
 Needs the extra ``api`` (pydantic). Importing this package loads neither PyTorch nor CasADi; a
 service asks for its own extra when it needs it and names it in the error
 (:class:`~twinlink_ml.api.base.MissingExtraError`).
 
-Stage 1 (this package): :class:`ForecastService`, :class:`SetpointService`, the model bundle.
-A calibration service and a heat-distribution service are planned as stage 2.
+Services: :class:`ForecastService`, :class:`SetpointService` (stage 1, with the model bundle),
+:class:`CalibrationService`, :class:`HeatDistributionService` and :class:`RecoveryCaseService`
+(stage 2).
 """
 
 try:
@@ -40,16 +42,29 @@ from .bundle import (
     instantiate_model,
     load_bundle,
 )
+from .calibration import CalibrationService
 from .forecast import ForecastService
+from .heat import HeatDistributionService, RecoveryCaseService
 from .schemas import (
+    CalibrationDescription,
+    CalibrationRequest,
+    CalibrationResponse,
     ForecastDescription,
     ForecastRequest,
     ForecastResponse,
+    HeatDistributionDescription,
+    HeatDistributionRequest,
+    HeatDistributionResponse,
+    HeatSink,
     MeasuredTargetSeries,
     ProcessInputSeries,
+    RecoveryCaseDescription,
+    RecoveryCaseRequest,
+    RecoveryCaseResponse,
     SetpointDescription,
     SetpointRequest,
     SetpointResponse,
+    SteadySection,
     TimedSetpoint,
 )
 from .setpoint import SetpointService
@@ -59,10 +74,19 @@ __all__ = [
     "SCHEMA_VERSION",
     "BundleIntegrityError",
     "BundleManifest",
+    "CalibrationDescription",
+    "CalibrationRequest",
+    "CalibrationResponse",
+    "CalibrationService",
     "ForecastDescription",
     "ForecastRequest",
     "ForecastResponse",
     "ForecastService",
+    "HeatDistributionDescription",
+    "HeatDistributionRequest",
+    "HeatDistributionResponse",
+    "HeatDistributionService",
+    "HeatSink",
     "MeasuredTargetSeries",
     "MissingExtraError",
     "ModelBundle",
@@ -70,6 +94,10 @@ __all__ = [
     "NoSolutionError",
     "Notice",
     "ProcessInputSeries",
+    "RecoveryCaseDescription",
+    "RecoveryCaseRequest",
+    "RecoveryCaseResponse",
+    "RecoveryCaseService",
     "RequestRejectedError",
     "ResponseMeta",
     "Service",
@@ -79,6 +107,7 @@ __all__ = [
     "SetpointRequest",
     "SetpointResponse",
     "SetpointService",
+    "SteadySection",
     "TimedSetpoint",
     "ValueRange",
     "build_bundle",

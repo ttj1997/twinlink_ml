@@ -1,0 +1,90 @@
+{
+  "$defs": {
+    "SteadySection": {
+      "additionalProperties": false,
+      "description": "Means of one stationary section of plant operation.\n\nThe roles are those of the plant-near model (Befund 117): intake air, process air, atomising\nair, supply air, spray rate, and the two measured temperatures the model is compared with.",
+      "properties": {
+        "ambient_temperature_celsius": {
+          "title": "Ambient Temperature Celsius",
+          "type": "number"
+        },
+        "atomising_air_flow_nm3_per_h": {
+          "minimum": 0.0,
+          "title": "Atomising Air Flow Nm3 Per H",
+          "type": "number"
+        },
+        "bed_temperature_celsius": {
+          "title": "Bed Temperature Celsius",
+          "type": "number"
+        },
+        "exhaust_temperature_celsius": {
+          "title": "Exhaust Temperature Celsius",
+          "type": "number"
+        },
+        "process_air_flow_nm3_per_h": {
+          "exclusiveMinimum": 0.0,
+          "title": "Process Air Flow Nm3 Per H",
+          "type": "number"
+        },
+        "product": {
+          "description": "Role of the product, as named by the service description.",
+          "title": "Product",
+          "type": "string"
+        },
+        "spray_rate_kg_per_h": {
+          "exclusiveMinimum": 0.0,
+          "title": "Spray Rate Kg Per H",
+          "type": "number"
+        },
+        "supply_air_temperature_celsius": {
+          "title": "Supply Air Temperature Celsius",
+          "type": "number"
+        }
+      },
+      "required": [
+        "product",
+        "ambient_temperature_celsius",
+        "process_air_flow_nm3_per_h",
+        "atomising_air_flow_nm3_per_h",
+        "supply_air_temperature_celsius",
+        "spray_rate_kg_per_h",
+        "bed_temperature_celsius",
+        "exhaust_temperature_celsius"
+      ],
+      "title": "SteadySection",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Stationary sections, and optionally the parameters to calibrate on them.\n\nWithout ``calibrate_parameters`` the answer is the constant bias per measured quantity, the\ndefault. Parameters are calibrated only when they are named.",
+  "properties": {
+    "calibrate_parameters": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Calibrate Parameters",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "sections": {
+      "items": {
+        "$ref": "#/$defs/SteadySection"
+      },
+      "minItems": 1,
+      "title": "Sections",
+      "type": "array"
+    }
+  },
+  "required": [
+    "sections"
+  ],
+  "title": "CalibrationRequest",
+  "type": "object",
+  "x-schema-version": "1.0"
+}

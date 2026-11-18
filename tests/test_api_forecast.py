@@ -28,6 +28,7 @@ from twinlink_ml.api import (
     build_bundle,
     fit_bundle,
 )
+from twinlink_ml.api.base import LAB_LINE_SCOPE as LAB
 from twinlink_ml.api.bundle import instantiate_model
 from twinlink_ml.data.windows import WindowBatch
 from twinlink_ml.models import LinearARXModel
@@ -94,6 +95,7 @@ def test_response_says_what_it_is(service: ForecastService, arx_bundle: ModelBun
     )
     assert meta.model_fingerprint == arx_bundle.fingerprint
     assert meta.model_label == "arx_p4_q2"
+    assert meta.model_scope == service.describe().model_scope == LAB
     assert meta.parameter_status == "placeholder"
     assert meta.advisory_only is True
     assert meta.notices == ()
@@ -364,7 +366,7 @@ def test_network_end_to_end_equals_the_trained_model() -> None:
     )
     trained.fit(train, seed=5, validation=validation)
     bundle = build_bundle(
-        trained, train, sample_time_s=SAMPLE_TIME_S, parameter_status="placeholder"
+        trained, train, sample_time_s=SAMPLE_TIME_S, parameter_status="placeholder", model_scope=LAB
     )
     fallback = fit_bundle(data, n_train=N_TRAIN, model_seed=3, kind="linear_arx")
     service = ForecastService(bundle, fallback)

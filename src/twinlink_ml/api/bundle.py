@@ -64,6 +64,7 @@ from ..models.base import SequenceModel
 from ..models.baselines import LinearARXModel
 from ..simulation.backend import FloatArray
 from .base import (
+    LAB_LINE_SCOPE,
     ApiModel,
     BundleIntegrityError,
     ParameterStatus,
@@ -153,6 +154,7 @@ class BundleManifest(ApiModel):
     bundle_format_version: int
     model_kind: ModelKind
     model_label: str
+    model_scope: str
     model_settings: dict[str, JsonValue]
     exogenous_names: tuple[str, ...]
     target_names: tuple[str, ...]
@@ -466,6 +468,7 @@ def build_bundle(
     *,
     sample_time_s: float,
     parameter_status: ParameterStatus,
+    model_scope: str,
     data_spec: Mapping[str, Any] | None = None,
     data_fingerprints: Mapping[str, str] | None = None,
     training: Mapping[str, Any] | None = None,
@@ -483,6 +486,9 @@ def build_bundle(
         Sample time of the data (a data set does not know it).
     parameter_status
         Status of the process parameters behind the data (``ProcessConfig.provenance.status``).
+    model_scope
+        Which plant or line and which model the data came from (for example
+        :data:`~twinlink_ml.api.base.LAB_LINE_SCOPE`); goes into every answer of the model.
     data_spec, data_fingerprints, training
         Description of the data and of the fit for the manifest (for example
         ``DataSpec.as_parameters()``, ``GeneratedData.fingerprints``, number of training runs and
@@ -494,6 +500,7 @@ def build_bundle(
         "bundle_format_version": BUNDLE_FORMAT_VERSION,
         "model_kind": kind,
         "model_label": model.name,
+        "model_scope": model_scope,
         "model_settings": settings,
         "exogenous_names": list(train.exogenous_names),
         "target_names": list(train.target_names),
@@ -539,13 +546,16 @@ def fit_bundle(
     model_seed: int,
     kind: ModelKind = "composite_torch",
     torch_config: TorchSequenceConfig | None = None,
+    model_scope: str = LAB_LINE_SCOPE,
 ) -> ModelBundle:
     """From runs to a bundle: build the data sets of one budget, fit, pack.
 
     ``kind="composite_torch"`` fits one network per target (GRU with the default settings of the
     architecture comparison unless ``torch_config`` says otherwise); ``kind="linear_arx"`` fits the
     linear ARX baseline, which needs neither PyTorch nor a model seed. Scalers come from the
-    training runs of this budget only (run-level split of ``data``).
+    training runs of this budget only (run-level split of ``data``). ``model_scope`` names the
+    plant and model behind ``data``; the default is the laboratory line of the grey-box simulator,
+    which is what ``generate_data`` simulates.
     """
     from ..evaluation.experiments import build_datasets
 
@@ -566,6 +576,7 @@ def fit_bundle(
         train,
         sample_time_s=data.spec.sample_time_s,
         parameter_status=data.process_config.provenance.status,
+        model_scope=model_scope,
         data_spec=data.spec.as_parameters(),
         data_fingerprints=data.fingerprints,
         training={

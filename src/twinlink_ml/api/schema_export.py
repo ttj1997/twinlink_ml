@@ -21,10 +21,18 @@ JSON_SCHEMA_DIALECT = "https://json-schema.org/draft/2020-12/schema"
 
 def service_classes() -> tuple[type[Service[Any, Any]], ...]:
     """The services of this package, in the order of the documentation."""
+    from .calibration import CalibrationService
     from .forecast import ForecastService
+    from .heat import HeatDistributionService, RecoveryCaseService
     from .setpoint import SetpointService
 
-    return (ForecastService, SetpointService)
+    return (
+        ForecastService,
+        SetpointService,
+        CalibrationService,
+        HeatDistributionService,
+        RecoveryCaseService,
+    )
 
 
 def collect_schemas() -> dict[str, dict[str, Any]]:
