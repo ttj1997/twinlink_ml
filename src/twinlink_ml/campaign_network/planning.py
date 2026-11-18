@@ -43,6 +43,7 @@ from __future__ import annotations
 
 import time
 from abc import ABC, abstractmethod
+from collections.abc import Collection, Sequence
 from dataclasses import dataclass
 
 import numpy as np
@@ -51,7 +52,7 @@ from scipy.optimize import linprog
 from scipy.sparse import coo_matrix
 
 from .config import CampaignNetworkConfig
-from .profiles import build_consumers, plant_schedules
+from .profiles import ColdStream, build_consumers, plant_schedules
 
 __all__ = [
     "CutData",
@@ -59,6 +60,7 @@ __all__ = [
     "PlanResult",
     "TrueForecast",
     "cut_data",
+    "cut_data_for_streams",
     "planned_transitions",
     "rolling_plan",
     "use_of",
@@ -83,6 +85,47 @@ class CutData:
         return out
 
 
+def cut_data_for_streams(
+    streams: Sequence[ColdStream],
+    schedulable: Collection[str],
+    *,
+    supply_celsius: float,
+    floor_celsius: float,
+    approach_k: float,
+) -> CutData:
+    """Cut pieces of every hour for given cold streams (a pure function of its arguments).
+
+    ``streams`` carry the heat-capacity flow at full flow; the streams named in ``schedulable``
+    are switched on and off by a schedule afterwards (:meth:`CutData.demand_below`), the others
+    always count. ``supply_celsius`` and ``floor_celsius`` are the temperatures of the source
+    water, ``approach_k`` the minimum approach of every exchanger. Refuses streams with different
+    efficiencies of the replaced supply (the reduced model weighs every consumer alike, module
+    docstring).
+    """
+    if len({s.gas_efficiency for s in streams}) != 1:
+        raise ValueError("the reduced model needs the same efficiency for every consumer")
+    n = streams[0].cp.size
+    half = 0.5 * approach_k
+    hs = supply_celsius - half
+    hb = floor_celsius - half
+    cols = [np.full(n, hs), np.full(n, hb)]
+    for s in streams:
+        cols += [s.t_in + half, s.t_out + half]
+    b = np.stack(cols, axis=1)
+    f = np.clip((hs - b) / (hs - hb), 0.0, 1.0)
+    c_low = np.zeros_like(b)
+    c_plant: dict[str, FloatArray] = {}
+    for s in streams:
+        lo = s.t_in + half
+        width = np.maximum(s.t_out - s.t_in, 0.0)
+        part = s.cp[:, None] * np.clip(b - lo[:, None], 0.0, width[:, None])
+        if s.name in schedulable:
+            c_plant[s.name] = part
+        else:
+            c_low += part
+    return CutData(f=f, c_low=c_low, c_plant=c_plant)
+
+
 def cut_data(config: CampaignNetworkConfig) -> CutData:
     """Cut pieces of the year for the consumers of ``config`` (process plants at full flow)."""
     etas = {p.gas_efficiency for p in config.plants}
@@ -91,26 +134,13 @@ def cut_data(config: CampaignNetworkConfig) -> CutData:
         raise ValueError("the reduced model needs the same efficiency for every consumer")
     n = config.campaigns.hours
     full = build_consumers(config, {p.name: np.ones(n, dtype=bool) for p in config.plants})
-    half = 0.5 * config.approach_k
-    hs = config.source.supply_celsius - half
-    hb = config.source.floor_celsius - half
-    cols = [np.full(n, hs), np.full(n, hb)]
-    for s in full.streams:
-        cols += [s.t_in + half, s.t_out + half]
-    b = np.stack(cols, axis=1)
-    f = np.clip((hs - b) / (hs - hb), 0.0, 1.0)
-    plants = {p.name for p in config.plants}
-    c_low = np.zeros_like(b)
-    c_plant: dict[str, FloatArray] = {}
-    for s in full.streams:
-        lo = s.t_in + half
-        width = np.maximum(s.t_out - s.t_in, 0.0)
-        part = s.cp[:, None] * np.clip(b - lo[:, None], 0.0, width[:, None])
-        if s.name in plants:
-            c_plant[s.name] = part
-        else:
-            c_low += part
-    return CutData(f=f, c_low=c_low, c_plant=c_plant)
+    return cut_data_for_streams(
+        full.streams,
+        {p.name for p in config.plants},
+        supply_celsius=config.source.supply_celsius,
+        floor_celsius=config.source.floor_celsius,
+        approach_k=config.approach_k,
+    )
 
 
 def use_of(f: FloatArray, c_below: FloatArray, heat: FloatArray | float) -> FloatArray:
@@ -258,10 +288,19 @@ def rolling_plan(
     storage_hours: float,
     horizon_h: int,
     replan_every_h: int,
+    initial_content_kwh: float = 0.0,
 ) -> PlanResult:
-    """Rolling planning of the module docstring; returns the realised operation."""
+    """Rolling planning of the module docstring; returns the realised operation.
+
+    ``initial_content_kwh`` is the content of the tank at the beginning of the first hour (before
+    the loss of that hour); the default 0 is the empty tank of the study.
+    """
     n = cuts.f.shape[0]
     capacity = storage_hours * power_kw
+    if not 0.0 <= initial_content_kwh <= capacity + config.solver.duty_tolerance_kw:
+        raise ValueError(
+            f"initial_content_kwh = {initial_content_kwh} lies outside [0, {capacity}] kWh"
+        )
     keep = 1.0 - config.storage.loss_per_h
     dis_max = config.storage.discharge_max_fraction * power_kw
     true_below = cuts.demand_below(on, slice(None))
@@ -269,7 +308,8 @@ def rolling_plan(
     charge = np.zeros(n)
     discharge = np.zeros(n)
     content = np.zeros(n + 1)
-    e = 0.0
+    content[0] = initial_content_kwh
+    e = float(initial_content_kwh)
     plan_c = plan_d = np.zeros(0)
     plan_states: dict[str, BoolArray] = {}
     t0 = 0

@@ -34,8 +34,11 @@ without foresight, hour by hour:
 2. otherwise charge the largest part of the source water whose removal lowers no stage duty
    (limited by the free capacity and the source power).
 
-Storage balance ``E[t+1] = (1 - loss) E[t] + c[t] - d[t]``, empty at the start. Because the cascade
-duties do not decrease with the water flow, K2 >= K1 in every stage and hour.
+Storage balance ``E[t+1] = (1 - loss) E[t] + c[t] - d[t]``, empty at the start unless
+``initial_content_kwh`` gives ``E[0]`` (the content at the beginning of the first hour, before the
+loss of that hour). The rule has no foresight, so a run over consecutive hours equals two runs in
+which the second starts with the content the first ended with (tested). Because the cascade duties
+do not decrease with the water flow, K2 >= K1 in every stage and hour (with an empty start).
 
 **K2b** (post-hoc extension v2, rule fixed before its run; ``run_k2(..., rule="k2b")``) -- the same
 tank and the same charging as K2, another discharge:
@@ -226,10 +229,21 @@ def run_k2(
     storage_hours: float,
     config: CampaignNetworkConfig,
     rule: str = "k2",
+    initial_content_kwh: float = 0.0,
 ) -> CascadeResult:
-    """K2 (``rule="k2"``) or K2b (``rule="k2b"``): cascade rule plus a storage rule (docstring)."""
+    """K2 (``rule="k2"``) or K2b (``rule="k2b"``): cascade rule plus a storage rule (docstring).
+
+    ``initial_content_kwh``: content of the tank at the beginning of the first hour; the default 0
+    is the empty tank of the study.
+    """
     if rule not in ("k2", "k2b"):
         raise ValueError(f"unknown storage rule {rule!r}")
+    largest = storage_hours * power_kw + config.solver.duty_tolerance_kw
+    if not 0.0 <= initial_content_kwh <= largest:
+        raise ValueError(
+            f"initial_content_kwh = {initial_content_kwh} lies outside "
+            f"[0, {storage_hours * power_kw}] kWh"
+        )
     stages = cascade_stages(consumers)
     n = stages[0].cp.size
     span = config.source.span_k
@@ -250,7 +264,8 @@ def run_k2(
     charge = np.zeros(n, dtype=np.float64)
     discharge = np.zeros(n, dtype=np.float64)
     content = np.zeros(n + 1, dtype=np.float64)
-    e = 0.0
+    content[0] = initial_content_kwh
+    e = float(initial_content_kwh)
 
     def ok(d: list[float], target: list[float]) -> bool:
         return all(a >= b - tol for a, b in zip(d, target, strict=True))
