@@ -306,7 +306,8 @@ managing session computes on the machine. No merge, no push by this session.
 
 ## 12. Points settled without asking when the design was fixed (most conservative reading each time)
 
-To be objected to before any run; none of them is a result.
+None of them is a result. **All seven points were confirmed by the project lead on 2026-11-18**,
+point 7 with the caveat added there.
 
 1. **Reading of family D.** The decisions name a reading of D; D has one arm and no baseline. Its
    classes are U0, U2 and U3 as defined in section 7 (U1 cannot occur). The comparison of D-gru
@@ -324,3 +325,5 @@ To be objected to before any run; none of them is a result.
    interval 4 h only.
 7. **Range of the training labels (addition C):** per input the minimum and maximum over the labels
    of the cell (budget and seed); a decision counts as outside if at least one input is outside.
+   The check per input does not capture unfamiliar combinations of inputs; the quantity is
+   descriptive and tends to underestimate the distribution shift.
