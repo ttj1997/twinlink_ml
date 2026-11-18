@@ -10,7 +10,7 @@ One virtual environment in the main checkout with every extra of `pyproject.toml
 
 ```bash
 python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
-pip install -e ".[torch,sklearn,plant-data,train,rl,dev]"
+pip install -e ".[torch,sklearn,plant-data,train,rl,api,dev]"
 python -c "import twinlink_ml; print(twinlink_ml.__file__)"   # must point to this repo's src/
 ```
 

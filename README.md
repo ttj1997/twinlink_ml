@@ -23,6 +23,7 @@ training data and is used to evaluate control strategies before anything touches
 | Control | `src/twinlink_ml/rl/` | Bandit/RL environment on the steady-state model, Lagrangian and shield variants |
 | Heat recovery | `src/twinlink_ml/heatnetwork/` | Cascaded exhaust-to-process-air heat recovery with minimum approach checked along the exchanger, pinch target |
 | Partner model | `src/twinlink_ml/partner_v4/`, `partner_v4_1/` | One-to-one rebuilds of an application partner's Excel balance model, used to check and give feedback |
+| Module interface | `src/twinlink_ml/api/` | Framework-independent services (forecast, set point) behind one ABC, versioned request and response schemas (`docs/api/`), model-bundle format; stage 1, see `docs/NN_module_api.md` |
 | Real plant data | `src/twinlink_ml/plant_data/` | Reader for plant exports. **Raw plant data is never in this repository.** |
 | Documentation | `docs/` | Lab book, process set-up, work plan, syntheses, design drafts (mostly English; early lab-book entries are German) |
 
@@ -216,7 +217,7 @@ One virtual environment with every extra of `pyproject.toml`:
 
 ```bash
 python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
-pip install -e ".[torch,sklearn,plant-data,train,rl,dev]"
+pip install -e ".[torch,sklearn,plant-data,train,rl,api,dev]"
 python -c "import twinlink_ml; print(twinlink_ml.__file__)"   # must point to this repo's src/
 ```
 

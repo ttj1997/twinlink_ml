@@ -1,0 +1,160 @@
+{
+  "$defs": {
+    "Notice": {
+      "additionalProperties": false,
+      "description": "A remark on a response that does not make it invalid (for example an input out of range).",
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "Notice",
+      "type": "object"
+    },
+    "ResponseMeta": {
+      "additionalProperties": false,
+      "description": "What every response says about itself.",
+      "properties": {
+        "advisory_only": {
+          "const": true,
+          "default": true,
+          "title": "Advisory Only",
+          "type": "boolean"
+        },
+        "api_version": {
+          "title": "Api Version",
+          "type": "string"
+        },
+        "model_fingerprint": {
+          "title": "Model Fingerprint",
+          "type": "string"
+        },
+        "model_label": {
+          "title": "Model Label",
+          "type": "string"
+        },
+        "notices": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Notice"
+          },
+          "title": "Notices",
+          "type": "array"
+        },
+        "parameter_status": {
+          "enum": [
+            "placeholder",
+            "partially_calibrated",
+            "calibrated"
+          ],
+          "title": "Parameter Status",
+          "type": "string"
+        },
+        "schema_version": {
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "service": {
+          "title": "Service",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "service",
+        "api_version",
+        "model_fingerprint",
+        "model_label",
+        "parameter_status"
+      ],
+      "title": "ResponseMeta",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Predicted quantities over the horizon; ``null`` for a quantity the model does not predict.\n\n``time_offset_s`` counts from the last sample of the history; the first prediction is one\nsample time later.",
+  "properties": {
+    "bed_temperature_celsius": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Bed Temperature Celsius"
+    },
+    "energy_target_kw": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Energy Target Kw"
+    },
+    "fallback_used": {
+      "title": "Fallback Used",
+      "type": "boolean"
+    },
+    "meta": {
+      "$ref": "#/$defs/ResponseMeta"
+    },
+    "product_moisture_kg_per_kg": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Product Moisture Kg Per Kg"
+    },
+    "sample_time_s": {
+      "title": "Sample Time S",
+      "type": "number"
+    },
+    "time_offset_s": {
+      "items": {
+        "type": "number"
+      },
+      "title": "Time Offset S",
+      "type": "array"
+    }
+  },
+  "required": [
+    "meta",
+    "fallback_used",
+    "sample_time_s",
+    "time_offset_s"
+  ],
+  "title": "ForecastResponse",
+  "type": "object",
+  "x-schema-version": "1.0"
+}

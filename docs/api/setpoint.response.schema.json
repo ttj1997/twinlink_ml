@@ -1,0 +1,203 @@
+{
+  "$defs": {
+    "AppliedLimits": {
+      "additionalProperties": false,
+      "description": "The bounds the optimiser actually used (process configuration narrowed by the request).",
+      "properties": {
+        "bed_temperature_limit_celsius": {
+          "title": "Bed Temperature Limit Celsius",
+          "type": "number"
+        },
+        "gas_velocity_maximum_m_per_s": {
+          "title": "Gas Velocity Maximum M Per S",
+          "type": "number"
+        },
+        "gas_velocity_minimum_m_per_s": {
+          "title": "Gas Velocity Minimum M Per S",
+          "type": "number"
+        },
+        "inlet_temperature_maximum_celsius": {
+          "title": "Inlet Temperature Maximum Celsius",
+          "type": "number"
+        },
+        "inlet_temperature_minimum_celsius": {
+          "title": "Inlet Temperature Minimum Celsius",
+          "type": "number"
+        },
+        "moisture_bound_kg_per_kg": {
+          "description": "Limit minus margin: the moisture the optimiser plans for.",
+          "title": "Moisture Bound Kg Per Kg",
+          "type": "number"
+        }
+      },
+      "required": [
+        "inlet_temperature_minimum_celsius",
+        "inlet_temperature_maximum_celsius",
+        "gas_velocity_minimum_m_per_s",
+        "gas_velocity_maximum_m_per_s",
+        "bed_temperature_limit_celsius",
+        "moisture_bound_kg_per_kg"
+      ],
+      "title": "AppliedLimits",
+      "type": "object"
+    },
+    "Notice": {
+      "additionalProperties": false,
+      "description": "A remark on a response that does not make it invalid (for example an input out of range).",
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "Notice",
+      "type": "object"
+    },
+    "ResponseMeta": {
+      "additionalProperties": false,
+      "description": "What every response says about itself.",
+      "properties": {
+        "advisory_only": {
+          "const": true,
+          "default": true,
+          "title": "Advisory Only",
+          "type": "boolean"
+        },
+        "api_version": {
+          "title": "Api Version",
+          "type": "string"
+        },
+        "model_fingerprint": {
+          "title": "Model Fingerprint",
+          "type": "string"
+        },
+        "model_label": {
+          "title": "Model Label",
+          "type": "string"
+        },
+        "notices": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Notice"
+          },
+          "title": "Notices",
+          "type": "array"
+        },
+        "parameter_status": {
+          "enum": [
+            "placeholder",
+            "partially_calibrated",
+            "calibrated"
+          ],
+          "title": "Parameter Status",
+          "type": "string"
+        },
+        "schema_version": {
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "service": {
+          "title": "Service",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "service",
+        "api_version",
+        "model_fingerprint",
+        "model_label",
+        "parameter_status"
+      ],
+      "title": "ResponseMeta",
+      "type": "object"
+    },
+    "TimedSetpoint": {
+      "additionalProperties": false,
+      "description": "Set points valid from ``time_offset_s`` after the request.\n\n``spray_rate_kg_per_h`` is ``null`` when the service does not decide the throughput.",
+      "properties": {
+        "gas_velocity_m_per_s": {
+          "title": "Gas Velocity M Per S",
+          "type": "number"
+        },
+        "inlet_temperature_celsius": {
+          "title": "Inlet Temperature Celsius",
+          "type": "number"
+        },
+        "spray_rate_kg_per_h": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Spray Rate Kg Per H"
+        },
+        "time_offset_s": {
+          "minimum": 0.0,
+          "title": "Time Offset S",
+          "type": "number"
+        }
+      },
+      "required": [
+        "time_offset_s",
+        "inlet_temperature_celsius",
+        "gas_velocity_m_per_s"
+      ],
+      "title": "TimedSetpoint",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Recommended set points as a time series and the steady state the model expects for them.\n\nThe quasi-stationary optimiser returns one entry (``time_offset_s = 0``); the list form leaves\nroom for a set-point trajectory without a change of the schema.",
+  "properties": {
+    "applied_limits": {
+      "$ref": "#/$defs/AppliedLimits"
+    },
+    "expected_bed_temperature_celsius": {
+      "title": "Expected Bed Temperature Celsius",
+      "type": "number"
+    },
+    "expected_product_moisture_kg_per_kg": {
+      "title": "Expected Product Moisture Kg Per Kg",
+      "type": "number"
+    },
+    "expected_total_power_kw": {
+      "title": "Expected Total Power Kw",
+      "type": "number"
+    },
+    "meta": {
+      "$ref": "#/$defs/ResponseMeta"
+    },
+    "setpoints": {
+      "items": {
+        "$ref": "#/$defs/TimedSetpoint"
+      },
+      "title": "Setpoints",
+      "type": "array"
+    }
+  },
+  "required": [
+    "meta",
+    "setpoints",
+    "applied_limits",
+    "expected_bed_temperature_celsius",
+    "expected_product_moisture_kg_per_kg",
+    "expected_total_power_kw"
+  ],
+  "title": "SetpointResponse",
+  "type": "object",
+  "x-schema-version": "1.0"
+}
