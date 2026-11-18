@@ -60,6 +60,12 @@ lab book (`04_stand_ap1.md`), process setup, and synthesis documents.
   `scripts/verify/_common.provenance()`). If the loaded `twinlink_ml` is not
   `<root>/src/twinlink_ml` of the repository or worktree the run belongs to, the run aborts.
   Artifact scripts that write their own provenance call `require_code_location(ROOT)`.
+- Exception for model bundles (`twinlink_ml.api.bundle`; decision of the project lead, 2026-11-18):
+  a bundle leaves the machine, so its manifest holds no absolute path and no user name
+  (`code/package_dir` and `code/interpreter` are left out). It records the code commit, the dirty
+  flag, the fingerprints, the preset version and `code/root_checked`; the check itself is
+  unchanged (building a bundle aborts when the loaded package is not the checkout's). See
+  `docs/NN_module_api.md`, section 5.
 - Worktrees: an editable install points at one directory only, so a worktree must load its own
   code. Start every run there with `tools/run_here.sh <python args>` (changes into the worktree
   root, sets `PYTHONPATH=<worktree>/src`, uses the main checkout's `.venv`); detached drivers do
