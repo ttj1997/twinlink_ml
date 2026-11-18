@@ -84,6 +84,9 @@ lab book (`04_stand_ap1.md`), process setup, and synthesis documents.
 - When models are compared for use in constrained operation, the pre-registered reading is
   defined on the cost at a held constraint (e.g. energy at the margin that keeps the limit),
   not on the margin alone; a margin favours models that err on the safe side.
+- When feasibility can fail (a margin is not reached), the pre-registered reading starts with
+  feasibility (share of admissible cells per model, compared before any cost comparison); cost
+  comparisons on paired admissible cells come second.
 
 ## Documentation
 
