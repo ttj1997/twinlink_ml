@@ -14,8 +14,9 @@ lab book (`04_stand_ap1.md`), process setup, and synthesis documents.
   to real names is in `local/`, which is gitignored and absent in cloud sessions. Do not
   guess real names.
 - Raw plant data is never in the repository.
-- `tests/test_denylist.py` checks `local/denylist.txt` (if present) against all
-  git-tracked files before a commit is trusted.
+- `tests/test_denylist.py` checks `local/denylist.txt` against all git-tracked files before a
+  commit is trusted. Every worktree gets a copy of `local/denylist.txt` at creation; the
+  denylist test fails (not skips) when the list is missing.
 
 ## Working rules
 

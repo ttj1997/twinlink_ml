@@ -63,7 +63,7 @@ nbstripout notebooks/*.ipynb
   git-ignored. Do not guess real names.
 - Raw plant data and partner workbooks never go into the repository (`local/`, see
   `local.example`).
-- `tests/test_denylist.py` checks `local/denylist.txt` (if present) against all tracked files.
+- `tests/test_denylist.py` checks `local/denylist.txt` against all tracked files and fails when the list is missing.
   Run it before pushing; set `TWINLINK_LOCAL_DIR` when `local/` is not in your checkout.
 
 ## Provenance of results

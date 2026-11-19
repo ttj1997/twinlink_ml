@@ -14,7 +14,7 @@ Then fill in:
   associated partner, and any third-party contact names).
 - `denylist.txt` -- the same real names, one per line. `tests/test_denylist.py`
   greps every git-tracked file against this list before a commit is trusted; if
-  `local/` is absent (the normal case in a cloud session), that test is skipped.
+  the list is missing, that test fails (it does not skip).
 
 `local/` is gitignored and must never be committed. It does not sync over
 GitHub -- see `docs/07_synchronisation.md` for how to transfer it separately.
