@@ -1,7 +1,8 @@
 # NN -- Stationary Dyssol flowsheets as a data source: how many Dyssol runs does a surrogate need?
 
-Status: **design and pre-registered reading, committed BEFORE any Dyssol data set was generated.**
-Results are added below (sections 11 and 12) after the runs, numbers only from the artifacts named
+Status: **complete; pre-registered reading D2 in both cases (sections 11 to 13).** Sections 1 to 10
+are the design and the pre-registered reading, committed BEFORE any Dyssol data set was generated
+(cfefde2) and unchanged since; the results below take their numbers only from the artifacts named
 there. Branch `dyssol-steady-state` (from `master` 61d5b18), worktree `C:/twinlink_work/dyssteady`.
 The document number and the finding number are open (assigned at the merge). Code
 `src/twinlink_ml/dyssol_steady/`, settings `conf/dyssol_steady/dyssol_steady.yaml`, drivers
@@ -229,3 +230,170 @@ points; median and maximum error next to the 95th percentile; the other targets.
 Not in the repository: the delivery (sources carry a person's name), the plant values of the
 workbook, the box, the data sets, the names of the plant lines. The committed template of the box
 holds placeholders. `tests/test_denylist.py` is run before every commit of this branch.
+
+## 11. Results: `one_line`
+
+Artifacts: training `artifacts/runs/dyssol_steady_v1_one_line_training.json.gz` (driver aeedeec,
+clean tree), analysis `artifacts/runs/dyssol_steady_v1_one_line_analysis.json`. The data set
+`dyssol_steady_v1_one_line.json.gz` is local; its SHA-256 is in the training artifact. Sections
+1-10 are unchanged since the commit before the data set (cfefde2); the pilot selection was added
+to the YAML in aeedeec, before the data stage.
+
+**Data.** 1024 + 256 Dyssol runs, none failed. Over-saturated: 9 of 1024 points of the pool, 3 of
+256 of the test set (253 admissible test points). Dyssol per run: median 1.43 s, maximum 2.42 s,
+1881 s in total, peak 54 MB per process.
+
+**Step 0, control: held.** Dyssol against the rebuild at all 1280 points: largest temperature
+deviation 1.7e-13 K, largest relative deviation of heat flows and fuel 6.3e-12 % (bounds 1e-6).
+
+**Step 1, feasibility, and the reading numbers.** Median over the five seeds (range); bold = both
+medians at or below their threshold; "seeds" = seeds meeting both thresholds. Test set: in-box
+Sobol test set, independent of the training pool (all 256 points).
+
+| N | linear: exhaust P95 [K] | fuel P95 [%] | seeds | quadratic: exhaust P95 [K] | fuel P95 [%] | seeds | MLP: exhaust P95 [K] | fuel P95 [%] | seeds |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 8 | 2.72 (2.21-6.26) | 12.71 (8.44-24.25) | 0/5 | 26.81 (19.66-35.07) | 44.28 (26.44-50.02) | 0/5 | 6.63 (3.83-8.83) | 9.80 (7.62-15.80) | 0/5 |
+| 16 | 2.21 (1.90-2.35) | 9.07 (8.34-10.87) | 0/5 | 13.89 (7.47-14.09) | 19.65 (16.99-22.72) | 0/5 | 2.08 (1.90-2.76) | 5.12 (4.10-6.15) | 0/5 |
+| 32 | 1.94 (1.90-2.14) | 8.23 (7.98-9.16) | 0/5 | **0.37** (0.26-0.40) | **0.41** (0.33-0.54) | 5/5 | 1.69 (1.09-2.19) | 1.97 (1.81-2.33) | 0/5 |
+| 64 | 1.97 (1.83-2.00) | 7.40 (6.72-8.81) | 0/5 | **0.24** (0.22-0.25) | **0.32** (0.26-0.39) | 5/5 | **0.48** (0.37-0.76) | **0.84** (0.68-1.04) | 4/5 |
+| 128 | 1.92 (1.77-1.99) | 7.42 (6.61-7.93) | 0/5 | **0.20** (0.19-0.23) | **0.28** (0.26-0.32) | 5/5 | **0.33** (0.26-0.48) | **0.60** (0.47-0.78) | 5/5 |
+| 256 | 1.91 (1.77-1.97) | 7.22 (7.02-7.31) | 0/5 | **0.18** (0.18-0.20) | **0.24** (0.23-0.26) | 5/5 | **0.23** (0.20-1.01) | **0.41** (0.35-1.67) | 4/5 |
+| 512 | 1.95 (1.82-2.00) | 7.14 (6.98-7.67) | 0/5 | **0.17** (0.17-0.17) | **0.22** (0.22-0.23) | 5/5 | **0.19** (0.18-0.19) | **0.38** (0.32-0.40) | 5/5 |
+
+**Step 2, verdict: D2.** N\* of the quadratic regression is 32, of the MLP 64; the linear
+regression has none. **Data need: 32 Dyssol runs, reached by the quadratic regression.**
+
+**Step 3, rank claims** (22 of 28 tests resolved after Holm). MLP against quadratic: the MLP is
+better at N = 8 and 16 on both numbers (resolved; there the quadratic regression has fewer runs
+than its 21 coefficients); the quadratic regression is better at N = 32, 64, 128 and 512 on both
+numbers (resolved); at N = 256 nothing is resolved (one MLP seed lies at 1.01 K and 1.67 %). MLP
+against linear: the MLP is better on the exhaust from N = 64 and on the fuel from N = 16
+(resolved); the remaining four tests (both numbers at N = 8, the exhaust at N = 16 and 32) are
+not resolved.
+
+**Without a reading.** On the 253 admissible test points the verdict and every N\* are the same.
+Largest error over the test set (median over seeds; largest seed in brackets): quadratic at N = 32
+0.82 K (0.90 K) and 1.45 % (1.59 %), at N = 512 0.42 K (0.46 K) and 0.91 % (0.95 %); MLP at N = 64
+1.24 K (1.98 K) and 2.12 % (2.43 %), at N = 512 0.38 K (0.72 K) and 0.92 % (1.21 %). The
+thresholds are therefore met at the 95th percentile, not at every test point. Other targets of the
+quadratic regression at N = 32 (95th percentile, median over seeds): dryer outlet 0.47 K,
+preheated air 0.31 K, recovered heat 2.61 kW.
+
+## 12. Results: `two_lines`
+
+Artifacts: training `artifacts/runs/dyssol_steady_v1_two_lines_training.json.gz` (driver aeedeec;
+run on 0924f2a, which differs from aeedeec only by the two artifacts of section 11; clean tree),
+analysis `artifacts/runs/dyssol_steady_v1_two_lines_analysis.json`. Data set
+`dyssol_steady_v1_two_lines.json.gz` local, SHA-256 in the training artifact. Same reading, same
+settings; 10 varied inputs, 10 targets.
+
+**Data.** 1024 + 256 Dyssol runs, none failed. Over-saturated: **378 of 1024** points of the pool
+and **99 of 256** of the test set (157 admissible test points). Dyssol per run: median 1.63 s,
+maximum 2.31 s, 2135 s in total, peak 59 MB per process.
+
+**Step 0, control: held.** 1280 points: largest temperature deviation 1.7e-13 K, largest relative
+deviation 4.6e-11 %.
+
+**Step 1, feasibility, and the reading numbers** (as in section 11; the exhaust number is the
+larger one of the two lines, the fuel is the total of both heaters; all 256 test points).
+
+| N | linear: exhaust P95 [K] | fuel P95 [%] | seeds | quadratic: exhaust P95 [K] | fuel P95 [%] | seeds | MLP: exhaust P95 [K] | fuel P95 [%] | seeds |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 8 | 35.83 (22.77-50.79) | 39.09 (25.07-67.37) | 0/5 | 50.66 (42.67-62.72) | 58.03 (47.74-71.90) | 0/5 | 29.33 (16.30-41.03) | 19.32 (14.06-26.62) | 0/5 |
+| 16 | 5.67 (5.14-6.47) | 9.05 (7.36-10.58) | 0/5 | 35.28 (30.42-40.83) | 43.47 (34.38-45.89) | 0/5 | 6.43 (5.07-7.10) | 7.87 (5.87-9.19) | 0/5 |
+| 32 | 4.57 (4.41-5.95) | 6.29 (5.22-6.37) | 0/5 | 23.80 (21.86-30.43) | 34.80 (32.64-42.99) | 0/5 | 4.67 (4.17-5.61) | 5.16 (4.60-5.57) | 0/5 |
+| 64 | 4.18 (3.81-4.60) | 5.35 (5.28-6.32) | 0/5 | 6.94 (5.24-10.94) | 10.40 (6.62-10.63) | 0/5 | 3.36 (2.77-3.98) | 2.85 (2.59-3.11) | 0/5 |
+| 128 | 3.88 (3.71-4.03) | 5.32 (4.93-5.49) | 0/5 | **0.53** (0.46-0.54) | **0.23** (0.18-0.27) | 5/5 | 1.61 (1.34-1.79) | 1.65 (1.12-1.72) | 0/5 |
+| 256 | 3.72 (3.55-4.06) | 5.09 (5.00-5.31) | 0/5 | **0.37** (0.35-0.39) | **0.18** (0.16-0.20) | 5/5 | **0.83** (0.76-1.09) | **0.83** (0.72-0.98) | 4/5 |
+| 512 | 3.56 (3.43-3.67) | 5.17 (4.96-5.24) | 0/5 | **0.34** (0.30-0.35) | **0.16** (0.15-0.17) | 5/5 | **0.58** (0.51-0.92) | **0.57** (0.53-0.73) | 5/5 |
+
+**Step 2, verdict: D2.** N\* of the quadratic regression is 128, of the MLP 256; the linear
+regression has none. **Data need: 128 Dyssol runs, reached by the quadratic regression.**
+
+**Step 3, rank claims** (21 of 28 tests resolved after Holm). MLP against quadratic: all 14 tests
+are resolved; the MLP is better at N = 8 to 64 (the quadratic regression has fewer runs than its
+66 coefficients), the quadratic regression is better at N = 128, 256 and 512, on both numbers. MLP
+against linear: the MLP is better on the exhaust from N = 128 and on the fuel from N = 64
+(resolved); the remaining seven tests are not resolved.
+
+**Without a reading.** On the 157 admissible test points the verdict and every N\* are the same
+(quadratic at N = 128: 0.45 K and 0.20 %). Largest error over the test set (median over seeds;
+largest seed in brackets), line 1 / line 2 and total fuel: quadratic at N = 128 0.67 K (1.01 K) /
+1.14 K (1.26 K) and 0.39 % (0.63 %), at N = 512 0.48 K / 0.87 K and 0.25 %; MLP at N = 256 1.31 K /
+3.06 K and 1.66 %, at N = 512 1.30 K / 2.30 K and 1.42 %. Other targets of the quadratic regression
+at N = 128 (95th percentile, median over seeds), line 1 / line 2: dryer outlet 0.46 / 0.79 K,
+preheated air 0.33 / 0.29 K, recovered heat 2.70 / 2.10 kW.
+
+## 13. Both cases together, and caveats
+
+**Answer to the question of section 1.** Without a rebuild, a surrogate of these stationary
+flowsheets needs 32 Dyssol runs with one line (5 inputs) and 128 with two lines (10 inputs), and a
+quadratic regression reaches both; an MLP needs twice as many (64 and 256). A linear regression
+does not reach the thresholds at any N: it settles near 1.9 K and 7.1 % (one line) and 3.6 K and
+5.2 % (two lines) at N = 512. Both verdicts are D2.
+
+**Caveats.**
+
+1. **The grid sets the resolution of N\*.** In both cases N\* of the quadratic regression is the
+   first N of the grid above its number of coefficients (21 and 66, section 5); below it the
+   minimum-norm solution is the worst model of the study. The grid has no N between 16 and 32 and
+   none between 64 and 128, so the study does not say how few runs above the number of
+   coefficients suffice. The step from 32 to 128 follows the number of coefficients, not the
+   number of inputs.
+2. **A closed, smooth function.** The three units are closed formulas with constant heat
+   capacities (section 3). That a low-order polynomial fits them says nothing about dynamic Dyssol
+   models; what carries over is the chain (design, script, run, control, fit, reading).
+3. **Over-saturation.** With two lines more than a third of the box (378 of 1024, 99 of 256) gives
+   a dryer exhaust above saturation, because the dryer unit has no saturation limit. The surrogate
+   reproduces the unit there, not a dryer. The reading on the admissible test points is the same,
+   but the training pools contain the flagged points in every case.
+4. **MLP optimiser.** The selected setting (learning rate 0.003, weight decay 0.1) lies at the
+   edge of the pilot grid in both cases (criterion 1.81 against 1.83 for the next setting with one
+   line, 4.01 against 4.37 with two); the grid was not extended, as fixed beforehand. "The MLP
+   needs twice as many runs" holds for this grid. At its N\* the MLP meets the thresholds in 4 of
+   5 seeds in both cases, and with one line one seed misses them again at N = 256.
+5. **95th percentile.** The thresholds are met at the 95th percentile of the test set; the largest
+   errors at N\* are above 1 K or 1 % for some models (sections 11 and 12).
+6. **The fuel threshold is a setting** without a measured source (section 6).
+7. **In-box test set.** No statement about points outside the box.
+8. **Dyssol equals the rebuild** to rounding at every point (control). The learning curves are
+   therefore the ones the rebuild would have given; the Dyssol runs demonstrate the chain and its
+   cost (about 1.4 to 1.6 s and below 60 MB per run), not a different data source.
+9. **Seen before the data set:** section 8. All inputs are stored values of the delivery varied in
+   a local box; no statement about a plant.
+
+**Open for the project lead.** Acceptance of D2 for both cases and of the decisions taken without
+asking (section 9). Questions to the units' author: whether the dryer is to get a saturation
+limit; with which state of the units four of the stored flowsheets were saved (section 8); whether
+evaluating the vapour enthalpy at the bound of its correlation below 290 K is intended.
+
+## 14. Course of the run (2026-11-19)
+
+* Code, design and reading committed 16:06 (cfefde2), units built on that commit; pilots on the
+  rebuild (1fa3b12, a96f84f); selection committed 16:17 (aeedeec).
+* The probe of the other study on the machine had finished before (decision 5). Chain started
+  detached 16:21 on aeedeec with 2 workers: full suite 1614 passed, 6 skipped (34 min, next to the
+  main run of the other study).
+* Per case: dry run of the data stage (every point through the rebuild; Dyssol at 21 points with
+  one line and 32 with two, none failed), dry run of the training stage (105 cells at 5 optimiser
+  steps), data stage (15.9 min and 18.3 min with 2 workers, chain log), copy of the data set to
+  `C:/twinlink_runs/dyssol-steady-state/data` (verified), training stage (105 cells, 134 s and
+  125 s, peak 364 MB and 365 MB per worker), analysis. No stage was retried, no unit failed,
+  nothing was cut. Chain complete 17:44.
+* Every artifact was committed with a clean tree after the denylist test (4de73d2, 0924f2a,
+  cd2fdd2, f0aa215). No merge, no push.
+
+## 15. Artifacts
+
+| Artifact | Content | Driver |
+|---|---|---|
+| `artifacts/runs/dyssol_steady_pilot_v1_one_line.json.gz` | pilot of the MLP optimiser on the rebuild | cfefde2 |
+| `artifacts/runs/dyssol_steady_pilot_v1_two_lines.json.gz` | the same, two lines | cfefde2 (run on 1fa3b12) |
+| `artifacts/runs/dyssol_steady_v1_one_line_training.json.gz` | 105 cells, data summary, control | aeedeec |
+| `artifacts/runs/dyssol_steady_v1_one_line_analysis.json` | reading, rank tests, numbers without a reading | run on 4de73d2 |
+| `artifacts/runs/dyssol_steady_v1_two_lines_training.json.gz` | 105 cells, data summary, control | aeedeec (run on 0924f2a) |
+| `artifacts/runs/dyssol_steady_v1_two_lines_analysis.json` | reading, rank tests, numbers without a reading | run on cd2fdd2 |
+
+Local only (git-ignored; copy in `C:/twinlink_runs/dyssol-steady-state/`): the two data sets, the
+box, the compiled units with their manifest, the materials database with the added constant, the
+caches and the outputs of the dry runs.
