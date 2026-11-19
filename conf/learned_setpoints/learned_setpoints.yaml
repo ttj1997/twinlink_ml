@@ -1,0 +1,101 @@
+# Learned controllers on the load-following task (docs/NN_learned_setpoints.md)
+#
+# STATUS: placeholder -- every number below is a study setting or a placeholder, none is a
+# measured plant value. The task (truth, line, band, prices, days, tail, margin search) is that
+# of the load-following study (Befund 126) and is READ from its config and artifacts, not
+# repeated here. The feedback settings are those of the sensor-value studies (Befunde 111, 112)
+# and are read from their configs.
+
+version: 1
+load_following_config: conf/load_following/load_following.yaml
+sensor_value_config: conf/sensor_value/sensor_value.yaml       # feedback grid, bias filter, pre-roll
+sensor_value_2_config: conf/sensor_value/sensor_value_2.yaml   # F4: delay, error, gain
+
+reference:
+  # Artifacts of the load-following study the task is taken from: band and training days
+  # (stage 0), test days and the margins of C0 and C2 (main run), reading (analysis).
+  stage0_artifact: load_following_v1_stage0.json.gz
+  main_artifact: load_following_v1.json.gz
+  analysis_artifact: load_following_v1_analysis.json
+  # Twin margin curve (decomposition for the cells below the largest budget): the twin is run
+  # at these margins on the test days; margin shares in between by linear interpolation.
+  twin_margin_grid: [0.0, 0.0025, 0.005, 0.0075, 0.01, 0.015, 0.02, 0.03, 0.04, 0.06, 0.08, 0.10, 0.12]
+  short_horizon_intervals: 3     # C3-15: horizon of the lower layer in control intervals (900 s)
+
+models:
+  # Decision 4: data specification of arm N of Befund 94, retrained and checked against its
+  # records (artifacts/runs/rerun_full_N.jsonl).
+  n_train: [8, 16, 32, 64]
+  seeds: [1, 2, 3, 4, 5]
+  max_epochs: 200
+  befund94_records: artifacts/runs/rerun_full_N.jsonl
+  process_fingerprint: bddca37f716f5cfc
+
+table:
+  # Tabulation of a steady response (learned or true) and the optimisation on it. Axes: inlet
+  # temperature and gas velocity over the action box, spray rate over the main band, ambient
+  # temperature and relative humidity over the disturbance ranges. Linear interpolation per axis,
+  # the moisture in its logarithm. The optimum is the cheapest admissible point of a fine grid in
+  # (inlet temperature, gas velocity), moved onto the moisture bound along one of the two.
+  # The control M-tab (the TRUE steady response behind the same table) measures what the
+  # tabulation costs. Grid chosen on the TRUE response before any learned model existed (scratch
+  # checks on ambient states of six days, not an artifact): the gas-velocity axis decides the
+  # error where the inlet temperature sits at its lower bound; finer axes of the inlet
+  # temperature, the ambient state or the spray rate changed little.
+  inlet_temperature_points: 13
+  gas_velocity_points: 12
+  spray_rate_points: 7
+  ambient_temperature_points: 7
+  relative_humidity_points: 5
+  fine_inlet_temperature_step_k: 0.1
+  fine_gas_velocity_step_m_per_s: 0.01
+  chunk_points: 400              # points per model call of the fixed-point search (memory)
+
+feedback:
+  # Level fb: the bias filter of Befund 111 on an inline moisture measurement with the existing
+  # sensor model (first-order lag plus Gaussian noise; no outliers). Level lab: F4 of Befund 112
+  # with the sampling interval below; delay, error and gain are read from sensor_value_2_config.
+  lab_sampling_interval_h: 4
+  noise_seed: 20261119
+
+gru_mpc:
+  # Family D: optimisation through the GRU rollout over its horizon (decision 10).
+  n_train: [16, 64]
+  finite_difference_step: 1.0e-3   # in scaled command units (box half-width = 1)
+  max_iterations: 40
+  measurement_seed: 20261120
+
+policy:
+  # Family P (decisions 9 and 11, addition C).
+  budgets_days: [5, 10, 20, 40]
+  seeds: [1, 2, 3, 4, 5]
+  label_margins_kg_per_kg: [0.0, 0.02, 0.04]   # the expert is solved at these margins per day
+  strata: 5                        # label days are drawn nested from quintiles of the price spread
+  validation_fraction: 0.2         # of the DAYS of a cell (day-level split), at least one day
+  ridge: 1.0e-3                    # P-lin
+  hidden_size: 64                  # P-mlp: two hidden layers
+  gru_hidden_size: 32              # P-gru
+  learning_rate: 1.0e-3
+  max_epochs: 400
+  patience: 40
+
+days:
+  # Tuning days for the deployable margin (decision 7): drawn as the training days of the
+  # load-following study from the training months, without its training days (which are the
+  # label days of family P).
+  tuning_seed: 20261121
+  tuning_per_month_by_tercile: [2, 1, 2]
+  probe_days: 3
+
+reading:
+  # Decision 6 and addition A; the reading itself is the docstring of the analysis script.
+  within_twin: 0.02
+  within_twin_every_seed: 0.05
+  admissible_seeds_minimum: 4      # of 5 at the largest budget; all 3 after cut (3)
+
+budget:
+  # Decision 8.
+  wall_clock_h: 30.0
+  extended_wall_clock_h: 48.0
+  cut_order: [lab, n_train_32, d_gru_seeds_3, p_gru]
+  extrapolation_safety: 1.25

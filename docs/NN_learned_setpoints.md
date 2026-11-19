@@ -1,13 +1,12 @@
 # NN -- Learned prediction of optimised transient set points: learned controllers for load following of the granulator
 
 Status: **design fixed and committed before any code and any run** (sections 1-12; decisions of
-the project lead of 2026-11-18 in section 10, points settled without asking in section 12). No code
-is written and no run is started before the branch `load-following` is merged. Runs and results
-follow in sections 13 onwards, added after the runs (numbers only from the artifacts named there).
-Document number and finding number are open (the managing session assigns them at merge). Branch
-`learned-setpoints` (worktree, from `master` 230312c; to be rebased onto the current
-`origin/master` once `load-following` is merged). **Scenario on placeholders, not a plant
-statement.**
+the project lead of 2026-11-18 in section 10, points settled without asking in section 12). Code
+committed before the dry run (section 13, with the points settled during the implementation).
+Runs and results follow from section 14 onwards, added after the runs (numbers only from the
+artifacts named there). Document number and finding number are open (the managing session assigns
+them at merge). Branch `learned-setpoints` (worktree; rebased onto `origin/master` 61d5b18 after
+the merge of `load-following`). **Scenario on placeholders, not a plant statement.**
 
 Precondition: the branch `load-following` (`docs/NN_load_following.md` there) is merged; this study
 uses its package, its days and its reference controllers unchanged.
@@ -327,3 +326,71 @@ point 7 with the caveat added there.
    of the cell (budget and seed); a decision counts as outside if at least one input is outside.
    The check per input does not capture unfamiliar combinations of inputs; the quantity is
    descriptive and tends to underestimate the distribution shift.
+
+## 13. Implementation (code committed before the dry run; no result here)
+
+State on 2026-11-19: `load-following` is merged (Befund 126, `docs/43_load_following.md`, reading
+**T1**). By the reference rule of section 4 the learned arms use the schedule and **the twin is
+C2**. The branch was rebased onto `origin/master` 61d5b18. Package
+`src/twinlink_ml/learned_setpoints/`, settings `conf/learned_setpoints/learned_setpoints.yaml`,
+driver `scripts/run_learned_setpoints.py`, analysis `scripts/analyze_learned_setpoints.py` (its
+docstring holds section 7 verbatim), tests `tests/test_learned_setpoints.py`.
+
+**Points settled without asking during the implementation** (most conservative reading each time;
+none is a result; to be objected to before the main run is read):
+
+1. **Tabulation and the control M-tab.** A query of the fixed point of the GRU costs seconds, a
+   day needs about 1300 queries. The steady response of every model is therefore tabulated once
+   (13 inlet temperatures x 12 gas velocities x 7 spray rates x 7 ambient temperatures x 5
+   humidities, linear interpolation, the moisture in its logarithm) and the optimum is searched on
+   the table. What the table costs is measured by a control that is not in the design: **M-tab**,
+   the TRUE steady response behind the same table and the same law. It has no part in the
+   reading; the gap of an M arm to its twin contains the gap of M-tab.
+2. **Prediction of the feedback.** The bias is the filtered difference between the measured
+   moisture and the STEADY prediction of the map at the inputs of the 25 s block (the map has no
+   dynamics). Level *fb*: the existing sensor model without outliers. Levels *fb* and *lab* get
+   the pre-roll of Befund 111 (6 h, first disturbance sample held, nominal throughput) in which
+   the bias settles; cost and violations of the pre-roll do not count. The level without feedback
+   has no pre-roll and starts as C0-C4 do.
+3. **Margin search.** Critical subset = the 8 days with the largest violation of the cell itself
+   at margin 0 (one pass over all days), then the bisection on them and the verification on all
+   days, as in the load-following study (`bisect_margin_over_scenarios`). A cell that reaches no
+   margin is not admissible. Cfix has no set point where the steady optimiser finds none at the
+   margin; such a margin counts as violating.
+4. **Family D.** Horizon problem: energy over the 36 blocks plus the slack weight of the headroom
+   config per block, moisture and bed temperature at every block end, commands piecewise constant
+   over the three intervals, solved by SLSQP with finite differences. The rate limits are not in
+   the prediction; the spray rate is held at its current level over the horizon; the history is
+   measured through the sensor model. C3-15 uses the schedule on the true map and the unchanged
+   optimiser of the headroom study with three intervals. The test compares the first command of
+   both on the true model (tolerance 0.5 K and 0.01 m/s); the two programmes discretise the model
+   differently, bit equality is not possible.
+5. **Family P.** Label margins 0, 0.02 and 0.04 kg/kg (stage 0 of the load-following study
+   guarantees a steady optimum up to 0.02 at every weather grid point; a policy asked for a larger
+   margin extrapolates, and the range check counts it). Label days of a seed: the 40 training
+   days of the load-following study in five strata of the price spread, permuted per stratum, a
+   budget takes the first days of every stratum; at 40 days the seeds differ in the
+   initialisation only. P-mlp and P-gru stop on validation days of their cell (a fifth, at least
+   one day). P-gru runs over the decisions of the day (5 min steps). Guard: slack 0.02 kg of
+   suspension per day before the last hour, so that the schedule of C2 passes it untouched.
+6. **Deployable margin.** Computed for every arm with a reading at the largest budget (a superset
+   of the arms the reading names; the analysis reports the named ones), on 40 tuning days of the
+   training months drawn as the training days of the load-following study, without its training
+   days (the label days of family P).
+7. **Decomposition.** The twin is run at the margin of every admissible cell of the largest
+   budget; for the other cells its cost is interpolated on a grid of 13 margins (marked).
+8. **Ladder.** C0 and C2 are run again at their margins of the load-following artifact (control:
+   the records must equal the artifact); C3 and C4 are quoted from it. The tail uses the margin
+   of C0 of the load-following study for every arm.
+9. **Reproduction check.** GRU and static quadratic regression against the Befund 94 records on
+   the excited test set (largest absolute difference of the metrics).
+10. **Computing.** The truth simulation of a day costs about the same for one controller as for
+    some hundred, so the searches of all cells run side by side and their days share batches. A
+    controller that fails gives an error record for its day and does not touch the others.
+
+**Tests** (green on the commit of the code): the runner equals `run_days` for C2 bit for bit, and
+the true map behind family M is C2 bit for bit; lookup policy = expert; margin input moves the
+moisture; months disjoint, fingerprints equal the load-following artifacts; guard meets the target
+(to within its slack); no margin -> not admissible and no number; true steady response = steady
+optimiser; table optimum of a known response; NumPy GRU = PyTorch model; horizon problem on the
+truth = decision of C3-15 (tolerance above); reading and budget rule on synthetic inputs.
