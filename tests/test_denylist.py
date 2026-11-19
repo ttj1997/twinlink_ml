@@ -2,12 +2,13 @@
 
 Prevents real partner/person names (see ``local.example/README.md``) from being
 accidentally committed again. ``local/`` exists only locally with the maintainer
-of the repo and is gitignored -- in cloud sessions it is normally missing, then
-this test is skipped (it cannot read its own reference there).
+of the repo and is gitignored. Every worktree gets a copy of ``local/denylist.txt`` at
+creation; the test FAILS (it does not skip) when the list is missing, because a silent
+skip would let a commit count as checked that was not.
 
 Search order for ``denylist.txt``: ``$TWINLINK_LOCAL_DIR`` (as with the partner tests),
 ``<Repo>/local``, ``local/`` of the main checkout (in a git worktree ``local/`` lies
-only there). Only if none of the three locations has the file is the test skipped.
+only there). If none of the three locations has the file, the test fails.
 
 Lines with the prefix ``re:`` are regular expressions (case-sensitive, applied per
 line, e.g. ``re:(?<![A-Za-z0-9])XYZ(?![A-Za-z0-9])`` for an abbreviation with
@@ -68,6 +69,18 @@ def _find_denylist(repo_root: Path) -> Path | None:
     return next((c for c in candidates if c.is_file()), None)
 
 
+def _require_denylist(repo_root: Path) -> Path:
+    """Path of ``denylist.txt``; fails the test (never skips) when it cannot be found."""
+    path = _find_denylist(repo_root)
+    if path is None:
+        pytest.fail(
+            "local/denylist.txt fehlt: the denylist check cannot run. Copy local/denylist.txt "
+            "into this worktree (or set TWINLINK_LOCAL_DIR); a missing list is a failure, "
+            "not a skip."
+        )
+    return path
+
+
 def _denylist_terms(denylist_path: Path) -> list[str]:
     terms = []
     for line in denylist_path.read_text(encoding="utf-8").splitlines():
@@ -92,9 +105,7 @@ def test_denylist_terms_not_present_in_tracked_files() -> None:
     repo_root = _repo_root()
     if repo_root is None:
         pytest.skip("kein Git-Repository (git rev-parse --show-toplevel schlug fehl)")
-    denylist_path = _find_denylist(repo_root)
-    if denylist_path is None:
-        pytest.skip("local/denylist.txt fehlt (Normalfall in Cloud-Sitzungen)")
+    denylist_path = _require_denylist(repo_root)
 
     terms = _denylist_terms(denylist_path)
     if not terms:
@@ -126,3 +137,18 @@ def test_denylist_terms_not_present_in_tracked_files() -> None:
                     hits.append(f"{rel}:{line_no}: enthaelt Sperrlisten-Begriff {term!r}")
 
     assert not hits, "Sperrlisten-Treffer in getrackten Dateien:\n" + "\n".join(hits)
+
+
+def test_missing_denylist_fails_instead_of_skipping(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A repository without any ``denylist.txt`` must make the check fail, not skip."""
+    monkeypatch.setenv("TWINLINK_LOCAL_DIR", str(tmp_path / "nowhere"))
+    with pytest.raises(pytest.fail.Exception, match="denylist.txt"):
+        _require_denylist(tmp_path)
+
+
+def test_found_denylist_is_returned(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    (tmp_path / "denylist.txt").write_text("term\n", encoding="utf-8")
+    monkeypatch.setenv("TWINLINK_LOCAL_DIR", str(tmp_path))
+    assert _require_denylist(tmp_path) == tmp_path / "denylist.txt"
