@@ -1,0 +1,27 @@
+# Template of the box of the varied inputs. Copy to <local>/dyssol_steady/box_local.yaml (the
+# local folder is git-ignored) and replace the placeholders. The real box is a decision of the
+# project lead and stays outside the repository; records carry its SHA-256 only.
+#
+# One mapping per line of the flowsheet, in the order of the dryer names. An entry is either
+# [lower, upper] in the unit of the input, or {relative: r} for nominal x (1 -+ r) around the
+# value stored in the source flowsheet.
+cases:
+  one_line:
+    lines:
+      - dry_gas_kg_per_h: [LOWER, UPPER]
+        dryer_inlet_celsius: [LOWER, UPPER]
+        spray_kg_per_h: {relative: R}
+        solid_fraction: {relative: R}
+        medium_kg_per_h: {relative: R}
+  two_lines:
+    lines:
+      - dry_gas_kg_per_h: [LOWER, UPPER]
+        dryer_inlet_celsius: [LOWER, UPPER]
+        spray_kg_per_h: {relative: R}
+        solid_fraction: {relative: R}
+        medium_kg_per_h: {relative: R}
+      - dry_gas_kg_per_h: [LOWER, UPPER]
+        dryer_inlet_celsius: [LOWER, UPPER]
+        spray_kg_per_h: {relative: R}
+        solid_fraction: {relative: R}
+        medium_kg_per_h: {relative: R}
