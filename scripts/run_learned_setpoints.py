@@ -1035,18 +1035,24 @@ def run_stage0(
             units[name] = result
             log(f"stage-0 unit {name} done")
 
-    def cached(name: str) -> bool:
+    def cached(name: str, *files: str) -> bool:
+        """Whether unit ``name`` is finished; files a failed earlier run left of it are removed."""
         path = _unit_file(directory, name)
         if path.exists():
             units[name] = json.loads(path.read_text(encoding="utf-8"))
             return True
+        for file in files:
+            leftover = directory / file
+            if leftover.exists():
+                log(f"stage-0 unit {name}: removing {file} of an unfinished earlier run")
+                leftover.unlink()
         return False
 
     os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
     seeds = list(config.seeds)
     with ProcessPoolExecutor(max_workers=workers) as pool:
         futures: dict[Future, str] = {}
-        if not cached("table_truth"):
+        if not cached("table_truth", Assets.table_name("M-tab", 0, 0)):
             futures[pool.submit(truth_table_unit, str(directory), config_path, band, smoke)] = (
                 "table_truth"
             )
@@ -1054,7 +1060,12 @@ def run_stage0(
         for n_train in sorted(config.n_train, reverse=True):
             for seed in seeds:
                 name = f"model_n{n_train}_s{seed}"
-                if not cached(name):
+                files = (
+                    Assets.checkpoint_name(n_train, seed),
+                    Assets.table_name("M-gru", n_train, seed),
+                    Assets.table_name("M-quad", n_train, seed),
+                )
+                if not cached(name, *files):
                     futures[
                         pool.submit(
                             model_unit, seed, n_train, smoke, str(directory), config_path, band
@@ -1132,7 +1143,7 @@ def run_stage0(
             for budget, days in nested.items():
                 for arm in POLICY_ARMS:
                     name = Path(Assets.policy_name(arm, budget, seed)).stem
-                    if not cached(name):
+                    if not cached(name, Assets.policy_name(arm, budget, seed)):
                         futures[
                             pool.submit(
                                 policy_unit,
