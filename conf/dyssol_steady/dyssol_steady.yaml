@@ -33,8 +33,10 @@ mlp:
   hidden: [64, 64]                   # tanh, as in static_transfer (docs/37)
   # Filled from the pilot artifact of each case (own commit) BEFORE any Dyssol data exist.
   selected:
-    one_line: null
-    two_lines: null
+    # selections of dyssol_steady_pilot_v1_one_line / dyssol_steady_pilot_v1_two_lines (setting 5 of
+    # the grid in both; it lies at the edge of the grid, no extension as pre-registered)
+    one_line: {learning_rate: 0.003, steps: 5000, weight_decay: 0.1}
+    two_lines: {learning_rate: 0.003, steps: 5000, weight_decay: 0.1}
 
 # Pilot of the MLP optimiser on the PYTHON REBUILD (no Dyssol run): its own pool and test points,
 # its own seeds. Selection: lowest mean criterion over pilot seeds and budgets; criterion of a cell
