@@ -35,6 +35,7 @@ from dataclasses import dataclass
 
 import casadi as cs
 import numpy as np
+from scipy.stats import qmc
 
 from twinlink_ml.simulation import ProcessConfig
 
@@ -43,6 +44,8 @@ from .scenarios import Scenario
 from .symbolic import DISTURBANCE_CHANNELS, interval_function, step_means, symbolic_derivative
 
 __all__ = [
+    "COLD_START_IMPROVEMENT",
+    "COLD_START_SEED",
     "Controller",
     "DynamicOptimizer",
     "FixedPointController",
@@ -62,6 +65,13 @@ _IPOPT_OPTIONS = {
     "ipopt.max_iter": 1000,
     "ipopt.sb": "yes",
 }
+
+
+COLD_START_SEED = 20261120
+"""Seed of the start points of the cold multi-start (:class:`SteadyStateOptimizer`)."""
+COLD_START_IMPROVEMENT = 1.0e-6
+"""Relative gain in power a later start needs to replace the incumbent (the solver tolerance)."""
+_STRICT_STATUS = "Solve_Succeeded"
 
 
 def nominal_disturbance(study: HeadroomStudyConfig, process: ProcessConfig) -> np.ndarray:
@@ -93,9 +103,36 @@ class SteadyPoint:
 
 
 class SteadyStateOptimizer:
-    """Steady-state NLP, see the module docstring. Parameters: disturbance (5) and bound."""
+    """Steady-state NLP, see the module docstring. Parameters: disturbance (5) and bound.
 
-    def __init__(self, study: HeadroomStudyConfig, process: ProcessConfig) -> None:
+    Start of a solve (switch ``cold_starts``, default off):
+
+    ``cold_starts = 0`` (default, the behaviour of Befund 105 and Befund 126)
+        Every solve starts from the solution of the previous one. The NLP has several local
+        optima, so the point returned for a query depends on the queries solved before it
+        (``docs/NN_order_dependence.md``).
+    ``cold_starts = n >= 1``
+        Every solve is a function of its query alone: ``n`` solves from fixed start points (start
+        0 is the default guess, the others a seeded Latin hypercube over moisture, bed
+        temperature and the action box, the same for every query). The first start is the
+        incumbent; a later start replaces it only if its power is lower by more than
+        :data:`COLD_START_IMPROVEMENT` (relative), so that solver noise does not move the set
+        points; a strictly converged solve is preferred to one at the acceptable level. Nothing
+        is remembered between solves. The caches in front of the optimiser
+        (:class:`QuasiStationaryController`, the steady-state map of the load-following package)
+        then use the unrounded query as their key (:attr:`order_independent`).
+    """
+
+    def __init__(
+        self,
+        study: HeadroomStudyConfig,
+        process: ProcessConfig,
+        *,
+        cold_starts: int = 0,
+        start_seed: int = COLD_START_SEED,
+    ) -> None:
+        if cold_starts < 0:
+            raise ValueError("cold_starts must be >= 0")
         self._process = process
         self._solid_mass = process.geometry.bed_mass_solid_setpoint_kg
         w = cs.SX.sym("w", 4)  # m_w, T_bed, T_in command, u_gas
@@ -114,9 +151,87 @@ class SteadyStateOptimizer:
         self._ubg = np.array([0.0, 0.0, 0.0, study.line.bed_temperature_limit_celsius])
         self._guess = np.array([0.25, 45.0, 90.0, low[1]])
         self._power = cs.Function("power", [w, p], [power])
+        self._starts: np.ndarray | None = None
+        if cold_starts:
+            starts = np.empty((cold_starts, 4))
+            starts[0] = self._guess
+            if cold_starts > 1:
+                unit = qmc.LatinHypercube(d=4, seed=start_seed).random(cold_starts - 1)
+                lower = np.array([0.02 * self._solid_mass, 25.0, low[0], low[1]])
+                upper = np.array(
+                    [
+                        0.30 * self._solid_mass,
+                        study.line.bed_temperature_limit_celsius,
+                        high[0],
+                        high[1],
+                    ]
+                )
+                starts[1:] = lower + unit * (upper - lower)
+            self._starts = starts
+
+    @property
+    def order_independent(self) -> bool:
+        """Whether a solve depends on its query alone (``cold_starts >= 1``)."""
+        return self._starts is not None
+
+    @property
+    def start_points(self) -> np.ndarray:
+        """Start points ``(n, 4)`` of the cold multi-start (m_w, T_bed, T_in, u_gas)."""
+        return np.empty((0, 4)) if self._starts is None else self._starts.copy()
+
+    def solve_from(
+        self, disturbance: np.ndarray, moisture_bound: float, guess: np.ndarray
+    ) -> tuple[SteadyPoint | None, str]:
+        """One solve from ``guess`` without a retry: the point (``None`` on failure) and the status.
+
+        Neither reads nor changes the start of later solves.
+        """
+        params = np.append(np.asarray(disturbance, dtype=np.float64), moisture_bound)
+        solution = self._solver(
+            x0=np.asarray(guess, dtype=np.float64),
+            p=params,
+            lbx=self._lbx,
+            ubx=self._ubx,
+            lbg=self._lbg,
+            ubg=self._ubg,
+        )
+        stats = self._solver.stats()
+        status = str(stats["return_status"])
+        if not stats["success"]:
+            return None, status
+        w = np.asarray(solution["x"]).ravel()
+        point = SteadyPoint(
+            command=w[2:4].copy(),
+            state=np.array([self._solid_mass, w[0], w[1]]),
+            power_kw=float(solution["f"]),
+        )
+        return point, status
+
+    def _solve_cold(self, disturbance: np.ndarray, moisture_bound: float) -> SteadyPoint:
+        assert self._starts is not None
+        best: SteadyPoint | None = None
+        best_strict = False
+        status = ""
+        for guess in self._starts:
+            point, status = self.solve_from(disturbance, moisture_bound, guess)
+            if point is None:
+                continue
+            strict = status == _STRICT_STATUS
+            if best is None or (strict and not best_strict):
+                best, best_strict = point, strict
+            elif strict == best_strict and point.power_kw < best.power_kw - (
+                COLD_START_IMPROVEMENT * abs(best.power_kw)
+            ):
+                best = point
+        if best is None:
+            params = np.append(np.asarray(disturbance, dtype=np.float64), moisture_bound)
+            raise RuntimeError(f"steady optimum failed: {status} at {params}")
+        return best
 
     def solve(self, disturbance: np.ndarray, moisture_bound: float) -> SteadyPoint:
         """Steady optimum for one disturbance vector and moisture bound ``limit - m``."""
+        if self._starts is not None:
+            return self._solve_cold(disturbance, moisture_bound)
         params = np.append(np.asarray(disturbance, dtype=np.float64), moisture_bound)
         solution = self._solver(
             x0=self._guess, p=params, lbx=self._lbx, ubx=self._ubx, lbg=self._lbg, ubg=self._ubg
@@ -472,7 +587,12 @@ class FixedPointController(Controller):
 
 
 class QuasiStationaryController(Controller):
-    """R1: steady optimum at the current disturbance, bound ``limit - margin``."""
+    """R1: steady optimum at the current disturbance, bound ``limit - margin``.
+
+    The cache key is the query rounded to 12 decimals; with an order-independent optimiser
+    (``cold_starts`` of :class:`SteadyStateOptimizer`) it is the unrounded query, so that the
+    command is a function of the query alone.
+    """
 
     def __init__(self, optimizer: SteadyStateOptimizer, margin: float) -> None:
         self._optimizer = optimizer
@@ -491,7 +611,11 @@ class QuasiStationaryController(Controller):
         limit: float,
     ) -> np.ndarray:
         """Steady optimum at ``disturbance``."""
-        key = (*np.round(disturbance, 12), round(limit - self._margin, 12))
+        key: tuple[float, ...]
+        if self._optimizer.order_independent:
+            key = (*(float(v) for v in disturbance), float(limit - self._margin))
+        else:
+            key = (*np.round(disturbance, 12), round(limit - self._margin, 12))
         if key not in self._cache:
             self._cache[key] = self._optimizer.solve(disturbance, limit - self._margin).command
         return self._cache[key]
