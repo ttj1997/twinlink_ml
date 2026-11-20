@@ -5,8 +5,8 @@ the project lead of 2026-11-18 in section 10, points settled without asking in s
 committed before the dry run (section 13, with the points settled during the implementation).
 Runs and results: sections 14-19, added on 2026-11-20 after the runs (numbers only from the
 artifacts named there). **Pre-registered reading: U3 in every family (M without and with feedback,
-D, P), valid, no errored unit; family P at the boundary to U0. Not yet accepted by the project
-lead.** Document number and finding number are open (the managing session assigns
+D, P), valid, no errored unit; family P is U3 by the letter only, at the boundary to U0. Accepted
+by the project lead on 2026-11-20 (section 20).** Document number and finding number are open (the managing session assigns
 them at merge). Branch `learned-setpoints` (worktree; rebased onto `origin/master` 61d5b18 after
 the merge of `load-following`). **Scenario on placeholders, not a plant statement.**
 
@@ -339,7 +339,8 @@ driver `scripts/run_learned_setpoints.py`, analysis `scripts/analyze_learned_set
 docstring holds section 7 verbatim), tests `tests/test_learned_setpoints.py`.
 
 **Points settled without asking during the implementation** (most conservative reading each time;
-none is a result; to be objected to before the main run is read):
+none is a result; to be objected to before the main run is read; all ten confirmed by the project
+lead on 2026-11-20, section 20):
 
 1. **Tabulation and the control M-tab.** A query of the fixed point of the GRU costs seconds, a
    day needs about 1300 queries. The steady response of every model is therefore tabulated once
@@ -617,7 +618,7 @@ Read with the table: M-gru is cheaper than M-quad in every comparison that could
 | 32 | +7.04, 0.0416 (5 of 5) | +3.23, 0.0195 (5 of 5) | +8.83, 0.0361 (5 of 5) | +45.77, 0.0742 (2 of 5) | +11.16, 0.0318 (3 of 5) |
 | 64 | +7.07, 0.0357 (5 of 5) | +3.87, 0.0221 (5 of 5) | +7.62, 0.0348 (5 of 5) | +22.36, 0.0934 (4 of 5) | +8.51, 0.0203 (5 of 5) |
 
-The inline measurement roughly halves the margin and the gap of M-gru at every budget and makes M-quad admissible in 5 of 5 seeds at `n_train` 16 and 64; it does not bring either arm within 2 %. What remains with feedback is a margin of about 0.02 kg/kg against the 0.0074 of the twin. A plausible reading, not tested here: a slow bias correction removes the mean error of the map, not its variation over the day. With the laboratory sample every 4 h (level lab, placeholders of Befund 112) the median gap is not smaller than without feedback at any budget, although the median margin is slightly smaller.
+The inline measurement roughly halves the margin and the gap of M-gru at every budget and makes M-quad admissible in 5 of 5 seeds at `n_train` 16 and 64; it does not bring either arm within 2 %. What remains with feedback is a margin of about 0.02 kg/kg against the 0.0074 of the twin. A plausible reading, not tested here: a slow bias correction removes the mean error of the map, not its variation over the day. With the laboratory sample every 4 h (level lab, placeholders of Befund 112) the median gap is not smaller than without feedback at any budget, although the median margin is slightly smaller. An interpretation of the project lead of why this differs from Befund 112 is recorded in section 20, labelled as such.
 
 ### 16.7 Map error at the limit (stage 0, descriptive; the exploitation gap of Befund 113)
 
@@ -716,9 +717,23 @@ Seeds (of 5) whose tuning margin holds the limit on all 40 test days within the 
 
 ## 19. Open for the project lead
 
+State on 2026-11-20, after the decisions of section 20: points 1, 2 and 4 are decided; point 3 remains open; point 5 is unchanged (nothing started). The points are kept as written before the decision.
+
 1. **Acceptance of the reading** U3 in the families M (both levels), D and P, with the note that family P is U3 by the letter and at the boundary to U0.
 2. **The ten points settled without asking during the implementation** (section 13) are not yet confirmed; neither is the handling in point 4 below.
 3. **Order dependence of the steady optimiser** (`SteadyStateOptimizer.solve` warm start, `SteadyMap` cache; section 15). Found by the control of this study, in code of the headroom and load-following packages. Not changed, not investigated beyond a scratch check. To decide: whether and how the effect on Befund 105 and Befund 126 is measured (for example the reference controllers with a cold start per query, or a multi-start, against the artifacts), and by which session.
 4. **Register row and README paragraph.** Section 11 planned a `docs/12` row with the results. As for the load-following branch, this branch delivers the study document and the lab-book entry only; the row and the paragraph need the finding number and the decision of the project lead and are left to the managing session at merge.
 5. **Possible follow-ups, none started:** a margin-aware training of the map or of the GRU (the gap is the margin); DAgger or more solved days for family P (its curve has not levelled off); a dynamic observer instead of the steady bias correction; the deployable margin as the pre-registered quantity of a next study (section 16.9).
+
+## 20. Decisions of the project lead (2026-11-20)
+
+Taken after the results of sections 14-19 were reported; the sections above are unchanged except for the status paragraph, the pointers in sections 13 and 16.6 and the state line of section 19.
+
+1. **The pre-registered reading U3 is accepted** in the families M (without and with feedback), D and P.
+2. **Family P is U3 by the letter only.** P-gru decides the class with a median cost 0.015 % below Cfix and 3 of 5 seeds cheaper than Cfix (section 16.2); in substance the policies do not beat a fixed set point at 40 solved days (the wording of section 16.2).
+3. **The ten points settled without asking during the implementation** (section 13) are confirmed.
+4. **Register row and README paragraph** (section 19, point 4): leaving the `docs/12` row and the README paragraph to the managing session at merge is confirmed.
+5. **Interpretation of the project lead, not a result of this study and not tested by it:** the laboratory sample every 4 h does not help here, unlike in Befund 112, because the error of the learned model depends on the operating point and the throughput changes hourly under load following. The study itself shows only that the median gap of the level lab is not smaller than without feedback at any budget (section 16.6).
+
+Not decided here: the order dependence of the steady optimiser (section 19, point 3) remains open.
 
