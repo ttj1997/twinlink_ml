@@ -137,3 +137,5 @@ with `--resume`.
   sign-in does not stop them. Watchers may be session-bound.
 - Stage outputs are written directly as .json.gz (or packed by the chain between stages), so
   that the working tree stays clean between stages.
+- The probe run uses full-size batches; its peak memory is the basis of the worker count (a probe
+  with small batches underestimated the main run by a factor of 6).
