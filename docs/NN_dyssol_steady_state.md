@@ -397,3 +397,32 @@ evaluating the vapour enthalpy at the bound of its correlation below 290 K is in
 Local only (git-ignored; copy in `C:/twinlink_runs/dyssol-steady-state/`): the two data sets, the
 box, the compiled units with their manifest, the materials database with the added constant, the
 caches and the outputs of the dry runs.
+
+## 16. Decision of the project lead (2026-11-20; added after the fact, sections 1 to 15 are unchanged)
+
+1. **D2 is accepted for both cases.** Data need 32 Dyssol runs with one line and 128 with two,
+   reached by the quadratic regression; the MLP needs 64 and 256; the linear regression does not
+   reach the thresholds (sections 11 to 13).
+2. **The ten decisions taken without asking are confirmed:** the eight of section 9, the box of
+   the second line (gas flow and dryer inlet temperature as for line 1, the other three inputs
+   +-25 % around the stored point of line 2; sections 2 and 4) and the 1 % on the fuel as a
+   setting without a measured source (section 6).
+3. **Correction to decision 3 as it was given on 2026-11-19.** The decision named the rebuild as
+   the exact reference with the note "Befunde 106, 110: deviation <= 0.03 K". That attribution was
+   an error of the project lead: neither finding reports a deviation of 0.03 K between Dyssol and
+   a rebuild (Befund 106: Dyssol against the Excel equations, 0.46 K at identical inputs; quoted in
+   section 6). The number comes from the re-computation in this study: the re-runs of four stored
+   flowsheets of the delivery differ from the stored results by about 0.01-0.03 K (section 8,
+   probes without an artifact). Section 2 did not take the note over, and no section quotes the
+   number as a finding; the agreement of Dyssol and the rebuild rests on the control alone (at
+   most 1.7e-13 K at the 1280 points of each case, sections 11 and 12).
+4. **Restriction named with the verdict.** The selected MLP setting lies at the edge of the pilot
+   grid in both cases and the grid was not extended (caveat 4 of section 13). What this study says
+   about the MLP (N\* of 64 and 256, its rank against the quadratic regression) holds for this
+   grid.
+5. **The five points for the units' author go out** (sent by the project lead, not from this
+   branch): whether the dryer is to get a saturation limit; with which state of the units four of
+   the stored flowsheets were saved; whether evaluating the vapour enthalpy at the bound of its
+   correlation below 290 K is intended; that two flowsheets still hold inputs that differ from the
+   plant sheet and the fourth unit is unfinished; that the delivery has no compiled units and no
+   materials database (built here, one constant added; section 3).
