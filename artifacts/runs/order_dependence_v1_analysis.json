@@ -1,0 +1,1313 @@
+{
+ "provenance": {
+  "git/commit": "060c6bc1d75aebe3c27bf94cd7b05c92326dd9e2",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used",
+  "git/dirty_ignored_paths": [
+   "C:\\twinlink_work\\orderdep\\artifacts\\runs\\order_dependence_v1_analysis.json"
+  ]
+ },
+ "source": "order_dependence_v1.json.gz",
+ "source_commit": "9acd22cde243b94c276c77e6226caba89f49e4d4",
+ "smoke": false,
+ "learned_setpoints_source": {
+  "commit": "2e630e72cb4a61716c9cea714cb53bace798468e",
+  "sha256": {
+   "learned_setpoints_v1.json.gz": "e8abec5da2f31541753b086ae258f4cb6df132a597ff443de86fd73cf14690c2",
+   "learned_setpoints_v1_analysis.json": "337fdd118453123d1531f9de9385e74b3b147555a321e083a43d397766a44f9e"
+  }
+ },
+ "old": {
+  "K1": 0.08932020093834324,
+  "K2": 0.020705619924501553,
+  "K3": 0.020622138314531843,
+  "K4": 0.39794413476924634,
+  "K5": 0.029774878143509986
+ },
+ "printed_in_the_findings": {
+  "K1": 0.0893,
+  "K2": 0.0207,
+  "K3": 0.0206,
+  "K4": 0.39794,
+  "K5": 0.0298
+ },
+ "twin_artifact": {
+  "J_twin": 0.39794413476924634,
+  "gap_printed_source": 0.029774878143509986,
+  "margin": 0.007421875
+ },
+ "variants": {
+  "held": {
+   "new": {
+    "K1": 0.08932020094623946,
+    "K2": 0.020832023421540214,
+    "K3": 0.02080036262120307,
+    "K4": 0.39785460337513223,
+    "K5": 0.030006614008023638
+   },
+   "relative_change": {
+    "K1": 8.840357788384702e-11,
+    "K2": 0.006104791718362606,
+    "K3": 0.00864237762122069,
+    "K4": 0.0002249848315166709,
+    "K5": 0.007782932423660086
+   },
+   "margins": {
+    "R0": 0.04355468750000001,
+    "R1": 0.006640625000000001,
+    "C0": 0.0054687500000000005,
+    "C1": 0.007421875,
+    "C2": 0.007421875
+   },
+   "largest_violation": {
+    "R0": 0.0,
+    "R1": 0.0,
+    "C0": 0.0,
+    "C1": 9.44355910014738e-05,
+    "C2": 0.0004014158844889426
+   },
+   "holds_the_limit": {
+    "R0": true,
+    "R1": true,
+    "C0": true,
+    "C1": true,
+    "C2": false
+   },
+   "cost_per_kg": {
+    "C0": 0.406305913715555,
+    "C1": 0.3978417394047223,
+    "C2": 0.39785460337513223
+   }
+  },
+  "searched": {
+   "new": {
+    "K1": 0.0909674331879475,
+    "K2": 0.020832023421540214,
+    "K3": 0.01984224135225147,
+    "K4": 0.3982438937127639,
+    "K5": 0.028999764615326464
+   },
+   "relative_change": {
+    "K1": 0.018441878010791005,
+    "K2": 0.006104791718362606,
+    "K3": 0.037818433296551046,
+    "K4": 0.0007532689071831659,
+    "K5": 0.026032466848314312
+   },
+   "margins": {
+    "R0": 0.04355468750000001,
+    "R1": 0.005859375,
+    "C0": 0.0054687500000000005,
+    "C1": 0.007421875,
+    "C2": 0.0078125
+   },
+   "largest_violation": {
+    "R0": 0.0,
+    "R1": 0.0,
+    "C0": 0.0,
+    "C1": 9.44355910014738e-05,
+    "C2": 9.365151803397698e-05
+   },
+   "holds_the_limit": {
+    "R0": true,
+    "R1": true,
+    "C0": true,
+    "C1": true,
+    "C2": true
+   },
+   "cost_per_kg": {
+    "C0": 0.406305913715555,
+    "C1": 0.3978417394047223,
+    "C2": 0.3982438937127639
+   }
+  }
+ },
+ "old_margins": {
+  "R0": 0.04355468750000001,
+  "R1": 0.006640625000000001,
+  "C0": 0.0054687500000000005,
+  "C1": 0.007421875,
+  "C2": 0.007421875
+ },
+ "old_cost_per_kg": {
+  "C0": 0.4063298547528317,
+  "C1": 0.3979165432163416,
+  "C2": 0.39795046428679515
+ },
+ "reading": {
+  "threshold": 0.1,
+  "changes": {
+   "K1/held": 8.840357788384702e-11,
+   "K2/held": 0.006104791718362606,
+   "K3/held": 0.00864237762122069,
+   "K4/held": 0.0002249848315166709,
+   "K5/held": 0.007782932423660086,
+   "K1/searched": 0.018441878010791005,
+   "K2/searched": 0.006104791718362606,
+   "K3/searched": 0.037818433296551046,
+   "K4/searched": 0.0007532689071831659,
+   "K5/searched": 0.026032466848314312
+  },
+  "largest_change": 0.037818433296551046,
+  "reading": "O0",
+  "exceeded": [],
+  "findings_concerned": [],
+  "valid": true,
+  "invalid_because": [],
+  "with_the_twin": true
+ },
+ "warm_rerun": {
+  "key_numbers": {
+   "K1": 0.08932020093834245,
+   "K2": 0.020685653006404098,
+   "K3": 0.020587135526011855,
+   "K4": 0.39796234485130205,
+   "K5": 0.02972775739132698
+  },
+  "relative_change": {
+   "K1": 8.85615904056761e-15,
+   "K2": 0.0009643236073230537,
+   "K3": 0.0016973404011805437,
+   "K4": 4.576039816813342e-05,
+   "K5": 0.00158256742331204
+  },
+  "largest_violation": {
+   "R0": 0.0,
+   "R1": 0.0,
+   "C0": 0.0,
+   "C1": 9.293731236179048e-05,
+   "C2": 7.668596758306223e-05
+  },
+  "against_the_artifact": {
+   "R0": {
+    "units": 105,
+    "units_differing": 0,
+    "min": -1.9779803889232375e-11,
+    "max": 2.510929734002734e-11,
+    "median_abs": 0.0
+   },
+   "R1": {
+    "units": 105,
+    "units_differing": 4,
+    "min": -0.008077592146996687,
+    "max": 0.0001003833825694327,
+    "median_abs": 0.0
+   },
+   "C0": {
+    "units": 40,
+    "units_differing": 4,
+    "min": -0.00016935841726243184,
+    "max": 3.6600116930119506e-05,
+    "median_abs": 1.4062606466113166e-16
+   },
+   "C1": {
+    "units": 40,
+    "units_differing": 4,
+    "min": -0.00034786051708076814,
+    "max": 0.0006899089772481835,
+    "median_abs": 2.4248651516060423e-15
+   },
+   "C2": {
+    "units": 40,
+    "units_differing": 6,
+    "min": -0.0005345948926852886,
+    "max": 0.0009869839192424385,
+    "median_abs": 4.0383612306886576e-14
+   }
+  },
+  "cold_held_against_the_artifact": {
+   "R0": {
+    "units": 105,
+    "units_differing": 0,
+    "min": -1.9348642343780396e-11,
+    "max": 1.811516359100336e-11,
+    "median_abs": 6.9010431912879065e-12
+   },
+   "R1": {
+    "units": 105,
+    "units_differing": 17,
+    "min": -0.008077592636828715,
+    "max": 4.393511040659163e-05,
+    "median_abs": 1.8137345557436773e-11
+   },
+   "C0": {
+    "units": 40,
+    "units_differing": 15,
+    "min": -0.0009958630904462634,
+    "max": 0.0002686195998907881,
+    "median_abs": 2.5443155261837525e-11
+   },
+   "C1": {
+    "units": 40,
+    "units_differing": 17,
+    "min": -0.001371860990469051,
+    "max": 0.00040971350997321294,
+    "median_abs": 6.156244517625788e-11
+   },
+   "C2": {
+    "units": 40,
+    "units_differing": 17,
+    "min": -0.0017923253292591588,
+    "max": 0.0004570688313649401,
+    "median_abs": 6.106710998336701e-11
+   }
+  },
+  "r1_set_points_warm_against_cold": {
+   "share_of_intervals_differing": 0.014186507936507936,
+   "largest_abs_d_inlet_k": 31.762440000000005,
+   "largest_abs_d_gas_m_per_s": 0.8560377000000001
+  },
+  "twin_records_against_load_following": {
+   "units": 40,
+   "units_differing": 17,
+   "min": -0.00128720188973309,
+   "max": 0.001539474507313525,
+   "median_abs": 1.7374316662379126e-10
+  },
+  "cold_held_against_the_twin_records": {
+   "units": 40,
+   "units_differing": 18,
+   "min": -0.0015205336427311588,
+   "max": 0.00010774831002923201,
+   "median_abs": 2.348102766167051e-10
+  }
+ },
+ "cold_repeat": {
+  "R1": {
+   "units": 105,
+   "equal_units": 105,
+   "differing_units": [],
+   "largest_abs_difference": {}
+  },
+  "R0": {
+   "units": 105,
+   "equal_units": 105,
+   "differing_units": [],
+   "largest_abs_difference": {}
+  },
+  "C0": {
+   "units": 40,
+   "equal_units": 40,
+   "differing_units": [],
+   "largest_abs_difference": {}
+  },
+  "C1": {
+   "units": 40,
+   "equal_units": 40,
+   "differing_units": [],
+   "largest_abs_difference": {}
+  },
+  "C2": {
+   "units": 40,
+   "equal_units": 40,
+   "differing_units": [],
+   "largest_abs_difference": {}
+  }
+ },
+ "queries": {
+  "R1": {
+   "n_queries": 24115,
+   "n_units": 4,
+   "natural_pass_reproduced_in_all_units": true,
+   "failed": {
+    "warm_natural": 0,
+    "warm_any_order": 0,
+    "cold": 0,
+    "reference_all_starts": 0
+   },
+   "share_bit_distinct_between_orders": 1.0,
+   "by_threshold": {
+    "1e-09": {
+     "share_differing_between_orders": 0.11793489529338586,
+     "share_warm_natural_worse": 0.03296703296703297,
+     "share_warm_natural_better": 0.00978643997511922,
+     "share_warm_any_order_worse": 0.07053701015965166,
+     "share_cold_single_start_worse": 0.010325523533070704,
+     "share_reference_better_than_multi_start": 0.20659340659340658,
+     "worse_warm_natural_relative_power": {
+      "n": 795,
+      "median": 0.001327,
+      "p90": 0.006465,
+      "p99": 0.010162599999999989,
+      "max": 0.01169
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 795,
+      "median": 24.15,
+      "p90": 26.594,
+      "p99": 29.996199999999984,
+      "max": 31.76
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 795,
+      "median": 0.4309,
+      "p90": 0.51694,
+      "p99": 0.7284579999999989,
+      "max": 0.856
+     }
+    },
+    "1e-06": {
+     "share_differing_between_orders": 0.053949823761144516,
+     "share_warm_natural_worse": 0.01783122537839519,
+     "share_warm_natural_better": 0.0,
+     "share_warm_any_order_worse": 0.05581588223097657,
+     "share_cold_single_start_worse": 0.010325523533070704,
+     "share_reference_better_than_multi_start": 0.0011196350818992327,
+     "worse_warm_natural_relative_power": {
+      "n": 430,
+      "median": 0.0055445,
+      "p90": 0.0079568,
+      "p99": 0.010488099999999998,
+      "max": 0.01169
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 430,
+      "median": 24.8,
+      "p90": 27.865000000000002,
+      "p99": 31.615199999999998,
+      "max": 31.76
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 430,
+      "median": 0.4547,
+      "p90": 0.6126900000000002,
+      "p99": 0.846966,
+      "max": 0.856
+     }
+    },
+    "0.0001": {
+     "share_differing_between_orders": 0.053742483931163175,
+     "share_warm_natural_worse": 0.017748289446402655,
+     "share_warm_natural_better": 0.0,
+     "share_warm_any_order_worse": 0.055608542400995234,
+     "share_cold_single_start_worse": 0.0102011196350819,
+     "share_reference_better_than_multi_start": 0.0,
+     "worse_warm_natural_relative_power": {
+      "n": 428,
+      "median": 0.0055455,
+      "p90": 0.0079584,
+      "p99": 0.010490300000000003,
+      "max": 0.01169
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 428,
+      "median": 24.8,
+      "p90": 27.875,
+      "p99": 31.617600000000003,
+      "max": 31.76
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 428,
+      "median": 0.4547,
+      "p90": 0.6140700000000001,
+      "p99": 0.8470580000000001,
+      "max": 0.856
+     }
+    },
+    "0.001": {
+     "share_differing_between_orders": 0.05233257308729007,
+     "share_warm_natural_worse": 0.016711590296495958,
+     "share_warm_natural_better": 0.0,
+     "share_warm_any_order_worse": 0.054032759693137054,
+     "share_cold_single_start_worse": 0.009247356417167738,
+     "share_reference_better_than_multi_start": 0.0,
+     "worse_warm_natural_relative_power": {
+      "n": 403,
+      "median": 0.005575,
+      "p90": 0.0080038,
+      "p99": 0.010517800000000002,
+      "max": 0.01169
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 403,
+      "median": 24.75,
+      "p90": 27.518000000000004,
+      "p99": 31.62360000000002,
+      "max": 31.76
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 403,
+      "median": 0.4507,
+      "p90": 0.5782,
+      "p99": 0.8464000000000018,
+      "max": 0.856
+     }
+    },
+    "0.01": {
+     "share_differing_between_orders": 0.0010366991499066972,
+     "share_warm_natural_worse": 0.0004976155919552146,
+     "share_warm_natural_better": 0.0,
+     "share_warm_any_order_worse": 0.0010366991499066972,
+     "share_cold_single_start_worse": 4.146796599626788e-05,
+     "share_reference_better_than_multi_start": 0.0,
+     "worse_warm_natural_relative_power": {
+      "n": 12,
+      "median": 0.01039,
+      "p90": 0.011029,
+      "p99": 0.011617400000000002,
+      "max": 0.01169
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 12,
+      "median": 24.17,
+      "p90": 24.18,
+      "p99": 26.9479,
+      "max": 27.29
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 12,
+      "median": 0.43665,
+      "p90": 0.43717999999999996,
+      "p99": 0.561266,
+      "max": 0.5766
+     }
+    }
+   },
+   "local_optima": {
+    "share_of_queries_with_several": 0.09508604602944226,
+    "largest_number": 6,
+    "relative_power_spread_where_several": {
+     "n": 2293,
+     "median": 0.005433,
+     "p90": 0.0085996,
+     "p99": 0.014558799999999992,
+     "max": 0.0194
+    }
+   },
+   "set_points_between_orders": {
+    "abs_d_inlet_k": {
+     "n": 24115,
+     "median": 8.487e-09,
+     "p90": 7.096200000000114e-07,
+     "p99": 27.92,
+     "max": 32.7
+    },
+    "abs_d_gas_m_per_s": {
+     "n": 24115,
+     "median": 9.565e-11,
+     "p90": 1.1508000000000175e-08,
+     "p99": 0.603786,
+     "max": 0.857
+    }
+   }
+  },
+  "C0": {
+   "n_queries": 11534,
+   "n_units": 4,
+   "natural_pass_reproduced_in_all_units": true,
+   "failed": {
+    "warm_natural": 0,
+    "warm_any_order": 0,
+    "cold": 0,
+    "reference_all_starts": 0
+   },
+   "share_bit_distinct_between_orders": 1.0,
+   "by_threshold": {
+    "1e-09": {
+     "share_differing_between_orders": 0.06753944858678688,
+     "share_warm_natural_worse": 0.03147216923877232,
+     "share_warm_natural_better": 0.01179122594069707,
+     "share_warm_any_order_worse": 0.054967920929426047,
+     "share_cold_single_start_worse": 0.02098144615918155,
+     "share_reference_better_than_multi_start": 0.20339864747702444,
+     "worse_warm_natural_relative_power": {
+      "n": 363,
+      "median": 2.07e-06,
+      "p90": 0.006814000000000001,
+      "p99": 0.0103764,
+      "max": 0.01093
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 363,
+      "median": 0.002156,
+      "p90": 26.31,
+      "p99": 29.8298,
+      "max": 30.07
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 363,
+      "median": 0.0001203,
+      "p90": 0.5313,
+      "p99": 0.7237819999999999,
+      "max": 0.7409
+     }
+    },
+    "1e-06": {
+     "share_differing_between_orders": 0.02791746141841512,
+     "share_warm_natural_worse": 0.01647303624067973,
+     "share_warm_natural_better": 0.0,
+     "share_warm_any_order_worse": 0.03259927171839778,
+     "share_cold_single_start_worse": 0.02098144615918155,
+     "share_reference_better_than_multi_start": 0.00234090514999133,
+     "worse_warm_natural_relative_power": {
+      "n": 190,
+      "median": 0.003796,
+      "p90": 0.0081392,
+      "p99": 0.010634099999999995,
+      "max": 0.01093
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 190,
+      "median": 25.12,
+      "p90": 27.841,
+      "p99": 29.9855,
+      "max": 30.07
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 190,
+      "median": 0.47725,
+      "p90": 0.6082299999999999,
+      "p99": 0.7343069999999999,
+      "max": 0.7409
+     }
+    },
+    "0.0001": {
+     "share_differing_between_orders": 0.027137159701751346,
+     "share_warm_natural_worse": 0.015172533379573435,
+     "share_warm_natural_better": 0.0,
+     "share_warm_any_order_worse": 0.031385469048031904,
+     "share_cold_single_start_worse": 0.020027744061036933,
+     "share_reference_better_than_multi_start": 0.0,
+     "worse_warm_natural_relative_power": {
+      "n": 175,
+      "median": 0.004156,
+      "p90": 0.0082214,
+      "p99": 0.010680599999999997,
+      "max": 0.01093
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 175,
+      "median": 25.19,
+      "p90": 28.179999999999996,
+      "p99": 29.993,
+      "max": 30.07
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 175,
+      "median": 0.4804,
+      "p90": 0.6270999999999998,
+      "p99": 0.734862,
+      "max": 0.7409
+     }
+    },
+    "0.001": {
+     "share_differing_between_orders": 0.024536153979538754,
+     "share_warm_natural_worse": 0.013525229755505462,
+     "share_warm_natural_better": 0.0,
+     "share_warm_any_order_worse": 0.028264262181376797,
+     "share_cold_single_start_worse": 0.018207040055488122,
+     "share_reference_better_than_multi_start": 0.0,
+     "worse_warm_natural_relative_power": {
+      "n": 156,
+      "median": 0.004505,
+      "p90": 0.008509,
+      "p99": 0.010739499999999996,
+      "max": 0.01093
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 156,
+      "median": 25.18,
+      "p90": 28.125,
+      "p99": 29.969,
+      "max": 30.03
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 156,
+      "median": 0.48,
+      "p90": 0.624,
+      "p99": 0.733075,
+      "max": 0.7376
+     }
+    },
+    "0.01": {
+     "share_differing_between_orders": 0.0017340038148083927,
+     "share_warm_natural_worse": 0.0006069013351829374,
+     "share_warm_natural_better": 0.0,
+     "share_warm_any_order_worse": 0.0018207040055488123,
+     "share_cold_single_start_worse": 0.0005202011444425178,
+     "share_reference_better_than_multi_start": 0.0,
+     "worse_warm_natural_relative_power": {
+      "n": 7,
+      "median": 0.01055,
+      "p90": 0.010918,
+      "p99": 0.0109288,
+      "max": 0.01093
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 7,
+      "median": 24.99,
+      "p90": 25.16,
+      "p99": 25.214,
+      "max": 25.22
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 7,
+      "median": 0.4743,
+      "p90": 0.48144000000000003,
+      "p99": 0.483924,
+      "max": 0.4842
+     }
+    }
+   },
+   "local_optima": {
+    "share_of_queries_with_several": 0.0653719438182764,
+    "largest_number": 4,
+    "relative_power_spread_where_several": {
+     "n": 754,
+     "median": 0.0064575,
+     "p90": 0.012431000000000001,
+     "p99": 0.017047000000000003,
+     "max": 0.01948
+    }
+   },
+   "set_points_between_orders": {
+    "abs_d_inlet_k": {
+     "n": 11534,
+     "median": 6.057e-09,
+     "p90": 1.0312000000000044e-07,
+     "p99": 25.7967,
+     "max": 31.61
+    },
+    "abs_d_gas_m_per_s": {
+     "n": 11534,
+     "median": 7.1355e-11,
+     "p90": 1.6425000000000036e-09,
+     "p99": 0.5073030000000001,
+     "max": 0.8522
+    }
+   }
+  },
+  "C1": {
+   "n_queries": 11542,
+   "n_units": 4,
+   "natural_pass_reproduced_in_all_units": true,
+   "failed": {
+    "warm_natural": 0,
+    "warm_any_order": 0,
+    "cold": 0,
+    "reference_all_starts": 0
+   },
+   "share_bit_distinct_between_orders": 1.0,
+   "by_threshold": {
+    "1e-09": {
+     "share_differing_between_orders": 0.13801767457979552,
+     "share_warm_natural_worse": 0.04869173453474268,
+     "share_warm_natural_better": 0.033789637844394385,
+     "share_warm_any_order_worse": 0.0968636284872639,
+     "share_cold_single_start_worse": 0.01438225610812684,
+     "share_reference_better_than_multi_start": 0.2641656558655346,
+     "worse_warm_natural_relative_power": {
+      "n": 562,
+      "median": 3.431e-08,
+      "p90": 0.011754000000000002,
+      "p99": 0.0206485,
+      "max": 0.02577
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 562,
+      "median": 2.4735e-06,
+      "p90": 39.909,
+      "p99": 41.72239999999999,
+      "max": 42.59
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 562,
+      "median": 4.8360000000000004e-08,
+      "p90": 0.8724900000000001,
+      "p99": 1.0154599999999998,
+      "max": 1.09
+     }
+    },
+    "1e-06": {
+     "share_differing_between_orders": 0.036388840755501646,
+     "share_warm_natural_worse": 0.018887541154046093,
+     "share_warm_natural_better": 0.00017328019407381737,
+     "share_warm_any_order_worse": 0.03838156298735054,
+     "share_cold_single_start_worse": 0.01438225610812684,
+     "share_reference_better_than_multi_start": 0.0035522439785132557,
+     "worse_warm_natural_relative_power": {
+      "n": 218,
+      "median": 0.0068785,
+      "p90": 0.016212,
+      "p99": 0.0225145,
+      "max": 0.02577
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 218,
+      "median": 37.945,
+      "p90": 40.372,
+      "p99": 42.0228,
+      "max": 42.59
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 218,
+      "median": 0.7371,
+      "p90": 0.90701,
+      "p99": 1.03864,
+      "max": 1.09
+     }
+    },
+    "0.0001": {
+     "share_differing_between_orders": 0.035435799688095654,
+     "share_warm_natural_worse": 0.01767457979552937,
+     "share_warm_natural_better": 0.0,
+     "share_warm_any_order_worse": 0.03725524172587073,
+     "share_cold_single_start_worse": 0.01386241552590539,
+     "share_reference_better_than_multi_start": 0.0,
+     "worse_warm_natural_relative_power": {
+      "n": 204,
+      "median": 0.0075715,
+      "p90": 0.01672300000000001,
+      "p99": 0.0225355,
+      "max": 0.02577
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 204,
+      "median": 37.99,
+      "p90": 40.4,
+      "p99": 42.045199999999994,
+      "max": 42.59
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 204,
+      "median": 0.7396,
+      "p90": 0.90946,
+      "p99": 1.03976,
+      "max": 1.09
+     }
+    },
+    "0.001": {
+     "share_differing_between_orders": 0.03249003638884076,
+     "share_warm_natural_worse": 0.01576849766071738,
+     "share_warm_natural_better": 0.0,
+     "share_warm_any_order_worse": 0.03352971755328366,
+     "share_cold_single_start_worse": 0.01186969329405649,
+     "share_reference_better_than_multi_start": 0.0,
+     "worse_warm_natural_relative_power": {
+      "n": 182,
+      "median": 0.0085785,
+      "p90": 0.017447,
+      "p99": 0.023014999999999994,
+      "max": 0.02577
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 182,
+      "median": 38.02,
+      "p90": 40.358,
+      "p99": 41.8295,
+      "max": 41.89
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 182,
+      "median": 0.744,
+      "p90": 0.90664,
+      "p99": 1.02495,
+      "max": 1.032
+     }
+    },
+    "0.01": {
+     "share_differing_between_orders": 0.010656731935539768,
+     "share_warm_natural_worse": 0.006844567665915786,
+     "share_warm_natural_better": 0.0,
+     "share_warm_any_order_worse": 0.011003292323687403,
+     "share_cold_single_start_worse": 0.001386241552590539,
+     "share_reference_better_than_multi_start": 0.0,
+     "worse_warm_natural_relative_power": {
+      "n": 79,
+      "median": 0.01386,
+      "p90": 0.019966,
+      "p99": 0.0252006,
+      "max": 0.02577
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 79,
+      "median": 38.09,
+      "p90": 40.416,
+      "p99": 41.8744,
+      "max": 41.89
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 79,
+      "median": 0.7718,
+      "p90": 0.91212,
+      "p99": 1.02966,
+      "max": 1.032
+     }
+    }
+   },
+   "local_optima": {
+    "share_of_queries_with_several": 0.0538901403569572,
+    "largest_number": 7,
+    "relative_power_spread_where_several": {
+     "n": 622,
+     "median": 0.006433,
+     "p90": 0.02206099999999999,
+     "p99": 0.030959599999999955,
+     "max": 0.0367
+    }
+   },
+   "set_points_between_orders": {
+    "abs_d_inlet_k": {
+     "n": 11542,
+     "median": 1.277e-08,
+     "p90": 3.6594999999999986e-07,
+     "p99": 39.71,
+     "max": 43.02
+    },
+    "abs_d_gas_m_per_s": {
+     "n": 11542,
+     "median": 1.5325000000000001e-10,
+     "p90": 5.911099999999997e-09,
+     "p99": 0.8618540000000001,
+     "max": 1.133
+    }
+   }
+  },
+  "C2": {
+   "n_queries": 47020,
+   "n_units": 4,
+   "natural_pass_reproduced_in_all_units": true,
+   "failed": {
+    "warm_natural": 0,
+    "warm_any_order": 0,
+    "cold": 0,
+    "reference_all_starts": 0
+   },
+   "share_bit_distinct_between_orders": 1.0,
+   "by_threshold": {
+    "1e-09": {
+     "share_differing_between_orders": 0.11363249680986814,
+     "share_warm_natural_worse": 0.04232241599319438,
+     "share_warm_natural_better": 0.019842620161633347,
+     "share_warm_any_order_worse": 0.08002977456401532,
+     "share_cold_single_start_worse": 0.017630795406210122,
+     "share_reference_better_than_multi_start": 0.21390897490429606,
+     "worse_warm_natural_relative_power": {
+      "n": 1990,
+      "median": 3.7235e-08,
+      "p90": 0.007059000000000005,
+      "p99": 0.016374899999999942,
+      "max": 0.02578
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 1990,
+      "median": 3.1979999999999997e-06,
+      "p90": 37.32,
+      "p99": 40.4911,
+      "max": 42.59
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 1990,
+      "median": 8.8125e-08,
+      "p90": 0.7425800000000001,
+      "p99": 0.9599439999999999,
+      "max": 1.09
+     }
+    },
+    "1e-06": {
+     "share_differing_between_orders": 0.03972777541471714,
+     "share_warm_natural_worse": 0.01858783496384517,
+     "share_warm_natural_better": 0.00010633772862611655,
+     "share_warm_any_order_worse": 0.04021692896639728,
+     "share_cold_single_start_worse": 0.017630795406210122,
+     "share_reference_better_than_multi_start": 0.002807316035729477,
+     "worse_warm_natural_relative_power": {
+      "n": 874,
+      "median": 0.003522,
+      "p90": 0.010648000000000001,
+      "p99": 0.018907,
+      "max": 0.02578
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 874,
+      "median": 31.045,
+      "p90": 38.694,
+      "p99": 41.4897,
+      "max": 42.59
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 874,
+      "median": 0.63525,
+      "p90": 0.8766700000000001,
+      "p99": 1.01281,
+      "max": 1.09
+     }
+    },
+    "0.0001": {
+     "share_differing_between_orders": 0.038983411314334325,
+     "share_warm_natural_worse": 0.017396852403232667,
+     "share_warm_natural_better": 0.0,
+     "share_warm_any_order_worse": 0.039493832411739684,
+     "share_cold_single_start_worse": 0.017120374308804764,
+     "share_reference_better_than_multi_start": 0.0,
+     "worse_warm_natural_relative_power": {
+      "n": 818,
+      "median": 0.003897,
+      "p90": 0.01111,
+      "p99": 0.018963000000000004,
+      "max": 0.02578
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 818,
+      "median": 31.975,
+      "p90": 38.743,
+      "p99": 41.551300000000005,
+      "max": 42.59
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 818,
+      "median": 0.6476500000000001,
+      "p90": 0.8774299999999999,
+      "p99": 1.0144900000000001,
+      "max": 1.09
+     }
+    },
+    "0.001": {
+     "share_differing_between_orders": 0.034474691620586986,
+     "share_warm_natural_worse": 0.014929817099106762,
+     "share_warm_natural_better": 0.0,
+     "share_warm_any_order_worse": 0.034814972352190554,
+     "share_cold_single_start_worse": 0.01471714164185453,
+     "share_reference_better_than_multi_start": 0.0,
+     "worse_warm_natural_relative_power": {
+      "n": 702,
+      "median": 0.0046105,
+      "p90": 0.011616,
+      "p99": 0.019851200000000006,
+      "max": 0.02578
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 702,
+      "median": 32.879999999999995,
+      "p90": 39.65699999999999,
+      "p99": 41.3196,
+      "max": 41.85
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 702,
+      "median": 0.6622,
+      "p90": 0.87749,
+      "p99": 1.00895,
+      "max": 1.045
+     }
+    },
+    "0.01": {
+     "share_differing_between_orders": 0.005487026797107614,
+     "share_warm_natural_worse": 0.002190557209698001,
+     "share_warm_natural_better": 0.0,
+     "share_warm_any_order_worse": 0.005487026797107614,
+     "share_cold_single_start_worse": 0.0009357720119098256,
+     "share_reference_better_than_multi_start": 0.0,
+     "worse_warm_natural_relative_power": {
+      "n": 103,
+      "median": 0.01265,
+      "p90": 0.018646,
+      "p99": 0.02499000000000001,
+      "max": 0.02578
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 103,
+      "median": 37.92,
+      "p90": 40.356,
+      "p99": 41.820600000000006,
+      "max": 41.85
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 103,
+      "median": 0.7327,
+      "p90": 0.90704,
+      "p99": 1.0264120000000003,
+      "max": 1.031
+     }
+    }
+   },
+   "local_optima": {
+    "share_of_queries_with_several": 0.0603998298596342,
+    "largest_number": 7,
+    "relative_power_spread_where_several": {
+     "n": 2840,
+     "median": 0.0057845,
+     "p90": 0.017661999999999997,
+     "p99": 0.027896600000000008,
+     "max": 0.0367
+    }
+   },
+   "set_points_between_orders": {
+    "abs_d_inlet_k": {
+     "n": 47020,
+     "median": 9.408500000000001e-09,
+     "p90": 2.1540999999999986e-07,
+     "p99": 36.390999999999764,
+     "max": 42.83
+    },
+    "abs_d_gas_m_per_s": {
+     "n": 47020,
+     "median": 1.135e-10,
+     "p90": 3.7042999999999956e-09,
+     "p99": 0.7318,
+     "max": 1.115
+    }
+   }
+  },
+  "pooled": {
+   "n_queries": 94211,
+   "n_units": 16,
+   "natural_pass_reproduced_in_all_units": true,
+   "failed": {
+    "warm_natural": 0,
+    "warm_any_order": 0,
+    "cold": 0,
+    "reference_all_starts": 0
+   },
+   "share_bit_distinct_between_orders": 1.0,
+   "by_threshold": {
+    "1e-09": {
+     "share_differing_between_orders": 0.11207820742800735,
+     "share_warm_natural_worse": 0.039379690269713725,
+     "share_warm_natural_better": 0.01799152965152689,
+     "share_warm_any_order_worse": 0.07659402829818174,
+     "share_cold_single_start_worse": 0.015773105051427115,
+     "share_reference_better_than_multi_start": 0.21690673063654986,
+     "worse_warm_natural_relative_power": {
+      "n": 3710,
+      "median": 7.621e-08,
+      "p90": 0.0074762,
+      "p99": 0.01733,
+      "max": 0.02578
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 3710,
+      "median": 5.48e-06,
+      "p90": 37.29,
+      "p99": 40.49,
+      "max": 42.59
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 3710,
+      "median": 1.56e-07,
+      "p90": 0.72953,
+      "p99": 0.9426409999999993,
+      "max": 1.09
+     }
+    },
+    "1e-06": {
+     "share_differing_between_orders": 0.041513199095647005,
+     "share_warm_natural_worse": 0.018171975671630702,
+     "share_warm_natural_better": 7.430130239568628e-05,
+     "share_warm_any_order_worse": 0.043052297502414794,
+     "share_cold_single_start_worse": 0.015773105051427115,
+     "share_reference_better_than_multi_start": 0.002409485091974398,
+     "worse_warm_natural_relative_power": {
+      "n": 1712,
+      "median": 0.004631,
+      "p90": 0.010559,
+      "p99": 0.01898,
+      "max": 0.02578
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 1712,
+      "median": 26.56,
+      "p90": 38.64,
+      "p99": 41.57,
+      "max": 42.59
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 1712,
+      "median": 0.53735,
+      "p90": 0.8697400000000001,
+      "p99": 1.0085599999999995,
+      "max": 1.09
+     }
+    },
+    "0.0001": {
+     "share_differing_between_orders": 0.040876330789398264,
+     "share_warm_natural_worse": 0.01724851662757003,
+     "share_warm_natural_better": 0.0,
+     "share_warm_any_order_worse": 0.04235174236554118,
+     "share_cold_single_start_worse": 0.015306068293511374,
+     "share_reference_better_than_multi_start": 0.0,
+     "worse_warm_natural_relative_power": {
+      "n": 1625,
+      "median": 0.004926,
+      "p90": 0.01066,
+      "p99": 0.01964879999999999,
+      "max": 0.02578
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 1625,
+      "median": 26.95,
+      "p90": 38.69200000000001,
+      "p99": 41.5852,
+      "max": 42.59
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 1625,
+      "median": 0.5555,
+      "p90": 0.8708600000000001,
+      "p99": 1.00976,
+      "max": 1.09
+     }
+    },
+    "0.001": {
+     "share_differing_between_orders": 0.037585844540446445,
+     "share_warm_natural_worse": 0.015316682765282186,
+     "share_warm_natural_better": 0.0,
+     "share_warm_any_order_worse": 0.038774665378777426,
+     "share_cold_single_start_worse": 0.013395463374765154,
+     "share_reference_better_than_multi_start": 0.0,
+     "worse_warm_natural_relative_power": {
+      "n": 1443,
+      "median": 0.005446,
+      "p90": 0.011349999999999997,
+      "p99": 0.02016739999999996,
+      "max": 0.02578
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 1443,
+      "median": 27.21,
+      "p90": 38.81,
+      "p99": 41.10779999999997,
+      "max": 41.89
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 1443,
+      "median": 0.563,
+      "p90": 0.8718999999999999,
+      "p99": 1.00158,
+      "max": 1.045
+     }
+    },
+    "0.01": {
+     "share_differing_between_orders": 0.004521764974366051,
+     "share_warm_natural_worse": 0.0021335088259332776,
+     "share_warm_natural_better": 0.0,
+     "share_warm_any_order_worse": 0.004574837333220112,
+     "share_cold_single_start_worse": 0.0007111696086444258,
+     "share_reference_better_than_multi_start": 0.0,
+     "worse_warm_natural_relative_power": {
+      "n": 201,
+      "median": 0.01265,
+      "p90": 0.01888,
+      "p99": 0.02504,
+      "max": 0.02578
+     },
+     "worse_warm_natural_abs_d_inlet_k": {
+      "n": 201,
+      "median": 37.94,
+      "p90": 40.36,
+      "p99": 41.85,
+      "max": 41.89
+     },
+     "worse_warm_natural_abs_d_gas_m_per_s": {
+      "n": 201,
+      "median": 0.7355,
+      "p90": 0.9075,
+      "p99": 1.029,
+      "max": 1.032
+     }
+    }
+   },
+   "local_optima": {
+    "share_of_queries_with_several": 0.06908959675621743,
+    "largest_number": 7,
+    "relative_power_spread_where_several": {
+     "n": 6509,
+     "median": 0.005616,
+     "p90": 0.014163999999999998,
+     "p99": 0.026576000000000002,
+     "max": 0.0367
+    }
+   },
+   "set_points_between_orders": {
+    "abs_d_inlet_k": {
+     "n": 94211,
+     "median": 8.976e-09,
+     "p90": 2.503e-07,
+     "p99": 34.61,
+     "max": 43.02
+    },
+    "abs_d_gas_m_per_s": {
+     "n": 94211,
+     "median": 1.064e-10,
+     "p90": 4.17e-09,
+     "p99": 0.7095,
+     "max": 1.133
+    }
+   }
+  },
+  "units_with_an_error": 0
+ },
+ "stage0_check": {
+  "bands_artifact": {
+   "main": [
+    1.2,
+    1.8
+   ],
+   "box": [
+    0.4,
+    3.0
+   ]
+  },
+  "bands_cold": {
+   "main": [
+    1.2,
+    1.8
+   ],
+   "box": [
+    0.4,
+    3.0
+   ]
+  },
+  "bands_equal": true,
+  "rule": {
+   "E": {
+    "quantile": [
+     0.5,
+     0.5
+    ],
+    "spread_kg_per_h": [
+     0.6000000000000001,
+     0.6000000000000001
+    ],
+    "relative_change_of_cost": 8.585278302009072e-05,
+    "equal": true
+   },
+   "G": {
+    "quantile": [
+     0.5,
+     0.5
+    ],
+    "spread_kg_per_h": [
+     0.6000000000000001,
+     0.6000000000000001
+    ],
+    "relative_change_of_cost": 0.000735795994055611,
+    "equal": true
+   }
+  },
+  "steady_failures_cold": 0,
+  "map": {
+   "points": 1325,
+   "points_with_an_optimum_in_both": 1325,
+   "optimum_only_in_artifact": 0,
+   "optimum_only_cold": 0,
+   "feasibility_flags_differing": 0,
+   "relative_power_artifact_minus_cold": {
+    "max": 0.024126429458166773,
+    "min": -0.0003263660386707229,
+    "share_above_1e-6": 0.017358490566037735,
+    "share_above_1e-3": 0.01509433962264151,
+    "share_below_-1e-6": 0.0007547169811320754
+   }
+  }
+ },
+ "errors_of_the_run": 0
+}
