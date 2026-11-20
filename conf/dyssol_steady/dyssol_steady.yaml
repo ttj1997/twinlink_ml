@@ -1,0 +1,72 @@
+# Surrogates of stationary Dyssol flowsheets: how many Dyssol runs does a surrogate need when no
+# rebuild of the flowsheet exists? (docs/45_dyssol_steady_state.md; reading pre-registered there
+# and in the docstring of scripts/analyze_dyssol_steady.py.)
+#
+# STATUS: every number below is a study setting fixed by decision of the project lead
+# (2026-11-19) or chosen in the design document; none is a measured plant value. Plant values,
+# the box of the varied inputs and every generated data set are NOT in the repository: the box is
+# read from <local>/dyssol_steady/box_local.yaml (template: box_local.yaml.example next to this
+# file), the source flowsheets from <local>/partner/<delivery>/.
+
+version: 1
+
+delivery: dyssol_2026-11-19          # folder under <local>/partner/ with the .dflw files and unit sources
+
+cases:
+  one_line:                          # one line with its own heat recovery (5 varied inputs)
+    source_file: "Case 1.1.dflw"
+    lines: 1
+  two_lines:                         # two lines, each exhaust preheats the other line (10 inputs)
+    source_file: "Case 2.dflw"
+    lines: 2
+
+design:
+  pool_size: 1024                    # scrambled Sobol points of the training pool (power of two)
+  pool_seed: 20261119
+  test_size: 256                     # independent scrambled Sobol points in the same box
+  test_seed: 20261120
+
+budgets: [8, 16, 32, 64, 128, 256, 512]   # Dyssol runs N; per seed nested prefixes of one permutation
+seeds: [1, 2, 3, 4, 5]                    # permutation of the pool and initialisation of the MLP
+
+mlp:
+  hidden: [64, 64]                   # tanh, as in static_transfer (docs/37)
+  # Filled from the pilot artifact of each case (own commit) BEFORE any Dyssol data exist.
+  selected:
+    # selections of dyssol_steady_pilot_v1_one_line / dyssol_steady_pilot_v1_two_lines (setting 5 of
+    # the grid in both; it lies at the edge of the grid, no extension as pre-registered)
+    one_line: {learning_rate: 0.003, steps: 5000, weight_decay: 0.1}
+    two_lines: {learning_rate: 0.003, steps: 5000, weight_decay: 0.1}
+
+# Pilot of the MLP optimiser on the PYTHON REBUILD (no Dyssol run): its own pool and test points,
+# its own seeds. Selection: lowest mean criterion over pilot seeds and budgets; criterion of a cell
+# = mean of (exhaust_p95_k / threshold, fuel_p95_percent / threshold). No extension of the grid.
+pilot:
+  pool_seed: 20261121
+  test_seed: 20261122
+  seeds: [11, 12]
+  budgets: [16, 64, 256]
+  grid:                              # order = tie-break order
+    - {learning_rate: 0.001, steps: 5000, weight_decay: 0.0}
+    - {learning_rate: 0.001, steps: 5000, weight_decay: 0.001}
+    - {learning_rate: 0.001, steps: 5000, weight_decay: 0.1}
+    - {learning_rate: 0.003, steps: 5000, weight_decay: 0.0}
+    - {learning_rate: 0.003, steps: 5000, weight_decay: 0.001}
+    - {learning_rate: 0.003, steps: 5000, weight_decay: 0.1}
+
+# Reading: 95th percentile over the test set, median over the seeds (see the design document for
+# the justification of both thresholds).
+thresholds:
+  exhaust_temperature_k: 1.0         # exhaust after the heat recovery, the larger of the lines
+  total_fuel_percent: 1.0            # total fuel consumption, relative
+
+# Control before any fit: Dyssol against the Python rebuild at EVERY point of the data set. The
+# rebuild reproduces Dyssol to rounding at the probe points seen before this file was committed
+# (below 1e-11 K and 1e-11 kW); above the bounds here the data set is not used and the deviation
+# is reported. Temperatures absolute; heat flows and fuel relative to max(|value|, 1).
+control:
+  temperature_k: 1.0e-6
+  relative_percent: 1.0e-6
+
+statistics:
+  alpha: 0.05                        # paired t over seeds, Holm per family (one baseline, one number, all N)

@@ -199,6 +199,8 @@ replace a product-moisture measurement.
 
 **Learned prediction of optimised transient set points for load following (Befund 127; synthetic twin with perfect physics, placeholders).** With a learned model the law of the schedule costs 2.98 % (GRU in the loop) to 7.07 % (GRU map without feedback) more per kg than with the known model, 3.87 % with inline moisture feedback; no learned arm is within 2 % of the twin and none reaches constant throughput with the true steady optimum (load following gains 2.07 % with the known model). The gap is the safety margin the learned model needs, more data beyond 16 runs do not close it, and networks that output the commands directly do not beat a fixed set point (reading U3 in every family). The margins reported are optimistic: on test days no arm holds its margin in all seeds.
 
+**Stationary Dyssol flowsheets as a data source (Befund 128; stored values of a delivery varied in a local box).** A quadratic regression reaches the thresholds (95th percentile 1 K on the exhaust temperature, 1 % on the fuel) from 32 Dyssol runs for one line and 128 for two lines, an MLP from 64 and 256, a linear regression never (reading D2); the data need follows the number of coefficients. Dyssol and a Python rebuild agree to rounding at all 2560 points. The result is for closed formulas and says nothing about dynamic Dyssol models; the chain (design of experiments, run, control, fit, reading) carries over.
+
 **One-step bandit (Befund 93, follow-up of Befund 68).** A residual action and a separated
 moisture cost lift SAC from a negative to a clearly positive closed-regret fraction, but no cell
 meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of

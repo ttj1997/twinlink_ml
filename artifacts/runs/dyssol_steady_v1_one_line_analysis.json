@@ -1,0 +1,3293 @@
+{
+ "provenance": {
+  "git/commit": "4de73d2fde8c180a20feb3bbe5c88affd44d05f5",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": null,
+  "heatnetwork/fingerprint": null
+ },
+ "training": "dyssol_steady_v1_one_line_training",
+ "case": "one_line",
+ "test_set": {
+  "name": "in-box Sobol test set, independent of the training pool",
+  "points": 256,
+  "admissible_points": 253
+ },
+ "data_summary": {
+  "by_set": {
+   "train": {
+    "points": 1024,
+    "dyssol_ok": 1024,
+    "failed": 0,
+    "oversaturated": 9
+   },
+   "test": {
+    "points": 256,
+    "dyssol_ok": 256,
+    "failed": 0,
+    "oversaturated": 3
+   }
+  },
+  "dyssol_wall_seconds": {
+   "median": 1.4278484500246122,
+   "max": 2.4227996000554413,
+   "sum": 1881.224890299607
+  },
+  "dyssol_peak_memory_mb": 53.65625,
+  "control": {
+   "points_compared": 1280,
+   "max_temperature_k": 1.7053025658242404e-13,
+   "max_relative_percent": 6.308143459803556e-12,
+   "max_by_quantity": {
+    "dryer_outlet_celsius": 5.684341886080802e-14,
+    "dryer_outlet_humidity_g_per_kg": 4.649555859185199e-14,
+    "exhaust_celsius": 1.7053025658242404e-13,
+    "preheated_celsius": 1.1368683772161603e-13,
+    "heat_recovered_kw": 6.308143459803556e-12,
+    "heater_duty_kw": 2.4077771906860676e-13,
+    "fuel_kg_per_h": 2.3956508400958524e-13,
+    "product_kg_per_h": 3.8413954605512704e-14
+   }
+  }
+ },
+ "reading": {
+  "verdict": "D2",
+  "data_need_runs": 32,
+  "reached_by": "quadratic",
+  "n_star": {
+   "linear": null,
+   "quadratic": 32,
+   "mlp": 64
+  },
+  "table": {
+   "linear": {
+    "8": {
+     "seeds_meeting_both": 0,
+     "exhaust_p95_k": {
+      "median": 2.721677703760996,
+      "range": [
+       2.212932515395412,
+       6.264309348025257
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 12.713462918792116,
+      "range": [
+       8.442643652502252,
+       24.254968718236697
+      ]
+     },
+     "met": false
+    },
+    "16": {
+     "seeds_meeting_both": 0,
+     "exhaust_p95_k": {
+      "median": 2.2051163277560075,
+      "range": [
+       1.903423224639397,
+       2.352769959779483
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 9.07369907524366,
+      "range": [
+       8.337550260374634,
+       10.867409029958143
+      ]
+     },
+     "met": false
+    },
+    "32": {
+     "seeds_meeting_both": 0,
+     "exhaust_p95_k": {
+      "median": 1.9370110964411058,
+      "range": [
+       1.8985673647603463,
+       2.140191731891221
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 8.230884857493841,
+      "range": [
+       7.980850573687067,
+       9.164823767829855
+      ]
+     },
+     "met": false
+    },
+    "64": {
+     "seeds_meeting_both": 0,
+     "exhaust_p95_k": {
+      "median": 1.9697432147979406,
+      "range": [
+       1.8270493604252458,
+       1.998090187452819
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 7.397529773441502,
+      "range": [
+       6.7219789340095435,
+       8.810142981612337
+      ]
+     },
+     "met": false
+    },
+    "128": {
+     "seeds_meeting_both": 0,
+     "exhaust_p95_k": {
+      "median": 1.9230734133947003,
+      "range": [
+       1.7661307535383877,
+       1.9906834472133657
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 7.416453733422426,
+      "range": [
+       6.612731470600938,
+       7.930923553157197
+      ]
+     },
+     "met": false
+    },
+    "256": {
+     "seeds_meeting_both": 0,
+     "exhaust_p95_k": {
+      "median": 1.9083240873149343,
+      "range": [
+       1.7740419382927062,
+       1.9685564058587435
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 7.220200431777571,
+      "range": [
+       7.016896697891057,
+       7.31155429069064
+      ]
+     },
+     "met": false
+    },
+    "512": {
+     "seeds_meeting_both": 0,
+     "exhaust_p95_k": {
+      "median": 1.9497061280161816,
+      "range": [
+       1.8194259585372539,
+       1.9953859131381542
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 7.138903977017476,
+      "range": [
+       6.979566327614121,
+       7.6655332676979615
+      ]
+     },
+     "met": false
+    }
+   },
+   "quadratic": {
+    "8": {
+     "seeds_meeting_both": 0,
+     "exhaust_p95_k": {
+      "median": 26.81334163010272,
+      "range": [
+       19.6613391090729,
+       35.065079045132116
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 44.28163455669733,
+      "range": [
+       26.437342186341745,
+       50.017762151508975
+      ]
+     },
+     "met": false
+    },
+    "16": {
+     "seeds_meeting_both": 0,
+     "exhaust_p95_k": {
+      "median": 13.886259568220272,
+      "range": [
+       7.467169416104754,
+       14.094857012056277
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 19.647249694499042,
+      "range": [
+       16.986168652294428,
+       22.723455670058804
+      ]
+     },
+     "met": false
+    },
+    "32": {
+     "seeds_meeting_both": 5,
+     "exhaust_p95_k": {
+      "median": 0.37477822761659496,
+      "range": [
+       0.263820569582375,
+       0.40321188827753396
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 0.4098162857631359,
+      "range": [
+       0.326762382688835,
+       0.5367483655096893
+      ]
+     },
+     "met": true
+    },
+    "64": {
+     "seeds_meeting_both": 5,
+     "exhaust_p95_k": {
+      "median": 0.24107600248589112,
+      "range": [
+       0.21556049469382277,
+       0.24638509992066382
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 0.31905153685095344,
+      "range": [
+       0.2622099916140037,
+       0.39051264397024565
+      ]
+     },
+     "met": true
+    },
+    "128": {
+     "seeds_meeting_both": 5,
+     "exhaust_p95_k": {
+      "median": 0.2006939108166641,
+      "range": [
+       0.18741182394827316,
+       0.2330031559507617
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 0.2833337516022037,
+      "range": [
+       0.2561520888027067,
+       0.31634172492878376
+      ]
+     },
+     "met": true
+    },
+    "256": {
+     "seeds_meeting_both": 5,
+     "exhaust_p95_k": {
+      "median": 0.18480273078068166,
+      "range": [
+       0.1795382125487084,
+       0.19714274875192572
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 0.24310118869252983,
+      "range": [
+       0.2276005962949064,
+       0.2619068028238849
+      ]
+     },
+     "met": true
+    },
+    "512": {
+     "seeds_meeting_both": 5,
+     "exhaust_p95_k": {
+      "median": 0.1664642673064769,
+      "range": [
+       0.1657534768178479,
+       0.1734032412932116
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 0.2177330598004133,
+      "range": [
+       0.2162611393773594,
+       0.2310073147516432
+      ]
+     },
+     "met": true
+    }
+   },
+   "mlp": {
+    "8": {
+     "seeds_meeting_both": 0,
+     "exhaust_p95_k": {
+      "median": 6.633924237134373,
+      "range": [
+       3.8329374324565,
+       8.833027650119096
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 9.797521400519646,
+      "range": [
+       7.618585427249835,
+       15.801499656788256
+      ]
+     },
+     "met": false
+    },
+    "16": {
+     "seeds_meeting_both": 0,
+     "exhaust_p95_k": {
+      "median": 2.0771337747197114,
+      "range": [
+       1.8970256708089295,
+       2.7585205067997514
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 5.123029501444724,
+      "range": [
+       4.09768557209185,
+       6.153247474784146
+      ]
+     },
+     "met": false
+    },
+    "32": {
+     "seeds_meeting_both": 0,
+     "exhaust_p95_k": {
+      "median": 1.6938892377043686,
+      "range": [
+       1.0906958272109346,
+       2.189612375682856
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 1.9683018186191354,
+      "range": [
+       1.8140696239649197,
+       2.332010814750922
+      ]
+     },
+     "met": false
+    },
+    "64": {
+     "seeds_meeting_both": 4,
+     "exhaust_p95_k": {
+      "median": 0.4787955542086566,
+      "range": [
+       0.3727138902855991,
+       0.7605703416061171
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 0.8393503054532465,
+      "range": [
+       0.6762552929983949,
+       1.0381319993351577
+      ]
+     },
+     "met": true
+    },
+    "128": {
+     "seeds_meeting_both": 5,
+     "exhaust_p95_k": {
+      "median": 0.33144964753330086,
+      "range": [
+       0.2599175474907547,
+       0.48147874217744224
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 0.6044347054484653,
+      "range": [
+       0.47245896539175186,
+       0.7764646702875493
+      ]
+     },
+     "met": true
+    },
+    "256": {
+     "seeds_meeting_both": 4,
+     "exhaust_p95_k": {
+      "median": 0.22597595735461518,
+      "range": [
+       0.19933894694925058,
+       1.0083452987909958
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 0.41374044891489475,
+      "range": [
+       0.34873827984163974,
+       1.6717429460743598
+      ]
+     },
+     "met": true
+    },
+    "512": {
+     "seeds_meeting_both": 5,
+     "exhaust_p95_k": {
+      "median": 0.19232684640430264,
+      "range": [
+       0.18067675415668205,
+       0.19445367129342017
+      ]
+     },
+     "fuel_p95_percent": {
+      "median": 0.3753550586737785,
+      "range": [
+       0.3248982709112149,
+       0.4006353808446444
+      ]
+     },
+     "met": true
+    }
+   }
+  },
+  "thresholds": {
+   "exhaust_p95_k": 1.0,
+   "fuel_p95_percent": 1.0
+  }
+ },
+ "rank_tests": [
+  {
+   "family": "mlp_vs_linear/exhaust_p95_k",
+   "n": 8,
+   "mean_difference": -2.6497311500928116,
+   "threshold": 2.579012408014306,
+   "p_value": 0.04627507845719356,
+   "degenerate": false,
+   "resolved_holm": false,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_linear/exhaust_p95_k",
+   "n": 16,
+   "mean_difference": -0.06603070171553718,
+   "threshold": 0.6138469236989866,
+   "p_value": 0.7800733282406499,
+   "degenerate": false,
+   "resolved_holm": false,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_linear/exhaust_p95_k",
+   "n": 32,
+   "mean_difference": 0.3333862558799929,
+   "threshold": 0.5687075031595837,
+   "p_value": 0.17893935935785732,
+   "degenerate": false,
+   "resolved_holm": false,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_linear/exhaust_p95_k",
+   "n": 64,
+   "mean_difference": 1.406862804213381,
+   "threshold": 0.16846849555330667,
+   "p_value": 2.0506711093275368e-05,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_linear/exhaust_p95_k",
+   "n": 128,
+   "mean_difference": 1.5177065720658376,
+   "threshold": 0.153671842606134,
+   "p_value": 1.0519134496762272e-05,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_linear/exhaust_p95_k",
+   "n": 256,
+   "mean_difference": 1.508574586652271,
+   "threshold": 0.3860757770956107,
+   "p_value": 0.00040964754400904253,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_linear/exhaust_p95_k",
+   "n": 512,
+   "mean_difference": 1.7354793457468607,
+   "threshold": 0.08054355651250154,
+   "p_value": 4.675539727876169e-07,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_linear/fuel_p95_percent",
+   "n": 8,
+   "mean_difference": 2.670897637844509,
+   "threshold": 8.453013094129982,
+   "p_value": 0.4298694902780947,
+   "degenerate": false,
+   "resolved_holm": false,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_linear/fuel_p95_percent",
+   "n": 16,
+   "mean_difference": 4.036156131294275,
+   "threshold": 0.8731144351205353,
+   "p_value": 0.00021243838363771062,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_linear/fuel_p95_percent",
+   "n": 32,
+   "mean_difference": 6.4334275264677885,
+   "threshold": 0.3825831571787224,
+   "p_value": 1.2589298515804648e-06,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_linear/fuel_p95_percent",
+   "n": 64,
+   "mean_difference": 6.708695840695098,
+   "threshold": 1.0432053352111013,
+   "p_value": 5.782210531316504e-05,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_linear/fuel_p95_percent",
+   "n": 128,
+   "mean_difference": 6.696984980248385,
+   "threshold": 0.556251021424462,
+   "p_value": 4.777207710028892e-06,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_linear/fuel_p95_percent",
+   "n": 256,
+   "mean_difference": 6.55132106481515,
+   "threshold": 0.8381491737955782,
+   "p_value": 2.6671165765214285e-05,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_linear/fuel_p95_percent",
+   "n": 512,
+   "mean_difference": 6.896414609703756,
+   "threshold": 0.41457420213221563,
+   "p_value": 1.314481429852918e-06,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_quadratic/exhaust_p95_k",
+   "n": 8,
+   "mean_difference": 19.741896718301533,
+   "threshold": 6.301765229288135,
+   "p_value": 0.0009619561700131578,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_quadratic/exhaust_p95_k",
+   "n": 16,
+   "mean_difference": 9.998717500162734,
+   "threshold": 3.5548030041148175,
+   "p_value": 0.0014508971595210897,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_quadratic/exhaust_p95_k",
+   "n": 32,
+   "mean_difference": -1.3253340223231445,
+   "threshold": 0.5445059137847336,
+   "p_value": 0.0025004853452227607,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_quadratic/exhaust_p95_k",
+   "n": 64,
+   "mean_difference": -0.27995699616066927,
+   "threshold": 0.1782010395652929,
+   "p_value": 0.012044717866806356,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_quadratic/exhaust_p95_k",
+   "n": 128,
+   "mean_difference": -0.15998589778078146,
+   "threshold": 0.0888441810749906,
+   "p_value": 0.007492154490118352,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_quadratic/exhaust_p95_k",
+   "n": 256,
+   "mean_difference": -0.1878853304330514,
+   "threshold": 0.441378731952893,
+   "p_value": 0.3027178034518652,
+   "degenerate": false,
+   "resolved_holm": false,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_quadratic/exhaust_p95_k",
+   "n": 512,
+   "mean_difference": -0.020971035147022477,
+   "threshold": 0.011048658299782636,
+   "p_value": 0.006212716995493846,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_quadratic/fuel_p95_percent",
+   "n": 8,
+   "mean_difference": 29.190051823815775,
+   "threshold": 16.69363479519041,
+   "p_value": 0.008310378551180945,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_quadratic/fuel_p95_percent",
+   "n": 16,
+   "mean_difference": 14.738327391198192,
+   "threshold": 2.652145416616207,
+   "p_value": 0.00010297363629053043,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_quadratic/fuel_p95_percent",
+   "n": 32,
+   "mean_difference": -1.5711157918132153,
+   "threshold": 0.2606977230978327,
+   "p_value": 7.475494981110433e-05,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_quadratic/fuel_p95_percent",
+   "n": 64,
+   "mean_difference": -0.521997262585625,
+   "threshold": 0.19767142185990724,
+   "p_value": 0.0018419139058712813,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_quadratic/fuel_p95_percent",
+   "n": 128,
+   "mean_difference": -0.32793811898628633,
+   "threshold": 0.1392359579931066,
+   "p_value": 0.002826096039633828,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_quadratic/fuel_p95_percent",
+   "n": 256,
+   "mean_difference": -0.40577656265406004,
+   "threshold": 0.7108885566446298,
+   "p_value": 0.18818968785537984,
+   "degenerate": false,
+   "resolved_holm": false,
+   "tests_in_family": 7
+  },
+  {
+   "family": "mlp_vs_quadratic/fuel_p95_percent",
+   "n": 512,
+   "mean_difference": -0.14569261750566076,
+   "threshold": 0.04184916018769655,
+   "p_value": 0.0006409450051701147,
+   "degenerate": false,
+   "resolved_holm": true,
+   "tests_in_family": 7
+  }
+ ],
+ "without_reading": {
+  "reading_on_admissible_test_points": {
+   "verdict": "D2",
+   "data_need_runs": 32,
+   "reached_by": "quadratic",
+   "n_star": {
+    "linear": null,
+    "quadratic": 32,
+    "mlp": 64
+   },
+   "table": {
+    "linear": {
+     "8": {
+      "seeds_meeting_both": 0,
+      "exhaust_p95_k": {
+       "median": 2.6958092328124064,
+       "range": [
+        2.1709582068910875,
+        6.28156573874827
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 12.568675888676335,
+       "range": [
+        8.11565219899641,
+        23.911429835514106
+       ]
+      },
+      "met": false
+     },
+     "16": {
+      "seeds_meeting_both": 0,
+      "exhaust_p95_k": {
+       "median": 2.1736334315660417,
+       "range": [
+        1.9046127114766505,
+        2.2984682308598203
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 8.493863525697861,
+       "range": [
+        7.996384087570111,
+        10.781837069800828
+       ]
+      },
+      "met": false
+     },
+     "32": {
+      "seeds_meeting_both": 0,
+      "exhaust_p95_k": {
+       "median": 1.8940944316985406,
+       "range": [
+        1.8362761887631458,
+        2.152346061798577
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 7.908601505290176,
+       "range": [
+        7.523167615217696,
+        8.260479881313614
+       ]
+      },
+      "met": false
+     },
+     "64": {
+      "seeds_meeting_both": 0,
+      "exhaust_p95_k": {
+       "median": 1.8975573582220318,
+       "range": [
+        1.784734039113659,
+        1.9827712849785153
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 6.846295241109402,
+       "range": [
+        6.524370849788151,
+        8.11942387239848
+       ]
+      },
+      "met": false
+     },
+     "128": {
+      "seeds_meeting_both": 0,
+      "exhaust_p95_k": {
+       "median": 1.8795968823230473,
+       "range": [
+        1.7193666995161239,
+        1.970145255355092
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 6.963511314686796,
+       "range": [
+        6.54070030816823,
+        7.577658479530999
+       ]
+      },
+      "met": false
+     },
+     "256": {
+      "seeds_meeting_both": 0,
+      "exhaust_p95_k": {
+       "median": 1.8381149664583685,
+       "range": [
+        1.7112953111860159,
+        1.9663577977704676
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 6.86047119690822,
+       "range": [
+        6.693614021425684,
+        7.132233036702174
+       ]
+      },
+      "met": false
+     },
+     "512": {
+      "seeds_meeting_both": 0,
+      "exhaust_p95_k": {
+       "median": 1.8747322837180813,
+       "range": [
+        1.7899347432209518,
+        1.9478338957915824
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 6.763798805047266,
+       "range": [
+        6.61403672083016,
+        6.853213217432706
+       ]
+      },
+      "met": false
+     }
+    },
+    "quadratic": {
+     "8": {
+      "seeds_meeting_both": 0,
+      "exhaust_p95_k": {
+       "median": 26.81725626257424,
+       "range": [
+        19.68895117927255,
+        35.09679013870648
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 44.45686753549674,
+       "range": [
+        26.513134227353742,
+        48.62675500814789
+       ]
+      },
+      "met": false
+     },
+     "16": {
+      "seeds_meeting_both": 0,
+      "exhaust_p95_k": {
+       "median": 13.868752313223363,
+       "range": [
+        7.613634289329064,
+        13.98225371354475
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 19.25129391326491,
+       "range": [
+        16.99848531488994,
+        22.7282175983888
+       ]
+      },
+      "met": false
+     },
+     "32": {
+      "seeds_meeting_both": 5,
+      "exhaust_p95_k": {
+       "median": 0.3640868556315692,
+       "range": [
+        0.26560007276244446,
+        0.40375224369077495
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 0.3988488180372035,
+       "range": [
+        0.3140592476421292,
+        0.5060548083834774
+       ]
+      },
+      "met": true
+     },
+     "64": {
+      "seeds_meeting_both": 5,
+      "exhaust_p95_k": {
+       "median": 0.24018569469601925,
+       "range": [
+        0.21647344524271675,
+        0.24664905980225024
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 0.31398890314844463,
+       "range": [
+        0.2565304405971656,
+        0.3829157563169992
+       ]
+      },
+      "met": true
+     },
+     "128": {
+      "seeds_meeting_both": 5,
+      "exhaust_p95_k": {
+       "median": 0.1952890383963036,
+       "range": [
+        0.18869882682690128,
+        0.23475068530565268
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 0.2664334869549229,
+       "range": [
+        0.24850415176402474,
+        0.308663318443699
+       ]
+      },
+      "met": true
+     },
+     "256": {
+      "seeds_meeting_both": 5,
+      "exhaust_p95_k": {
+       "median": 0.18325627531559402,
+       "range": [
+        0.1788011127917997,
+        0.19715478818606869
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 0.24149152367711257,
+       "range": [
+        0.21918770949629776,
+        0.2593981908974941
+       ]
+      },
+      "met": true
+     },
+     "512": {
+      "seeds_meeting_both": 5,
+      "exhaust_p95_k": {
+       "median": 0.16660548699942976,
+       "range": [
+        0.1639493827829852,
+        0.172553996304731
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 0.2136296787974856,
+       "range": [
+        0.2109176366586156,
+        0.22050873763475956
+       ]
+      },
+      "met": true
+     }
+    },
+    "mlp": {
+     "8": {
+      "seeds_meeting_both": 0,
+      "exhaust_p95_k": {
+       "median": 6.638001247505462,
+       "range": [
+        3.804382158099923,
+        8.854594292033966
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 9.821461176862375,
+       "range": [
+        7.6689091211204445,
+        15.849928688611902
+       ]
+      },
+      "met": false
+     },
+     "16": {
+      "seeds_meeting_both": 0,
+      "exhaust_p95_k": {
+       "median": 2.081695880820798,
+       "range": [
+        1.764223453164224,
+        2.617926377008178
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 5.164076922217711,
+       "range": [
+        4.136831001888417,
+        6.158815847957842
+       ]
+      },
+      "met": false
+     },
+     "32": {
+      "seeds_meeting_both": 0,
+      "exhaust_p95_k": {
+       "median": 1.5376135163706997,
+       "range": [
+        0.9033099762081865,
+        1.9411798852014186
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 1.9709919365797794,
+       "range": [
+        1.7285311269637036,
+        2.345090037315544
+       ]
+      },
+      "met": false
+     },
+     "64": {
+      "seeds_meeting_both": 4,
+      "exhaust_p95_k": {
+       "median": 0.4739893157948951,
+       "range": [
+        0.3730965232650163,
+        0.6274713652453469
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 0.7795310933089983,
+       "range": [
+        0.6699806952776018,
+        1.038298110832608
+       ]
+      },
+      "met": true
+     },
+     "128": {
+      "seeds_meeting_both": 5,
+      "exhaust_p95_k": {
+       "median": 0.31335314269357306,
+       "range": [
+        0.25997173398711765,
+        0.4817055014560253
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 0.5918915623209553,
+       "range": [
+        0.4496725139393263,
+        0.7403780303727198
+       ]
+      },
+      "met": true
+     },
+     "256": {
+      "seeds_meeting_both": 4,
+      "exhaust_p95_k": {
+       "median": 0.22259289484741765,
+       "range": [
+        0.19877484512122118,
+        1.0040840929349215
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 0.3833134115325219,
+       "range": [
+        0.3317943746863009,
+        1.674324525248435
+       ]
+      },
+      "met": true
+     },
+     "512": {
+      "seeds_meeting_both": 5,
+      "exhaust_p95_k": {
+       "median": 0.1837749921399903,
+       "range": [
+        0.1770231367178723,
+        0.19342554855796262
+       ]
+      },
+      "fuel_p95_percent": {
+       "median": 0.3292022088100889,
+       "range": [
+        0.3124736880478077,
+        0.36159674377999823
+       ]
+      },
+      "met": true
+     }
+    }
+   },
+   "thresholds": {
+    "exhaust_p95_k": 1.0,
+    "fuel_p95_percent": 1.0
+   }
+  },
+  "all_metrics": {
+   "linear": {
+    "8": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 1.0169111086852922,
+      "min": 0.5749615069323504,
+      "max": 2.2541516273357622
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 2.721677703760996,
+      "min": 2.212932515395412,
+      "max": 6.264309348025257
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 4.58617437766263,
+      "min": 3.398614090214039,
+      "max": 9.83882003030989
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 1.0389726259141767,
+      "min": 0.8414632464164811,
+      "max": 3.281296870107905
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 4.705374068504,
+      "min": 3.4910216705735486,
+      "max": 8.878344291546426
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 7.050909721509612,
+      "min": 5.84193568033929,
+      "max": 15.203941953239806
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.7345030797774115,
+      "min": 0.5812795508576993,
+      "max": 1.2373784210856797
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 2.2939936328733648,
+      "min": 2.067232750095057,
+      "max": 3.6668733339200976
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 5.505961223987164,
+      "min": 3.1529733482984987,
+      "max": 5.7096176096290066
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 8.918428859565026,
+      "min": 6.744977535698382,
+      "max": 15.850148880128529
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 26.719138680316323,
+      "min": 24.00204919177162,
+      "max": 46.81981575465227
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 47.57883580288063,
+      "min": 39.392253814471644,
+      "max": 72.65369352614337
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 2.850475540791585,
+      "min": 1.3923981143235196,
+      "max": 5.694880662912286
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 8.319929540534018,
+      "min": 4.959784164651667,
+      "max": 16.221989994965433
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 14.336916535521553,
+      "min": 7.817855727050791,
+      "max": 26.578651847863753
+     },
+     "median_rel/total_fuel": {
+      "median": 4.1221692752403065,
+      "min": 1.8877867140699154,
+      "max": 8.089658433257382
+     },
+     "p95_rel/total_fuel": {
+      "median": 12.713462918792116,
+      "min": 8.442643652502252,
+      "max": 24.254968718236697
+     },
+     "max_rel/total_fuel": {
+      "median": 25.553946250805797,
+      "min": 17.018098812689573,
+      "max": 37.26629344950405
+     },
+     "exhaust_p95_k": {
+      "median": 2.721677703760996,
+      "min": 2.212932515395412,
+      "max": 6.264309348025257
+     },
+     "fuel_p95_percent": {
+      "median": 12.713462918792116,
+      "min": 8.442643652502252,
+      "max": 24.254968718236697
+     }
+    },
+    "16": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 0.6478048725565451,
+      "min": 0.6254617596399257,
+      "max": 0.6996594981546309
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 2.2051163277560075,
+      "min": 1.903423224639397,
+      "max": 2.352769959779483
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 3.587691030389493,
+      "min": 3.361451118880005,
+      "max": 4.260473412733248
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 1.0773743419563786,
+      "min": 0.6942721934343226,
+      "max": 1.23450376229232
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 3.1176728245600067,
+      "min": 2.8283378874400515,
+      "max": 3.5461857624132094
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 5.789038366898836,
+      "min": 5.173603022698856,
+      "max": 6.688253212622513
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.697346698041228,
+      "min": 0.5105023265266233,
+      "max": 0.8345545189990737
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 1.9470432612805153,
+      "min": 1.5888222598681487,
+      "max": 2.603066643987469
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 3.4089330184075948,
+      "min": 2.868924263854854,
+      "max": 4.376762978982839
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 6.673968931605941,
+      "min": 6.020542334774547,
+      "max": 7.348114617548063
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 20.919092374173445,
+      "min": 19.233797435493013,
+      "max": 26.941327540611233
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 39.33357342511832,
+      "min": 31.445697651444817,
+      "max": 42.176812451323144
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 1.8352927665651393,
+      "min": 1.4964501895689537,
+      "max": 2.2792826591481763
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 6.1066876233829035,
+      "min": 5.132874151154018,
+      "max": 7.932955553297379
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 9.27449982206144,
+      "min": 8.451993132442567,
+      "max": 12.290990696648535
+     },
+     "median_rel/total_fuel": {
+      "median": 2.719862610782033,
+      "min": 2.1566667196639955,
+      "max": 3.3690046045176736
+     },
+     "p95_rel/total_fuel": {
+      "median": 9.07369907524366,
+      "min": 8.337550260374634,
+      "max": 10.867409029958143
+     },
+     "max_rel/total_fuel": {
+      "median": 17.66880767195106,
+      "min": 17.123386545652053,
+      "max": 22.89989513135605
+     },
+     "exhaust_p95_k": {
+      "median": 2.2051163277560075,
+      "min": 1.903423224639397,
+      "max": 2.352769959779483
+     },
+     "fuel_p95_percent": {
+      "median": 9.07369907524366,
+      "min": 8.337550260374634,
+      "max": 10.867409029958143
+     }
+    },
+    "32": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 0.5574607240764671,
+      "min": 0.5476147969216605,
+      "max": 0.6788594808505124
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 1.9370110964411058,
+      "min": 1.8985673647603463,
+      "max": 2.140191731891221
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 3.2762941700222825,
+      "min": 2.8520721713962303,
+      "max": 4.520808182205471
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 0.7986629206676668,
+      "min": 0.7143893746270464,
+      "max": 1.1060020357827725
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 2.7179864875268684,
+      "min": 2.6565500791381798,
+      "max": 3.251192452265979
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 5.671106270939816,
+      "min": 4.9488548289079475,
+      "max": 6.8483820598862195
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.5143206900969162,
+      "min": 0.40031686627117224,
+      "max": 0.5788171239111257
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 1.6180306034685294,
+      "min": 1.5362780737435662,
+      "max": 1.664548463416489
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 3.5471601879097108,
+      "min": 3.25084249058807,
+      "max": 3.69601505573727
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 5.970368407203708,
+      "min": 5.595066330233351,
+      "max": 6.517416660683267
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 19.839459228959647,
+      "min": 17.972883055153506,
+      "max": 25.855301090200484
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 35.81166789542053,
+      "min": 25.563670498057682,
+      "max": 43.89186260307417
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 1.5895728573504755,
+      "min": 1.4161267763176362,
+      "max": 1.8084169358755595
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 5.2408558924220685,
+      "min": 4.692567887086675,
+      "max": 5.720093132266758
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 8.320896597999862,
+      "min": 7.496234806541693,
+      "max": 9.34385278862176
+     },
+     "median_rel/total_fuel": {
+      "median": 2.2751819365933432,
+      "min": 2.0018104061706534,
+      "max": 2.645693656669283
+     },
+     "p95_rel/total_fuel": {
+      "median": 8.230884857493841,
+      "min": 7.980850573687067,
+      "max": 9.164823767829855
+     },
+     "max_rel/total_fuel": {
+      "median": 19.299573464790342,
+      "min": 15.99460851994983,
+      "max": 22.70247584460673
+     },
+     "exhaust_p95_k": {
+      "median": 1.9370110964411058,
+      "min": 1.8985673647603463,
+      "max": 2.140191731891221
+     },
+     "fuel_p95_percent": {
+      "median": 8.230884857493841,
+      "min": 7.980850573687067,
+      "max": 9.164823767829855
+     }
+    },
+    "64": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 0.5665815221510151,
+      "min": 0.4958094628191567,
+      "max": 0.5958015002707313
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 1.9697432147979406,
+      "min": 1.8270493604252458,
+      "max": 1.998090187452819
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 3.336701072278572,
+      "min": 3.000627820478144,
+      "max": 3.500823028422154
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 0.8156811741305461,
+      "min": 0.7388454824011106,
+      "max": 0.8540417234276845
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 2.691461226398477,
+      "min": 2.6666107096794285,
+      "max": 2.976834893455665
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 5.3369691349587995,
+      "min": 5.106455782470952,
+      "max": 5.9435608980839305
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.4949498407193822,
+      "min": 0.4497698809724717,
+      "max": 0.5710092542045473
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 1.5099921031005996,
+      "min": 1.444658897014321,
+      "max": 1.5668942909770083
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 3.4050609982876665,
+      "min": 3.2016776165234333,
+      "max": 4.37018201179508
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 5.7175998052767625,
+      "min": 5.476210429629077,
+      "max": 5.953390919678611
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 18.015144572069936,
+      "min": 17.26073157075762,
+      "max": 20.91085075708849
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 30.874284986700523,
+      "min": 25.506454000462867,
+      "max": 35.22982453244924
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 1.388412665753286,
+      "min": 1.2720211711808176,
+      "max": 1.534644204592773
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 4.880738752520124,
+      "min": 4.616891335367432,
+      "max": 5.442319072947559
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 8.600097077938727,
+      "min": 7.289346720260994,
+      "max": 9.023187122594408
+     },
+     "median_rel/total_fuel": {
+      "median": 1.8969651351085615,
+      "min": 1.7649226631670094,
+      "max": 2.1803481398418807
+     },
+     "p95_rel/total_fuel": {
+      "median": 7.397529773441502,
+      "min": 6.7219789340095435,
+      "max": 8.810142981612337
+     },
+     "max_rel/total_fuel": {
+      "median": 17.278702626133512,
+      "min": 14.219243097359547,
+      "max": 20.430433330041716
+     },
+     "exhaust_p95_k": {
+      "median": 1.9697432147979406,
+      "min": 1.8270493604252458,
+      "max": 1.998090187452819
+     },
+     "fuel_p95_percent": {
+      "median": 7.397529773441502,
+      "min": 6.7219789340095435,
+      "max": 8.810142981612337
+     }
+    },
+    "128": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 0.5575470170251897,
+      "min": 0.5024023899845353,
+      "max": 0.56698199062971
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 1.9230734133947003,
+      "min": 1.7661307535383877,
+      "max": 1.9906834472133657
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 3.3429339345619837,
+      "min": 3.148762522813051,
+      "max": 3.5620402537113733
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 0.7819160322666114,
+      "min": 0.6257291960012523,
+      "max": 0.8131103166471831
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 2.675870055048767,
+      "min": 2.5275118865805695,
+      "max": 2.947623572637763
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 5.33449612799005,
+      "min": 5.178571579084114,
+      "max": 5.6047437567147185
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.4755102778174187,
+      "min": 0.4598588842015623,
+      "max": 0.5417846573379492
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 1.4895214283107432,
+      "min": 1.449430805363809,
+      "max": 1.5315451474395676
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 3.5557734556724157,
+      "min": 3.2827434184822266,
+      "max": 4.110185885352905
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 5.501897956758185,
+      "min": 5.323467536477807,
+      "max": 5.798763681425562
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 18.383926986934377,
+      "min": 16.777243791571912,
+      "max": 19.255240086816762
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 27.05216421637084,
+      "min": 25.960915645492037,
+      "max": 30.687975595110856
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 1.2747660736261466,
+      "min": 1.2244643831683675,
+      "max": 1.3252112378833054
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 4.814875906594114,
+      "min": 4.6495238570795685,
+      "max": 5.214884389296252
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 7.94455830569764,
+      "min": 7.13818862051091,
+      "max": 8.330461098158011
+     },
+     "median_rel/total_fuel": {
+      "median": 1.866059157976268,
+      "min": 1.7811519801848283,
+      "max": 1.9062517069673528
+     },
+     "p95_rel/total_fuel": {
+      "median": 7.416453733422426,
+      "min": 6.612731470600938,
+      "max": 7.930923553157197
+     },
+     "max_rel/total_fuel": {
+      "median": 17.497677706599116,
+      "min": 14.837818880897492,
+      "max": 20.27219983267148
+     },
+     "exhaust_p95_k": {
+      "median": 1.9230734133947003,
+      "min": 1.7661307535383877,
+      "max": 1.9906834472133657
+     },
+     "fuel_p95_percent": {
+      "median": 7.416453733422426,
+      "min": 6.612731470600938,
+      "max": 7.930923553157197
+     }
+    },
+    "256": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 0.5420229737737117,
+      "min": 0.524703460917447,
+      "max": 0.5547988377065707
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 1.9083240873149343,
+      "min": 1.7740419382927062,
+      "max": 1.9685564058587435
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 3.249184200889374,
+      "min": 3.087448587602424,
+      "max": 3.3317660310348884
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 0.7337055625676356,
+      "min": 0.6918893842406106,
+      "max": 0.7693872355318057
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 2.7195388780678975,
+      "min": 2.4871868059478572,
+      "max": 2.8815857693492415
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 5.072200155888538,
+      "min": 4.802270885125132,
+      "max": 5.492283197659624
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.46165585502806294,
+      "min": 0.44839601851242605,
+      "max": 0.5126077699204572
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 1.4523514898368006,
+      "min": 1.3820000302756998,
+      "max": 1.5511428465917092
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 3.5190094345568284,
+      "min": 3.2405702310638347,
+      "max": 3.7266271122552084
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 5.327085805911381,
+      "min": 5.171945639681638,
+      "max": 5.646141344412456
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 17.60334457447928,
+      "min": 17.17357990843375,
+      "max": 18.01296150558776
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 26.577599124076812,
+      "min": 25.46854594897575,
+      "max": 28.12370199575392
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 1.2369433343978855,
+      "min": 1.1039082105857716,
+      "max": 1.2596282152222926
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 4.675817547470622,
+      "min": 4.6211132204955305,
+      "max": 4.708110195072525
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 7.27014001392007,
+      "min": 7.093117969278829,
+      "max": 7.898055367232338
+     },
+     "median_rel/total_fuel": {
+      "median": 1.693305920800659,
+      "min": 1.5674627314772125,
+      "max": 1.7091872365446896
+     },
+     "p95_rel/total_fuel": {
+      "median": 7.220200431777571,
+      "min": 7.016896697891057,
+      "max": 7.31155429069064
+     },
+     "max_rel/total_fuel": {
+      "median": 16.96705484017286,
+      "min": 16.55382881399101,
+      "max": 19.501282346357694
+     },
+     "exhaust_p95_k": {
+      "median": 1.9083240873149343,
+      "min": 1.7740419382927062,
+      "max": 1.9685564058587435
+     },
+     "fuel_p95_percent": {
+      "median": 7.220200431777571,
+      "min": 7.016896697891057,
+      "max": 7.31155429069064
+     }
+    },
+    "512": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 0.5338128982337977,
+      "min": 0.5253509995165544,
+      "max": 0.5475645079496374
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 1.9497061280161816,
+      "min": 1.8194259585372539,
+      "max": 1.9953859131381542
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 3.126729300464774,
+      "min": 3.0896092958131263,
+      "max": 3.170639622104787
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 0.687681603730077,
+      "min": 0.652000258122218,
+      "max": 0.7168142736158032
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 2.7726269561220196,
+      "min": 2.6521461877918036,
+      "max": 2.841193333548155
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 5.086924507077875,
+      "min": 4.886229330535372,
+      "max": 5.167138633577359
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.44661612209370816,
+      "min": 0.420104390805367,
+      "max": 0.48140214177083607
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 1.4533495866804085,
+      "min": 1.3535901111136228,
+      "max": 1.5076869592670672
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 3.3938071541117267,
+      "min": 3.36192457778467,
+      "max": 3.647711065929542
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 5.309165732798789,
+      "min": 5.188058870374597,
+      "max": 5.4668142921544245
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 17.893757995560108,
+      "min": 17.720216376264347,
+      "max": 17.92370409557811
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 26.341769903636703,
+      "min": 25.786830700356802,
+      "max": 27.154295379687085
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 1.2187827231525432,
+      "min": 1.1793349729512386,
+      "max": 1.2572457079409922
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 4.713302539226753,
+      "min": 4.679149427414782,
+      "max": 4.822617204584127
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 7.262268341133776,
+      "min": 6.975051985431982,
+      "max": 7.399347711994054
+     },
+     "median_rel/total_fuel": {
+      "median": 1.7051778683046162,
+      "min": 1.621267743662334,
+      "max": 1.7272820438497027
+     },
+     "p95_rel/total_fuel": {
+      "median": 7.138903977017476,
+      "min": 6.979566327614121,
+      "max": 7.6655332676979615
+     },
+     "max_rel/total_fuel": {
+      "median": 17.22227204341533,
+      "min": 16.656059235432654,
+      "max": 18.26991103520673
+     },
+     "exhaust_p95_k": {
+      "median": 1.9497061280161816,
+      "min": 1.8194259585372539,
+      "max": 1.9953859131381542
+     },
+     "fuel_p95_percent": {
+      "median": 7.138903977017476,
+      "min": 6.979566327614121,
+      "max": 7.6655332676979615
+     }
+    }
+   },
+   "quadratic": {
+    "8": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 8.962134983113064,
+      "min": 6.535494853659493,
+      "max": 13.57105570777657
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 26.81334163010272,
+      "min": 19.6613391090729,
+      "max": 35.065079045132116
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 35.367800491914096,
+      "min": 24.82170333182335,
+      "max": 51.24429028302224
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 13.488882442762538,
+      "min": 9.05427820123343,
+      "max": 19.921477012719286
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 39.88518980226827,
+      "min": 26.537779888557033,
+      "max": 53.094920071993386
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 52.40744580153622,
+      "min": 33.578178190639264,
+      "max": 74.64446898264133
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 5.976295626761289,
+      "min": 3.9978614454520613,
+      "max": 8.720491618636338
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 17.780468419750623,
+      "min": 11.71658450364059,
+      "max": 23.514157339081176
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 24.509931132817712,
+      "min": 16.519046861802963,
+      "max": 32.17642363006087
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 36.86233557150387,
+      "min": 25.63162487678906,
+      "max": 55.568718683707786
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 118.59369948989672,
+      "min": 75.01717025193062,
+      "max": 151.53798820487583
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 197.32784852891103,
+      "min": 114.69019017955233,
+      "max": 226.0657392719064
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 9.78360690429258,
+      "min": 7.4468752920103185,
+      "max": 12.447824139478563
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 27.83535727943523,
+      "min": 21.245549915913593,
+      "max": 37.50204632716902
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 44.41733171442927,
+      "min": 34.862515426815285,
+      "max": 58.34105981315879
+     },
+     "median_rel/total_fuel": {
+      "median": 13.983210159895355,
+      "min": 10.700871069083924,
+      "max": 17.80142966625459
+     },
+     "p95_rel/total_fuel": {
+      "median": 44.28163455669733,
+      "min": 26.437342186341745,
+      "max": 50.017762151508975
+     },
+     "max_rel/total_fuel": {
+      "median": 90.3703645149239,
+      "min": 53.709702215662986,
+      "max": 119.56742686269948
+     },
+     "exhaust_p95_k": {
+      "median": 26.81334163010272,
+      "min": 19.6613391090729,
+      "max": 35.065079045132116
+     },
+     "fuel_p95_percent": {
+      "median": 44.28163455669733,
+      "min": 26.437342186341745,
+      "max": 50.017762151508975
+     }
+    },
+    "16": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 3.799794868104634,
+      "min": 2.617598914654053,
+      "max": 4.341686237805437
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 13.886259568220272,
+      "min": 7.467169416104754,
+      "max": 14.094857012056277
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 20.429858156960265,
+      "min": 14.654596730857364,
+      "max": 23.20588610019422
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 5.530361395007461,
+      "min": 3.7979347065204863,
+      "max": 6.759402315394773
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 20.12597222491096,
+      "min": 10.026925649212764,
+      "max": 21.550950322526884
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 29.428833524619904,
+      "min": 18.260462682179067,
+      "max": 36.08228519365946
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 2.3104790063696505,
+      "min": 1.927877747450804,
+      "max": 3.030095745906806
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 8.183202223913325,
+      "min": 4.90668666113946,
+      "max": 9.566238254632806
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 13.554734535225109,
+      "min": 9.89055126398172,
+      "max": 15.17033507415725
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 14.972017750101443,
+      "min": 10.52325745211752,
+      "max": 24.873835860963638
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 51.22230865256329,
+      "min": 36.18647867702428,
+      "max": 79.91628905865235
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 80.46712922067256,
+      "min": 62.45243050537306,
+      "max": 133.4258440722345
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 3.7418095378426415,
+      "min": 3.4510949921368628,
+      "max": 4.707996398207751
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 13.447037928232952,
+      "min": 12.161983033784548,
+      "max": 15.599864010783017
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 22.513851686822143,
+      "min": 17.55957361766871,
+      "max": 27.505667442498293
+     },
+     "median_rel/total_fuel": {
+      "median": 5.055786468084663,
+      "min": 4.806344815785131,
+      "max": 6.793726221173488
+     },
+     "p95_rel/total_fuel": {
+      "median": 19.647249694499042,
+      "min": 16.986168652294428,
+      "max": 22.723455670058804
+     },
+     "max_rel/total_fuel": {
+      "median": 39.56589953488787,
+      "min": 33.192348666476526,
+      "max": 55.589503749274556
+     },
+     "exhaust_p95_k": {
+      "median": 13.886259568220272,
+      "min": 7.467169416104754,
+      "max": 14.094857012056277
+     },
+     "fuel_p95_percent": {
+      "median": 19.647249694499042,
+      "min": 16.986168652294428,
+      "max": 22.723455670058804
+     }
+    },
+    "32": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 0.09217625737336377,
+      "min": 0.06533330191633269,
+      "max": 0.1105663823321521
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 0.37477822761659496,
+      "min": 0.263820569582375,
+      "max": 0.40321188827753396
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 0.8235277394540788,
+      "min": 0.4322262092955711,
+      "max": 0.9017002665728739
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 0.15097664367256058,
+      "min": 0.09666692330182514,
+      "max": 0.1736333892513997
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 0.4710185722722322,
+      "min": 0.45305778477474945,
+      "max": 0.6566672714263486
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 1.187582817474592,
+      "min": 0.8832487618904423,
+      "max": 1.3810826410590948
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.08463923062735645,
+      "min": 0.07382289952070664,
+      "max": 0.09146390656140824
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 0.31443992999341663,
+      "min": 0.27759971751026136,
+      "max": 0.36472377486995544
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 0.7104175024412385,
+      "min": 0.4978657602097556,
+      "max": 0.8569884431495858
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 0.5719164571548703,
+      "min": 0.5144234908892713,
+      "max": 0.8382006865511471
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 2.6081242273547662,
+      "min": 2.2580374076293808,
+      "max": 3.3308947314177146
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 6.210735911799066,
+      "min": 4.934398778479235,
+      "max": 9.844501545595236
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 0.056940621914709055,
+      "min": 0.051446821588516656,
+      "max": 0.08380731886864368
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 0.26045672349663107,
+      "min": 0.22541191874443278,
+      "max": 0.33313637829671805
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 0.620650326132079,
+      "min": 0.49250370268730137,
+      "max": 0.9834650366481412
+     },
+     "median_rel/total_fuel": {
+      "median": 0.07886367173863268,
+      "min": 0.0747809520202482,
+      "max": 0.12289347534213156
+     },
+     "p95_rel/total_fuel": {
+      "median": 0.4098162857631359,
+      "min": 0.326762382688835,
+      "max": 0.5367483655096893
+     },
+     "max_rel/total_fuel": {
+      "median": 1.454273790264666,
+      "min": 0.879775113524436,
+      "max": 1.593466527400484
+     },
+     "exhaust_p95_k": {
+      "median": 0.37477822761659496,
+      "min": 0.263820569582375,
+      "max": 0.40321188827753396
+     },
+     "fuel_p95_percent": {
+      "median": 0.4098162857631359,
+      "min": 0.326762382688835,
+      "max": 0.5367483655096893
+     }
+    },
+    "64": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 0.06887049655251332,
+      "min": 0.05832779739177951,
+      "max": 0.07727536227904608
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 0.24107600248589112,
+      "min": 0.21556049469382277,
+      "max": 0.24638509992066382
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 0.4949453581484704,
+      "min": 0.44742839137173007,
+      "max": 0.5520286084265962
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 0.10900709625312288,
+      "min": 0.09162182186552315,
+      "max": 0.12107659920544478
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 0.3519672215891507,
+      "min": 0.33109309329952197,
+      "max": 0.40451520540921493
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 0.7582359662249587,
+      "min": 0.6287855537200784,
+      "max": 0.8421657159963729
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.0584623550351715,
+      "min": 0.05184904801927459,
+      "max": 0.06252746878045379
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 0.21997713326214452,
+      "min": 0.18967081113420825,
+      "max": 0.2535718641321054
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 0.4643326242252641,
+      "min": 0.40530725003488044,
+      "max": 0.5376296355055352
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 0.43963305196263036,
+      "min": 0.37690827495383417,
+      "max": 0.5917796102306312
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 2.1012950552491674,
+      "min": 1.8460354541179385,
+      "max": 2.7157059617057797
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 5.252616528726026,
+      "min": 4.238515785110234,
+      "max": 7.052174168259739
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 0.04630324867015645,
+      "min": 0.03777100072485595,
+      "max": 0.05963016746786565
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 0.2115491733477164,
+      "min": 0.18450156770917125,
+      "max": 0.270979409723612
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 0.5253005889170481,
+      "min": 0.42403375662474474,
+      "max": 0.71187237396218
+     },
+     "median_rel/total_fuel": {
+      "median": 0.06285212298154912,
+      "min": 0.054277350051026504,
+      "max": 0.09263864576949127
+     },
+     "p95_rel/total_fuel": {
+      "median": 0.31905153685095344,
+      "min": 0.2622099916140037,
+      "max": 0.39051264397024565
+     },
+     "max_rel/total_fuel": {
+      "median": 0.7825991215080564,
+      "min": 0.6496014588086877,
+      "max": 1.29703257635798
+     },
+     "exhaust_p95_k": {
+      "median": 0.24107600248589112,
+      "min": 0.21556049469382277,
+      "max": 0.24638509992066382
+     },
+     "fuel_p95_percent": {
+      "median": 0.31905153685095344,
+      "min": 0.2622099916140037,
+      "max": 0.39051264397024565
+     }
+    },
+    "128": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 0.05832023609919901,
+      "min": 0.05385783579522396,
+      "max": 0.074614555692051
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 0.2006939108166641,
+      "min": 0.18741182394827316,
+      "max": 0.2330031559507617
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 0.46218791669451065,
+      "min": 0.38179151634329855,
+      "max": 0.5159303833469551
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 0.09597923855732304,
+      "min": 0.08567913124285553,
+      "max": 0.11372269293415016
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 0.33545274058308294,
+      "min": 0.30059301995354737,
+      "max": 0.35245496496975903
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 0.634869851893491,
+      "min": 0.5578221845005231,
+      "max": 0.7552491800193621
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.05076573098707726,
+      "min": 0.04686073157719939,
+      "max": 0.06175723606105166
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 0.19277611669447037,
+      "min": 0.1798576699398602,
+      "max": 0.2040308187834885
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 0.3954021174445046,
+      "min": 0.2938461066383766,
+      "max": 0.4643956403301317
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 0.40497934954716897,
+      "min": 0.3575331417211203,
+      "max": 0.4516577721441024
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 1.9516456388905823,
+      "min": 1.829231175963244,
+      "max": 2.2634138515045272
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 4.888122614481176,
+      "min": 4.530848652619753,
+      "max": 6.2522561168821085
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 0.040614550751136846,
+      "min": 0.03568006837511106,
+      "max": 0.04524713434210881
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 0.19629691968130558,
+      "min": 0.18241388594188734,
+      "max": 0.226113773975543
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 0.4884640914982725,
+      "min": 0.4532700107544656,
+      "max": 0.631026112579903
+     },
+     "median_rel/total_fuel": {
+      "median": 0.05665593031851841,
+      "min": 0.050466961789916026,
+      "max": 0.06292537108878736
+     },
+     "p95_rel/total_fuel": {
+      "median": 0.2833337516022037,
+      "min": 0.2561520888027067,
+      "max": 0.31634172492878376
+     },
+     "max_rel/total_fuel": {
+      "median": 0.6964369045635219,
+      "min": 0.5436546806170715,
+      "max": 1.1191801079962465
+     },
+     "exhaust_p95_k": {
+      "median": 0.2006939108166641,
+      "min": 0.18741182394827316,
+      "max": 0.2330031559507617
+     },
+     "fuel_p95_percent": {
+      "median": 0.2833337516022037,
+      "min": 0.2561520888027067,
+      "max": 0.31634172492878376
+     }
+    },
+    "256": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 0.05989684952794505,
+      "min": 0.05694271956038932,
+      "max": 0.06142949334439862
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 0.18480273078068166,
+      "min": 0.1795382125487084,
+      "max": 0.19714274875192572
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 0.41252592655241216,
+      "min": 0.3926638377239442,
+      "max": 0.44283204881184446
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 0.0946072113688885,
+      "min": 0.09067458976383591,
+      "max": 0.10004678080368734
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 0.3079572306986371,
+      "min": 0.28330031667301014,
+      "max": 0.33611068808544253
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 0.6038479519150606,
+      "min": 0.5249776525092358,
+      "max": 0.6755491979925381
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.04991893991925522,
+      "min": 0.04711439783618232,
+      "max": 0.05521427776927723
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 0.1692345755765512,
+      "min": 0.1561487371231518,
+      "max": 0.18299005109271427
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 0.3510446477318965,
+      "min": 0.28994365381369747,
+      "max": 0.4549416828636126
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 0.41456412025033273,
+      "min": 0.37426129874590686,
+      "max": 0.4373737403007567
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 1.6599233981736479,
+      "min": 1.5574352505593083,
+      "max": 1.8209669118799638
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 4.240298158620135,
+      "min": 3.986771825608024,
+      "max": 4.898291729054733
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 0.04127429116106285,
+      "min": 0.03729609666854117,
+      "max": 0.043734124897000015
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 0.1674608914860336,
+      "min": 0.15542372913133562,
+      "max": 0.18222050467213435
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 0.4272235003967353,
+      "min": 0.3987014289428288,
+      "max": 0.49208817442229247
+     },
+     "median_rel/total_fuel": {
+      "median": 0.056340656200465605,
+      "min": 0.05257516163597602,
+      "max": 0.06038462467265706
+     },
+     "p95_rel/total_fuel": {
+      "median": 0.24310118869252983,
+      "min": 0.2276005962949064,
+      "max": 0.2619068028238849
+     },
+     "max_rel/total_fuel": {
+      "median": 0.8697047492813539,
+      "min": 0.6991149675834729,
+      "max": 0.9844434833881115
+     },
+     "exhaust_p95_k": {
+      "median": 0.18480273078068166,
+      "min": 0.1795382125487084,
+      "max": 0.19714274875192572
+     },
+     "fuel_p95_percent": {
+      "median": 0.24310118869252983,
+      "min": 0.2276005962949064,
+      "max": 0.2619068028238849
+     }
+    },
+    "512": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 0.05667607228176408,
+      "min": 0.05177474703295104,
+      "max": 0.06042239550985329
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 0.1664642673064769,
+      "min": 0.1657534768178479,
+      "max": 0.1734032412932116
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 0.41455519241890215,
+      "min": 0.3823733023555391,
+      "max": 0.4593331085603367
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 0.09389212054198737,
+      "min": 0.08995537729699521,
+      "max": 0.09809525008123288
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 0.2795599569997087,
+      "min": 0.26114820827196183,
+      "max": 0.30705157702832864
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 0.6323715248340989,
+      "min": 0.5243594921539625,
+      "max": 0.6814564131720857
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.05010167968200108,
+      "min": 0.04829357764192821,
+      "max": 0.05502600938024216
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 0.15850897989644075,
+      "min": 0.15652125137413542,
+      "max": 0.16140299952104264
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 0.3381950020113855,
+      "min": 0.3164882034197021,
+      "max": 0.37770856411360043
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 0.38635793967821996,
+      "min": 0.35391045324831794,
+      "max": 0.4058499867744274
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 1.5432984019145408,
+      "min": 1.485361199616186,
+      "max": 1.653512110081202
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 4.2087479298594985,
+      "min": 3.7901684498495882,
+      "max": 4.534007748596082
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 0.03859994229416586,
+      "min": 0.03527628798632776,
+      "max": 0.041326072695461846
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 0.15406113432150903,
+      "min": 0.14833733861986076,
+      "max": 0.16500462593253218
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 0.4220780369784052,
+      "min": 0.3791058267051497,
+      "max": 0.45457376251629
+     },
+     "median_rel/total_fuel": {
+      "median": 0.05385382452747298,
+      "min": 0.051739435726390615,
+      "max": 0.05460376390070044
+     },
+     "p95_rel/total_fuel": {
+      "median": 0.2177330598004133,
+      "min": 0.2162611393773594,
+      "max": 0.2310073147516432
+     },
+     "max_rel/total_fuel": {
+      "median": 0.9107902329043581,
+      "min": 0.7360019652534115,
+      "max": 0.9447228178126055
+     },
+     "exhaust_p95_k": {
+      "median": 0.1664642673064769,
+      "min": 0.1657534768178479,
+      "max": 0.1734032412932116
+     },
+     "fuel_p95_percent": {
+      "median": 0.2177330598004133,
+      "min": 0.2162611393773594,
+      "max": 0.2310073147516432
+     }
+    }
+   },
+   "mlp": {
+    "8": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 1.645051510583425,
+      "min": 0.8892808410791488,
+      "max": 3.57222578078828
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 6.633924237134373,
+      "min": 3.8329374324565,
+      "max": 8.833027650119096
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 11.172905503741902,
+      "min": 6.676627999854702,
+      "max": 13.046889947324388
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 1.8436780249852731,
+      "min": 1.204236728838218,
+      "max": 6.407403708216265
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 8.466935071688273,
+      "min": 4.490291837043372,
+      "max": 16.064288404520013
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 15.126409605729592,
+      "min": 7.742289724253872,
+      "max": 24.287862276744207
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.6768751329476572,
+      "min": 0.5301283244636465,
+      "max": 2.922349256815913
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 2.7215700037451906,
+      "min": 1.815032977671585,
+      "max": 7.776384055366119
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 5.736881964276577,
+      "min": 3.6081226638781345,
+      "max": 12.385245221345855
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 8.420694025166533,
+      "min": 5.662323196212448,
+      "max": 9.868778473723467
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 28.834385966457063,
+      "min": 20.450568948468742,
+      "max": 31.830891493129364
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 49.40780513361392,
+      "min": 41.815574143607876,
+      "max": 62.86635210934912
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 1.619205019804248,
+      "min": 1.1157380433948667,
+      "max": 3.717452033880882
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 7.9465405850751765,
+      "min": 5.33362071359706,
+      "max": 10.400337379430896
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 15.347094208796918,
+      "min": 12.952420273310537,
+      "max": 17.414644653734854
+     },
+     "median_rel/total_fuel": {
+      "median": 2.4446877891966627,
+      "min": 1.7847478165631292,
+      "max": 4.9938657533695245
+     },
+     "p95_rel/total_fuel": {
+      "median": 9.797521400519646,
+      "min": 7.618585427249835,
+      "max": 15.801499656788256
+     },
+     "max_rel/total_fuel": {
+      "median": 15.186719692187804,
+      "min": 12.325584790515428,
+      "max": 31.108948745104126
+     },
+     "exhaust_p95_k": {
+      "median": 6.633924237134373,
+      "min": 3.8329374324565,
+      "max": 8.833027650119096
+     },
+     "fuel_p95_percent": {
+      "median": 9.797521400519646,
+      "min": 7.618585427249835,
+      "max": 15.801499656788256
+     }
+    },
+    "16": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 0.5803730459961329,
+      "min": 0.5170038148412388,
+      "max": 0.7993050982201702
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 2.0771337747197114,
+      "min": 1.8970256708089295,
+      "max": 2.7585205067997514
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 3.8407159221378606,
+      "min": 3.57160955918841,
+      "max": 6.418941781277908
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 0.8339127758975593,
+      "min": 0.7924588116017546,
+      "max": 1.1686139015477366
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 3.253461643837859,
+      "min": 2.7697808874763794,
+      "max": 4.307702328975829
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 6.451753621565814,
+      "min": 5.038983895139722,
+      "max": 10.070969804678782
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.3501154495080776,
+      "min": 0.29322655516985563,
+      "max": 0.41891968383344746
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 1.5335080806940837,
+      "min": 1.145525881783949,
+      "max": 1.6958866024338395
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 3.1053652428276166,
+      "min": 2.538266841587834,
+      "max": 3.8522481597219453
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 4.340558102920298,
+      "min": 3.5164748927510203,
+      "max": 5.775901940878356
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 17.068984807130434,
+      "min": 14.440827898069962,
+      "max": 21.64444747198752
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 36.31842586606464,
+      "min": 29.46170643481682,
+      "max": 45.69486226093164
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 0.8301223600215479,
+      "min": 0.653299091829119,
+      "max": 1.028647120904136
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 3.8650824252381746,
+      "min": 3.4698532306128804,
+      "max": 4.485777014119854
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 7.898277125631822,
+      "min": 6.555712505495734,
+      "max": 8.043051527679381
+     },
+     "median_rel/total_fuel": {
+      "median": 1.2405179280657719,
+      "min": 0.9934874434582361,
+      "max": 1.54687694914629
+     },
+     "p95_rel/total_fuel": {
+      "median": 5.123029501444724,
+      "min": 4.09768557209185,
+      "max": 6.153247474784146
+     },
+     "max_rel/total_fuel": {
+      "median": 9.49715379806829,
+      "min": 8.089102289975068,
+      "max": 12.615329800531681
+     },
+     "exhaust_p95_k": {
+      "median": 2.0771337747197114,
+      "min": 1.8970256708089295,
+      "max": 2.7585205067997514
+     },
+     "fuel_p95_percent": {
+      "median": 5.123029501444724,
+      "min": 4.09768557209185,
+      "max": 6.153247474784146
+     }
+    },
+    "32": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 0.424725295192097,
+      "min": 0.1819260817205226,
+      "max": 0.4844945055599368
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 1.6938892377043686,
+      "min": 1.0906958272109346,
+      "max": 2.189612375682856
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 3.1396032127483835,
+      "min": 2.599260173228494,
+      "max": 6.496119757162191
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 0.6413029095427305,
+      "min": 0.27511648294774815,
+      "max": 0.8093258394059681
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 2.6096594706289515,
+      "min": 1.1960702943786554,
+      "max": 3.956694379007047
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 5.658696105874583,
+      "min": 4.18366214535434,
+      "max": 10.424546748585165
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.2532056574224306,
+      "min": 0.10086940356703877,
+      "max": 0.32232050562874903
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 0.9664783185737642,
+      "min": 0.6365546193851621,
+      "max": 1.6811299365627068
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 2.9136957217358272,
+      "min": 1.8277084689306982,
+      "max": 4.130319757440294
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 2.182631331587018,
+      "min": 0.9324626861173471,
+      "max": 2.4020891199610617
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 9.424393424019584,
+      "min": 4.840518737068006,
+      "max": 13.085818781540572
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 17.310401642869294,
+      "min": 15.13182778578306,
+      "max": 28.35201160480989
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 0.2906388667935573,
+      "min": 0.19569177011238992,
+      "max": 0.3640336053298334
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 1.2914964541155598,
+      "min": 1.052382293736338,
+      "max": 1.7897896991652935
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 3.1451409920159676,
+      "min": 2.9664771853939342,
+      "max": 5.981427721135759
+     },
+     "median_rel/total_fuel": {
+      "median": 0.42938073031372126,
+      "min": 0.2804776939033209,
+      "max": 0.49305256281009435
+     },
+     "p95_rel/total_fuel": {
+      "median": 1.9683018186191354,
+      "min": 1.8140696239649197,
+      "max": 2.332010814750922
+     },
+     "max_rel/total_fuel": {
+      "median": 4.9799345175082355,
+      "min": 3.6135350801532495,
+      "max": 6.067101368897114
+     },
+     "exhaust_p95_k": {
+      "median": 1.6938892377043686,
+      "min": 1.0906958272109346,
+      "max": 2.189612375682856
+     },
+     "fuel_p95_percent": {
+      "median": 1.9683018186191354,
+      "min": 1.8140696239649197,
+      "max": 2.332010814750922
+     }
+    },
+    "64": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 0.11441611877956248,
+      "min": 0.08306451908719481,
+      "max": 0.13312299069686517
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 0.4787955542086566,
+      "min": 0.3727138902855991,
+      "max": 0.7605703416061171
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 1.243881607527399,
+      "min": 0.7061682974343313,
+      "max": 1.9798540029830605
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 0.15289320788387784,
+      "min": 0.12019398337019638,
+      "max": 0.21113734396314143
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 0.7222389781861409,
+      "min": 0.5062413405202086,
+      "max": 1.1517943038259162
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 2.717952087140219,
+      "min": 1.4396860060215602,
+      "max": 2.8950427896442363
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.06109076375063793,
+      "min": 0.05075792608616325,
+      "max": 0.08124629479301504
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 0.33273151818351643,
+      "min": 0.2319901265952673,
+      "max": 0.48026132260641496
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 1.1931861194614584,
+      "min": 0.9364749485923056,
+      "max": 1.4503258599897322
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 0.5634614794266781,
+      "min": 0.4565167927622866,
+      "max": 0.8729646365741104
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 2.8683260209797936,
+      "min": 2.174718018326793,
+      "max": 4.559573260244264
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 9.624016217850965,
+      "min": 5.115587174834161,
+      "max": 12.007837066078253
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 0.13859244025276496,
+      "min": 0.11087113675299065,
+      "max": 0.14451695113262986
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 0.5931675921140211,
+      "min": 0.5322327348358158,
+      "max": 0.7519081398142706
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 2.187863184610862,
+      "min": 1.4122175407951616,
+      "max": 2.6601708087242173
+     },
+     "median_rel/total_fuel": {
+      "median": 0.18298146517460673,
+      "min": 0.16273731852282858,
+      "max": 0.2038669048751524
+     },
+     "p95_rel/total_fuel": {
+      "median": 0.8393503054532465,
+      "min": 0.6762552929983949,
+      "max": 1.0381319993351577
+     },
+     "max_rel/total_fuel": {
+      "median": 2.1232534935354255,
+      "min": 1.6945540764728146,
+      "max": 2.4274728184905587
+     },
+     "exhaust_p95_k": {
+      "median": 0.4787955542086566,
+      "min": 0.3727138902855991,
+      "max": 0.7605703416061171
+     },
+     "fuel_p95_percent": {
+      "median": 0.8393503054532465,
+      "min": 0.6762552929983949,
+      "max": 1.0381319993351577
+     }
+    },
+    "128": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 0.06569900346586266,
+      "min": 0.05894347562022162,
+      "max": 0.2615945734431193
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 0.33144964753330086,
+      "min": 0.2599175474907547,
+      "max": 0.48147874217744224
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 0.9939289417022081,
+      "min": 0.622369150071961,
+      "max": 1.3884990831386759
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 0.10073357662450633,
+      "min": 0.08018103297097667,
+      "max": 0.40288634123819733
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 0.47564819844426864,
+      "min": 0.4169800682935687,
+      "max": 0.8112761650372278
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 1.9543857483123048,
+      "min": 0.9651901013829729,
+      "max": 2.3163295936014094
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.04557203137590449,
+      "min": 0.03831977223586236,
+      "max": 0.15154809689666493
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 0.22726665734279639,
+      "min": 0.19447981015101057,
+      "max": 0.31869288129959195
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 0.8532002901223024,
+      "min": 0.7266001054405393,
+      "max": 1.0625062308065196
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 0.4702649495165758,
+      "min": 0.37816024386624747,
+      "max": 1.5728425514172528
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 2.323214972745305,
+      "min": 1.6263949300692815,
+      "max": 2.7775941778851276
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 6.356103794993317,
+      "min": 4.074600866785602,
+      "max": 7.985438831643194
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 0.10788168548805999,
+      "min": 0.08436226680169057,
+      "max": 0.27097256136801207
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 0.4466994714169168,
+      "min": 0.34507474204918687,
+      "max": 0.5430586821388133
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 1.4992368144158092,
+      "min": 1.192239498969542,
+      "max": 2.233496660943956
+     },
+     "median_rel/total_fuel": {
+      "median": 0.1598941738498752,
+      "min": 0.12127711595495597,
+      "max": 0.40563411675024197
+     },
+     "p95_rel/total_fuel": {
+      "median": 0.6044347054484653,
+      "min": 0.47245896539175186,
+      "max": 0.7764646702875493
+     },
+     "max_rel/total_fuel": {
+      "median": 1.473708599500108,
+      "min": 1.1586385808699498,
+      "max": 2.0381219194082796
+     },
+     "exhaust_p95_k": {
+      "median": 0.33144964753330086,
+      "min": 0.2599175474907547,
+      "max": 0.48147874217744224
+     },
+     "fuel_p95_percent": {
+      "median": 0.6044347054484653,
+      "min": 0.47245896539175186,
+      "max": 0.7764646702875493
+     }
+    },
+    "256": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 0.06365458056990292,
+      "min": 0.047469051684075225,
+      "max": 0.8211688513616338
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 0.22597595735461518,
+      "min": 0.19933894694925058,
+      "max": 1.0083452987909958
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 0.592566965931077,
+      "min": 0.42713205496184514,
+      "max": 1.496706993537913
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 0.08625208142757401,
+      "min": 0.07008173749493807,
+      "max": 1.234388307012722
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 0.3514495919255296,
+      "min": 0.3101921239907206,
+      "max": 1.5507198466223038
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 0.9601272289831542,
+      "min": 0.844955676569441,
+      "max": 2.4717734152830033
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.03560271568334272,
+      "min": 0.034850143820108315,
+      "max": 0.44722208097280713
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 0.15272110398388072,
+      "min": 0.13060688015985278,
+      "max": 0.5881900812426633
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 0.6353660309043363,
+      "min": 0.5980614048861312,
+      "max": 1.1587694461619478
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 0.3482022060979517,
+      "min": 0.30300777186974415,
+      "max": 4.801331572520667
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 1.4678011131350317,
+      "min": 1.2950646225529852,
+      "max": 6.368120223471323
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 3.732850602079232,
+      "min": 3.0544045041865004,
+      "max": 9.505952054218064
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 0.0731030291532484,
+      "min": 0.07223313871992332,
+      "max": 0.7142079518686586
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 0.29184858704948624,
+      "min": 0.2585993534769173,
+      "max": 0.9739578829711224
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 1.162215009891014,
+      "min": 0.874161879354773,
+      "max": 1.6125920253935533
+     },
+     "median_rel/total_fuel": {
+      "median": 0.1086477350781858,
+      "min": 0.10541524193388513,
+      "max": 0.9943969235628296
+     },
+     "p95_rel/total_fuel": {
+      "median": 0.41374044891489475,
+      "min": 0.34873827984163974,
+      "max": 1.6717429460743598
+     },
+     "max_rel/total_fuel": {
+      "median": 1.075087263871304,
+      "min": 0.7471905980698408,
+      "max": 2.849445278944416
+     },
+     "exhaust_p95_k": {
+      "median": 0.22597595735461518,
+      "min": 0.19933894694925058,
+      "max": 1.0083452987909958
+     },
+     "fuel_p95_percent": {
+      "median": 0.41374044891489475,
+      "min": 0.34873827984163974,
+      "max": 1.6717429460743598
+     }
+    },
+    "512": {
+     "median_abs/line1/exhaust_celsius": {
+      "median": 0.05310498437398792,
+      "min": 0.045584448379379694,
+      "max": 0.05917594104354862
+     },
+     "p95_abs/line1/exhaust_celsius": {
+      "median": 0.19232684640430264,
+      "min": 0.18067675415668205,
+      "max": 0.19445367129342017
+     },
+     "max_abs/line1/exhaust_celsius": {
+      "median": 0.375557248548148,
+      "min": 0.32438253270660766,
+      "max": 0.7179333763508424
+     },
+     "median_abs/line1/dryer_outlet_celsius": {
+      "median": 0.06957121243160458,
+      "min": 0.06873255697749414,
+      "max": 0.07467354243207325
+     },
+     "p95_abs/line1/dryer_outlet_celsius": {
+      "median": 0.28765216775793334,
+      "min": 0.28235392716691443,
+      "max": 0.306097601113013
+     },
+     "max_abs/line1/dryer_outlet_celsius": {
+      "median": 0.7577667254132336,
+      "min": 0.48472766122570476,
+      "max": 1.1822348062899337
+     },
+     "median_abs/line1/preheated_celsius": {
+      "median": 0.034137733845891916,
+      "min": 0.031190882633403305,
+      "max": 0.041188543404793165
+     },
+     "p95_abs/line1/preheated_celsius": {
+      "median": 0.13172626395303766,
+      "min": 0.11775740053291628,
+      "max": 0.13971031015541868
+     },
+     "max_abs/line1/preheated_celsius": {
+      "median": 0.49764438524844934,
+      "min": 0.334761284360539,
+      "max": 0.6239048410209023
+     },
+     "median_abs/line1/heat_recovered_kw": {
+      "median": 0.30037152342622164,
+      "min": 0.27665127581022375,
+      "max": 0.3221427483088064
+     },
+     "p95_abs/line1/heat_recovered_kw": {
+      "median": 1.27161757823729,
+      "min": 1.1978898815791936,
+      "max": 1.3338473498238717
+     },
+     "max_abs/line1/heat_recovered_kw": {
+      "median": 3.4618195563446434,
+      "min": 3.024300688486541,
+      "max": 4.603475975177901
+     },
+     "median_abs/line1/fuel_kg_per_h": {
+      "median": 0.06819564026440972,
+      "min": 0.0638948307286249,
+      "max": 0.07324492823049411
+     },
+     "p95_abs/line1/fuel_kg_per_h": {
+      "median": 0.26192197661933037,
+      "min": 0.23469851732154723,
+      "max": 0.27587623686935103
+     },
+     "max_abs/line1/fuel_kg_per_h": {
+      "median": 0.9891716492487888,
+      "min": 0.97787765500604,
+      "max": 1.103234915405352
+     },
+     "median_rel/total_fuel": {
+      "median": 0.10212624369267595,
+      "min": 0.09469308259795933,
+      "max": 0.109010102508586
+     },
+     "p95_rel/total_fuel": {
+      "median": 0.3753550586737785,
+      "min": 0.3248982709112149,
+      "max": 0.4006353808446444
+     },
+     "max_rel/total_fuel": {
+      "median": 0.9185160955358292,
+      "min": 0.8141478782493609,
+      "max": 1.2048090028031422
+     },
+     "exhaust_p95_k": {
+      "median": 0.19232684640430264,
+      "min": 0.18067675415668205,
+      "max": 0.19445367129342017
+     },
+     "fuel_p95_percent": {
+      "median": 0.3753550586737785,
+      "min": 0.3248982709112149,
+      "max": 0.4006353808446444
+     }
+    }
+   }
+  }
+ }
+}
