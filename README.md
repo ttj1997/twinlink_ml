@@ -201,6 +201,8 @@ replace a product-moisture measurement.
 
 **Stationary Dyssol flowsheets as a data source (Befund 128; stored values of a delivery varied in a local box).** A quadratic regression reaches the thresholds (95th percentile 1 K on the exhaust temperature, 1 % on the fuel) from 32 Dyssol runs for one line and 128 for two lines, an MLP from 64 and 256, a linear regression never (reading D2); the data need follows the number of coefficients. Dyssol and a Python rebuild agree to rounding at all 2560 points. The result is for closed formulas and says nothing about dynamic Dyssol models; the chain (design of experiments, run, control, fit, reading) carries over.
 
+**Order dependence of the steady-state optimiser (Befund 129; synthetic truth, placeholders).** The steady optimum of a query depends on what the solver solved before (warm start, rounded cache). Of 94211 queries the warm start is worse than a cold multi-start in 1.82 %, a single cold start in 1.58 %; eight starts are reliable. No key number of Befund 105, 126 or the learned-set-point study changes by more than 10 % when the dependence is removed (largest change 3.78 %; reading O0), but two margins move (R1 0.005859 instead of 0.006641, C2 0.007812 instead of 0.007422). A switch `cold_starts` (default off) removes the dependence; new studies set it to 8. The controllers with a dynamic optimiser were not recomputed.
+
 **One-step bandit (Befund 93, follow-up of Befund 68).** A residual action and a separated
 moisture cost lift SAC from a negative to a clearly positive closed-regret fraction, but no cell
 meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of

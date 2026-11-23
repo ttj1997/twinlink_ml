@@ -57,18 +57,25 @@ WARM_UP_S = 6 * 3600.0
 
 @dataclass
 class Solvers:
-    """Optimisers of one process, built lazily (one per worker process)."""
+    """Optimisers of one process, built lazily (one per worker process).
+
+    ``steady_cold_starts``: switch of :class:`SteadyStateOptimizer` (0 = off, the behaviour of
+    Befund 105: every steady solve starts from the previous one).
+    """
 
     study: HeadroomStudyConfig
     process: ProcessConfig
     _steady: SteadyStateOptimizer | None = None
     _preview: dict[int, DynamicOptimizer] = field(default_factory=dict)
+    steady_cold_starts: int = 0
 
     @property
     def steady(self) -> SteadyStateOptimizer:
         """Steady-state optimiser (R0, R1, initial conditions)."""
         if self._steady is None:
-            self._steady = SteadyStateOptimizer(self.study, self.process)
+            self._steady = SteadyStateOptimizer(
+                self.study, self.process, cold_starts=self.steady_cold_starts
+            )
         return self._steady
 
     def preview(self, n_intervals: int) -> DynamicOptimizer:

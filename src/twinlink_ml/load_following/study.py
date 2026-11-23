@@ -25,7 +25,7 @@ from typing import Any, Literal
 
 import numpy as np
 
-from twinlink_ml.headroom.controllers import DynamicOptimizer
+from twinlink_ml.headroom.controllers import DynamicOptimizer, SteadyStateOptimizer
 from twinlink_ml.headroom.symbolic import steady_particle_count
 
 from .config import LoadFollowingConfig
@@ -51,18 +51,33 @@ ControllerKind = Literal["C0", "C1", "C2", "C3", "C4"]
 
 @dataclass
 class Solvers:
-    """Steady map and optimisers of one process, built lazily (one set per worker process)."""
+    """Steady map and optimisers of one process, built lazily (one set per worker process).
+
+    ``steady_cold_starts``: switch of the steady-state optimiser behind the map (0 = off, the
+    behaviour of Befund 126: every steady solve starts from the previous one).
+    """
 
     config: LoadFollowingConfig
     reference_tariff: float
     _map: SteadyMap | None = None
     _load: dict[int, LoadOptimizer] = field(default_factory=dict)
+    steady_cold_starts: int = 0
 
     @property
     def steady(self) -> SteadyMap:
         """Steady-state map (C0-C2, tail, initial conditions, starts of C3 and C4)."""
         if self._map is None:
-            self._map = SteadyMap(self.config)
+            if self.steady_cold_starts:
+                self._map = SteadyMap(
+                    self.config,
+                    optimizer=SteadyStateOptimizer(
+                        self.config.headroom,
+                        self.config.process,
+                        cold_starts=self.steady_cold_starts,
+                    ),
+                )
+            else:
+                self._map = SteadyMap(self.config)
         return self._map
 
     def load(self, n_intervals: int) -> LoadOptimizer:

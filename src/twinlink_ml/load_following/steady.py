@@ -57,12 +57,26 @@ class MapPoint:
 
 
 class SteadyMap:
-    """Steady optima over disturbance, spray rate and moisture bound, cached."""
+    """Steady optima over disturbance, spray rate and moisture bound, cached.
 
-    def __init__(self, config: LoadFollowingConfig) -> None:
+    ``optimizer``: the steady-state optimiser (default: one with the behaviour of Befund 126,
+    every solve started from the previous one). The cache key is the query rounded to 10
+    decimals; with an order-independent optimiser (``cold_starts`` of
+    :class:`~twinlink_ml.headroom.controllers.SteadyStateOptimizer`) it is the unrounded query,
+    so that a point of the map is a function of its query alone
+    (``docs/46_order_dependence.md``).
+    """
+
+    def __init__(
+        self, config: LoadFollowingConfig, *, optimizer: SteadyStateOptimizer | None = None
+    ) -> None:
         self._config = config
         self._process = config.process
-        self._optimizer = SteadyStateOptimizer(config.headroom, config.process)
+        self._optimizer = (
+            SteadyStateOptimizer(config.headroom, config.process)
+            if optimizer is None
+            else optimizer
+        )
         self._simulator = GreyBoxFluidBedGranulator(config.process)
         self._nozzle = config.process.actions.nozzle_pressure_bar.nominal
         self._cache: dict[tuple[float, ...], MapPoint | None] = {}
@@ -75,7 +89,11 @@ class SteadyMap:
         """
         d = np.array(disturbance, dtype=np.float64)
         d[3] = spray
-        key = (*np.round(d, 10), round(float(bound), 10))
+        key: tuple[float, ...]
+        if self._optimizer.order_independent:
+            key = (*(float(v) for v in d), float(bound))
+        else:
+            key = (*np.round(d, 10), round(float(bound), 10))
         if key in self._cache:
             return self._cache[key]
         try:
