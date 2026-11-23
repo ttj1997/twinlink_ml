@@ -2,8 +2,9 @@
 
 Status: design, reading and code committed before the first measurement run; run of 2026-11-20
 complete, pre-registered reading **O0** (valid; largest relative change of a key number 3.78 %,
-threshold 10 %); results in sections 8 to 13. Not merged, not pushed. Branch `order-dependence` (worktree `C:/twinlink_work/orderdep`, from
-`origin/master` 61d5b18). Document number open (`NN`; assigned by the managing session at merge).
+threshold 10 %); results in sections 8 to 13; decision of the project lead of 2026-11-23 in
+section 14 (O0 accepted). Not merged, not pushed. Branch `order-dependence` (worktree
+`C:/twinlink_work/orderdep`, from `origin/master` 61d5b18). Document number open (`NN`; assigned by the managing session at merge).
 Lab-book entry: "Befund NN (number open)".
 
 **Placeholders.** Every number below inherits the placeholders of Befund 105 and Befund 126 (lab
@@ -391,3 +392,31 @@ For the project lead to decide:
    point. Nothing of this was done here.
 4. Whether the controllers with a dynamic optimiser are to be recomputed with the switch (hours
    per controller in the drivers of the findings; not estimated here).
+
+## 14. Decision of the project lead (2026-11-23)
+
+Added after the fact; sections 1 to 13 are unchanged apart from the status line.
+
+1. **O0 is accepted.** No key number changes by more than 10 % relative (largest change 3.78 %,
+   K3, variant searched); the effect is immaterial for the reported statements.
+2. **The ten decisions of section 6 are confirmed**, expressly K5 as an added key number
+   (item 1) and "both variants count" (item 2).
+3. **Margins of C2 and R1 (section 10).** The two observations are recorded as descriptive
+   addenda to Befund 126 (C2 does not hold the limit at its artifact margin with set points
+   from the cold multi-start; searched margin 0.007812 instead of 0.007422; gain against C0
+   1.98 % instead of 2.06 %) and to Befund 105 (R1 holds the limit with the margin 0.005859
+   instead of 0.006641; median saving 9.10 % instead of 8.93 %). The addenda are written by the
+   managing session at merge (append-only); they are not part of this branch.
+4. **New studies set `steady_cold_starts = 8`.** The defaults of `SteadyStateOptimizer` and of
+   the two `Solvers` stay at 0 (the code path of Befund 105 and Befund 126, to reproduce old
+   results); nothing in the code of this branch changes by this decision.
+5. **The controllers with a dynamic optimiser are not recomputed** (R2, R3, C3, C4; caveat 1 of
+   section 13). This stays an open point in docs/12.
+
+Left to the managing session at merge, not done on this branch: the two addenda of item 3; the
+rule of item 4 where the project keeps its rules for new studies (CLAUDE.md, Methodology); the
+open point of item 5 in docs/12 together with the docs/12 row and the README paragraph of this
+study. Proposed wording of the open point: "Controllers with a dynamic optimiser (R2, R3 of
+Befund 105; C3, C4 of Befund 126) take initial states, tails, start guesses or safeguards from
+the order-dependent steady-state optimiser and were not recomputed with the cold multi-start
+(`docs/NN_order_dependence.md`, sections 13 and 14); decision of 2026-11-23: not recomputed."
