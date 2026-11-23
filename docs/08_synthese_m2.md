@@ -2,16 +2,25 @@
 
 > Milestone M2 (TUHH-B, AP1): "Methodology of simulation and ML modelling documented
 > (procedures, tools, templates; reduction of the training-data need)"
-> (`docs/01_projektsteckbrief.md`). **Version 5f**, state 2026-10-20, draft for review by the
-> project lead, revised after review 4 (`docs/reviews/2026-10-19/review4_synthesis_v5.md`) and its
-> follow-up check 4b (`docs/reviews/2026-10-19/review4b_followup.md`), with the convergence check
-> of Befund 104.
-> Every number in the summary, in sections 1 to 8 and in appendices A to E is traced to a finding
-> in `docs/04_stand_ap1.md` and a committed artifact (appendix F) and is checked against that
-> artifact or configuration by `scripts/check_m2_synthesis_consistency.py`, or listed there as not
-> machine-checkable with the reason. Findings are cited as "Befund N" (lab-book entries, in German
-> or English as written). Procedures are in sections 2 and 5, tools and templates in appendix A,
-> the reduction of the training-data need in section 6 and appendix D.
+> (`docs/01_projektsteckbrief.md`). **Version 6**, state 2026-11-23, draft for review by the
+> project lead. It takes in the findings after version 5f (Befunde 100 to 129: the control studies,
+> the learned models in the control, the moisture feedback, the plant-near model) and describes the
+> method as rules and templates that a third party can apply. Version 5f (2026-10-20, revised after
+> review 4, `docs/reviews/2026-10-19/review4_synthesis_v5.md`, and its follow-up check 4b,
+> `docs/reviews/2026-10-19/review4b_followup.md`) is retrievable under the git tag `docs08-v5f`.
+> The selection of methods that follows from the results, and the reasoned deviation from the
+> proposal on reinforcement learning, are in `docs/48_ap1_conclusion.md` (accepted by the project
+> lead on 2026-11-23); this document does not repeat the selection, it documents the method and the
+> evidence.
+> Every number in the summary, in sections 1 to 13 and in appendices A to F is traced to a finding
+> in `docs/04_stand_ap1.md` and, where one exists, a committed artifact (appendix G) and is checked
+> against that artifact or configuration by `scripts/check_m2_synthesis_consistency.py`, or listed
+> there as not machine-checkable with the reason. Numbers of findings that carry a dated addendum
+> are quoted as recorded, and the addendum is named next to them. Findings are cited as "Befund N"
+> (lab-book entries, in German or English as written); readings are given as they were fixed before
+> the run and accepted by the project lead. Procedures are in section 2 (rules) and appendix E
+> (templates), tools in appendix A, the reduction of the training-data need in section 5 and
+> appendix D, and what the studies do not show in section 12.
 
 ## Summary
 
@@ -46,82 +55,10 @@ excitation experiment at the plant. Inference is far below the sample time of 25
 plant data (the moisture is not measured at the plant), the placeholder parameters, and more seeds
 where the paired spread is large.
 
-## Changes from version 5e (xLSTM cell distribution, 2026-10-20)
+## Changes since version 5f
 
-- **xLSTM** (summary and section 3): "large and consistent across all seeds" now carries its cell
-  distribution: median ratio 3.3, 40 of 48 cells individually at least 1.5 (the other 8 between 1.05
-  and 1.5), all seeds worse in all 48 cells. No new effect level is introduced and no threshold is changed.
-- Version 5f is the version frozen for dispatch (`docs/12` section H).
-
-## Changes from version 5d (effect-size wording, 2026-10-20)
-
-- **Section 3, Transformer against the LSTM at 16 runs (excited, energy and bed temperature):** version 5d
-  called both cells "large and consistent" at both budgets. The document's own threshold for "large" is a
-  ratio of at least 1.5 with all seeds on that side: both cells are large at 200 epochs (1.72, 1.65); at
-  600 epochs the bed-temperature cell remains large (1.55), the energy cell is below the threshold
-  (1.43). The sentence now says so; the cells stay consistent across all seeds and at the Holm threshold.
-- **Consistency check:** every effect label ("large and consistent", "remains large", "large at the
-  budget") is checked against the threshold; the check found this one sentence in 5d.
-
-## Changes from version 5c (convergence check, 2026-10-20)
-
-- **Fixed training budget** (section 7): Befund 94 remains the main result; Befund 104 is the
-  robustness check with a larger budget (every head stops regularly, order and effect sizes
-  unchanged, two Holm verdicts at the threshold change).
-- **Section 3:** the Transformer against the LSTM at 16 runs on energy and bed temperature
-  (consistent across all seeds, at the Holm threshold; the wording on "large" is corrected in 5e) and the
-  GRU against the LSTM in the convergence check (better in some cells without correction, never resolved
-  worse, none resolved under Holm).
-- **Appendix F:** row for the artifact of Befund 104. The summary is unchanged (it names no budget).
-
-## Changes from version 5b (review 4b, 2026-10-19)
-
-- **Summary:** GRU and LSTM "have the lowest errors" in the tested, untuned configuration, with the
-  qualification against the Transformer (N1); the capacity-matched variants in one sentence (SX3); the
-  falling curves marked as an uncorrected statement (N3); the plant recommendation marked as a
-  simulator result and a recommendation (N6).
-- **Fixed training budget** (N4): the heads that reach the cap of 200 epochs, per network (new addendum to
-  Befund 94); section 3, section 7 and appendix B.
-- **Appendix C:** the sample time of 25 s is set by `DataSpec`, the YAML configuration says 5 s (N5).
-- The README paragraph on the architecture comparison is corrected accordingly (N2, `docs/12` section H).
-
-## Changes from version 5 (review 4, 2026-10-19)
-
-- **Executive summary** and **appendices A to E** (tools and environment with a study template,
-  hyperparameters, simulator interface, data need, glossary) added for the M2 items "tools,
-  templates, reduction of the training-data need"; the traceability table is now appendix F, with
-  the script that writes each artifact.
-- **Capacity and protocol** paragraph in section 3: parameter counts of all networks, the xLSTM is
-  the mLSTM-only variant, fixed protocol without tuning, the capacity-matched variants of SX3 with
-  their result; every architecture statement holds for the tested, untuned configuration.
-- **Rank statements** carry the Holm verdict, the effect size (ratio of medians) and the sign
-  consistency over the seeds (addendum to Befund 98); large and consistent effects that do not
-  survive Holm are no longer called a tendency.
-- **Seed numbers** from arm N (addendum to Befund 94); the old data A0 only as a comparison.
-- **Text fixes** (review findings 5-20): the xLSTM instability concerns the energy target; the
-  Holm-resolved tests of N against A0 are all persistence; study A marked as uncorrected, the hybrid
-  statement as in Befund 88 with the cost; study B leads with the hypothesis verdicts; the stability
-  verdict of Befund 80; test set and caveat of Befund 55 (with its corrected GRU range); seed budget
-  restricted to GRU; origin of the margin m; Befund 99 in the outlook; metric and targets of Befund
-  39; Benjamini-Hochberg count; "dE" defined; figures numbered and labelled with units.
-- There is no version 4 in the repository history: the revision list of `docs/12` (2026-10-09)
-  was written for version 5 directly.
-
-## Changes from version 3 (2026-09-25) to version 5 (2026-10-16)
-
-- **Data basis.** The architecture comparison rests on the re-run on preset version 2
-  (arm N, Befund 94); the old records (arm A0) are used only as a comparison. The old
-  Linux/Windows confound between model families does not apply to the new records.
-- **Statistics.** Paired resolution over seeds (t distribution) replaces the unpaired z threshold;
-  **Holm correction is the main form**, uncorrected counts are given as an addition (Befund 83, 94
-  and its addendum, Befund 98).
-- **Cost.** Inference times only from the joint measurement on an idle machine (Befund 97).
-- **Removed or restated (review of 2026-10-09, `docs/12`).** Persistence factors, model R^2
-  and "factor 20", the solid-fraction range, the soft-sensor margin factors, early-stopping
-  epoch counts, the ARX/NARX paragraph and the pinch statement are no longer taken over.
-- **New in version 5.** Studies A and B (Befunde 88, 87), the outlook with the corrected figures of
-  Befunde 80, 81, 93, 96, the partner model (Befunde 90, 95) and the storage of plant A
-  (Befunde 91, 92).
+Version 5f (2026-10-20) and its change history back to version 3 are retrievable under the git tag
+`docs08-v5f`. (This section is completed with the last chapter of version 6.)
 
 ## 1. Question and frame
 
@@ -133,20 +70,37 @@ controlled bed level (solids-mass set point, time constant 600 s), not a sequenc
 batches; the operating mode of the target plant is an open question for AP2. The state that
 matters for operation (bed mass, water content, particle number, bed temperature) is only
 partly measurable at a real plant: the bed temperature is available inline, the product
-moisture in general is not. A controller that acts on measured quantities only therefore
-needs a model that infers the unobserved state from the history of the manipulated
-variables, a soft sensor. AP1 builds and compares the candidate model classes and asks how
-much training data each needs, not only how good it gets at best. The three predicted targets are
+moisture in general is not. AP1 therefore builds and compares model classes that predict the
+targets from the history of the manipulated variables and the disturbances, called **forecast
+models** in this document, and asks how much training data each needs, not only how good it gets
+at best. It then asks what such a model is worth in the control of the process: where the energy
+is with a known model (section 6), what it costs to replace the known model by a learned one
+(section 7), and what a measurement of the moisture is worth (section 8). The term "soft sensor" is
+used only where a model estimates the moisture in place of a measurement inside a control loop;
+that use was tested and has the limits of section 8. The three predicted targets are
 the product moisture (kg water per kg dry solid), the bed temperature and the **energy target
 dE**, the instantaneous total power of heater, fan, pump and atomiser in kW (absolute, no
 reference point; the definition for the plant is an open question of the consortium).
 
 Until a full population-balance model is available (planned for month 21), a reduced
 grey-box model with four states (solids mass, water mass, particle number, bed temperature)
-carries the methodology work (`docs/02_prozess_setup.md`, appendix C). The ML architectures are
-needed because the real state is not fully measurable, whatever process model stands behind them.
-**All numbers in this document are statements about the grey-box simulator, not about a real
-plant**; section 7 makes the limit explicit.
+carries the methodology work (`docs/02_prozess_setup.md`, appendix C).
+**All numbers in this document are statements about the grey-box simulator or about synthetic
+data, not about a real plant**; sections 12 and 13 make the limits explicit.
+
+**The tasks of AP1.** The proposal asks for a comparison of machine-learning methods for the
+dynamic control of a single process, with an emphasis on reinforcement learning in combination
+with time-based models, a selection by accuracy, generalisability and real-time ability, a low
+data need, a contribution to a lower energy demand, synthetic data from Dyssol models, and a
+pipeline that can be used as a module. Where each task stands is in `docs/48_ap1_conclusion.md`,
+section 2; this document carries the evidence in sections 3 to 11.
+
+**Two words that change their meaning between the studies.** The *margin m* of the studies up to
+Befund 96, used again in Befund 113, is the half-width of a calibrated prediction band; from Befund
+105 on the margin of a controller is the smallest distance to the moisture limit, found by a search,
+with which that controller holds the limit on a whole family of cases (appendix F). The *reading labels* (L0, T1,
+U3 and so on) are fixed per study before its run and have no meaning across studies; each is spelled
+out where it is used.
 
 ## 2. Method
 
