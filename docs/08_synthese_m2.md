@@ -24,9 +24,10 @@
 
 ## Summary
 
-TwinLink builds a digital twin of fluidised-bed spray granulation; AP1 develops the method for a
-soft sensor that infers the unmeasured product moisture and the energy target from the history of
-the manipulated variables. **All results are statements about a grey-box simulator with placeholder
+TwinLink builds a digital twin of fluidised-bed spray granulation; AP1 compares methods that
+forecast the product moisture, the bed temperature and the energy target from the history of the
+manipulated variables, and asks what such models are worth in the control of the process. **All
+results are statements about a grey-box simulator with placeholder
 parameters, not about a plant.** The method: learning curves over the number of simulated training
 runs, splits by run, two named test sets (excited and constant-run holdout), baselines before any
 network, and paired comparisons over five seeds with Holm correction as the main form.
@@ -55,10 +56,94 @@ excitation experiment at the plant. Inference is far below the sample time of 25
 plant data (the moisture is not measured at the plant), the placeholder parameters, and more seeds
 where the paired spread is large.
 
+**Control with the known model.** The energy lies in tracking the operating point, not in the
+dynamics: against a fixed operating point the quasi-stationary set-point optimisation saves 8.93 % of
+the energy in the median, an MPC adds 0.55 %, and the upper bound with perfect preview is 1.51 %
+(Befund 105; with the cold multi-start of the steady optimiser 9.10 % instead of 8.93 %, dated
+addendum). With the throughput as a command under an hourly electricity price a two-level price rule
+lowers the cost per kg of product by 2.07 % and an MPC by 2.88 %, with an electric heater only (Befund
+126). In both studies the MPC differs from the simple method by the smaller safety margin it needs,
+not by its trajectory. On these bounds, with thresholds fixed before the runs, no sequential
+reinforcement-learning agent was trained for the granulator; where reinforcement learning was trained
+it did not reach the direct optimisation (section 9).
+
+**Learned models in the control.** Replacing the known model by a learned one costs more than load
+following gains: the GRU in the loop is 2.98 % more expensive per kg than the same control law with
+the known model, the learned steady-state map 3.87 % with an inline moisture feedback and 7.07 %
+without, and no learned arm is within the 2 % fixed beforehand (Befund 127). The gap is the margin
+that the learned model needs at the moisture limit. A model for the control is therefore chosen by
+whether it holds the limit and by its cost at the held limit, not by its mean prediction error
+(Befunde 113, 122, 125, 127). Where a physical model exists the order is: calibrate, then a bias,
+only then learn; this order is resolved where the model errs to the safe side and only descriptive
+on the unsafe side (Befunde 120, 122, 124, 125).
+
+**Moisture information.** Under a model mismatch a feedback of the product moisture is worth 13.40 %
+of the energy in the median against no feedback, relative to the placeholder band of the drying
+kinetics (Befund 111); a laboratory sample every 4 h captures 0.934 of the value of an inline sensor
+(Befund 112); a learned soft sensor did not replace the measurement in any tested form (Befunde 111,
+112, 116). The drying kinetics, not the sorption isotherm, decide the operating point (Befund 108).
+
+**Method, templates, and what is not shown.** The method is stated as rules with their reasons, the
+findings that triggered them and their pitfalls (section 2), and as templates for the study design,
+the reading, the lab-book entry and the merge (appendix E). Not shown (section 12): anything about a
+plant; product quality beyond the moisture, the particle size being constant in the model; a
+calibration of the model to plant A, whose structure does not carry between the two measured days
+(Befunde 117, 123); training on dynamic Dyssol data; partial observability; batch operation.
+
 ## Changes since version 5f
 
 Version 5f (2026-10-20) and its change history back to version 3 are retrievable under the git tag
-`docs08-v5f`. (This section is completed with the last chapter of version 6.)
+`docs08-v5f`; its consistency check gave 455 confirmed claims.
+
+**Structure.** Sections 3 and 4 and appendices B, C and D are those of 5f with additions; sections 2
+and 5 of 5f are section 2 (rules), section 6 of 5f is section 5 with the plant paragraph moved to
+section 10, section 7 is section 13, and section 8 (outlook) is dissolved into sections 6, 9 and 11.
+New: sections 6 to 12 and appendix E; the glossary is appendix F and the traceability table
+appendix G. The six older change sections are dropped.
+
+**Statements that changed, and why** (one line per contradiction or tension found between 5f and
+the findings after it):
+
+1. **Status of control and reinforcement learning.** 5f listed both as an outlook for AP3; they are
+   results of AP1 (sections 6, 7 and 9), because they answer the tasks of AP1 on dynamic control and
+   on reinforcement learning (`docs/48_ap1_conclusion.md`, section 2).
+2. **"Soft sensor".** The networks are called forecast models; "soft sensor" is used only where a
+   model replaces a moisture measurement in a loop, because that use was tested and failed in the
+   tested forms (Befunde 111, 112, 116).
+3. **Cost of a "soft-sensor margin".** The 1.30 to 1.46 % of Befund 80 stay as the cost of a margin of
+   the size m for an optimiser that knows the true model; the reading as the cost of using a learned
+   model is replaced, because a margin calibrated on the prediction error does not hold once an
+   optimiser chooses the operating points (Befunde 113, 127).
+4. **Pre-training as the route for a data-poor model.** The statement of study A stays with its
+   comparison set named; where a physical model is available, its calibration and a bias come first
+   (Befunde 120, 122, 125), and they were not in the comparison set of study A.
+5. **Data need.** The learning curves give the data need of the prediction error; for a controller
+   the gap did not shrink from 16 runs on and no data need could be determined (Befund 127).
+6. **Criterion for comparing models.** 5f compared on the prediction error only; for use under a
+   constraint the comparison is admissibility first and cost at the held limit (Befunde 124, 125,
+   127; rules 6 and 7).
+7. **Savings of a tracked operating point.** The figures of Befunde 80, 105 and 108 are kept apart as
+   three frames; they are not one series.
+8. **Quality limit.** The sentence of 5f on the critical moisture as "kinetics parameter and quality
+   limit at once" is left unchanged in section 13 for now: from Befund 64 on the quality limit is a
+   separate placeholder, and the correction waits for the release by the project lead.
+9. **Ranking of the partner's scenarios.** "Robust against every assumption switched" holds at the
+   workbook point of one delivery, not over the operating range (Befunde 110, 121).
+10. **Recovery of the partner model.** The 60 to 88 % belong to the earlier delivery; the later one
+    is in Befund 106.
+11. **Storage and reinforcement learning.** "No RL was built" holds for the storage of plant A;
+    reinforcement learning was trained on a storage problem under a price and ended behind a constant
+    rule (Befund 115).
+12. **Coupling of lines.** No coupling gain in continuous operation; with campaigns and standstills
+    a network pays (Befunde 118, 119).
+13. **What limits the simulator.** The placeholder isotherm hardly matters for the operating point,
+    the drying kinetics decide (Befund 108); and the structure of the model does not represent
+    plant A (Befunde 117, 123).
+14. **Two meanings of "margin", and the reading labels.** Defined in section 1 and in the glossary.
+15. **Tools and procedure.** Appendix A lists the packages and extras of the later studies; the study
+    template of 5f is replaced by the templates of appendix E and the rules on long runs.
+16. **Seeds.** "Five seeds" is not the limit of every study: three in Befunde 113 and 122, two in
+    part of Befund 112 (section 13).
 
 ## 1. Question and frame
 
@@ -1426,15 +1511,28 @@ take the results to cover and where they stop.
   the addenda of 2026-11-23 next to them (section 6); two figures of the merge supplements of
   Befunde 127 and 128 were withdrawn by addenda and are not quoted.
 
-## Appendix A: tools, environment and study template
+## Appendix A: tools and environment
 
-**Package.** `twinlink_ml` (`src/` layout, typed, configurations as frozen dataclasses):
+**Package.** `twinlink_ml` (`src/` layout, typed, configurations as frozen dataclasses). Core:
 `simulation` (grey-box simulator, excitation designs, steady-state solver, fluidisation limits),
 `data` (windows, run-level splits), `models` (baselines, recurrent and attention networks, the
 per-target composite, the hybrid, transfer), `evaluation` (`experiments.DataSpec.new_study`, the
-paired resolution `paired_resolution.py`, rollout evaluation, the analyses of studies A and B),
-`heatnetwork`, `flowsheet`, `rl`, `storage_a1`, `storage_timeslice` (outlook) and `utils` (run
-records, seeds, code location). Process parameters live in YAML files under `conf/process/`.
+paired resolution `paired_resolution.py`, rollout evaluation, the analyses of studies A and B) and
+`utils` (run records, seeds, code location). One package per study line, each importing the core
+and the earlier packages unchanged: control (`rl`, `headroom`, `load_following`,
+`learned_setpoints`, `order_dependence`), learned models in the control (`surrogate_env`,
+`surrogate_opt`, `hybrid_model`, `hybrid_structural`, `hybrid_structural_2`, `static_transfer`),
+moisture information (`sensitivity`, `outliers`, `sensor_value`, `observability`), plant
+(`plant_data`, `plant_a_op`, `plant_scale`, `plant_calibration`), Dyssol and the partner model
+(`dyssol_steady`, `partner_v4`, `partner_v4_1`, `flowsheet`, `case_ranking`), heat and storage
+(`heatnetwork`, `site`, `heatpump`, `storage_a1`, `storage_timeslice`, `storage_price`,
+`joint_recovery`, `campaign_network`), and the module interface `api` (services for forecast, set
+point, calibration, heat distribution and the choice of a recovery case, versioned JSON schemas in
+`docs/api/`, a transferable model bundle; `docs/47_module_api.md`, infrastructure without a finding).
+Process parameters live in YAML files under `conf/process/`, the settings of a study under
+`conf/<study>/`. The optimisers of the control studies use CasADi with IPOPT (extra
+`optimal-control`), the sensitivity study SALib (extra `sensitivity`), the interface pydantic (extra
+`api`).
 
 **Environment of the re-run and the timing (from the records and Befund 97).** Python 3.14.2, NumPy
 2.5.3, SciPy 1.18.1, PyTorch 2.14.0 (CPU build), Windows 11; one thread per process. Timing machine:
@@ -1449,19 +1547,18 @@ excitation, of the split and of the measurement model, and the preset version of
 are written under `artifacts/runs/` and never overwritten; config-fingerprint regression tests keep
 the process configuration of old results reproducible.
 
-**Study template (the procedure used for Befunde 82-99).** (1) Write the question, the design, the
-readings and the gate into the docstring of the run and analysis scripts or a design document
-(`docs/13` to `docs/19`) before any run (pre-registration); (2) commit the scripts; (3) start the run
-from a clean tree (`git/dirty` is logged; an analysis refuses a dirty tree); (4) commit the records
-and the analysis artifact; (5) enter the result in the lab book with script commit, artifact and
-commit, test set and caveats, and readings that were added after the result as "post hoc"; (6) rank
-statements with paired resolution and Holm, effect size and sign consistency; (7) a synthesis quotes
-only numbers that are in a Befund and an artifact and is checked by
-`scripts/check_m2_synthesis_consistency.py`.
+A model bundle leaves the machine, so its manifest holds no absolute path and no user name; it
+records the commit, the dirty flag, the fingerprints and the preset version, and building one still
+aborts when the loaded package is not that of the checkout (decision of the project lead,
+`docs/47_module_api.md`, section 5).
+
+**Procedure of a study.** The steps of a study, from the design to the merge, are the templates of
+appendix E; the rules behind them are in section 2.
 
 **Reproducing a result.** (1) Clone the repository and check out the commit named in the artifact;
-(2) create the environment (`pip install -e ".[torch,sklearn,plant-data,train,rl,dev]"`) and check
-that `twinlink_ml.__file__` lies in this `src`; (3) run the script named in appendix F with
+(2) create the environment
+(`pip install -e ".[torch,sklearn,plant-data,train,rl,optimal-control,surrogate,sensitivity,api,dev]"`)
+and check that `twinlink_ml.__file__` lies in this `src`; (3) run the script named in appendix G with
 `tools/run_here.sh` and the arguments of its docstring, writing into a scratch directory or under a
 new artifact name; (4) compare with the committed artifact; the figure scripts take an output
 directory, so that figures can be regenerated beside the committed ones. Training runs (for example the re-run,
@@ -1511,6 +1608,15 @@ Mamba and 4 of the xLSTM (addendum to Befund 94, section 7).
   `placeholder` in `conf/process/greybox_gab_placeholder.yaml`); the measurement model adds noise and
   a sensor lag.
 
+- **Settings of the control studies (Befunde 105, 126, 127).** The truth is the same model at the
+  sample time of the YAML configuration, 5 s, and the moisture limit of 0.15 kg/kg (placeholder) has
+  to hold as a path condition at every such sample, with a tolerance of 1e-4 kg/kg. Commands are
+  piecewise constant over 5 min and pass the rate limits above. Bed temperature at most 80 degC,
+  gas velocity at least 0.80 m/s, nozzle pressure fixed, solid fraction around the nominal 0.30 of the
+  laboratory line. The spray rate, nominally 1.5 kg/h, is a disturbance in Befund 105 and the third
+  command in Befunde 126 and 127 (main band 1.2 to 1.8 kg/h). The margin searches use a bisection
+  with a tolerance of 2.5e-4 kg/kg and end at 0.12 kg/kg.
+
 ## Appendix D: data need (arm N, horizon 36, median over five seeds)
 
 Error at 8, 16 and 32 training runs relative to the error at 64 runs (addendum to Befund 94):
@@ -1537,6 +1643,160 @@ Error at 8, 16 and 32 training runs relative to the error at 64 runs (addendum t
   test; descriptively several runs of the plain design at small $N$.
 - **Caveats:** simulator with placeholder parameters; fixed, untuned protocol; five seeds.
 
+## Appendix E: templates
+
+Four templates for a study, in the order in which they are used. They are derived from the documents
+named with each and add nothing to them; angle brackets mark what a study fills in. The rules they
+implement are those of section 2.
+
+**E1. Study design with its decision table.** Derived from `docs/43_load_following.md` (sections 1
+to 13 written and committed before the first run, sections 14 to 18 added after it) and
+`docs/44_learned_setpoints.md` (sections 7 to 12).
+
+```
+# NN -- <title of the study>
+
+Status: <design fixed and committed before the first run | run finished: reading X>. Branch,
+worktree, base commit. Document number and finding number are assigned at the merge.
+Scenario on placeholders, not a plant statement.
+
+## 1. Why this study            what earlier findings leave open; step 0: was it studied before?
+## 2. Question                  one question that a reading can answer
+## 3. Truth, model, placeholders   every placeholder with value, band and source
+## 4. Data, scenarios, test set    the test set named; split by run; training and test periods disjoint
+## 5. Arms and references       baselines first; the reference that knows the true model (the twin)
+## 6. Stages, margins, metric   admissibility; cost at the held limit; statistics and families
+## 7. Pre-registered reading    table: class | condition | consequence; validity conditions;
+                                an expectation, declared as such
+## 8. What the study will not show   caveats fixed beforehand
+## 9. Budget and cuts           wall-clock budget; order of the cuts; what is never cut
+## 10. Decisions of the project lead (date)   the decision table below
+## 11. Questions for the partner
+## 12. Implementation and run plan   tests fixed beforehand; dry run over all units; probe; detached main run
+## 13. Decisions taken without asking   the most conservative reading each time; disclosure of
+                                everything that was seen before the reading was committed
+--- added after the runs; the sections above stay unchanged ---
+## 14. Course of the run        table: step | time | result | artifact and commit
+## 15. Results                  numbers only from the named artifacts; the test set named
+## 16. Controls and sensitivities   no reading
+## 17. Reading and what it does and does not say
+## 18. Open for the project lead
+## 19. Decision of the project lead   added after the fact
+
+Decision table (section 10), one row per decision the design depends on:
+
+| # | decision                                                                  | enters |
+| 1 | the variant the reading is defined on; what is reported next to it        | 7      |
+| 2 | ranges of the main variant and of a sensitivity without a reading         | 3, 4   |
+| 3 | target quantity and period                                                | 4      |
+| 4 | thresholds of the reading                                                 | 7      |
+| 5 | test set, and the rule that chooses it if the budget forbids the full set | 4      |
+| 6 | exceptions from project rules, with the precedent                         | 4      |
+| 7 | budget in wall-clock hours; order of cuts; parts that are never cut       | 9      |
+| 8 | what stays fixed                                                          | 3      |
+| 9 | how margins are determined                                                | 6      |
+| A | admissibility first: when a cell counts as not admissible                 | 6, 7   |
+| B | the family of the multiplicity correction                                 | 6      |
+| C | what is measured descriptively, without a reading                         | 6      |
+| D | the caveat on the truth of the study                                      | 8      |
+```
+
+**E2. Reading docstring of the analysis script.** Derived from the docstrings of
+`scripts/analyze_load_following.py` and `scripts/analyze_hybrid_structural_2.py`. The docstring is
+committed before the first run that could show a result, and the study document refers to it.
+
+```
+Analysis of <study> and its PRE-REGISTERED reading.
+
+Study document: docs/NN_<topic>.md. Input: artifacts/runs/<name>.json.gz, written by
+scripts/run_<study>.py. Output: artifacts/runs/<name>_analysis.json.
+
+This docstring was committed before <the first run that could show a result>. Known at that
+time: <what had been seen: probes, smoke runs, artifacts of other studies>.
+
+PRE-REGISTERED READING (decisions of the project lead of <date>)
+Family: <cases, variant, band, test set>. Every controller or model at <how its margin is found>.
+Metric: <definition, with the formula of every ratio and its sign>.
+Admissibility (where a margin can fail): a cell is admissible iff <condition>; otherwise it is
+counted and takes part in no comparison; no substitute value.
+Statistics: paired over the seeds, on cells admissible for both; families <list>; Holm within each
+family; resolved iff Holm rejects AND at least <k of n> seeds have the sign of the mean.
+
+First class that applies:
+* X0 if <condition>: <consequence>.
+* X1 if <condition>: <consequence>.
+* X2 if <condition>: <consequence>.
+If none or more than one applies: "mixed", reported and not reinterpreted.
+
+Every condition is also reported on its own, per <stratum>.
+The reading is INVALID (reported as such, not replaced) if <a search did not converge, or a unit
+ended with an error>.
+No reading is taken from: <variants and controls that are descriptive>.
+Post hoc, separate: <what is computed on other data, under its own key, never merged with the
+verdict>.
+```
+
+**E3. Lab-book entry with its decision paragraph.** Derived from the entries of Befunde 125, 126 and
+129 in `docs/04_stand_ap1.md`. Entries are append-only; a correction is a dated addendum.
+
+```
+### Befund N (date): <topic> -- <the reading in one clause, with its key numbers>
+
+Branch, worktree, base commit; merged on <date>; document docs/NN_<topic>.md. Code, settings, tests,
+driver; analysis script with the reading (commit, committed before <the first run>). Artifacts.
+
+**Question and design.** <truth; arms; test set; metric; reading with its thresholds; exceptions>
+**Run.** <full suite; dry run over all units; probe and extrapolation against the budget; main run
+with times, units, errors and peak memory per worker; what was cut>
+**Results (<test set>, <variant>).** <numbers from the analysis artifact>
+**Pre-registered reading: X (valid | invalid).** <every condition with its value>
+**Without a reading.** <controls, sensitivities, post hoc; each labelled>
+**Caveats.** <numbered; the placeholders; what was seen before the reading was committed>
+**Open for the project lead.** <acceptance; decisions taken without asking; follow-ups>
+
+**Decision of the project lead (date; added after the fact, the entry above is unchanged).**
+(1) **X is accepted** <formally | with the qualification ...>. (2) **Classification:** <what the
+number means and what it does not>. (3) <a weakness of the design or of the reading, named as
+such>. (4) <descriptive results the decision relies on, marked as descriptive>. (5) <what stays
+open, with its item in docs/12>. All values are placeholders or synthetic, no statement about a
+plant.
+
+### Addendum (date) to Befund N: <what is added or corrected>; the entry above is unchanged
+```
+
+**E4. Merge checklist.** No such list existed as a document; it is assembled from the working
+rules of `CLAUDE.md` and from the passages "left to the managing session" of the study documents
+(for example `docs/46_order_dependence.md`, section 14).
+
+```
+Before the merge (study session; it delivers a branch and neither merges nor pushes)
+[ ] the reading was committed before the first run; the design sections are unchanged since
+[ ] every artifact was written on a clean tree; none overwritten; stage outputs packed
+[ ] full suite green on the commit of the code; ruff clean; denylist test green
+[ ] study document with the sections of E1; lab-book entry drafted as E3;
+    decisions taken without asking listed for confirmation
+[ ] what is left to the managing session is named: document and finding number, the row in
+    docs/12, the README paragraph, addenda to earlier findings
+
+Decision
+[ ] the decision paragraph of the project lead is entered; the entry above it is unchanged
+
+At the merge (managing session; only this session merges into master and pushes)
+[ ] master has not moved since the suite ran; otherwise check again
+[ ] document number and finding number assigned; cross references updated
+[ ] lab-book entry appended; dated addenda to earlier findings where the decision asks for them
+[ ] docs/12: row in the list of findings; open points added or closed
+[ ] README paragraph
+[ ] rules that the decision changes are entered in CLAUDE.md
+[ ] every scripted edit is verified by grep (heading, finding number, decision paragraph,
+    docs/12 row, README paragraph); a change counts as done only when its grep passes
+[ ] full suite on the commit that is pushed (documentation-only commits: ruff and denylist test)
+
+After the merge
+[ ] before a worktree is removed: ignored and untracked content listed; checkpoints, job logs
+    and unversioned reports copied; the copy verified by file count and total size
+```
+
 ## Appendix F: glossary
 
 - **Arm A0, A1, N.** Data bases of the architecture comparison: A0 the old records (legacy data
@@ -1557,13 +1817,37 @@ Error at 8, 16 and 32 training runs relative to the error at 64 runs (addendum t
   with all seeds on that side, but not resolved after Holm (section 3).
 - **Composite.** A network with an independent head per target (Befund 26).
 - **dE, energy target.** Instantaneous total power of the plant model in kW (section 1).
-- **Soft sensor.** A model that infers an unmeasured quantity (here the product moisture) from
-  measured inputs.
-- **Margin m.** Safety distance to the moisture limit for the soft-sensor error (section 8).
+- **Forecast model.** A model that predicts the targets over a horizon from the history and the
+  planned inputs (sections 3 to 5).
+- **Soft sensor.** A model that estimates an unmeasured quantity (here the product moisture) in place
+  of a measurement inside a control loop; tested in section 8.
+- **Margin m.** The half-width of a calibrated prediction band, used as a distance to the moisture
+  limit in the studies up to Befund 96 and in Befund 113 (section 6).
+- **Margin of a controller (family-wide margin).** From Befund 105 on: the smallest distance to the
+  moisture limit, found by a search, with which a controller holds the limit in every case of a family
+  (or in 95 % of the cases, where a study says so).
+- **Cost at the held limit.** The cost of a controller at the margin with which it holds the limit;
+  the quantity on which controllers and models are compared (rule 6).
+- **Admissible cell.** A cell whose margin is reached within the upper end of the search and holds;
+  a cell that is not admissible is counted and gets no number.
+- **Deployable margin.** A margin searched on other cases than those on which it is checked.
+- **Twin.** The controller with the same control law as a learned arm and the true model (Befund 127).
+- **Headroom.** The gain of the upper bound (true model, perfect preview) over a simple reference;
+  measured before a learning study (rule 10).
+- **Inside and outside cases.** Test cases inside and outside the range covered by the training data
+  of a cell (Befunde 122 to 125).
+- **Cold multi-start.** A steady optimisation from fixed start points that remembers nothing between
+  solves (rule 11).
+- **Dry run, probe.** A run over all units at minimal cost, and a run of few units at full size,
+  before a main run (rule 12).
+- **Decisions taken without asking.** Choices a session makes where the task leaves room, listed in
+  the study document for confirmation by the project lead.
 - **Closed fraction.** Share of the gap between a fixed operating point and the oracle that a policy
   closes (Befund 93).
-- **Gate, reading L1/L2/L3.** Decision rule fixed before a study; L1 = advanced control justified,
-  L2 = a rule suffices, L3 = no saving (Befunde 92, 99).
+- **Gate, reading.** A decision rule fixed before a study, with named classes. The labels (L0 to L3,
+  T, U, E, Y, Z, O and so on) are defined per study and have no meaning across studies; in the storage
+  studies L1 = advanced control justified, L2 = a rule suffices, L3 = no saving (Befunde 92, 99), in
+  the headroom study L0 = dynamic control does not pay (Befund 105).
 - **Register items (E-Q1 and similar).** Open questions of the review register `docs/12`.
 - **Pre-registration, post hoc.** Rules written and committed before a run; anything added after the
   result is labelled post hoc.
