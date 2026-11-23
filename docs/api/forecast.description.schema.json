@@ -1,0 +1,166 @@
+{
+  "$defs": {
+    "ValueRange": {
+      "additionalProperties": false,
+      "description": "Closed interval of a quantity, in the unit named by the key it is stored under.",
+      "properties": {
+        "maximum": {
+          "title": "Maximum",
+          "type": "number"
+        },
+        "minimum": {
+          "title": "Minimum",
+          "type": "number"
+        }
+      },
+      "required": [
+        "minimum",
+        "maximum"
+      ],
+      "title": "ValueRange",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Self-description of the forecast service.",
+  "properties": {
+    "advisory_only": {
+      "const": true,
+      "default": true,
+      "title": "Advisory Only",
+      "type": "boolean"
+    },
+    "api_version": {
+      "title": "Api Version",
+      "type": "string"
+    },
+    "fallback_model_fingerprint": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Fallback Model Fingerprint"
+    },
+    "fallback_model_label": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Fallback Model Label"
+    },
+    "history_length": {
+      "title": "History Length",
+      "type": "integer"
+    },
+    "maximum_horizon": {
+      "title": "Maximum Horizon",
+      "type": "integer"
+    },
+    "model_fingerprint": {
+      "title": "Model Fingerprint",
+      "type": "string"
+    },
+    "model_label": {
+      "title": "Model Label",
+      "type": "string"
+    },
+    "model_scope": {
+      "title": "Model Scope",
+      "type": "string"
+    },
+    "observation_mode": {
+      "enum": [
+        "inline",
+        "soft_sensor"
+      ],
+      "title": "Observation Mode",
+      "type": "string"
+    },
+    "parameter_status": {
+      "enum": [
+        "placeholder",
+        "partially_calibrated",
+        "calibrated"
+      ],
+      "title": "Parameter Status",
+      "type": "string"
+    },
+    "predicted_fields": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Predicted Fields",
+      "type": "array"
+    },
+    "required_extras": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Required Extras",
+      "type": "array"
+    },
+    "required_measured_fields": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Required Measured Fields",
+      "type": "array"
+    },
+    "sample_time_s": {
+      "title": "Sample Time S",
+      "type": "number"
+    },
+    "schema_version": {
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "service": {
+      "title": "Service",
+      "type": "string"
+    },
+    "stateless": {
+      "const": true,
+      "default": true,
+      "title": "Stateless",
+      "type": "boolean"
+    },
+    "valid_input_ranges": {
+      "additionalProperties": {
+        "$ref": "#/$defs/ValueRange"
+      },
+      "title": "Valid Input Ranges",
+      "type": "object"
+    }
+  },
+  "required": [
+    "service",
+    "api_version",
+    "schema_version",
+    "model_fingerprint",
+    "model_label",
+    "model_scope",
+    "parameter_status",
+    "required_extras",
+    "valid_input_ranges",
+    "sample_time_s",
+    "history_length",
+    "maximum_horizon",
+    "observation_mode",
+    "predicted_fields",
+    "required_measured_fields"
+  ],
+  "title": "ForecastDescription",
+  "type": "object",
+  "x-schema-version": "1.0"
+}

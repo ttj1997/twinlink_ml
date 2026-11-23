@@ -1,0 +1,159 @@
+{
+  "$defs": {
+    "Notice": {
+      "additionalProperties": false,
+      "description": "A remark on a response that does not make it invalid (for example an input out of range).",
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "Notice",
+      "type": "object"
+    },
+    "ResponseMeta": {
+      "additionalProperties": false,
+      "description": "What every response says about itself.",
+      "properties": {
+        "advisory_only": {
+          "const": true,
+          "default": true,
+          "title": "Advisory Only",
+          "type": "boolean"
+        },
+        "api_version": {
+          "title": "Api Version",
+          "type": "string"
+        },
+        "model_fingerprint": {
+          "title": "Model Fingerprint",
+          "type": "string"
+        },
+        "model_label": {
+          "title": "Model Label",
+          "type": "string"
+        },
+        "model_scope": {
+          "title": "Model Scope",
+          "type": "string"
+        },
+        "notices": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Notice"
+          },
+          "title": "Notices",
+          "type": "array"
+        },
+        "parameter_status": {
+          "enum": [
+            "placeholder",
+            "partially_calibrated",
+            "calibrated"
+          ],
+          "title": "Parameter Status",
+          "type": "string"
+        },
+        "schema_version": {
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "service": {
+          "title": "Service",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "service",
+        "api_version",
+        "model_fingerprint",
+        "model_label",
+        "model_scope",
+        "parameter_status"
+      ],
+      "title": "ResponseMeta",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Recommended heat-recovery case with what the recommendation rests on.\n\n``recommended_case``: 1 (each exhaust to its own sink), 2 (crossed), or ``null`` where the\nstudy names no case. ``case_1_expected_best`` is the statement the hit rates refer to.",
+  "properties": {
+    "case_1_expected_best": {
+      "title": "Case 1 Expected Best",
+      "type": "boolean"
+    },
+    "exhaust_2_usable_excess_k": {
+      "description": "Exhaust 2 minus ambient minus the offset of the rule; positive: usable heat.",
+      "title": "Exhaust 2 Usable Excess K",
+      "type": "number"
+    },
+    "exhaust_temperature_difference_k": {
+      "title": "Exhaust Temperature Difference K",
+      "type": "number"
+    },
+    "hit_rate_basis": {
+      "title": "Hit Rate Basis",
+      "type": "string"
+    },
+    "hit_rate_physical_pressurised": {
+      "title": "Hit Rate Physical Pressurised",
+      "type": "number"
+    },
+    "hit_rate_physical_unpressurised": {
+      "title": "Hit Rate Physical Unpressurised",
+      "type": "number"
+    },
+    "meta": {
+      "$ref": "#/$defs/ResponseMeta"
+    },
+    "recommended_case": {
+      "anyOf": [
+        {
+          "enum": [
+            1,
+            2
+          ],
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Recommended Case"
+    },
+    "reference": {
+      "title": "Reference",
+      "type": "string"
+    },
+    "valid_for": {
+      "title": "Valid For",
+      "type": "string"
+    }
+  },
+  "required": [
+    "meta",
+    "recommended_case",
+    "case_1_expected_best",
+    "exhaust_temperature_difference_k",
+    "exhaust_2_usable_excess_k",
+    "reference",
+    "valid_for",
+    "hit_rate_physical_unpressurised",
+    "hit_rate_physical_pressurised",
+    "hit_rate_basis"
+  ],
+  "title": "RecoveryCaseResponse",
+  "type": "object",
+  "x-schema-version": "1.0"
+}

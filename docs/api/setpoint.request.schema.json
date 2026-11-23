@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Disturbances, limits and margin for one steady set-point recommendation.\n\nThe optimiser minimises the total power of the line while the steady product moisture stays\nat or below ``product_moisture_limit_kg_per_kg - moisture_margin_kg_per_kg``. The spray rate\nis the throughput and is given, not decided. The optional bounds may only narrow the box of\nthe process configuration.",
+  "properties": {
+    "ambient_relative_humidity": {
+      "description": "Relative humidity as a fraction between 0 and 1.",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Ambient Relative Humidity",
+      "type": "number"
+    },
+    "ambient_temperature_celsius": {
+      "title": "Ambient Temperature Celsius",
+      "type": "number"
+    },
+    "bed_temperature_limit_celsius": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Bed Temperature Limit Celsius"
+    },
+    "gas_velocity_maximum_m_per_s": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Gas Velocity Maximum M Per S"
+    },
+    "gas_velocity_minimum_m_per_s": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Gas Velocity Minimum M Per S"
+    },
+    "inlet_temperature_maximum_celsius": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Inlet Temperature Maximum Celsius"
+    },
+    "inlet_temperature_minimum_celsius": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Inlet Temperature Minimum Celsius"
+    },
+    "inlet_temperature_offset_k": {
+      "default": 0.0,
+      "description": "Known additive offset between the realised and the commanded inlet temperature; 0 when unknown.",
+      "title": "Inlet Temperature Offset K",
+      "type": "number"
+    },
+    "moisture_margin_kg_per_kg": {
+      "minimum": 0.0,
+      "title": "Moisture Margin Kg Per Kg",
+      "type": "number"
+    },
+    "product_moisture_limit_kg_per_kg": {
+      "exclusiveMinimum": 0.0,
+      "title": "Product Moisture Limit Kg Per Kg",
+      "type": "number"
+    },
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "spray_rate_kg_per_h": {
+      "exclusiveMinimum": 0.0,
+      "title": "Spray Rate Kg Per H",
+      "type": "number"
+    },
+    "suspension_solid_fraction": {
+      "exclusiveMaximum": 1.0,
+      "exclusiveMinimum": 0.0,
+      "title": "Suspension Solid Fraction",
+      "type": "number"
+    }
+  },
+  "required": [
+    "ambient_temperature_celsius",
+    "ambient_relative_humidity",
+    "suspension_solid_fraction",
+    "spray_rate_kg_per_h",
+    "product_moisture_limit_kg_per_kg",
+    "moisture_margin_kg_per_kg"
+  ],
+  "title": "SetpointRequest",
+  "type": "object",
+  "x-schema-version": "1.0"
+}

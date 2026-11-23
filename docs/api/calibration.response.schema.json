@@ -1,0 +1,251 @@
+{
+  "$defs": {
+    "CalibratedParameters": {
+      "additionalProperties": false,
+      "description": "Result of the weighted least-squares fit; the keys of ``values`` carry the units.",
+      "properties": {
+        "at_bound": {
+          "items": {
+            "type": "string"
+          },
+          "title": "At Bound",
+          "type": "array"
+        },
+        "errors": {
+          "$ref": "#/$defs/TemperatureErrors"
+        },
+        "evaluations": {
+          "title": "Evaluations",
+          "type": "integer"
+        },
+        "n_residuals": {
+          "title": "N Residuals",
+          "type": "integer"
+        },
+        "solver_message": {
+          "title": "Solver Message",
+          "type": "string"
+        },
+        "values": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Values",
+          "type": "object"
+        },
+        "weighted_squared_residual_sum": {
+          "title": "Weighted Squared Residual Sum",
+          "type": "number"
+        }
+      },
+      "required": [
+        "values",
+        "at_bound",
+        "weighted_squared_residual_sum",
+        "n_residuals",
+        "evaluations",
+        "solver_message",
+        "errors"
+      ],
+      "title": "CalibratedParameters",
+      "type": "object"
+    },
+    "Notice": {
+      "additionalProperties": false,
+      "description": "A remark on a response that does not make it invalid (for example an input out of range).",
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "Notice",
+      "type": "object"
+    },
+    "ResponseMeta": {
+      "additionalProperties": false,
+      "description": "What every response says about itself.",
+      "properties": {
+        "advisory_only": {
+          "const": true,
+          "default": true,
+          "title": "Advisory Only",
+          "type": "boolean"
+        },
+        "api_version": {
+          "title": "Api Version",
+          "type": "string"
+        },
+        "model_fingerprint": {
+          "title": "Model Fingerprint",
+          "type": "string"
+        },
+        "model_label": {
+          "title": "Model Label",
+          "type": "string"
+        },
+        "model_scope": {
+          "title": "Model Scope",
+          "type": "string"
+        },
+        "notices": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Notice"
+          },
+          "title": "Notices",
+          "type": "array"
+        },
+        "parameter_status": {
+          "enum": [
+            "placeholder",
+            "partially_calibrated",
+            "calibrated"
+          ],
+          "title": "Parameter Status",
+          "type": "string"
+        },
+        "schema_version": {
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "service": {
+          "title": "Service",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "service",
+        "api_version",
+        "model_fingerprint",
+        "model_label",
+        "model_scope",
+        "parameter_status"
+      ],
+      "title": "ResponseMeta",
+      "type": "object"
+    },
+    "TemperatureBias": {
+      "additionalProperties": false,
+      "description": "Mean of measured minus model over the sections, per measured quantity.",
+      "properties": {
+        "bed_temperature_bias_k": {
+          "title": "Bed Temperature Bias K",
+          "type": "number"
+        },
+        "exhaust_temperature_bias_k": {
+          "title": "Exhaust Temperature Bias K",
+          "type": "number"
+        }
+      },
+      "required": [
+        "bed_temperature_bias_k",
+        "exhaust_temperature_bias_k"
+      ],
+      "title": "TemperatureBias",
+      "type": "object"
+    },
+    "TemperatureErrors": {
+      "additionalProperties": false,
+      "description": "Model minus measured over the sections: root mean square and largest absolute error.",
+      "properties": {
+        "bed_temperature_maximum_k": {
+          "title": "Bed Temperature Maximum K",
+          "type": "number"
+        },
+        "bed_temperature_rms_k": {
+          "title": "Bed Temperature Rms K",
+          "type": "number"
+        },
+        "exhaust_temperature_maximum_k": {
+          "title": "Exhaust Temperature Maximum K",
+          "type": "number"
+        },
+        "exhaust_temperature_rms_k": {
+          "title": "Exhaust Temperature Rms K",
+          "type": "number"
+        }
+      },
+      "required": [
+        "bed_temperature_rms_k",
+        "bed_temperature_maximum_k",
+        "exhaust_temperature_rms_k",
+        "exhaust_temperature_maximum_k"
+      ],
+      "title": "TemperatureErrors",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Bias of the uncalibrated model, its errors, and the calibrated parameters when asked for.\n\n``calibration_fingerprint`` identifies this result (model, bias and parameters); a caller that\nstores the result stores the fingerprint with it.",
+  "properties": {
+    "bias": {
+      "$ref": "#/$defs/TemperatureBias"
+    },
+    "calibration_fingerprint": {
+      "title": "Calibration Fingerprint",
+      "type": "string"
+    },
+    "errors_uncalibrated": {
+      "$ref": "#/$defs/TemperatureErrors"
+    },
+    "errors_with_bias": {
+      "$ref": "#/$defs/TemperatureErrors"
+    },
+    "meta": {
+      "$ref": "#/$defs/ResponseMeta"
+    },
+    "model_bed_temperature_celsius": {
+      "items": {
+        "type": "number"
+      },
+      "title": "Model Bed Temperature Celsius",
+      "type": "array"
+    },
+    "model_exhaust_temperature_celsius": {
+      "items": {
+        "type": "number"
+      },
+      "title": "Model Exhaust Temperature Celsius",
+      "type": "array"
+    },
+    "n_sections": {
+      "title": "N Sections",
+      "type": "integer"
+    },
+    "parameters": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CalibratedParameters"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "meta",
+    "n_sections",
+    "model_bed_temperature_celsius",
+    "model_exhaust_temperature_celsius",
+    "bias",
+    "errors_uncalibrated",
+    "errors_with_bias",
+    "calibration_fingerprint"
+  ],
+  "title": "CalibrationResponse",
+  "type": "object",
+  "x-schema-version": "1.0"
+}

@@ -1,0 +1,268 @@
+{
+  "$defs": {
+    "HeatKeyFigures": {
+      "additionalProperties": false,
+      "description": "Sums over the request (the key figures of Befund 118).",
+      "properties": {
+        "co2_net_saving_kg": {
+          "title": "Co2 Net Saving Kg",
+          "type": "number"
+        },
+        "co2_pump_kg": {
+          "title": "Co2 Pump Kg",
+          "type": "number"
+        },
+        "co2_replaced_gas_kg": {
+          "title": "Co2 Replaced Gas Kg",
+          "type": "number"
+        },
+        "heat_used_kwh": {
+          "title": "Heat Used Kwh",
+          "type": "number"
+        },
+        "pump_electricity_kwh": {
+          "title": "Pump Electricity Kwh",
+          "type": "number"
+        },
+        "replaced_gas_kwh": {
+          "title": "Replaced Gas Kwh",
+          "type": "number"
+        },
+        "source_energy_kwh": {
+          "title": "Source Energy Kwh",
+          "type": "number"
+        },
+        "storage_charged_kwh": {
+          "title": "Storage Charged Kwh",
+          "type": "number"
+        },
+        "storage_content_end_kwh": {
+          "title": "Storage Content End Kwh",
+          "type": "number"
+        },
+        "storage_discharged_kwh": {
+          "title": "Storage Discharged Kwh",
+          "type": "number"
+        },
+        "utilisation": {
+          "description": "Heat used as a fraction of the source energy.",
+          "title": "Utilisation",
+          "type": "number"
+        }
+      },
+      "required": [
+        "source_energy_kwh",
+        "heat_used_kwh",
+        "utilisation",
+        "replaced_gas_kwh",
+        "co2_replaced_gas_kg",
+        "pump_electricity_kwh",
+        "co2_pump_kg",
+        "co2_net_saving_kg",
+        "storage_charged_kwh",
+        "storage_discharged_kwh",
+        "storage_content_end_kwh"
+      ],
+      "title": "HeatKeyFigures",
+      "type": "object"
+    },
+    "Notice": {
+      "additionalProperties": false,
+      "description": "A remark on a response that does not make it invalid (for example an input out of range).",
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "Notice",
+      "type": "object"
+    },
+    "ResponseMeta": {
+      "additionalProperties": false,
+      "description": "What every response says about itself.",
+      "properties": {
+        "advisory_only": {
+          "const": true,
+          "default": true,
+          "title": "Advisory Only",
+          "type": "boolean"
+        },
+        "api_version": {
+          "title": "Api Version",
+          "type": "string"
+        },
+        "model_fingerprint": {
+          "title": "Model Fingerprint",
+          "type": "string"
+        },
+        "model_label": {
+          "title": "Model Label",
+          "type": "string"
+        },
+        "model_scope": {
+          "title": "Model Scope",
+          "type": "string"
+        },
+        "notices": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Notice"
+          },
+          "title": "Notices",
+          "type": "array"
+        },
+        "parameter_status": {
+          "enum": [
+            "placeholder",
+            "partially_calibrated",
+            "calibrated"
+          ],
+          "title": "Parameter Status",
+          "type": "string"
+        },
+        "schema_version": {
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "service": {
+          "title": "Service",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "service",
+        "api_version",
+        "model_fingerprint",
+        "model_label",
+        "model_scope",
+        "parameter_status"
+      ],
+      "title": "ResponseMeta",
+      "type": "object"
+    },
+    "SinkHeat": {
+      "additionalProperties": false,
+      "description": "Heat delivered to one consumer, hour by hour.",
+      "properties": {
+        "heat_delivered_kw": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Heat Delivered Kw",
+          "type": "array"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "heat_delivered_kw"
+      ],
+      "title": "SinkHeat",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Assignment (mode ``cascade_rule``) or planned operation (mode ``planning``).\n\n``sink_heat`` is ``null`` in the mode ``planning``: the reduced model of the planning knows\nthe heat used per hour, not its split to the consumers. ``storage_content_kwh`` has one entry\nmore than the other series (content before the first and after every hour).",
+  "properties": {
+    "key_figures": {
+      "$ref": "#/$defs/HeatKeyFigures"
+    },
+    "lp_failures": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Lp Failures"
+    },
+    "meta": {
+      "$ref": "#/$defs/ResponseMeta"
+    },
+    "mode": {
+      "enum": [
+        "cascade_rule",
+        "planning"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "sample_time_s": {
+      "title": "Sample Time S",
+      "type": "number"
+    },
+    "sink_heat": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/SinkHeat"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Sink Heat"
+    },
+    "storage_charge_kw": {
+      "items": {
+        "type": "number"
+      },
+      "title": "Storage Charge Kw",
+      "type": "array"
+    },
+    "storage_content_kwh": {
+      "items": {
+        "type": "number"
+      },
+      "title": "Storage Content Kwh",
+      "type": "array"
+    },
+    "storage_discharge_kw": {
+      "items": {
+        "type": "number"
+      },
+      "title": "Storage Discharge Kw",
+      "type": "array"
+    },
+    "total_heat_used_kw": {
+      "items": {
+        "type": "number"
+      },
+      "title": "Total Heat Used Kw",
+      "type": "array"
+    }
+  },
+  "required": [
+    "meta",
+    "mode",
+    "sample_time_s",
+    "total_heat_used_kw",
+    "storage_charge_kw",
+    "storage_discharge_kw",
+    "storage_content_kwh",
+    "key_figures"
+  ],
+  "title": "HeatDistributionResponse",
+  "type": "object",
+  "x-schema-version": "1.0"
+}

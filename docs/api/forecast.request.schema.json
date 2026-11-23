@@ -1,0 +1,171 @@
+{
+  "$defs": {
+    "MeasuredTargetSeries": {
+      "additionalProperties": false,
+      "description": "Measured history of the predicted quantities, same grid and length as ``history``.\n\nA quantity that is not measured is left out (``null``). Which quantities a model needs is\nstated by :class:`ForecastDescription`.",
+      "properties": {
+        "bed_temperature_celsius": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bed Temperature Celsius"
+        },
+        "energy_target_kw": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Energy Target Kw"
+        },
+        "product_moisture_kg_per_kg": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Product Moisture Kg Per Kg"
+        }
+      },
+      "title": "MeasuredTargetSeries",
+      "type": "object"
+    },
+    "ProcessInputSeries": {
+      "additionalProperties": false,
+      "description": "Manipulated variables and disturbances on the model grid, oldest sample first.",
+      "properties": {
+        "ambient_relative_humidity": {
+          "description": "Relative humidity of the ambient air as a fraction between 0 and 1.",
+          "items": {
+            "type": "number"
+          },
+          "title": "Ambient Relative Humidity",
+          "type": "array"
+        },
+        "ambient_temperature_celsius": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Ambient Temperature Celsius",
+          "type": "array"
+        },
+        "gas_velocity_m_per_s": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Gas Velocity M Per S",
+          "type": "array"
+        },
+        "inlet_temperature_celsius": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Inlet Temperature Celsius",
+          "type": "array"
+        },
+        "nozzle_pressure_bar": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Nozzle Pressure Bar",
+          "type": "array"
+        },
+        "spray_rate_kg_per_h": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Spray Rate Kg Per H",
+          "type": "array"
+        },
+        "suspension_solid_fraction": {
+          "description": "Solid mass fraction of the sprayed suspension, between 0 and 1.",
+          "items": {
+            "type": "number"
+          },
+          "title": "Suspension Solid Fraction",
+          "type": "array"
+        }
+      },
+      "required": [
+        "inlet_temperature_celsius",
+        "gas_velocity_m_per_s",
+        "spray_rate_kg_per_h",
+        "nozzle_pressure_bar",
+        "ambient_temperature_celsius",
+        "ambient_relative_humidity",
+        "suspension_solid_fraction"
+      ],
+      "title": "ProcessInputSeries",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "History and planned inputs for a forecast over the horizon.\n\n``history`` holds the realised manipulated variables and the measured disturbances up to now;\n``planned`` the set points as planned and the disturbances as expected by the caller from the\nnext sample on. Its length is the requested horizon, at most the horizon the model was\ntrained for.",
+  "properties": {
+    "history": {
+      "$ref": "#/$defs/ProcessInputSeries"
+    },
+    "measured_history": {
+      "$ref": "#/$defs/MeasuredTargetSeries",
+      "default": {
+        "bed_temperature_celsius": null,
+        "energy_target_kw": null,
+        "product_moisture_kg_per_kg": null
+      }
+    },
+    "observation_mode": {
+      "enum": [
+        "inline",
+        "soft_sensor"
+      ],
+      "title": "Observation Mode",
+      "type": "string"
+    },
+    "planned": {
+      "$ref": "#/$defs/ProcessInputSeries"
+    },
+    "sample_time_s": {
+      "exclusiveMinimum": 0.0,
+      "title": "Sample Time S",
+      "type": "number"
+    },
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "sample_time_s",
+    "observation_mode",
+    "history",
+    "planned"
+  ],
+  "title": "ForecastRequest",
+  "type": "object",
+  "x-schema-version": "1.0"
+}

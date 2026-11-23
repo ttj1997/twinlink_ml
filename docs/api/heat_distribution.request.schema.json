@@ -1,0 +1,153 @@
+{
+  "$defs": {
+    "HeatSink": {
+      "additionalProperties": false,
+      "description": "A consumer of network heat: a cold stream from inlet to outlet temperature, hour by hour.\n\n``heat_capacity_flow_kw_per_k`` is the flow while the consumer runs; ``running`` says in which\nhours it does (default: always). ``group`` joins consumers that are parallel branches of one\ncascade stage; they need the same temperatures and the same required temperature.",
+      "properties": {
+        "group": {
+          "anyOf": [
+            {
+              "maxLength": 40,
+              "pattern": "^[A-Za-z][A-Za-z0-9_]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Group"
+        },
+        "heat_capacity_flow_kw_per_k": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Heat Capacity Flow Kw Per K",
+          "type": "array"
+        },
+        "inlet_temperature_celsius": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Inlet Temperature Celsius",
+          "type": "array"
+        },
+        "name": {
+          "maxLength": 40,
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*$",
+          "title": "Name",
+          "type": "string"
+        },
+        "outlet_temperature_celsius": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Outlet Temperature Celsius",
+          "type": "array"
+        },
+        "replaced_supply_efficiency": {
+          "description": "Efficiency of the heat supply the network heat replaces.",
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "title": "Replaced Supply Efficiency",
+          "type": "number"
+        },
+        "required_temperature_celsius": {
+          "title": "Required Temperature Celsius",
+          "type": "number"
+        },
+        "running": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "boolean"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Running"
+        }
+      },
+      "required": [
+        "name",
+        "required_temperature_celsius",
+        "inlet_temperature_celsius",
+        "outlet_temperature_celsius",
+        "heat_capacity_flow_kw_per_k",
+        "replaced_supply_efficiency"
+      ],
+      "title": "HeatSink",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One source of waste heat, the consumers and, with a tank, how it is operated.\n\nThe grid is hourly. ``storage_capacity_kwh = 0`` means no tank; ``storage_content_kwh`` is the\ncontent of the tank at the beginning of the first hour (default: empty). The content after\nevery hour comes back in the response, so the state of the tank stays with the caller.",
+  "properties": {
+    "mode": {
+      "default": "cascade_rule",
+      "enum": [
+        "cascade_rule",
+        "planning"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "sample_time_s": {
+      "default": 3600.0,
+      "exclusiveMinimum": 0.0,
+      "title": "Sample Time S",
+      "type": "number"
+    },
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "sinks": {
+      "items": {
+        "$ref": "#/$defs/HeatSink"
+      },
+      "minItems": 1,
+      "title": "Sinks",
+      "type": "array"
+    },
+    "source_power_kw": {
+      "exclusiveMinimum": 0.0,
+      "title": "Source Power Kw",
+      "type": "number"
+    },
+    "storage_capacity_kwh": {
+      "default": 0.0,
+      "minimum": 0.0,
+      "title": "Storage Capacity Kwh",
+      "type": "number"
+    },
+    "storage_content_kwh": {
+      "default": 0.0,
+      "minimum": 0.0,
+      "title": "Storage Content Kwh",
+      "type": "number"
+    },
+    "storage_rule": {
+      "default": "k2",
+      "enum": [
+        "k2",
+        "k2b"
+      ],
+      "title": "Storage Rule",
+      "type": "string"
+    }
+  },
+  "required": [
+    "source_power_kw",
+    "sinks"
+  ],
+  "title": "HeatDistributionRequest",
+  "type": "object",
+  "x-schema-version": "1.0"
+}

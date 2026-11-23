@@ -1,0 +1,303 @@
+{
+  "$defs": {
+    "CodeProvenance": {
+      "additionalProperties": false,
+      "description": "Where the code of a bundle came from. No paths, see the module docstring.",
+      "properties": {
+        "commit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Commit"
+        },
+        "diff_digest": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Diff Digest"
+        },
+        "dirty": {
+          "title": "Dirty",
+          "type": "boolean"
+        },
+        "numpy": {
+          "title": "Numpy",
+          "type": "string"
+        },
+        "package_version": {
+          "title": "Package Version",
+          "type": "string"
+        },
+        "preset_version": {
+          "title": "Preset Version",
+          "type": "integer"
+        },
+        "python": {
+          "title": "Python",
+          "type": "string"
+        },
+        "root_checked": {
+          "title": "Root Checked",
+          "type": "boolean"
+        },
+        "torch": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Torch"
+        }
+      },
+      "required": [
+        "commit",
+        "dirty",
+        "diff_digest",
+        "root_checked",
+        "package_version",
+        "python",
+        "numpy",
+        "torch",
+        "preset_version"
+      ],
+      "title": "CodeProvenance",
+      "type": "object"
+    },
+    "JsonValue": {},
+    "ScalerPayload": {
+      "additionalProperties": false,
+      "description": "Channel-wise standardisation: mean and scale per channel.",
+      "properties": {
+        "mean": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Mean",
+          "type": "array"
+        },
+        "scale": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Scale",
+          "type": "array"
+        }
+      },
+      "required": [
+        "mean",
+        "scale"
+      ],
+      "title": "ScalerPayload",
+      "type": "object"
+    },
+    "ValueRange": {
+      "additionalProperties": false,
+      "description": "Closed interval of a quantity, in the unit named by the key it is stored under.",
+      "properties": {
+        "maximum": {
+          "title": "Maximum",
+          "type": "number"
+        },
+        "minimum": {
+          "title": "Minimum",
+          "type": "number"
+        }
+      },
+      "required": [
+        "minimum",
+        "maximum"
+      ],
+      "title": "ValueRange",
+      "type": "object"
+    },
+    "WindowPayload": {
+      "additionalProperties": false,
+      "description": "Window the model was trained with.",
+      "properties": {
+        "future_actions": {
+          "enum": [
+            "realised",
+            "planned"
+          ],
+          "title": "Future Actions",
+          "type": "string"
+        },
+        "history_length": {
+          "title": "History Length",
+          "type": "integer"
+        },
+        "horizon": {
+          "title": "Horizon",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "history_length",
+        "horizon",
+        "future_actions"
+      ],
+      "title": "WindowPayload",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Everything needed to rebuild the model and to check where it came from.",
+  "properties": {
+    "bundle_format_version": {
+      "title": "Bundle Format Version",
+      "type": "integer"
+    },
+    "code": {
+      "$ref": "#/$defs/CodeProvenance"
+    },
+    "data_fingerprints": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Data Fingerprints",
+      "type": "object"
+    },
+    "data_spec": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Data Spec",
+      "type": "object"
+    },
+    "exogenous_names": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Exogenous Names",
+      "type": "array"
+    },
+    "fingerprint": {
+      "title": "Fingerprint",
+      "type": "string"
+    },
+    "input_ranges": {
+      "additionalProperties": {
+        "$ref": "#/$defs/ValueRange"
+      },
+      "title": "Input Ranges",
+      "type": "object"
+    },
+    "input_scaler": {
+      "$ref": "#/$defs/ScalerPayload"
+    },
+    "measured_input_names": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Measured Input Names",
+      "type": "array"
+    },
+    "model_kind": {
+      "enum": [
+        "composite_torch",
+        "linear_arx"
+      ],
+      "title": "Model Kind",
+      "type": "string"
+    },
+    "model_label": {
+      "title": "Model Label",
+      "type": "string"
+    },
+    "model_scope": {
+      "title": "Model Scope",
+      "type": "string"
+    },
+    "model_settings": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Model Settings",
+      "type": "object"
+    },
+    "observed_target_names": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Observed Target Names",
+      "type": "array"
+    },
+    "parameter_status": {
+      "enum": [
+        "placeholder",
+        "partially_calibrated",
+        "calibrated"
+      ],
+      "title": "Parameter Status",
+      "type": "string"
+    },
+    "sample_time_s": {
+      "title": "Sample Time S",
+      "type": "number"
+    },
+    "target_names": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Target Names",
+      "type": "array"
+    },
+    "target_scaler": {
+      "$ref": "#/$defs/ScalerPayload"
+    },
+    "training": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Training",
+      "type": "object"
+    },
+    "weights_sha256": {
+      "title": "Weights Sha256",
+      "type": "string"
+    },
+    "window": {
+      "$ref": "#/$defs/WindowPayload"
+    }
+  },
+  "required": [
+    "bundle_format_version",
+    "model_kind",
+    "model_label",
+    "model_scope",
+    "model_settings",
+    "exogenous_names",
+    "target_names",
+    "observed_target_names",
+    "measured_input_names",
+    "window",
+    "sample_time_s",
+    "input_scaler",
+    "target_scaler",
+    "input_ranges",
+    "data_spec",
+    "data_fingerprints",
+    "parameter_status",
+    "training",
+    "code",
+    "weights_sha256",
+    "fingerprint"
+  ],
+  "title": "BundleManifest",
+  "type": "object",
+  "x-schema-version": "1.0"
+}

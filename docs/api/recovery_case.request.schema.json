@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Exhaust temperatures of the two dryers of the workbook arrangement, and the ambient air.",
+  "properties": {
+    "ambient_temperature_celsius": {
+      "title": "Ambient Temperature Celsius",
+      "type": "number"
+    },
+    "exhaust_1_temperature_celsius": {
+      "title": "Exhaust 1 Temperature Celsius",
+      "type": "number"
+    },
+    "exhaust_2_temperature_celsius": {
+      "title": "Exhaust 2 Temperature Celsius",
+      "type": "number"
+    },
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "exhaust_1_temperature_celsius",
+    "exhaust_2_temperature_celsius",
+    "ambient_temperature_celsius"
+  ],
+  "title": "RecoveryCaseRequest",
+  "type": "object",
+  "x-schema-version": "1.0"
+}
