@@ -88,7 +88,7 @@ SYNTHESIS = REPO_ROOT / "docs" / "08_synthese_m2.md"
 CONFIG = REPO_ROOT / "conf" / "process" / "greybox_gab_placeholder.yaml"
 ARTIFACT_NAMES = {
     "5f": "check_m2_synthesis_consistency_v5f",
-    "6": "check_m2_synthesis_consistency_v6",
+    "6": "check_m2_synthesis_consistency_v6_2",
 }
 TAG_OF_VERSION = {"5f": "docs08-v5f"}
 # Regions whose numeric tokens must be covered: summary, and the body up to the traceability table.

@@ -29,6 +29,8 @@ import re
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RUNS_DIR = REPO_ROOT / "artifacts" / "runs"
 LAB_BOOK = REPO_ROOT / "docs" / "04_stand_ap1.md"
@@ -570,6 +572,35 @@ def median(values: list[float]) -> float:
 def register_artifact_claims(report: Any) -> None:
     """Key numbers of the control studies, computed from the analysis artifacts."""
     pct = 100.0
+
+    # ---- section 13: the quality limit is a placeholder of its own (correction of a sentence of 5f) --
+    limits_file = REPO_ROOT / "conf" / "headroom" / "dynamic_headroom.yaml"
+
+    def find(node: Any, key: str) -> Any:
+        if isinstance(node, dict):
+            if key in node:
+                return node[key]
+            for value in node.values():
+                found = find(value, key)
+                if found is not None:
+                    return found
+        return None
+
+    limit = find(
+        yaml.safe_load(limits_file.read_text(encoding="utf-8")), "product_moisture_limit_kg_per_kg"
+    )
+    report.claim(
+        "a separate placeholder limit, 0.15 kg/kg in their main case",
+        [("0.15", limit)],
+        "conf/headroom/dynamic_headroom.yaml, product_moisture_limit_kg_per_kg",
+    )
+    wording = "kinetics at 0.20 (decoupled mechanics of Befund 64), quality limit 0.15 main case and 0.20 stress case"
+    report.truth(
+        "decoupled from the kinetics since Befund 64",
+        wording in normalise(LAB_BOOK.read_text(encoding="utf-8")),
+        "the lab book describes the set-up of Befund 80 as: " + wording,
+        "docs/04_stand_ap1.md",
+    )
 
     # ---- Befund 105: dynamic headroom ----------------------------------------------------------
     source = "dynamic_headroom_v2_analysis.json (Befund 105)"

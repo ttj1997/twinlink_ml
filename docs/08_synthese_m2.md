@@ -97,9 +97,10 @@ calibration of the model to plant A, whose structure does not carry between the 
 Version 5f (2026-10-20) and its change history back to version 3 are retrievable under the git tag
 `docs08-v5f`; its consistency check gave 455 confirmed claims and still does at the tag
 (`scripts/check_m2_synthesis_consistency.py --version 5f`, tested). The check of version 6 confirms
-1229 claims and 19 verified exemptions, with no numeric token left without a check: 453 of the 455
-claims of version 5f, whose sentences are still in the text, 158 new values recomputed from the
-analysis artifacts of Befunde 105, 111, 126, 127 and 129, and 618 numbers checked against the text
+1231 claims and 19 verified exemptions, with no numeric token left without a check: 453 of the 455
+claims of version 5f, whose sentences are still in the text, 160 new values recomputed from the
+analysis artifacts of Befunde 105, 111, 126, 127 and 129 or read from the configuration, and 618
+numbers checked against the text
 of the lab-book entry or study document they are quoted from (appendix G).
 
 **Structure.** Sections 3 and 4 and appendices B, C and D are those of 5f with additions; sections 2
@@ -131,9 +132,10 @@ the findings after it):
    127; rules 6 and 7).
 7. **Savings of a tracked operating point.** The figures of Befunde 80, 105 and 108 are kept apart as
    three frames; they are not one series.
-8. **Quality limit.** The sentence of 5f on the critical moisture as "kinetics parameter and quality
-   limit at once" is left unchanged in section 13 for now: from Befund 64 on the quality limit is a
-   separate placeholder, and the correction waits for the release by the project lead.
+8. **Quality limit.** 5f called the critical moisture "kinetics parameter and quality limit at
+   once". From Befund 64 on the quality limit is a separate placeholder, 0.15 kg/kg in the main
+   case of the control studies, also in Befund 80, which 5f quotes; section 13 now says so
+   (correction released by the project lead on 2026-11-23). No result number changes.
 9. **Ranking of the partner's scenarios.** "Robust against every assumption switched" holds at the
    workbook point of one delivery, not over the operating range (Befunde 110, 121).
 10. **Recovery of the partner model.** The 60 to 88 % belong to the earlier delivery; the later one
@@ -1480,8 +1482,10 @@ take the results to cover and where they stop.
 - **No validation against plant data.** Plant exports lack gas consumption, heating power,
   intake humidity, product moisture, particle size and product mass flow (Befund 56); the
   energy target cannot be validated at all.
-- **Placeholders that influence results:** the critical moisture of 0.20 kg/kg (kinetics
-  parameter and quality limit at once), the bed-temperature limit, the steady-state
+- **Placeholders that influence results:** the critical moisture of 0.20 kg/kg (a kinetics
+  parameter; it is also the quality limit of the product moisture wherever no separate limit is
+  set, and the control studies set a separate placeholder limit, 0.15 kg/kg in their main case,
+  decoupled from the kinetics since Befund 64), the bed-temperature limit, the steady-state
   particle diameter, the lower bound of the gas velocity (0.80 and 1.26 m/s), the box
   minimum of the inlet temperature, the soft-sensor margin and the penalty weight, the
   minimum approach temperature and the cold-side temperature of the heat network. The
