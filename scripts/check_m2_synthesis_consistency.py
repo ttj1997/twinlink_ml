@@ -2191,6 +2191,7 @@ def main() -> int:
     # ---- version 6: claims of version 5f whose sentence is gone are retired, new claims added -------
     retired: list[dict[str, Any]] = []
     extra_patterns: list[str] = []
+    breakdown: dict[str, int] = {}
     if version == "6":
         kept = []
         for row in report.results:
@@ -2199,6 +2200,7 @@ def main() -> int:
             else:
                 retired.append({"fragment": row["fragment"], "kind": "claim of version 5f"})
         report.results = kept
+        n_kept = len(kept)
         report.fragments = [frag for frag in report.fragments if frag in text]
         report.effect_fragments = [frag for frag in report.effect_fragments if frag in text]
         kept_exemptions = []
@@ -2306,8 +2308,16 @@ def main() -> int:
         for row in retired:
             print("RETIRED", row)
         n_text = sum(row.get("kind") == "text" for row in report.results)
+        breakdown = {
+            "claims_of_version_5f_kept": n_kept,
+            "new_against_artifacts_or_configuration": len(report.results) - n_text - n_kept,
+            "text_claims": n_text,
+        }
         print(
             f"of the claims: {n_text} text claims of version 6, {len(report.results) - n_text} against artifacts or configuration"
+        )
+        print(
+            f"of the latter: {n_kept} claims of version 5f kept, {len(report.results) - n_text - n_kept} new"
         )
     print(
         f"exemptions: {len(exempt_results)} declared, {len(unverified)} not in text or not verified"
@@ -2339,6 +2349,7 @@ def main() -> int:
                     "deviating": n_dev,
                     "exemptions": len(exempt_results),
                     "uncovered": len(leftover),
+                    **breakdown,
                 },
             },
         )

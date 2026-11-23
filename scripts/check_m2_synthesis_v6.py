@@ -36,7 +36,13 @@ RUNS_DIR = REPO_ROOT / "artifacts" / "runs"
 LAB_BOOK = REPO_ROOT / "docs" / "04_stand_ap1.md"
 
 # (old, new): sections and appendices of version 5f that are renumbered in version 6.
-FRAGMENT_REWRITES: list[tuple[str, str]] = []
+FRAGMENT_REWRITES: list[tuple[str, str]] = [
+    # the data need moved from section 6 of version 5f to section 5 of version 6
+    (
+        "(an uncorrected statement, see section 6)",
+        "(an uncorrected statement, see section 5)",
+    ),
+]
 
 # Reference patterns of version 6 in addition to those of version 5f (applied first).
 EXTRA_PATTERNS: list[str] = [
@@ -292,6 +298,7 @@ def register_passages(sources: Sources) -> None:
         "Learned models in the control. Replacing the known model",
         "on the unsafe side (Befunde 120, 122, 124, 125).",
         (127,),
+        (D44,),
     )
     p(
         "Moisture information. Under a model mismatch",
@@ -539,9 +546,9 @@ def register_passages(sources: Sources) -> None:
         (105, 112, 116, 117, 123, 124, 125, 126, 127, 128, 129),
     )
     p(
-        "Fewer seeds in three studies.",
+        "Fewer seeds in five studies.",
         "were withdrawn by addenda and are not quoted.",
-        (105, 109, 112, 113, 116, 122, 124, 125, 126, 127, 128),
+        (105, 109, 111, 112, 113, 115, 116, 122, 124, 125, 126, 127, 128),
     )
     # ---- appendices --------------------------------------------------------------------------
     p(
@@ -1069,10 +1076,19 @@ def register_artifact_claims(report: Any) -> None:
         [("0.85", -pct * cell_median("D-gru", "none", "64", "saving_vs_c0", cells))],
         source,
     )
+    # D-gru against the same control law with the true model, the reference C3-15 (docs/44, 16.3)
+    in_the_loop = tables["D-gru|none"]["64"]["J"]["median"]
+    same_law = learned["controls"]["C3-15"]["J"]
     report.claim(
-        "the GRU in the loop is 2.98 % more expensive per kg than the same control law with the known model, the learned steady-state map 3.87 % with an inline moisture feedback and 7.07 % without",
+        "against it D-gru costs 3.48 % more at 64 runs",
+        [("3.48", pct * (in_the_loop / same_law - 1.0))],
+        source,
+    )
+    report.claim(
+        "the GRU in the loop is 2.98 % more expensive per kg than the schedule with the known model (3.48 % against the same control law with the known model), the learned steady-state map 3.87 % with an inline moisture feedback and 7.07 % without",
         [
             ("2.98", gap_at("D-gru", "none", "64")),
+            ("3.48", pct * (in_the_loop / same_law - 1.0)),
             ("3.87", gap_at("M-gru", "fb", "64")),
             ("7.07", gap_at("M-gru", "none", "64")),
         ],

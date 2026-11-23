@@ -47,7 +47,7 @@ mixed variant largely close the gap to the LSTM on energy and bed temperature bu
 and no capacity-matched variant is better than GRU or LSTM; a larger Mamba stays behind.
 
 Data need: with the fixed protocol the moisture error of GRU and LSTM at 8 training runs is 3.7 to
-5.1 times the error at 64 runs, and the curves still fall at 64 runs in the medians (an uncorrected statement, see section 6), so the
+5.1 times the error at 64 runs, and the curves still fall at 64 runs in the medians (an uncorrected statement, see section 5), so the
 need beyond 64 runs is not determined; every point also uses 32 validation runs. Pre-training on the simulator and
 fine-tuning on few plant runs beats training from scratch at small numbers of runs on every plant
 variant tested (study A); a hybrid with the simulator as an input channel is not recommended as the
@@ -63,27 +63,31 @@ dynamics: against a fixed operating point the quasi-stationary set-point optimis
 the energy in the median, an MPC adds 0.55 %, and the upper bound with perfect preview is 1.51 %
 (Befund 105; with the cold multi-start of the steady optimiser 9.10 % instead of 8.93 %, dated
 addendum). With the throughput as a command under an hourly electricity price a two-level price rule
-lowers the cost per kg of product by 2.07 % and an MPC by 2.88 %, with an electric heater only (Befund
-126). In both studies the MPC differs from the simple method by the smaller safety margin it needs,
-not by its trajectory. On these bounds, with thresholds fixed before the runs, no sequential
+lowers the cost per kg of product by 2.07 % and an MPC by 2.88 %, with an electric heater only
+(Befund 126). In both studies the MPC differs from the simple method by the smaller safety margin it
+needs, not by its trajectory. On these bounds, with thresholds fixed before the runs, no sequential
 reinforcement-learning agent was trained for the granulator; where reinforcement learning was trained
-it did not reach the direct optimisation (section 9).
+it was not better than the direct optimisation (section 9).
 
 **Learned models in the control.** Replacing the known model by a learned one costs more than load
-following gains: the GRU in the loop is 2.98 % more expensive per kg than the same control law with
-the known model, the learned steady-state map 3.87 % with an inline moisture feedback and 7.07 %
-without, and no learned arm is within the 2 % fixed beforehand (Befund 127). The gap is the margin
-that the learned model needs at the moisture limit. A model for the control is therefore chosen by
-whether it holds the limit and by its cost at the held limit, not by its mean prediction error
-(Befunde 113, 122, 125, 127). Where a physical model exists the order is: calibrate, then a bias,
-only then learn; this order is resolved where the model errs to the safe side and only descriptive
-on the unsafe side (Befunde 120, 122, 124, 125).
+following gains: the GRU in the loop is 2.98 % more expensive per kg than the schedule with the known
+model (3.48 % against the same control law with the known model), the learned steady-state map 3.87 %
+with an inline moisture feedback and 7.07 % without, and no learned arm is within the 2 % fixed
+beforehand (Befund 127). For the learned map the gap is the margin that it needs at the moisture
+limit; for the GRU in the loop most of the gap lies in its set points. A model for the control is
+therefore chosen by whether it holds the limit and by its cost at the held limit, not by its mean
+prediction error (Befunde 113, 122, 125, 127). Where a physical model exists the order is: calibrate,
+then a bias, only then learn; this order is resolved post hoc against the hybrid on the safe side,
+not resolved against the plain GRU, and only descriptive on the unsafe side (Befunde 120, 122, 124,
+125).
 
 **Moisture information.** Under a model mismatch a feedback of the product moisture is worth 13.40 %
 of the energy in the median against no feedback, relative to the placeholder band of the drying
-kinetics (Befund 111); a laboratory sample every 4 h captures 0.934 of the value of an inline sensor
-(Befund 112); a learned soft sensor did not replace the measurement in any tested form (Befunde 111,
-112, 116). The drying kinetics, not the sorption isotherm, decide the operating point (Befund 108).
+kinetics (Befund 111); in continuous operation with a mismatch that is constant per draw, a
+laboratory sample every 4 h captures 0.934 of the value of an inline sensor (Befund 112), and under
+load following it did not help (Befund 127); a learned soft sensor did not replace the measurement in
+any tested form (Befunde 111, 112, 116). The drying kinetics, not the sorption isotherm, decide the
+operating point (Befund 108).
 
 **Method, templates, and what is not shown.** The method is stated as rules with their reasons, the
 findings that triggered them and their pitfalls (section 2), and as templates for the study design,
@@ -96,12 +100,14 @@ calibration of the model to plant A, whose structure does not carry between the 
 
 Version 5f (2026-10-20) and its change history back to version 3 are retrievable under the git tag
 `docs08-v5f`; its consistency check gave 455 confirmed claims and still does at the tag
-(`scripts/check_m2_synthesis_consistency.py --version 5f`, tested). The check of version 6 confirms
-1231 claims and 19 verified exemptions, with no numeric token left without a check: 453 of the 455
-claims of version 5f, whose sentences are still in the text, 160 new values recomputed from the
-analysis artifacts of Befunde 105, 111, 126, 127 and 129 or read from the configuration, and 618
-numbers checked against the text
-of the lab-book entry or study document they are quoted from (appendix G).
+(`scripts/check_m2_synthesis_consistency.py --version 5f`, tested). The counts of the check of
+version 6 are those of the committed artifact
+`artifacts/runs/check_m2_synthesis_consistency_v6_2.json`, and a test compares this sentence with it:
+1242 claims and 19 verified exemptions, with no numeric token left without a check: 453 of the 455
+claims of version 5f, whose sentences are still in the text, 162 new values recomputed from the
+analysis artifacts of Befunde 105, 111, 126, 127 and 129 or read from the configuration, and 627
+numbers checked against the text of the lab-book entry or study document they are quoted from
+(appendix G).
 
 **Structure.** Sections 3 and 4 and appendices B, C and D are those of 5f with additions; sections 2
 and 5 of 5f are section 2 (rules), section 6 of 5f is section 5 with the plant paragraph moved to
@@ -151,8 +157,28 @@ the findings after it):
 14. **Two meanings of "margin", and the reading labels.** Defined in section 1 and in the glossary.
 15. **Tools and procedure.** Appendix A lists the packages and extras of the later studies; the study
     template of 5f is replaced by the templates of appendix E and the rules on long runs.
-16. **Seeds.** "Five seeds" is not the limit of every study: three in Befunde 113 and 122, two in
-    part of Befund 112 (section 13).
+16. **Seeds.** "Five seeds" is not the limit of every study: three in Befunde 113 and 122 and in
+    parts of Befunde 111 and 115, two in part of Befund 112 (section 13).
+
+**Corrections after an independent check (2026-11-23, commit d49bdaf; decision of the project lead).**
+A sample of the text claims and a reading of the rules, of this list and of the summary (report not
+versioned, `local/reports/`) found every sampled number written in its source, and a set of
+statements whose condition or reference set was shortened. Corrected:
+the 20 outputs of the sensitivity study count over both models (section 8.1); the error map of
+Befund 113 covers the residual box, not the whole action box (section 7.1, rule 7); where the margin
+holds outside the training range (section 7.3, rule 9); the hybrid has the smallest rollout error at
+4 and 8 runs and shares the lowest admissibility with the GRU (section 7.3, rule 7); the readings of
+Befund 121 near the workbook point (section 11, with a dated addendum in the lab book); printed
+numbers of two findings, not two numbers, moved with the cold multi-start (section 6, rule 11);
+Befunde 111 and 115 among the studies with fewer seeds (section 13); rule 5 restricted to studies
+that end in a decision; the origin of the rules (section 2), the status of rule 8, the bit-equality
+control as a practice (rule 11) and the origin of a withdrawn figure (rule 13); three leftovers of
+"soft sensor" and of the isotherm as the named limit (sections 2 and 13); four section references;
+and five statements of the summary (the 2.98 % is the gap to the schedule with the known model,
+3.48 % against the same control law; the gap is the margin for the learned map; the status of the
+order "calibrate, bias, only then learn"; the scope of the laboratory sample; reinforcement learning
+"not better than" the direct optimisation). `docs/48_ap1_conclusion.md` carries a dated addendum
+with the last two precisions.
 
 ## 1. Question and frame
 
@@ -200,10 +226,11 @@ out where it is used.
 
 This section states the method as rules that a third party can apply. Each rule has the same four
 parts: the rule, the reason, the finding that triggered it, and the typical pitfall. They are the
-working rules of the project (`CLAUDE.md`, sections Methodology, Long runs and Provenance) together
-with their evidence; the templates that implement them are in appendix E. Rules 1 to 4 concern the
-comparison of forecast models, rules 5 to 10 every study that ends in a decision, rules 11 to 13 the
-computing practice. Where a rule is illustrated by a number, the number is in the section named.
+working rules of `CLAUDE.md` (sections Methodology, Long runs and Provenance) and rules derived from
+decisions of the project lead, together with their evidence; the templates that implement them are in
+appendix E. Rules 1 to 4 concern the comparison of forecast models, rules 5 to 10 every study that
+ends in a decision, rules 11 to 13 the computing practice. Where a rule is illustrated by a number,
+the number is in the section named.
 
 ### Rule 1: split by run, never by window
 
@@ -308,9 +335,10 @@ any neural model. The error metric is the run-median RMSE in physical units at h
 a constant bias on top of it are baselines of every learned model (Befunde 120 and 123).
 
 **Reason.** A learned model is worth what it adds over the simplest alternative, and the simplest
-alternative differs from target to target. **Static explainability of dE** makes R^2 uninformative; compare in physical units (section 3).
-**Negative transfer.** A shared loss over targets of unequal difficulty degrades the energy
-target in soft-sensor operation; per-target networks (composite) avoid it (Befund 26).
+alternative differs from target to target. **Static explainability of dE** makes R^2 uninformative;
+compare in physical units (section 3). **Negative transfer.** A shared loss over targets of unequal
+difficulty degrades the energy target in the observation mode without measured targets; per-target
+networks (composite) avoid it (Befund 26).
 
 **Finding.** Befunde 16, 26 and 59 for the forecast models; Befunde 120 and 123 for the calibration
 and the bias (sections 7.4 and 10): a constant bias was as good on the other day as a calibration of
@@ -336,10 +364,10 @@ read in favour of almost any conclusion after the fact. The fixed reading is wha
 suffices" or "no arm is within the threshold" a finding and not an impression.
 
 **Finding.** The stability rule of Befund 69 and the gates of Befunde 92 and 99 were the first
-readings fixed beforehand; from Befund 105 on every study of sections 5 to 11 has one. Cases in which
-the fixed reading was kept although its content was uncomfortable: the class R2 that hinges on one
-sharpening cell (Befund 109), the class "mixed" (Befund 124), the class O2 reached only through one
-variant fixed beforehand (Befund 116), the class U3 "by the letter" (Befund 127).
+readings fixed beforehand; from Befund 105 on every study that ends in a decision has one. Cases in
+which the fixed reading was kept although its content was uncomfortable: the class R2 that hinges on
+one sharpening cell (Befund 109), the class "mixed" (Befund 124), the class O2 reached only through
+one variant fixed beforehand (Befund 116), the class U3 "by the letter" (Befund 127).
 
 **Pitfall.** A reading formulated after a dry run had shown the numbers (Befund 110, disclosed, both
 readings kept in the artifact); test figures visible in a smoke test before the main run (Befunde 115
@@ -377,11 +405,12 @@ optimiser chooses and at the tails, with rule 6, not by its error on a test set.
 **Reason.** An optimiser places its optimum on the constraint, where a small error of the model in
 its favour decides; it finds the errors of the model. The margin is set by the least favourable cases.
 
-**Finding.** Sections 7.1 to 7.3: an error statistic over the whole action box understates what the
-optimiser finds by an order of magnitude or more (Befund 113); the hybrid has a much smaller rollout
-error than the GRU without a resolvably smaller margin (Befund 122), and with a structural error to
-the unsafe side it has the smallest rollout error and is admissible least often (Befund 125); under
-load following the gap of the learned map is its margin (Befund 127).
+**Finding.** Sections 7.1 to 7.3: an error statistic over the residual box (the action range of the
+residual policy) understates what the optimiser finds by an order of magnitude or more (Befund 113);
+the hybrid has a much smaller rollout error than the GRU without a resolvably smaller margin (Befund
+122), and with a structural error to the unsafe side it has the smallest rollout error at 4 and 8
+runs and is, with the GRU, admissible least often (Befund 125); under load following the gap of the
+learned map is its margin (Befund 127).
 
 **Pitfall.** Selecting the model for the control from the learning curves of section 3; trusting
 the spread of an ensemble to cover a systematic error that its members share (Befunde 113 and 122).
@@ -390,8 +419,10 @@ the spread of an ensemble to cover a systematic error that its members share (Be
 
 **Rule.** Where a physical model exists, the order of attempts is: calibrate its parameters after
 checking which of them the data can determine; add a constant bias; use a learned model for what is
-left. The status of this order is part of the rule: it is resolved where the structural error lies on
-the safe side and only descriptive where it lies on the unsafe side (decision on Befund 125).
+left. The status of this order is part of the rule: it is resolved post hoc against the hybrid on
+the safe side (16 runs) and not resolved against the plain GRU; where the structural error lies on
+the unsafe side it is only descriptive (Befunde 124 and 125; the decision on Befund 125 words it
+as "resolved on the safe side, only descriptive on the unsafe side").
 
 **Reason.** A calibration needs the fewest data wherever the structure of the model fits, and it
 extrapolates; a bias is the cheapest correction of what the structure does not contain.
@@ -411,10 +442,10 @@ searched on. Whether it holds outside is tested and reported separately.
 
 **Reason.** A margin is an empirical quantile of a family of cases, not a property of a model.
 
-**Finding.** Outside the training range the margin found inside held for one model only (Befund 122);
-the margins searched under the price signal did not hold for two controllers under a constant price
-(Befund 126); a margin searched on other days held on the test days in every seed for no learned arm
-(Befund 127). Sections 6 and 7.
+**Finding.** Outside the training range the margin found inside held in both outside classes for the
+refit only, at 16 and 32 runs (Befund 122); the margins searched under the price signal did not hold
+for two controllers under a constant price (Befund 126); a margin searched on other days held on the
+test days in every seed for no learned arm (Befund 127). Sections 6 and 7.
 
 **Pitfall.** Margins found on the test days are optimistic; they are comparable between controllers
 searched in the same way and are not the margins a deployed controller would need.
@@ -442,8 +473,9 @@ as an achievable gain; forgetting that the bound was measured with the true stat
 
 **Rule.** New studies that use the steady-state optimiser set `steady_cold_starts = 8`: every solve
 starts from fixed start points and remembers nothing between solves. The defaults stay at the old
-behaviour and exist only to reproduce old results. Every study re-runs at least one reference of an
-earlier finding and compares it with the records bit for bit.
+behaviour and exist only to reproduce old results. A practice, not a decided rule, goes with it: the
+studies re-run at least one reference of an earlier finding and compare it with the records bit for
+bit (Befunde 112, 113, 114, 119 and 127).
 
 **Reason.** A warm start makes the result of a query depend on the queries solved before it, so that
 two runs of the same code with another division of the work differ; and it returns a worse local
@@ -452,9 +484,9 @@ optimum in a measurable share of the queries.
 **Finding.** The bit-equality control of Befund 127 found the dependence; Befund 129 measured it
 (section 6).
 
-**Pitfall.** "Below the threshold of the reading" does not mean that no printed number moves: two
-did, and they are recorded as dated addenda. A single cold start removes the dependence on the order
-and keeps most of the worse local optima.
+**Pitfall.** "Below the threshold of the reading" does not mean that no printed number moves: printed
+numbers of two findings moved, and they are recorded as dated addenda. A single cold start removes
+the dependence on the order and keeps most of the worse local optima.
 
 ### Rule 12: long runs
 
@@ -494,12 +526,12 @@ and an artifact, and every placeholder is labelled as one.
 G), and the old results stay reproducible while the defaults for new studies change.
 
 **Finding.** The platform confound of the old records (Befund 83 b), the data preset (Befund 86), and
-two figures that entered decision paragraphs from a conversation and from an unversioned report and
-had to be corrected by dated addenda (Befunde 127 and 128).
+two figures that entered decision paragraphs from a sample of the study session and from an
+unversioned report and had to be corrected by dated addenda (Befunde 127 and 128).
 
-**Pitfall.** A number from a conversation in a decision paragraph; an editable installation that
-points at another checkout than the one whose commit the artifact names; a fitted or assumed value
-quoted without its label "placeholder".
+**Pitfall.** A number from a sample of a study session or from a conversation in a decision
+paragraph; an editable installation that points at another checkout than the one whose commit the
+artifact names; a fitted or assumed value quoted without its label "placeholder".
 
 ## 3. Architecture comparison (arm N)
 
@@ -534,7 +566,7 @@ arm N, excited test set; logarithmic axes.*
 Transformer 23,523, xLSTM 8,649 and Mamba 8,139 (appendix B). The xLSTM of this comparison is the
 **mLSTM-only variant**, without sLSTM cells and without hidden-to-hidden weights (Befund 67 SX0). All
 networks were trained with the same fixed protocol without hyperparameter tuning (at most 200 epochs,
-early stopping); the epoch cap binds for part of the heads of all five networks at $n_{\mathrm{train}}$ = 64 (section 7, appendix B). The
+early stopping); the epoch cap binds for part of the heads of all five networks at $n_{\mathrm{train}}$ = 64 (section 13, appendix B). The
 capacity-matched variants of SX3 (Befund 67, re-evaluated in Befund 83 d; old data A0 at
 $n_{\mathrm{train}}$ = 64, same untuned protocol) answer part of the size question: the variants with
 recurrent memory mixing (sLSTM only, and mixed mLSTM and sLSTM, 47,955 to 50,739 parameters) come
@@ -878,15 +910,16 @@ C4 were not recomputed.
 found that a re-run of C2 does not reproduce the records of Befund 126 bit for bit (0.397944 against
 0.397950 EUR per kg in the sum). Cause: the steady optimiser starts every solve from the previous
 solution, and the caches in front of it use rounded keys. Measured on 94211 queries: the warm start
-returns a worse local optimum than a cold multi-start with eight starts in 1.82 % of the queries, by up
-to 2.58 % of the power; a single cold start is worse in 1.58 %, so the memory is not the only cause; a
-reference with 64 starts improves on eight starts by more than 1e-4 in no query. The pre-registered
-reading O0 (no key number of Befunde 105, 126 and 127 that rests on the optimiser changes by more than
-10 % relative when the dependence is removed) holds: the largest change is 3.78 %. Below that
-threshold two printed numbers move, and they are recorded in the two addenda above. With the switch
-the records are bit-equal for another order of the units, another chunk size and workers with another
-history. New studies set `steady_cold_starts = 8`; the default stays at 0 to reproduce old results.
-The controllers with a dynamic optimiser (R2, R3, C3, C4) were not recomputed (`docs/12`, item 38).
+returns a worse local optimum than a cold multi-start with eight starts in 1.82 % of the queries, by
+up to 2.58 % of the power; a single cold start is worse in 1.58 %, so the memory is not the only
+cause; a reference with 64 starts improves on eight starts by more than 1e-4 in no query. The
+pre-registered reading O0 (no key number of Befunde 105, 126 and 127 that rests on the optimiser
+changes by more than 10 % relative when the dependence is removed) holds: the largest change is 3.78
+%. Below that threshold printed numbers of two findings move, and they are recorded in the two
+addenda above. With the switch the records are bit-equal for another order of the units, another
+chunk size and workers with another history. New studies set `steady_cold_starts = 8`; the default
+stays at 0 to reproduce old results. The controllers with a dynamic optimiser (R2, R3, C3, C4) were
+not recomputed (`docs/12`, item 38).
 
 **What the studies of this section say together.** (1) The energetic lever is tracking the operating
 point, not the dynamics. (2) An MPC differs from the simple methods by the smaller margin it needs,
@@ -932,11 +965,11 @@ fivefold margin**:
   0.0080 kg/kg on U2 (median over the replicates). The fivefold margin is larger than this bias.
 - With the margin m itself (a sensitivity without a reading) the optimiser violates the true limit in
   39 of 75 cases on U2, in 60 of 75 on U1 and in 9 of 75 on the ensemble U3, and in none of 25 on U0.
-- Over the whole action box only 0.3 to 2.9 % of the grid points that U2 calls feasible at the margin
-  m are truly infeasible, but 7 to 19 of the 25 optima are. The optimum lies on the constraint, where
-  a small error of the model decides; an error statistic over the box understates what the optimiser
-  finds by an order of magnitude or more. This evaluation of the error map was added after the runs
-  and is descriptive.
+- Over the residual box (the action range of the residual policy) only 0.3 to 2.9 % of the grid
+  points that U2 calls feasible at the margin m are truly infeasible, but 7 to 19 of the 25 optima
+  are. The optimum lies on the constraint, where a small error of the model decides; an error
+  statistic over the box understates what the optimiser finds by an order of magnitude or more. This
+  evaluation of the error map was added after the runs and is descriptive.
 - The ensemble reduces the violations and does not replace the margin. Reinforcement learning does
   not exploit the model more than the optimiser does: none of the 12 tests on the moisture error and
   on the share of violations is resolved (three replicates).
@@ -944,22 +977,25 @@ fivefold margin**:
   on U2 with the fivefold margin uses about 4.6 % more true energy than the optimiser on U0 with the
   margin m.
 
-### 7.2 Load following with learned models: the gap is the margin (Befund 127)
+### 7.2 Load following with learned models: for the learned map the gap is the margin (Befund 127)
 
-This is the question the proposal names, the prediction of optimised transient manipulated
-variables. The headroom studies of section 6 ask whether advanced control pays given the true model;
-this study asks what it costs to replace that model by a learned one, as a function of the data, and
-in which form. The frame of Befund 126 is unchanged (truth, main band, prices, the 40 test days, cost
-per kg of dry product at the held moisture limit; the margin search ends at 0.12 kg/kg). Every learned
-arm is compared with its **twin**, the controller with the same control law and the true model; by a
-rule fixed before the reading of Befund 126 was known, the twin is the schedule C2. Three families:
+This is the question the proposal names, the prediction of optimised transient manipulated variables.
+The headroom studies of section 6 ask whether advanced control pays given the true model; this study
+asks what it costs to replace that model by a learned one, as a function of the data, and in which
+form. The frame of Befund 126 is unchanged (truth, main band, prices, the 40 test days, cost per kg
+of dry product at the held moisture limit; the margin search ends at 0.12 kg/kg). Every learned arm
+is compared with its **twin**, a reference controller with the true model; by a rule fixed before the
+reading of Befund 126 was known, the twin is the schedule C2. Three families:
 
 - **M, a learned steady-state map inside the unchanged law of C2:** M-quad (static quadratic
   regression, the baseline) and M-gru (fixed point of the composite GRU, the mapping of section 7.1);
   each without feedback and with an inline moisture measurement used as a slow bias correction (the
   scheme of Befund 111); for M-gru also a laboratory sample every 4 h, descriptive only.
-- **D, the sequence model in the loop:** D-gru optimises inlet temperature and gas velocity every
-  5 min through the GRU rollout over 900 s, from the measured history.
+- **D, the sequence model in the loop:** D-gru optimises inlet temperature and gas velocity every 5
+  min through the GRU rollout over 900 s, from the measured history. Its twin C2 is not the same
+  control law: the same law with the true model is the reference C3-15 (the MPC layer of C3 with its
+  horizon cut to 15 min); against it D-gru costs 3.48 % more at 64 runs
+  (`docs/44_learned_setpoints.md`, section 16.3).
 - **P, policies that output the three commands directly,** trained by imitation of the twin on 5 to
   40 solved days: P-lin (ridge regression, the baseline), P-mlp, P-gru.
 
@@ -1002,12 +1038,13 @@ is U3 by the letter only: the median cost of P-gru is 0.015 % below that of the 
 
 What the numbers say beyond the class:
 
-- **The gap is the margin.** With feedback the learned map chooses the set points of the twin
-  (set-point share +0.05 %) and pays for the distance it has to keep from the limit (margin share
-  +3.82 %). Without feedback the set-point share is negative: the map underestimates the moisture at
-  its own optimum (by 0.0077 kg/kg at 64 runs, median of the seed means), the arm runs closer to the
-  limit than it plans to, and the larger margin pays for exactly that. This is the mechanism of
-  section 7.1.
+- **For the learned map the gap is the margin.** With feedback the learned map chooses the set points
+  of the twin (set-point share +0.05 %) and pays for the distance it has to keep from the limit
+  (margin share +3.82 %). Without feedback the set-point share is negative: the map underestimates
+  the moisture at its own optimum (by 0.0077 kg/kg at 64 runs, median of the seed means), the arm
+  runs closer to the limit than it plans to, and the larger margin pays for exactly that. This is the
+  mechanism of section 7.1. For the GRU in the loop it is the other way round: its margin is close to
+  that of the twin (margin share +0.34 %) and its gap lies in the set points (+2.54 %).
 - **What a margin costs.** On the curve of the twin a margin of 0.015 kg/kg costs 1.92 % and a margin
   of 0.02 kg/kg 3.26 %: the 2 % of the reading corresponds to a margin of about 0.015 kg/kg.
 - **Learning the model costs more than load following gains.** The twin gains 2.07 % against constant
@@ -1069,8 +1106,10 @@ smaller margin. The margin is set by the least favourable cases, not by the mean
 is favoured by construction, because the truth has the structure of the prior model. An ensemble of
 residual networks with the constraint "mean plus k standard deviations" does not reach the 95 % with
 k up to 10 in 6 of 12 cells: the spread of an ensemble does not capture a systematic error that its
-members share. Outside the training range the margin found inside holds only for the refit, at 16 and
-32 runs.
+members share. Outside the training range the margin found inside holds in both outside classes
+(extrapolation beyond the disturbance box of the data design, and interior cases outside the range of
+the training runs) only for the refit, at 16 and 32 runs; in the second class alone it also holds for
+the prior knowledge, the GRU and the hybrid at 8 runs.
 
 **Structural error to the safe side (Befund 124).** Margins at 16 runs: prior knowledge 0, hybrid 0,
 GRU 0.0406, refit 0.0061, refit with bias 0.0072 kg/kg. The hybrid needs a resolved smaller margin
@@ -1105,17 +1144,19 @@ That difference, counted as fixed beforehand but without a test:
 
 Even the calibrations need a margin of about 0.11 kg/kg in single cells, at 37 to 41 % more energy.
 The hybrid has the smallest rollout error of the moisture at 4 and 8 runs (0.0054 and 0.0046 against
-0.0377 and 0.0279 kg/kg for the GRU) and is admissible least often. Post hoc and labelled as such: the
-same cost measure applied to the records of Befund 124 gives the class E0 there (the refit with bias
-is resolved cheaper than the hybrid at 16 runs, 5 of 5 seeds, Holm 0.0093); the reading "mixed" of
-Befund 124 is unchanged by this. Disclosed: the rule that fixed the strength of the error was amended
-once after the medians of the prior knowledge had become visible; the selection is the same under
-both versions.
+0.0377 and 0.0279 kg/kg for the GRU) and is, with the GRU, admissible least often. Post hoc and
+labelled as such: the same cost measure applied to the records of Befund 124 gives the class E0 there
+(the refit with bias is resolved cheaper than the hybrid at 16 runs, 5 of 5 seeds, Holm 0.0093); the
+reading "mixed" of Befund 124 is unchanged by this. Disclosed: the rule that fixed the strength of
+the error was amended once after the medians of the prior knowledge had become visible; the selection
+is the same under both versions.
 
-**The order that follows, and its status.** From the decision of the project lead on Befund 125:
-over Befunde 120, 122, 124 and 125 the order "calibrate, then a bias, only then learn" holds in all
-four studies; it is **resolved on the safe side and only descriptive on the unsafe side**. The line
-is closed until the real structural deviation of the plant is known from data (section 10).
+**The order that follows, and its status.** From the decision of the project lead on Befund 125: over
+Befunde 120, 122, 124 and 125 the order "calibrate, then a bias, only then learn" holds in all four
+studies; it is **resolved on the safe side and only descriptive on the unsafe side**. The resolution
+on the safe side is the post-hoc result above, against the hybrid at 16 runs; against the plain GRU
+the order is not resolved. The line is closed until the real structural deviation of the plant is
+known from data (section 10).
 
 ### 7.4 The static counterpart: pre-training against calibration, a bias and a residual model (Befund 120)
 
@@ -1173,16 +1214,17 @@ operating point.
 
 **The drying kinetics decide, the isotherm hardly matters**: the two kinetic parameters together
 carry at least 0.90 of the variance of the energy at the optimum. Version 5f named the placeholder
-isotherm first among the limits of the simulator; for the operating point at the moisture limit it
-is the least valuable of the open measurements, and one series of drying experiments on the
-laboratory line is the most valuable. The order of the two kinetic parameters swaps when their ranges
-are doubled; that the two of them decide does not change. The saving of the steady optimum against
-the fixed point is 9.67 % at the nominal parameters and 6.7 % in the mean over the parameter samples;
-the fixed point exceeds the moisture limit in 13.1 % of the samples, through combinations of
-parameters and through no parameter alone. The convergence criterion fixed beforehand was not met at
-the first sample size (base sample 2^12); a precision extension to 2^14, declared before its run as
-the same test, meets it for 19 of 20 outputs and not for the optimal gas velocity, which sits at its
-bound in most samples.
+isotherm first among the limits of the simulator; for the operating point at the moisture limit it is
+the least valuable of the open measurements, and one series of drying experiments on the laboratory
+line is the most valuable. The order of the two kinetic parameters swaps when their ranges are
+doubled; that the two of them decide does not change. The saving of the steady optimum against the
+fixed point is 9.67 % at the nominal parameters and 6.7 % in the mean over the parameter samples; the
+fixed point exceeds the moisture limit in 13.1 % of the samples, through combinations of parameters
+and through no parameter alone. The convergence criterion fixed beforehand was not met at the first
+sample size (base sample 2^12); a precision extension to 2^14, declared before its run as the same
+test, meets it for 19 of the 20 outputs with a dominant input over both models (the line model of
+heater, dryer and recovery in two variants, and the laboratory line); of the laboratory line only the
+optimal gas velocity misses it, which sits at its bound in most samples.
 
 ### 8.2 The value of a moisture feedback under a model mismatch (Befund 111)
 
@@ -1295,8 +1337,8 @@ was fixed before the runs. The wording of this deviation was accepted by the pro
   perfect information 1.05 %, against a threshold of 5 % for a study of reinforcement learning; the
   reading is T1.
 
-Where reinforcement learning was trained it did not reach the direct optimisation, and its cost is
-the margin it needs, which the optimiser pays too. **What the deviation does not cover:** (a) both
+Where reinforcement learning was trained it was not better than the direct optimisation, and its cost
+is the margin it needs, which the optimiser pays too. **What the deviation does not cover:** (a) both
 headroom studies use controllers that see the true state; partial observability (a state estimator,
 measurement noise, soft-sensor operation) was not tested and is expressly open; (b) the whole
 throughput box, where the perfect preview gains 8.96 % without a reading (section 6); (c) frequent
@@ -1399,7 +1441,7 @@ form together.
 | Befund 115 | Heat pump and storage with power limits under an hourly electricity price: a rule, an MPC or reinforcement learning? | Real hourly day-ahead prices of 2024, test on four months. A schedule-aware price rule is 0.65 % above the MPC with perfect prices (0.31 to 0.88 % per test month), and the MPC 0.010 % above the optimum in hindsight. SAC and TD3 end behind the constant rule (section 9). A first run was aborted because test prices leaked into the training; it was fixed and every job re-run. | H0: a simple price rule suffices; neither an MPC nor reinforcement learning is justified. |
 | Befund 118 | Campaign network: does a heat network pay when the consumers run in campaigns and stand still in between? | One waste-heat source, three plants with campaigns, one year in hourly steps. Additional share of the source that the network uses, at the source power of today (400 kW) and an availability of 0.57: 42.08 % with independent standstills, 27.60 % with joint ones; in continuous operation 1.60 %. Simple rules stay up to 7.30 % below the bound with full foresight. | N1: with consumers that stand still a network pays clearly. Restriction by the project lead: this baseline gives the source to one plant alone; the citable network benefit is the one against the fair baseline of Befund 119. |
 | Befund 119 | Campaign network 2: does a better simple rule, or a rolling planning on the production plan, close the gap to the bound? | Against a fair baseline (the source in fixed shares to the three plants) the network benefit at 400 kW is 0.00 % in continuous operation and 4.0 to 39.6 % at an availability of 0.57. A rolling planning with an exactly known standstill plan stays within 0.98 % of the bound in every cell; with plan deviations of up to 24 h and a naive correction the gap is up to 3.29 %. A dynamic order of the cascade does not help. | Q2 formally. The picture drawn by the project lead: a simple rule is mostly sufficient, planning with the production plan pays up to about 3 %, reinforcement learning is not justified. |
-| Befund 121 | Partner model: is the case that the workbook finds best (case 1) best over the operating range? | No case is best everywhere, in any mode. In the main mode (physical, unpressurised circuit) case 1 is strictly best on 0.471 of the admissible box and best or practically equal on 0.666; near the workbook point on 0.950 and 0.993. The partner mode overstates it (0.740 strictly best). The choice is between two cases and follows the order of the two exhaust temperatures; always choosing case 1 costs nothing in the median and at most 10.1 % of the fuel. | Readings as fixed: "not robust" (strictly best) and "conditional" (best or practically equal) over the box, "robust" near the workbook point. The shares depend on the placeholder box; the rule and the distribution of the extra consumption are what is reliable. |
+| Befund 121 | Partner model: is the case that the workbook finds best (case 1) best over the operating range? | No case is best everywhere, in any mode. In the main mode (physical, unpressurised circuit) case 1 is strictly best on 0.471 of the admissible box and best or practically equal on 0.666; near the workbook point on 0.950 and 0.993. The partner mode overstates it (0.740 strictly best). The choice is between two cases and follows the order of the two exhaust temperatures; always choosing case 1 costs nothing in the median and at most 10.1 % of the fuel. | Readings as fixed: over the box "not robust" (strictly best) and "conditional" (best or practically equal); near the workbook point "conditional" (strictly best) and "robust" (best or practically equal). The shares depend on the placeholder box; the rule and the distribution of the extra consumption are what is reliable. |
 
 **The picture these studies form.**
 
@@ -1477,8 +1519,9 @@ take the results to cover and where they stop.
 ## 13. Limits of the numbers that are shown
 
 - **Grey-box simulator, not the plant.** Four states, no agglomeration, no breakage; the
-  GAB sorption isotherm uses placeholder parameters (Befund 34). All numbers are statements
-  about the model.
+  GAB sorption isotherm uses placeholder parameters (Befund 34). Of the placeholders it is the drying
+  kinetics (critical moisture and `nu_max`), not the isotherm, that decide the operating point
+  (section 8.1). All numbers are statements about the model.
 - **No validation against plant data.** Plant exports lack gas consumption, heating power,
   intake humidity, product moisture, particle size and product mass flow (Befund 56); the
   energy target cannot be validated at all.
@@ -1487,7 +1530,7 @@ take the results to cover and where they stop.
   set, and the control studies set a separate placeholder limit, 0.15 kg/kg in their main case,
   decoupled from the kinetics since Befund 64), the bed-temperature limit, the steady-state
   particle diameter, the lower bound of the gas velocity (0.80 and 1.26 m/s), the box
-  minimum of the inlet temperature, the soft-sensor margin and the penalty weight, the
+  minimum of the inlet temperature, the margin m and the penalty weight, the
   minimum approach temperature and the cold-side temperature of the heat network. The
   reference state of the gas velocity (mass flow) and the nozzle-pressure kink at 1 bar
   are unresolved questions of the register (`docs/12`, E-Q1, E-Q3).
@@ -1506,8 +1549,9 @@ take the results to cover and where they stop.
   the Transformer more seeds are needed (section 2); the family-wise correction is conservative.
 - **A single timing run** on a single machine (Befund 97); the networks used for the timing were
   fitted for two epochs only (the cost of `predict` does not depend on the weights).
-- **Fewer seeds in three studies.** Three replicates in Befunde 113 and 122 and two seeds per variant
-  in the soft-sensor part of Befund 112 (after a budget cut). With three seeds the resolution
+- **Fewer seeds in five studies.** Three seeds or replicates in Befunde 113 and 122, for the soft
+  sensor of Befund 111 and for the reinforcement-learning agents of Befund 115, and two seeds per
+  variant in the soft-sensor part of Befund 112 (after a budget cut). With three seeds the resolution
   thresholds of Befund 122 are of the size of the margins themselves.
 - **Margins found on the test cases.** The margins of sections 6 and 7 are searched on the cases on
   which the costs are reported. They are comparable between controllers and optimistic as margins of a
@@ -1595,7 +1639,7 @@ patience 20 on the validation runs, gradient clipping at 1.0, no dropout, no tea
 weight of all horizon steps; input windows of 32 past steps, prediction of 36 steps (900 s) ahead,
 window stride 8. No hyperparameter was tuned for any architecture. Over all four budgets the cap of
 200 epochs is reached by 44 of 60 head-trainings of the Transformer, 33 of the GRU, 32 of the LSTM, 22 of
-Mamba and 4 of the xLSTM (addendum to Befund 94, section 7).
+Mamba and 4 of the xLSTM (addendum to Befund 94, section 13).
 
 ## Appendix C: simulator interface
 
@@ -1648,7 +1692,7 @@ Error at 8, 16 and 32 training runs relative to the error at 64 runs (addendum t
   runs on the excited set, and on the constant-run holdout from 32 runs on the moisture.
 - **Runs behind each point:** $n_{\mathrm{train}}$ training runs plus 32 validation runs for early
   stopping (appendix C); each run is 8 h of simulated operation.
-- **What the simulator saves (study A, section 6):** pre-training on the simulator reduces the error
+- **What the simulator saves (study A, section 5):** pre-training on the simulator reduces the error
   at 2 real runs by a factor of 12.69 (identical plant) and 10.27 (parameter deviation) against
   training from scratch. **What the excitation is worth (study B):** not established in the primary
   test; descriptively several runs of the plain design at small $N$.
@@ -1842,7 +1886,9 @@ After the merge
 - **Admissible cell.** A cell whose margin is reached within the upper end of the search and holds;
   a cell that is not admissible is counted and gets no number.
 - **Deployable margin.** A margin searched on other cases than those on which it is checked.
-- **Twin.** The controller with the same control law as a learned arm and the true model (Befund 127).
+- **Twin.** The reference controller with the true model against which a learned arm is compared, in
+  Befund 127 the schedule C2: for a learned map the same control law with the true map; for the GRU
+  in the loop the same law with the true model is the reference C3-15.
 - **Headroom.** The gain of the upper bound (true model, perfect preview) over a simple reference;
   measured before a learning study (rule 10).
 - **Inside and outside cases.** Test cases inside and outside the range covered by the training data

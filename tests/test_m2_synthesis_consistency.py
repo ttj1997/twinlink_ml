@@ -8,6 +8,7 @@ does (it is set locally on the branch ``synthesis-v6`` and pushed with its merge
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import subprocess
@@ -28,6 +29,14 @@ CLAIMS = re.compile(r"^claims: (\d+) checked, (\d+) confirmed, (\d+) deviating$"
 COVERAGE = re.compile(r"^coverage: (\d+) numeric tokens without a check", re.MULTILINE)
 EXEMPTIONS = re.compile(
     r"^exemptions: (\d+) declared, (\d+) not in text or not verified$", re.MULTILINE
+)
+# The sentence of docs/08 (section "Changes since version 5f") that states the counts of the check.
+COUNTS_IN_THE_TEXT = re.compile(
+    r"committed artifact `artifacts/runs/(check_m2_synthesis_consistency_v6\w*)\.json`, and a test "
+    r"compares this sentence with it: (\d+) claims and (\d+) verified exemptions, with no numeric "
+    r"token left without a check: (\d+) of the 455 claims of version 5f, whose sentences are still "
+    r"in the text, (\d+) new values recomputed from the analysis artifacts of Befunde [\d, and]+ "
+    r"or read from the configuration, and (\d+) numbers checked against the text"
 )
 
 
@@ -93,8 +102,13 @@ def test_version_5f_at_its_tag_still_confirms_455_claims() -> None:
     assert code == 0
 
 
-def test_version_6_confirms_completely() -> None:
-    code, output = run_check("6")
+@pytest.fixture(scope="module")
+def check_of_version_6() -> tuple[int, str]:
+    return run_check("6")
+
+
+def test_version_6_confirms_completely(check_of_version_6: tuple[int, str]) -> None:
+    code, output = check_of_version_6
     found = counts(output)
     assert found["deviating"] == 0, output[-3000:]
     assert found["uncovered"] == 0, output[-3000:]
@@ -102,6 +116,57 @@ def test_version_6_confirms_completely() -> None:
     assert found["confirmed"] == found["checked"] > 455
     assert "verified references outside their allowed values: []" in output
     assert code == 0
+
+
+def test_the_counts_in_the_text_are_those_of_the_committed_artifact(
+    check_of_version_6: tuple[int, str],
+) -> None:
+    """The counts written in docs/08 are bound to a committed artifact and to the tree.
+
+    FAILS when the artifact named in the sentence is missing: a count in the text without the
+    committed record of the check is what this test is there to prevent. The same counts must
+    come out of the check of the working tree, so a later change of the text needs a new
+    artifact (under a new name, artifacts are never overwritten) and the sentence adapted.
+    """
+    synthesis = (ROOT / "docs" / "08_synthese_m2.md").read_text(encoding="utf-8")
+    sentence = COUNTS_IN_THE_TEXT.search(" ".join(synthesis.split()))
+    assert sentence, "the sentence with the counts of the check is not in docs/08"
+    name = sentence.group(1)
+    written = dict(
+        zip(
+            (
+                "claims",
+                "exemptions",
+                "claims_of_version_5f_kept",
+                "new_against_artifacts_or_configuration",
+                "text_claims",
+            ),
+            (int(sentence.group(index)) for index in range(2, 7)),
+            strict=True,
+        )
+    )
+    path = ROOT / "artifacts" / "runs" / f"{name}.json"
+    if not path.is_file():
+        pytest.fail(
+            f"artifacts/runs/{name}.json is missing: docs/08 states the counts of the check as "
+            "those of this committed artifact. Write it on a clean tree with "
+            "scripts/check_m2_synthesis_consistency.py --version 6 --write and commit it."
+        )
+    artifact = json.loads(path.read_text(encoding="utf-8"))
+    summary = artifact["summary"]
+    assert {key: summary[key] for key in written} == written
+    assert summary["confirmed"] == summary["claims"]
+    assert summary["deviating"] == 0 and summary["uncovered"] == 0
+    assert artifact["provenance"]["git/dirty"] is False
+    live = counts(check_of_version_6[1])
+    assert (live["checked"], live["exemptions"]) == (written["claims"], written["exemptions"])
+    assert (
+        f"of the claims: {written['text_claims']} text claims of version 6" in check_of_version_6[1]
+    )
+    assert (
+        f"of the latter: {written['claims_of_version_5f_kept']} claims of version 5f kept, "
+        f"{written['new_against_artifacts_or_configuration']} new"
+    ) in check_of_version_6[1]
 
 
 class FakeReport:
