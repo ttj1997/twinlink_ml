@@ -1,8 +1,8 @@
-# NN -- Conclusion of AP 1: method selection for the dynamic control of fluidised-bed spray granulation
+# 48 -- Conclusion of AP 1: method selection for the dynamic control of fluidised-bed spray granulation
 
 > **Status:** final, version 3, 2026-11-23 (version 1: 2026-11-20; version 2: 2026-11-23). The
 > selection of section 7 and the deviation of section 6 are accepted by the project lead (decisions
-> of 2026-11-23, section 11). Branch `ap1-conclusion`, rebased onto `master` 82dcc84 (lab book up to
+> of 2026-11-23, section 11). Document number 48 (no lab-book entry); merged into `master` on 2026-11-23. Branch `ap1-conclusion`, rebased onto `master` 82dcc84 (lab book up to
 > Befund 129, with the addenda of 2026-11-23 to Befunde 105, 126, 127 and 128). No code, no run, no new number: every number
 > below is quoted from a finding of the lab book (`docs/04_stand_ap1.md`) and traced to its artifact
 > in section 10. `docs/08_synthese_m2.md` stays frozen at version 5f (2026-10-20) and is not changed;
