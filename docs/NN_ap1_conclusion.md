@@ -391,6 +391,11 @@ Entered with version 2; the sections above are changed accordingly.
 3. **Finalisation.** Rebase and finalise only when `order-dependence` and `module-api` are merged;
    until then this documentation commit, and wait.
 
-The decision does not address the wording of the deviation in section 6, which version 1 had put to
-the project lead together with section 7. The line of section 7 that rests on it (reinforcement
-learning not selected for the granulator) is accepted with the section.
+**Supplement (2026-11-23, second decision of the project lead on this document).**
+
+4. **Section 6 is accepted** as well: the wording of the deviation on reinforcement learning,
+   including the three cases it does not cover (partial observability, the whole throughput box,
+   frequent product changes). The first decision had not addressed section 6, which version 1 had
+   put to the project lead together with section 7.
+5. **The sentence on the frames in addition (b) stays** (section 7: the 13.40 % of Befund 111 and
+   the 8.93 % of Befund 105 come from different frames and are not steps of one ladder).
