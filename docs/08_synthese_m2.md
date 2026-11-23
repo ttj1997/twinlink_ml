@@ -163,6 +163,27 @@ varies strongly (GRU on the excited set 3 to 753 seeds), because the spread betw
 small budgets. The M2 definition of 10 to 15 % sits in a note of the project profile and the work
 plan, not in the formal definition.
 
+### Methodological findings (version 5f; merged into the rules of this section in a later step)
+
+- **Run-level splits** prevent an optimistic bias of 29 to 68 % (section 2; Befund 39).
+- **Negative transfer.** A shared loss over targets of unequal difficulty degrades the energy
+  target in soft-sensor operation; per-target networks (composite) avoid it (Befund 26).
+- **Static explainability of dE** makes R^2 uninformative; compare in physical units (section 3).
+- **t instead of z, paired instead of unpaired** at the resolution threshold: the z
+  threshold of Befund 63 g was too small at few seeds, and pairing over seeds removes the
+  shared seed effect (Befund 67, 82, 83).
+- **Effect size next to the verdict.** With five seeds and a family of 336 tests, Holm leaves
+  large effects unresolved; the ratio of the medians and the sign consistency over the seeds are
+  reported with every verdict (addendum to Befund 98).
+- **Seed budget.** Five seeds resolve large differences everywhere. They are of the order needed
+  for a 10 to 12.5 % difference of GRU against LSTM on energy and bed temperature (3 to 8 seeds,
+  arm N, $n_{\mathrm{train}}$ = 64), not for the Transformer (4 to 10 seeds), and on the moisture only
+  for GRU on the excited test set (section 2; addendum to Befund 94).
+- **Holm and Benjamini-Hochberg.** In arm N 260 of 336 rank cells are resolved without
+  correction, 251 after Benjamini-Hochberg and 70 after Holm (Befund 94); the main form here is Holm.
+- **Test sets.** A constant-run holdout hides what an excited set shows and conversely;
+  every number is quoted with its test set (Befund 51).
+
 ## 3. Architecture comparison (arm N)
 
 Eight methods (persistence, static regression, ARX, GRU, LSTM, Transformer, xLSTM, Mamba),
@@ -259,6 +280,30 @@ on the old data A0 the trained networks improve the physical RMSE over the stati
 factors of 5.2 to 7.8 (GRU, LSTM, Transformer, $n_{\mathrm{train}}$ = 64, horizon 36, both test sets,
 all five seeds better; Befund 83 e). Comparisons are therefore made in physical units.
 
+**Robustness of the ranking against outliers in the moisture signal (Befund 109).** The ranking had
+been tested against the level of Gaussian sensor noise only. Here an outlier process is added to the
+moisture signal, in the input history and in the training target: independent outliers (heavy-tailed
+errors) or bursts, with and without a causal Hampel filter; persistence, ARX, GRU, LSTM and
+Transformer, 16 and 64 training runs, five seeds, protocol of arm N; the main metric is the error
+against the noise-free simulator output. The laboratory data of the predecessor project lost 17 to
+34 % of the raw points per batch as outliers; this share is the only outlier parameter with a
+source, all others are placeholders. Result at an outlier rate of 0.25: **in no condition is a
+baseline ahead of a network after Holm** (family: the 72 rank cells of a condition), **and no Holm
+verdict is reversed** against the condition without outliers. The pre-registered readings are R1 for
+independent outliers (ranking unchanged without and with the filter) and R2 for bursts (changed
+without the filter, unchanged with it). The R2 hinges on a single cell: the Transformer against the
+GRU at 16 runs on the excited test set at horizon 1 becomes resolved after Holm as "Transformer
+worse" (ratio of the medians 1.093, worse in 5 of 5 seeds), the direction it already had without
+outliers. The criterion fixed beforehand counts any new resolution in the order of the networks as a
+change; the project lead accepted R2 formally and reads it as "R1 in substance" (a sharpening, not a
+reordering), and derived a rule for later pre-registrations from it (section 2). The order of the
+networks on the moisture is not resolved after Holm in this family even without outliers (0 of 24
+cells). The Hampel filter keeps the ranking but does not restore the error level: on clean data it
+raises the error of the GRU at 16 runs on the excited test set at horizon 1 from 3.22e-4 to
+1.08e-3 kg/kg. It is not made a mandatory part of the pipeline; the treatment of outliers is decided
+with real sensor data in AP2. Not covered: xLSTM, Mamba, static regression, energy target and bed
+temperature.
+
 ## 4. Inference and compute cost
 
 All timings are from the joint measurement on an idle machine (Befund 97): one thread,
@@ -295,28 +340,7 @@ needs the simulator ahead of every prediction: one horizon of 36 steps costs 253
 the simulator, of 256,123 µs in total, i.e. **98.8 % simulator share**; the network alone
 (2,987 µs) is not the cost of the hybrid.
 
-## 5. Methodological findings
-
-- **Run-level splits** prevent an optimistic bias of 29 to 68 % (section 2; Befund 39).
-- **Negative transfer.** A shared loss over targets of unequal difficulty degrades the energy
-  target in soft-sensor operation; per-target networks (composite) avoid it (Befund 26).
-- **Static explainability of dE** makes R^2 uninformative; compare in physical units (section 3).
-- **t instead of z, paired instead of unpaired** at the resolution threshold: the z
-  threshold of Befund 63 g was too small at few seeds, and pairing over seeds removes the
-  shared seed effect (Befund 67, 82, 83).
-- **Effect size next to the verdict.** With five seeds and a family of 336 tests, Holm leaves
-  large effects unresolved; the ratio of the medians and the sign consistency over the seeds are
-  reported with every verdict (addendum to Befund 98).
-- **Seed budget.** Five seeds resolve large differences everywhere. They are of the order needed
-  for a 10 to 12.5 % difference of GRU against LSTM on energy and bed temperature (3 to 8 seeds,
-  arm N, $n_{\mathrm{train}}$ = 64), not for the Transformer (4 to 10 seeds), and on the moisture only
-  for GRU on the excited test set (section 2; addendum to Befund 94).
-- **Holm and Benjamini-Hochberg.** In arm N 260 of 336 rank cells are resolved without
-  correction, 251 after Benjamini-Hochberg and 70 after Holm (Befund 94); the main form here is Holm.
-- **Test sets.** A constant-run holdout hides what an excited set shows and conversely;
-  every number is quoted with its test set (Befund 51).
-
-## 6. Data need and plant link
+## 5. Data need and how it was reduced
 
 **Data need from the learning curves (arm N; appendix D).** With the fixed protocol the error of GRU
 and LSTM on the product moisture at 8 training runs is 3.7 to 5.1 times the error at 64 runs, and the
@@ -362,7 +386,130 @@ separable from the seed spread with five seeds, and the two training arms were n
 paired test. The product moisture is not measured at the plant (Befund 56); a validation of the soft
 sensor against plant data is still open.
 
-## 7. Limits
+## 6. Control with the known model: where the energy is
+
+Truth in every study of this section: the grey-box model of the laboratory line. The controllers
+carry this model as their internal model and see the true state. From Befund 105 on the quality limit
+is a product moisture of 0.15 kg/kg (placeholder) that has to hold as a path condition at every sample
+of the truth; each controller gets the smallest family-wide margin with which the limit holds in every
+case of its family (bisection, tolerance 2.5e-4 kg/kg), and costs are compared at that held limit.
+What it costs to replace the known model by a learned one is the subject of section 7.
+
+**The predecessor: the one-step operating point (Befund 80).** Adapting the operating point to the
+ambient state saves a median of 9.0 % (lower gas-velocity bound 0.80 m/s) to 16.5 % (1.26 m/s)
+against a fixed point; a safety margin of the size m costs 1.30 to 1.46 % and leaves 94 % (1.26
+m/s) to 85 % (0.80 m/s) of that benefit. By the pre-registered stability rule (Befund 69) the
+saving itself is **not stable** between the two bounds (its figures change by 74 to 87 %); the
+cost of the margin and the remaining benefit are stable (Befund 80 c). The gas velocity sits on its
+lower bound at 22 (1.26 m/s) and 17 (0.80 m/s) of 25 test points: it is the main lever, but the
+bound itself is a placeholder, and the moisture limit binds at 13 (1.26 m/s) and 25 (0.80 m/s) of
+25 points. The margin m (0.006 kg/kg) is the median half-width of the calibrated band of an
+ensemble of networks that estimate the moisture, calibrated to 95 % coverage on validation runs
+(Befund 65 FA2, adopted in Befund 68): a convention for model accuracy, not a plant or norm
+requirement. **Version 5f called the 1.30 to 1.46 % the cost of a soft-sensor margin. That reading is
+replaced.** The number stands as the cost of a margin of the size m for an optimiser that knows the
+true model. It is not the cost of using a learned model: a margin calibrated on the prediction error
+does not hold once an optimiser chooses the operating points on the learned model (section 7;
+Befunde 113, 127).
+
+**Continuous operation: the headroom of dynamic control (Befund 105).** Question, asked before any
+further work on reinforcement learning: when disturbances are ridden out in continuous operation, is
+there an energy gain from dynamic control over a quasi-stationary set-point optimisation? The
+controllers command inlet temperature and gas velocity every 5 min: R0 a fixed operating point, R1 the
+quasi-stationary set-point optimisation (the steady optimum at the current disturbance), R3 an MPC
+without disturbance preview (horizon 2 h), R2 the optimum with perfect preview of the disturbances
+(an upper bound). Family "observed": 105 scenarios of 24 h (day profiles of the ambient air,
+throughput, solid fraction, slow and fast offsets of the inlet temperature; all amplitudes are
+placeholders, those derived from plant data are relative only).
+
+| Step | Energy saved, median | Range over the scenarios | Margin of the better controller (kg/kg) |
+|---|---|---|---|
+| R0 -> R1, fixed point to quasi-stationary optimisation | 8.93 % | 0.69 .. 25.23 % | 0.00664 (R0: 0.04355) |
+| R1 -> R3, MPC without preview | 0.55 % | 0.05 .. 1.50 % | 0.00270 |
+| R1 -> R2, perfect preview (upper bound) | 1.51 % | 1.02 .. 2.44 % | 0.00021 |
+
+The pre-registered reading has three classes on the median of the step R1 -> R3: L0 below 2 %
+(dynamic control does not pay in continuous operation; the line of reinforcement learning for the
+granulator is closed), L1 2 to 5 % (an MPC suffices), L2 above 5 % (a study of reinforcement learning
+against the MPC is justified). **The reading is L0**, in every scenario type, and it was accepted by
+the project lead. The step R1 -> R3 is margin, not trajectory: its margin share is 0.92 % and its
+trajectory share -0.35 % (at equal margin the MPC costs more than the quasi-stationary schedule), and
+of the 1.51 % of the perfect preview 1.49 % are margin. With 20 draws of the sorption isotherm inside
+its placeholder band R1 holds the limit at its nominal margin in 19 of 20 draws and R3 in 20 of 20;
+the statement is restricted to this: with full knowledge of the state the scatter of the isotherm
+needs no margin beyond the nominal one. *Addendum of 2026-11-23 to Befund 105:* with the cold
+multi-start of the steady optimiser (below) R1 holds the limit with the margin 0.005859 instead of
+0.006641, and the median saving against R0 is 9.10 % instead of 8.93 %; no statement of the entry is
+withdrawn. R3 and R2 were not recomputed.
+
+**Product change (Befund 105, no reading).** When the moisture target is tightened from 0.15 to
+0.12 kg/kg, R1 needs 37 to 55 min to reach the new specification and R3 0.9 to 1.8 min. The value of
+an MPC lies in the time outside the specification, not in energy; it depends on how often the product
+is changed, which is not known, so the result is reported per changeover and not extrapolated.
+
+**Load following under an hourly price (Befund 126).** The proposal motivates dynamic control with
+running the plant up and down after the supply of renewable electricity. This is the first study in
+which the throughput (spray rate) is a command. Day-ahead prices of 2024 with a constant adder
+(placeholder), a production target per day, a main band of the spray rate of 1.2 to 1.8 kg/h, an
+electric heater; 40 test days stratified by the daily price spread, from four test months that are
+not used for tuning. Controllers: C0 constant throughput with the steady optimum (R1 of Befund 105),
+C1 a price rule with two throughput levels, C2 the exact schedule on the steady-state map, C3 an
+economic MPC, C4 the optimum with perfect preview (upper bound). Metric: cost per kg of dry product
+at the held moisture limit.
+
+| Controller | Margin (kg/kg) | Cost (EUR per kg) | Gain against C0 | Margin share | Schedule share |
+|---|---|---|---|---|---|
+| C0 constant throughput | 0.00547 | 0.40633 | - | - | - |
+| C1 price rule | 0.00742 | 0.39792 | 2.07 % | -0.48 % | 2.55 % |
+| C2 schedule on the map | 0.00742 | 0.39795 | 2.06 % | -0.48 % | 2.54 % |
+| C3 economic MPC | 0.00379 | 0.39463 | 2.88 % | +0.40 % | 2.48 % |
+| C4 perfect preview | 0.00023 | 0.39053 | 3.89 % | +1.24 % | 2.65 % |
+
+The pre-registered reading takes the first class that applies: T0 if the gain of C4 against C0 is
+below 2 % (load following does not pay), T1 if the price rule is within 2 % of the MPC (a price rule
+suffices), T2 if the schedule is within 2 % of the MPC, T3 otherwise (the dynamics pay; reinforcement
+learning only above 5 %). **The reading is T1** and valid: the gap between C1 and C3 is 0.83 %, in each
+of the four test months and in each tercile of the price spread; the gap between C3 and C4, the value
+of perfect information, is 1.05 %. The schedule share is about 2.5 % for every controller; what the
+MPC adds over the rule is its smaller margin, the mechanism of Befund 105. C1 and C2 use slightly
+more energy than C0 (1135.3 against 1132.9 kWh over the 40 days): load following shifts consumption in
+time and saves cost, not energy. Restrictions named in the decision of the project lead: the gain
+exists only with an electric heater (with a gas heater C1 and C2 are 0.04 % and 0.08 % more expensive
+than C0); the gain of the rule is below 2 % in February (1.14 %), in November (1.61 %) and in the low
+tercile of the price spread (1.27 %); the negative control at a constant price is not clean (C3 gains
+0.49 % and C4 1.81 % without a price signal, and C2 and C3 each violate the limit on one day there).
+In the whole throughput box of 0.4 to 3.0 kg/h, which carries no reading, the perfect preview gains
+8.96 % and the schedule 1.98 % at a margin of 0.03047 kg/kg; this hangs on a particle size that does
+not depend on the throughput in the model (section 12). *Addendum of 2026-11-23 to Befund 126:* with
+set points from the cold multi-start C2 does not hold the limit at its recorded margin; at the newly
+searched margin 0.007812 instead of 0.007422 its gain in the main band is 1.98 % instead of 2.06 %,
+and that of C1 is 2.08 % instead of 2.07 % at an unchanged margin. The reading T1 is untouched. C3 and
+C4 were not recomputed.
+
+**The steady optimiser depends on the order of its queries (Befund 129).** A control of Befund 127
+found that a re-run of C2 does not reproduce the records of Befund 126 bit for bit (0.397944 against
+0.397950 EUR per kg in the sum). Cause: the steady optimiser starts every solve from the previous
+solution, and the caches in front of it use rounded keys. Measured on 94211 queries: the warm start
+returns a worse local optimum than a cold multi-start with eight starts in 1.82 % of the queries, by up
+to 2.58 % of the power; a single cold start is worse in 1.58 %, so the memory is not the only cause; a
+reference with 64 starts improves on eight starts by more than 1e-4 in no query. The pre-registered
+reading O0 (no key number of Befunde 105, 126 and 127 that rests on the optimiser changes by more than
+10 % relative when the dependence is removed) holds: the largest change is 3.78 %. Below that
+threshold two printed numbers move, and they are recorded in the two addenda above. With the switch
+the records are bit-equal for another order of the units, another chunk size and workers with another
+history. New studies set `steady_cold_starts = 8`; the default stays at 0 to reproduce old results.
+The controllers with a dynamic optimiser (R2, R3, C3, C4) were not recomputed (`docs/12`, item 38).
+
+**What the studies of this section say together.** (1) The energetic lever is tracking the operating
+point, not the dynamics. (2) An MPC differs from the simple methods by the smaller margin it needs,
+not by its trajectory or its schedule. (3) The value of an MPC lies in the product change, as time
+outside the specification. (4) Load following saves cost, with an electric heater only, and a
+two-level price rule captures most of it. The savings of a tracked operating point come from three
+frames (9.0 to 16.5 % at the 25 test points of Befund 80, 8.93 % over the scenarios of Befund 105,
+and the value of section 8 from the sensitivity study); they agree in size and are not one series,
+because the limits, the disturbances and the fixed point differ.
+
+## 13. Limits of the numbers that are shown
 
 - **Grey-box simulator, not the plant.** Four states, no agglomeration, no breakage; the
   GAB sorption isotherm uses placeholder parameters (Befund 34). All numbers are statements
@@ -393,20 +540,10 @@ sensor against plant data is still open.
 - **A single timing run** on a single machine (Befund 97); the networks used for the timing were
   fitted for two epochs only (the cost of `predict` does not depend on the weights).
 
-## 8. Outlook (context for AP3, not a result of AP1)
+## Outlook of version 5f (being dissolved into sections 9 and 11)
 
-- **Model-based optimisation (Befund 80).** Adapting the operating point to the ambient
-  state saves a median of 9.0 % (lower gas-velocity bound 0.80 m/s) to 16.5 % (1.26 m/s)
-  against a fixed point; a soft-sensor safety margin costs 1.30 to 1.46 % and leaves 94 % (1.26
-  m/s) to 85 % (0.80 m/s) of that benefit. By the pre-registered stability rule (Befund 69) the
-  saving itself is **not stable** between the two bounds (its figures change by 74 to 87 %); the
-  cost of the margin and the remaining benefit are stable (Befund 80 c). The gas velocity sits on its
-  lower bound at 22 (1.26 m/s) and 17 (0.80 m/s) of 25 test points: it is the main lever, but the
-  bound itself is a placeholder, and the moisture limit binds at 13 (1.26 m/s) and 25 (0.80 m/s) of
-  25 points. The margin m (0.006 kg/kg) is the median half-width of the calibrated band of an
-  ensemble of soft-sensor networks, calibrated to 95 % coverage on validation runs (Befund 65 FA2,
-  adopted in Befund 68): a convention for model accuracy, not a plant or norm requirement. As a
-  procedure (not a finding), set points are optimised line by line before any interconnection.
+- **Coupling of lines (Befund 81).** As a procedure (not a finding), set points are optimised line
+  by line before any interconnection.
   **A coupling gain of lines A and B is not demonstrated in the corrected model** (0 of 6 scenarios at
   20 K minimum approach, 1 of 6 at 10 K as a sensitivity; Befund 81).
 - **Reinforcement learning (Befunde 62, 68, 93, 96).** The line is closed as a diagnostic
@@ -536,7 +673,7 @@ Error at 8, 16 and 32 training runs relative to the error at 64 runs (addendum t
   test; descriptively several runs of the plain design at small $N$.
 - **Caveats:** simulator with placeholder parameters; fixed, untuned protocol; five seeds.
 
-## Appendix E: glossary
+## Appendix F: glossary
 
 - **Arm A0, A1, N.** Data bases of the architecture comparison: A0 the old records (legacy data
   configuration), A1 legacy trajectories with planned future inputs, N the preset version 2 (Befund
@@ -567,7 +704,7 @@ Error at 8, 16 and 32 training runs relative to the error at 64 runs (addendum t
 - **Pre-registration, post hoc.** Rules written and committed before a run; anything added after the
   result is labelled post hoc.
 
-## Appendix F: traceability table
+## Appendix G: traceability table
 
 Columns: statement (section) · number(s) · Befund · artifact · commit that added the
 artifact in the current history · script that writes it · checked by
