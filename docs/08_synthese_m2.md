@@ -379,18 +379,72 @@ is far worse than any excited design. Reservations: the per-run gas-velocity lim
 (the gas velocity sits on it in 20 to 24 % of the steps), and the rate limiter and the box bounds
 shape the plans unequally (plan B2: 18 % of the inlet-temperature and 35 % of the spray-rate steps).
 
-**Plant data (Befund 55, 56).** Operating records of the application partner (two 24-hour
-exports, two products, one-minute sampling) show a coefficient of variation of the manipulated
-variables inside a single operating point of only 0.12 to 2.01 % (air flow, inlet temperature, spray
-rate) but large differences between the products: operating data cover different operating
-points but little dynamics within a single operating point. This agrees with the synthetic experiment of Befund 55
-(with its addendum): a model trained on constant runs only stays worse on the product moisture than
-the same model trained on excited data by a factor of 2 to 3 over the whole budget range (GRU and
-LSTM, run-median NRMSE at horizon 36 on the constant-run holdout, legacy data configuration of arm
-A0). The gap is a statement about the medians: for the LSTM at the largest budget it is not
-separable from the seed spread with five seeds, and the two training arms were not compared with a
-paired test. The product moisture is not measured at the plant (Befund 56); a validation of the soft
-sensor against plant data is still open.
+**The data need depends on the metric (Befund 127).** The statements above are about the prediction
+error. In the control the picture differs: the cost gap of the learned steady-state map to the
+controller with the known model does not shrink from 16 training runs on, although the prediction
+error of the same networks still falls, and no data need could be determined there because no learned
+arm came within the threshold (section 7.2). A learning curve of the prediction error does not give
+the data need of a controller.
+
+**How many evaluations of the true model a set-point optimisation on a surrogate needs (Befund 107).**
+Learning curves over 8 to 256 evaluations of the true steady model, five seeds, 50 test states per
+problem; the metric is the regret at the true model with the feasibility counted, not the prediction
+error. Two problems: P1, a line of heater, dryer and heat recovery; P2, the steady grey-box model of
+the laboratory line with the moisture limit. Surrogates: a quadratic surface, a Gaussian process, an
+ensemble of networks, a grey-box fit of two parameters while a third, hidden parameter is shifted, and
+the Gaussian process with an adaptive design that places its points at its own predicted optima. The
+reading fixed beforehand: S1 if some variant passes the gate from at most 32 evaluations (data
+efficient), S2 if the smallest such number is 64 to 256 (feasible, but costly with an expensive
+model), S3 if none passes at 256. **The reading is S2 on both problems, and the adaptive design is
+decisive:** only the Gaussian process with the adaptive design passes, from 64 evaluations on P1 and
+only at 256 on P2; no space-filling design passes at any number. The grey-box fit gives a usable
+operating point from 8 evaluations and then stops at an error floor set by the hidden parameter: on
+P1 it compensates the hidden parameter with wrong values of the fitted ones (a heater efficiency of
+0.72 to 0.74 for a true 0.85), on P2 it recovers the fitted parameters and leaves the product 0.0011
+to 0.0013 kg/kg above the limit, which makes it infeasible. A variant declared post hoc, the same fit
+with a back-off from its training residuals, is feasible on P2 from 8 evaluations and only costs
+energy on P1, because a symmetric back-off is blind to the sign of the error. The core statement of
+the project lead: the kind of model error decides between a physical model with a margin, which is
+economical in data, and adaptive sampling of a black-box model; and fitted parameters that compensate
+a hidden error are physically wrong and must not be reported as measured values.
+
+**Pre-training on a physical model, static case (Befund 120).** With the balance available at run
+time, calibrating a few physical parameters needs the fewest plant points wherever the structure
+fits, and pre-training a network on the balance helps only against a network from scratch with 2
+points (section 7.4).
+
+**Stationary Dyssol flowsheets as the data source (Befund 128).** The proposal asks for training with
+synthetic data from Dyssol models. The sub-project TUHH-A delivered stationary Dyssol units (dryer,
+heater, heat recovery) and flowsheets; the dynamic granulation model is not available yet. The study
+therefore rehearses the chain on the stationary case: how many Dyssol runs does a surrogate of a
+flowsheet need when no rebuild exists? Two flowsheets, one line with 5 varied inputs and two lines
+with 10; per case a pool of 1024 and an independent test set of 256 points inside the same box;
+learning curves over 8 to 512 runs, five seeds; linear and quadratic regression against an MLP.
+Reading numbers: the 95th percentile over the test set of the error of the exhaust temperature and of
+the fuel, with the thresholds 1 K and 1 % in the median over the seeds. Control before any fit: Dyssol
+and a Python rebuild of the units agree at all 1280 points of each case (at most 1.7e-13 K). The
+reading fixed beforehand: D1 an MLP is needed, D2 a regression suffices, D3 the need exceeds 512 runs.
+**The reading is D2 in both cases:** the quadratic regression meets the thresholds from 32 Dyssol runs
+with one line and from 128 with two, the MLP from 64 and 256, the linear regression never. The need
+follows the number of coefficients of the quadratic regression (21 and 66), and the grid of the study
+does not resolve it more finely. Scope, as the project lead fixed it with the acceptance: the units
+are closed formulas, so the verdict says nothing about dynamic Dyssol models; what carries over is the
+chain of design, Dyssol run, control, fit and reading. With two lines 378 of the 1024 pool points give
+an over-saturated dryer exhaust, because the delivered dryer unit has no saturation limit; the points
+are flagged and counted, and the verdict is the same on the admissible test points. The MLP setting
+lies at the edge of its pilot grid. A "factor 2.31" named in the merge supplement of the lab-book
+entry is unsubstantiated within the repository (addendum of 2026-11-23 to Befund 128) and is not used
+here.
+
+**What was established about reducing the data need, and what was not.** Established on the
+simulator: splits by run and excited instead of constant data (Befunde 39, 55); pre-training of a
+sequence model on the simulator against training from scratch (study A, uncorrected, consistent
+pattern); an adaptive design for a surrogate-based optimisation (Befund 107, resolved in paired
+tests); calibrating a physical model before learning one (Befunde 120 and 122; section 7). Not
+established: that a planned excitation is better than random steps, and that active learning is
+better than random selection (study B); the need of the forecast model beyond 64 runs; the data need
+of a controller with a learned model (Befund 127); a saving of margin by the hybrid model with few
+runs (Befund 122).
 
 ## 6. Control with the known model: where the energy is
 
@@ -884,6 +938,79 @@ inline sensor (accepted with `docs/48_ap1_conclusion.md`, section 7). A learned 
 replace the measurement in any tested form. The step not taken is a model-based observer that
 estimates the moisture and the unknown input offsets jointly and uses the transients (`docs/12`,
 section I, item 19).
+
+## 10. Plant link
+
+Everything above is simulation. This section collects what the plant data that were available say
+about the transfer: what operating records contain, whether the grey-box model can be calibrated to
+plant A, and which data would decide. Raw plant data are not in the repository; the numbers below are
+differences, model errors and relative values from committed artifacts or from the lab book.
+
+**Plant data (Befund 55, 56).** Operating records of the application partner (two 24-hour
+exports, two products, one-minute sampling) show a coefficient of variation of the manipulated
+variables inside a single operating point of only 0.12 to 2.01 % (air flow, inlet temperature, spray
+rate) but large differences between the products: operating data cover different operating
+points but little dynamics within a single operating point. This agrees with the synthetic experiment of Befund 55
+(with its addendum): a model trained on constant runs only stays worse on the product moisture than
+the same model trained on excited data by a factor of 2 to 3 over the whole budget range (GRU and
+LSTM, run-median NRMSE at horizon 36 on the constant-run holdout, legacy data configuration of arm
+A0). The gap is a statement about the medians: for the LSTM at the largest budget it is not
+separable from the seed spread with five seeds, and the two training arms were not compared with a
+paired test. The product moisture is not measured at the plant (Befund 56); a validation of the
+forecast model against plant data is still open.
+
+**A plant-near model of plant A: the structure does not carry from one day to the other
+(Befund 117).** Question: does the picture of the laboratory studies hold at the scale of plant A?
+Two exported days, one per product, with four stationary segments of 60 minutes each; the grey-box
+model of the laboratory line at plant geometry, driven by the measured inputs, its kinetics not
+calibrated because there is no moisture measurement. At most two parameters are calibrated on one day
+and checked on the other, in both directions, with four candidate terms for the gap between the bed
+temperature and the exhaust temperature (none, a constant offset, a heat loss, evaporation above the
+bed). The reading fixed beforehand: P1 if some candidate reproduces bed and exhaust temperature of the
+other day within 2 K (the model is usable for energy questions), P2 otherwise (a structural finding).
+**The reading is P2.** The largest error on the other day is 13.84 K without a term, 5.51 K with the
+offset, 13.63 K with the heat loss and 11.10 K with the evaporation. With the offset the bed
+temperature transfers between the days within 1.27 to 2.14 K, the exhaust temperature does not: the
+fitted offset is 5.03 K on one day and 10.12 K on the other. The assumption of the model that the gas
+leaves at the bed temperature cannot represent the data; the measured energy balance closes only with
+the measured exhaust temperature as the gas outlet. From the decision of the project lead: the two
+days are two products, so "specific to the day" cannot be separated from "specific to the product";
+the most plausible cause, not shown, is a partial evaporation of the spray in the free space above the
+bed with a share that depends on the product, and the candidate with one common share failed. The
+consequences drawn: energy questions at the plant are computed with the measured exhaust temperature
+as the outlet; questions about moisture and kinetics need a model with two zones; the laboratory
+results stay untouched within their frame, and their transfer to the plant needs this term. The steady
+saving of a tracked operating point computed at plant scale in the same study was declared not
+citable by the project lead (it rests on the bounds of the command box and on placeholders) and is
+not quoted here.
+
+**Identifiability before calibration (Befund 123).** Before any fit, the sensitivities of the
+stationary bed and exhaust temperatures to the candidate parameters were analysed (collinearity
+after Brun et al.). Per day only two quantities can be determined, the temperature level of the bed
+and the gap between bed and exhaust; a fixed gap and a heat transfer above the bed cannot be told
+apart on one day; the effective heat capacity has no effect in the steady state; the two kinetic
+parameters are never separable from each other, and a moisture measurement remains necessary for
+them. The stationary calibration was then compared with the simplest alternative, a constant bias
+(the uncalibrated model plus the mean residual of the calibration day). The reading fixed beforehand:
+K0 if the calibrated model is within 2 K on the other day and better than the bias, K1 if its largest
+error is not smaller than that of the bias. **The reading is K1:** the largest error on the other day
+is 7.66 K for the calibrated model and 5.51 K for the constant bias; the data do not suffice for a
+physical calibration, and a bias suffices until transient data exist. The check across the two days
+is a check across two products. The data that would decide, as questions to the application partner
+(`docs/12`, section I, items 31 and 32): several days per product, days with transitions (start-up,
+load change, product change), and laboratory moisture values with their clock time.
+
+**What this means for the simulator studies.** The structural studies of section 7.3 take their
+motive from here: Befund 124 emulates the candidate "evaporation above the bed" at a gap of the size
+found at plant A, Befund 125 a deviation of the opposite sign with another form. Neither is the real
+deviation, which is not identified. The second stage of the static transfer study (Befund 120), a
+test on plant A, was halted: the main heater has no independent meter in the exports and the exhaust
+humidity is not measured; and the input sets of the partner model lie at laboratory scale with supply
+air of 150 to 300 degC, while plant A is about 300 times larger with supply air of 83 to 85 degC.
+
+**Dyssol.** The training data of the sequence models come from the project's own grey-box simulator.
+Stationary Dyssol flowsheets were used as a data source in Befund 128 (section 5); data of dynamic
+Dyssol models depend on the granulation model of the sub-project TUHH-A and are open (section 12).
 
 ## 13. Limits of the numbers that are shown
 
