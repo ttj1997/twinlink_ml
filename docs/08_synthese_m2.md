@@ -509,6 +509,226 @@ frames (9.0 to 16.5 % at the 25 test points of Befund 80, 8.93 % over the scenar
 and the value of section 8 from the sensitivity study); they agree in size and are not one series,
 because the limits, the disturbances and the fixed point differ.
 
+## 7. Learned models in the control
+
+The controllers of section 6 carry the true model. This section replaces it by a learned one, in
+three settings: a one-step operating-point problem in which the learned sequence model is the
+environment of the controller (Befund 113), load following with learned maps, a GRU in the loop and
+learned policies (Befund 127), and the comparison of a learned model, a hybrid and a calibrated
+physical model when the plant deviates from the prior knowledge in its parameters or in its structure
+(Befunde 120, 122, 124, 125). All of it is simulation with placeholder parameters.
+
+### 7.1 The learned model as the environment: the optimiser seeks the model errors (Befund 113)
+
+The one-step operating-point problem of Befund 96: the context is the ambient temperature and
+humidity, the action is the inlet temperature and the gas velocity, the product moisture must stay
+below 0.15 kg/kg (placeholder); test set: the 25 grid points of Befund 52; the truth is the steady
+state of the grey-box model. Environments: U0 the grey-box model itself; U1 and U2 the composite GRU
+of arm N trained on 16 and on 64 runs; U3 an ensemble of 5 GRU whose constraint moisture is the mean
+plus two standard deviations. A learned model is mapped to an operating point by the fixed point of
+its 36-step prediction under constant inputs (decision of the project lead: the slowest moisture mode
+is longer than the prediction horizon, so a plain rollout would let a controller exploit the inertia
+instead of the learning error). Controllers: reinforcement learning (SAC and TD3) and a multistart
+optimiser (called RTO here), each against the limit tightened by five times the margin m of section
+6, the margin that Befund 96 had found necessary for the SAC policy on the grey-box model; three
+replicates.
+
+The pre-registered reading: G0 (learned models are usable as an environment) if on U2 the pooled
+feasibility on the true model is at least 0.95 and the median energy is at most 2 % above that of the
+same controller on U0; G1 if only the ensemble U3 meets this; G2 if neither does. **The reading is G0
+for SAC, TD3 and the optimiser** (feasible share on U2 1.000, 0.987 and 0.973 of 75 cases), accepted
+formally by the project lead with the qualification that **in substance G0 holds only because of the
+fivefold margin**:
+
+- The GRU underestimates the moisture at the actions the controllers choose, by 0.0049 to
+  0.0080 kg/kg on U2 (median over the replicates). The fivefold margin is larger than this bias.
+- With the margin m itself (a sensitivity without a reading) the optimiser violates the true limit in
+  39 of 75 cases on U2, in 60 of 75 on U1 and in 9 of 75 on the ensemble U3, and in none of 25 on U0.
+- Over the whole action box only 0.3 to 2.9 % of the grid points that U2 calls feasible at the margin
+  m are truly infeasible, but 7 to 19 of the 25 optima are. The optimum lies on the constraint, where
+  a small error of the model decides; an error statistic over the box understates what the optimiser
+  finds by an order of magnitude or more. This evaluation of the error map was added after the runs
+  and is descriptive.
+- The ensemble reduces the violations and does not replace the margin. Reinforcement learning does
+  not exploit the model more than the optimiser does: none of the 12 tests on the moisture error and
+  on the share of violations is resolved (three replicates).
+- The energy cost of the learned environment, from the decision of the project lead: the optimiser
+  on U2 with the fivefold margin uses about 4.6 % more true energy than the optimiser on U0 with the
+  margin m.
+
+### 7.2 Load following with learned models: the gap is the margin (Befund 127)
+
+This is the question the proposal names, the prediction of optimised transient manipulated
+variables. The headroom studies of section 6 ask whether advanced control pays given the true model;
+this study asks what it costs to replace that model by a learned one, as a function of the data, and
+in which form. The frame of Befund 126 is unchanged (truth, main band, prices, the 40 test days, cost
+per kg of dry product at the held moisture limit; the margin search ends at 0.12 kg/kg). Every learned
+arm is compared with its **twin**, the controller with the same control law and the true model; by a
+rule fixed before the reading of Befund 126 was known, the twin is the schedule C2. Three families:
+
+- **M, a learned steady-state map inside the unchanged law of C2:** M-quad (static quadratic
+  regression, the baseline) and M-gru (fixed point of the composite GRU, the mapping of section 7.1);
+  each without feedback and with an inline moisture measurement used as a slow bias correction (the
+  scheme of Befund 111); for M-gru also a laboratory sample every 4 h, descriptive only.
+- **D, the sequence model in the loop:** D-gru optimises inlet temperature and gas velocity every
+  5 min through the GRU rollout over 900 s, from the measured history.
+- **P, policies that output the three commands directly,** trained by imitation of the twin on 5 to
+  40 solved days: P-lin (ridge regression, the baseline), P-mlp, P-gru.
+
+Training data of the families M and D: the data specification of arm N, 8 to 64 runs, five seeds.
+**Admissibility comes first:** a cell (arm, feedback level, budget, seed) that reaches no margin within
+0.12 kg/kg with which the limit holds on all test days is not admissible, is counted as such and gets
+no number. 27 of the 170 learned cells are not admissible.
+
+Results at the largest budget (64 training runs, or 40 solved days for family P); gap = cost of the
+arm over the cost of the twin, each at the margin it needs; median over the admissible seeds; the
+medians of the two shares need not add up to the median gap. The margin of the twin is 0.00742 kg/kg.
+
+| Arm | Admissible seeds | Gap to the twin | Margin (kg/kg) | Margin share | Set-point share |
+|---|---|---|---|---|---|
+| M-quad, no feedback | 4 of 5 | +22.36 % | 0.0934 | +33.90 % | +0.46 % |
+| M-quad, inline feedback | 5 of 5 | +8.51 % | 0.0203 | +3.34 % | +1.94 % |
+| M-gru, no feedback | 5 of 5 | +7.07 % | 0.0357 | +7.83 % | -1.17 % |
+| M-gru, inline feedback | 5 of 5 | +3.87 % | 0.0221 | +3.82 % | +0.05 % |
+| M-gru, laboratory sample (descriptive) | 5 of 5 | +7.62 % | 0.0348 | +7.52 % | +0.31 % |
+| D-gru | 5 of 5 | +2.98 % | 0.0088 | +0.34 % | +2.54 % |
+| P-lin | 5 of 5 | +14.15 % | 0.0344 | +7.40 % | +6.74 % |
+| P-gru | 5 of 5 | +10.47 % | 0.0338 | +7.22 % | +3.31 % |
+| P-mlp | 1 of 5 | not admissible for the reading | - | - | - |
+
+The margins of the rows M-quad, P-lin, P-gru and M-gru with the laboratory sample, the admissible
+seeds of M-gru with feedback and with the laboratory sample, and the two shares of the rows M-quad,
+P-lin and M-gru with the laboratory sample are taken from the tables of
+`docs/44_learned_setpoints.md` (sections 16.1 and 16.3); the other entries are in the lab-book entry
+as well.
+
+The pre-registered reading starts with the admissibility (an arm with fewer than 4 of 5 admissible
+seeds at the largest budget enters no class) and then takes the first class that applies, per family:
+U0 no admissible arm is cheaper than fixed set points; U1 the baseline arm is within 2 % of its twin;
+U2 the baseline is not, a named other arm is; U3 otherwise (better than a fixed point, but the gap to
+the known model remains). **The reading is U3 in every family** (M without and with feedback, D, P),
+valid and accepted by the project lead: no arm is within 2 % of its twin, so no arm is named and **no
+data need is determined**. The expectation declared beforehand (U1 with feedback) is not met. Family P
+is U3 by the letter only: the median cost of P-gru is 0.015 % below that of the fixed set points and
+3 of 5 seeds are cheaper; in substance the policies do not beat a fixed set point at 40 solved days.
+
+What the numbers say beyond the class:
+
+- **The gap is the margin.** With feedback the learned map chooses the set points of the twin
+  (set-point share +0.05 %) and pays for the distance it has to keep from the limit (margin share
+  +3.82 %). Without feedback the set-point share is negative: the map underestimates the moisture at
+  its own optimum (by 0.0077 kg/kg at 64 runs, median of the seed means), the arm runs closer to the
+  limit than it plans to, and the larger margin pays for exactly that. This is the mechanism of
+  section 7.1.
+- **What a margin costs.** On the curve of the twin a margin of 0.015 kg/kg costs 1.92 % and a margin
+  of 0.02 kg/kg 3.26 %: the 2 % of the reading corresponds to a margin of about 0.015 kg/kg.
+- **Learning the model costs more than load following gains.** The twin gains 2.07 % against constant
+  throughput with the true steady optimum (C0); no learned arm is cheaper than C0 in the median at
+  any budget. The closest, D-gru at 64 runs, is 0.85 % above C0.
+- **More data do not close the gap of the map.** Gap of M-gru at 8, 16, 32 and 64 runs: +11.28, +7.44,
+  +7.04 and +7.07 % without feedback and +6.06, +3.98, +3.23 and +3.87 % with it. D-gru: +5.44 % at 16
+  and +2.98 % at 64 runs. P-gru: +21.18, +12.05 and +10.47 % at 10, 20 and 40 solved days.
+- **Feedback.** The inline measurement about halves margin and gap of M-gru at every budget and does
+  not bring it within 2 %. The laboratory sample every 4 h does not help. Why this differs from
+  section 8 is an interpretation of the project lead that the study did not test: the error of the
+  learned map depends on the operating point, and the throughput changes hourly under load following.
+- **Rank statements.** Of 27 tested comparisons between learned arms one is resolved after Holm (P-gru
+  cheaper than P-lin at 40 days, where P-lin has no variation over the seeds). M-gru is cheaper than
+  M-quad in every comparison that could be tested, in every common seed, and none of these passes Holm
+  with five seeds; D-gru against M-gru is not resolved.
+- **The reported margins are optimistic.** The margin of every cell is found on the test days, as for
+  the reference controllers. A margin searched on 40 days of the training months holds on all test
+  days in 2 of 5 seeds for M-gru without feedback, in 4 of 5 for M-gru with feedback and for D-gru, in
+  3 of 5 for P-gru: for no learned arm in every seed (descriptive; the reading names no arm).
+
+Fixed beforehand as caveats: the truth is the simulator without a parameter or a structural
+deviation, so the twin is a perfectly calibrated physical model, the most favourable case for the
+physics; the training runs are excitation experiments of 8 h each, not operating records; the inline
+feedback assumes a moisture measurement that the plant does not have (Befund 56); a policy needs an
+expert that knows the model, so it saves computing time and not modelling effort; every model is the
+tested, untuned configuration.
+
+### 7.3 Learned model, hybrid or calibrated physical model, with few runs (Befunde 122, 124, 125)
+
+Section 7.2 gives the physics its most favourable case. These three studies take that away step by
+step. Common design: the one-step operating-point problem of section 7.1; the truth is the grey-box
+model with the material parameters of one of 20 draws (the two kinetic parameters, critical moisture
+and `nu_max`, and the five parameters of the isotherm), the prior knowledge is the model with the
+nominal parameters; data from the pool of arm N generated with the truth, 4 to 32 training runs in
+Befund 122 and 4 to 16 in the other two. Models: M0 the prior knowledge
+alone; M1 the GRU; M2 a refit of the two kinetic parameters of the prior model; M2b the refit plus a
+constant bias of the moisture from the training runs (from Befund 124 on); M3 the hybrid, prior
+knowledge plus a GRU on the residual. The margin of a model is the one with which the limit holds in
+95 % of the cases that lie inside its training range; the search ends at 0.12 kg/kg ("not reached").
+
+| | Befund 122 | Befund 124 | Befund 125 |
+|---|---|---|---|
+| Truth against the prior knowledge | same structure, other parameters | in addition a share of 0.30 of the spray water evaporates above the bed: the bed is drier than the prior expects (error to the safe side) | in addition exhaust recirculation with the fraction 0.35: the bed is wetter than the prior expects (error to the unsafe side) |
+| Seeds | 3 | 5 | 5 |
+| The reading is defined on | the margin | the margin | the energy at the held limit, on admissible cells |
+| Pre-registered reading | Y2 | "mixed" (none of Z0, Z1, Z2) | E3 |
+
+**Same structure, other parameters (Befund 122).** Margins in kg/kg at 4, 8, 16 and 32 runs (median
+over the seeds): GRU 0.1173, 0.12, 0.0456 and 0.0318; hybrid 0.0375, 0.1089, 0.0374 and 0.0195; refit
+0.0019, 0.0032, 0.0039 and 0.0032. Reading Y2: at no budget up to 16 runs does the hybrid need a
+resolvably smaller margin than the GRU; Y1 (the refit is equivalent to the hybrid) is not met. The
+project lead accepted Y2 with two qualifications. First, with three seeds the resolution thresholds
+(0.049 to 0.134 kg/kg) are of the order of the margins themselves: Y2 means "not resolvably better",
+not "equally good", and the study is under-powered for the question. Second, the core finding is not
+the class: **the rollout error of the moisture of the hybrid is 8 to 12 times smaller than that of
+the GRU at 4 and 8 runs (0.0037 and 0.0033 against 0.0451 and 0.0259 kg/kg) without a resolvably
+smaller margin. The margin is set by the least favourable cases, not by the mean error.** The refit
+is favoured by construction, because the truth has the structure of the prior model. An ensemble of
+residual networks with the constraint "mean plus k standard deviations" does not reach the 95 % with
+k up to 10 in 6 of 12 cells: the spread of an ensemble does not capture a systematic error that its
+members share. Outside the training range the margin found inside holds only for the refit, at 16 and
+32 runs.
+
+**Structural error to the safe side (Befund 124).** Margins at 16 runs: prior knowledge 0, hybrid 0,
+GRU 0.0406, refit 0.0061, refit with bias 0.0072 kg/kg. The hybrid needs a resolved smaller margin
+than the refit with bias (difference 0.0095 kg/kg, 5 of 5 seeds, Holm 0.0329), and against the plain
+refit the difference misses Holm (0.0701): none of the three classes fixed beforehand applies, and
+the reading "mixed" was accepted without reinterpreting a class. **The project lead names a design
+weakness of the reading:** the zero margin of the hybrid and of the prior knowledge is caution, not
+accuracy. Both overestimate the moisture at their own operating point (by 0.031 and 0.070 kg/kg) and
+pay in energy. A margin measures only the additional safety a model needs and therefore favours
+models that err to the safe side; a reading on the margin was unsuitable. Without a reading, the
+energy above the oracle at 16 runs: refit with bias 8.1 %, GRU 8.2 %, refit 9.1 %, hybrid 16.2 %,
+prior knowledge 29.5 %. The refit cannot represent the structural error: 62, 61 and 66 of 100 fits
+(at 4, 8 and 16 runs) end at the bounds of both parameters; the bias compensates for the moisture.
+
+**Structural error to the unsafe side (Befund 125).** The prior knowledge now underestimates the
+moisture at its own operating point by 0.0523 kg/kg in the median. The reading is on the energy of the
+truth at the operating point of the model, relative to the oracle, at the held limit; a cell whose
+margin is not reached within 0.12 kg/kg is not admissible, is counted and gets no substitute value.
+Reading E3, nothing resolved: 11 of the 12 tests have fewer than 4 pairs of admissible cells and
+cannot be resolved, and the one that can (GRU against refit with bias at 16 runs) is not. **The
+project lead names a second design weakness:** the reading compared only pairs of admissible cells,
+so the largest difference between the models, whether they hold the limit at all, did not enter it.
+That difference, counted as fixed beforehand but without a test:
+
+| Model | Admissible cells of 15 | Energy relative to the oracle at 4 / 8 / 16 runs (median over the admissible seeds) |
+|---|---|---|
+| M2, refit | 13 | 1.017 / 1.016 / 1.014 |
+| M2b, refit with bias | 13 | 1.015 / 1.016 / 1.014 |
+| M0, prior knowledge | 11 | 1.421 / 1.385 / 1.385 |
+| M1, GRU | 6 | - / 1.197 / 1.368 |
+| M3, hybrid | 6 | 1.194 / 1.254 / 1.434 |
+
+Even the calibrations need a margin of about 0.11 kg/kg in single cells, at 37 to 41 % more energy.
+The hybrid has the smallest rollout error of the moisture at 4 and 8 runs (0.0054 and 0.0046 against
+0.0377 and 0.0279 kg/kg for the GRU) and is admissible least often. Post hoc and labelled as such: the
+same cost measure applied to the records of Befund 124 gives the class E0 there (the refit with bias
+is resolved cheaper than the hybrid at 16 runs, 5 of 5 seeds, Holm 0.0093); the reading "mixed" of
+Befund 124 is unchanged by this. Disclosed: the rule that fixed the strength of the error was amended
+once after the medians of the prior knowledge had become visible; the selection is the same under
+both versions.
+
+**The order that follows, and its status.** From the decision of the project lead on Befund 125:
+over Befunde 120, 122, 124 and 125 the order "calibrate, then a bias, only then learn" holds in all
+four studies; it is **resolved on the safe side and only descriptive on the unsafe side**. The line
+is closed until the real structural deviation of the plant is known from data (section 10).
+
 ## 13. Limits of the numbers that are shown
 
 - **Grey-box simulator, not the plant.** Four states, no agglomeration, no breakage; the
