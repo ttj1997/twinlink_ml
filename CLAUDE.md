@@ -77,6 +77,7 @@ lab book (`04_stand_ap1.md`), process setup, and synthesis documents.
   (`evaluation/paired_resolution.py`) for every rank claim of a new study; the older
   `resolution.py` only to reproduce old findings.
 
+- New studies that use the steady-state optimiser (headroom, load following) set `steady_cold_starts = 8` in `Solvers` (cold multi-start, nothing remembered between solves; the warm start was worse in 1.82 % of the queries, Befund 129). The defaults stay at 0 and exist only to reproduce old results.
 - Run-level splits, never window-level.
 - Learning curves as primary result; 3-5 seeds, median and range.
 - Baselines before any architecture comparison.
