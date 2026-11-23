@@ -1,14 +1,13 @@
 # NN -- Conclusion of AP 1: method selection for the dynamic control of fluidised-bed spray granulation
 
-> **Status:** version 2, 2026-11-23 (version 1: 2026-11-20). The selection of section 7 is accepted
-> by the project lead with four additions (decision of 2026-11-23, section 11); (a) to (c) are
-> worked in, (d) waits for the merge of the branch `order-dependence`. **Not final:** the document
-> is rebased and finalised once `order-dependence` and `module-api` are merged. Branch
-> `ap1-conclusion` (from `master` 33aa046, lab book up to Befund 128). No code, no run, no new number: every number
+> **Status:** final, version 3, 2026-11-23 (version 1: 2026-11-20; version 2: 2026-11-23). The
+> selection of section 7 and the deviation of section 6 are accepted by the project lead (decisions
+> of 2026-11-23, section 11). Branch `ap1-conclusion`, rebased onto `master` 82dcc84 (lab book up to
+> Befund 129, with the addenda of 2026-11-23 to Befunde 105, 126, 127 and 128). No code, no run, no new number: every number
 > below is quoted from a finding of the lab book (`docs/04_stand_ap1.md`) and traced to its artifact
 > in section 10. `docs/08_synthese_m2.md` stays frozen at version 5f (2026-10-20) and is not changed;
 > it documents the method and the comparison of the forecast models. This document adds what
-> version 5f does not contain: the control studies after it (Befunde 105 to 128), the explicit
+> version 5f does not contain: the control studies after it (Befunde 105 to 129), the explicit
 > selection of methods, and the reasoned deviation from the proposal on reinforcement learning.
 > **All results are statements about a grey-box simulator with placeholder parameters or about
 > synthetic data, not about a plant.** Findings are cited as "Befund N".
@@ -30,7 +29,10 @@ as follows.
    operating point, an MPC adds 0.55 %, and the upper bound with perfect preview is 1.51 %
    (Befund 105). With the throughput as a command under an hourly electricity price, a two-level
    price rule saves 2.07 % of the cost per kg of dry product, the economic MPC 2.88 % and the
-   perfect preview 3.89 % (Befund 126); this gain exists only with an electric heater.
+   perfect preview 3.89 % (Befund 126); this gain exists only with an electric heater. The numbers
+   are quoted as recorded; with the cold multi-start of the steady optimiser the dated addenda give
+   9.10 % instead of 8.93 % and 2.08 % instead of 2.07 %, and the readings are untouched (Befund 129;
+   section 4).
 3. **Learned models in the control (prediction of optimised transient set points).** No learned
    arm comes within 2 % of the same control law with the known model: the GRU in the loop costs
    2.98 % more per kg, the GRU map with an inline moisture feedback 3.87 %, without feedback
@@ -47,8 +49,8 @@ as follows.
    lever in continuous operation (Befunde 111, 112; section 7).
 
 Not complete in AP 1: training on data of dynamic Dyssol models (A6, partial) and the integration
-of the pipeline as a module into the framework of the consortium coordinator (A7, in progress;
-section 9). The selection of section 7 is accepted by the project lead (decision of 2026-11-23,
+of the pipeline into the framework of the consortium coordinator (A7: the interface is built,
+`docs/47_module_api.md`; the integration is open, the specification is requested; section 9). The selection of section 7 is accepted by the project lead (decision of 2026-11-23,
 section 11); each of its lines rests on a reading the project lead has accepted.
 
 ## 2. The tasks of AP 1 and where each stands
@@ -64,7 +66,7 @@ repository; short form in `docs/01_projektsteckbrief.md`).
 | A4 | Reliable prediction with few training data through a suitable sampling of the parameter range; low data need | done; the data need beyond 64 runs is not determined | Befunde 55, 87, 88, 94 (addendum), 107, 122, 127 | 3, 8 |
 | A5 | Contribute to a lower energy demand at equal product quality | done on the simulator; quality is the product moisture only | Befunde 105, 126 | 4 |
 | A6 | Training and comparison first with synthetic data from existing Dyssol models and from TUHH-A-AP 2 | partial: stationary Dyssol flowsheets done (Befund 128); training on data of dynamic Dyssol models depends on the granulation model of TUHH-A | Befund 128 | 8, 9 |
-| A7 | Data and model pipeline as a separate module in the framework of the consortium coordinator, usable for other optimisation tasks such as the distribution of waste heat | in progress: branch `module-api` (not merged) | none on `master`; branch `module-api` | 9 |
+| A7 | Data and model pipeline as a separate module in the framework of the consortium coordinator, usable for other optimisation tasks such as the distribution of waste heat | interface built (`docs/47_module_api.md`); integration into the framework of the consortium coordinator open, specification requested | `docs/47_module_api.md` (infrastructure, no finding) | 9 |
 
 ## 3. Forecast model: accuracy, generalisability, real-time ability
 
@@ -107,9 +109,9 @@ limit. The controllers of this section carry the true model as their internal mo
 
 | Befund | Operation | Commands | Compared | Result (median) | Pre-registered reading |
 |---|---|---|---|---|---|
-| 105 | continuous operation, disturbances ridden out | inlet temperature and gas velocity every 5 min | R0 fixed operating point, R1 quasi-stationary RTO, R3 MPC without disturbance preview (2 h), R2 perfect preview (upper bound) | R0 -> R1 8.93 % energy (0.69 .. 25.23 %); R1 -> R3 0.55 % (0.05 .. 1.50 %); R1 -> R2 1.51 % (1.02 .. 2.44 %) | L0: dynamic control does not pay in continuous operation |
+| 105 | continuous operation, disturbances ridden out | inlet temperature and gas velocity every 5 min | R0 fixed operating point, R1 quasi-stationary RTO, R3 MPC without disturbance preview (2 h), R2 perfect preview (upper bound) | R0 -> R1 8.93 % energy (0.69 .. 25.23 %; addendum: 9.10 % with the cold multi-start); R1 -> R3 0.55 % (0.05 .. 1.50 %); R1 -> R2 1.51 % (1.02 .. 2.44 %) | L0: dynamic control does not pay in continuous operation |
 | 105 | product change (moisture target 0.15 -> 0.12) | as above | R1, R3, R2 | time to the new specification: R1 37-55 min, R3 0.9-1.8 min | none (per changeover; frequency unknown) |
-| 126 | load following under an hourly price with a daily production target, main band 1.2-1.8 kg/h | in addition the spray rate (throughput), hourly | C0 constant throughput with the steady optimum, C1 two-level price rule, C2 schedule on the steady-state map, C3 economic MPC, C4 perfect preview (upper bound) | gain in cost per kg against C0: 2.07 % / 2.06 % / 2.88 % / 3.89 % (C1 / C2 / C3 / C4); `gap(C1, C3)` 0.83 % | T1: a price rule suffices |
+| 126 | load following under an hourly price with a daily production target, main band 1.2-1.8 kg/h | in addition the spray rate (throughput), hourly | C0 constant throughput with the steady optimum, C1 two-level price rule, C2 schedule on the steady-state map, C3 economic MPC, C4 perfect preview (upper bound) | gain in cost per kg against C0: 2.07 % / 2.06 % / 2.88 % / 3.89 % (C1 / C2 / C3 / C4; addendum: C1 2.08 %, C2 1.98 % with the cold multi-start and a newly searched margin); `gap(C1, C3)` 0.83 % | T1: a price rule suffices |
 
 **Reading of the table.** (1) The step from a fixed operating point to the steady optimum at the
 current disturbance carries the saving (8.93 %); the dynamics add 0.55 %, and even the perfect
@@ -120,6 +122,18 @@ the trajectory share -0.35 %; in Befund 126 the schedule share is about 2.5 % fo
 energy (decision of the project lead on Befund 105). (4) Load following shifts consumption in time
 and saves no energy: C1 and C2 use slightly more energy than C0 (1135.3 against 1132.9 kWh). With a
 gas heater there is no gain (C1 and C2 are 0.04 % and 0.08 % more expensive than C0; Befund 126).
+
+**Addenda of 2026-11-23 (cold multi-start, Befund 129).** The table and the text quote Befunde 105
+and 126 as recorded. The steady optimiser behind the reference controllers depends on the order of
+its queries. Recomputed with a cold multi-start (8 starts; R0, R1, C0, C1 and C2 only), R1 holds
+the limit with the margin 0.005859 instead of 0.006641, and its median saving against R0 is 9.10 %
+instead of 8.93 % (addendum to Befund 105). C2 does not hold the limit at its recorded margin;
+with the newly searched margin 0.007812 instead of 0.007422 its gain against C0 is 1.98 % instead
+of 2.06 %, and that of C1 is 2.08 % instead of 2.07 % at an unchanged margin (addendum to
+Befund 126). No statement of Befund 105 is withdrawn, so L0 stands, and the reading T1 is
+untouched. The controllers with a dynamic optimiser (R3, R2, C3, C4) were not recomputed
+(`docs/12`, item 38): the gaps to them (0.55 %, 1.51 %, 0.83 %, 1.05 %) and the shares are as
+recorded.
 
 **Manipulated variables.** Inlet temperature, gas velocity and spray rate were commands in the
 dynamic studies; the studies of Befunde 126 and 127 run with these three commands.
@@ -257,7 +271,7 @@ Befund 127).
 | Moisture information | feedback of a moisture measurement, the most effective lever in continuous operation (b); there a laboratory sample every 4 h | GRU soft sensor as the feedback | Befunde 111, 112, 127 |
 | Reinforcement learning | not selected for the granulator | - | section 6 |
 | Training data | excitation experiment at the plant; pre-training on the simulator plus fine-tuning | constant operating records alone; hybrid with the simulator as an input channel as the default | Befunde 55, 87, 88 |
-| Steady optimiser of the set-point optimisation | cold multi-start (d) | - | finding on the order dependence, reading O0; number of the finding open, branch `order-dependence` not merged: the reference is entered at the finalisation |
+| Steady optimiser of the set-point optimisation | cold multi-start; new studies set `steady_cold_starts = 8` (d) | warm start from the previous solution (the default 0 stays only to reproduce old results) | Befund 129 (O0; largest change 3.78 %) |
 
 The line "learned model in the loop" names the two cheapest learned arms of Befund 127; the reading
 U3 names no arm, and D-gru against M-gru is not resolved.
@@ -274,9 +288,13 @@ steps of one ladder.
 **Load following (c).** The gain of Befund 126 exists with an electric heater only; with a gas
 heater there is none (section 4).
 
-**Steady optimiser (d).** Entered by decision of the project lead of 2026-11-23. The finding is
-not on the state this document is based on: no number of it is quoted here, and until its merge
-the caveat on the order dependence in section 9 stands.
+**Steady optimiser (d).** The steady optimiser starts every solve from the previous solution, so
+its result depends on the order of the queries: the warm start returns a worse local optimum than
+a cold multi-start in 1.82 % of 94211 queries, by up to 2.58 % of the power. Pre-registered reading
+O0: no key number of Befunde 105, 126 and 127 that rests on it changes by more than 10 % when the
+dependence is removed (largest change 3.78 %). New studies set `steady_cold_starts = 8`; the
+defaults stay at 0 to reproduce old results (Befund 129, decision of the project lead of
+2026-11-23).
 
 ## 8. Data need
 
@@ -314,29 +332,29 @@ the caveat on the order dependence in section 9 stands.
 - The margins of Befund 127 are found on the test days; a margin searched on other days holds on
   the test days in every seed for no learned arm, so the reported margins are optimistic.
 - Five seeds (three in Befunde 113 and 122), untuned networks and RL agents throughout.
-- **Order dependence of the steady optimiser** (`docs/12`, item 37): found in Befund 127, where the
-  re-run of C2 differs from the records of Befund 126 by 0.0016 % in the sum. The code belongs to
-  Befunde 105 and 126; the follow-up against these two findings is on the branch
-  `order-dependence` (not merged). Their numbers are quoted here as recorded. By decision of the
-  project lead of 2026-11-23 this caveat is replaced by the reference to the finding on the order
-  dependence once that finding is merged (section 11, (d)); at that point every number quoted
-  from Befunde 105 and 126 is checked against the addenda the merge brings.
+- **Order dependence of the steady optimiser** (Befund 129): found in Befund 127, where the re-run
+  of C2 differs from the records of Befund 126 by 0.0016 % in the sum, and measured in Befund 129
+  with the reading O0 (largest change of a key number 3.78 %; section 7, (d)). The numbers of
+  Befunde 105 and 126 are quoted as recorded, with the dated addenda named in section 4. The twin
+  of Befund 127 was recomputed as well: at newly searched margins its cost changes by 0.075 % and
+  the smallest gap of a learned arm by 2.603 % relative (0.029000 against 0.029775, with the costs
+  of the arm held), so that gap stays above the 2 % of the reading U3. Not recomputed: the
+  controllers with a dynamic optimiser (R2, R3, C3, C4) and the learned arms (`docs/12`, item 38).
 
 **Not complete in AP 1.**
 
 - **A6, Dyssol data: partial.** The sequence models were trained on data of the project's own
   grey-box simulator. Stationary Dyssol flowsheets are done (Befund 128). Training and comparison
   on data of dynamic Dyssol models depend on the granulation model of TUHH-A and are open.
-- **A7, module: in progress.** No finding and no merged code on the state this document is based
-  on. A package for the interface is in work on the branch `module-api` (not merged, not assessed
-  here); the interface itself belongs to the framework of the consortium coordinator and has to
-  be agreed there.
+- **A7, module: interface built, integration open.** The package `twinlink_ml.api` makes the
+  pipeline integrable: forecast, set-point, calibration and heat-distribution service, a
+  transferable model bundle and versioned JSON schemas (`docs/47_module_api.md`; infrastructure,
+  no finding). It contains no framework adapter. The framework, its transport and its information
+  model are the consortium coordinator's to define; the specification is requested. The task is
+  not done as long as no adapter exists (decision of the project lead of 2026-11-23).
 
-**Open until the finalisation.** The document is rebased onto `master` after the merges of
-`order-dependence` and `module-api`. Then follow: the reference of addition (d) in sections 7
-and 9 in place of the caveat, the check of every number quoted from Befunde 105 and 126, and the
-status of A7 with its evidence. The number of this document, its row in `docs/12` and a README
-paragraph are left to the managing session at merge.
+**Left to the managing session at merge.** The number of this document, its row in `docs/12` and a
+README paragraph.
 
 ## 10. Traceability table
 
@@ -371,7 +389,10 @@ Rows that restate `docs/08_synthese_m2.md` 5f carry the artifact named in its ap
 | Steady optimisation with few true evaluations (8) | 64; 256 | 107 | `surrogate_rto_v1_analysis.json`, `surrogate_rto_v2_analysis.json` | `docs/25_surrogate_rto.md` |
 | Stationary Dyssol flowsheets (8) | 32 / 128; 64 / 256; D2 | 128 | `dyssol_steady_v1_one_line_analysis.json`, `dyssol_steady_v1_two_lines_analysis.json` | `docs/45_dyssol_steady_state.md` |
 | Plant-near model (9) | 5.51 K | 117 | `plant_scale_v1_analysis.json` | `docs/34_plant_scale.md` |
-| Order dependence of the steady optimiser (9) | 0.0016 % | 127 | `learned_setpoints_v1.json.gz` | `docs/44_learned_setpoints.md`, `docs/12`, item 37 |
+| Order dependence of the steady optimiser: where found (9) | 0.0016 % | 127 | `learned_setpoints_v1.json.gz` | `docs/44_learned_setpoints.md` |
+| Order dependence: reading, mechanism, rule (7, 9) | O0; 3.78 %; 1.82 % of 94211; 2.58 %; 8 starts; 0.075 %; 2.603 % (0.029000 against 0.029775) | 129 | `order_dependence_v1.json.gz`, `order_dependence_v1_analysis.json` | `docs/46_order_dependence.md` |
+| Cold multi-start: addenda to Befunde 105 and 126 (1, 4) | 9.10 % instead of 8.93 %, margin 0.005859 instead of 0.006641; 1.98 % instead of 2.06 %, margin 0.007812 instead of 0.007422; 2.08 % instead of 2.07 % | 129; addenda of 2026-11-23 to 105 and 126 | `order_dependence_v1_analysis.json` | `docs/46_order_dependence.md` |
+| Module interface (2, 9) | no number | none (infrastructure) | none | `docs/47_module_api.md` |
 
 ## 11. Decisions of the project lead (2026-11-23)
 
@@ -399,3 +420,17 @@ Entered with version 2; the sections above are changed accordingly.
    put to the project lead together with section 7.
 5. **The sentence on the frames in addition (b) stays** (section 7: the 13.40 % of Befund 111 and
    the 8.93 % of Befund 105 come from different frames and are not steps of one ladder).
+
+**Supplement (2026-11-23, third decision of the project lead: finalisation).** Both conditions of
+item 3 are met: `order-dependence` is merged as Befund 129 (`docs/46_order_dependence.md`),
+`module-api` as `docs/47_module_api.md` (infrastructure, no finding). Entered with version 3:
+
+6. **Addition (d) is entered** in sections 7 and 9: the caveat is replaced by the reference to
+   Befund 129 (O0, largest change 3.78 %; new studies set `steady_cold_starts = 8`).
+7. **Numbers of Befunde 105 and 126:** quoted as recorded, with the dated addenda named (R1 9.10 %
+   instead of 8.93 %; C2 1.98 % instead of 2.06 % at a newly searched margin; C1 2.08 % instead of
+   2.07 %); the readings are untouched.
+8. **A7:** "interface built (`docs/47_module_api.md`), integration into the framework of the
+   consortium coordinator open, specification requested"; not "done" as long as no adapter exists.
+   This replaces the status "in progress" of item 2.
+9. **The document is final** with version 3.
