@@ -939,6 +939,42 @@ replace the measurement in any tested form. The step not taken is a model-based 
 estimates the moisture and the unknown input offsets jointly and uses the transients (`docs/12`,
 section I, item 19).
 
+## 9. Reinforcement learning: what was done, and the reasoned deviation
+
+The proposal puts an emphasis on reinforcement learning in combination with time-based models.
+Version 5f listed it as an outlook. It is a result of AP1: reinforcement learning was trained on
+three problems, and for the granulator in sequential operation it was not trained, for a reason that
+was fixed before the runs. The wording of this deviation was accepted by the project lead with
+`docs/48_ap1_conclusion.md`, section 6; this section gives the evidence in the order of the studies.
+
+- **One-step operating-point problem on the grey-box model (Befunde 62, 68, 93, 96).** The line is
+  closed as a diagnostic finding: with a residual action and a separated moisture cost the policy is
+  feasible in every seed at five times the base margin, the smallest tested factor that meets the gate
+  (factors 1, 2, 3 and 5 tested, 4 not), at 6.9 % extra energy over the optimiser with the base
+  margin, of which 6.5 points are the margin itself.
+- **Reinforcement learning on the learned sequence model (Befund 113, section 7.1).** SAC and TD3
+  trained on the composite GRU as their environment stay feasible on the grey-box model only with the
+  fivefold margin, and they are no better than the optimiser on the same learned model.
+- **Sequential reinforcement learning on a storage problem (Befund 115, section 11).** SAC and TD3
+  (three seeds, 400 000 steps each, untuned) for a heat pump with a storage under an hourly price end
+  behind the constant rule, by 3.13 % and 2.98 % of the cost. The reading of that study does not
+  depend on their quality: the whole headroom above a simple price rule is 0.65 %.
+- **The headroom was measured before a sequential agent for the granulator would have been trained
+  (Befunde 105 and 126, section 6).** In continuous operation the upper bound with the true model and
+  perfect preview is 1.51 % above the quasi-stationary set-point optimisation; the reading is L0, and
+  by the rule fixed beforehand the line for the granulator in continuous operation was closed. With
+  the throughput as a command the gap between the price rule and the MPC is 0.83 % and the value of
+  perfect information 1.05 %, against a threshold of 5 % for a study of reinforcement learning; the
+  reading is T1.
+
+Where reinforcement learning was trained it did not reach the direct optimisation, and its cost is
+the margin it needs, which the optimiser pays too. **What the deviation does not cover:** (a) both
+headroom studies use controllers that see the true state; partial observability (a state estimator,
+measurement noise, soft-sensor operation) was not tested and is expressly open; (b) the whole
+throughput box, where the perfect preview gains 8.96 % without a reading (section 6); (c) frequent
+product changes, whose frequency is not known. In each of these cases the headroom would have to be
+measured again before a study of reinforcement learning.
+
 ## 10. Plant link
 
 Everything above is simulation. This section collects what the plant data that were available say
@@ -1049,11 +1085,6 @@ Dyssol models depend on the granulation model of the sub-project TUHH-A and are 
   by line before any interconnection.
   **A coupling gain of lines A and B is not demonstrated in the corrected model** (0 of 6 scenarios at
   20 K minimum approach, 1 of 6 at 10 K as a sensitivity; Befund 81).
-- **Reinforcement learning (Befunde 62, 68, 93, 96).** The line is closed as a diagnostic
-  finding: with a residual action and a separated moisture cost the policy is feasible in every
-  seed at five times the base margin, the smallest tested factor that meets the gate (factors 1, 2,
-  3 and 5 tested, 4 not), at 6.9 % extra energy over the optimiser with the base margin, of which
-  6.5 points are the margin itself.
 - **Partner model (Befunde 74, 75, 90, 95).** The ranking of the partner's scenarios is
   robust against every assumption switched (Befund 95); the model recovers 60 to 88 % of an
   independent counter-current calculation, and the flow arrangement is the assumption that
