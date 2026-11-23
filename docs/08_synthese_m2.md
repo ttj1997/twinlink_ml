@@ -1048,6 +1048,59 @@ air of 150 to 300 degC, while plant A is about 300 times larger with supply air 
 Stationary Dyssol flowsheets were used as a data source in Befund 128 (section 5); data of dynamic
 Dyssol models depend on the granulation model of the sub-project TUHH-A and are open (section 12).
 
+## 11. Other optimisation tasks: waste heat, heat pump, storage, heat network, partner model
+
+The proposal wants the pipeline to be usable for other optimisation tasks such as the distribution of
+waste heat. The studies of this section are those tasks. They are scenario bands on placeholders or
+comparisons of model against model; **none of them is a statement about a plant**, and every number
+carries its scenario. The table gives one row per finding; the text after it gives the picture they
+form together.
+
+| Befund | Question | Result | Reading or decision |
+|---|---|---|---|
+| 81 | Coupling of two lines in the corrected model of the heat network. | **A coupling gain of lines A and B is not demonstrated in the corrected model** (0 of 6 scenarios at 20 K minimum approach, 1 of 6 at 10 K as a sensitivity; Befund 81). | As a procedure (not a finding), set points are optimised line by line before any interconnection. |
+| 74, 75, 90, 95 | Partner model, the earlier delivery: which assumption moves which scenario? | At the workbook point of that delivery the ranking of the partner's scenarios is robust against every assumption switched (Befund 95); the model recovers 60 to 88 % of an independent counter-current calculation, and the flow arrangement is the assumption that matters (Befund 90 with its addendum). | For the later delivery and over the operating range see Befunde 106, 110 and 121 below. |
+| 91, 92, 99 | Storage of plant A. | The model bounds the storage volume only from above and is not a predictor. The saving consists entirely of the added discarded compressor heat; pure shifting in time saves nothing. A later time-slice study with an ideal storage: a rule without foresight reaches the ideal storage, and the potential depends on an assumed compressor load profile (Befund 99 with its addendum). | The saving read by the pre-registered rule is L1 (L2 only post hoc with a plain rule); the time-slice study reads L2 by its pre-registered gate. No reinforcement learning was built for this storage. |
+| 100 | Site pinch: how much waste heat can the site use at most, where is the pinch, at which temperature should a heat network run? | In the reference scenario 436 kW less fossil heat than today (655 against 1092 kW); over the grid of 2232 scenarios 62 to 3564 kW. The compressor heat saturates without further sinks: 800 and 1200 kW of it give the same result. A network with a supply of 70 to 75 degC and a return of 40 to 45 degC reaches at least 90 % of the possible saving in 96 % of the scenarios. | Exploration without a gate. What limits the site is the number of heat consumers, not the waste heat. |
+| 101 | Heat pump on low-temperature waste heat: does it pay, and does a heat pump with a storage under a time-varying signal need foresight? | It saves in every one of the 528 scenarios of the grid under every central criterion, as a booster across the pinch on top of the direct recovery. Gate on the storage: in 114 of 4480 realistic cells a programme with foresight is at least 2 points better than the best of three rules; declared post hoc, a tuned constant rule leaves 18 of them, all in an assumed shift mode. | L1 formally, by the rule fixed beforehand; reading of the project lead: a constant rule closes most of the gap, a learning control is not justified. |
+| 102 | Exhaust recirculation of one line (laboratory line): how much exhaust can be recirculated before the moisture limit is violated, and what does it save? | At unchanged set points almost nothing: the moisture limit already binds at 17 of 25 ambient states. With re-optimised set points every tested fraction up to 0.8 is feasible and the CO2 of the line falls by 17.0 % in the median (envelope over the arms, declared post hoc), most in cold weather. Recirculation makes the line's own heat recovery possible instead of competing with it. | No gate. A model optimum, not a recommendation: the inlet humidity leaves the range the kinetics were set for, and the kinetics placeholders lead the sensitivity. |
+| 103 | Operating point of plant A: what would another air flow and supply-air temperature save in CO2, counting steam and fans? | Stationary balance on the day means of the two measured days: at the reference placeholders at most 758 kg CO2 per day (14.6 %) on one product and 90 kg per day (2.8 %) on the other. Three unknowns decide: the minimum air flow, the fan law and how the waste-heat side reacts. | An upper bound under placeholders and proxy constraints, no operating recommendation. Side result: the solid fraction assumed in Befund 99 is inadmissible by the energy balance of the same days (taken up by an addendum to Befund 99). |
+| 106 | Partner model, a later delivery: does the reproduction carry over, do the partner's own Excel and Dyssol figures agree with an independent rebuild, and are they plausible? | The workbook is reproduced completely with one switch changed (230 cells). 53 of 60 reported values of five data sets agree with Excel within rounding; in one data set Excel is not consistent with itself. Reusable plausibility checks find the expected violations and one more. With counter-current exchangers the recovery is 10 to 52 % above the partner model with an unpressurised circuit and 44 to 121 % above it with a pressurised one. | No gate; model against model, written as feedback to the partner. |
+| 110 | Partner model, six cases of connecting two exhausts with two sinks, new inputs: Excel, Dyssol, counter-current exchangers, and the distance to the best network. | Workbook reproduced exactly; Excel within rounding in 72 of 72 values, Dyssol in 42 of 72 (its case 2 uses swapped medium flows). Case 1, each process with its own recovery, is first in every mode. Its saving rises from 17.9 % in the partner model to 28.4 % (unpressurised) and 33.1 % (pressurised) with counter-current exchangers, and it reaches 92.5 % and 83.6 % of what any network of circuits could save. With an unpressurised circuit two pairs of the cascade cases become equal. | Core statement of the project lead: the physics of the exchangers acts more strongly than the interconnection (the span between the six cases in the partner model is about 6 %). Valid for the inputs of the workbook, not plant-near. |
+| 114 | Operating point and heat recovery of one line: optimise them jointly, or one after the other? | On the line model the joint optimum equals "first the dryer, then the recovery" in every one of the 50 test states. The minimum approach of the exchanger decides how much the recovery gives: 13.75 % of the energy at 5 K, 0.48 % at 10 K, nothing at 20 K (medians). | J0 at every approach and in both variants of the medium: one after the other suffices. The value of the recovery is a question of the exchanger design, not of the control. |
+| 115 | Heat pump and storage with power limits under an hourly electricity price: a rule, an MPC or reinforcement learning? | Real hourly day-ahead prices of 2024, test on four months. A schedule-aware price rule is 0.65 % above the MPC with perfect prices (0.31 to 0.88 % per test month), and the MPC 0.010 % above the optimum in hindsight. SAC and TD3 end behind the constant rule (section 9). A first run was aborted because test prices leaked into the training; it was fixed and every job re-run. | H0: a simple price rule suffices; neither an MPC nor reinforcement learning is justified. |
+| 118 | Campaign network: does a heat network pay when the consumers run in campaigns and stand still in between? | One waste-heat source, three plants with campaigns, one year in hourly steps. Additional share of the source that the network uses, at the source power of today (400 kW) and an availability of 0.57: 42.08 % with independent standstills, 27.60 % with joint ones; in continuous operation 1.60 %. Simple rules stay up to 7.30 % below the bound with full foresight. | N1: with consumers that stand still a network pays clearly. Restriction by the project lead: this baseline gives the source to one plant alone; the citable network benefit is the one against the fair baseline of Befund 119. |
+| 119 | Campaign network 2: does a better simple rule, or a rolling planning on the production plan, close the gap to the bound? | Against a fair baseline (the source in fixed shares to the three plants) the network benefit at 400 kW is 0.00 % in continuous operation and 4.0 to 39.6 % at an availability of 0.57. A rolling planning with an exactly known standstill plan stays within 0.98 % of the bound in every cell; with plan deviations of up to 24 h and a naive correction the gap is up to 3.29 %. A dynamic order of the cascade does not help. | Q2 formally. The picture drawn by the project lead: a simple rule is mostly sufficient, planning with the production plan pays up to about 3 %, reinforcement learning is not justified. |
+| 121 | Partner model: is the case that the workbook finds best (case 1) best over the operating range? | No case is best everywhere, in any mode. In the main mode (physical, unpressurised circuit) case 1 is strictly best on 0.471 of the admissible box and best or practically equal on 0.666; near the workbook point on 0.950 and 0.993. The partner mode overstates it (0.740 strictly best). The choice is between two cases and follows the order of the two exhaust temperatures; always choosing case 1 costs nothing in the median and at most 10.1 % of the fuel. | Readings as fixed: "not robust" (strictly best) and "conditional" (best or practically equal) over the box, "robust" near the workbook point. The shares depend on the placeholder box; the rule and the distribution of the extra consumption are what is reliable. |
+
+**The picture these studies form.**
+
+1. **A heat network falls apart in continuous operation and pays with standstills.** In the corrected
+   model two lines in continuous operation show no coupling gain (Befund 81). Against a fair baseline
+   the network benefit at the source power of today is nothing in continuous operation and comes
+   entirely from the standstills when the plants run in campaigns; what decides is whether the
+   standstills coincide (Befunde 118, 119). At the level of the site, what is missing is heat
+   consumers, not waste heat (Befund 100).
+2. **The design of the exchangers matters more than the interconnection.** Counter-current exchangers
+   and the admissible temperature of the medium move the saving of the best case by more than the
+   choice among the six cases (Befunde 106, 110); the value of a recovery falls from 13.75 % to nothing
+   between a minimum approach of 5 and of 20 K (Befund 114); and the circuit flows weigh more than the
+   choice of the case (Befund 121).
+3. **Simple rules suffice.** A tuned constant rule for the heat pump (Befund 101), a price rule for
+   the heat pump with storage (Befund 115), a rule without foresight for the storage (Befund 99) and a
+   simple cascade rule or a planning on the production plan for the campaign network (Befund 119) come
+   close to their bounds with foresight. Reinforcement learning was not justified by any of these
+   studies; where it was trained (Befund 115) it ended behind the constant rule.
+
+**What changed against version 5f.** Version 5f said that the ranking of the partner's scenarios is
+"robust against every assumption switched". That holds at the workbook point of the earlier delivery;
+over the operating range no case is best everywhere, and the partner mode overstates the robustness
+of the case it ranks first (Befund 121). The 60 to 88 % of Befund 90 belong to the earlier delivery
+and are not comparable with the figures of Befund 106. Version 5f said of storage that "no RL was
+built"; that is true of the storage of plant A and no longer of storage problems in general (Befund
+115). And the sentence that a coupling gain is not demonstrated holds for continuous operation; with
+campaigns a network pays (Befunde 118, 119).
+
 ## 13. Limits of the numbers that are shown
 
 - **Grey-box simulator, not the plant.** Four states, no agglomeration, no breakage; the
@@ -1078,23 +1131,6 @@ Dyssol models depend on the granulation model of the sub-project TUHH-A and are 
   the Transformer more seeds are needed (section 2); the family-wise correction is conservative.
 - **A single timing run** on a single machine (Befund 97); the networks used for the timing were
   fitted for two epochs only (the cost of `predict` does not depend on the weights).
-
-## Outlook of version 5f (being dissolved into sections 9 and 11)
-
-- **Coupling of lines (Befund 81).** As a procedure (not a finding), set points are optimised line
-  by line before any interconnection.
-  **A coupling gain of lines A and B is not demonstrated in the corrected model** (0 of 6 scenarios at
-  20 K minimum approach, 1 of 6 at 10 K as a sensitivity; Befund 81).
-- **Partner model (Befunde 74, 75, 90, 95).** The ranking of the partner's scenarios is
-  robust against every assumption switched (Befund 95); the model recovers 60 to 88 % of an
-  independent counter-current calculation, and the flow arrangement is the assumption that
-  matters (Befund 90 with its addendum).
-- **Storage of plant A (Befunde 91, 92, 99).** The model bounds the storage volume only from
-  above and is not a predictor. The saving read by the pre-registered rule is L1 (L2 only
-  post hoc with a plain rule); it consists entirely of the added discarded compressor heat,
-  pure shifting in time saves nothing, and no RL was built. A later time-slice study with an ideal
-  storage reads L2 by its pre-registered gate: a rule without foresight reaches the ideal storage,
-  and the potential depends on an assumed compressor load profile (Befund 99 with its addendum).
 
 ## Appendix A: tools, environment and study template
 
