@@ -102,18 +102,38 @@ with which that controller holds the limit on a whole family of cases (appendix 
 U3 and so on) are fixed per study before its run and have no meaning across studies; each is spelled
 out where it is used.
 
-## 2. Method
+## 2. Method: rules that can be reused
 
-**Learning curves as the primary result format.** For every method the error is reported
-over the number of training runs ($n_{\mathrm{train}} \in \{8, 16, 32, 64\}$), as median and range over
-five seeds (Figures 1 and 2). A model that leads at small $n_{\mathrm{train}}$ but stops improving has a
-different data need from a model whose curve still falls at 64.
+This section states the method as rules that a third party can apply. Each rule has the same four
+parts: the rule, the reason, the finding that triggered it, and the typical pitfall. They are the
+working rules of the project (`CLAUDE.md`, sections Methodology, Long runs and Provenance) together
+with their evidence; the templates that implement them are in appendix E. Rules 1 to 4 concern the
+comparison of forecast models, rules 5 to 10 every study that ends in a decision, rules 11 to 13 the
+computing practice. Where a rule is illustrated by a number, the number is in the section named.
 
-**Run-level splits.** Training, validation and test sets are separated by simulation runs,
-never by windows or time points. A window-wise split, common in parts of the literature,
+### Rule 1: split by run, never by window
+
+**Rule.** Training, validation and test sets are separated by simulation runs,
+never by windows or time points.
+
+**Reason.** Windows of one run share its trajectory, its disturbances and its initial state. A split
+by windows puts near-copies of the test windows into the training set and measures interpolation
+inside known runs, not the prediction of a new run, which is what a plant asks for.
+
+**Finding.** A window-wise split, common in parts of the literature,
 reports on the same data an error that is lower by 29 to 68 % depending on the target
 (Befund 39: ExtraTrees, horizon 1, run-median NRMSE of the energy target, the product moisture
 and the median particle diameter).
+
+**Pitfall.** A window-wise split is the default of many data loaders and of part of the literature;
+it does not announce itself. The split has to be checked at the level of run identifiers.
+
+### Rule 2: learning curves as the primary result, on two test sets that are always named
+
+**Rule.** For every method the error is reported
+over the number of training runs ($n_{\mathrm{train}} \in \{8, 16, 32, 64\}$), as median and range over
+five seeds (Figures 1 and 2). A model that leads at small $n_{\mathrm{train}}$ but stops improving has a
+different data need from a model whose curve still falls at 64.
 
 **Two test sets, always named.** The *excited* test set (steps, PRBS, ramps inside every
 run) measures identification quality; the *constant-run holdout* (set points constant within
@@ -123,22 +143,19 @@ test set and budget named, because persistence is structurally weak on the excit
 trivially strong on constant runs (Befund 51, K5). The excited set contains a small share of
 constant runs (`docs/12`, D-W2).
 
-**Baselines first.** Persistence, a static quadratic regression and a linear ARX run before
-any neural model. The error metric is the run-median RMSE in physical units at horizon 36
-(900 s) unless stated; horizon 1 is reported separately.
+**Reason.** The question of the milestone is the data need, and a single budget cannot answer it.
+**Test sets.** A constant-run holdout hides what an excited set shows and conversely;
+every number is quoted with its test set (Befund 51).
 
-**Data basis.** The old records (arm A0, Befund 51/58) rest on the legacy data
-configuration. The re-run (Befund 94) adds arm A1 (legacy trajectories, planned future
-inputs) and **arm N, the preset version 2** (`DataSpec.new_study`: planned future inputs, own
-disturbance process of the solid fraction, per-run cap of the gas velocity at the terminal
-velocity of the initial diameter; Befund 82, 86). Arm N is the basis of this synthesis.
-`process/fingerprint` covers the process configuration only; the data, excitation and split
-digests are recorded next to it. The new records come from a single machine; arm A0 carries a
-platform confound (GRU, LSTM and baselines on Linux, Transformer, xLSTM and Mamba on
-Windows; Befund 83 b); at the cells re-run, Befund 84 and 85 found no platform effect for
-GRU and LSTM beyond the last digits.
+**Finding.** Befunde 51 and 94 (the learning curves of section 3 and appendix D).
 
-**Resolution: paired over seeds, Holm as the main form.** All methods run with the same
+**Pitfall.** A factor against persistence without its test set; one budget read as "the" accuracy
+of a method; and a learning curve of the prediction error read as the data need of a controller
+(section 5; Befund 127).
+
+### Rule 3: the same seeds for every method, paired statistics, Holm as the main form
+
+**Rule.** All methods run with the same
 master seeds; per cell the differences `reference - candidate` are formed per seed and
 tested with the t distribution on four degrees of freedom (`evaluation/paired_resolution.py`;
 Befund 82). The test is on the mean of the differences; the tables report medians. The
@@ -163,28 +180,245 @@ varies strongly (GRU on the excited set 3 to 753 seeds), because the spread betw
 small budgets. The M2 definition of 10 to 15 % sits in a note of the project profile and the work
 plan, not in the formal definition.
 
-### Methodological findings (version 5f; merged into the rules of this section in a later step)
+**Reason.** Four observations from the comparison of section 3:
 
-- **Run-level splits** prevent an optimistic bias of 29 to 68 % (section 2; Befund 39).
-- **Negative transfer.** A shared loss over targets of unequal difficulty degrades the energy
-  target in soft-sensor operation; per-target networks (composite) avoid it (Befund 26).
-- **Static explainability of dE** makes R^2 uninformative; compare in physical units (section 3).
 - **t instead of z, paired instead of unpaired** at the resolution threshold: the z
   threshold of Befund 63 g was too small at few seeds, and pairing over seeds removes the
   shared seed effect (Befund 67, 82, 83).
 - **Effect size next to the verdict.** With five seeds and a family of 336 tests, Holm leaves
   large effects unresolved; the ratio of the medians and the sign consistency over the seeds are
   reported with every verdict (addendum to Befund 98).
+- **Holm and Benjamini-Hochberg.** In arm N 260 of 336 rank cells are resolved without
+  correction, 251 after Benjamini-Hochberg and 70 after Holm (Befund 94); the main form here is Holm.
 - **Seed budget.** Five seeds resolve large differences everywhere. They are of the order needed
   for a 10 to 12.5 % difference of GRU against LSTM on energy and bed temperature (3 to 8 seeds,
   arm N, $n_{\mathrm{train}}$ = 64), not for the Transformer (4 to 10 seeds), and on the moisture only
   for GRU on the excited test set (section 2; addendum to Befund 94).
-- **Holm and Benjamini-Hochberg.** In arm N 260 of 336 rank cells are resolved without
-  correction, 251 after Benjamini-Hochberg and 70 after Holm (Befund 94); the main form here is Holm.
-- **Test sets.** A constant-run holdout hides what an excited set shows and conversely;
-  every number is quoted with its test set (Befund 51).
+
+**Finding.** Befunde 67, 82, 83, 94 and 98 with their addenda. Later studies added three practices:
+a difference counts as resolved only if it survives Holm within a family fixed beforehand **and** has
+the same sign in at least 4 of 5 seeds (Befunde 120, 124, 125); a new resolution in the direction a
+cell already had is counted apart from a reversal or a reordering (decision on Befund 109, section
+3); and the family is fixed per study and per question, not over all cells of a study (Befund 127).
+
+**Pitfall.** Calling a large effect that Holm leaves unresolved "a tendency", or an unresolved
+difference "equal". With three seeds the resolution thresholds can be of the size of the effect
+itself: such a study is under-powered, and its verdict means "not resolvably better" (Befund 122,
+section 7.3).
+
+### Rule 4: baselines before any architecture comparison
+
+**Rule.** Persistence, a static quadratic regression and a linear ARX run before
+any neural model. The error metric is the run-median RMSE in physical units at horizon 36
+(900 s) unless stated; horizon 1 is reported separately. Where a physical model exists, its calibration and
+a constant bias on top of it are baselines of every learned model (Befunde 120 and 123).
+
+**Reason.** A learned model is worth what it adds over the simplest alternative, and the simplest
+alternative differs from target to target. **Static explainability of dE** makes R^2 uninformative; compare in physical units (section 3).
+**Negative transfer.** A shared loss over targets of unequal difficulty degrades the energy
+target in soft-sensor operation; per-target networks (composite) avoid it (Befund 26).
+
+**Finding.** Befunde 16, 26 and 59 for the forecast models; Befunde 120 and 123 for the calibration
+and the bias (sections 7.4 and 10): a constant bias was as good on the other day as a calibration of
+the plant-near model, and with few points a hard baseline for every learned model of a static balance.
+
+**Pitfall.** A coefficient of determination on a target that a static regression already explains;
+a learned model compared only with other learned models (study A had neither a calibration nor a bias
+in its comparison set, section 7.4).
+
+### Rule 5: fix the reading before the first run
+
+**Rule.** Question, design, metric, the classes of the reading with their thresholds, the validity
+conditions, the budget and the order of cuts are written and committed before the first run that
+could show a result: the design in a study document, the reading verbatim in the docstring of the
+analysis script (appendix E). What was seen before that commit (probes, smoke runs) is disclosed.
+Decisions the session takes without asking are listed for confirmation, each with the most
+conservative reading. Anything added after a result is labelled post hoc and never replaces the
+reading. The project lead accepts or rejects the reading as fixed and adds a dated decision
+paragraph; a class is not reinterpreted afterwards.
+
+**Reason.** A study with several outputs, several controllers and several plausible thresholds can be
+read in favour of almost any conclusion after the fact. The fixed reading is what makes "a price rule
+suffices" or "no arm is within the threshold" a finding and not an impression.
+
+**Finding.** The stability rule of Befund 69 and the gates of Befunde 92 and 99 were the first
+readings fixed beforehand; from Befund 105 on every study of sections 5 to 11 has one. Cases in which
+the fixed reading was kept although its content was uncomfortable: the class R2 that hinges on one
+sharpening cell (Befund 109), the class "mixed" (Befund 124), the class O2 reached only through one
+variant fixed beforehand (Befund 116), the class U3 "by the letter" (Befund 127).
+
+**Pitfall.** A reading formulated after a dry run had shown the numbers (Befund 110, disclosed, both
+readings kept in the artifact); test figures visible in a smoke test before the main run (Befunde 115
+and 126, disclosed, reading committed before and unchanged); a rule that fixes a study parameter
+amended after first values were visible (Befund 125, disclosed, the selection identical under both
+versions). None of these is forbidden; each has to be written down where the result is.
+
+### Rule 6: admissibility first, then the cost at the held limit
+
+**Rule.** When models or controllers are compared for use under a constraint, every one gets the
+smallest margin with which the constraint holds on the whole family of cases, and the comparison is
+made on the cost at that held limit. When a margin can fail to be reached, the reading starts with
+the admissibility: the share of admissible cells per model is compared first; costs are compared
+second, on cells that are admissible for both. A cell that is not admissible is counted and gets no
+substitute value.
+
+**Reason.** A margin measures only the additional safety a model needs. A model that errs to the safe
+side needs none and looks best, while it pays in cost; and a comparison of costs on admissible cells
+alone cannot say that a model fails to hold the limit at all.
+
+**Finding.** Two design weaknesses that the project lead names as such (section 7.3): the reading of
+Befund 124 was defined on the margin and favoured the models that overestimate the moisture; the
+reading of Befund 125 compared only pairs of admissible cells, so that 11 of its 12 tests could not be
+resolved and the largest difference between the models did not enter. Befund 127 was then designed
+with the admissibility as the first step of the reading.
+
+**Pitfall.** Ranking by the margin; averaging costs over cells in which some models violate the
+limit; replacing a margin that was not reached by the upper end of the search.
+
+### Rule 7: do not choose a model for control by its mean prediction error
+
+**Rule.** A model that is to stand inside an optimiser or a controller is assessed at the points the
+optimiser chooses and at the tails, with rule 6, not by its error on a test set.
+
+**Reason.** An optimiser places its optimum on the constraint, where a small error of the model in
+its favour decides; it finds the errors of the model. The margin is set by the least favourable cases.
+
+**Finding.** Sections 7.1 to 7.3: an error statistic over the whole action box understates what the
+optimiser finds by an order of magnitude or more (Befund 113); the hybrid has a much smaller rollout
+error than the GRU without a resolvably smaller margin (Befund 122), and with a structural error to
+the unsafe side it has the smallest rollout error and is admissible least often (Befund 125); under
+load following the gap of the learned map is its margin (Befund 127).
+
+**Pitfall.** Selecting the model for the control from the learning curves of section 3; trusting
+the spread of an ensemble to cover a systematic error that its members share (Befunde 113 and 122).
+
+### Rule 8: calibrate, then a bias, only then learn
+
+**Rule.** Where a physical model exists, the order of attempts is: calibrate its parameters after
+checking which of them the data can determine; add a constant bias; use a learned model for what is
+left. The status of this order is part of the rule: it is resolved where the structural error lies on
+the safe side and only descriptive where it lies on the unsafe side (decision on Befund 125).
+
+**Reason.** A calibration needs the fewest data wherever the structure of the model fits, and it
+extrapolates; a bias is the cheapest correction of what the structure does not contain.
+
+**Finding.** Befunde 107, 120, 122, 124 and 125 (sections 5 and 7), and for real plant data Befund 123
+(section 10), where the identifiability analysis came before the fit.
+
+**Pitfall.** Fitted parameters that compensate a hidden error are physically wrong and must not be
+reported as measured values (Befund 107); a refit can end at its bounds without representing the
+error (Befund 124); and "calibrate first" is not shown for a plant whose structural deviation is
+unknown (section 10).
+
+### Rule 9: a margin is valid only where it was found
+
+**Rule.** A margin is reported with the family of cases, the range of inputs and the signal it was
+searched on. Whether it holds outside is tested and reported separately.
+
+**Reason.** A margin is an empirical quantile of a family of cases, not a property of a model.
+
+**Finding.** Outside the training range the margin found inside held for one model only (Befund 122);
+the margins searched under the price signal did not hold for two controllers under a constant price
+(Befund 126); a margin searched on other days held on the test days in every seed for no learned arm
+(Befund 127). Sections 6 and 7.
+
+**Pitfall.** Margins found on the test days are optimistic; they are comparable between controllers
+searched in the same way and are not the margins a deployed controller would need.
+
+### Rule 10: measure the headroom with the known model before every learning study
+
+**Rule.** Before a learned controller or a reinforcement-learning agent is trained for a task, the
+gain it could reach at most is measured with controllers that know the true model: a fixed point, a
+simple rule, an optimiser without preview, and an upper bound with perfect preview. The thresholds
+that would justify the learning study are fixed beforehand.
+
+**Reason.** These reference controllers are cheap compared with a learning study, they bound its
+result from above, and they show where the gain comes from (in sections 6 and 7 it came from the
+margin, not from the trajectory).
+
+**Finding.** Befund 105 closed the line of reinforcement learning for the granulator in continuous
+operation with such a bound, Befund 126 did the same for load following, and Befund 127 measured
+against the same references what a learned model costs. Before these, reinforcement learning had been
+trained on a one-step problem in which the direct optimisation was better (section 9).
+
+**Pitfall.** Training an agent where the upper bound is below the threshold; reading the upper bound
+as an achievable gain; forgetting that the bound was measured with the true state known (section 12).
+
+### Rule 11: a steady optimiser with a cold multi-start, and bit-equality controls of re-runs
+
+**Rule.** New studies that use the steady-state optimiser set `steady_cold_starts = 8`: every solve
+starts from fixed start points and remembers nothing between solves. The defaults stay at the old
+behaviour and exist only to reproduce old results. Every study re-runs at least one reference of an
+earlier finding and compares it with the records bit for bit.
+
+**Reason.** A warm start makes the result of a query depend on the queries solved before it, so that
+two runs of the same code with another division of the work differ; and it returns a worse local
+optimum in a measurable share of the queries.
+
+**Finding.** The bit-equality control of Befund 127 found the dependence; Befund 129 measured it
+(section 6).
+
+**Pitfall.** "Below the threshold of the reading" does not mean that no printed number moves: two
+did, and they are recorded as dated addenda. A single cold start removes the dependence on the order
+and keeps most of the worse local optima.
+
+### Rule 12: long runs
+
+**Rule.** A stage that runs for hours saves its results per unit at once, can be resumed, and logs
+every finished unit; a failing unit is recorded and does not discard the others. Before a main run a
+dry run covers all units at minimal cost. A probe with batches of full size gives the peak memory
+per worker; the number of workers is at most the number of physical cores, and workers times peak
+memory stays below 80 % of the memory of the machine. Budgets are wall-clock time; the cuts and their
+order are fixed before the main run, and a main run that exceeds its budget and demonstrably
+progresses continues, documented as a decision. Main runs are started detached from the session.
+Stage outputs are written packed, so that the working tree is clean between stages. Checkpoints and
+other content that cannot be reproduced in seconds are copied out of a working tree before it is
+removed.
+
+**Reason.** Each sentence of the rule answers a loss that occurred.
+
+**Finding.** A first attempt lost to exhausted memory (Befund 105); checkpoints lost with a removed
+working tree and retrained, reproducing their records exactly (addendum to Befund 111; Befund 113); a
+margins run lost after more than a day because one case set was empty and the driver discarded the
+results of the other units, followed by a standstill at a clean-tree check (decision on Befund 122); a probe on small batches that underestimated the peak memory of the main run by a factor of about
+6 (Befund 127).
+
+**Pitfall.** A probe on a single unit or on shortened units as the basis of a time or memory
+estimate; a budget counted in processor hours where wall-clock time was meant (Befund 113).
+
+### Rule 13: provenance
+
+**Rule.** Scripts are committed before they run, on a clean working tree; every artifact records the
+commit, the dirty flag, the versions, the fingerprints of its configurations, the version of the data
+preset, and the location of the code that was loaded, and a run aborts if that is not the code of its
+own checkout. Artifacts are never overwritten. New studies generate their data with one preset
+(`DataSpec.new_study`); an exception is approved and recorded (`docs/12`, section L). Lab-book entries
+are append-only, corrections are dated addenda. A synthesis quotes only numbers that are in a finding
+and an artifact, and every placeholder is labelled as one.
+
+**Reason.** Every number of this document can be traced to a commit and recomputed (appendices A and
+G), and the old results stay reproducible while the defaults for new studies change.
+
+**Finding.** The platform confound of the old records (Befund 83 b), the data preset (Befund 86), and
+two figures that entered decision paragraphs from a conversation and from an unversioned report and
+had to be corrected by dated addenda (Befunde 127 and 128).
+
+**Pitfall.** A number from a conversation in a decision paragraph; an editable installation that
+points at another checkout than the one whose commit the artifact names; a fitted or assumed value
+quoted without its label "placeholder".
 
 ## 3. Architecture comparison (arm N)
+
+**Data basis.** The old records (arm A0, Befund 51/58) rest on the legacy data
+configuration. The re-run (Befund 94) adds arm A1 (legacy trajectories, planned future
+inputs) and **arm N, the preset version 2** (`DataSpec.new_study`: planned future inputs, own
+disturbance process of the solid fraction, per-run cap of the gas velocity at the terminal
+velocity of the initial diameter; Befund 82, 86). Arm N is the basis of this synthesis.
+`process/fingerprint` covers the process configuration only; the data, excitation and split
+digests are recorded next to it. The new records come from a single machine; arm A0 carries a
+platform confound (GRU, LSTM and baselines on Linux, Transformer, xLSTM and Mamba on
+Windows; Befund 83 b); at the cells re-run, Befund 84 and 85 found no platform effect for
+GRU and LSTM beyond the last digits.
 
 Eight methods (persistence, static regression, ARX, GRU, LSTM, Transformer, xLSTM, Mamba),
 three targets, two test sets, $n_{\mathrm{train}} \in \{8,16,32,64\}$, five seeds, horizons 1 and 36;
@@ -1101,6 +1335,51 @@ built"; that is true of the storage of plant A and no longer of storage problems
 115). And the sentence that a coupling gain is not demonstrated holds for continuous operation; with
 campaigns a network pays (Befunde 118, 119).
 
+## 12. What is not shown
+
+The statements of sections 3 to 11 end where this list begins. Each item names what a reader might
+take the results to cover and where they stop.
+
+- **A plant.** Every result is a statement about the grey-box simulator of the laboratory line with
+  placeholder parameters, or about synthetic data. The forecast models are not validated against
+  plant data; the product moisture is not measured at the plant (Befund 56). The drying kinetics, the
+  parameters that decide the operating point (section 8.1), have not been measured.
+- **Product quality beyond the moisture.** The particle size is constant in the model: the median
+  particle diameter does not depend on the operating point. Changes of the throughput therefore carry
+  no cost in product quality, which is why the reading of the load-following study is restricted to
+  a narrow band and the result in the wide band has no reading (Befund 126, section 6).
+- **A calibrated model of plant A.** The structure of the grey-box model does not carry from one
+  measured day to the other, and the two days do not allow a physical calibration (Befunde 117 and
+  123, section 10). No result of sections 6 to 8 is transferred to plant A. Whether the moisture limit
+  binds at the plant at all is an open question to the application partner (Befund 105).
+- **Dynamic Dyssol data.** The sequence models were trained on the project's own simulator. Dyssol
+  was used as a data source for stationary flowsheets only (Befund 128); training on data of dynamic
+  Dyssol models depends on a granulation model that was not available.
+- **Partial observability.** Every reference controller of sections 6 and 7 sees the true state and,
+  in section 6, knows the true model. No state estimator, no measurement noise in the loop and no
+  soft-sensor operation was tested with them, and the headroom bounds of rule 10 were measured under
+  this assumption. The inline feedback of Befund 127 assumes a moisture measurement that the plant
+  does not have. The observer that Befund 116 points to was not built.
+- **Batch operation.** The simulator and every control study model continuous operation with a
+  controlled bed level. A headroom study for batch operation was not made (`docs/12`, section I,
+  item 8), and nothing is said about soft sensors in transient or batch operation, where the gas-side
+  signal of the moisture is larger (Befunde 112 and 116).
+- **A sequential reinforcement-learning agent for the granulator.** It was not trained; the reason
+  and the three cases that the reason does not cover are in section 9.
+- **Frequent product changes and a wide throughput band.** The time an MPC saves at a product change
+  is reported per changeover and not extrapolated; the wide band has numbers and no reading (`docs/12`,
+  section I, item 36).
+- **Controllers with a dynamic optimiser under the cold multi-start.** The MPC and the preview
+  optima of Befunde 105 and 126 and the learned arms of Befund 127 were not recomputed after
+  Befund 129; the gaps to them are as recorded (`docs/12`, section I, item 38).
+- **The real structural deviation.** The studies with a structural error use two synthetic
+  deviations, one to each side (Befunde 124 and 125). Which deviation a plant has is not known, and
+  the order of rule 8 is only descriptive on the unsafe side.
+- **Tuned models and agents.** Every network, every learned controller and every
+  reinforcement-learning agent is one untuned configuration (section 13).
+- **The module in a framework.** The interface of the pipeline is built (`docs/47_module_api.md`, no
+  finding); its integration into the framework of the consortium coordinator is open.
+
 ## 13. Limits of the numbers that are shown
 
 - **Grey-box simulator, not the plant.** Four states, no agglomeration, no breakage; the
@@ -1131,6 +1410,21 @@ campaigns a network pays (Befunde 118, 119).
   the Transformer more seeds are needed (section 2); the family-wise correction is conservative.
 - **A single timing run** on a single machine (Befund 97); the networks used for the timing were
   fitted for two epochs only (the cost of `predict` does not depend on the weights).
+- **Fewer seeds in three studies.** Three replicates in Befunde 113 and 122 and two seeds per variant
+  in the soft-sensor part of Befund 112 (after a budget cut). With three seeds the resolution
+  thresholds of Befund 122 are of the size of the margins themselves.
+- **Margins found on the test cases.** The margins of sections 6 and 7 are searched on the cases on
+  which the costs are reported. They are comparable between controllers and optimistic as margins of a
+  deployed controller (rule 9; Befund 127).
+- **Stratified test days.** The load-following studies use 40 test days stratified by the daily price
+  spread, chosen by a rule fixed beforehand, not the whole test months (Befunde 126 and 127); one year
+  of prices.
+- **Readings accepted formally.** Four readings were accepted as fixed with a qualification in
+  substance by the project lead (Befunde 109, 113, 116 and 127), and two with a named weakness of the
+  reading itself (Befunde 124 and 125); each is given with its qualification where it is used.
+- **Numbers with a dated addendum.** The numbers of Befunde 105 and 126 are quoted as recorded and
+  the addenda of 2026-11-23 next to them (section 6); two figures of the merge supplements of
+  Befunde 127 and 128 were withdrawn by addenda and are not quoted.
 
 ## Appendix A: tools, environment and study template
 
