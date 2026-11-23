@@ -20,7 +20,9 @@ import ctypes
 import shutil
 import subprocess
 import sys
+import tempfile
 import time
+import weakref
 from abc import ABC, abstractmethod
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
@@ -311,6 +313,21 @@ class DyssolFlowsheet(SteadyStateSource):
         self.end_time = any_stream.time_s
         self._phases = tuple(any_stream.phase_fractions)
         self._index = {r: _compound_index(self.file, self.names, r) for r in COMPOUND_NAMES}
+        self._local_copy: Path | None = None
+
+    def local_source(self) -> Path:
+        """The source file in a local temporary directory (copied once per instance).
+
+        ``DyssolC`` cannot open a flowsheet from a network (UNC) path, so every job opens this
+        copy instead of the delivered file. The directory is removed with the instance.
+        """
+        if self._local_copy is None or not self._local_copy.exists():
+            directory = Path(tempfile.mkdtemp(prefix="twinlink_dyssol_src_"))
+            weakref.finalize(self, shutil.rmtree, directory, True)
+            copy = directory / self.source.name
+            shutil.copyfile(self.source, copy)
+            self._local_copy = copy
+        return self._local_copy
 
     def _fractions(self, role_values: Mapping[str, float]) -> str:
         values = [0.0] * len(self.file.compounds)
@@ -336,15 +353,19 @@ class DyssolFlowsheet(SteadyStateSource):
         rows += [f'HOLDUP_COMPOUNDS "{unit}" "{_FEED}" {p}' for p in parts]
         return "\n".join(rows)
 
-    def script(self, lines: Sequence[LineInputs], result: Path) -> str:
-        """Script of one job: the source file with the feeds and parameters of ``lines``."""
+    def script(self, lines: Sequence[LineInputs], result: Path, source: Path | None = None) -> str:
+        """Script of one job: the source file with the feeds and parameters of ``lines``.
+
+        ``source`` is the file ``DyssolC`` opens (default: the delivered file; ``evaluate``
+        passes the local copy).
+        """
         if len(lines) != len(self.topology.lines):
             raise ValueError("one LineInputs per line of the flowsheet")
         inst = self.installation
         t0, t1 = 0.0, self.end_time
         rows = [
             "JOB",
-            f'SOURCE_FILE "{self.source}"',
+            f'SOURCE_FILE "{self.source if source is None else source}"',
             f'RESULT_FILE "{result}"',
             f'MATERIALS_DATABASE "{inst.materials_db}"',
             f'MODELS_PATH "{inst.units_dir}"',
@@ -389,14 +410,17 @@ class DyssolFlowsheet(SteadyStateSource):
         return "\n".join(rows) + "\n"
 
     def evaluate(self, lines: Sequence[LineInputs], tag: str) -> Evaluation:
-        """Run Dyssol in its own scratch directory; the directory is removed on success."""
+        """Run Dyssol on the local copy of the source file in its own scratch directory.
+
+        The scratch directory is removed on success.
+        """
         scratch = self.work_dir / tag
         if scratch.exists():
             shutil.rmtree(scratch)
         scratch.mkdir(parents=True)
         result = scratch / "result.dflw"
         script = scratch / "script.txt"
-        script.write_text(self.script(lines, result), encoding="utf-8")
+        script.write_text(self.script(lines, result, self.local_source()), encoding="utf-8")
         t0 = time.perf_counter()
         process = subprocess.Popen(
             [str(self.installation.executable), f"--script={script}"],

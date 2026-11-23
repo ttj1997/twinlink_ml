@@ -355,6 +355,51 @@ def test_script_sets_feeds_and_parameters_by_the_names_of_the_file(tmp_path, mon
     )
 
 
+def test_evaluate_opens_a_local_copy_of_the_flowsheet_not_the_delivered_path(
+    tmp_path, monkeypatch
+) -> None:
+    """DyssolC cannot open a flowsheet from a network (UNC) path: it gets a local copy."""
+    file = _fake_file([LAB, LAB2], (1, 0))
+    monkeypatch.setattr(
+        "twinlink_ml.dyssol_steady.flowsheet.load_dyssol_steady_state", lambda _path: file
+    )
+    delivered = tmp_path / "share" / "source.dflw"  # stands in for the UNC delivery
+    delivered.parent.mkdir()
+    delivered.write_bytes(b"flowsheet bytes")
+    seen: list[Path] = []
+
+    class FakeProcess:
+        returncode = 0
+
+        def __init__(self, command, **_kwargs: object) -> None:
+            script = Path(command[1].removeprefix("--script=")).read_text(encoding="utf-8")
+            rows = {r.split(" ", 1)[0]: r.split(" ", 1)[1] for r in script.splitlines() if " " in r}
+            opened = Path(rows["SOURCE_FILE"].strip('"'))
+            assert opened.read_bytes() == b"flowsheet bytes"
+            seen.append(opened)
+            Path(rows["RESULT_FILE"].strip('"')).write_bytes(b"result")
+
+        def communicate(self):
+            return "", None
+
+    monkeypatch.setattr("twinlink_ml.dyssol_steady.flowsheet.subprocess.Popen", FakeProcess)
+    installation = DyssolInstallation(
+        tmp_path / "DyssolC.exe", tmp_path / "units", tmp_path / "m.dmdb"
+    )
+    flowsheet = DyssolFlowsheet(delivered, installation, tmp_path / "work", NAMES)
+    flowsheet.evaluate(flowsheet.nominal, "a")
+    flowsheet.evaluate(flowsheet.nominal, "b")
+    assert len(seen) == 2 and seen[0] == seen[1]  # copied once per instance
+    assert seen[0] != delivered and seen[0].parent != delivered.parent
+    assert delivered.read_bytes() == b"flowsheet bytes"  # the delivery itself is untouched
+    directory = seen[0].parent
+    del flowsheet
+    import gc
+
+    gc.collect()
+    assert not directory.exists()  # the temporary copy is removed with the instance
+
+
 # ----------------------------------------------------------------------------- design
 def test_box_is_resolved_from_absolute_and_relative_entries() -> None:
     entry = {
