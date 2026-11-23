@@ -340,6 +340,12 @@ needs the simulator ahead of every prediction: one horizon of 36 steps costs 253
 the simulator, of 256,123 µs in total, i.e. **98.8 % simulator share**; the network alone
 (2,987 µs) is not the cost of the hybrid.
 
+**Time per decision of the controllers.** The controllers of sections 6 and 7 decide on a grid of
+5 min. Under load following (Befund 127) the learned policies need less than 0.1 ms per decision, the
+arms with a tabulated map about 6 ms, the GRU in the loop 84 ms and an MPC on the true model with the
+same short horizon 119 ms; the MPC without preview of Befund 105 needs about 1 s per solve. Computing
+time is no obstacle for any of them; it does not separate the methods.
+
 ## 5. Data need and how it was reduced
 
 **Data need from the learning curves (arm N; appendix D).** With the fixed protocol the error of GRU
@@ -728,6 +734,39 @@ both versions.
 over Befunde 120, 122, 124 and 125 the order "calibrate, then a bias, only then learn" holds in all
 four studies; it is **resolved on the safe side and only descriptive on the unsafe side**. The line
 is closed until the real structural deviation of the plant is known from data (section 10).
+
+### 7.4 The static counterpart: pre-training against calibration, a bias and a residual model (Befund 120)
+
+Study A (section 5) found pre-training on the simulator plus fine-tuning ahead of training from
+scratch at small numbers of runs, for a sequence model on dynamic synthetic plants. Its comparison set
+contained no calibrated physical model and no bias correction. Befund 120 puts these competitors in,
+for a static source that is a closed formula (the dryer balance of the partner model): the balance
+alone; the balance with four calibrated physical parameters; the balance plus a residual network; a
+network pre-trained on the balance and fine-tuned; the same network from scratch; and as a baseline
+the balance plus a constant bias. Six synthetic static plants (a control, deviations inside the
+structure of the calibration, partly inside and outside it), 2 to 64 plant points, five seeds, four
+named test sets (interpolation, extrapolation, plant-like, product change). A difference counts as
+resolved only if it survives Holm and has the same sign in at least 4 of 5 seeds.
+
+The pre-registered reading asks where the pre-trained network wins: R1 against all five alternatives
+in some cell; R2 against the balance, the calibration and the network from scratch; R3 against the
+network from scratch only. **The reading is R3** on the interpolation set: the pre-trained network
+beats the network from scratch with 2 plant points on every deviating plant and at no larger number,
+and it never beats the balance, the calibration and the network from scratch jointly. On the
+plant-like test set it does not beat the network from scratch in any cell. A sensitivity with a
+stronger fine-tuning, declared post hoc, leaves the reading at R3 (78 better, 0 worse, 192 unresolved
+of 270 tests). The practical consequences drawn by the project lead for a static balance: calibrate
+the physical parameters, which is the best method wherever the structure fits, at every number of
+points; with up to 4 points a constant bias is a hard baseline; a residual network only from about 16
+to 64 stationary points and only for deviations outside the calibrated structure; pre-training a
+network on the balance is unnecessary as long as the balance is available at run time; outside the
+trained range no learning method is reliable. Under unknown input offsets of the size found in
+section 8, 163 of 168 changed pairwise verdicts lose their resolution: at a plant, the knowledge of
+the inputs determines the quality more strongly than the choice of the model.
+
+Study A and Befund 120 do not contradict each other; they differ in the comparison set. Where a
+physical model is available at run time, its calibration and a bias are the competitors of a learned
+model, and they were not part of study A.
 
 ## 13. Limits of the numbers that are shown
 
