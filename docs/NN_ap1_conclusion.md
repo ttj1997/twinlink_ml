@@ -1,7 +1,10 @@
 # NN -- Conclusion of AP 1: method selection for the dynamic control of fluidised-bed spray granulation
 
-> **Status:** version 1, 2026-11-20, draft for review by the project lead. Branch `ap1-conclusion`
-> (from `master` 33aa046, lab book up to Befund 128). No code, no run, no new number: every number
+> **Status:** version 2, 2026-11-23 (version 1: 2026-11-20). The selection of section 7 is accepted
+> by the project lead with four additions (decision of 2026-11-23, section 11); (a) to (c) are
+> worked in, (d) waits for the merge of the branch `order-dependence`. **Not final:** the document
+> is rebased and finalised once `order-dependence` and `module-api` are merged. Branch
+> `ap1-conclusion` (from `master` 33aa046, lab book up to Befund 128). No code, no run, no new number: every number
 > below is quoted from a finding of the lab book (`docs/04_stand_ap1.md`) and traced to its artifact
 > in section 10. `docs/08_synthese_m2.md` stays frozen at version 5f (2026-10-20) and is not changed;
 > it documents the method and the comparison of the forecast models. This document adds what
@@ -38,14 +41,15 @@ as follows.
    optimisation in any of them. A sequential RL agent for the granulator was not trained, because
    the pre-registered headroom tests bound its possible gain below the thresholds fixed beforehand
    (section 6).
-5. **What decides.** Whether a learned model is usable for control is decided by the safety margin
-   it needs at the moisture limit, not by its mean prediction error (Befunde 113, 122, 125, 127),
-   and by the information on the product moisture that is fed back (Befunde 111, 112).
+5. **What decides.** A model is chosen for the control by admissibility and by the cost at the held
+   limit, that is by the safety margin it needs at the moisture limit, not by its mean prediction
+   error (Befunde 113, 122, 125, 127). The feedback of the product moisture is the most effective
+   lever in continuous operation (Befunde 111, 112; section 7).
 
-Still open in AP 1: training on data of dynamic Dyssol models, and the integration of the pipeline
-as a module into the framework of the consortium coordinator (section 9). The selection of
-section 7 is a proposal for the project lead; each of its lines rests on a reading the project lead
-has accepted.
+Not complete in AP 1: training on data of dynamic Dyssol models (A6, partial) and the integration
+of the pipeline as a module into the framework of the consortium coordinator (A7, in progress;
+section 9). The selection of section 7 is accepted by the project lead (decision of 2026-11-23,
+section 11); each of its lines rests on a reading the project lead has accepted.
 
 ## 2. The tasks of AP 1 and where each stands
 
@@ -56,11 +60,11 @@ repository; short form in `docs/01_projektsteckbrief.md`).
 |---|---|---|---|---|
 | A1 | Compare ML methods for the dynamic control of single processes, in particular for the prediction of optimised transient manipulated variables; example process fluidised-bed spray granulation | done on the simulator | Befunde 105, 113, 126, 127 | 4, 5 |
 | A2 | Emphasis: reinforcement learning in combination with time-based models (recurrent networks, Transformer) and their suitability for process optimisation | done with a reasoned deviation: no sequential RL agent for the granulator | Befunde 93, 96, 113, 115; gates of Befunde 105, 126 | 6 |
-| A3 | Select the most suitable methods by accuracy, generalisability and real-time ability | proposal in this document | `docs/08_synthese_m2.md` 5f; Befunde 94, 97, 98, 104, 109 | 3, 7 |
+| A3 | Select the most suitable methods by accuracy, generalisability and real-time ability | done: selection of section 7, accepted by the project lead on 2026-11-23 | `docs/08_synthese_m2.md` 5f; Befunde 94, 97, 98, 104, 109 | 3, 7 |
 | A4 | Reliable prediction with few training data through a suitable sampling of the parameter range; low data need | done; the data need beyond 64 runs is not determined | Befunde 55, 87, 88, 94 (addendum), 107, 122, 127 | 3, 8 |
 | A5 | Contribute to a lower energy demand at equal product quality | done on the simulator; quality is the product moisture only | Befunde 105, 126 | 4 |
-| A6 | Training and comparison first with synthetic data from existing Dyssol models and from TUHH-A-AP 2 | open: stationary Dyssol flowsheets only | Befund 128 | 8, 9 |
-| A7 | Data and model pipeline as a separate module in the framework of the consortium coordinator, usable for other optimisation tasks such as the distribution of waste heat | open | none on `master` | 9 |
+| A6 | Training and comparison first with synthetic data from existing Dyssol models and from TUHH-A-AP 2 | partial: stationary Dyssol flowsheets done (Befund 128); training on data of dynamic Dyssol models depends on the granulation model of TUHH-A | Befund 128 | 8, 9 |
+| A7 | Data and model pipeline as a separate module in the framework of the consortium coordinator, usable for other optimisation tasks such as the distribution of waste heat | in progress: branch `module-api` (not merged) | none on `master`; branch `module-api` | 9 |
 
 ## 3. Forecast model: accuracy, generalisability, real-time ability
 
@@ -229,22 +233,50 @@ reading; a follow-up waits for the answers of the application partner (`docs/12`
 (c) Frequent product changes were not assessed (frequency unknown). In each of these cases the
 gate would have to be measured again before an RL study.
 
-## 7. The selection (proposal for the project lead)
+## 7. The selection (accepted by the project lead on 2026-11-23)
+
+Accepted with four additions, marked (a) to (d) here and listed in section 11.
+
+**Criterion for the choice of a model for the control (a).** A model for the control is chosen
+by admissibility first (does it reach a safety margin with which the moisture limit holds) and
+by the cost at the held limit second, not by its mean prediction error. Evidence: the hybrid has
+a rollout error of the moisture 8 to 12 times smaller than the GRU without a resolvably smaller
+margin (Befund 122); with a structural error to the unsafe side the calibrations are admissible
+in 13 of 15 cells, the hybrid and the GRU in 6 of 15 each (Befund 125); under load following the
+gap of the GRU map with feedback is its margin (margin share +3.82 % of a gap of +3.87 %;
+Befund 127).
 
 | Role | Selected | Not selected | Reason |
 |---|---|---|---|
 | Forecast model of moisture, energy target and bed temperature | GRU, composite of per-target networks; LSTM equivalent | Transformer, xLSTM (mLSTM-only variant), Mamba in the tested, untuned configuration | Befunde 94, 98, 104, 97 |
 | Energy-optimal operation in continuous operation | quasi-stationary set-point optimisation on a calibrated physical model with a safety margin at the moisture limit | MPC and RL as energy measures | Befund 105 (L0) |
 | Product change | MPC, for the time outside the specification | - | Befund 105 (no reading; value depends on the frequency of changes) |
-| Load following under an hourly price (electric heater) | two-level price rule | schedule, economic MPC, RL | Befund 126 (T1) |
+| Load following under an hourly price | two-level price rule, with an electric heater only (c) | schedule, economic MPC, RL; load following with a gas heater (no gain) | Befund 126 (T1; with a gas heater C1 and C2 are 0.04 % and 0.08 % more expensive than C0) |
 | Internal model of the controller | the order "calibrate, bias, only then learn": a calibrated physical model first, a bias correction second, a learned model last | learned model in place of a fitting physical model | Befunde 122, 125 (decision, item 5: resolved on the safe side, only descriptive on the unsafe side), 127 |
 | Learned model in the loop, where one is needed | GRU in the loop (D-gru) or GRU map with inline moisture feedback, each with its own margin | direct prediction of the commands (family P); static quadratic map; GRU map without feedback | Befund 127 (U3; no arm within 2 %) |
-| Moisture information | feedback of a moisture measurement; in continuous operation a laboratory sample every 4 h | GRU soft sensor as the feedback | Befunde 111, 112 |
+| Moisture information | feedback of a moisture measurement, the most effective lever in continuous operation (b); there a laboratory sample every 4 h | GRU soft sensor as the feedback | Befunde 111, 112, 127 |
 | Reinforcement learning | not selected for the granulator | - | section 6 |
 | Training data | excitation experiment at the plant; pre-training on the simulator plus fine-tuning | constant operating records alone; hybrid with the simulator as an input channel as the default | Befunde 55, 87, 88 |
+| Steady optimiser of the set-point optimisation | cold multi-start (d) | - | finding on the order dependence, reading O0; number of the finding open, branch `order-dependence` not merged: the reference is entered at the finalisation |
 
 The line "learned model in the loop" names the two cheapest learned arms of Befund 127; the reading
 U3 names no arm, and D-gru against M-gru is not resolved.
+
+**Moisture feedback (b).** Under a model mismatch in continuous operation the value of a moisture
+feedback is 13.40 % energy in the median (Befund 111, reading V2), and a laboratory sample every
+4 h captures 93 % of the value of an inline sensor (Befund 112). Under load following the inline
+feedback about halves margin and gap of the GRU map, while the laboratory sample every 4 h does
+not help (Befund 127, descriptive). The 13.40 % are measured under a model mismatch against the
+bias-corrected set-point optimisation without feedback, the 8.93 % of Befund 105 with the true
+model against a fixed operating point: the two numbers come from different frames and are not
+steps of one ladder.
+
+**Load following (c).** The gain of Befund 126 exists with an electric heater only; with a gas
+heater there is none (section 4).
+
+**Steady optimiser (d).** Entered by decision of the project lead of 2026-11-23. The finding is
+not on the state this document is based on: no number of it is quoted here, and until its merge
+the caveat on the order dependence in section 9 stands.
 
 ## 8. Data need
 
@@ -284,22 +316,27 @@ U3 names no arm, and D-gru against M-gru is not resolved.
 - Five seeds (three in Befunde 113 and 122), untuned networks and RL agents throughout.
 - **Order dependence of the steady optimiser** (`docs/12`, item 37): found in Befund 127, where the
   re-run of C2 differs from the records of Befund 126 by 0.0016 % in the sum. The code belongs to
-  Befunde 105 and 126; the follow-up against these two findings is running. Their numbers are
-  quoted here as recorded; if the follow-up changes them, this document gets a dated addendum.
+  Befunde 105 and 126; the follow-up against these two findings is on the branch
+  `order-dependence` (not merged). Their numbers are quoted here as recorded. By decision of the
+  project lead of 2026-11-23 this caveat is replaced by the reference to the finding on the order
+  dependence once that finding is merged (section 11, (d)); at that point every number quoted
+  from Befunde 105 and 126 is checked against the addenda the merge brings.
 
-**Open in AP 1.**
+**Not complete in AP 1.**
 
-- **A6, Dyssol data.** The sequence models were trained on data of the project's own grey-box
-  simulator. Dyssol entered through stationary flowsheets only (Befund 128); training and
-  comparison on data of dynamic Dyssol models are open.
-- **A7, module.** No finding and no merged code on the state this document is based on. A package
-  for the interface is in work on the branch `module-api` (not merged, not assessed here); the
-  interface itself belongs to the framework of the consortium coordinator and has to be agreed
-  there.
+- **A6, Dyssol data: partial.** The sequence models were trained on data of the project's own
+  grey-box simulator. Stationary Dyssol flowsheets are done (Befund 128). Training and comparison
+  on data of dynamic Dyssol models depend on the granulation model of TUHH-A and are open.
+- **A7, module: in progress.** No finding and no merged code on the state this document is based
+  on. A package for the interface is in work on the branch `module-api` (not merged, not assessed
+  here); the interface itself belongs to the framework of the consortium coordinator and has to
+  be agreed there.
 
-**Open for the project lead.** Acceptance of the selection of section 7 and of the wording of the
-deviation in section 6; the number of this document, its row in `docs/12` and a README paragraph
-are left to the managing session at merge.
+**Open until the finalisation.** The document is rebased onto `master` after the merges of
+`order-dependence` and `module-api`. Then follow: the reference of addition (d) in sections 7
+and 9 in place of the caveat, the check of every number quoted from Befunde 105 and 126, and the
+status of A7 with its evidence. The number of this document, its row in `docs/12` and a README
+paragraph are left to the managing session at merge.
 
 ## 10. Traceability table
 
@@ -335,3 +372,25 @@ Rows that restate `docs/08_synthese_m2.md` 5f carry the artifact named in its ap
 | Stationary Dyssol flowsheets (8) | 32 / 128; 64 / 256; D2 | 128 | `dyssol_steady_v1_one_line_analysis.json`, `dyssol_steady_v1_two_lines_analysis.json` | `docs/45_dyssol_steady_state.md` |
 | Plant-near model (9) | 5.51 K | 117 | `plant_scale_v1_analysis.json` | `docs/34_plant_scale.md` |
 | Order dependence of the steady optimiser (9) | 0.0016 % | 127 | `learned_setpoints_v1.json.gz` | `docs/44_learned_setpoints.md`, `docs/12`, item 37 |
+
+## 11. Decisions of the project lead (2026-11-23)
+
+Entered with version 2; the sections above are changed accordingly.
+
+1. **Section 7 is accepted, with four additions.**
+   (a) The criterion for the choice of a model for the control is admissibility and the cost at the
+   held limit, not the mean error (Befunde 122, 125, 127).
+   (b) The moisture feedback is the most effective lever in continuous operation (Befunde 111, 112,
+   127).
+   (c) Load following only with an electric heater; with gas there is no gain (Befund 126).
+   (d) The steady optimiser runs with a cold multi-start (finding on the order dependence, reading
+   O0). The caveat on the order dependence in section 9 is replaced by the reference as soon as that
+   finding is merged.
+2. **Status of the tasks.** A6 "partial": stationary, Befund 128; dynamic, depending on the
+   granulation model of TUHH-A. A7 "in progress", with the reference to the branch `module-api`.
+3. **Finalisation.** Rebase and finalise only when `order-dependence` and `module-api` are merged;
+   until then this documentation commit, and wait.
+
+The decision does not address the wording of the deviation in section 6, which version 1 had put to
+the project lead together with section 7. The line of section 7 that rests on it (reinforcement
+learning not selected for the granulator) is accepted with the section.
