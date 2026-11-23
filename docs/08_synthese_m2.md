@@ -768,6 +768,123 @@ Study A and Befund 120 do not contradict each other; they differ in the comparis
 physical model is available at run time, its calibration and a bias are the competitors of a learned
 model, and they were not part of study A.
 
+## 8. Moisture information: what decides, feedback, laboratory samples, observability
+
+Every reference controller of section 6 knows the true model and sees the true state. This section
+asks which unknown parameters decide the result, what a measurement of the product moisture is worth
+when the model of the controller is wrong, and whether the moisture can be obtained without measuring
+it. Truth throughout: the grey-box model of the laboratory line with placeholder parameters.
+
+### 8.1 Which parameters decide: global sensitivity of the steady model (Befund 108)
+
+Total Sobol indices of the steady model of the laboratory line, with the unknown model parameters
+varied independently over placeholder ranges at the nominal operating point; outputs: the energy at
+the steady optimum, the optimal inlet temperature, and the saving of the optimum against a fixed
+operating point.
+
+| Input | Total index, energy at the optimum | Total index, optimal inlet temperature |
+|---|---|---|
+| critical moisture | 0.518 | 0.614 |
+| `nu_max` (kinetics) | 0.388 | 0.446 |
+| heat loss | 0.097 | 0.107 |
+| the five parameters of the sorption isotherm together | at most 0.001 | at most 0.029 |
+
+**The drying kinetics decide, the isotherm hardly matters**: the two kinetic parameters together
+carry at least 0.90 of the variance of the energy at the optimum. Version 5f named the placeholder
+isotherm first among the limits of the simulator; for the operating point at the moisture limit it
+is the least valuable of the open measurements, and one series of drying experiments on the
+laboratory line is the most valuable. The order of the two kinetic parameters swaps when their ranges
+are doubled; that the two of them decide does not change. The saving of the steady optimum against
+the fixed point is 9.67 % at the nominal parameters and 6.7 % in the mean over the parameter samples;
+the fixed point exceeds the moisture limit in 13.1 % of the samples, through combinations of
+parameters and through no parameter alone. The convergence criterion fixed beforehand was not met at
+the first sample size (base sample 2^12); a precision extension to 2^14, declared before its run as
+the same test, meets it for 19 of 20 outputs and not for the optimal gas velocity, which sits at its
+bound in most samples.
+
+### 8.2 The value of a moisture feedback under a model mismatch (Befund 111)
+
+The truth now differs from the model of the controller: 20 draws of the two kinetic parameters and
+the five isotherm parameters from the bands of section 8.1. The controller is the quasi-stationary
+set-point optimisation on the nominal model with a slow bias correction from a moisture feedback; 20
+scenarios of the family "observed" of Befund 105, so 400 pairs of draw and scenario. Each variant
+gets the margin with which the limit holds in at least 95 % of the pairs. The laboratory samples and
+the second soft sensor are those of Befund 112 (section 8.3), with everything else unchanged.
+
+| Feedback | Margin (kg/kg) | Energy relative to the ideal measurement (median over the pairs) |
+|---|---|---|
+| none | 0.0594 | +13.36 % |
+| ideal inline measurement | 0.0047 | reference |
+| inline sensor with noise and outliers at a rate of 0.25, no filter | 0.0045 | -0.05 % |
+| laboratory sample every 4 h | 0.0086 | +0.88 % |
+| laboratory sample every 8 h | 0.0166 | +2.64 % |
+| GRU soft sensor from commands and disturbances (three seeds) | 0.0758 to 0.0826 | +12.07 to +17.62 % |
+| GRU soft sensor with measured bed temperature, exhaust temperature and exhaust humidity (three training variants, two seeds each) | 0.0637 to 0.0729 | +10.51 to +21.27 % |
+
+The value of the measurement, the energy without feedback minus the energy with the inline sensor
+relative to the ideal case, is **13.40 % in the median**. Classes fixed beforehand: V0 below 1 %, V1
+1 to 5 %, V2 above 5 % (clear value; check a sensor investment and a control with state estimation).
+**The reading is V2**; at the first candidate margin of the variant without feedback the value would
+be 9.47 %, also V2. How the project lead classified it:
+
+- What is measured is the value of a feedback against no feedback, **relative to the placeholder band
+  of the drying kinetics**: the two kinetic parameters explain 0.91 of the variance of the margin
+  that the variant without feedback needs. Narrowing the kinetics by drying experiments lowers the
+  value directly.
+- The sensor with outliers is as good as the ideal one: a bias correction with a filter of 30 min
+  makes outliers harmless. The value lies in the information, not in the controller.
+- The GRU soft sensor of the existing pipeline captures at most an eighth of the value (0.12 in two
+  seeds, worse than no feedback in the third). It sees only commands and disturbances and is
+  **structurally blind to a mismatch of the model**; this is no verdict on soft sensors that see
+  measured process responses, which section 8.3 tests.
+- The 13.40 % and the 8.93 % of section 6 come from different frames (here a model mismatch, against
+  the bias-corrected optimisation without feedback; there the true model, against a fixed operating
+  point) and are not steps of one ladder.
+
+### 8.3 Laboratory samples, and soft sensors with measured responses (Befund 112)
+
+Measure: the share A of the value of the inline sensor that a variant captures, per pair; reading on
+the median with the threshold 0.8. **Reading La holds:** a laboratory sample every 4 h (analysis
+delay 30 min, placeholder error) captures A = 0.934; every 8 h it captures 0.805, narrowly, and 0.775
+under the stricter margin criterion. An inline sensor has little added value over such samples for
+this line. The project lead restricts this to a model mismatch that is constant per draw and to the
+placeholder laboratory settings; with a kinetics that varies in time the value of frequent
+measurement rises, and under load following the same laboratory sample did not help (section 7.2).
+**Reading Lb does not hold:** the soft sensor trained with domain randomisation of the uncertain
+parameters reaches A = -0.183 (median over its two seeds); every soft sensor with measured responses
+needs a larger margin than no feedback at all. The effects of the randomisation and of the exhaust
+humidity are not resolved (two seeds per variant after a budget cut). The explanation the project
+lead offered, that the gas-side signal of the bed moisture is "far below the measurement noise", was
+tested in Befund 116 and corrected by a dated addendum to Befund 112: the signal is 0.3 to 0.6
+standard deviations of the noise per 0.01 kg/kg for a single sensor.
+
+### 8.4 Is the bed moisture observable from gas-side measurements? (Befund 116)
+
+Signal-to-noise ratio of a moisture difference of 0.01 kg/kg in one sample of each gas-side
+measurement, at seven steady operating points of the laboratory line, over the 20 parameter draws:
+0.28 to 0.60 for every single sensor (exhaust humidity, exhaust temperature, bed temperature); 1.07
+to 1.26 at five of the seven points, and 0.68 and 0.74 at the other two, for the bed temperature
+averaged over six redundant sensors. The reading fixed beforehand is O1 if every variant stays below 1
+at every point (the hypothesis explains the failure of the soft sensor) and O2 otherwise
+(observability is given; the failure lies in training or architecture). **The reading is O2, with the
+qualifier fixed beforehand "only through the six-sensor redundancy"**, accepted formally. In substance,
+from the decision of the project lead: the moisture is observable in principle (at fixed inputs the
+measurements are deterministic functions of it) and limited in practice, because unknown offsets of
+the inputs of the size of the scenarios shift the measurements by up to 3.9 times the signal, and in
+the steady state water feed and bed moisture can hardly be separated; transients carry information
+(the kinetic extremes differ by up to 5.8 standard deviations, over hours). The failure of the soft
+sensor of Befund 112 is not fully explained by this. The analytic expression of the hypothesis has
+the right sign and order and overstates the signal by 5 to 10 %. At a plant-like ratio of solid to air
+(placeholder, no reading) the signal is larger. In the model the exhaust temperature equals the bed
+temperature; at plant A it does not (section 10).
+
+**What follows for the moisture information.** A feedback of a moisture measurement is the most
+effective lever in continuous operation, and there a laboratory sample every 4 h comes close to an
+inline sensor (accepted with `docs/48_ap1_conclusion.md`, section 7). A learned soft sensor did not
+replace the measurement in any tested form. The step not taken is a model-based observer that
+estimates the moisture and the unknown input offsets jointly and uses the transients (`docs/12`,
+section I, item 19).
+
 ## 13. Limits of the numbers that are shown
 
 - **Grey-box simulator, not the plant.** Four states, no agglomeration, no breakage; the
