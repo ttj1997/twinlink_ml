@@ -1,9 +1,9 @@
-# NN -- Module interface for the digital-twin framework
+# 47 -- Module interface for the digital-twin framework
 
 Status: infrastructure, no study and no finding. Branch `module-api`. Stage 1 (forecast service,
 set-point service, model bundle, schemas) and stage 2 (calibration service, heat-distribution
-service, recovery-case rule) are built and tested. The number of this document is assigned at the
-merge.
+service, recovery-case rule) are built and tested. Document number 47; merged into `master` on
+2026-11-23.
 
 ## 1. Purpose and limits
 

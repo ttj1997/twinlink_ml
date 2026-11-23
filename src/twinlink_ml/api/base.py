@@ -1,6 +1,6 @@
 """Common parts of the module interface: service ABC, response metadata, errors.
 
-The interface is framework independent on purpose (``docs/NN_module_api.md``): a service is a
+The interface is framework independent on purpose (``docs/47_module_api.md``): a service is a
 stateless mapping from one validated request to one response. A transport layer (REST, an asset
 administration shell, a message bus) is an adapter around :meth:`Service.handle_json` and is not
 part of this package; the technique is the decision of the consortium coordinator.

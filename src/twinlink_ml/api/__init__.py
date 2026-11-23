@@ -1,6 +1,6 @@
 """Framework-independent module interface of the ML and control pipeline.
 
-A narrow, stable layer above the research code (``docs/NN_module_api.md``): services behind one
+A narrow, stable layer above the research code (``docs/47_module_api.md``): services behind one
 ABC, requests and responses as versioned pydantic models with JSON Schemas, and a model-bundle
 format for the trained models. The package imports the research code and holds no copy of
 its arithmetic.

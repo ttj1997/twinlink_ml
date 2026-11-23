@@ -20,7 +20,7 @@ The plant-near model of plant A, not the laboratory line of the forecast and set
 A calibration result belongs to the model it was computed with: its bias must not be applied to
 the forecasts or set points of another model. Those two services therefore do not take a
 calibration result as input; a service on the plant-near model that does would be a further step
-(``docs/NN_module_api.md``, section 9).
+(``docs/47_module_api.md``, section 9).
 
 Equality with the research code
 -------------------------------

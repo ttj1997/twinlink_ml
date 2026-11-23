@@ -66,7 +66,7 @@ lab book (`04_stand_ap1.md`), process setup, and synthesis documents.
   (`code/package_dir` and `code/interpreter` are left out). It records the code commit, the dirty
   flag, the fingerprints, the preset version and `code/root_checked`; the check itself is
   unchanged (building a bundle aborts when the loaded package is not the checkout's). See
-  `docs/NN_module_api.md`, section 5.
+  `docs/47_module_api.md`, section 5.
 - Worktrees: an editable install points at one directory only, so a worktree must load its own
   code. Start every run there with `tools/run_here.sh <python args>` (changes into the worktree
   root, sets `PYTHONPATH=<worktree>/src`, uses the main checkout's `.venv`); detached drivers do
