@@ -14,8 +14,10 @@
 > evidence.
 > Every number in the summary, in sections 1 to 13 and in appendices A to F is traced to a finding
 > in `docs/04_stand_ap1.md` and, where one exists, a committed artifact (appendix G) and is checked
-> against that artifact or configuration by `scripts/check_m2_synthesis_consistency.py`, or listed
-> there as not machine-checkable with the reason. Numbers of findings that carry a dated addendum
+> by `scripts/check_m2_synthesis_consistency.py`: against that artifact or configuration, or, for
+> part of the findings after version 5f, against the lab-book entry or study document it is quoted
+> from (appendix G says which), or it is listed there as not machine-checkable with the reason.
+> Numbers of findings that carry a dated addendum
 > are quoted as recorded, and the addendum is named next to them. Findings are cited as "Befund N"
 > (lab-book entries, in German or English as written); readings are given as they were fixed before
 > the run and accepted by the project lead. Procedures are in section 2 (rules) and appendix E
@@ -93,7 +95,12 @@ calibration of the model to plant A, whose structure does not carry between the 
 ## Changes since version 5f
 
 Version 5f (2026-10-20) and its change history back to version 3 are retrievable under the git tag
-`docs08-v5f`; its consistency check gave 455 confirmed claims.
+`docs08-v5f`; its consistency check gave 455 confirmed claims and still does at the tag
+(`scripts/check_m2_synthesis_consistency.py --version 5f`, tested). The check of version 6 confirms
+1229 claims and 19 verified exemptions, with no numeric token left without a check: 453 of the 455
+claims of version 5f, whose sentences are still in the text, 158 new values recomputed from the
+analysis artifacts of Befunde 105, 111, 126, 127 and 129, and 618 numbers checked against the text
+of the lab-book entry or study document they are quoted from (appendix G).
 
 **Structure.** Sections 3 and 4 and appendices B, C and D are those of 5f with additions; sections 2
 and 5 of 5f are section 2 (rules), section 6 of 5f is section 5 with the plant paragraph moved to
@@ -159,7 +166,7 @@ moisture in general is not. AP1 therefore builds and compares model classes that
 targets from the history of the manipulated variables and the disturbances, called **forecast
 models** in this document, and asks how much training data each needs, not only how good it gets
 at best. It then asks what such a model is worth in the control of the process: where the energy
-is with a known model (section 6), what it costs to replace the known model by a learned one
+is with a known model (section 6), what it costs to replace the known model by a learned model
 (section 7), and what a measurement of the moisture is worth (section 8). The term "soft sensor" is
 used only where a model estimates the moisture in place of a measurement inside a control loop;
 that use was tested and has the limits of section 8. The three predicted targets are
@@ -662,7 +669,7 @@ the simulator, of 256,123 µs in total, i.e. **98.8 % simulator share**; the net
 **Time per decision of the controllers.** The controllers of sections 6 and 7 decide on a grid of
 5 min. Under load following (Befund 127) the learned policies need less than 0.1 ms per decision, the
 arms with a tabulated map about 6 ms, the GRU in the loop 84 ms and an MPC on the true model with the
-same short horizon 119 ms; the MPC without preview of Befund 105 needs about 1 s per solve. Computing
+same short horizon, 119 ms; the MPC without preview of Befund 105 needs about 1 s per solve. Computing
 time is no obstacle for any of them; it does not separate the methods.
 
 ## 5. Data need and how it was reduced
@@ -774,7 +781,7 @@ of the truth; each controller gets the smallest family-wide margin with which th
 case of its family (bisection, tolerance 2.5e-4 kg/kg), and costs are compared at that held limit.
 What it costs to replace the known model by a learned one is the subject of section 7.
 
-**The predecessor: the one-step operating point (Befund 80).** Adapting the operating point to the
+**The predecessor: the single-step operating point (Befund 80).** Adapting the operating point to the
 ambient state saves a median of 9.0 % (lower gas-velocity bound 0.80 m/s) to 16.5 % (1.26 m/s)
 against a fixed point; a safety margin of the size m costs 1.30 to 1.46 % and leaves 94 % (1.26
 m/s) to 85 % (0.80 m/s) of that benefit. By the pre-registered stability rule (Befund 69) the
@@ -785,7 +792,7 @@ bound itself is a placeholder, and the moisture limit binds at 13 (1.26 m/s) and
 25 points. The margin m (0.006 kg/kg) is the median half-width of the calibrated band of an
 ensemble of networks that estimate the moisture, calibrated to 95 % coverage on validation runs
 (Befund 65 FA2, adopted in Befund 68): a convention for model accuracy, not a plant or norm
-requirement. **Version 5f called the 1.30 to 1.46 % the cost of a soft-sensor margin. That reading is
+requirement. **Version 5f called this the cost of a soft-sensor margin. That reading is
 replaced.** The number stands as the cost of a margin of the size m for an optimiser that knows the
 true model. It is not the cost of using a learned model: a margin calibrated on the prediction error
 does not hold once an optimiser chooses the operating points on the learned model (section 7;
@@ -796,7 +803,7 @@ further work on reinforcement learning: when disturbances are ridden out in cont
 there an energy gain from dynamic control over a quasi-stationary set-point optimisation? The
 controllers command inlet temperature and gas velocity every 5 min: R0 a fixed operating point, R1 the
 quasi-stationary set-point optimisation (the steady optimum at the current disturbance), R3 an MPC
-without disturbance preview (horizon 2 h), R2 the optimum with perfect preview of the disturbances
+without disturbance preview (a horizon of 2 h), R2 the optimum with perfect preview of the disturbances
 (an upper bound). Family "observed": 105 scenarios of 24 h (day profiles of the ambient air,
 throughput, solid fraction, slow and fast offsets of the inlet temperature; all amplitudes are
 placeholders, those derived from plant data are relative only).
@@ -884,8 +891,8 @@ point, not the dynamics. (2) An MPC differs from the simple methods by the small
 not by its trajectory or its schedule. (3) The value of an MPC lies in the product change, as time
 outside the specification. (4) Load following saves cost, with an electric heater only, and a
 two-level price rule captures most of it. The savings of a tracked operating point come from three
-frames (9.0 to 16.5 % at the 25 test points of Befund 80, 8.93 % over the scenarios of Befund 105,
-and the value of section 8 from the sensitivity study); they agree in size and are not one series,
+frames (the test points of Befund 80, the 8.93 % over the scenarios of Befund 105, and the value of
+section 8.1 from the sensitivity study); they agree in size and are not one series,
 because the limits, the disturbances and the fixed point differ.
 
 ## 7. Learned models in the control
@@ -1377,20 +1384,20 @@ form together.
 
 | Befund | Question | Result | Reading or decision |
 |---|---|---|---|
-| 81 | Coupling of two lines in the corrected model of the heat network. | **A coupling gain of lines A and B is not demonstrated in the corrected model** (0 of 6 scenarios at 20 K minimum approach, 1 of 6 at 10 K as a sensitivity; Befund 81). | As a procedure (not a finding), set points are optimised line by line before any interconnection. |
-| 74, 75, 90, 95 | Partner model, the earlier delivery: which assumption moves which scenario? | At the workbook point of that delivery the ranking of the partner's scenarios is robust against every assumption switched (Befund 95); the model recovers 60 to 88 % of an independent counter-current calculation, and the flow arrangement is the assumption that matters (Befund 90 with its addendum). | For the later delivery and over the operating range see Befunde 106, 110 and 121 below. |
-| 91, 92, 99 | Storage of plant A. | The model bounds the storage volume only from above and is not a predictor. The saving consists entirely of the added discarded compressor heat; pure shifting in time saves nothing. A later time-slice study with an ideal storage: a rule without foresight reaches the ideal storage, and the potential depends on an assumed compressor load profile (Befund 99 with its addendum). | The saving read by the pre-registered rule is L1 (L2 only post hoc with a plain rule); the time-slice study reads L2 by its pre-registered gate. No reinforcement learning was built for this storage. |
-| 100 | Site pinch: how much waste heat can the site use at most, where is the pinch, at which temperature should a heat network run? | In the reference scenario 436 kW less fossil heat than today (655 against 1092 kW); over the grid of 2232 scenarios 62 to 3564 kW. The compressor heat saturates without further sinks: 800 and 1200 kW of it give the same result. A network with a supply of 70 to 75 degC and a return of 40 to 45 degC reaches at least 90 % of the possible saving in 96 % of the scenarios. | Exploration without a gate. What limits the site is the number of heat consumers, not the waste heat. |
-| 101 | Heat pump on low-temperature waste heat: does it pay, and does a heat pump with a storage under a time-varying signal need foresight? | It saves in every one of the 528 scenarios of the grid under every central criterion, as a booster across the pinch on top of the direct recovery. Gate on the storage: in 114 of 4480 realistic cells a programme with foresight is at least 2 points better than the best of three rules; declared post hoc, a tuned constant rule leaves 18 of them, all in an assumed shift mode. | L1 formally, by the rule fixed beforehand; reading of the project lead: a constant rule closes most of the gap, a learning control is not justified. |
-| 102 | Exhaust recirculation of one line (laboratory line): how much exhaust can be recirculated before the moisture limit is violated, and what does it save? | At unchanged set points almost nothing: the moisture limit already binds at 17 of 25 ambient states. With re-optimised set points every tested fraction up to 0.8 is feasible and the CO2 of the line falls by 17.0 % in the median (envelope over the arms, declared post hoc), most in cold weather. Recirculation makes the line's own heat recovery possible instead of competing with it. | No gate. A model optimum, not a recommendation: the inlet humidity leaves the range the kinetics were set for, and the kinetics placeholders lead the sensitivity. |
-| 103 | Operating point of plant A: what would another air flow and supply-air temperature save in CO2, counting steam and fans? | Stationary balance on the day means of the two measured days: at the reference placeholders at most 758 kg CO2 per day (14.6 %) on one product and 90 kg per day (2.8 %) on the other. Three unknowns decide: the minimum air flow, the fan law and how the waste-heat side reacts. | An upper bound under placeholders and proxy constraints, no operating recommendation. Side result: the solid fraction assumed in Befund 99 is inadmissible by the energy balance of the same days (taken up by an addendum to Befund 99). |
-| 106 | Partner model, a later delivery: does the reproduction carry over, do the partner's own Excel and Dyssol figures agree with an independent rebuild, and are they plausible? | The workbook is reproduced completely with one switch changed (230 cells). 53 of 60 reported values of five data sets agree with Excel within rounding; in one data set Excel is not consistent with itself. Reusable plausibility checks find the expected violations and one more. With counter-current exchangers the recovery is 10 to 52 % above the partner model with an unpressurised circuit and 44 to 121 % above it with a pressurised one. | No gate; model against model, written as feedback to the partner. |
-| 110 | Partner model, six cases of connecting two exhausts with two sinks, new inputs: Excel, Dyssol, counter-current exchangers, and the distance to the best network. | Workbook reproduced exactly; Excel within rounding in 72 of 72 values, Dyssol in 42 of 72 (its case 2 uses swapped medium flows). Case 1, each process with its own recovery, is first in every mode. Its saving rises from 17.9 % in the partner model to 28.4 % (unpressurised) and 33.1 % (pressurised) with counter-current exchangers, and it reaches 92.5 % and 83.6 % of what any network of circuits could save. With an unpressurised circuit two pairs of the cascade cases become equal. | Core statement of the project lead: the physics of the exchangers acts more strongly than the interconnection (the span between the six cases in the partner model is about 6 %). Valid for the inputs of the workbook, not plant-near. |
-| 114 | Operating point and heat recovery of one line: optimise them jointly, or one after the other? | On the line model the joint optimum equals "first the dryer, then the recovery" in every one of the 50 test states. The minimum approach of the exchanger decides how much the recovery gives: 13.75 % of the energy at 5 K, 0.48 % at 10 K, nothing at 20 K (medians). | J0 at every approach and in both variants of the medium: one after the other suffices. The value of the recovery is a question of the exchanger design, not of the control. |
-| 115 | Heat pump and storage with power limits under an hourly electricity price: a rule, an MPC or reinforcement learning? | Real hourly day-ahead prices of 2024, test on four months. A schedule-aware price rule is 0.65 % above the MPC with perfect prices (0.31 to 0.88 % per test month), and the MPC 0.010 % above the optimum in hindsight. SAC and TD3 end behind the constant rule (section 9). A first run was aborted because test prices leaked into the training; it was fixed and every job re-run. | H0: a simple price rule suffices; neither an MPC nor reinforcement learning is justified. |
-| 118 | Campaign network: does a heat network pay when the consumers run in campaigns and stand still in between? | One waste-heat source, three plants with campaigns, one year in hourly steps. Additional share of the source that the network uses, at the source power of today (400 kW) and an availability of 0.57: 42.08 % with independent standstills, 27.60 % with joint ones; in continuous operation 1.60 %. Simple rules stay up to 7.30 % below the bound with full foresight. | N1: with consumers that stand still a network pays clearly. Restriction by the project lead: this baseline gives the source to one plant alone; the citable network benefit is the one against the fair baseline of Befund 119. |
-| 119 | Campaign network 2: does a better simple rule, or a rolling planning on the production plan, close the gap to the bound? | Against a fair baseline (the source in fixed shares to the three plants) the network benefit at 400 kW is 0.00 % in continuous operation and 4.0 to 39.6 % at an availability of 0.57. A rolling planning with an exactly known standstill plan stays within 0.98 % of the bound in every cell; with plan deviations of up to 24 h and a naive correction the gap is up to 3.29 %. A dynamic order of the cascade does not help. | Q2 formally. The picture drawn by the project lead: a simple rule is mostly sufficient, planning with the production plan pays up to about 3 %, reinforcement learning is not justified. |
-| 121 | Partner model: is the case that the workbook finds best (case 1) best over the operating range? | No case is best everywhere, in any mode. In the main mode (physical, unpressurised circuit) case 1 is strictly best on 0.471 of the admissible box and best or practically equal on 0.666; near the workbook point on 0.950 and 0.993. The partner mode overstates it (0.740 strictly best). The choice is between two cases and follows the order of the two exhaust temperatures; always choosing case 1 costs nothing in the median and at most 10.1 % of the fuel. | Readings as fixed: "not robust" (strictly best) and "conditional" (best or practically equal) over the box, "robust" near the workbook point. The shares depend on the placeholder box; the rule and the distribution of the extra consumption are what is reliable. |
+| Befund 81 | Coupling of lines A and B in the corrected model of the heat network. | **A coupling gain of lines A and B is not demonstrated in the corrected model** (0 of 6 scenarios at 20 K minimum approach, 1 of 6 at 10 K as a sensitivity; Befund 81). | As a procedure (not a finding), set points are optimised line by line before any interconnection. |
+| Befunde 74, 75, 90, 95 | Partner model, the earlier delivery: which assumption moves which scenario? | At the workbook point of that delivery the ranking of the partner's scenarios is robust against every assumption switched (Befund 95); the model recovers 60 to 88 % of an independent counter-current calculation, and the flow arrangement is the assumption that matters (Befund 90 with its addendum). | For the later delivery and over the operating range see Befunde 106, 110 and 121 below. |
+| Befunde 91, 92, 99 | Storage of plant A. | The model bounds the storage volume only from above and is not a predictor. The saving consists entirely of the added discarded compressor heat; pure shifting in time saves nothing. A later time-slice study with an ideal storage: a rule without foresight reaches the ideal storage, and the potential depends on an assumed compressor load profile (Befund 99 with its addendum). | The saving read by the pre-registered rule is L1 (L2 only post hoc with a plain rule); the time-slice study with an ideal storage reads L2 by its pre-registered gate. No reinforcement learning was built for this storage. |
+| Befund 100 | Site pinch: how much waste heat can the site use at most, where is the pinch, at which temperature should a heat network run? | In the reference scenario 436 kW less fossil heat than today (655 against 1092 kW); over the grid of 2232 scenarios 62 to 3564 kW. The compressor heat saturates without further sinks: 800 and 1200 kW of it give the same result. A network with a supply of 70 to 75 degC and a return of 40 to 45 degC reaches at least 90 % of the possible saving in 96 % of the scenarios. | Exploration without a gate. What limits the site is the number of heat consumers, not the waste heat. |
+| Befund 101 | Heat pump on low-temperature waste heat: does it pay, and does a heat pump with a storage under a time-varying signal need foresight? | It saves in every one of the 528 scenarios of the grid under every central criterion, as a booster across the pinch on top of the direct recovery. Gate on the storage: in 114 of 4480 realistic cells a programme with foresight is at least 2 points better than the best of three rules; declared post hoc, a tuned constant rule leaves 18 of them, all in an assumed shift mode. | L1 formally, by the rule fixed beforehand; reading of the project lead: a constant rule closes most of the gap, a learning control is not justified. |
+| Befund 102 | Exhaust recirculation of one line (laboratory line): how much exhaust can be recirculated before the moisture limit is violated, and what does it save? | At unchanged set points almost nothing: the moisture limit already binds at 17 of 25 ambient states. With re-optimised set points every tested fraction up to 0.8 is feasible and the CO2 of the line falls by 17.0 % in the median (envelope over the arms, declared post hoc), most in cold weather. Recirculation makes the line's own heat recovery possible instead of competing with it. | No gate. A model optimum, not a recommendation: the inlet humidity leaves the range the kinetics were set for, and the kinetics placeholders lead the sensitivity. |
+| Befund 103 | Operating point of plant A: what would another air flow and supply-air temperature save in CO2, counting steam and fans? | Stationary balance on the day means of the two measured days: at the reference placeholders at most 758 kg CO2 per day (14.6 %) on one product and 90 kg per day (2.8 %) on the other. Three unknowns decide: the minimum air flow, the fan law and how the waste-heat side reacts. | An upper bound under placeholders and proxy constraints, no operating recommendation. Side result: the solid fraction assumed in Befund 99 is inadmissible by the energy balance of the same days (taken up by an addendum to Befund 99). |
+| Befund 106 | Partner model, a later delivery: does the reproduction carry over, do the partner's own Excel and Dyssol figures agree with an independent rebuild, and are they plausible? | The workbook is reproduced completely with one switch changed (230 cells). 53 of 60 reported values of five data sets agree with Excel within rounding; in one data set Excel is not consistent with itself. Reusable plausibility checks find the expected violations and one more. With counter-current exchangers the recovery is 10 to 52 % above the partner model with an unpressurised circuit and 44 to 121 % above it with a pressurised one. | No gate; model against model, written as feedback to the partner. |
+| Befund 110 | Partner model, six cases of connecting two exhausts with two sinks, new inputs: Excel, Dyssol, counter-current exchangers, and the distance to the best network. | Workbook reproduced exactly; Excel within rounding in 72 of 72 values, Dyssol in 42 of 72 (its case 2 uses swapped medium flows). Case 1, each process with its own recovery, is first in every mode. Its saving rises from 17.9 % in the partner model to 28.4 % (unpressurised) and 33.1 % (pressurised) with counter-current exchangers, and it reaches 92.5 % and 83.6 % of what any network of circuits could save. With an unpressurised circuit two pairs of the cascade cases become equal. | Core statement of the project lead: the physics of the exchangers acts more strongly than the interconnection (the span between the six cases in the partner model is about 6 %). Valid for the inputs of the workbook, not plant-near. |
+| Befund 114 | Operating point and heat recovery of one line: optimise them jointly, or one after the other? | On the line model the joint optimum equals "first the dryer, then the recovery" in every one of the 50 test states. The minimum approach of the exchanger decides how much the recovery gives: 13.75 % of the energy at 5 K, 0.48 % at 10 K, nothing at 20 K (medians). | J0 at every approach and in both variants of the medium: one after the other suffices. The value of the recovery is a question of the exchanger design, not of the control. |
+| Befund 115 | Heat pump and storage with power limits under an hourly electricity price: a rule, an MPC or reinforcement learning? | Real hourly day-ahead prices of 2024, test on four months. A schedule-aware price rule is 0.65 % above the MPC with perfect prices (0.31 to 0.88 % per test month), and the MPC 0.010 % above the optimum in hindsight. SAC and TD3 end behind the constant rule (section 9). A first run was aborted because test prices leaked into the training; it was fixed and every job re-run. | H0: a simple price rule suffices; neither an MPC nor reinforcement learning is justified. |
+| Befund 118 | Campaign network: does a heat network pay when the consumers run in campaigns and stand still in between? | One waste-heat source, three plants with campaigns, one year in hourly steps. Additional share of the source that the network uses, at the source power of today (400 kW) and an availability of 0.57: 42.08 % with independent standstills, 27.60 % with joint ones; in continuous operation 1.60 %. Simple rules stay up to 7.30 % below the bound with full foresight. | N1: with consumers that stand still a network pays clearly. Restriction by the project lead: this baseline gives the source to one plant alone; the citable network benefit is the one against the fair baseline of Befund 119. |
+| Befund 119 | Campaign network 2: does a better simple rule, or a rolling planning on the production plan, close the gap to the bound? | Against a fair baseline (the source in fixed shares to the three plants) the network benefit at 400 kW is 0.00 % in continuous operation and 4.0 to 39.6 % at an availability of 0.57. A rolling planning with an exactly known standstill plan stays within 0.98 % of the bound in every cell; with plan deviations of up to 24 h and a naive correction the gap is up to 3.29 %. A dynamic order of the cascade does not help. | Q2 formally. The picture drawn by the project lead: a simple rule is mostly sufficient, planning with the production plan pays up to about 3 %, reinforcement learning is not justified. |
+| Befund 121 | Partner model: is the case that the workbook finds best (case 1) best over the operating range? | No case is best everywhere, in any mode. In the main mode (physical, unpressurised circuit) case 1 is strictly best on 0.471 of the admissible box and best or practically equal on 0.666; near the workbook point on 0.950 and 0.993. The partner mode overstates it (0.740 strictly best). The choice is between two cases and follows the order of the two exhaust temperatures; always choosing case 1 costs nothing in the median and at most 10.1 % of the fuel. | Readings as fixed: "not robust" (strictly best) and "conditional" (best or practically equal) over the box, "robust" near the workbook point. The shares depend on the placeholder box; the rule and the distribution of the extra consumption are what is reliable. |
 
 **The picture these studies form.**
 
@@ -1414,8 +1421,8 @@ form together.
 **What changed against version 5f.** Version 5f said that the ranking of the partner's scenarios is
 "robust against every assumption switched". That holds at the workbook point of the earlier delivery;
 over the operating range no case is best everywhere, and the partner mode overstates the robustness
-of the case it ranks first (Befund 121). The 60 to 88 % of Befund 90 belong to the earlier delivery
-and are not comparable with the figures of Befund 106. Version 5f said of storage that "no RL was
+of the case it ranks first (Befund 121). The recovery figures of Befund 90 belong to the earlier
+delivery and are not comparable with those of Befund 106. Version 5f said of storage that "no RL was
 built"; that is true of the storage of plant A and no longer of storage problems in general (Befund
 115). And the sentence that a coupling gain is not demonstrated holds for continuous operation; with
 campaigns a network pays (Befunde 118, 119).
@@ -1548,7 +1555,7 @@ are written under `artifacts/runs/` and never overwritten; config-fingerprint re
 the process configuration of old results reproducible.
 
 A model bundle leaves the machine, so its manifest holds no absolute path and no user name; it
-records the commit, the dirty flag, the fingerprints and the preset version, and building one still
+records the commit, the dirty flag, the fingerprints and the preset version, and building a bundle still
 aborts when the loaded package is not that of the checkout (decision of the project lead,
 `docs/47_module_api.md`, section 5).
 
@@ -1856,7 +1863,14 @@ After the merge
 
 Columns: statement (section) · number(s) · Befund · artifact · commit that added the
 artifact in the current history · script that writes it · checked by
-`scripts/check_m2_synthesis_consistency.py` (`yes`, or `no: reason`).
+`scripts/check_m2_synthesis_consistency.py` (`yes`, or `no: reason`). The rows down to
+"Environment, hyperparameters, simulator interface" are those of version 5f with the section
+numbers of this version; in them `yes` means that the numbers are recomputed from the artifact. The
+rows after it are new in version 6. There `yes: artifact` means the same, and `yes: text` means
+that every number of the passages is written in the lab-book entry of the finding (with its
+decision paragraphs and dated addenda) or in the study document named, which the script checks
+token by token; this shows that the number stands in the cited source, not which quantity it
+belongs to. The registration of version 6 is in `scripts/check_m2_synthesis_v6.py`.
 
 | Statement (section) | Number(s) | Befund | Artifact | Commit | Script | Checked |
 |---|---|---|---|---|---|---|
@@ -1870,28 +1884,62 @@ artifact in the current history · script that writes it · checked by
 | Rank verdicts differing from A0 (3) | 85, 45, 40 | 94 b | `rerun_evaluation_rerun_full.json` | aac7b55 | `analyze_rerun.py` | yes |
 | A1 / N against A0, Holm (3) | 3 of 192; 24 of 384 (all persistence) | 94 a | `rerun_evaluation_rerun_full.json` | aac7b55 | `analyze_rerun.py` | yes |
 | Gain over static regression (3) | 5.2 to 7.8 (A0) | 83 e | `paired_reevaluation_58_63_67.json` | db3cc5d | `analyze_paired_reevaluation.py` | yes |
-| Seed numbers (2, 5) | arm N 3-6, 5, 16, 4-7, 210, 69; A0 45, 37, 193, 33 | 94 addendum, 83 addendum b | `befund94_addendum_seeds_data_need_rerun_full.json`, `paired_reevaluation_83_addendum.json` | 198afc1, 714d4ac | `analyze_94_addendum_seeds_data_need.py`, `analyze_83_addendum.py` | yes |
+| Seed numbers (2) | arm N 3-6, 5, 16, 4-7, 210, 69; A0 45, 37, 193, 33 | 94 addendum, 83 addendum b | `befund94_addendum_seeds_data_need_rerun_full.json`, `paired_reevaluation_83_addendum.json` | 198afc1, 714d4ac | `analyze_94_addendum_seeds_data_need.py`, `analyze_83_addendum.py` | yes |
 | Number of paired tests, old data (2) | 632 | 83 b | `paired_reevaluation_58_63_67.json` | db3cc5d | `analyze_paired_reevaluation.py` | yes |
-| Rank-cell families, BH count (2, 5) | 336, 336, 168; 251 | 94 | `rerun_evaluation_rerun_full.json` | aac7b55 | `analyze_rerun.py` | yes |
+| Rank-cell families, BH count (2) | 336, 336, 168; 251 | 94 | `rerun_evaluation_rerun_full.json` | aac7b55 | `analyze_rerun.py` | yes |
 | Inference cost (4) | table of section 4 | 97 | `joint_timing_idle.json` | 3ce113a | `measure_joint_timing.py` | yes |
-| Hybrid simulator share (4, 6) | 253,136 of 256,123 µs, 98.8 % | 97 | `a1_inference_time_v2_idle.json` | 3ce113a | `measure_joint_timing.py` | yes |
-| Run-level against window-wise split (2, 5) | 29-68 % | 39 | `extra_trees_split_comparison.jsonl` | 7384455 | `run_extra_trees_split_comparison.py` | yes |
-| Data need (6, D) | ratios to 64 runs, absolute errors, 12 of 12 / 2 after Holm, baselines | 94 addendum | `befund94_addendum_seeds_data_need_rerun_full.json` | 198afc1 | `analyze_94_addendum_seeds_data_need.py` | yes |
-| Convergence check at a larger budget (3, 7) | no head reaches the new cap; GRU against LSTM 5 and 3 cells better uncorrected; two Holm verdicts of the Transformer at 16 runs drop out (ratios 1.72 / 1.65 at 200 epochs, 1.43 / 1.55 at 600) | 104 | `convergence_check_94_conv600_main_attempt2.json`, `conv600_main_N.jsonl.gz` | 294c9ea, ec0fb6a | `analyze_convergence_check_94.py`, `run_convergence_check_94.py` | yes |
-| Epoch cap (3, 7, B) | heads at the cap of 200 epochs: 44 / 33 / 32 / 22 / 4 of 60 (Transformer, GRU, LSTM, Mamba, xLSTM); at 64 runs 10 / 9 / 5 / 4 / 2 of 15 | 94 addendum | `befund94_addendum_epoch_cap_rerun_full.json` | 6930205 | `analyze_94_epoch_cap.py` | yes |
-| Constant-trained model against excited (6) | factor 2 to 3 | 55 with addendum | `befund55_addendum_ratio_range.json` | 6ef5501 | `analyze_55_addendum_ratio_range.py` | yes |
-| Plant data variation (6) | 0.12-2.01 % | 56a | raw plant data not in the repository | - | - | no: raw data are never in the repository |
-| Study A ratios, tests, hybrid cells (6, D) | 12.69, 10.27, 1.32, 1.27; 2640; 1 and 34 of 90 | 88 d | `a1_main_analysis.json` | 93ef6aa | `analyze_a1_main.py` | yes |
-| Study A crossover (6) | four of five plants | 88 d | `a1_main_analysis.json` | 93ef6aa | `analyze_a1_main.py` | yes |
-| Study B verdicts (6) | HB1 not established; HB2 not established (T3), refuted (T1); HB3 not established | 87 add. 4 | `b1_main_analysis.json` | 2462ef7 | `analyze_b1_main.py` | yes |
-| Study B limits (6) | 20 to 24 %; 18 %, 35 % | 87 add. 2, 3 | `b1_pool_limits.json` | 8add722 | `report_b1_pool_limits.py` | yes |
-| Model-based optimisation (8) | 9.0 / 16.5 %; 1.30 / 1.46 %; 94 / 85 %; 22 / 17 of 25; 13 / 25 of 25 | 80 | `m1_k1_comparison.json` | 603cf69 | `analyze_m1_k1_comparison.py` | yes |
-| Stability of S1-S3 (8) | changes 74 to 87 % | 80 c | `m1_gas_bound_sensitivity_k1.json` | bc681f3 | `analyze_m1_gas_bound_sensitivity.py` | yes |
-| Margin m (8) | 0.006 kg/kg; 95 % | 65 FA2, 68 | `bres_margin.json`, `verify_fa2_spread_calibration.json` | 13eadb6, dff9cd0 | `analyze_bres_margin.py`, `verify/fa2_spread_calibration.py` | yes |
-| Coupling test (8) | 0 of 6 (20 K), 1 of 6 (10 K) | 81 | `m4r_test_dt20_umin126.json`, `m4r_test_dt10_umin126.json` | 65dcb7e, 609a629 | `run_m4r_test.py` | yes |
-| RL margin (8) | k = 5 (1, 2, 3, 5 tested); 6.9 %; 6.5 points | 96 | `bres_margin.json` | 13eadb6 | `analyze_bres_margin.py` | yes |
-| Partner model recovery (8) | 60 to 88 % | 90 addendum | `heat_recovery_comparison_r4_consistent.json` | 0737e75 | `report_heat_recovery_comparison.py` | yes |
-| Storage readings (8) | L1 pre-registered, L2 post hoc; time slice L2 | 92, 99 | `gate_storage_shift.json`, `gate_storage_shift_posthoc.json`, `gate_storage_timeslice.json` | 8019fe2, 3c99b40, f8ec7e6 | `gate_storage_shift.py`, `analyze_gate_storage_shift.py`, `gate_storage_timeslice.py` | yes |
+| Hybrid simulator share (4, 5) | 253,136 of 256,123 µs, 98.8 % | 97 | `a1_inference_time_v2_idle.json` | 3ce113a | `measure_joint_timing.py` | yes |
+| Run-level against window-wise split (2) | 29-68 % | 39 | `extra_trees_split_comparison.jsonl` | 7384455 | `run_extra_trees_split_comparison.py` | yes |
+| Data need (5, D) | ratios to 64 runs, absolute errors, 12 of 12 / 2 after Holm, baselines | 94 addendum | `befund94_addendum_seeds_data_need_rerun_full.json` | 198afc1 | `analyze_94_addendum_seeds_data_need.py` | yes |
+| Convergence check at a larger budget (3, 13) | no head reaches the new cap; GRU against LSTM 5 and 3 cells better uncorrected; two Holm verdicts of the Transformer at 16 runs drop out (ratios 1.72 / 1.65 at 200 epochs, 1.43 / 1.55 at 600) | 104 | `convergence_check_94_conv600_main_attempt2.json`, `conv600_main_N.jsonl.gz` | 294c9ea, ec0fb6a | `analyze_convergence_check_94.py`, `run_convergence_check_94.py` | yes |
+| Epoch cap (3, 13, B) | heads at the cap of 200 epochs: 44 / 33 / 32 / 22 / 4 of 60 (Transformer, GRU, LSTM, Mamba, xLSTM); at 64 runs 10 / 9 / 5 / 4 / 2 of 15 | 94 addendum | `befund94_addendum_epoch_cap_rerun_full.json` | 6930205 | `analyze_94_epoch_cap.py` | yes |
+| Constant-trained model against excited (10) | factor 2 to 3 | 55 with addendum | `befund55_addendum_ratio_range.json` | 6ef5501 | `analyze_55_addendum_ratio_range.py` | yes |
+| Plant data variation (10) | 0.12-2.01 % | 56a | raw plant data not in the repository | - | - | no: raw data are never in the repository |
+| Study A ratios, tests, hybrid cells (5, D) | 12.69, 10.27, 1.32, 1.27; 2640; 1 and 34 of 90 | 88 d | `a1_main_analysis.json` | 93ef6aa | `analyze_a1_main.py` | yes |
+| Study A crossover (5) | four of five plants | 88 d | `a1_main_analysis.json` | 93ef6aa | `analyze_a1_main.py` | yes |
+| Study B verdicts (5) | HB1 not established; HB2 not established (T3), refuted (T1); HB3 not established | 87 add. 4 | `b1_main_analysis.json` | 2462ef7 | `analyze_b1_main.py` | yes |
+| Study B limits (5) | 20 to 24 %; 18 %, 35 % | 87 add. 2, 3 | `b1_pool_limits.json` | 8add722 | `report_b1_pool_limits.py` | yes |
+| Model-based optimisation (6) | 9.0 / 16.5 %; 1.30 / 1.46 %; 94 / 85 %; 22 / 17 of 25; 13 / 25 of 25 | 80 | `m1_k1_comparison.json` | 603cf69 | `analyze_m1_k1_comparison.py` | yes |
+| Stability of S1-S3 (6) | changes 74 to 87 % | 80 c | `m1_gas_bound_sensitivity_k1.json` | bc681f3 | `analyze_m1_gas_bound_sensitivity.py` | yes |
+| Margin m (6) | 0.006 kg/kg; 95 % | 65 FA2, 68 | `bres_margin.json`, `verify_fa2_spread_calibration.json` | 13eadb6, dff9cd0 | `analyze_bres_margin.py`, `verify/fa2_spread_calibration.py` | yes |
+| Coupling test (11) | 0 of 6 (20 K), 1 of 6 (10 K) | 81 | `m4r_test_dt20_umin126.json`, `m4r_test_dt10_umin126.json` | 65dcb7e, 609a629 | `run_m4r_test.py` | yes |
+| RL margin (9) | k = 5 (1, 2, 3, 5 tested); 6.9 %; 6.5 points | 96 | `bres_margin.json` | 13eadb6 | `analyze_bres_margin.py` | yes |
+| Partner model recovery (11) | 60 to 88 % | 90 addendum | `heat_recovery_comparison_r4_consistent.json` | 0737e75 | `report_heat_recovery_comparison.py` | yes |
+| Storage readings (11) | L1 pre-registered, L2 post hoc; time slice L2 | 92, 99 | `gate_storage_shift.json`, `gate_storage_shift_posthoc.json`, `gate_storage_timeslice.json` | 8019fe2, 3c99b40, f8ec7e6 | `gate_storage_shift.py`, `analyze_gate_storage_shift.py`, `gate_storage_timeslice.py` | yes |
 | Environment, hyperparameters, simulator interface (A, B, C) | versions, parameter counts, settings | 94, 97 | `rerun_full_N.jsonl`, `joint_timing_idle.json`, `conf/process/greybox_gab_placeholder.yaml` | 3207baf, 3ce113a, - | `run_arch_rerun_worker.py`, `measure_joint_timing.py` | yes |
+| Outliers and the ranking (3) | 72 cells; 1.093, 5 of 5 seeds; 0 of 24; 3.22e-4 to 1.08e-3 kg/kg; 17-34 % | 109 | `outlier_robustness_analysis_main.json` | c5341d0 | `analyze_outlier_robustness.py` | yes: text |
+| Time per decision (4) | 0.1 / 6 / 84 / 119 ms; about 1 s per MPC solve | 105, 127 | `learned_setpoints_v1_analysis.json` | de261bc | `analyze_learned_setpoints.py` | yes: text (the MPC solve time from `docs/24`, section 4) |
+| Surrogate-based set-point optimisation (5) | 8-256 evaluations, 50 test states; 64 / 256; 0.72-0.74 for 0.85; 0.0011-0.0013 kg/kg; S2 | 107 with addendum | `surrogate_rto_v1_analysis.json`, `surrogate_rto_v2_analysis.json` | 3a07bfe, 323cb14 | `analyze_surrogate_rto.py` | yes: text |
+| Stationary Dyssol flowsheets (5) | 32 / 128; 64 / 256; 21 / 66 coefficients; 1024 + 256 points; 1.7e-13 K; 378 of 1024; D2 | 128 with addendum | `dyssol_steady_v1_one_line_analysis.json`, `dyssol_steady_v1_two_lines_analysis.json` | 0924f2a, f0aa215 | `analyze_dyssol_steady.py` | yes: text |
+| Headroom in continuous operation (summary, 6) | 8.93 % (0.69 .. 25.23); 0.55 % (0.05 .. 1.50); 1.51 % (1.02 .. 2.44); margins; shares 0.92 / -0.35 %, 1.49 %; L0 | 105 | `dynamic_headroom_v2_analysis.json`, `dynamic_headroom_v2.json.gz` | 8a4a872, 869f2ad | `analyze_dynamic_headroom.py` | yes: artifact (19 of 20 and 20 of 20 draws: text) |
+| Product change (6) | 37-55 min; 0.9-1.8 min | 105 | `dynamic_headroom_v2_analysis.json` | 8a4a872 | `analyze_dynamic_headroom.py` | yes: artifact |
+| Load following (summary, 6) | margins, costs, gains and shares of C0-C4; gaps 0.83 %, 1.05 %; 1135.3 / 1132.9 kWh; gas 0.04 / 0.08 %; 1.14 / 1.61 / 1.27 %; 0.49 / 1.81 %; box 8.96 % / 1.98 % at 0.03047; T1 | 126 | `load_following_v1_analysis.json`, `load_following_v1.json.gz` | 53552b6, c509190 | `analyze_load_following.py` | yes: artifact |
+| Order dependence, and the addenda to Befunde 105 and 126 (summary, 6) | 94211 queries; 1.82 %; 2.58 %; 1.58 %; 3.78 %; margins 0.005859 / 0.006641 and 0.007812 / 0.007422; 9.10 %; 1.98 %; 2.08 %; 0.397944 / 0.397950; O0 | 129; addenda of 2026-11-23 to 105 and 126 | `order_dependence_v1_analysis.json`, `order_dependence_v1.json.gz` | f21929c, 060c6bc | `analyze_order_dependence.py` | yes: artifact |
+| Learned model as the environment (7.1, 9) | feasible shares 1.000 / 0.987 / 0.973; 0.0049-0.0080 kg/kg; 39 / 60 / 9 of 75, 0 of 25; 0.3-2.9 % against 7-19 of 25; 12 tests; about 4.6 %; G0 | 113 | `surrogate_env_v1_analysis.json` | 12c6976 | `analyze_surrogate_env.py` | yes: text |
+| Learned set points: table, admissibility, gaps per budget (summary, 7.2) | gaps, margins and shares at the largest budget; 27 of 170; gaps at 8-64 runs and 10-40 days; 2.07 %; 0.85 %; U3 | 127 | `learned_setpoints_v1_analysis.json`, `learned_setpoints_v1.json.gz` | de261bc, 5238b5e | `analyze_learned_setpoints.py` | yes: artifact |
+| Learned set points: twin curve, map error, rank statements, deployable margin (7.2) | 1.92 % / 3.26 %; 0.0077 kg/kg; 0.015 %, 3 of 5; 1 of 27; 2 / 4 / 4 / 3 of 5 seeds | 127 (`docs/44`, sections 15 and 16) | `learned_setpoints_v1_analysis.json` | de261bc | `analyze_learned_setpoints.py` | yes: text |
+| GRU, hybrid and refit, same structure (7.3) | margins at 4-32 runs; thresholds 0.049-0.134; rollout errors 0.0037 / 0.0033 against 0.0451 / 0.0259; 6 of 12 cells; Y2 | 122 with addendum | `hybrid_model_v1_analysis.json` | f7ad0be | `analyze_hybrid_model.py` | yes: text |
+| Structural error to the safe side (7.3) | share 0.30; margins at 16 runs; 0.0095, Holm 0.0329 and 0.0701; 0.031 / 0.070; energies 8.1-29.5 %; 62 / 61 / 66 of 100 | 124 | `hybrid_structural_v1_analysis.json` | 2198bf3 | `analyze_hybrid_structural.py` | yes: text |
+| Structural error to the unsafe side (7.3) | fraction 0.35; 0.0523; 11 of 12 tests; admissible cells of 15; energies relative to the oracle; 0.11 kg/kg, 37-41 %; rollout errors; post hoc Holm 0.0093; E3 | 125 | `hybrid_structural_2_v1_analysis.json` | 754f0d5 | `analyze_hybrid_structural_2.py` | yes: text |
+| Static transfer (5, 7.4, 10) | six plants, 2-64 points; R3; 78 / 0 / 192 of 270; 163 of 168; 16-64 points; about 300 times, 150-300 and 83-85 degC | 120 with addendum | `static_transfer_v1_analysis.json`, `static_transfer_v2_analysis.json` | 1f2d12c, 71ce0ca | `analyze_static_transfer.py`, `analyze_static_transfer_v2.py` | yes: text |
+| Global sensitivity (summary, 8.1) | total indices 0.518 / 0.388 / 0.097 / 0.001 and 0.614 / 0.446 / 0.107 / 0.029; 0.90; 9.67 %, 6.7 %; 13.1 %; 19 of 20 outputs | 108 with addendum | `sobol_steady_v1.json`, `sobol_steady_e14.json` | b4b6864, c68929c | `run_sensitivity.py` | yes: text |
+| Value of a moisture feedback (summary, 8.2) | margins and energies of the variants; 13.40 %; 9.47 %; 0.91; 0.12; V2 | 111 with addendum | `sensor_value_v1_analysis.json`, `sensor_value_v1_f0_candidate_check.json` | 93882d3, c626ed8 | `analyze_sensor_value.py` | yes: text (the class V2: artifact) |
+| Laboratory samples and soft sensors with measured responses (summary, 8.2, 8.3) | 0.0086 / 0.0166; +0.88 / +2.64 %; A 0.934 / 0.805 / 0.775; -0.183; 0.0637-0.0729; La, not Lb | 112 with addendum | `sensor_value_2_v1_analysis.json` | 58c977a | `analyze_sensor_value_2.py` | yes: text |
+| Observability from gas-side measurements (8.3, 8.4) | SNR 0.28-0.60; 1.07-1.26; 0.68 / 0.74; 3.9 times; 5.8 standard deviations; 5-10 %; O2 | 116 | `observability_v1_analysis.json` | 7c880c5 | `analyze_observability.py` | yes: text |
+| Reinforcement learning on the storage problem (9, 11) | three seeds, 400 000 steps; 3.13 % / 2.98 %; 0.65 %; 0.31-0.88 %; 0.010 %; H0 | 115 | `storage_price_v2_analysis.json` | d421a05 | `analyze_storage_price.py` | yes: text |
+| Plant-near model of plant A (summary, 10) | 13.84 / 5.51 / 13.63 / 11.10 K; 1.27-2.14 K; offsets 5.03 / 10.12 K; P2 | 117 | `plant_scale_v1_analysis.json` | 77a306b | `analyze_plant_scale.py` | yes: text |
+| Identifiability and calibration at plant A (10) | 7.66 K against 5.51 K; K1 | 123 | `plant_calibration_v1_analysis.json` | 640ce49 | `analyze_plant_calibration.py` | yes: text |
+| Site pinch (11) | 436 kW (655 against 1092); 2232 scenarios, 62-3564 kW; 800 / 1200 kW; 70-75 / 40-45 degC, 90 % in 96 % | 100 | `run_site_pinch_sf0634.json` | d524403 | `run_site_pinch.py` | yes: text |
+| Heat pump on waste heat (11) | 528 scenarios; 114 of 4480 cells, 2 points; 18 cells post hoc; L1 | 101 with addendum | `gate_heat_pump.json`, `gate_heat_pump_rule_tuning_posthoc.json` | 07d5b43, 19d7efc | `gate_heat_pump.py`, `analyze_heat_pump_rule_tuning.py` | yes: text |
+| Exhaust recirculation (11) | 17 of 25 states; fractions up to 0.8; 17.0 % | 102 | `exhaust_recirc_analysis.json` | d40613d | `analyze_exhaust_recirc.py` | yes: text |
+| Operating point of plant A (11) | 758 kg/d (14.6 %); 90 kg/d (2.8 %) | 103 | `study_plant_a_operating_point.json` | 7bc187a | `study_plant_a_operating_point.py` | yes: text |
+| Partner model, later delivery (11) | 230 cells; 53 of 60 values; 10-52 %, 44-121 % | 106 | `partner_v41_2_comparison.json` | 282fba0 | `report_partner_v41_2.py` | yes: text |
+| Partner model, six cases (11) | 72 of 72, 42 of 72; 17.9 / 28.4 / 33.1 %; 92.5 / 83.6 %; about 6 % | 110 | `partner_6cases_comparison.json` | 2db7dd6 | `report_partner_6cases.py` | yes: text |
+| Operating point and recovery, jointly or in sequence (11) | 50 test states; 13.75 % / 0.48 % / 0 at 5 / 10 / 20 K; J0 | 114 | `joint_recovery_v1_analysis.json` | e960286 | `analyze_joint_recovery.py` | yes: text |
+| Campaign network (11) | 400 kW, availability 0.57: 42.08 / 27.60 %; 1.60 %; 7.30 %; N1 | 118 with addendum | `campaign_network_v1_analysis.json`, `campaign_network_v2_analysis.json` | 583f5b7, a7c0b4c | `analyze_campaign_network.py`, `analyze_campaign_network_v2.py` | yes: text |
+| Campaign network 2 (11) | 0.00 %; 4.0-39.6 %; 0.98 %; 3.29 %, 24 h; about 3 %; Q2 | 119 | `campaign_network_2_v1_analysis.json` | 9557e49 | `analyze_campaign_network_2.py` | yes: text |
+| Ranking of the six cases over the operating range (11) | 0.471 / 0.666; 0.950 / 0.993; 0.740; 10.1 % | 121 | `case_ranking_v1_analysis.json` | 1d6b4dd | `analyze_case_ranking.py` | yes: text |
+| Rules of the method (2), what is not shown and limits (12, 13), settings of the control studies (C), glossary (F) | the numbers of the rules and of the limits | findings named in the text | `CLAUDE.md`, `docs/04_stand_ap1.md`, `docs/24`, `docs/43`, `docs/44` | - | - | yes: text; five counts (parts of a rule, list items, templates, terms, test sets) as verified exemptions |
+| Module interface (A) | no number | none (infrastructure) | none | - | - | no number to check (`docs/47_module_api.md`) |
 
 Older tables of statements, corrections and placeholders: `docs/08_synthese_m2_bestand.md`.
