@@ -1,9 +1,11 @@
 # NN -- Dyssol flowsheet with the fresh-gas state as an input: data need of a surrogate with 7 inputs, and the partner sheet as a named test set
 
-Status: **design and pre-registered reading; no Dyssol data set of this study exists yet.**
+Status: **complete. Step 0 held at all 1291 points; pre-registered reading D1 (an MLP is needed,
+256 Dyssol runs; the quadratic regression does not reach the thresholds up to 512 runs); the
+prediction N\* = 64 is not confirmed; reading on the sheet B1 (sections 11 to 14).**
 Sections 1 to 10 are the design and the reading, committed BEFORE the pilot and before any Dyssol
-run of this study; results are added below them and take their numbers only from the artifacts
-named there. Branch `dyssol-freshgas` (from `master` 2e54dde), worktree
+run of this study (4639bef) and unchanged since; the results below them take their numbers only
+from the artifacts named there. Branch `dyssol-freshgas` (from `master` 2e54dde), worktree
 `C:/twinlink_work/freshgas`. Document number and finding number are open (assigned by the managing
 session at merge). Code `src/twinlink_ml/dyssol_steady/` (extended, not copied), settings
 `conf/dyssol_steady/dyssol_freshgas.yaml`, drivers `scripts/run_dyssol_steady.py --config
@@ -278,3 +280,239 @@ Not in the repository: the delivery, the sheet and its values, the box, the stor
 data sets, the names of the processes. The committed template of the box holds placeholders.
 Committed artifacts hold errors in physical units, counts and digests, no input value and no
 value of the sheet. `tests/test_denylist.py` is run before every commit of this branch.
+
+## 11. Results
+
+Artifacts: pilot `artifacts/runs/dyssol_freshgas_pilot_v1.json.gz` (driver 4639bef, clean tree),
+training `artifacts/runs/dyssol_freshgas_v1_training.json.gz` (driver 6e0bfc2, clean tree),
+analysis `artifacts/runs/dyssol_freshgas_v1_analysis.json` (run on 5f4af7e, which differs from
+6e0bfc2 only by the training artifact). The data set `dyssol_freshgas_v1.json.gz` is local; its
+SHA-256 is in the training artifact. **All of this section is conditional on the reading "gas mass
+flow of the sheet = dry gas" (inferred, not confirmed by the sender).**
+
+### 11.1 Pilot
+
+1440 fits on the rebuild. Round 1 (108 settings) selected width 64, learning rate 0.0003, 10000
+steps, weight decay 0.1: at the edge of three axes (learning rate lower, steps upper, weight decay
+upper). By the committed rule the grid was extended once on these three axes (240 settings).
+**Final selection: width 128, learning rate 0.0003, 20000 steps, weight decay 0.1** (criterion
+4.09, against 4.12 for the selection of round 1 and 4.33 for the setting of Befund 128, which is
+part of the grid). The final selection lies at the upper edge of the width and of the steps in the
+extended grid; there is no second extension (caveat 4).
+
+### 11.2 Data
+
+1024 + 256 + 11 = 1291 Dyssol runs, none failed. Dyssol per run: median 1.33 s, maximum 1.84 s,
+1728 s in total, peak 54 MB per process. Units, patched materials database and source flowsheet
+have the digests of the training artifact of Befund 128 (`dyssol_steady_v1_one_line_training`).
+
+Over-saturated (flag of docs/45, dryer exhaust): 9 of 1024 points of the pool, 0 of 256 of the
+test set, 0 of 11 of the sheet. With the stricter rule of docs/49 (also after the heat recovery):
+26 of 1024, 5 of 256, 0 of 11.
+
+The eleven points of the sheet: all inside the box; all strictly inside in the fresh-gas
+temperature and the relative humidity; **all eleven on the face of the dryer inlet temperature,
+one of them also on the face of the medium flow** (no flow); none on a face of the other inputs.
+
+### 11.3 Step 0, control: held
+
+Dyssol against the rebuild at all 1291 points: largest temperature deviation 1.7e-13 K, largest
+relative deviation of heat flows and fuel 1.0e-11 % (bounds 1e-6). Per set: pool 1.7e-13 K and
+1.0e-11 %, Sobol test set 1.7e-13 K and 1.2e-12 %, sheet 5.7e-14 K and 2.2e-13 %.
+
+| Fresh-gas temperature [degC] | Points | Largest temperature deviation [K] | Largest relative deviation [%] |
+|---|---:|---:|---:|
+| -10 to -5 | 160 | 1.7e-13 | 1.0e-12 |
+| -5 to 0 | 160 | 1.7e-13 | 9.9e-13 |
+| 0 to 5 | 160 | 1.7e-13 | 1.0e-12 |
+| 5 to 10 | 160 | 1.1e-13 | 1.2e-12 |
+| 10 to 15 | 171 | 1.7e-13 | 1.2e-12 |
+| 15 to 20 | 160 | 1.7e-13 | 1.2e-12 |
+| 20 to 25 | 160 | 1.1e-13 | 1.5e-12 |
+| 25 to 30 | 160 | 1.1e-13 | 1.0e-11 |
+
+At 177 of the 1291 points the heater inlet is colder than 290 K, the lower bound of the
+vapour-enthalpy correlation; there the deviation is at most 1.7e-13 K and 9.9e-13 %.
+
+**Answer to question 1: Dyssol keeps up with the rebuild at cold fresh gas.** The deviation does
+not depend on the fresh-gas temperature; it is rounding in every bin. The rebuild's rule (the
+vapour enthalpy evaluated at the bound of its correlation) reproduces Dyssol down to -10 degC.
+This closes caveat 5 of docs/49 for the range of this box: the scans of the carrier sweep at -10
+and 0 degC used a rebuild that agrees with Dyssol there. Whether evaluating the correlation at its
+bound is intended remains the question to the units' author (docs/45, section 16, item 5).
+
+### 11.4 Reading D: D1
+
+Median over the five seeds (range); bold = both medians at or below their threshold; "seeds" =
+seeds meeting both thresholds. Test set: in-box Sobol test set, 7 inputs (all 256 points).
+
+| N | linear: exhaust P95 [K] | fuel P95 [%] | seeds | quadratic: exhaust P95 [K] | fuel P95 [%] | seeds | MLP: exhaust P95 [K] | fuel P95 [%] | seeds |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 8 | 35.03 (17.02-328.78) | 41.61 (14.65-642.43) | 0/5 | 45.45 (26.59-66.94) | 53.34 (38.19-66.73) | 0/5 | 15.66 (14.45-34.66) | 20.21 (19.21-39.80) | 0/5 |
+| 16 | 11.98 (8.66-14.51) | 20.04 (12.44-25.74) | 0/5 | 27.10 (18.41-42.93) | 48.14 (34.03-55.85) | 0/5 | 10.05 (7.59-12.96) | 12.10 (9.35-18.06) | 0/5 |
+| 32 | 9.73 (7.16-11.22) | 12.57 (11.56-21.93) | 0/5 | 13.27 (11.54-22.02) | 19.50 (18.92-27.19) | 0/5 | 5.41 (3.54-6.15) | 5.67 (4.70-6.95) | 0/5 |
+| 64 | 7.65 (7.08-8.33) | 12.25 (11.49-16.71) | 0/5 | 4.38 (3.87-5.48) | 5.53 (4.97-5.72) | 0/5 | 2.26 (1.76-3.20) | 2.51 (2.23-2.60) | 0/5 |
+| 128 | 7.42 (7.11-8.44) | 11.85 (10.65-12.61) | 0/5 | 3.08 (2.96-3.17) | 3.98 (3.61-4.44) | 0/5 | 0.94 (0.80-1.03) | 1.04 (0.97-1.49) | 2/5 |
+| 256 | 7.33 (7.21-7.89) | 11.35 (10.85-11.80) | 0/5 | 2.89 (2.69-2.92) | 3.76 (3.28-4.18) | 0/5 | **0.47** (0.38-0.58) | **0.64** (0.61-0.70) | 5/5 |
+| 512 | 7.63 (7.19-7.66) | 10.97 (10.86-11.52) | 0/5 | 2.52 (2.45-2.74) | 4.05 (3.37-4.41) | 0/5 | **0.27** (0.19-0.35) | **0.41** (0.37-0.49) | 5/5 |
+
+**Feasibility:** only the MLP meets the thresholds, from N = 256 (5 of 5 seeds at 256 and 512; at
+N = 128 2 of 5 seeds, and the median of the fuel misses with 1.04 %). No seed of a regression
+meets them at any N.
+
+**Verdict: D1.** N\* of the MLP is 256; the quadratic and the linear regression have none.
+**Data need: 256 Dyssol runs, reached by the MLP.** With five inputs and the narrow medium range
+(Befund 128) the verdict was D2 with 32 runs.
+
+**Rank claims** (24 of 28 tests resolved after Holm). MLP against quadratic: the MLP is better at
+every N on both numbers, all 14 tests resolved. MLP against linear: the MLP is better on both
+numbers from N = 32 (10 tests resolved); the four tests at N = 8 and 16 are not resolved.
+
+### 11.5 Prediction: not confirmed
+
+Predicted N\* of the quadratic regression: 64. Found: **none up to N = 512.** **Prediction not
+confirmed.** The quadratic regression does not fail for lack of runs: from N = 128 to N = 512 its
+numbers stay at about 2.5 to 3.1 K and 3.8 to 4.1 %, with a narrow range over the seeds. It has
+reached the error of the best quadratic function of this box, and that error is above the
+thresholds. The rule of thumb of Befund 128 (data need about 1.5 to 2 times the number of
+coefficients) presupposes that a polynomial of degree 2 can represent the flowsheet over the box;
+that held in the box of Befund 128 and does not hold in this one.
+
+### 11.6 Reading B: B1
+
+Test set: partner sheet 2026-11-24, process 2, 11 points; truth = our Dyssol run at each point.
+Model of reading D: the MLP at N = 256. Largest error over the eleven points, median over the
+seeds (range): **exhaust temperature 2.27 K (1.94-4.41), fuel 1.32 % (0.91-2.26)**; 0 of 5 seeds
+meet both thresholds. **Verdict: B1** -- the surrogate does not hold 1 K and 1 % at all eleven
+points.
+
+**Answer to question 3: no, not at all points.** Not a blind test (section 8), and a test on a
+face of the box (section 11.2, caveat 1).
+
+### 11.7 Without a reading
+
+* **Admissible test points.** No test point is over-saturated by the flag of docs/45, so the
+  reading on the admissible points is reading D itself. With the stricter rule 251 of 256 test
+  points are admissible; on them verdict and N\* are the same (MLP at N = 256: 0.47 K and
+  0.64 %, 5 of 5 seeds; quadratic at N = 512: 2.51 K and 3.83 %).
+* **Largest error over the Sobol test set** (median over seeds; largest seed in brackets): MLP at
+  N = 256 4.74 K (5.18 K) and 2.70 % (3.31 %), at N = 512 3.29 K (4.01 K) and 1.67 % (2.64 %);
+  quadratic at N = 512 9.53 K (9.83 K) and 5.81 % (6.16 %). Median error: MLP at N = 256 0.08 K
+  and 0.12 %; quadratic at N = 512 0.88 K and 1.12 %. The thresholds are met at the 95th
+  percentile, not at every test point.
+* **Other targets** (95th percentile, median over seeds). MLP at N = 256: dryer outlet 0.32 K,
+  preheated air 0.45 K, recovered heat 3.73 kW. Quadratic at N = 512: dryer outlet 0.33 K,
+  preheated air 2.63 K, recovered heat 25.85 kW. The quadratic regression fits the dryer as well
+  as the MLP and misses the two quantities of the heat recovery.
+* **The sheet, every model and N.** No model meets the rule of reading B at any N. MLP at
+  N = 512: 1.66 K (1.41-3.09) and 1.16 % (0.78-1.28), 0 of 5 seeds; quadratic at N = 512: 9.77 K
+  and 5.09 %; linear at N = 512: 17.91 K and 11.15 %.
+* **Where on the sheet** (MLP at N = 256; per point the median over the seeds, computed from the
+  per-point errors stored in the training artifact). 8 of the 11 points are within both
+  thresholds. The other three are the first three in the order of the sheet, the point without
+  medium flow and the two smallest flows: 2.06, 1.16 and 1.06 K, and 0.63, 1.18 and 1.00 %. From
+  the fifth point on the errors are at most 0.36 K and 0.29 %. In 4 of 5 seeds the largest
+  exhaust error is at the point without medium flow, which lies on two faces of the box.
+* **The surrogate against the sheet's own values** (MLP at N = 256; 64 reported values). Within
+  half a unit of the last reported decimal: 2, 2, 11, 4 and 6 values in the five seeds; within
+  one unit: 3, 6, 16, 9 and 18. Our Dyssol runs at the same points: 48 and 62 of 64 (the counts
+  of the addendum to Befund 130 for process 2). A surrogate that is read against 1 K and 1 % does
+  not reproduce a sheet reported to one decimal; Dyssol and the rebuild do.
+
+## 12. Answers and caveats
+
+**Question 1.** Dyssol and the rebuild agree to rounding at all 1291 points, at every fresh-gas
+temperature from -10 to 30 degC and at the 177 points with a heater inlet below 290 K.
+
+**Question 2.** With seven inputs and the full range of the medium flow a surrogate needs 256
+Dyssol runs, and it has to be an MLP (D1). The quadratic regression, which sufficed with 32 runs
+in Befund 128, settles at about 2.5 K and 4.0 % and never reaches the thresholds. The prediction
+N\* = 64 is not confirmed.
+
+**Question 3.** The MLP at its N\* holds the thresholds at 8 of the 11 points of the sheet in the
+median over the seeds and misses them at the point without medium flow and at the two smallest
+flows (B1).
+
+**Placing.** The rebuild is exact at every point of this study, including the points of the
+sheet. Nothing here is a reason to use a surrogate where the rebuild exists; the result is the
+data need for the case without one, and the limit of the rule of thumb.
+
+**Caveats.**
+
+1. **The points of the sheet lie on the boundary of the box** (all on the face of the dryer inlet
+   temperature, one also without medium flow; section 9, item 1). B1 is a statement about the
+   surrogate at the edge of its box. The largest errors are at the corner. Whether the surrogate
+   would hold the thresholds at these points inside a wider box is not tested.
+2. **The sheet is not a blind test** (section 8).
+3. **"Gas mass flow of the sheet = dry gas"** is inferred, not confirmed by the sender; reading B
+   and every count against the sheet depend on it.
+4. **MLP optimiser.** The final selection lies at the upper edge of width and steps of the
+   extended grid (no second extension, as fixed beforehand); the criterion differs little between
+   the best settings (4.09, 4.12, 4.13). What the study says about the MLP (N\* = 256, B1) holds
+   for this grid.
+5. **The grid of N sets the resolution of N\*.** At N = 128 the MLP misses the thresholds
+   narrowly (0.94 K, 1.04 %; 2 of 5 seeds); the study has no N between 128 and 256.
+6. **Why the quadratic regression fails is not separated.** Two things changed against Befund 128
+   at once: the fresh-gas state became an input, and the medium flow went from +-25 % around the
+   stored point to the full range from no flow. The other targets (section 11.7) point to the
+   heat recovery, whose outlet temperatures saturate with the medium flow; this is a hypothesis,
+   not a result of this study.
+7. **95th percentile.** The largest errors of the MLP at N\* are 4.74 K and 2.70 %.
+8. **Closed, smooth formulas** with constant heat capacities; no statement about dynamic Dyssol
+   models. What carries over is the chain and the observation that a rule of thumb for the data
+   need holds only as long as the model class fits the box.
+9. **Over-saturation.** Few points (9 of 1024 in the pool, none in the test set; 26 and 5 with
+   the stricter rule); the units have no saturation limit and no condensation.
+10. **The 1 % on the fuel is a setting** (docs/45, section 6). **In-box test set:** no statement
+    outside the box.
+11. **Dyssol equals the rebuild** at every point: the learning curves are those of the rebuild.
+
+**Relation to existing findings (reported, nothing changed).** No number of Befund 128 or 130
+changes. The supplement to Befund 128 states that "the data need follows the number of
+coefficients"; this study shows that this holds in the box of Befund 128 and not in a box with
+the full range of the medium flow and the fresh-gas state. Whether Befund 128 gets a scope note is
+a decision of the project lead. The Dyssol counts against the sheet (48 and 62 of 64) are those of
+the addendum to Befund 130.
+
+## 13. Open for the project lead
+
+1. Acceptance of D1, of "prediction not confirmed" and of B1, and of the twelve decisions taken
+   without asking (section 9).
+2. Whether Befund 128 gets a scope note on the rule of thumb (section 12).
+3. Whether the box is widened in the dryer inlet temperature so that the points of the sheet lie
+   inside, and the study repeated under a new name (about 15 minutes of Dyssol runs). The point
+   without medium flow stays on a face in any case.
+4. Whether the cause of the quadratic regression's failure is to be separated (descriptive, with
+   the rebuild alone: seven inputs with the narrow medium range; five inputs with the full one).
+5. Whether the pilot grid is to be extended a second time (width and steps upwards).
+6. Whether the three ranges of the task may stay in this document (section 9, item 11).
+7. The sender's confirmation of the reading "dry gas" is still open (Befund 130).
+
+## 14. Course of the run (2026-11-24)
+
+* Code, design, reading, grid and extension rule committed 14:57 (4639bef). Pilot detached
+  14:57 to 15:38 with 4 workers (1440 fits, none failed); next to it the full suite on 4639bef:
+  1801 passed, 6 skipped (49 min). Selection and pilot artifact committed (6e0bfc2).
+* Dry runs detached 15:49 to 15:53 on 6e0bfc2: every point through the rebuild; Dyssol at 49
+  points (extreme results and inputs, first points, all points of the sheet), none failed,
+  median 1.32 s and 53 MB per process; 105 cells with 5 optimiser steps; probe with full-size
+  fits: the MLP at N = 512 takes 58 s and 366 MB per worker (4 workers: 1.5 GB of 31 GB).
+  The dry run showed the control at its 49 points (at most 1.1e-13 K) before the main run.
+* **Main run** detached 15:54 to 16:07 on 6e0bfc2 with 4 workers: **12 min 50 s of the 4 h
+  budget.** Data stage 439 s (1291 runs), verified copy to `C:/twinlink_runs/dyssol-freshgas/data`,
+  training stage 291 s (105 cells, peak 371 MB per worker). No stage was retried, no unit failed,
+  nothing was cut.
+* Artifacts committed with a clean tree after the denylist test (6e0bfc2, 5f4af7e, dbd7434).
+  No merge, no push.
+
+## 15. Artifacts
+
+| Artifact | Content | Driver |
+|---|---|---|
+| `artifacts/runs/dyssol_freshgas_pilot_v1.json.gz` | pilot of the MLP optimiser on the rebuild, both rounds, extension record | 4639bef |
+| `artifacts/runs/dyssol_freshgas_v1_training.json.gz` | 105 cells (Sobol test set and sheet), data summary, control with its table | 6e0bfc2 |
+| `artifacts/runs/dyssol_freshgas_v1_analysis.json` | readings D and B, prediction, rank tests, numbers without a reading | run on 5f4af7e |
+
+Local only (git-ignored): the data set and the caches (`<worktree>/local/runs/dyssol_steady/`,
+copy in `C:/twinlink_runs/dyssol-freshgas/`), the box, the outputs of the dry runs, the report
+with the values that must not enter the repository (`local/reports/dyssol_freshgas_bericht.md`).

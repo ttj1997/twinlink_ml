@@ -534,3 +534,89 @@ def test_control_summary_is_tabulated_over_the_fresh_gas_temperature(run) -> Non
     }
     cold = full["heater_inlet_below_vapour_correlation"]
     assert cold["points"] == 3 and cold["max_temperature_k"] == pytest.approx(3e-13)
+
+
+# ----------------------------------------------------------------------------- analysis
+def test_analysis_helpers_summarise_the_sheet_per_model_and_seed() -> None:
+    analyze = _script("analyze_dyssol_freshgas.py")
+    config = study.load_config(FRESHGAS)
+    count = {"n": 4, "within_half": 1, "within_one": 2, "max_abs": 0.3, "min_signed": -0.3}
+    cells = [
+        {
+            "model": model,
+            "n": n,
+            "seed": seed,
+            "metrics": {"exhaust_p95_k": 0.5, "fuel_p95_percent": 0.5},
+            "metrics_sheet": {
+                "exhaust_abs_k": [0.1, 0.2 * seed],
+                "fuel_rel_percent": [0.3, 0.1],
+                "exhaust_max_k": 0.2 * seed,
+                "fuel_max_percent": 0.3,
+                "against_sheet": {
+                    "per_quantity": {"fuel_kg_per_h": count},
+                    "total": {"n": 4, "within_half": 1, "within_one": 2},
+                },
+            },
+        }
+        for model in study.MODELS
+        for n in config.budgets
+        for seed in config.seeds
+    ]
+    table = analyze.sheet_table(cells, config)
+    entry = table["mlp"]["256"]
+    assert entry["exhaust_max_k"] == {
+        "median": pytest.approx(0.6),
+        "min": pytest.approx(0.2),
+        "max": pytest.approx(1.0),
+    }
+    assert entry["seeds_meeting_both"] == 5
+    per_seed = analyze.against_sheet(cells, "mlp", 256)
+    assert [row["seed"] for row in per_seed] == list(config.seeds)
+    assert per_seed[0]["per_quantity"]["fuel_kg_per_h"] == {
+        "n": 4,
+        "within_half": 1,
+        "within_one": 2,
+        "max_abs": 0.3,
+    }
+    assert analyze.against_sheet(cells, None, None) is None
+    assert analyze.with_metrics(cells, "metrics_admissible") is None
+    renamed = analyze.with_metrics(cells, "metrics_sheet")
+    assert renamed is not None and renamed[0]["metrics"] is cells[0]["metrics_sheet"]
+
+
+def test_committed_analysis_follows_from_the_committed_training_artifact() -> None:
+    runs = ROOT / "artifacts" / "runs"
+    training_path = runs / "dyssol_freshgas_v1_training.json.gz"
+    analysis_path = runs / "dyssol_freshgas_v1_analysis.json"
+    if not (training_path.exists() and analysis_path.exists()):
+        pytest.skip("artifacts of the fresh-gas study not written yet")
+    config = study.load_config(FRESHGAS)
+    with gzip.open(training_path, "rt", encoding="utf-8") as fh:
+        training = json.load(fh)
+    analysis = json.loads(analysis_path.read_text(encoding="utf-8"))
+    assert training["header"]["config_fingerprint"] == config.fingerprint
+    assert training["mlp_settings"]["hidden"] == list(config.mlp_settings("one_line").hidden)
+    assert training["test_set"]["name"] == config.test_set_name
+    assert config.sheet_test is not None and config.prediction is not None
+    assert training["sheet_test"]["name"] == config.sheet_test["name"]
+    assert training["sheet_test"]["points_inside_box"] == config.sheet_test["points"]
+    control = training["data"]["summary"]["control"]
+    points = sum(s["points"] for s in training["data"]["summary"]["by_set"].values())
+    assert control["points_compared"] == points == config.pool_size + config.test_size + 11
+    assert control["max_temperature_k"] <= config.control_temperature_k
+    assert control["max_relative_percent"] <= config.control_relative_percent
+    assert sum(row["points"] for row in control["by_fresh_gas_celsius"]) == points
+    cells = training["cells"]
+    result = study.reading(cells, config)
+    stored = analysis["reading"]
+    assert (result["verdict"], result["data_need_runs"], result["reached_by"]) == (
+        stored["verdict"],
+        stored["data_need_runs"],
+        stored["reached_by"],
+    )
+    assert result["n_star"] == stored["n_star"]
+    assert study.prediction_check(result, config.prediction) == analysis["prediction"]
+    again = study.sheet_reading(cells, config, result["reached_by"], result["data_need_runs"])
+    assert again == analysis["reading_sheet"]
+    # no input value and no value of the sheet: the cells hold errors and counts only
+    assert all("x" not in cell and "reported" not in cell for cell in cells)
