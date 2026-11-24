@@ -11118,3 +11118,7 @@ With the cold multi-start (8 starts) R1 holds the limit with the margin 0.005859
 ### Addendum (2026-11-23) to Befund 126: margin and gain of C2 with the cold multi-start (descriptive); the entry above is unchanged
 
 With set points from the cold multi-start C2 does not hold its margin (largest violation 4.01e-4 kg/kg, tolerance 1e-4); the newly searched margin is 0.007812 instead of 0.007422 and the gain against C0 is 1.98 % instead of 2.06 % (C1: 2.08 % instead of 2.07 %, margin unchanged; new Befund 129, `docs/46_order_dependence.md`). Reading T1 is untouched.
+
+### Addendum (2026-11-23) to Befund 121: the readings near the workbook point are "conditional" (strictly best) and "robust" (best or practically equal); the entry above is unchanged
+
+The decision paragraph of 2026-11-13 gives the two shares in the neighbourhood of the workbook point, 0.950 / 0.993, the one label "robust". **Correction:** by the classes fixed beforehand (robust >= 0.99, conditional 0.50-0.99, not robust < 0.50) case 1 is there "conditional" as strictly best (0.950) and "robust" as best or practically equal (0.993), as the table of `docs/38_case_ranking.md` has it (row "workbook neighbourhood", unpressurised 95). No number changes; the readings over the box ("not robust" and "conditional") and the rule of Q2 stand. Found by the independent check of `docs/08_synthese_m2.md` version 6 (commit d49bdaf of the branch `synthesis-v6`); entered on the decision of the project lead of 2026-11-23.

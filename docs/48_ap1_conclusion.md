@@ -434,3 +434,25 @@ item 3 are met: `order-dependence` is merged as Befund 129 (`docs/46_order_depen
    consortium coordinator open, specification requested"; not "done" as long as no adapter exists.
    This replaces the status "in progress" of item 2.
 9. **The document is final** with version 3.
+
+## 12. Addendum (2026-11-23): two precisions after the independent check of the M2 synthesis
+
+Decision of the project lead of 2026-11-23, after the independent check of `docs/08_synthese_m2.md`
+version 6 (commit d49bdaf of the branch `synthesis-v6`). The sections above are unchanged and the
+document stays final; the selection of section 7 is not touched. No code, no run, no new number.
+
+1. **Status of the order "calibrate, bias, only then learn"** (section 7, row "Internal model of the
+   controller"; decision on Befund 125, item 5: "resolved on the safe side, only descriptive on the
+   unsafe side"). The resolution on the safe side is a post-hoc result: the cost measure of Befund 125
+   applied to the records of Befund 124 resolves the refit with bias as cheaper than the hybrid at
+   `n_train` 16. Against the plain GRU the order is not resolved (there the GRU against the refit with
+   bias is not resolved; in Befund 122 the paired comparison of the refit with the hybrid is not
+   resolved either). The precise status is therefore: resolved post hoc against the hybrid on the safe
+   side, not resolved against the plain GRU, only descriptive on the unsafe side.
+2. **Reinforcement learning** (section 1, item 4: "It does not reach the direct optimisation in any of
+   them"; section 6, item 3: "Where RL was trained it did not reach the direct optimisation"). For
+   Befund 113 this is too strong: with the learned GRU as the environment the comparison of RL with
+   the optimiser shows no resolved difference in the moisture gap or the violation share (12 tests).
+   The statement that holds for all the findings named there is: where reinforcement learning was
+   trained it was **not better than** the direct optimisation. The reasoned deviation of section 6
+   rests on the two headroom gates and is not affected.

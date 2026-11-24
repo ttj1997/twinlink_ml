@@ -1,5 +1,7 @@
-r"""Consistency check of ``docs/08_synthese_m2.md`` (version 5f): every number of the summary, of
-sections 1-8 and of appendices A-E against its committed artifact or configuration.
+r"""Consistency check of ``docs/08_synthese_m2.md``: every number of the summary, of the numbered
+sections and of the appendices before the traceability table against its committed artifact,
+configuration or cited source. ``--version 6`` (default) checks the file of the working tree,
+``--version 5f`` the file at the git tag ``docs08-v5f`` (sections 1-8, appendices A-E).
 
 No new run, no simulation: pure re-reading of committed artifacts and configuration files. Three parts:
 
@@ -19,6 +21,14 @@ No new run, no simulation: pure re-reading of committed artifacts and configurat
    run: a number without a check cannot enter the text unnoticed.
 3. NOT CHECKABLE. Claims whose source is not in the repository (raw plant data) are listed with
    the reason, not silently skipped; where possible the lab-book text of the Befund is compared.
+
+Version 6: the claims below are those of version 5f and stay as they are. A claim whose sentence is
+still in version 6 is checked there too (453 of 455); a claim whose sentence is gone is retired and
+listed. The claims that are new in version 6 are registered in ``scripts/check_m2_synthesis_v6.py``:
+text claims (every numeric token of a named passage is written in the lab-book entry of a cited
+finding or in a named study document) and artifact claims for the key numbers of the control
+studies. The templates of appendix E (fenced blocks) hold placeholders and are not statements.
+``tests/test_m2_synthesis_consistency.py`` runs both versions; version 5f has to keep its 455 claims.
 
 Version 5b (review 4, finding 22): the exemptions "600 s", "month 21" and "1 bar" are verified against
 the configuration and the plan row instead of a bare grep; "0.80 m/s" against the configuration;
@@ -46,8 +56,9 @@ are added; the summary claims follow the new wording.
 
 Call::
 
-    tools/run_here.sh scripts/check_m2_synthesis_consistency.py           # check only
-    tools/run_here.sh scripts/check_m2_synthesis_consistency.py --write   # write the artifact
+    tools/run_here.sh scripts/check_m2_synthesis_consistency.py                 # version 6, check only
+    tools/run_here.sh scripts/check_m2_synthesis_consistency.py --write         # write the artifact
+    tools/run_here.sh scripts/check_m2_synthesis_consistency.py --version 5f    # version 5f at its tag
 """
 
 from __future__ import annotations
@@ -57,6 +68,7 @@ import gzip
 import json
 import re
 import statistics
+import subprocess
 import sys
 from collections import Counter
 from pathlib import Path
@@ -74,8 +86,48 @@ from analyze_rerun import ALPHA as RERUN_ALPHA
 
 SYNTHESIS = REPO_ROOT / "docs" / "08_synthese_m2.md"
 CONFIG = REPO_ROOT / "conf" / "process" / "greybox_gab_placeholder.yaml"
-ARTIFACT_NAME = "check_m2_synthesis_consistency_v5f"
+ARTIFACT_NAMES = {
+    "5f": "check_m2_synthesis_consistency_v5f",
+    "6": "check_m2_synthesis_consistency_v6_2",
+}
+TAG_OF_VERSION = {"5f": "docs08-v5f"}
+# Regions whose numeric tokens must be covered: summary, and the body up to the traceability table.
+REGIONS = {
+    "5f": (
+        ("## Summary", "## Changes from version 5"),
+        ("## 1. Question and frame", "## Appendix F"),
+    ),
+    "6": (
+        ("## Summary", "## Changes since version 5f"),
+        ("## 1. Question and frame", "## Appendix G"),
+    ),
+}
+
+
+def synthesis_text(version: str) -> str:
+    """Text of the synthesis: version 6 from the working tree, version 5f from its git tag."""
+    tag = TAG_OF_VERSION.get(version)
+    if tag is None:
+        return SYNTHESIS.read_text(encoding="utf-8")
+    relative = SYNTHESIS.relative_to(REPO_ROOT).as_posix()
+    shown = subprocess.run(
+        ["git", "show", f"{tag}:{relative}"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        check=False,
+    )
+    if shown.returncode != 0:
+        raise SystemExit(
+            f"version {version} of {relative} is read from the git tag {tag!r}, which is missing in "
+            "this repository (the tag is set locally on the branch synthesis-v6 and pushed with its "
+            f"merge): git tag {tag} <commit of version {version}>"
+        )
+    return shown.stdout.decode("utf-8")
+
+
 MICRO = "µ"
+# Fenced blocks (the templates of appendix E of version 6) hold placeholders, not statements.
+FENCED_BLOCK = re.compile("`" * 3 + ".*?" + "`" * 3)
 WORDS = {
     "one": 1,
     "two": 2,
@@ -128,10 +180,19 @@ class Report:
         self.results: list[dict[str, Any]] = []
         self.fragments: list[str] = []
         self.effect_fragments: list[str] = []
+        # Version 6 renumbers sections and appendices: (old, new) pairs applied to the fragments of
+        # the claims of version 5f before they are looked up. Empty for version 5f.
+        self.rewrites: list[tuple[str, str]] = []
+
+    def locate(self, fragment: str) -> str:
+        frag = normalise(fragment)
+        for old, new in self.rewrites:
+            frag = frag.replace(old, new)
+        return frag
 
     def claim(self, fragment: str, pairs: list[tuple[str, float]], source: str) -> None:
         """``pairs``: (number as written in the text, value computed from the artifact)."""
-        frag = normalise(fragment)
+        frag = self.locate(fragment)
         present = frag in self.text
         self.fragments.append(frag)
         for written, actual in pairs:
@@ -165,7 +226,7 @@ class Report:
         large if its ratio is at least ``threshold`` (or at most ``1 / threshold``) and consistent if all
         seeds are on that side.
         """
-        frag = normalise(fragment)
+        frag = self.locate(fragment)
         present = frag in self.text
         self.effect_fragments.append(frag)
 
@@ -195,7 +256,7 @@ class Report:
         )
 
     def truth(self, fragment: str, holds: bool, what: str, source: str) -> None:
-        frag = normalise(fragment)
+        frag = self.locate(fragment)
         present = frag in self.text
         self.fragments.append(frag)
         self.results.append(
@@ -214,12 +275,23 @@ def main() -> int:
     parser.add_argument(
         "--write", action="store_true", help="write the artifact (clean tree required)"
     )
+    parser.add_argument(
+        "--version",
+        choices=sorted(REGIONS),
+        default="6",
+        help="6: docs/08 of the working tree; 5f: docs/08 at the git tag docs08-v5f",
+    )
     arguments = parser.parse_args()
+    version = arguments.version
     if arguments.write:
         require_clean_tree()
-    raw = SYNTHESIS.read_text(encoding="utf-8")
+    raw = synthesis_text(version)
     text = normalise(raw)
     report = Report(text)
+    if version == "6":
+        import check_m2_synthesis_v6 as version6
+
+        report.rewrites = list(version6.FRAGMENT_REWRITES)
     config = yaml.safe_load(CONFIG.read_text(encoding="utf-8"))
 
     rerun = load("rerun_evaluation_rerun_full")
@@ -2116,13 +2188,37 @@ def main() -> int:
             {"exemption": literal, "in_text": present, "verified": bool(verified), "reason": reason}
         )
 
+    # ---- version 6: claims of version 5f whose sentence is gone are retired, new claims added -------
+    retired: list[dict[str, Any]] = []
+    extra_patterns: list[str] = []
+    breakdown: dict[str, int] = {}
+    if version == "6":
+        kept = []
+        for row in report.results:
+            if row["fragment_in_text"]:
+                kept.append(row)
+            else:
+                retired.append({"fragment": row["fragment"], "kind": "claim of version 5f"})
+        report.results = kept
+        n_kept = len(kept)
+        report.fragments = [frag for frag in report.fragments if frag in text]
+        report.effect_fragments = [frag for frag in report.effect_fragments if frag in text]
+        kept_exemptions = []
+        for row in exempt_results:
+            if row["in_text"]:
+                kept_exemptions.append(row)
+            else:
+                retired.append({"fragment": row["exemption"], "kind": "exemption of version 5f"})
+        exempt_results = kept_exemptions
+        added = version6.register(report, text, raw)
+        exempt_results.extend(added["exemptions"])
+        extra_patterns = list(added["patterns"])
+    exemption_literals = [normalise(row["exemption"]) for row in exempt_results]
+
     # ---- effect labels: every occurrence is backed by a check against the thresholds ---------------
     label_rx = re.compile(r"large and consistent|remains large|large at the budget|moderate", re.I)
     unchecked_labels: list[str] = []
-    for start_head, end_head in (
-        ("## Summary", "## Changes from version 5"),
-        ("## 1. Question and frame", "## Appendix F"),
-    ):
+    for start_head, end_head in REGIONS[version]:
         region = text[text.index(start_head) : text.index(end_head)]
         spans = []
         for frag in report.effect_fragments:
@@ -2145,17 +2241,15 @@ def main() -> int:
 
     # ---- coverage ----------------------------------------------------------------------
     pieces = []
-    for start_head, end_head in (
-        ("## Summary", "## Changes from version 5"),
-        ("## 1. Question and frame", "## Appendix F"),
-    ):
+    for start_head, end_head in REGIONS[version]:
         pieces.append(text[text.index(start_head) : text.index(end_head)])
     body = " ".join(pieces)
     body = re.sub(r"!\[[^\]]*\]\([^)]*\)", " ", body)
+    body = FENCED_BLOCK.sub(" ", body)
     for fragment in sorted(report.fragments, key=len, reverse=True):
         body = body.replace(fragment, " ")
-    for literal, _, _ in sorted(exemptions, key=lambda e: -len(e[0])):
-        body = body.replace(normalise(literal), " ")
+    for literal in sorted(exemption_literals, key=len, reverse=True):
+        body = body.replace(literal, " ")
     body = re.sub(r"`[^`]*`", " ", body)
     allowed_horizons = set(horizons_n) | {
         int(re.search(r"\d+", str(b1["primary"].get("horizon", b1["primary"]))).group())
@@ -2188,7 +2282,7 @@ def main() -> int:
         r"\(\d\)",
         r"\bAP\d\b",
     ]
-    for pattern in patterns:
+    for pattern in extra_patterns + patterns:
         body = re.sub(pattern, " ", body)
     digits = {m.group() for m in re.finditer(r"\d[\d,\.]*\d|\d", body)}
     words = {m.group().lower() for m in WORD_PATTERN.finditer(body)}
@@ -2205,7 +2299,26 @@ def main() -> int:
     n_conf = sum(r["status"] == "confirmed" for r in report.results)
     n_dev = sum(r["status"] == "DEVIATING" for r in report.results)
     unverified = [e for e in exempt_results if not (e["in_text"] and e["verified"])]
+    print(f"version {version} of {SYNTHESIS.name}")
     print(f"claims: {len(report.results)} checked, {n_conf} confirmed, {n_dev} deviating")
+    if version == "6":
+        print(
+            f"claims and exemptions of version 5f whose sentence is not in version 6: {len(retired)}"
+        )
+        for row in retired:
+            print("RETIRED", row)
+        n_text = sum(row.get("kind") == "text" for row in report.results)
+        breakdown = {
+            "claims_of_version_5f_kept": n_kept,
+            "new_against_artifacts_or_configuration": len(report.results) - n_text - n_kept,
+            "text_claims": n_text,
+        }
+        print(
+            f"of the claims: {n_text} text claims of version 6, {len(report.results) - n_text} against artifacts or configuration"
+        )
+        print(
+            f"of the latter: {n_kept} claims of version 5f kept, {len(report.results) - n_text - n_kept} new"
+        )
     print(
         f"exemptions: {len(exempt_results)} declared, {len(unverified)} not in text or not verified"
     )
@@ -2220,10 +2333,12 @@ def main() -> int:
         print("UNCOVERED", tok, ctx)
     if arguments.write:
         write_artifact(
-            ARTIFACT_NAME,
+            ARTIFACT_NAMES[version],
             {
                 "_provenance": provenance(),
                 "synthesis": SYNTHESIS.name,
+                "version": version,
+                "retired_from_version_5f": retired,
                 "claims": report.results,
                 "exemptions": exempt_results,
                 "bad_references": bad_references,
@@ -2234,6 +2349,7 @@ def main() -> int:
                     "deviating": n_dev,
                     "exemptions": len(exempt_results),
                     "uncovered": len(leftover),
+                    **breakdown,
                 },
             },
         )
