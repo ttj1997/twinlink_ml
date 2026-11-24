@@ -28,7 +28,7 @@ from __future__ import annotations
 import math
 import re
 from collections.abc import Callable, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -44,6 +44,7 @@ __all__ = [
     "line_inputs",
     "load_sweep_sheet",
     "parse_sweep_rows",
+    "sweep_points",
     "sweep_table",
     "totals",
     "verdict",
@@ -316,6 +317,12 @@ def line_inputs(sheet: SweepSheet, process: int, gas_flow: str) -> LineInputs:
         heater_efficiency_percent=line.heater_efficiency_percent,
         calorific_value_kj_per_kg=line.calorific_value_kj_per_kg,
     )
+
+
+def sweep_points(sheet: SweepSheet, process: int, gas_flow: str) -> tuple[LineInputs, ...]:
+    """Inputs of one process (0-based) at every medium flow of the sheet, in its order."""
+    line = line_inputs(sheet, process, gas_flow)
+    return tuple(replace(line, medium_kg_per_h=flow) for flow in sheet.medium_kg_per_h)
 
 
 def sweep_table(outputs: Sequence[LineOutputs]) -> dict[str, tuple[float, ...]]:

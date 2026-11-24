@@ -1,0 +1,22 @@
+# Template of the box of the study with the fresh-gas state as an input
+# (docs/NN_dyssol_freshgas.md). Copy to <local>/dyssol_steady/box_freshgas_local.yaml (the local
+# folder is git-ignored) and replace the placeholders. The real box stays outside the repository;
+# records carry its SHA-256 only.
+#
+# One mapping per line of the flowsheet. An entry is either [lower, upper] in the unit of the
+# input, or {relative: r} for nominal x (1 -+ r) around the value stored in the source flowsheet.
+# gas_relative_humidity is a fraction and takes an interval inside (0, 1] only; the humidity
+# ratio of a point is computed from it at the fresh-gas temperature of the point.
+#
+# The box must contain every point of the sheet named in sheet_test of dyssol_freshgas.yaml; the
+# drivers abort otherwise.
+cases:
+  one_line:
+    lines:
+      - dry_gas_kg_per_h: [LOWER, UPPER]
+        dryer_inlet_celsius: [LOWER, UPPER]
+        spray_kg_per_h: {relative: R}
+        solid_fraction: {relative: R}
+        medium_kg_per_h: [LOWER, UPPER]
+        gas_celsius: [LOWER, UPPER]
+        gas_relative_humidity: [LOWER, UPPER]
