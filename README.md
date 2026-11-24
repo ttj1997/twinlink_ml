@@ -294,6 +294,6 @@ git-ignored `local/` directory (see `local.example`).
 [`docs/01_projektsteckbrief.md`](docs/01_projektsteckbrief.md) (project outline),
 [`docs/02_prozess_setup.md`](docs/02_prozess_setup.md) (process set-up and open questions to the
 partner), [`docs/04_stand_ap1.md`](docs/04_stand_ap1.md) (lab book),
-[`docs/08_synthese_m2.md`](docs/08_synthese_m2.md) (synthesis),
+[`docs/08_synthese_m2.md`](docs/08_synthese_m2.md) (synthesis, version 6 of 2026-11-24 with Befunde up to 129; version 5f under the git tag `docs08-v5f`),
 [`docs/11_partner_model_v4.md`](docs/11_partner_model_v4.md) (partner model and heat recovery),
 [`CONTRIBUTING.md`](CONTRIBUTING.md).

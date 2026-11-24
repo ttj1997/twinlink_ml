@@ -1,4 +1,4 @@
-# 25 -- Global sensitivity analysis (Sobol indices) of the steady-state models
+# 26 -- Global sensitivity analysis (Sobol indices) of the steady-state models
 
 Status: run and evaluated. Design fixed before the run (sections 1-6, commit `ac7befe`); results in
 sections 7-9 (numbers only from `artifacts/runs/sobol_steady_v1.json`). Branch `sensitivity`;

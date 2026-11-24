@@ -456,3 +456,7 @@ document stays final; the selection of section 7 is not touched. No code, no run
    The statement that holds for all the findings named there is: where reinforcement learning was
    trained it was **not better than** the direct optimisation. The reasoned deviation of section 6
    rests on the two headroom gates and is not affected.
+
+## 13. Addendum (2026-11-24): `docs/08` is in version 6
+
+`docs/08_synthese_m2.md` has been in version 6 since 2026-11-24 (merge commit f6849d6); version 5f remains retrievable under the git tag `docs08-v5f`. The statement that `docs/08` stays frozen at version 5f (status block of this document) is therefore superseded. The sections above are unchanged; the selection of section 7 is not touched. No code, no run, no new number.
