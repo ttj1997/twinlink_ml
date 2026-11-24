@@ -50,7 +50,11 @@ mlp:
   hidden: [64, 64]                   # only a default; the selected setting names its own widths
   # Filled from the pilot artifact (own commit) BEFORE any Dyssol data exist.
   selected:
-    one_line: null
+    # selection of dyssol_freshgas_pilot_v1 (setting 175 of the grid after its one extension; round 1
+    # had selected width 64, learning rate 0.0003, 10000 steps, weight decay 0.1, at the edge of
+    # three axes). The final selection lies at the upper edge of width and steps; by the rule the
+    # grid is not extended a second time (caveat of the results).
+    one_line: {hidden: [128, 128], learning_rate: 0.0003, steps: 20000, weight_decay: 0.1}
 
 # Pilot of the MLP optimiser on the PYTHON REBUILD (no Dyssol run): its own pool and test points,
 # its own seeds; the points of the sheet are not loaded in this stage. Criterion and selection as
