@@ -1,0 +1,610 @@
+{
+ "provenance": {
+  "git/commit": "1a48f86211654ee81b0af820b2d080724f1d78f6",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used"
+ },
+ "name": "dyssol_sweep_case1_comparison",
+ "inputs": {
+  "workbook_sha256": "7436f4156dd050c389ea710ad73189dfe0a1175219e2a79fe65070182bb1020a",
+  "sources_sha256": {
+   "Case 1.1.dflw": "76e2951ff97b0662f139cda64713352b8c2f3d52b051f455040d1166790fb784",
+   "Case 1.2.dflw": "1bbb502efecd30dc4148136ae4cafb84936e2e72ca06956d4322d70dd3d58887"
+  },
+  "box_sha256": "e9da2d15db5f9cd0a5b76316b4ce525b114178f44f869f2f3e78577b15d8ad32",
+  "materials": {
+   "installed_sha256": "30188fb7a5678054b1819187359b0f5a04517f429ff52d35f0fda33c9b7ae30a",
+   "patched_sha256": "bf57d42ee7ef1ae0e83c06b71fc7efe1824f89161e93a5c21330b96be7eb98db"
+  },
+  "config_fingerprint": "34311677cd77a56d10e82de572580fae2406ee827b75deaec8a7dcfb28b1218b",
+  "dyssol_version": "Version: 1.6.0",
+  "units_libraries": {
+   "DryerTwinLink.dll": "7cff70c22fe85fea28ce27daee0ee293d0318c825eb1dc9c306d23f680366599",
+   "HeaterTwinLink.dll": "198a8b751ad0110e54195c963b96dd06c2409035b349eebf140b912a9bcde77c",
+   "HeatrecoveryTwinLink.dll": "08e24cf29e1acd46655e8ba5141a404937c78d633bfbb609c604d44ead6ee2fd"
+  },
+  "units_sources": {
+   "DryerTwinLink/Unit.h": "be686a1da6aa5bc45c7849150bc454f786f1e23073cfa6d501365593ca00fc75",
+   "DryerTwinLink/UnitDryer.cpp": "c2a7a0b8046be37e77805b73739416c6abd35918edb9190d9f27b4bd6af0c3c7",
+   "HeaterTwinLink/Unit.h": "6a66098ec53ea01f670ace735bcea5e4882552e193002b50d990f29acf697eb7",
+   "HeaterTwinLink/UnitHeater.cpp": "0c9830342cd5e7a38eeadbe74a3d33714b4646a46b738f0fa60bfb85adbc4d73",
+   "HeatrecoveryTwinLink/Unit.h": "6a66098ec53ea01f670ace735bcea5e4882552e193002b50d990f29acf697eb7",
+   "HeatrecoveryTwinLink/UnitHeatrecovery.cpp": "3a3c7d0253310d58c8a1fc2399d53fe4a2855711bd9619b73e6b5343fc660773"
+  },
+  "same_as_dyssol_steady_v1_one_line_training": {
+   "units_libraries": true,
+   "patched_materials": true,
+   "box": true,
+   "source_of_one_line": true
+  }
+ },
+ "sheet": {
+  "processes": 2,
+  "medium_flows": 11,
+  "reported_decimals": 1,
+  "reported_values": 128,
+  "condensation": false
+ },
+ "readings_of_the_gas_flow": {
+  "dry": {
+   "processes": [
+    {
+     "product_celsius": {
+      "n": 11,
+      "within_half": 11,
+      "within_one": 11,
+      "equal_if_rounded": 11,
+      "equal_if_truncated": 0,
+      "min_signed": -0.005561716223791535,
+      "max_signed": -0.005561716223791535,
+      "max_abs": 0.005561716223791535,
+      "max_relative_percent": 0.026868194317833504
+     },
+     "exhaust_celsius": {
+      "n": 11,
+      "within_half": 6,
+      "within_one": 10,
+      "equal_if_rounded": 6,
+      "equal_if_truncated": 6,
+      "min_signed": -0.018608967297257806,
+      "max_signed": 0.11312214324992809,
+      "max_abs": 0.11312214324992809,
+      "max_relative_percent": 0.6215502376369675
+     },
+     "recovered_kw": {
+      "n": 11,
+      "within_half": 2,
+      "within_one": 3,
+      "equal_if_rounded": 2,
+      "equal_if_truncated": 3,
+      "min_signed": 0.0,
+      "max_signed": 0.18766665734705157,
+      "max_abs": 0.18766665734705157,
+      "max_relative_percent": 0.7768876494011163
+     },
+     "medium_hot_celsius": {
+      "n": 10,
+      "within_half": 5,
+      "within_one": 9,
+      "equal_if_rounded": 5,
+      "equal_if_truncated": 6,
+      "min_signed": -0.018608967297257806,
+      "max_signed": 0.11312214324992809,
+      "max_abs": 0.11312214324992809,
+      "max_relative_percent": 0.6215502376369675
+     },
+     "medium_cold_celsius": {
+      "n": 10,
+      "within_half": 9,
+      "within_one": 10,
+      "equal_if_rounded": 9,
+      "equal_if_truncated": 7,
+      "min_signed": -0.02539430316105573,
+      "max_signed": 0.05250653737396149,
+      "max_abs": 0.05250653737396149,
+      "max_relative_percent": 0.43532208545433976
+     },
+     "fuel_kg_per_h": {
+      "n": 11,
+      "within_half": 10,
+      "within_one": 11,
+      "equal_if_rounded": 10,
+      "equal_if_truncated": 2,
+      "min_signed": -0.06097027863395965,
+      "max_signed": 0.029905349685364513,
+      "max_abs": 0.06097027863395965,
+      "max_relative_percent": 0.08228107777862302
+     }
+    },
+    {
+     "product_celsius": {
+      "n": 11,
+      "within_half": 11,
+      "within_one": 11,
+      "equal_if_rounded": 11,
+      "equal_if_truncated": 11,
+      "min_signed": 0.0035623270098597004,
+      "max_signed": 0.0035623270098597004,
+      "max_abs": 0.0035623270098597004,
+      "max_relative_percent": 0.003226745479945381
+     },
+     "exhaust_celsius": {
+      "n": 11,
+      "within_half": 7,
+      "within_one": 10,
+      "equal_if_rounded": 7,
+      "equal_if_truncated": 9,
+      "min_signed": -0.00018120389968601103,
+      "max_signed": 0.10554761331927409,
+      "max_abs": 0.10554761331927409,
+      "max_relative_percent": 0.11573203214832685
+     },
+     "recovered_kw": {
+      "n": 11,
+      "within_half": 7,
+      "within_one": 11,
+      "equal_if_rounded": 7,
+      "equal_if_truncated": 10,
+      "min_signed": -0.0006540581830876135,
+      "max_signed": 0.08098206680949716,
+      "max_abs": 0.08098206680949716,
+      "max_relative_percent": 0.045065145692541546
+     },
+     "medium_hot_celsius": {
+      "n": 10,
+      "within_half": 6,
+      "within_one": 9,
+      "equal_if_rounded": 6,
+      "equal_if_truncated": 8,
+      "min_signed": -0.00018120389968601103,
+      "max_signed": 0.10554761331927409,
+      "max_abs": 0.10554761331927409,
+      "max_relative_percent": 0.11573203214832685
+     },
+     "medium_cold_celsius": {
+      "n": 10,
+      "within_half": 9,
+      "within_one": 10,
+      "equal_if_rounded": 9,
+      "equal_if_truncated": 3,
+      "min_signed": -0.03830859124422048,
+      "max_signed": 0.0527077608022779,
+      "max_abs": 0.0527077608022779,
+      "max_relative_percent": 0.17178740468260303
+     },
+     "fuel_kg_per_h": {
+      "n": 11,
+      "within_half": 8,
+      "within_one": 11,
+      "equal_if_rounded": 8,
+      "equal_if_truncated": 3,
+      "min_signed": -0.06734899798418326,
+      "max_signed": 0.030846355130321967,
+      "max_abs": 0.06734899798418326,
+      "max_relative_percent": 0.07441878230296492
+     }
+    }
+   ],
+   "total": {
+    "n": 128,
+    "within_half": 91,
+    "within_one": 116
+   }
+  },
+  "humid_total": {
+   "processes": [
+    {
+     "product_celsius": {
+      "n": 11,
+      "within_half": 0,
+      "within_one": 0,
+      "equal_if_rounded": 0,
+      "equal_if_truncated": 0,
+      "min_signed": -0.3179630947111143,
+      "max_signed": -0.3179630947111143,
+      "max_abs": 0.3179630947111143,
+      "max_relative_percent": 1.5360535976382332
+     },
+     "exhaust_celsius": {
+      "n": 11,
+      "within_half": 0,
+      "within_one": 0,
+      "equal_if_rounded": 0,
+      "equal_if_truncated": 0,
+      "min_signed": -0.3179630947111143,
+      "max_signed": -0.13637086333325144,
+      "max_abs": 0.3179630947111143,
+      "max_relative_percent": 1.5360535976382332
+     },
+     "recovered_kw": {
+      "n": 11,
+      "within_half": 1,
+      "within_one": 1,
+      "equal_if_rounded": 1,
+      "equal_if_truncated": 1,
+      "min_signed": -1.1446695403549185,
+      "max_signed": 0.0,
+      "max_abs": 1.1446695403549185,
+      "max_relative_percent": 2.948552184008406
+     },
+     "medium_hot_celsius": {
+      "n": 10,
+      "within_half": 0,
+      "within_one": 0,
+      "equal_if_rounded": 0,
+      "equal_if_truncated": 0,
+      "min_signed": -0.2484544056791158,
+      "max_signed": -0.13637086333325144,
+      "max_abs": 0.2484544056791158,
+      "max_relative_percent": 1.395811267860201
+     },
+     "medium_cold_celsius": {
+      "n": 10,
+      "within_half": 5,
+      "within_one": 9,
+      "equal_if_rounded": 5,
+      "equal_if_truncated": 1,
+      "min_signed": -0.1227332649532169,
+      "max_signed": 0.024102267263719668,
+      "max_abs": 0.1227332649532169,
+      "max_relative_percent": 0.9024504775971831
+     },
+     "fuel_kg_per_h": {
+      "n": 11,
+      "within_half": 0,
+      "within_one": 0,
+      "equal_if_rounded": 0,
+      "equal_if_truncated": 0,
+      "min_signed": -0.4502296311821823,
+      "max_signed": -0.2719053872188937,
+      "max_abs": 0.4502296311821823,
+      "max_relative_percent": 0.5939704896862563
+     }
+    },
+    {
+     "product_celsius": {
+      "n": 11,
+      "within_half": 0,
+      "within_one": 0,
+      "equal_if_rounded": 0,
+      "equal_if_truncated": 0,
+      "min_signed": -0.2624269782228623,
+      "max_signed": -0.2624269782228623,
+      "max_abs": 0.2624269782228623,
+      "max_relative_percent": 0.23770559621636078
+     },
+     "exhaust_celsius": {
+      "n": 11,
+      "within_half": 0,
+      "within_one": 0,
+      "equal_if_rounded": 0,
+      "equal_if_truncated": 0,
+      "min_signed": -0.2655546737510406,
+      "max_signed": -0.16244289577065274,
+      "max_abs": 0.2655546737510406,
+      "max_relative_percent": 0.30929489396377025
+     },
+     "recovered_kw": {
+      "n": 11,
+      "within_half": 1,
+      "within_one": 1,
+      "equal_if_rounded": 1,
+      "equal_if_truncated": 1,
+      "min_signed": -1.8789288286706665,
+      "max_signed": 0.0,
+      "max_abs": 1.8789288286706665,
+      "max_relative_percent": 0.6696111292482774
+     },
+     "medium_hot_celsius": {
+      "n": 10,
+      "within_half": 0,
+      "within_one": 0,
+      "equal_if_rounded": 0,
+      "equal_if_truncated": 0,
+      "min_signed": -0.2655546737510406,
+      "max_signed": -0.16244289577065274,
+      "max_abs": 0.2655546737510406,
+      "max_relative_percent": 0.30929489396377025
+     },
+     "medium_cold_celsius": {
+      "n": 10,
+      "within_half": 6,
+      "within_one": 10,
+      "equal_if_rounded": 6,
+      "equal_if_truncated": 3,
+      "min_signed": -0.05750728986909337,
+      "max_signed": 0.05999958577559994,
+      "max_abs": 0.05999958577559994,
+      "max_relative_percent": 0.1724126028034481
+     },
+     "fuel_kg_per_h": {
+      "n": 11,
+      "within_half": 0,
+      "within_one": 0,
+      "equal_if_rounded": 0,
+      "equal_if_truncated": 0,
+      "min_signed": -0.6745602205240289,
+      "max_signed": -0.4287900593671736,
+      "max_abs": 0.6745602205240289,
+      "max_relative_percent": 0.6437424447808139
+     }
+    }
+   ],
+   "total": {
+    "n": 128,
+    "within_half": 13,
+    "within_one": 21
+   }
+  }
+ },
+ "chosen_reading": "dry",
+ "control": {
+  "bounds": {
+   "temperature_k": 1e-06,
+   "relative_percent": 1e-06
+  },
+  "processes": [
+   {
+    "points_compared": 11,
+    "max_temperature_k": 0.0,
+    "max_relative_percent": 0.0
+   },
+   {
+    "points_compared": 11,
+    "max_temperature_k": 5.684341886080802e-14,
+    "max_relative_percent": 2.2280034038349377e-13
+   }
+  ],
+  "failures": [],
+  "held": true,
+  "dyssol_wall_seconds": {
+   "min": 1.1191347000421956,
+   "max": 1.2308753000106663
+  }
+ },
+ "dyssol_against_sheet": {
+  "processes": [
+   {
+    "product_celsius": {
+     "n": 11,
+     "within_half": 11,
+     "within_one": 11,
+     "equal_if_rounded": 11,
+     "equal_if_truncated": 0,
+     "min_signed": -0.005561716223791535,
+     "max_signed": -0.005561716223791535,
+     "max_abs": 0.005561716223791535,
+     "max_relative_percent": 0.026868194317833504
+    },
+    "exhaust_celsius": {
+     "n": 11,
+     "within_half": 6,
+     "within_one": 10,
+     "equal_if_rounded": 6,
+     "equal_if_truncated": 6,
+     "min_signed": -0.018608967297257806,
+     "max_signed": 0.11312214324992809,
+     "max_abs": 0.11312214324992809,
+     "max_relative_percent": 0.6215502376369675
+    },
+    "recovered_kw": {
+     "n": 11,
+     "within_half": 2,
+     "within_one": 3,
+     "equal_if_rounded": 2,
+     "equal_if_truncated": 3,
+     "min_signed": 0.0,
+     "max_signed": 0.18766665734705157,
+     "max_abs": 0.18766665734705157,
+     "max_relative_percent": 0.7768876494011163
+    },
+    "medium_hot_celsius": {
+     "n": 10,
+     "within_half": 5,
+     "within_one": 9,
+     "equal_if_rounded": 5,
+     "equal_if_truncated": 6,
+     "min_signed": -0.018608967297257806,
+     "max_signed": 0.11312214324992809,
+     "max_abs": 0.11312214324992809,
+     "max_relative_percent": 0.6215502376369675
+    },
+    "medium_cold_celsius": {
+     "n": 10,
+     "within_half": 9,
+     "within_one": 10,
+     "equal_if_rounded": 9,
+     "equal_if_truncated": 7,
+     "min_signed": -0.02539430316105573,
+     "max_signed": 0.05250653737396149,
+     "max_abs": 0.05250653737396149,
+     "max_relative_percent": 0.43532208545433976
+    },
+    "fuel_kg_per_h": {
+     "n": 11,
+     "within_half": 10,
+     "within_one": 11,
+     "equal_if_rounded": 10,
+     "equal_if_truncated": 2,
+     "min_signed": -0.06097027863395965,
+     "max_signed": 0.029905349685364513,
+     "max_abs": 0.06097027863395965,
+     "max_relative_percent": 0.08228107777862302
+    }
+   },
+   {
+    "product_celsius": {
+     "n": 11,
+     "within_half": 11,
+     "within_one": 11,
+     "equal_if_rounded": 11,
+     "equal_if_truncated": 11,
+     "min_signed": 0.0035623270098597004,
+     "max_signed": 0.0035623270098597004,
+     "max_abs": 0.0035623270098597004,
+     "max_relative_percent": 0.003226745479945381
+    },
+    "exhaust_celsius": {
+     "n": 11,
+     "within_half": 7,
+     "within_one": 10,
+     "equal_if_rounded": 7,
+     "equal_if_truncated": 9,
+     "min_signed": -0.00018120389968601103,
+     "max_signed": 0.10554761331921725,
+     "max_abs": 0.10554761331921725,
+     "max_relative_percent": 0.11573203214826452
+    },
+    "recovered_kw": {
+     "n": 11,
+     "within_half": 7,
+     "within_one": 11,
+     "equal_if_rounded": 7,
+     "equal_if_truncated": 10,
+     "min_signed": -0.0006540581832155112,
+     "max_signed": 0.08098206680949716,
+     "max_abs": 0.08098206680949716,
+     "max_relative_percent": 0.045065145692541546
+    },
+    "medium_hot_celsius": {
+     "n": 10,
+     "within_half": 6,
+     "within_one": 9,
+     "equal_if_rounded": 6,
+     "equal_if_truncated": 8,
+     "min_signed": -0.00018120389968601103,
+     "max_signed": 0.10554761331921725,
+     "max_abs": 0.10554761331921725,
+     "max_relative_percent": 0.11573203214826452
+    },
+    "medium_cold_celsius": {
+     "n": 10,
+     "within_half": 9,
+     "within_one": 10,
+     "equal_if_rounded": 9,
+     "equal_if_truncated": 3,
+     "min_signed": -0.03830859124416364,
+     "max_signed": 0.0527077608022779,
+     "max_abs": 0.0527077608022779,
+     "max_relative_percent": 0.17178740468234815
+    },
+    "fuel_kg_per_h": {
+     "n": 11,
+     "within_half": 8,
+     "within_one": 11,
+     "equal_if_rounded": 8,
+     "equal_if_truncated": 3,
+     "min_signed": -0.06734899798416905,
+     "max_signed": 0.030846355130336178,
+     "max_abs": 0.06734899798416905,
+     "max_relative_percent": 0.07441878230294922
+    }
+   }
+  ],
+  "total": {
+   "n": 128,
+   "within_half": 91,
+   "within_one": 116
+  }
+ },
+ "verdict": {
+  "code": "S3",
+  "on": "rebuild",
+  "total": {
+   "n": 128,
+   "within_half": 91,
+   "within_one": 116
+  },
+  "dyssol_code": "S3"
+ },
+ "without_reading": [
+  {
+   "process": 1,
+   "source_flowsheet": "Case 1.2.dflw",
+   "saturation_ratio_rebuild": {
+    "min": 2.0154634728394782,
+    "max": 2.0154634728394782
+   },
+   "saturation_ratio_dyssol": {
+    "min": 2.0154634728394787,
+    "max": 2.0154634728394787
+   },
+   "oversaturated": true,
+   "box_one_line": {
+    "points": 11,
+    "points_inside": 0,
+    "points_inside_by_input": {
+     "dry_gas_kg_per_h": 11,
+     "dryer_inlet_celsius": 11,
+     "spray_kg_per_h": 0,
+     "solid_fraction": 11,
+     "medium_kg_per_h": 3
+    }
+   },
+   "fresh_gas_state_is_the_stored_one": false,
+   "shift_with_stored_fresh_gas_state": {
+    "exhaust_k_all_points": {
+     "min": 0.46055239060621034,
+     "max": 3.6152451855051027
+    },
+    "fuel_percent_all_points": {
+     "min": -13.500563793798424,
+     "max": -9.297850436387922
+    },
+    "exhaust_k_points_inside_box": null,
+    "fuel_percent_points_inside_box": null
+   }
+  },
+  {
+   "process": 2,
+   "source_flowsheet": "Case 1.1.dflw",
+   "saturation_ratio_rebuild": {
+    "min": 0.0,
+    "max": 0.0
+   },
+   "saturation_ratio_dyssol": {
+    "min": 0.0,
+    "max": 0.0
+   },
+   "oversaturated": false,
+   "box_one_line": {
+    "points": 11,
+    "points_inside": 3,
+    "points_inside_by_input": {
+     "dry_gas_kg_per_h": 11,
+     "dryer_inlet_celsius": 11,
+     "spray_kg_per_h": 11,
+     "solid_fraction": 11,
+     "medium_kg_per_h": 3
+    }
+   },
+   "fresh_gas_state_is_the_stored_one": false,
+   "shift_with_stored_fresh_gas_state": {
+    "exhaust_k_all_points": {
+     "min": 0.39195484949652837,
+     "max": 4.0396277956195945
+    },
+    "fuel_percent_all_points": {
+     "min": -5.8481291551559424,
+     "max": -4.795368910064348
+    },
+    "exhaust_k_points_inside_box": {
+     "min": 3.84414298505709,
+     "max": 4.0396277956195945
+    },
+    "fuel_percent_points_inside_box": {
+     "min": -4.866734714493915,
+     "max": -4.795368910064348
+    }
+   }
+  }
+ ]
+}

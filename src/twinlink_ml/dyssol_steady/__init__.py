@@ -10,7 +10,9 @@ Design and reading: ``docs/45_dyssol_steady_state.md``.
   command-line version of Dyssol;
 * :mod:`.design` -- box, Sobol design, nested training subsets;
 * :mod:`.models` -- linear and quadratic regression, MLP;
-* :mod:`.study` -- learning curve, metrics, pre-registered reading.
+* :mod:`.study` -- learning curve, metrics, pre-registered reading;
+* :mod:`.sweep_sheet` -- reader of a partner sheet that sweeps the medium flow of one-line
+  flowsheets, and its comparison with the rebuild or with Dyssol.
 
 Plant values, the box and every generated data set stay outside the repository (``local/``).
 """

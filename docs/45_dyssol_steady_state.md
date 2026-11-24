@@ -426,3 +426,55 @@ caches and the outputs of the dry runs.
    correlation below 290 K is intended; that two flowsheets still hold inputs that differ from the
    plant sheet and the fourth unit is unfinished; that the delivery has no compiled units and no
    materials database (built here, one constant added; section 3).
+
+## 17. Sweep sheet of 2026-11-24 against the rebuild and Dyssol (Befund 130; added after the fact, sections 1 to 16 are unchanged)
+
+A partner sheet of 2026-11-24 gives results of the two lines of the delivery, each with its own
+heat recovery ("case 1" of the six-case network, i.e. the flowsheets `Case 1.1.dflw` and
+`Case 1.2.dflw`), over eleven flows of the heat transfer medium and at a fresh-gas state other
+than the stored one. `scripts/report_dyssol_sweep_case1.py` (reader
+`src/twinlink_ml/dyssol_steady/sweep_sheet.py`) compares it with the rebuild of section 3 and
+with our own Dyssol runs; artifact `artifacts/runs/dyssol_sweep_case1_comparison.json` (written
+at 1a48f86, clean tree). The reading is in the script's docstring; it was written after probes
+without an artifact had shown the rebuild's numbers (disclosed there).
+
+* **Gas mass flow of the sheet: the dry gas.** 91 of 128 reported values are within rounding
+  (half a unit of the one reported decimal) with this reading, 13 with the humid total.
+* **Verdict S3:** 91 of 128 within rounding, 116 within one unit of the last decimal, 12 outside.
+  Eight of the twelve are the recovered heat of process 1 (ours higher by up to 0.188 kW,
+  0.78 %); the others are one exhaust and one medium temperature per process (at most 0.113 K).
+  Largest deviation of the fuel: 0.067 kg/h (0.08 % and 0.07 % in the two processes).
+* **Control held:** 22 Dyssol runs, none failed; Dyssol against the rebuild at most 5.7e-14 K and
+  2.2e-13 % (bounds 1e-6). The deviations above are therefore between the sheet and our Dyssol
+  runs, not between Dyssol and the rebuild. Units, patched materials database, box and the
+  one-line source are those of sections 11 and 12 (digests equal). The control of section 6 now
+  also covers 19 points outside the box (fresh-gas state, medium flow down to none, spray flow).
+* **Without a reading.** The dryer exhaust of process 1 is over-saturated at every point
+  (saturation ratio 2.015, Dyssol and rebuild alike; caveat 3 of section 13); the sheet states
+  that condensation is off. Of the 22 points, 3 lie in the box of `one_line` (process 2; its
+  other 8 leave it by the medium flow alone), none of process 1 (spray flow). The fresh-gas
+  state is not the stored one, and the surrogates of section 5 have no input for it: with the
+  stored state the rebuild's exhaust is 3.84 to 4.04 K warmer and its fuel 4.80 to 4.87 % lower
+  at the three points inside the box (thresholds of section 6: 1 K and 1 %).
+
+**The sheet is therefore a check of the units and of the rebuild, not a test set for the
+surrogates of this study.** A test of a surrogate on such a sheet needs a data set in which the
+fresh-gas state and the full range of the medium flow are varied inputs (a new study; decision
+of the project lead).
+
+**Added after the fact (decisions of the project lead, 2026-11-24; descriptive, no reading; the
+text of this section above is unchanged).**
+
+* **Per process.** Process 1 is over-saturated at every point and physically inadmissible. For
+  the admissible process 2 alone: 64 reported values, 48 within rounding, 62 within one unit of
+  the last decimal, 2 outside (one number in two rows of the sheet: the exhaust temperature and
+  the equal medium temperature of the hot side, 0.106 K). Process 1 alone: 64 values, 43 within
+  rounding, 54 within one unit, 10 outside (eight recovered heats and the same pair of
+  temperatures, 0.113 K). Of the 12 values outside one unit, 10 lie in the inadmissible process.
+  The split was made after the result was known; by the rule of the reading process 2 alone
+  would still be S3. The counts are sums of the per-quantity counts of the artifact.
+* **The reading "dry gas" is inferred from the agreement, not stated by the sheet** (91 against
+  13 of 128 values within rounding; process 2 alone 48 against 7 of 64). Every number of this
+  section is conditional on it until the sender confirms it.
+* **Status.** The branch stays a finding of its own; the number 130 is provisional (assigned by
+  the managing session at merge). The Dyssol control is confirmed.
