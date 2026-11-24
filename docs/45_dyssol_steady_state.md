@@ -461,3 +461,20 @@ without an artifact had shown the rebuild's numbers (disclosed there).
 surrogates of this study.** A test of a surrogate on such a sheet needs a data set in which the
 fresh-gas state and the full range of the medium flow are varied inputs (a new study; decision
 of the project lead).
+
+**Added after the fact (decisions of the project lead, 2026-11-24; descriptive, no reading; the
+text of this section above is unchanged).**
+
+* **Per process.** Process 1 is over-saturated at every point and physically inadmissible. For
+  the admissible process 2 alone: 64 reported values, 48 within rounding, 62 within one unit of
+  the last decimal, 2 outside (one number in two rows of the sheet: the exhaust temperature and
+  the equal medium temperature of the hot side, 0.106 K). Process 1 alone: 64 values, 43 within
+  rounding, 54 within one unit, 10 outside (eight recovered heats and the same pair of
+  temperatures, 0.113 K). Of the 12 values outside one unit, 10 lie in the inadmissible process.
+  The split was made after the result was known; by the rule of the reading process 2 alone
+  would still be S3. The counts are sums of the per-quantity counts of the artifact.
+* **The reading "dry gas" is inferred from the agreement, not stated by the sheet** (91 against
+  13 of 128 values within rounding; process 2 alone 48 against 7 of 64). Every number of this
+  section is conditional on it until the sender confirms it.
+* **Status.** The branch stays a finding of its own; the number 130 is provisional (assigned by
+  the managing session at merge). The Dyssol control is confirmed.
