@@ -1,0 +1,464 @@
+{
+ "provenance": {
+  "git/commit": "faf60056eec43b18589f11de4ac78e32e87df804",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used",
+  "git/dirty_ignored_paths": [
+   "C:\\twinlink_work\\csweep\\artifacts\\runs\\carrier_sweep_v1.json"
+  ]
+ },
+ "header": {
+  "name": "carrier_sweep_v1",
+  "dry_run": false,
+  "config_fingerprint": "299778cad6522981fc3d251027141514fa5f217f01855d8b4a2317abdec3bfd9",
+  "line_inputs_sha256": "ad305bc9876456789a0a986a52bcaa344072e7ede04f2011bd89b64c0b45166f",
+  "workbook_sha256": "7436f4156dd050c389ea710ad73189dfe0a1175219e2a79fe65070182bb1020a",
+  "materials": {
+   "installed_sha256": "30188fb7a5678054b1819187359b0f5a04517f429ff52d35f0fda33c9b7ae30a",
+   "patched_sha256": "bf57d42ee7ef1ae0e83c06b71fc7efe1824f89161e93a5c21330b96be7eb98db",
+   "patched_file": "Materials_30188fb7a567_boiling_point.dmdb"
+  },
+  "grid_points": 1501
+ },
+ "config": {
+  "version": 1,
+  "scan": {
+   "flow_max_kg_per_h": 15000.0,
+   "flow_step_kg_per_h": 10.0,
+   "ambient_celsius": [
+    -10.0,
+    0.0,
+    10.0,
+    20.0
+   ],
+   "neighbour_factors": [
+    0.8,
+    1.2
+   ]
+  },
+  "pump": {
+   "reference_pressure_drop_pa": "1.0e5",
+   "reference_flow_kg_per_h": 10000.0,
+   "efficiency": 0.4,
+   "density_kg_per_m3": 1000.0,
+   "pressure_factors": [
+    0.5,
+    1.0,
+    2.0
+   ]
+  },
+  "prices": {
+   "gas_eur_per_kwh": 0.04,
+   "co2_eur_per_t": 55.0,
+   "electricity_eur_per_kwh": 0.16,
+   "gas_co2_kg_per_kwh": 0.201,
+   "electricity_co2_kg_per_kwh": 0.366
+  }
+ },
+ "scan": [
+  {
+   "ambient_celsius": -10.0,
+   "humidity_capped_at_saturation": true,
+   "oversaturated_share_of_scan": 0.0,
+   "saturation_ratio_dryer_outlet": 0.0,
+   "saturation_ratio_exhaust_at_no_flow": 0.0,
+   "saturation_ratio_exhaust_at_upper_bound": 0.1250709855291692,
+   "heat_recovered_monotonic": true,
+   "optima": [
+    {
+     "pressure_factor": 0.5,
+     "flow_share_of_scan": 1.0,
+     "at_upper_bound": true,
+     "at_zero": false,
+     "saving_percent_of_no_flow_cost": 29.429987709199345,
+     "pump_share_of_cost_percent": 0.3416756691932973,
+     "heat_recovered_share_of_scan_max": 1.0,
+     "co2_change_percent_of_no_flow": -29.53100845246026,
+     "oversaturated_at_optimum": false,
+     "neighbours": [
+      {
+       "factor": 0.8,
+       "above_scanned_range": false,
+       "increase_percent_of_cost": 1.5807581594879185,
+       "increase_percent_of_saving": 3.7904916524642576
+      },
+      {
+       "factor": 1.2,
+       "above_scanned_range": true,
+       "increase_percent_of_cost": -1.0028172420119985,
+       "increase_percent_of_saving": -2.4046501749673626
+      }
+     ]
+    },
+    {
+     "pressure_factor": 1.0,
+     "flow_share_of_scan": 1.0,
+     "at_upper_bound": true,
+     "at_zero": false,
+     "saving_percent_of_no_flow_cost": 29.18886714745496,
+     "pump_share_of_cost_percent": 0.6810244435616852,
+     "heat_recovered_share_of_scan_max": 1.0,
+     "co2_change_percent_of_no_flow": -29.39090863397679,
+     "oversaturated_at_optimum": false,
+     "neighbours": [
+      {
+       "factor": 0.8,
+       "above_scanned_range": false,
+       "increase_percent_of_cost": 1.4092055205290197,
+       "increase_percent_of_saving": 3.418681472858085
+      },
+      {
+       "factor": 1.2,
+       "above_scanned_range": true,
+       "increase_percent_of_cost": -0.7515096292843593,
+       "increase_percent_of_saving": -1.823135099090736
+      }
+     ]
+    },
+    {
+     "pressure_factor": 2.0,
+     "flow_share_of_scan": 1.0,
+     "at_upper_bound": true,
+     "at_zero": false,
+     "saving_percent_of_no_flow_cost": 28.70662602396619,
+     "pump_share_of_cost_percent": 1.3528357450185544,
+     "heat_recovered_share_of_scan_max": 1.0,
+     "co2_change_percent_of_no_flow": -29.110708997009834,
+     "oversaturated_at_optimum": false,
+     "neighbours": [
+      {
+       "factor": 0.8,
+       "above_scanned_range": false,
+       "increase_percent_of_cost": 1.069581480743247,
+       "increase_percent_of_saving": 2.6563230538066844
+      },
+      {
+       "factor": 1.2,
+       "above_scanned_range": true,
+       "increase_percent_of_cost": -0.2539940726515049,
+       "increase_percent_of_saving": -0.6307984224311768
+      }
+     ]
+    }
+   ],
+   "optimum_without_humidity_cap": {
+    "pressure_factor": 1.0,
+    "flow_share_of_scan": 1.0,
+    "at_upper_bound": true,
+    "at_zero": false,
+    "saving_percent_of_no_flow_cost": 29.153116982743043,
+    "pump_share_of_cost_percent": 0.6763073112074118,
+    "heat_recovered_share_of_scan_max": 1.0,
+    "co2_change_percent_of_no_flow": -29.353860321433263,
+    "oversaturated_at_optimum": false,
+    "neighbours": [
+     {
+      "factor": 0.8,
+      "above_scanned_range": false,
+      "increase_percent_of_cost": 1.4258447653613038,
+      "increase_percent_of_saving": 3.4650379701119607
+     },
+     {
+      "factor": 1.2,
+      "above_scanned_range": true,
+      "increase_percent_of_cost": -0.7657752893790604,
+      "increase_percent_of_saving": -1.8609602663159104
+     }
+    ]
+   }
+  },
+  {
+   "ambient_celsius": 0.0,
+   "humidity_capped_at_saturation": true,
+   "oversaturated_share_of_scan": 0.0,
+   "saturation_ratio_dryer_outlet": 0.0,
+   "saturation_ratio_exhaust_at_no_flow": 0.0,
+   "saturation_ratio_exhaust_at_upper_bound": 0.10804420905444642,
+   "heat_recovered_monotonic": true,
+   "optima": [
+    {
+     "pressure_factor": 0.5,
+     "flow_share_of_scan": 1.0,
+     "at_upper_bound": true,
+     "at_zero": false,
+     "saving_percent_of_no_flow_cost": 28.651403090551508,
+     "pump_share_of_cost_percent": 0.3577087329362139,
+     "heat_recovered_share_of_scan_max": 1.0,
+     "co2_change_percent_of_no_flow": -28.758331053356137,
+     "oversaturated_at_optimum": false,
+     "neighbours": [
+      {
+       "factor": 0.8,
+       "above_scanned_range": false,
+       "increase_percent_of_cost": 1.5163607041361702,
+       "increase_percent_of_saving": 3.7760876249867645
+      },
+      {
+       "factor": 1.2,
+       "above_scanned_range": true,
+       "increase_percent_of_cost": -0.9509152064323657,
+       "increase_percent_of_saving": -2.3679980189585157
+      }
+     ]
+    },
+    {
+     "pressure_factor": 1.0,
+     "flow_share_of_scan": 1.0,
+     "at_upper_bound": true,
+     "at_zero": false,
+     "saving_percent_of_no_flow_cost": 28.396182928578956,
+     "pump_share_of_cost_percent": 0.7128674766541738,
+     "heat_recovered_share_of_scan_max": 1.0,
+     "co2_change_percent_of_no_flow": -28.610038854188225,
+     "oversaturated_at_optimum": false,
+     "neighbours": [
+      {
+       "factor": 0.8,
+       "above_scanned_range": false,
+       "increase_percent_of_cost": 1.3370162186882832,
+       "increase_percent_of_saving": 3.3714202005695366
+      },
+      {
+       "factor": 1.2,
+       "above_scanned_range": true,
+       "increase_percent_of_cost": -0.6880420623116291,
+       "increase_percent_of_saving": -1.7349669176000986
+      }
+     ]
+    },
+    {
+     "pressure_factor": 2.0,
+     "flow_share_of_scan": 1.0,
+     "at_upper_bound": true,
+     "at_zero": false,
+     "saving_percent_of_no_flow_cost": 27.885742604633844,
+     "pump_share_of_cost_percent": 1.415643292689329,
+     "heat_recovered_share_of_scan_max": 1.0,
+     "co2_change_percent_of_no_flow": -28.313454455852394,
+     "oversaturated_at_optimum": false,
+     "neighbours": [
+      {
+       "factor": 0.8,
+       "above_scanned_range": false,
+       "increase_percent_of_cost": 0.9821355650610728,
+       "increase_percent_of_saving": 2.539863396866765
+      },
+      {
+       "factor": 1.2,
+       "above_scanned_range": true,
+       "increase_percent_of_cost": -0.16787779311972273,
+       "increase_percent_of_saving": -0.4341423700149182
+      }
+     ]
+    }
+   ],
+   "optimum_without_humidity_cap": {
+    "pressure_factor": 1.0,
+    "flow_share_of_scan": 1.0,
+    "at_upper_bound": true,
+    "at_zero": false,
+    "saving_percent_of_no_flow_cost": 28.39544539223557,
+    "pump_share_of_cost_percent": 0.7105763888608183,
+    "heat_recovered_share_of_scan_max": 1.0,
+    "co2_change_percent_of_no_flow": -28.6086162010699,
+    "oversaturated_at_optimum": false,
+    "neighbours": [
+     {
+      "factor": 0.8,
+      "above_scanned_range": false,
+      "increase_percent_of_cost": 1.3449008206755504,
+      "increase_percent_of_saving": 3.3914250305234566
+     },
+     {
+      "factor": 1.2,
+      "above_scanned_range": true,
+      "increase_percent_of_cost": -0.6948119615329829,
+      "increase_percent_of_saving": -1.7521014498797216
+     }
+    ]
+   }
+  },
+  {
+   "ambient_celsius": 10.0,
+   "humidity_capped_at_saturation": false,
+   "oversaturated_share_of_scan": 0.0,
+   "saturation_ratio_dryer_outlet": 0.0,
+   "saturation_ratio_exhaust_at_no_flow": 0.0,
+   "saturation_ratio_exhaust_at_upper_bound": 0.09086680278276987,
+   "heat_recovered_monotonic": true,
+   "optima": [
+    {
+     "pressure_factor": 0.5,
+     "flow_share_of_scan": 1.0,
+     "at_upper_bound": true,
+     "at_zero": false,
+     "saving_percent_of_no_flow_cost": 27.808715625435394,
+     "pump_share_of_cost_percent": 0.3756579060501147,
+     "heat_recovered_share_of_scan_max": 1.0,
+     "co2_change_percent_of_no_flow": -27.922335319269074,
+     "oversaturated_at_optimum": false,
+     "neighbours": [
+      {
+       "factor": 0.8,
+       "above_scanned_range": false,
+       "increase_percent_of_cost": 1.4433188033996724,
+       "increase_percent_of_saving": 3.7468482752968106
+      },
+      {
+       "factor": 1.2,
+       "above_scanned_range": true,
+       "increase_percent_of_cost": -0.8920428128958685,
+       "increase_percent_of_saving": -2.3157386068254966
+      }
+     ]
+    },
+    {
+     "pressure_factor": 1.0,
+     "flow_share_of_scan": 1.0,
+     "at_upper_bound": true,
+     "at_zero": false,
+     "saving_percent_of_no_flow_cost": 27.53752335820322,
+     "pump_share_of_cost_percent": 0.7485039976559337,
+     "heat_recovered_share_of_scan_max": 1.0,
+     "co2_change_percent_of_no_flow": -27.764762745870602,
+     "oversaturated_at_optimum": false,
+     "neighbours": [
+      {
+       "factor": 0.8,
+       "above_scanned_range": false,
+       "increase_percent_of_cost": 1.2552821785004489,
+       "increase_percent_of_saving": 3.3031603588765
+      },
+      {
+       "factor": 1.2,
+       "above_scanned_range": true,
+       "increase_percent_of_cost": -0.6162488696914343,
+       "increase_percent_of_saving": -1.6216025945647314
+      }
+     ]
+    },
+    {
+     "pressure_factor": 2.0,
+     "flow_share_of_scan": 1.0,
+     "at_upper_bound": true,
+     "at_zero": false,
+     "saving_percent_of_no_flow_cost": 26.995138823738873,
+     "pump_share_of_cost_percent": 1.4858860786128372,
+     "heat_recovered_share_of_scan_max": 1.0,
+     "co2_change_percent_of_no_flow": -27.449617599073644,
+     "oversaturated_at_optimum": false,
+     "neighbours": [
+      {
+       "factor": 0.8,
+       "above_scanned_range": false,
+       "increase_percent_of_cost": 0.8833999437500939,
+       "increase_percent_of_saving": 2.3890408816819773
+      },
+      {
+       "factor": 1.2,
+       "above_scanned_range": true,
+       "increase_percent_of_cost": -0.0708079589941924,
+       "increase_percent_of_saving": -0.19149096621794837
+      }
+     ]
+    }
+   ],
+   "optimum_without_humidity_cap": null
+  },
+  {
+   "ambient_celsius": 20.0,
+   "humidity_capped_at_saturation": false,
+   "oversaturated_share_of_scan": 0.0,
+   "saturation_ratio_dryer_outlet": 0.0,
+   "saturation_ratio_exhaust_at_no_flow": 0.0,
+   "saturation_ratio_exhaust_at_upper_bound": 0.07008569606790362,
+   "heat_recovered_monotonic": true,
+   "optima": [
+    {
+     "pressure_factor": 0.5,
+     "flow_share_of_scan": 1.0,
+     "at_upper_bound": true,
+     "at_zero": false,
+     "saving_percent_of_no_flow_cost": 26.829203641028336,
+     "pump_share_of_cost_percent": 0.3969239391002486,
+     "heat_recovered_share_of_scan_max": 1.0,
+     "co2_change_percent_of_no_flow": -26.950884253531992,
+     "oversaturated_at_optimum": false,
+     "neighbours": [
+      {
+       "factor": 0.8,
+       "above_scanned_range": false,
+       "increase_percent_of_cost": 1.3538741818415354,
+       "increase_percent_of_saving": 3.6923962925125173
+      },
+      {
+       "factor": 1.2,
+       "above_scanned_range": true,
+       "increase_percent_of_cost": -0.8199081128677437,
+       "increase_percent_of_saving": -2.236120399338657
+      }
+     ]
+    },
+    {
+     "pressure_factor": 1.0,
+     "flow_share_of_scan": 1.0,
+     "at_upper_bound": true,
+     "at_zero": false,
+     "saving_percent_of_no_flow_cost": 26.538771233849285,
+     "pump_share_of_cost_percent": 0.7907093634482639,
+     "heat_recovered_share_of_scan_max": 1.0,
+     "co2_change_percent_of_no_flow": -26.782132458856605,
+     "oversaturated_at_optimum": false,
+     "neighbours": [
+      {
+       "factor": 0.8,
+       "above_scanned_range": false,
+       "increase_percent_of_cost": 1.1555884921976018,
+       "increase_percent_of_saving": 3.1987521139103734
+      },
+      {
+       "factor": 1.2,
+       "above_scanned_range": true,
+       "increase_percent_of_cost": -0.5288483594625062,
+       "increase_percent_of_saving": -1.4638903201187792
+      }
+     ]
+    },
+    {
+     "pressure_factor": 2.0,
+     "flow_share_of_scan": 1.0,
+     "at_upper_bound": true,
+     "at_zero": false,
+     "saving_percent_of_no_flow_cost": 25.95790641949118,
+     "pump_share_of_cost_percent": 1.56901239894441,
+     "heat_recovered_share_of_scan_max": 1.0,
+     "co2_change_percent_of_no_flow": -26.444628869505816,
+     "oversaturated_at_optimum": false,
+     "neighbours": [
+      {
+       "factor": 0.8,
+       "above_scanned_range": false,
+       "increase_percent_of_cost": 0.7636838034934887,
+       "increase_percent_of_saving": 2.1783246587916536
+      },
+      {
+       "factor": 1.2,
+       "above_scanned_range": true,
+       "increase_percent_of_cost": 0.04642100191904128,
+       "increase_percent_of_saving": 0.13241083901935136
+      }
+     ]
+    }
+   ],
+   "optimum_without_humidity_cap": null
+  }
+ ]
+}
