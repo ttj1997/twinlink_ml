@@ -1,11 +1,12 @@
 # NN -- Cost-optimal flow of the heat-transfer medium in the one-line Dyssol flowsheet ("case 1"): fuel against pump electricity
 
-Status: **run done (2026-11-24); descriptive result in sections 9 to 15, not yet seen by the
-project lead.** Sections 1 to 8 are the design, committed before the run (faf6005) and unchanged
+Status: **run done (2026-11-24); descriptive result in sections 9 to 15; decisions and
+interpretation of the project lead in section 16.** Sections 1 to 8 are the design, committed before the run (faf6005) and unchanged
 since. The results below them take their numbers only from the artifact named in section 9.
 Descriptive study, **no pre-registered reading**. Branch `carrier-sweep` (from `origin/master` 1c22a81),
-worktree `C:/twinlink_work/csweep`. Document number open (`NN`), lab-book entry "Befund NN (number
-open)"; the managing session assigns both at the merge. No merge, no push. Code
+worktree `C:/twinlink_work/csweep`. Document number open (`NN`; the managing session assigns it at the merge). Lab-book entry: a
+dated addendum to the finding of the comparison (Befund 130, provisional number, branch
+`dyssol-sweep-case1`), not a finding of its own (section 16). No merge, no push. Code
 `src/twinlink_ml/dyssol_steady/carrier_sweep.py`, settings `conf/dyssol_steady/carrier_sweep.yaml`,
 driver `scripts/run_carrier_sweep.py`, tests `tests/test_carrier_sweep.py`.
 
@@ -306,3 +307,24 @@ itself is that of Befund 130.
 |---|---|
 | `artifacts/runs/carrier_sweep_v1.json` | provenance, settings, per outside temperature and pressure factor the relative key numbers and flags of section 9 |
 | `<root>/local/runs/carrier_sweep/carrier_sweep_v1_local.json` (not versioned; copy in `C:/twinlink_runs/carrier-sweep/`) | the same with the inputs of the line, flows in kg/h, cost in EUR/h, recovered heat and the cost curves |
+
+## 16. Decisions and interpretation of the project lead (2026-11-24; added after the fact, sections 1 to 15 are unchanged)
+
+1. **First the questions to the sender; no extended scan.** The scan stays at 0 to 15 000 kg/h.
+   The questions (design flow, pressure drop and pump of the medium circuit, area or
+   effectiveness of the exchangers, among others) are in the report of the session, not versioned.
+2. **The eight decisions taken without asking (section 7) are confirmed.**
+3. **Not a finding of its own.** At the merge the result is entered as a dated addendum to the
+   finding of the comparison (Befund 130, provisional number, branch `dyssol-sweep-case1`). The
+   lab-book entry of this branch was first written as "Befund NN (number open)" (commit e1c56a4,
+   never merged) and is reworded as that addendum on this decision. This settles the third point
+   of section 14; the first is settled by 1 and the second by 2.
+4. **Interpretation of the project lead.** With ideal exchangers an optimum arises only from the
+   pump law. A reliable optimum needs an exchanger model with a finite area (UA). Reference:
+   Befund 114 and Befund 121.
+
+Added by the session, for the reader of the reference: Befund 114 (operating point and heat
+recovery, jointly or one after the other) and Befund 121 (ranking of the six heat-recovery cases
+of the partner workbook) are the findings of the repository in which the recovery is computed with
+exchangers that are not ideal (physical mode; in Befund 114 with a minimum approach `dT_min`, "the
+approach decides how much the recovery gives"). No number of them is used here.
