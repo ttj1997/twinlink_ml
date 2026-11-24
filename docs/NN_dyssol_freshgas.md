@@ -516,3 +516,85 @@ the addendum to Befund 130.
 Local only (git-ignored): the data set and the caches (`<worktree>/local/runs/dyssol_steady/`,
 copy in `C:/twinlink_runs/dyssol-freshgas/`), the box, the outputs of the dry runs, the report
 with the values that must not enter the repository (`local/reports/dyssol_freshgas_bericht.md`).
+
+## 16. Decisions of the project lead (2026-11-24; added after the fact, sections 1 to 15 are unchanged)
+
+1. **D1, "prediction N\* = 64 not confirmed" and B1 are accepted.** The twelve decisions taken
+   without asking (section 9) are confirmed. The three ranges of the task (medium flow, fresh-gas
+   temperature, relative humidity) may stay in this document; they are placeholders of the
+   project lead. **Restriction named with the verdict:** the selected MLP setting lies at the
+   edge of the extended pilot grid (caveat 4 of section 12); what the study says about the MLP
+   (N\* = 256, B1) holds for this grid. The grid is not extended a second time.
+2. **No repetition with a widened box.** B1 stays a statement at the edge of the box (caveat 1).
+3. **The cause is to be separated, with the rebuild only** (no Dyssol run: step 0 found the
+   rebuild exact in this box), as an add-on marked as added after the fact, with its reading
+   committed before the run: section 17.
+4. **Scope note to Befund 128** (a dated addendum, append-only, entered by the managing session
+   at the merge, not on this branch): "The rule of thumb (data need about 1.5 to 2 times the
+   number of coefficients of the quadratic regression) holds in the box of Befund 128; with the
+   full range of the medium flow the quadratic regression does not reach the thresholds up to
+   N = 512 (new finding), the cause is clarified by the add-on." After the add-on the note is
+   supplemented by its reading.
+
+## 17. Add-on: medium-flow range or fresh-gas inputs? (added after the fact; design and reading committed before its run)
+
+**Status of this section:** written after the results of sections 11 to 13 were known, on the
+decision of section 16, item 3. The design and the reading below were committed before the first
+run of `scripts/run_dyssol_freshgas_cause.py` (whose docstring holds the same reading); the
+results follow in section 18.
+
+**Question.** Against Befund 128 two things changed at once (caveat 6 of section 12): the
+fresh-gas state became an input, and the medium flow went from the interval of Befund 128 to the
+full range from no flow. Which of the two keeps the quadratic regression from the thresholds?
+
+**No Dyssol run.** Every variant box lies inside the box of the main run, where step 0 found
+Dyssol and the rebuild equal to rounding at all 1291 points. All data of the add-on come from the
+rebuild.
+
+**Variants**, each with the design of the main run (pool of 1024 and test set of 256 scrambled
+Sobol points with the seeds of the main run, N = 8 ... 512, seeds 1-5, thresholds 1 K and 1 %);
+only the quadratic regression and the MLP with the setting selected for the main run:
+
+| Variant | Inputs | Medium flow | Coefficients of the quadratic regression |
+|---|---|---|---:|
+| V-a | 7, as in the main run | interval of the box of Befund 128 | 36 |
+| V-b | 5, as in Befund 128 (fresh gas fixed at the stored state) | full range of the main run | 21 |
+| V-c (control) | 7, as in the main run | full range of the main run | 36 |
+
+Test set of a variant: "in-box Sobol test set, variant V-x".
+
+**Reading (fixed before the run).** Per variant and model the rule of section 6; "reaches the
+thresholds" = has an N\*.
+
+* **Control first:** V-c must reproduce the main run (the same box and seeds; N\* of the quadratic
+  regression none and of the MLP 256). Otherwise the add-on is not read.
+* **K0** -- the quadratic regression reaches the thresholds in V-a and not in V-b: the cause is
+  the range of the medium flow, not the additional inputs.
+* **K1** -- the reverse: the cause is the fresh-gas inputs.
+* **K2** -- otherwise.
+
+**Hypothesis of the project lead:** the recovery of an ideal counter-current exchanger has a kink
+where the capacity rates of both sides are equal (Q = min(C_hot, C_cold) x dT_max); with the full
+range of the medium flow the kink lies in the box, in the box of Befund 128 it does not.
+
+**Known before the run, from the equations of the unit** (no number of the add-on had been
+computed): the heat recovery of the delivered units is not that exchanger. By equations
+4.1 / 4.2 (`reference.heat_recovery`; section 3 of docs/45) the recovered heat is
+
+    Q = (T_hot - T_cold) / (1/A + 1/B + 1/C)
+
+with the capacity rates A of the dryer exhaust, B of the medium and C of the fresh gas: a smooth
+saturation in the medium flow (Q goes to zero with B, and to a limit for large B), **without a
+kink** (a test checks the formula against the unit and its strict concavity). Reading K does not
+depend on the mechanism; it separates the range of the medium flow from the additional inputs. A
+verdict K0 would confirm the cause that the hypothesis names (the range of the medium flow), not
+its mechanism.
+
+**Reported without a reading:** per variant the share of pool and test points on each side of
+capacity ratio 1 (B / min(A, C): the medium below, or at or above, the smaller gas stream) and in
+the bins 0-0.25, 0.25-0.5, 0.5-1, 1-2, above 2; the reading numbers of the quadratic regression
+(and of the MLP) per side and per bin; N\* and learning curve of the MLP per variant;
+over-saturated points per variant.
+
+**Disclosure.** Known before the add-on: all results of the main run, the equations of the unit,
+rough sizes of the capacity rates from the local box. No fit on a variant box had been made.

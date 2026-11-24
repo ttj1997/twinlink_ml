@@ -369,6 +369,13 @@ def _fit_cell(task: dict[str, Any]) -> dict[str, Any]:
             result["metrics_admissible_strict"] = study.cell_metrics(
                 w["y_test"][strict], prediction[strict], w["names"]
             )
+        for label, group in (w.get("groups") or {}).items():
+            # named subsets of the test set (descriptive splits); an empty one is left out
+            if int(group.sum()) > 0:
+                result.setdefault("metrics_by_group", {})[label] = {
+                    "points": int(group.sum()),
+                    **study.cell_metrics(w["y_test"][group], prediction[group], w["names"]),
+                }
         if w.get("x_sheet") is not None:
             # the points of the sheet are scored only; they never enter a fit
             result["metrics_sheet"] = study.sheet_errors(

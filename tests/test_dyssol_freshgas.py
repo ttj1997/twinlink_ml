@@ -620,3 +620,196 @@ def test_committed_analysis_follows_from_the_committed_training_artifact() -> No
     assert again == analysis["reading_sheet"]
     # no input value and no value of the sheet: the cells hold errors and counts only
     assert all("x" not in cell and "reported" not in cell for cell in cells)
+
+
+# ----------------------------------------------------------------------------- add-on: cause
+def test_the_heat_recovery_of_the_units_is_a_smooth_saturation_without_a_kink() -> None:
+    from twinlink_ml.dyssol_steady.reference import heat_recovery
+
+    hot, cold = (0.030, 0.004, 360.0), (0.030, 0.0002, 283.0)
+    a = hot[0] * PROPS.cp_gas + hot[1] * PROPS.cp_vapour
+    c = cold[0] * PROPS.cp_gas + cold[1] * PROPS.cp_vapour
+    flows = np.linspace(1e-4, 0.05, 400)  # medium from far below to far above both gas streams
+    heat = np.asarray([heat_recovery(PROPS, hot, cold, m)[2] for m in flows])
+    b = flows * PROPS.cp_liquid
+    assert b[0] < 0.05 * min(a, c) and b[-1] > 5 * max(a, c)
+    assert heat == pytest.approx((hot[2] - cold[2]) / (1 / a + 1 / b + 1 / c), rel=1e-12)
+    # an ideal counter-current exchanger would give min(...) x dT and a kink at ratio 1
+    kinked = np.minimum(b, min(a, c)) * (hot[2] - cold[2])
+    assert np.all(heat < kinked)
+    slope = np.diff(heat) / np.diff(flows)
+    assert np.all(np.diff(slope) < 0)  # strictly concave everywhere: no kink
+    assert np.all(slope > 0)
+
+
+def test_capacity_ratio_groups_and_variant_boxes() -> None:
+    from twinlink_ml.dyssol_steady.cause import (
+        MEDIUM,
+        RATIO_EDGES,
+        capacity_ratio,
+        ratio_groups,
+        with_interval_of,
+    )
+
+    (out,) = evaluate(PROPS, [LAB], (0,))
+    gas = LAB.dry_gas_kg_per_h / 3600.0
+    hot = gas * (PROPS.cp_gas + out.dryer_outlet_humidity_g_per_kg / 1000.0 * PROPS.cp_vapour)
+    cold = gas * (PROPS.cp_gas + LAB.gas_humidity_g_per_kg / 1000.0 * PROPS.cp_vapour)
+    assert cold < hot  # the exhaust carries the evaporated water
+    expected = LAB.medium_kg_per_h / 3600.0 * PROPS.cp_liquid / cold
+    assert capacity_ratio(PROPS, LAB, out) == pytest.approx(expected, rel=1e-14)
+    assert capacity_ratio(PROPS, replace(LAB, medium_kg_per_h=0.0), out) == 0.0
+    groups = ratio_groups(np.array([0.0, 0.2, 0.25, 0.9, 1.0, 1.9, 2.0, 50.0]))
+    assert groups["medium_below_gas"].sum() == 4 and groups["medium_above_gas"].sum() == 4
+    bins = [k for k in groups if k.startswith("ratio_")]
+    assert len(bins) == len(RATIO_EDGES) - 1
+    assert sum(groups[k].sum() for k in bins) == 8  # every point in exactly one bin
+    assert groups["ratio_0_0.25"].sum() == 2 and groups["ratio_2_inf"].sum() == 2
+    wide = resolve_box([ENTRY], [LAB], VARIED_FRESH_GAS)
+    narrow = resolve_box(
+        [{**{k: v for k, v in ENTRY.items() if k in VARIED}, MEDIUM: {"relative": 0.25}}], [LAB]
+    )
+    v_a = with_interval_of(wide, narrow, MEDIUM)
+    assert v_a.names == wide.names and v_a.dimension == 7
+    assert (v_a.lower[4], v_a.upper[4]) == pytest.approx((30.0, 50.0))
+    assert v_a.lower[:4] == wide.lower[:4] and v_a.upper[5:] == wide.upper[5:]
+    v_b = with_interval_of(narrow, wide, MEDIUM)
+    assert v_b.names == narrow.names and (v_b.lower[4], v_b.upper[4]) == (0.0, 60.0)
+    assert len({wide.sha256(), narrow.sha256(), v_a.sha256(), v_b.sha256()}) == 4
+    with pytest.raises(ValueError, match="both boxes"):
+        with_interval_of(narrow, wide, "gas_celsius")
+
+
+def test_cause_reading_separates_the_medium_range_from_the_additional_inputs() -> None:
+    from twinlink_ml.dyssol_steady.cause import cause_reading
+
+    def verdict(a: int | None, b: int | None, control: bool = True) -> str:
+        return cause_reading({"V-a": a, "V-b": b, "V-c": None}, control)["verdict"]
+
+    assert verdict(64, None) == "K0"
+    assert verdict(None, 32) == "K1"
+    assert verdict(64, 32) == "K2" and verdict(None, None) == "K2"
+    assert verdict(64, None, control=False).startswith("not read")
+
+
+def test_learning_table_is_the_rule_of_the_reading_for_one_model() -> None:
+    config = study.load_config(FRESHGAS)
+    cells = [
+        {
+            "model": model,
+            "n": n,
+            "seed": seed,
+            "metrics": {
+                "exhaust_p95_k": 0.5 if (model == "mlp" and n >= 128) else 2.0,
+                "fuel_p95_percent": 0.5,
+            },
+        }
+        for model in study.MODELS
+        for n in config.budgets
+        for seed in config.seeds
+    ]
+    whole = study.reading(cells, config)
+    for model in study.MODELS:
+        rows, n_star = study.learning_table(cells, config, model)
+        assert rows == whole["table"][model] and n_star == whole["n_star"][model]
+    assert study.learning_table(cells, config, "mlp")[1] == 128
+    only_two = [c for c in cells if c["model"] != "linear"]
+    assert study.learning_table(only_two, config, "quadratic")[1] is None
+    with pytest.raises(ValueError, match="one per seed"):
+        study.learning_table(only_two, config, "linear")
+
+
+def test_cause_driver_tabulates_groups_and_checks_the_control(run, monkeypatch, tmp_path) -> None:
+    cause = _script("run_dyssol_freshgas_cause.py")
+    config = study.load_config(FRESHGAS)
+
+    def metrics(value: float) -> dict[str, float]:
+        return {
+            "exhaust_p95_k": value,
+            "fuel_p95_percent": 2 * value,
+            "max_abs/line1/exhaust_celsius": 3 * value,
+            "max_rel/total_fuel": 4 * value,
+        }
+
+    cells = [
+        {
+            "model": model,
+            "n": n,
+            "seed": seed,
+            "metrics": metrics(0.1 * seed),
+            "metrics_by_group": {
+                "medium_below_gas": {"points": 60, **metrics(1.0 * seed)},
+                "medium_above_gas": {"points": 196, **metrics(0.01 * seed)},
+            },
+        }
+        for model in cause.MODELS
+        for n in config.budgets
+        for seed in config.seeds
+    ]
+    table = cause.group_table(cells, config)
+    below = table["quadratic"]["medium_below_gas"]["512"]
+    assert below == {
+        "points": 60,
+        "exhaust_p95_k": pytest.approx(3.0),
+        "fuel_p95_percent": pytest.approx(6.0),
+        "max_abs_exhaust_k": pytest.approx(9.0),
+        "max_rel_fuel_percent": pytest.approx(12.0),
+    }
+    assert table["mlp"]["medium_above_gas"]["8"]["points"] == 196
+    assert cause.shares(np.array([0.1, 0.6, 1.5, 3.0]))["medium_below_gas"] == 2
+    assert set(cause.VARIANTS) == {"V-a", "V-b", "V-c"} and cause.MODELS == ("quadratic", "mlp")
+    # the control compares with the committed artifacts of the main run
+    with gzip.open(cause.RUNS_DIR / f"{cause.MAIN_TRAINING}.json.gz", "rt") as fh:
+        training = json.load(fh)
+    main_cells = [c for c in training["cells"] if c["model"] in cause.MODELS]
+
+    class _Box:
+        def __init__(self, digest: str) -> None:
+            self.digest = digest
+
+        def sha256(self) -> str:
+            return self.digest
+
+    same = cause.control_against_main(
+        main_cells, {"quadratic": None, "mlp": 256}, _Box(training["header"]["box_sha256"])
+    )
+    assert same["reproduces"] is True
+    assert same["largest_difference_of_reading_numbers"]["mlp"]["exhaust_p95_k"] == 0.0
+    assert not cause.control_against_main(
+        main_cells, {"quadratic": 64, "mlp": 256}, _Box(training["header"]["box_sha256"])
+    )["reproduces"]
+    assert not cause.control_against_main(
+        main_cells, {"quadratic": None, "mlp": 256}, _Box("other")
+    )["reproduces"]
+
+
+def test_fit_cell_scores_named_groups_of_the_test_set(run) -> None:
+    rng = np.random.default_rng(4)
+    names = study.target_names(1)
+    x_pool, x_test = rng.uniform(-1, 1, size=(64, 3)), rng.uniform(-1, 1, size=(20, 3))
+
+    def targets(x: np.ndarray) -> np.ndarray:
+        base = 50.0 + x @ np.array([1.0, 2.0, 3.0]) + np.abs(x[:, 0])  # a kink in input 0
+        return np.column_stack([base + k for k in range(len(names))])
+
+    left = x_test[:, 0] < 0
+    run._WORKER.clear()
+    run._WORKER.update(
+        x_pool=x_pool,
+        y_pool=targets(x_pool),
+        x_test=x_test,
+        y_test=targets(x_test),
+        admissible=np.ones(20, dtype=bool),
+        available=np.arange(64),
+        names=names,
+        groups={"left": left, "right": ~left, "empty": np.zeros(20, dtype=bool)},
+    )
+    cell = run._fit_cell(
+        {"id": "linear-n64-seed1", "model": "linear", "n": 64, "seed": 1, "settings": None}
+    )
+    run._WORKER.clear()
+    groups = cell["metrics_by_group"]
+    assert set(groups) == {"left", "right"}
+    assert groups["left"]["points"] + groups["right"]["points"] == 20
+    largest = max(g["max_abs/line1/exhaust_celsius"] for g in groups.values())
+    assert largest == pytest.approx(cell["metrics"]["max_abs/line1/exhaust_celsius"])

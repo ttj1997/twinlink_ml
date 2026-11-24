@@ -57,6 +57,7 @@ __all__ = [
     "cell_metrics",
     "control_by_bins",
     "fit_and_score",
+    "learning_table",
     "load_config",
     "make_model",
     "pilot_extension",
@@ -484,6 +485,45 @@ def control_by_bins(
     return rows
 
 
+def learning_table(
+    cells: Sequence[Mapping[str, Any]], config: StudyConfig, model: str
+) -> tuple[dict[int, dict[str, Any]], int | None]:
+    """Rows of one model over ``N`` (feasibility, medians, ``met``) and its ``N*``.
+
+    The rule of :func:`reading` for a single model; ``cells`` as there.
+    """
+    rows: dict[int, dict[str, Any]] = {}
+    for n in config.budgets:
+        group = [c["metrics"] for c in cells if c["model"] == model and c["n"] == n]
+        if len(group) != len(config.seeds):
+            raise ValueError(f"{model} at N={n}: {len(group)} cells, expected one per seed")
+        exhaust = [m["exhaust_p95_k"] for m in group]
+        fuel = [m["fuel_p95_percent"] for m in group]
+        rows[n] = {
+            "seeds_meeting_both": sum(
+                e <= config.threshold_exhaust_k and f <= config.threshold_fuel_percent
+                for e, f in zip(exhaust, fuel, strict=True)
+            ),
+            "exhaust_p95_k": {
+                "median": float(np.median(exhaust)),
+                "range": [min(exhaust), max(exhaust)],
+            },
+            "fuel_p95_percent": {
+                "median": float(np.median(fuel)),
+                "range": [min(fuel), max(fuel)],
+            },
+            "met": bool(
+                np.median(exhaust) <= config.threshold_exhaust_k
+                and np.median(fuel) <= config.threshold_fuel_percent
+            ),
+        }
+    n_star = next(
+        (n for n in config.budgets if all(rows[m]["met"] for m in config.budgets if m >= n)),
+        None,
+    )
+    return rows, n_star
+
+
 def reading(cells: Sequence[Mapping[str, Any]], config: StudyConfig) -> dict[str, Any]:
     """Pre-registered reading: feasibility per cell group first, then ``N*`` and the verdict.
 
@@ -501,36 +541,7 @@ def reading(cells: Sequence[Mapping[str, Any]], config: StudyConfig) -> dict[str
     table: dict[str, dict[int, dict[str, Any]]] = {}
     n_star: dict[str, int | None] = {}
     for model in MODELS:
-        rows: dict[int, dict[str, Any]] = {}
-        for n in config.budgets:
-            group = [c["metrics"] for c in cells if c["model"] == model and c["n"] == n]
-            if len(group) != len(config.seeds):
-                raise ValueError(f"{model} at N={n}: {len(group)} cells, expected one per seed")
-            exhaust = [m["exhaust_p95_k"] for m in group]
-            fuel = [m["fuel_p95_percent"] for m in group]
-            rows[n] = {
-                "seeds_meeting_both": sum(
-                    e <= config.threshold_exhaust_k and f <= config.threshold_fuel_percent
-                    for e, f in zip(exhaust, fuel, strict=True)
-                ),
-                "exhaust_p95_k": {
-                    "median": float(np.median(exhaust)),
-                    "range": [min(exhaust), max(exhaust)],
-                },
-                "fuel_p95_percent": {
-                    "median": float(np.median(fuel)),
-                    "range": [min(fuel), max(fuel)],
-                },
-                "met": bool(
-                    np.median(exhaust) <= config.threshold_exhaust_k
-                    and np.median(fuel) <= config.threshold_fuel_percent
-                ),
-            }
-        table[model] = rows
-        n_star[model] = next(
-            (n for n in config.budgets if all(rows[m]["met"] for m in config.budgets if m >= n)),
-            None,
-        )
+        table[model], n_star[model] = learning_table(cells, config, model)
     reached = {m: n for m, n in n_star.items() if n is not None}
     baseline = min(
         (m for m in BASELINES if m in reached),
