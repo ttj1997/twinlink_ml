@@ -1,8 +1,9 @@
 # NN -- Cost-optimal flow of the heat-transfer medium in the one-line Dyssol flowsheet ("case 1"): fuel against pump electricity
 
-Status: **design; committed before the run.** Sections 1 to 8 are the design. Results are added
-below them after the run and take their numbers only from the artifact named there. Descriptive
-study, **no pre-registered reading**. Branch `carrier-sweep` (from `origin/master` 1c22a81),
+Status: **run done (2026-11-24); descriptive result in sections 9 to 15, not yet seen by the
+project lead.** Sections 1 to 8 are the design, committed before the run (faf6005) and unchanged
+since. The results below them take their numbers only from the artifact named in section 9.
+Descriptive study, **no pre-registered reading**. Branch `carrier-sweep` (from `origin/master` 1c22a81),
 worktree `C:/twinlink_work/csweep`. Document number open (`NN`), lab-book entry "Befund NN (number
 open)"; the managing session assigns both at the merge. No merge, no push. Code
 `src/twinlink_ml/dyssol_steady/carrier_sweep.py`, settings `conf/dyssol_steady/carrier_sweep.yaml`,
@@ -178,3 +179,130 @@ equals rebuild times prices; the fuel saved is the recovered heat over the heate
 optimum is interior with a costly pump, at the upper bound with a cheap one and at zero when the
 exhaust is colder than the fresh gas; a dry run of the driver writes no input, flow, heat or cost
 into the record meant for the repository.
+
+## 9. Results
+
+Artifact `artifacts/runs/carrier_sweep_v1.json`, written on the clean tree at faf6005
+(`git/dirty` False, `code/root_checked` True; settings fingerprint 299778cad652; 1501 grid points
+per outside temperature; materials database as in Befund 130's artifact, installed 30188fb7a567,
+with the added constant bf57d42ee7ef). All numbers of this section are in that artifact. Flows are
+given as shares of the upper bound of the scan (15 000 kg/h, set by the task).
+
+**In all 12 cells (four outside temperatures, three pressure factors) the cheapest flow of the
+scan is its upper bound. With the pump placeholder the scanned range holds no interior optimum.**
+
+| `T_a` [degC] | `f` | cheapest flow (share of the bound) | saving against no medium flow [% of that cost] | pump share of the cost [%] | cost at 80 %: increase [% of the cost] | cost at 80 %: increase [% of the saving] | cost at 120 % (above the scan): change [% of the cost] | CO2 against no medium flow [%] |
+|---|---|---|---|---|---|---|---|---|
+| -10 | 0.5 | 1.000 (bound) | 29.43 | 0.34 | +1.58 | 3.79 | -1.00 | -29.53 |
+| -10 | 1 | 1.000 (bound) | 29.19 | 0.68 | +1.41 | 3.42 | -0.75 | -29.39 |
+| -10 | 2 | 1.000 (bound) | 28.71 | 1.35 | +1.07 | 2.66 | -0.25 | -29.11 |
+| 0 | 0.5 | 1.000 (bound) | 28.65 | 0.36 | +1.52 | 3.78 | -0.95 | -28.76 |
+| 0 | 1 | 1.000 (bound) | 28.40 | 0.71 | +1.34 | 3.37 | -0.69 | -28.61 |
+| 0 | 2 | 1.000 (bound) | 27.89 | 1.42 | +0.98 | 2.54 | -0.17 | -28.31 |
+| 10 | 0.5 | 1.000 (bound) | 27.81 | 0.38 | +1.44 | 3.75 | -0.89 | -27.92 |
+| 10 | 1 | 1.000 (bound) | 27.54 | 0.75 | +1.26 | 3.30 | -0.62 | -27.76 |
+| 10 | 2 | 1.000 (bound) | 27.00 | 1.49 | +0.88 | 2.39 | -0.07 | -27.45 |
+| 20 | 0.5 | 1.000 (bound) | 26.83 | 0.40 | +1.35 | 3.69 | -0.82 | -26.95 |
+| 20 | 1 | 1.000 (bound) | 26.54 | 0.79 | +1.16 | 3.20 | -0.53 | -26.78 |
+| 20 | 2 | 1.000 (bound) | 25.96 | 1.57 | +0.76 | 2.18 | +0.05 | -26.44 |
+
+* **The bound, not an optimum.** The column "120 %" is the cost at 1.2 times the bound, above the
+  scanned range (flagged in every cell). In 11 of 12 cells the cost is still lower there (by 0.07
+  to 1.00 % of the cost); the pump electricity has not caught up with the fuel saved anywhere in
+  the scan. Only at 20 degC with twice the pressure drop it is higher (by 0.05 %), so in that one
+  cell the minimum of the formula lies between the bound and 1.2 times the bound.
+* **Flat towards lower flows.** At 80 % of the bound the cost is 0.76 to 1.58 % higher, that is
+  2.18 to 3.79 % of the saving against no medium flow.
+* **The saving against no medium flow** is 25.96 to 29.43 % of that cost and grows as the outside
+  air gets colder. It is the saving of the heat recovery as such at the bound, not a gain of the
+  choice of the flow.
+* **The pump** takes 0.34 to 1.57 % of the cost at the bound; doubling or halving the pressure
+  drop moves the saving by at most 0.58 percentage points against `f` = 1 (20 degC) and does not
+  move the cheapest flow of the scan.
+* **CO2** falls by 26.44 to 29.53 % against no medium flow (pump electricity included).
+* **Over-saturation:** no scanned point is over-saturated (share 0 in all four scans). After the
+  recovery the exhaust at the bound holds 0.070 (20 degC) to 0.125 (-10 degC) of the saturation
+  humidity. The ratio at the dryer outlet is recorded as 0: the repository's function returns an
+  infinite saturation humidity at or above the boiling point.
+* **Monotonic:** the recovered heat grows with the medium flow over each scan (flag in the
+  artifact); at the bound it is the largest of the scan.
+* **Humidity cap of the fresh gas:** active at -10 and 0 degC (the sheet's humidity is above
+  saturation there), not at 10 and 20 degC. Without the cap (`f` = 1) the cheapest flow is again
+  the bound and the saving 29.15 % (-10 degC) and 28.40 % (0 degC), against 29.19 % and 28.40 %
+  with it.
+
+## 10. What the result says and what it does not say
+
+The question of section 1 has no answer inside the range the task set: with 1 bar at
+10 000 kg/h, quadratic, and a pump efficiency of 0.40 the pump electricity stays far below the
+fuel saved up to 15 000 kg/h, also with twice the pressure drop. This is the estimate made by hand
+before the run (section 6). The result is a statement on the placeholder and on ideal exchangers:
+the bound is 1.5 times the reference flow of the placeholder, which was set to the largest flow of
+the delivered sheet. **It is not a recommendation of a flow.** In a real circuit the flow is
+limited by what this model does not contain: the area of the two exchangers (section 4), the
+design flow and the curve of the pump, the pressure drop of the circuit. Which of them binds
+first is a question to the sender of the sheet (the list is in the report, not versioned).
+
+## 11. Added since the design: status of the cited finding
+
+After the design was committed, an addendum to Befund 130 was entered on the branch
+`dyssol-sweep-case1` (commit 5d4a3c4, decisions of the project lead of 2026-11-24). Two points of
+it concern this study. (1) The number 130 is provisional; the managing session assigns it at the
+merge. (2) The reading "the sheet's gas mass flow is the dry gas" is inferred from the agreement
+with the sheet, not stated by the sender; until the sender confirms it, every number of that
+finding is conditional on it. **The same holds here:** the inputs of this study read the gas flow
+as dry gas (section 3), so every number of section 9 is conditional on that reading. The addendum
+also gives the comparison for process 2 alone (64 reported values, 62 within one unit of the last
+decimal, 2 outside; recovered heat at most 0.081 kW, fuel at most 0.067 kg/h); the two
+deviations are the ones already quoted in section 3.
+
+## 12. Course of the run (2026-11-24; from the chain log, not versioned)
+
+A first chain on the removed commit was stopped during its suite (section 6). The chain of this
+commit was started detached at 10:30 on the clean tree at faf6005 and waited for the suite of
+`dyssol-sweep-case1` (finished 11:01, exit 0). Full suite on faf6005: 1779 passed, 6 skipped in
+2359 s. The run followed at 11:41 and took 16 s, exit 0, no error. No separate dry run on the
+inputs of the line was made before it (the run itself takes seconds; the driver's dry run is
+covered by the test on laboratory-scale inputs). Artifact committed at cba8cd3 after
+`tests/test_denylist.py`.
+
+Looked at after the run, local and not versioned, not a finding: the scan at 10 degC is the
+fresh-gas state of the sheet and contains the sheet's flows; in the local record the recovered
+heat at four of them and the fuel at two agree with the sheet's printed decimals. The comparison
+itself is that of Befund 130.
+
+## 13. Caveats
+
+1. **Pump placeholder without a source.** All 12 cheapest flows lie at the bound of the scan; the
+   study does not determine an optimal flow. It determines that, for this placeholder, an optimum
+   lies at or above the bound (in one cell between the bound and 1.2 times the bound).
+2. **Ideal exchangers.** No exchanger area; the recovered heat only grows with the flow.
+3. **Conditional on the reading "dry gas"** of the sheet (section 11).
+4. **One process, one operating point.** Only the temperature of the fresh gas and, through the
+   cap, its humidity vary; gas flow, spray and dryer inlet temperature are those of the sheet.
+5. **Dyssol control only at the sheet's fresh-gas state** (Befund 130). The scans at -10, 0 and
+   20 degC are the rebuild alone. Where the gas entering the heater is colder than the lower bound
+   of the vapour correlation, the rebuild evaluates the correlation at that bound, as Dyssol was
+   observed to do (docs/45; `dyssol_steady/materials.py`).
+6. **Prices are placeholders** (Befund 115, Befund 101); the electricity price is a time mean.
+7. **Humidity of the outside air:** the sheet's value capped at saturation, not a climate.
+8. **The cost at 120 %** is evaluated above the scanned range.
+9. **No statement on process 1** (section 5).
+10. The branch is based on 1c22a81; Befund 130 is cited from a branch that was not merged.
+
+## 14. Open for the project lead
+
+* The eight decisions of section 7.
+* Whether the scan is to be extended above 15 000 kg/h (a new run under a new name) or whether the
+  pump placeholder is first replaced by data of the circuit. Proposal of the session: ask the
+  sender first; an interior optimum found by a wider scan would be a property of the placeholder.
+* Whether this is entered as a finding of its own or as a note to Befund 130.
+* Number of the document and of the finding (the managing session, at the merge). The lab book is
+  also appended to on `dyssol-sweep-case1`; the two entries will meet at the end of the file.
+
+## 15. Artifacts
+
+| File | Content |
+|---|---|
+| `artifacts/runs/carrier_sweep_v1.json` | provenance, settings, per outside temperature and pressure factor the relative key numbers and flags of section 9 |
+| `<root>/local/runs/carrier_sweep/carrier_sweep_v1_local.json` (not versioned; copy in `C:/twinlink_runs/carrier-sweep/`) | the same with the inputs of the line, flows in kg/h, cost in EUR/h, recovered heat and the cost curves |
