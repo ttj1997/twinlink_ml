@@ -813,3 +813,32 @@ def test_fit_cell_scores_named_groups_of_the_test_set(run) -> None:
     assert groups["left"]["points"] + groups["right"]["points"] == 20
     largest = max(g["max_abs/line1/exhaust_celsius"] for g in groups.values())
     assert largest == pytest.approx(cell["metrics"]["max_abs/line1/exhaust_celsius"])
+
+
+def test_committed_cause_artifact_follows_from_its_cells() -> None:
+    from twinlink_ml.dyssol_steady.cause import cause_reading
+
+    path = ROOT / "artifacts" / "runs" / "dyssol_freshgas_cause_v1.json.gz"
+    if not path.exists():
+        pytest.skip("artifact of the add-on not written yet")
+    config = study.load_config(FRESHGAS)
+    with gzip.open(path, "rt", encoding="utf-8") as fh:
+        artifact = json.load(fh)
+    assert artifact["source"] == "python rebuild (no Dyssol run)"
+    assert artifact["header"]["config_fingerprint"] == config.fingerprint
+    assert artifact["mlp_settings"]["hidden"] == list(config.mlp_settings("one_line").hidden)
+    assert len(artifact["cells"]) == 3 * 2 * len(config.budgets) * len(config.seeds)
+    n_star = {}
+    for key, variant in artifact["variants"].items():
+        cells = [c for c in artifact["cells"] if c["variant"] == key]
+        for model in ("quadratic", "mlp"):
+            assert study.learning_table(cells, config, model)[1] == variant["n_star"][model]
+        n_star[key] = variant["n_star"]["quadratic"]
+        groups = variant["capacity_ratio_groups"]["test"]
+        assert groups["medium_below_gas"] + groups["medium_above_gas"] == config.test_size
+        assert sum(v for k, v in groups.items() if k.startswith("ratio_")) == config.test_size
+    control = artifact["variants"]["V-c"]["control"]
+    assert control["same_box_as_main_run"] is True
+    assert control["largest_difference_of_reading_numbers"]["quadratic"]["exhaust_p95_k"] < 1e-9
+    assert artifact["reading"] == cause_reading(n_star, control["reproduces"])
+    assert all("x" not in cell for cell in artifact["cells"])

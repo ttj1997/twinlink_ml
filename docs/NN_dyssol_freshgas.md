@@ -2,7 +2,12 @@
 
 Status: **complete. Step 0 held at all 1291 points; pre-registered reading D1 (an MLP is needed,
 256 Dyssol runs; the quadratic regression does not reach the thresholds up to 512 runs); the
-prediction N\* = 64 is not confirmed; reading on the sheet B1 (sections 11 to 14).**
+prediction N\* = 64 is not confirmed; reading on the sheet B1 (sections 11 to 14).** Accepted by
+the project lead on 2026-11-24 (section 16). **Add-on on the cause (sections 17 and 18, added
+after the fact, rebuild only): its control is not met as committed, reading K is formally not
+read; the quadratic regression shows the pattern of K0 (N\* 64 with the medium flow of
+Befund 128, none with the full range), and N\* of the MLP is 128 instead of 256 when the targets
+differ by rounding.**
 Sections 1 to 10 are the design and the reading, committed BEFORE the pilot and before any Dyssol
 run of this study (4639bef) and unchanged since; the results below them take their numbers only
 from the artifacts named there. Branch `dyssol-freshgas` (from `master` 2e54dde), worktree
@@ -598,3 +603,127 @@ over-saturated points per variant.
 
 **Disclosure.** Known before the add-on: all results of the main run, the equations of the unit,
 rough sizes of the capacity rates from the local box. No fit on a variant box had been made.
+
+## 18. Add-on: results (added after the fact)
+
+Artifact `artifacts/runs/dyssol_freshgas_cause_v1.json.gz` (driver a069204, clean tree; 210
+cells; Python rebuild, no Dyssol run). Detached 2026-11-24 17:07 to 17:23 with 4 workers: dry run
+over all 210 cells (5 optimiser steps), then the run (704 s, peak 370 MB per worker); no unit
+failed, nothing was retried. The dry run already showed the numbers of the quadratic regression
+(a regression has no optimiser steps); the reading had been committed before it.
+
+### 18.1 Control: NOT met as committed -- reading K is formally not read
+
+V-c has the box and the seeds of the main run. **The quadratic regression reproduces the main
+run:** its reading numbers differ from those of `dyssol_freshgas_v1_training` by at most 1.4e-13 K
+and 3.1e-13 % in all 35 cells, and it has no N\*, as in the main run. **The MLP does not:** its
+reading numbers differ by up to 0.10 K and 0.13 %, and its N\* is 128 instead of 256. The rule
+committed in section 17 asks for the N\* of both models; it is not met, so the artifact's verdict
+is "not read".
+
+**Why the MLP differs** (probe without an artifact, 2026-11-24): the fit is deterministic (two
+fits on the same data are identical), and with the Dyssol results of the local data set it
+reproduces the cell of the main run bit for bit (checked for one cell, N = 128, seed 1). The
+targets of the rebuild and of Dyssol differ at the level of rounding (at most 3e-12 in the pool;
+the control of step 0), and 20000 optimiser steps carry that difference into the second decimal
+of the reading numbers. At N = 128 the MLP sits on the threshold: main run 0.94 K and 1.04 %,
+V-c 0.94 K and 0.98 % (2 of 5 seeds in both).
+
+**This touches a result of the main run (reported, sections 11 to 13 are unchanged):** N\* of the
+MLP is 256 with the Dyssol targets and 128 with targets that differ from them by rounding. The
+verdict D1 does not depend on it (no regression has an N\* in either case); the number "256
+Dyssol runs" does. Caveat 5 of section 12 named the narrow miss at N = 128; the add-on shows
+that the miss is within the effect of rounding in the targets. How the data need is to be stated
+is a decision of the project lead (section 18.4).
+
+### 18.2 The variants
+
+Median over the five seeds (range); bold = both medians at or below their threshold; test sets:
+in-box Sobol test set, variant V-a / V-b.
+
+**V-a: 7 inputs, medium flow as in Befund 128** (36 coefficients). N\* of the quadratic regression
+**64**, of the MLP 128.
+
+| N | quadratic: exhaust P95 [K] | fuel P95 [%] | seeds | MLP: exhaust P95 [K] | fuel P95 [%] | seeds |
+|---:|---:|---:|---:|---:|---:|---:|
+| 8 | 42.79 (28.39-59.71) | 52.96 (40.59-66.62) | 0/5 | 16.01 (6.28-25.69) | 20.78 (11.28-30.29) | 0/5 |
+| 16 | 28.63 (20.65-32.14) | 47.36 (33.50-51.80) | 0/5 | 2.69 (2.46-2.95) | 6.72 (6.51-8.74) | 0/5 |
+| 32 | 8.87 (6.45-15.01) | 17.15 (10.39-23.43) | 0/5 | 1.78 (1.27-2.61) | 3.02 (2.31-3.15) | 0/5 |
+| 64 | **0.32** (0.25-0.34) | **0.50** (0.41-0.55) | 5/5 | 0.68 (0.60-1.18) | 1.27 (0.87-1.44) | 1/5 |
+| 128 | **0.22** (0.21-0.25) | **0.37** (0.32-0.47) | 5/5 | **0.31** (0.28-0.36) | **0.54** (0.50-0.60) | 5/5 |
+| 256 | **0.21** (0.20-0.22) | **0.36** (0.31-0.41) | 5/5 | **0.18** (0.16-0.23) | **0.36** (0.30-0.39) | 5/5 |
+| 512 | **0.20** (0.19-0.20) | **0.32** (0.30-0.35) | 5/5 | **0.13** (0.12-0.16) | **0.26** (0.22-0.36) | 5/5 |
+
+**V-b: 5 inputs, full range of the medium flow** (21 coefficients). The quadratic regression has
+**no N\***; N\* of the MLP is 128.
+
+| N | quadratic: exhaust P95 [K] | fuel P95 [%] | seeds | MLP: exhaust P95 [K] | fuel P95 [%] | seeds |
+|---:|---:|---:|---:|---:|---:|---:|
+| 8 | 24.29 (14.16-55.21) | 29.63 (21.94-57.93) | 0/5 | 10.74 (7.59-11.97) | 14.47 (11.53-16.26) | 0/5 |
+| 16 | 15.79 (8.84-36.62) | 24.21 (12.97-42.46) | 0/5 | 5.74 (4.04-11.81) | 9.60 (6.61-15.09) | 0/5 |
+| 32 | 3.82 (3.32-5.18) | 4.95 (4.01-7.28) | 0/5 | 2.42 (2.13-5.61) | 3.51 (2.11-5.86) | 0/5 |
+| 64 | 3.25 (2.57-3.83) | 3.64 (3.45-4.97) | 0/5 | 1.31 (0.90-2.16) | 1.53 (0.97-2.35) | 0/5 |
+| 128 | 2.69 (2.17-2.99) | 3.69 (3.44-3.85) | 0/5 | **0.56** (0.36-0.91) | **0.76** (0.47-1.13) | 3/5 |
+| 256 | 2.33 (2.13-2.47) | 3.22 (2.99-3.39) | 0/5 | **0.29** (0.24-0.36) | **0.41** (0.32-0.45) | 5/5 |
+| 512 | 2.19 (2.03-2.36) | 3.00 (2.82-3.27) | 0/5 | **0.20** (0.18-0.32) | **0.33** (0.27-0.47) | 5/5 |
+
+**V-c (control):** quadratic regression as in section 11.4 (2.52 K and 4.05 % at N = 512, no
+N\*); MLP 0.94 K and 0.98 % at N = 128 (2 of 5 seeds), 0.46 K and 0.62 % at N = 256, 0.24 K and
+0.41 % at N = 512, N\* 128.
+
+Over-saturated (flag of docs/45), pool / test set: V-a 9 / 0, V-b 9 / 3, V-c 9 / 0.
+
+**What the numbers of the quadratic regression say.** N\* 64 in V-a, none in V-b, none in V-c:
+this is the pattern of **K0** (the range of the medium flow, not the additional inputs). With the
+medium flow of Befund 128 the quadratic regression reaches the thresholds with seven inputs at
+N = 64, the number the prediction of section 6 had named for 36 coefficients; with the full range
+it does not reach them even with five inputs and 21 coefficients. **By the committed rule this is
+not the reading of the add-on** (section 18.1); whether K is read on the quadratic regression
+alone is a decision of the project lead.
+
+### 18.3 Without a reading: the capacity ratio
+
+Capacity ratio B / min(A, C) of the medium over the smaller gas stream; "below" = the medium is
+the smallest stream. Points of the pool below / at or above 1: V-a 134 / 890, V-b 543 / 481,
+V-c 539 / 485; of the test set: V-a 34 / 222, V-b 135 / 121, V-c 134 / 122.
+
+Quadratic regression at N = 512, median over the seeds of the 95th percentile over the test
+points of the group (exhaust [K] / fuel [%]; number of test points):
+
+| Capacity ratio | V-a | V-b | V-c |
+|---|---|---|---|
+| below 1 | 0.18 / 0.36 (34) | 2.50 / 2.88 (135) | 2.78 / 3.02 (134) |
+| at or above 1 | 0.20 / 0.32 (222) | 1.84 / 3.23 (121) | 2.02 / 4.14 (122) |
+| 0 to 0.25 | no point | 4.17 / 3.92 (34) | 5.41 / 4.29 (33) |
+| 0.25 to 0.5 | no point | 1.68 / 2.00 (33) | 1.95 / 2.00 (35) |
+| 0.5 to 1 | 0.18 / 0.36 (34) | 1.98 / 2.30 (68) | 2.65 / 2.91 (66) |
+| 1 to 2 | 0.20 / 0.31 (221) | 1.53 / 2.60 (111) | 1.88 / 3.46 (112) |
+| above 2 | 0.11 / 0.68 (1) | 2.51 / 5.94 (10) | 2.32 / 5.46 (10) |
+
+* **Ratio 1 lies inside the box of Befund 128 as well:** in V-a 13 % of the points have the
+  medium below the smaller gas stream (134 of 1024, 34 of 256), and the quadratic regression
+  meets the thresholds on both sides of it. The hypothesis placed the equality of the capacity
+  rates outside that box.
+* **With the full range the quadratic regression misses the thresholds on both sides of ratio 1
+  and in every bin.** Its error is largest towards no medium flow (ratio below 0.25) and, for
+  the fuel, at the largest ratios; it is not concentrated at ratio 1.
+* The MLP has its largest errors in the same lowest bin (V-c at N = 512: 0.73 K and 0.76 %
+  below 0.25, at most 0.28 K and 0.44 % in the other bins).
+
+This fits the equation of the unit (section 17): a saturation that is steepest towards no medium
+flow and that no polynomial of degree 2 follows over the full range, and no kink. The cause that
+the hypothesis names (the range of the medium flow) is what the numbers show; its mechanism (a
+kink at equal capacity rates) is not found in the units.
+
+### 18.4 Open for the project lead (add-on)
+
+1. **Whether reading K is read with the control on the quadratic regression alone** (which
+   reproduces the main run to 3e-13; K is defined on it). Then the verdict is K0. By the rule as
+   committed the add-on is not read.
+2. **How the data need of the main run is stated.** N\* of the MLP is 256 with the Dyssol targets
+   and 128 with the rebuild's, which differ by rounding; in V-a and V-b it is 128 as well. D1 is
+   unaffected. Sections 11 to 13 and the lab-book entry state 256 and are unchanged.
+3. **Scope note to Befund 128** (section 16, item 4): its supplement "by the reading of the
+   add-on" depends on item 1.
+4. The hypothesis of a kink does not apply to the delivered units (smooth formula); whether the
+   units are meant to model an ideal counter-current exchanger is a question to their author.
