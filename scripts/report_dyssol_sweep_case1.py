@@ -395,7 +395,7 @@ def main() -> None:
                 "installed_sha256": sha256_of(installed),
                 "patched_sha256": sha256_of(patched),
             },
-            "config_fingerprint": config.fingerprint(),
+            "config_fingerprint": config.fingerprint,
             **installation_record,
             "same_as_dyssol_steady_v1_one_line_training": same_setup,
         },
