@@ -1,0 +1,20 @@
+# Template of the inputs of the line whose medium flow is scanned. Copy to
+# <local>/dyssol_steady/carrier_sweep_local.yaml (the local folder is git-ignored) and replace the
+# placeholders with the input block of the delivered sheet. The values are plant values and stay
+# outside the repository; records carry the SHA-256 of the local file and the digest of the
+# workbook named in it.
+source:
+  workbook: partner/DELIVERY_FOLDER/WORKBOOK.xlsx   # relative to the local folder; for the record
+  workbook_sha256: DIGEST
+  process: "WHICH PROCESS OF THE SHEET"             # free text, never written into a record
+line:
+  gas_kg_per_s: VALUE                  # the sheet's gas mass flow; it is the dry gas (Befund 130)
+  gas_moisture_kg_per_s: VALUE         # moisture flow of the fresh gas, on top of the dry gas
+  gas_celsius: VALUE                   # fresh-gas temperature of the sheet
+  dryer_inlet_celsius: VALUE
+  spray_kg_per_s: VALUE
+  spray_solid_kg_per_s: VALUE          # mass flow of the solid in the spray
+  spray_celsius: VALUE
+  heater_efficiency_percent: VALUE
+  calorific_value_kj_per_kg: VALUE
+  equilibrium_moisture_g_per_kg: VALUE

@@ -1,0 +1,44 @@
+# Cost-optimal flow of the medium of the heat recovery of one line (docs/49_carrier_sweep.md).
+# Descriptive study without a reading.
+#
+# STATUS: every number below is a study setting or a PLACEHOLDER with a reason; none is a plant
+# value. The inputs of the line come from a delivered sheet and are NOT in the repository: they
+# are read from <local>/dyssol_steady/carrier_sweep_local.yaml (template:
+# carrier_sweep_local.yaml.example next to this file).
+
+version: 1
+
+# Scan of the medium flow per outside temperature (decision of the project lead, 2026-11-24:
+# 0 to 15 000 kg/h, fine; -10, 0, 10, 20 degC; cost at 80 % and 120 % of the optimum).
+scan:
+  flow_max_kg_per_h: 15000.0
+  flow_step_kg_per_h: 10.0             # grid; the optimum is refined between two grid points
+  ambient_celsius: [-10.0, 0.0, 10.0, 20.0]
+  neighbour_factors: [0.8, 1.2]
+
+# Circulation pump of one medium circuit. PLACEHOLDER WITHOUT A SOURCE: the pressure drop of the
+# circuit (both exchangers and the piping) is quadratic in the flow (turbulent flow through a
+# fixed geometry) and passes through the repository's placeholder of 1 bar per medium circuit
+# (flowsheet.auxiliary.AuxiliaryConfig.loop_pressure_drop_pa, docs/11) at the reference flow of
+# 10 000 kg/h. The reference flow is a setting: no design flow of the circuit is known. Efficiency
+# and density as in the network studies (AuxiliaryConfig: the laboratory default 0.40 of
+# simulation.config.EnergyConfig, water).
+pump:
+  reference_pressure_drop_pa: 1.0e5
+  reference_flow_kg_per_h: 10000.0
+  efficiency: 0.40
+  density_kg_per_m3: 1000.0
+  pressure_factors: [0.5, 1.0, 2.0]    # sensitivity on the pressure drop; 1.0 is the placeholder
+
+# Prices and CO2 factors of Befund 115 (conf/storage_price/storage_price.yaml, i.e. the defaults of
+# heatpump.config.Economics, Befund 101). All PLACEHOLDERS except the CO2 factors (repository
+# factors, evaluation.net_energy). Befund 115 uses an hourly electricity price (day-ahead DE-LU
+# 2024 plus an adder of 0.08 EUR/kWh); this stationary study takes its time mean, which
+# docs/32_storage_price.md gives as 0.159 EUR/kWh, "i.e. the 0.16 EUR/kWh of Befund 101". The CO2
+# cost of electricity is inside its price (not charged again).
+prices:
+  gas_eur_per_kwh: 0.040               # fuel without the CO2 price
+  co2_eur_per_t: 55.0                  # CO2 price on gas
+  electricity_eur_per_kwh: 0.16
+  gas_co2_kg_per_kwh: 0.201
+  electricity_co2_kg_per_kwh: 0.366

@@ -204,6 +204,8 @@ replace a product-moisture measurement.
 
 **Order dependence of the steady-state optimiser (Befund 129; synthetic truth, placeholders).** The steady optimum of a query depends on what the solver solved before (warm start, rounded cache). Of 94211 queries the warm start is worse than a cold multi-start in 1.82 %, a single cold start in 1.58 %; eight starts are reliable. No key number of Befund 105, 126 or the learned-set-point study changes by more than 10 % when the dependence is removed (largest change 3.78 %; reading O0), but two margins move (R1 0.005859 instead of 0.006641, C2 0.007812 instead of 0.007422). A switch `cold_starts` (default off) removes the dependence; new studies set it to 8. The controllers with a dynamic optimiser were not recomputed.
 
+**Partner sweep sheet of 2026-11-24 and the cost of the medium flow (Befund 130; model against model, placeholders).** The rebuild of the stationary Dyssol units meets the delivered sweep of the medium flow in 91 of 128 values within rounding and 116 within one unit of the last decimal (our own Dyssol runs agree with the rebuild; the deviations lie between the sheet and Dyssol), and the sheet is not a test set for the surrogates of Befund 128. With ideal exchangers the cost of fuel plus pump electricity has no interior optimum of the medium flow up to 15 000 kg/h; a reliable optimum needs an exchanger model with a finite area.
+
 **One-step bandit (Befund 93, follow-up of Befund 68).** A residual action and a separated
 moisture cost lift SAC from a negative to a clearly positive closed-regret fraction, but no cell
 meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of
