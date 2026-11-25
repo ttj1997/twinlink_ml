@@ -7,7 +7,9 @@ the project lead on 2026-11-24 (section 16). **Add-on on the cause (sections 17 
 after the fact, rebuild only): its control is not met as committed, reading K is formally not
 read; the quadratic regression shows the pattern of K0 (N\* 64 with the medium flow of
 Befund 128, none with the full range), and N\* of the MLP is 128 instead of 256 when the targets
-differ by rounding.**
+differ by rounding.** Decisions of the project lead of 2026-11-25 (section 19): reading K stays
+formally not read; **the data need of the MLP is cited as "128 to 256 Dyssol runs"** (D1
+unaffected).
 Sections 1 to 10 are the design and the reading, committed BEFORE the pilot and before any Dyssol
 run of this study (4639bef) and unchanged since; the results below them take their numbers only
 from the artifacts named there. Branch `dyssol-freshgas` (from `master` 2e54dde), worktree
@@ -727,3 +729,36 @@ kink at equal capacity rates) is not found in the units.
    add-on" depends on item 1.
 4. The hypothesis of a kink does not apply to the delivered units (smooth formula); whether the
    units are meant to model an ideal counter-current exchanger is a question to their author.
+
+## 19. Decisions of the project lead (2026-11-25; added after the fact, sections 1 to 18 are unchanged)
+
+1. **Reading K stays formally not read** (the control V-c failed); the control is not restricted
+   after the fact. **Descriptive, and marked as such:** the quadratic regression reproduces the
+   main run to 3e-13 and shows the pattern of K0 (V-a: N\* = 64, as predicted for 36
+   coefficients; V-b: none). By these numbers the cause lies in the range of the medium flow, not
+   in the fresh-gas inputs.
+2. **The kink hypothesis of the project lead is refuted** (the unit is smooth, section 17).
+   **Recorded as a hypothesis of the project lead, not as a result:** at a small medium flow the
+   term 1/B of the medium dominates, the recovered heat rises about linearly with the flow and
+   then saturates; a quadratic surface does not represent this strong curvature over the full
+   range (its error is largest towards no flow, section 18.3).
+3. **The data need of the MLP in the main run is stated as "128 to 256 Dyssol runs".** Reason: at
+   the threshold, differences of the targets of 3e-12 shift the result over 20000 optimiser steps
+   by up to 0.10 K, and N\* jumps between 128 and 256 (section 18.1). D1 is unaffected. Sections
+   11 to 13 state 256 and stay as they are; this item governs how the result is cited.
+4. **Scope note to Befund 128** (directive for the managing session at the merge; it replaces the
+   wording of section 16, item 4): "The rule of thumb holds in the box of Befund 128 and with the
+   fresh gas as an input (V-a: N\* = 64 as predicted); with the full range of the medium flow the
+   quadratic regression does not reach the thresholds up to N = 512 (finding dyssol-freshgas;
+   reading K formally not read)."
+5. **Proposal for CLAUDE.md, section Methodology** (directive for the managing session; not
+   changed on this branch): "An N\* whose metric lies within the reproduction noise of the
+   threshold is reported as a range of the adjacent grid steps, not as a single value."
+6. **Question to the units' author on the formula of the heat recovery** (the smooth form of
+   equations 4.1 / 4.2 against an ideal counter-current exchanger): added to the local list of
+   questions (`local/reports/carrier_sweep_rueckfragen.md`, question 11; nothing has been sent).
+
+With these decisions the study is closed on this branch. Open at the merge (managing session):
+document and finding number, the scope note to Befund 128 (item 4), the sentence for CLAUDE.md
+(item 5). Still open outside the repository: the sender's confirmation of the reading "dry gas"
+and the answer of the units' author.
