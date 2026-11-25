@@ -85,6 +85,7 @@ lab book (`04_stand_ap1.md`), process setup, and synthesis documents.
   `resolution.py` only to reproduce old findings.
 
 - New studies that use the steady-state optimiser (headroom, load following) set `steady_cold_starts = 8` in `Solvers` (cold multi-start, nothing remembered between solves; the warm start was worse in 1.82 % of the queries, Befund 129). The defaults stay at 0 and exist only to reproduce old results.
+- An N* whose metric lies within the reproduction noise of the threshold is reported as a range of the adjacent grid steps, not as a single value (Befund 131: N* of the MLP jumped between 128 and 256 under target differences of 3e-12).
 - Run-level splits, never window-level.
 - Learning curves as primary result; 3-5 seeds, median and range.
 - Baselines before any architecture comparison.
