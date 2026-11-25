@@ -1,0 +1,479 @@
+{
+ "provenance": {
+  "git/commit": "10f28b0db9bbcccf6a76897371b4ab953045bfb3",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used"
+ },
+ "name": "sheet_plant_a_v1",
+ "inputs": {
+  "workbook_sha256": "7436f4156dd050c389ea710ad73189dfe0a1175219e2a79fe65070182bb1020a",
+  "source_sha256": "1bbb502efecd30dc4148136ae4cafb84936e2e72ca06956d4322d70dd3d58887",
+  "materials": {
+   "installed_sha256": "30188fb7a5678054b1819187359b0f5a04517f429ff52d35f0fda33c9b7ae30a",
+   "patched_sha256": "bf57d42ee7ef1ae0e83c06b71fc7efe1824f89161e93a5c21330b96be7eb98db"
+  },
+  "exports_sha256": {
+   "day_1": "e1ec8c7b72e35fa6a11b4fe74a2263907f8a245c449c5e4b6f659ce8b24998b6",
+   "day_2": "40a66b790032dcbf9d10d2155dc281d4e43825404bcd7892fb73f5b849938bdd"
+  },
+  "role_file_sha256": "8d45ef4c99c872d02399021cb633e3f1f9ab7431c3cf92f807389571034ebacd",
+  "dyssol_steady_config_fingerprint": "34311677cd77a56d10e82de572580fae2406ee827b75deaec8a7dcfb28b1218b",
+  "plant_scale_config_sha256": "40203a7b77f813b551e92bc9659a459dfebd1402fca51e4553d226b43f76aa86",
+  "gas_flow_reading": "dry",
+  "normal_density_dry_air_kg_per_m3": 1.2922,
+  "dyssol_version": "Version: 1.6.0",
+  "units_libraries": {
+   "DryerTwinLink.dll": "7cff70c22fe85fea28ce27daee0ee293d0318c825eb1dc9c306d23f680366599",
+   "HeaterTwinLink.dll": "198a8b751ad0110e54195c963b96dd06c2409035b349eebf140b912a9bcde77c",
+   "HeatrecoveryTwinLink.dll": "08e24cf29e1acd46655e8ba5141a404937c78d633bfbb609c604d44ead6ee2fd"
+  },
+  "same_as_dyssol_sweep_case1_comparison": {
+   "workbook": true,
+   "source": true,
+   "units_libraries": true,
+   "patched_materials": true
+  }
+ },
+ "control": {
+  "a_sheet_point": {
+   "relative_deviation": 0.0,
+   "tolerance": 1e-12,
+   "held": true
+  },
+  "b_segments": {
+   "same_windows": true,
+   "same_exports": true,
+   "same_role_file": true,
+   "aggregate_max_relative_deviation": 0.0,
+   "aggregate_tolerance": 1e-09,
+   "held": true
+  },
+  "c_dyssol": {
+   "points": 94,
+   "points_compared": 94,
+   "max_temperature_k": 5.684341886080802e-14,
+   "max_relative_percent": 2.92361749043396e-14,
+   "bounds": {
+    "temperature_k": 1e-06,
+    "relative_percent": 1e-06
+   },
+   "failures": [],
+   "dyssol_wall_seconds": [
+    0.9588864999823272,
+    1.1633035000413656
+   ],
+   "held": true
+  },
+  "read": true
+ },
+ "test_set": {
+  "days": {
+   "day_1": 4,
+   "day_2": 4
+  },
+  "segments": [
+   "day_1_s1",
+   "day_1_s2",
+   "day_1_s3",
+   "day_1_s4",
+   "day_2_s1",
+   "day_2_s2",
+   "day_2_s3",
+   "day_2_s4"
+  ],
+  "reference_variant": {
+   "solid_fraction": "0.65",
+   "humidity": "dried_supply_air"
+  }
+ },
+ "sheet_point": {
+  "saturation_ratio": 2.0154634728394782
+ },
+ "reading_f": {
+  "code": "F0",
+  "segments": 8,
+  "oversaturated_segments": 0,
+  "oversaturated_per_day": {
+   "day_1": 0,
+   "day_2": 0
+  }
+ },
+ "reading_t": {
+  "threshold_k": 2.0,
+  "code": "T1",
+  "unit_minus_exhaust_k": {
+   "day_1_s1": 5.064641004502661,
+   "day_1_s2": 5.568442613086653,
+   "day_1_s3": 5.598198808058413,
+   "day_1_s4": 5.7733617194032405,
+   "day_2_s1": 5.565878834471796,
+   "day_2_s2": 5.499038933084236,
+   "day_2_s3": 5.48079565024382,
+   "day_2_s4": 5.048769301576364
+  },
+  "unit_minus_exhaust_k_per_day": {
+   "day_1": [
+    5.064641004502661,
+    5.7733617194032405
+   ],
+   "day_2": [
+    5.048769301576364,
+    5.565878834471796
+   ]
+  },
+  "unit_warmer_at_every_read_segment": true
+ },
+ "reading_a": {
+  "code": "A0",
+  "removes_on_every_day": [
+   "solid_fraction"
+  ],
+  "removes_on_some_day_only": [
+   "spray_kg_per_h"
+  ],
+  "named_input": "solid_fraction",
+  "removed": {
+   "dry_gas_kg_per_h": {
+    "day_1": false,
+    "day_2": false
+   },
+   "dryer_inlet_celsius": {
+    "day_1": false,
+    "day_2": false
+   },
+   "spray_kg_per_h": {
+    "day_1": true,
+    "day_2": false
+   },
+   "solid_fraction": {
+    "day_1": true,
+    "day_2": true
+   },
+   "gas_humidity_g_per_kg": {
+    "day_1": false,
+    "day_2": false
+   }
+  },
+  "measured_inputs": [
+   "dry_gas_kg_per_h",
+   "dryer_inlet_celsius",
+   "spray_kg_per_h"
+  ]
+ },
+ "predictions": {
+  "F": {
+   "predicted": "F0",
+   "found": "F0",
+   "confirmed": true
+  },
+  "T": {
+   "predicted": "T1:unit warmer",
+   "found": "T1:unit warmer",
+   "confirmed": true
+  },
+  "A": {
+   "predicted": "A0:solid_fraction",
+   "found": "A0:solid_fraction",
+   "confirmed": true
+  }
+ },
+ "without_reading": {
+  "variants": {
+   "0.65|dried_supply_air": {
+    "segments": 8,
+    "oversaturated_segments": 0,
+    "oversaturated_per_day": {
+     "day_1": 0,
+     "day_2": 0
+    },
+    "reading_f": "F0",
+    "reading_t": "T1",
+    "unit_warmer_at_every_read_segment": true,
+    "saturation_ratio": {
+     "day_1_s1": 0.03498979189232108,
+     "day_1_s2": 0.03261855899514431,
+     "day_1_s3": 0.03299631936651758,
+     "day_1_s4": 0.03248567011616624,
+     "day_2_s1": 0.3678019192873323,
+     "day_2_s2": 0.36957685963295034,
+     "day_2_s3": 0.3680181552215219,
+     "day_2_s4": 0.3688969021146587
+    },
+    "unit_minus_exhaust_k": {
+     "day_1_s1": 5.064641004502661,
+     "day_1_s2": 5.568442613086653,
+     "day_1_s3": 5.598198808058413,
+     "day_1_s4": 5.7733617194032405,
+     "day_2_s1": 5.565878834471796,
+     "day_2_s2": 5.499038933084236,
+     "day_2_s3": 5.48079565024382,
+     "day_2_s4": 5.048769301576364
+    },
+    "unit_minus_bed_k": {
+     "day_1_s1": -1.6413729505076446,
+     "day_1_s2": -1.5162888279872817,
+     "day_1_s3": -1.6697764693124526,
+     "day_1_s4": -1.4518319188685211,
+     "day_2_s1": -4.450590230876514,
+     "day_2_s2": -3.9770610772578294,
+     "day_2_s3": -4.254657764673176,
+     "day_2_s4": -6.000279429485786
+    },
+    "unit_minus_exhaust_k_per_day": {
+     "day_1": [
+      5.064641004502661,
+      5.7733617194032405
+     ],
+     "day_2": [
+      5.048769301576364,
+      5.565878834471796
+     ]
+    }
+   },
+   "0.65|sheet": {
+    "segments": 8,
+    "oversaturated_segments": 0,
+    "oversaturated_per_day": {
+     "day_1": 0,
+     "day_2": 0
+    },
+    "reading_f": "F0",
+    "reading_t": "T1",
+    "unit_warmer_at_every_read_segment": true
+   },
+   "0.6|dried_supply_air": {
+    "segments": 8,
+    "oversaturated_segments": 0,
+    "oversaturated_per_day": {
+     "day_1": 0,
+     "day_2": 0
+    },
+    "reading_f": "F0",
+    "reading_t": "T1",
+    "unit_warmer_at_every_read_segment": false,
+    "saturation_ratio": {
+     "day_1_s1": 0.047494835167978526,
+     "day_1_s2": 0.04407837199633712,
+     "day_1_s3": 0.044593682866075686,
+     "day_1_s4": 0.04387240566079381,
+     "day_2_s1": 0.6094515046457847,
+     "day_2_s2": 0.6126492849247575,
+     "day_2_s3": 0.6099488688711245,
+     "day_2_s4": 0.6119136718911434
+    },
+    "unit_minus_exhaust_k": {
+     "day_1_s1": 2.338509038058575,
+     "day_1_s2": 2.9308095770351983,
+     "day_1_s3": 2.95543901950046,
+     "day_1_s4": 3.1459525729872695,
+     "day_2_s1": -0.6273508735790116,
+     "day_2_s2": -0.6997524930943797,
+     "day_2_s3": -0.7163377163868034,
+     "day_2_s4": -1.16248736792911
+    },
+    "unit_minus_bed_k": {
+     "day_1_s1": -4.367504916951731,
+     "day_1_s2": -4.153921864038736,
+     "day_1_s3": -4.312536257870406,
+     "day_1_s4": -4.079241065284492,
+     "day_2_s1": -10.643819938927322,
+     "day_2_s2": -10.175852503436445,
+     "day_2_s3": -10.4517911313038,
+     "day_2_s4": -12.21153609899126
+    },
+    "unit_minus_exhaust_k_per_day": {
+     "day_1": [
+      2.338509038058575,
+      3.1459525729872695
+     ],
+     "day_2": [
+      -1.16248736792911,
+      -0.6273508735790116
+     ]
+    }
+   },
+   "0.6|sheet": {
+    "segments": 8,
+    "oversaturated_segments": 0,
+    "oversaturated_per_day": {
+     "day_1": 0,
+     "day_2": 0
+    },
+    "reading_f": "F0",
+    "reading_t": "T1",
+    "unit_warmer_at_every_read_segment": false
+   },
+   "0.634|dried_supply_air": {
+    "segments": 8,
+    "oversaturated_segments": 0,
+    "oversaturated_per_day": {
+     "day_1": 0,
+     "day_2": 0
+    },
+    "reading_f": "F0",
+    "reading_t": "T1",
+    "unit_warmer_at_every_read_segment": true,
+    "saturation_ratio": {
+     "day_1_s1": 0.03868821565961062,
+     "day_1_s2": 0.036014673069342,
+     "day_1_s3": 0.03643285693490685,
+     "day_1_s4": 0.03586094468050518,
+     "day_2_s1": 0.4329934801430023,
+     "day_2_s2": 0.4351392193999712,
+     "day_2_s3": 0.4332792488534206,
+     "day_2_s4": 0.434427772177233
+    },
+    "unit_minus_exhaust_k": {
+     "day_1_s1": 4.191740679325605,
+     "day_1_s2": 4.723896426131795,
+     "day_1_s3": 4.752010073536525,
+     "day_1_s4": 4.9320910751700495,
+     "day_2_s1": 3.5812417906671,
+     "day_2_s2": 3.5126170355876383,
+     "day_2_s3": 3.4949058993211253,
+     "day_2_s4": 3.0583472763454225
+    },
+    "unit_minus_bed_k": {
+     "day_1_s1": -2.514273275684701,
+     "day_1_s2": -2.3608350149421398,
+     "day_1_s3": -2.515965203834341,
+     "day_1_s4": -2.293102563101712,
+     "day_2_s1": -6.4352272746812105,
+     "day_2_s2": -5.963482974754427,
+     "day_2_s3": -6.240547515595871,
+     "day_2_s4": -7.990701454716728
+    },
+    "unit_minus_exhaust_k_per_day": {
+     "day_1": [
+      4.191740679325605,
+      4.9320910751700495
+     ],
+     "day_2": [
+      3.0583472763454225,
+      3.5812417906671
+     ]
+    }
+   },
+   "0.634|sheet": {
+    "segments": 8,
+    "oversaturated_segments": 0,
+    "oversaturated_per_day": {
+     "day_1": 0,
+     "day_2": 0
+    },
+    "reading_f": "F0",
+    "reading_t": "T1",
+    "unit_warmer_at_every_read_segment": true
+   },
+   "0.7|dried_supply_air": {
+    "segments": 8,
+    "oversaturated_segments": 0,
+    "oversaturated_per_day": {
+     "day_1": 0,
+     "day_2": 0
+    },
+    "reading_f": "F0",
+    "reading_t": "T1",
+    "unit_warmer_at_every_read_segment": true,
+    "saturation_ratio": {
+     "day_1_s1": 0.02505280559673679,
+     "day_1_s2": 0.023460595060343325,
+     "day_1_s3": 0.02373082278828989,
+     "day_1_s4": 0.023379809301472675,
+     "day_2_s1": 0.21776733464191228,
+     "day_2_s2": 0.21873635862440494,
+     "day_2_s3": 0.2178469723897927,
+     "day_2_s4": 0.21819091335637242
+    },
+    "unit_minus_exhaust_k": {
+     "day_1_s1": 7.795724634425639,
+     "day_1_s2": 8.21070983483488,
+     "day_1_s3": 8.245611074971436,
+     "day_1_s4": 8.405369161729723,
+     "day_2_s1": 11.784947301759765,
+     "day_2_s2": 11.723716224130769,
+     "day_2_s3": 11.703800413965624,
+     "day_2_s4": 11.286015663053696
+    },
+    "unit_minus_bed_k": {
+     "day_1_s1": 1.089710679415333,
+     "day_1_s2": 1.1259783937609456,
+     "day_1_s3": 0.9776357976005698,
+     "day_1_s4": 1.1801755234579616,
+     "day_2_s1": 1.768478236411454,
+     "day_2_s2": 2.247616213788703,
+     "day_2_s3": 1.9683469990486273,
+     "day_2_s4": 0.23696693199154595
+    },
+    "unit_minus_exhaust_k_per_day": {
+     "day_1": [
+      7.795724634425639,
+      8.405369161729723
+     ],
+     "day_2": [
+      11.286015663053696,
+      11.784947301759765
+     ]
+    }
+   },
+   "0.7|sheet": {
+    "segments": 8,
+    "oversaturated_segments": 0,
+    "oversaturated_per_day": {
+     "day_1": 0,
+     "day_2": 0
+    },
+    "reading_f": "F0",
+    "reading_t": "T1",
+    "unit_warmer_at_every_read_segment": true
+   },
+   "sheet|dried_supply_air": {
+    "segments": 8,
+    "oversaturated_segments": 4,
+    "oversaturated_per_day": {
+     "day_1": 0,
+     "day_2": 4
+    },
+    "reading_f": "F1",
+    "reading_t": "T1",
+    "unit_warmer_at_every_read_segment": false
+   },
+   "sheet|sheet": {
+    "segments": 8,
+    "oversaturated_segments": 4,
+    "oversaturated_per_day": {
+     "day_1": 0,
+     "day_2": 4
+    },
+    "reading_f": "F1",
+    "reading_t": "T1",
+    "unit_warmer_at_every_read_segment": false
+   }
+  },
+  "minimum_solid_fraction_of_the_unit": {
+   "dried_supply_air": {
+    "segments": 8,
+    "segments_without_root": 4,
+    "segments_with_minimum_above_the_sheet_value": 4
+   },
+   "sheet": {
+    "segments": 8,
+    "segments_without_root": 4,
+    "segments_with_minimum_above_the_sheet_value": 4
+   }
+  },
+  "distance_to_admissibility": {
+   "spray_relative_change_percent": -16.285514698261885,
+   "dryer_inlet_change_k": 12.343589965520408,
+   "solid_fraction_root_exists": true
+  }
+ }
+}
