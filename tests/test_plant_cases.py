@@ -668,3 +668,196 @@ def test_repository_record_names_no_absolute_quantity(records) -> None:
     assert "results" in local
     assert local["points"]["R"][1]["solid_fraction"] == 0.65
     assert "fuel_kg_per_h" in json.dumps(local)
+
+
+# ----------------------------------------------------------------------------- the artifact
+def _span(values: list[float]) -> tuple[float, float]:
+    return round(min(values), 2), round(max(values), 2)
+
+
+def test_artifact_holds_the_numbers_of_the_document_and_of_the_lab_book_entry() -> None:
+    art = json.loads(ARTIFACT.read_text(encoding="utf-8"))
+    assert art["provenance"]["git/dirty"] is False
+    assert art["provenance"]["code/root_checked"] is True
+    control = art["control"]
+    assert control["read_units"] is True
+    assert control["read_workbook"] is True
+    assert control["a_extended_rebuild"] == {
+        "cells": 158,
+        "max_relative_difference": 0.0,
+        "tolerance": 1e-12,
+        "held": True,
+    }
+    assert control["b_segments"]["saturation_ratio_max_relative_deviation"] == 0.0
+    dyssol = control["c_dyssol"]
+    assert (dyssol["dyssol_runs"], dyssol["points"], dyssol["points_compared"]) == (
+        1106,
+        1896,
+        1896,
+    )
+    assert dyssol["failures"] == []
+    assert f"{dyssol['max_temperature_k']:.1e}" == "2.3e-13"
+    assert f"{dyssol['max_relative_percent']:.1e}" == "5.6e-11"
+    excel = control["d_workbook_against_excel"]["flow_settings"]
+    assert excel["stored"]["totals_within_rounding"] == 6
+    assert excel["stored"]["fuel_values_within_rounding"] == [12, 12]
+    assert excel["stored"]["recovered_heats_within_rounding"] == [12, 12]
+    assert round(excel["stored"]["largest_total_difference_in_units_of_the_last_decimal"], 2) == 0.9
+    assert excel["stated"]["totals_within_rounding"] == 0
+    assert round(excel["stated"]["largest_total_difference_in_units_of_the_last_decimal"]) == 193
+
+    days = art["test_set"]["groups"]
+    assert len(art["test_set"]["read_points"]) == 9
+    orders = {
+        pcs.MODEL_U: [2, 4, 1, 6, 3, 5],
+        "W:partner": [2, 4, 1, 6, 3, 5],
+        "W:physical_unpressurised_95": [2, 4, 6, 1, 3, 5],
+        "W:physical_pressurised": [2, 4, 6, 1, 3, 5],
+    }
+    regrets = {
+        pcs.MODEL_U: (9.51, (8.10, 8.28), (9.62, 10.05), 2.44, (2.39, 2.40), (2.45, 2.49)),
+        "W:partner": (9.56, (8.06, 8.26), (9.56, 10.05), 2.45, (2.37, 2.39), (2.43, 2.48)),
+        "W:physical_unpressurised_95": (
+            23.62,
+            (23.56, 25.37),
+            (23.91, 24.75),
+            11.46,
+            (14.19, 16.71),
+            (11.28, 11.72),
+        ),
+    }
+    regrets["W:physical_pressurised"] = regrets["W:physical_unpressurised_95"]
+    for model in pcs.MODELS:
+        entry = art["models"][model]
+        assert entry["reading_f"]["code"] == "F0"
+        assert (entry["reading_f"]["cells"], entry["reading_f"]["admissible_cells"]) == (54, 54)
+        assert entry["reading_c"]["code"] == "C1"
+        assert entry["reading_c"]["case_1_best_or_practically_equal"] == 0
+        assert entry["reading_c"]["sensitivity"] == {"0.005": "C1", "0.02": "C1"}
+        assert set(entry["reading_c"]["best_case_per_point"].values()) == {2}
+        assert all(p["order"] == orders[model] for p in entry["points"].values())
+        assert entry["worded_rule"]["points_where_it_predicts_case_1"] == 9
+        assert (
+            entry["worded_rule"]["points_where_it_predicts_case_1_and_case_1_is_best_or_equal"] == 0
+        )
+        rule = entry["generalised_rule"]
+        assert (rule["points"], rule["decided_points"], rule["hits"]) == (10, 10, 10)
+        assert rule["per_point"]["R"]["generalised_rule_case"] == 2
+        assert rule["per_point"]["X"]["generalised_rule_case"] == 1
+        exchanged = entry["exchanged_sizes"]
+        assert exchanged["X"]["best_case"] == 1
+        assert exchanged["X_scaled_circuits"]["best_case"] == 1
+        assert exchanged["measured_points_with_case_1_best_or_practically_equal"] == 8
+        for label in ("0.634", "0.7"):
+            assert entry["band"][label] == {
+                "reading_f": "F0",
+                "reading_c": "C1",
+                "best_cases": ["2"],
+            }
+        assert entry["band"]["0.6"]["reading_c"] == "C1"
+        r_saving, day_1, day_2, r_fuel, fuel_1, fuel_2 = regrets[model]
+        saving = {t: p["regret_case_1_percent_of_best_saving"] for t, p in entry["points"].items()}
+        fuel = {t: p["regret_case_1_percent_of_best_fuel"] for t, p in entry["points"].items()}
+        assert round(saving["R"], 2) == r_saving
+        assert round(fuel["R"], 2) == r_fuel
+        assert _span([saving[t] for t in days["day_1"]]) == day_1
+        assert _span([saving[t] for t in days["day_2"]]) == day_2
+        assert _span([fuel[t] for t in days["day_1"]]) == fuel_1
+        assert _span([fuel[t] for t in days["day_2"]]) == fuel_2
+    units = art["models"][pcs.MODEL_U]
+    assert units["band"]["0.6"] == {"reading_f": "F1", "reading_c": "C1", "best_cases": ["2", "6"]}
+    assert art["models"]["W:partner"]["band"]["0.6"]["reading_f"] == "F0"
+    assert units["exchanged_sizes"]["X"]["order"] == [1, 3, 2, 5, 4, 6]
+    physical = art["models"]["W:physical_unpressurised_95"]
+    assert physical["exchanged_sizes"]["X"]["order"] == [1, 3, 5, 2, 4, 6]
+
+    def savings(model: str, case: str) -> tuple[float, tuple[float, float], tuple[float, float]]:
+        points = art["models"][model]["points"]
+        return (
+            round(points["R"]["saving_percent"][case], 2),
+            _span([points[t]["saving_percent"][case] for t in days["day_1"]]),
+            _span([points[t]["saving_percent"][case] for t in days["day_2"]]),
+        )
+
+    assert savings(pcs.MODEL_U, "2") == (20.42, (22.49, 22.74), (19.83, 20.32))
+    assert savings(pcs.MODEL_U, "1") == (18.48, (20.62, 20.90), (17.83, 18.36))
+    assert savings("W:physical_unpressurised_95", "2") == (32.67, (37.58, 39.72), (31.30, 32.90))
+    assert art["reading_a"]["code"] == "A0"
+    assert all(c["confirmed"] for c in art["predictions"]["F"].values())
+    assert all(c["confirmed"] for c in art["predictions"]["C"].values())
+    assert art["predictions"]["A"]["confirmed"]
+
+    # negative recovery: cases 5 and 6 at R and on day 2 (case 6 not at the last segment)
+    for model in (pcs.MODEL_U, "W:partner"):
+        points = art["models"][model]["points"]
+        assert points["R"]["negative_stages"] == {"1": 0, "2": 0, "3": 0, "4": 0, "5": 1, "6": 1}
+        assert all(sum(points[t]["negative_stages"].values()) == 0 for t in days["day_1"])
+        assert [points[t]["negative_stages"]["5"] for t in days["day_2"]] == [1, 1, 1, 1]
+        assert [points[t]["negative_stages"]["6"] for t in days["day_2"]] == [1, 1, 1, 0]
+        grid = art["models"][model]["grid"]
+        assert all(
+            set(grid[t]["best_case_per_flow"]) == {2} for t in art["test_set"]["read_points"]
+        )
+    for model in ("W:physical_unpressurised_95", "W:physical_pressurised"):
+        points = art["models"][model]["points"]
+        assert all(sum(p["negative_stages"].values()) == 0 for p in points.values())
+        grid = art["models"][model]["grid"]
+        for tag in art["test_set"]["read_points"]:
+            flags = grid[tag]["case_1_best_or_practically_equal_per_flow"]
+            assert len(flags) == 10
+            assert all(flags[:6])
+            assert sum(flags) == (7 if tag == "M|day_1_s2" else 6)
+
+    # as delivered
+    assert round(units["as_delivered"]["S"]["saturation"][1], 3) == 2.015
+    assert units["as_delivered"]["S"]["order_of_the_formula"] == [2, 4, 1, 3, 6, 5]
+    assert not units["as_delivered"]["S"]["dryers_admissible"]
+    assert physical["as_delivered"]["S"]["saturation"][1] == 1.0
+    delivery = art["delivery"]
+    p0 = delivery["P0_units"]
+    assert round(p0["saturation"][1], 3) == 2.309
+    assert p0["order_of_the_formula"] == [2, 4, 1, 3, 6, 5]
+    assert [round(p0["saving_percent"][k], 2) for k in "1234"] == [15.29, 17.52, 15.24, 17.5]
+    assert delivery["plant_sheet_dyssol_columns_within_rounding"] == {
+        "fuel": [5, 8],
+        "total": [3, 4],
+        "recovered": [0, 8],
+    }
+    stored = delivery["stored_results_against_rebuild"]
+    exact = [k for k, v in stored.items() if v["max_temperature_k"] == 0.0]
+    assert exact == ["case 2", "case 4", "case 6"]
+    others = [v["max_temperature_k"] for k, v in stored.items() if k not in exact]
+    assert (round(min(others), 3), round(max(others), 3)) == (0.010, 0.030)
+    assert round(max(v["max_relative_percent"] for v in stored.values()), 2) == 1.75
+    assert delivery["sheet_numbering_reversed_between_the_deliveries"] is True
+    assert delivery["stated_and_stored_circuit_flows_equal"] is False
+
+    # the generalised rule at the points of Befund 121
+    rule_121 = art["generalised_rule_at_befund_121"]
+    assert rule_121["recomputed"] is False
+    assert rule_121["sets"]["full"]["admissible_points"] == 16803
+    assert rule_121["sets"]["rule_test"]["admissible_points"] == 4185
+    expected = {
+        ("full", "physical_unpressurised_95"): (14841, 0.9725, 0.9735, 13, 28),
+        ("rule_test", "physical_unpressurised_95"): (3716, 0.9701, 0.9701, 5, 5),
+        ("full", "physical_pressurised"): (16756, 0.9736, 0.9743, 21, 32),
+        ("rule_test", "physical_pressurised"): (4178, 0.9706, 0.9703, 9, 8),
+        ("full", "partner"): (16803, 0.8398, 0.9311, 54, 1589),
+        ("rule_test", "partner"): (4185, 0.8315, 0.9259, 18, 413),
+    }
+    for (label, mode), (n, generalised, worded, g_right, w_right) in expected.items():
+        rates = rule_121["sets"][label]["modes"][mode]
+        assert rates["generalised"]["decided"]["n"] == n
+        assert round(rates["generalised"]["decided"]["rate"], 4) == generalised
+        assert round(rates["worded"]["decided"]["rate"], 4) == worded
+        assert rates["rules_differ"]["generalised_right"] == g_right
+        assert rates["rules_differ"]["worded_right"] == w_right
+        assert rates["sink_1_larger_share"] == 1.0
+        if mode != "partner":
+            assert 0.992 <= rates["generalised"]["clear"]["rate"] <= 0.9945
+            assert 0.992 <= rates["worded"]["clear"]["rate"] <= 0.9945
+    partner = rule_121["sets"]["full"]["modes"]["partner"]
+    assert round(partner["generalised"]["clear"]["rate"], 3) == 0.982
+    assert round(partner["worded"]["clear"]["rate"], 4) == 0.9997
+    tree = rule_121["stored_tree_test_accuracy_strictly_best"]
+    assert (round(min(tree.values()), 3), round(max(tree.values()), 3)) == (0.966, 0.978)

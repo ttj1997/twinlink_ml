@@ -1,11 +1,16 @@
 # NN -- The six heat-recovery cases at the plant inputs of the partner deliveries: is case 1 still the best case, and does the rule of Befund 121 hold outside its box?
 
-Status: **design, pre-registered reading and code; no run of the report script yet.** Sections 1
-to 14 are committed before the first run. Branch `plant-cases` (from `master` 8ae68d4), worktree
-`C:/twinlink_work/plantcases`. Document and finding number are assigned by the managing session at
-the merge. Code `src/twinlink_ml/dyssol_steady/network.py`, `plant_cases.py`, an extension of
-`flowsheet.py`; script `scripts/report_plant_cases.py` (the reading is in its docstring); tests
-`tests/test_plant_cases.py`.
+Status: **complete. All four controls held; pre-registered readings F0 (all 54 cells
+admissible), C1 (case 1 is the best case at none of nine admissible points, case 2 at all of them,
+in the delivered units and in all three modes of the workbook rebuild) and A0 (exchanging the
+sizes of the two lines turns the order); all predictions confirmed (sections 15 to 17).** Not yet
+accepted by the project lead (section 17). Sections 1 to 14 are the design, committed before any
+run of the report script (d256082) and unchanged since except this paragraph; the results below
+them take their numbers only from the artifact named there. Branch `plant-cases` (from `master`
+8ae68d4), worktree `C:/twinlink_work/plantcases`. Document and finding number are assigned by the
+managing session at the merge. Code `src/twinlink_ml/dyssol_steady/network.py`, `plant_cases.py`,
+an extension of `flowsheet.py`; script `scripts/report_plant_cases.py` (the reading is in its
+docstring); tests `tests/test_plant_cases.py`.
 
 **Everything here stands under two readings that the sender has not confirmed:** "the gas mass
 flow of the sweep sheet is the dry gas" (Befund 130) and "the line labelled as plant A in both
@@ -327,3 +332,215 @@ docstring), `tests/test_plant_cases.py` (invented lines, segments and sheet rows
 `artifacts/runs/plant_cases_v1.json`; local record
 `<root>/local/runs/plant_cases/plant_cases_v1_local.json`, copied to `C:/twinlink_runs/plant-cases/`;
 German report in `local/reports/` of the main checkout (not versioned).
+
+## 15. Results
+
+All numbers from `artifacts/runs/plant_cases_v1.json` (written at d256082, `git/dirty` False,
+`code/root_checked` True). Fuel and heat in absolute units, temperatures and flows are in the
+local record only.
+
+### 15.1 Step 0: all four controls held
+
+* **(a)** At all 158 combinations of point and flow setting the extended rebuild equals
+  `reference.evaluate` for cases 1 and 2 (largest relative difference 0.0).
+* **(b)** The segments are those of Befund 132: same labels, same digests of both exports and of
+  the role file, saturation ratio of line 2 identical at all eight segments (deviation 0.0).
+* **(c)** 1106 Dyssol runs, none failed; 1896 line results compared; Dyssol against the rebuild at
+  most 2.3e-13 K and 5.6e-11 % (bounds 1e-6). This is the first Dyssol control of the four
+  cascades.
+* **(d)** With the circuit flows the flowsheets store, W in the partner mode reproduces all 6
+  Excel totals of the plant sheet within rounding (largest difference 0.90 units of the last
+  decimal), and all 12 heater values and all 12 recovered heats within half a unit. With the
+  circuit flows the sheet states it reproduces none of the totals (up to 193 units). The Excel
+  columns were computed with the stored flows.
+
+U and W are read.
+
+### 15.2 Reading F: F0 in every model
+
+All 54 cells of the nine read points are admissible in U and in each of the three modes of W (9
+points for each of the six cases). No exhaust is over-saturated after its recovery stage in U.
+
+### 15.3 Reading C: C1 in every model
+
+Case 1 is best or practically equal at **0 of 9** read points in U and in each mode of W; the
+verdict is the same with a tie of 0.5 % and of 2 %. **Case 2 is the best case at all nine points
+in all four models.** The order of the six cases is the same at all nine points: 2, 4, 1, 6, 3, 5
+in U and in the partner mode of W; 2, 4, 6, 1, 3, 5 in both physical modes.
+
+Regret of case 1 (its extra fuel over case 2), per model:
+
+| Model | % of the best saving: R | day 1 | day 2 | % of the best fuel: R | day 1 | day 2 |
+|---|---|---|---|---|---|---|
+| U (headline) | 9.51 | 8.10 to 8.28 | 9.62 to 10.05 | 2.44 | 2.39 to 2.40 | 2.45 to 2.49 |
+| W, partner | 9.56 | 8.06 to 8.26 | 9.56 to 10.05 | 2.45 | 2.37 to 2.39 | 2.43 to 2.48 |
+| W, physical unpressurised | 23.62 | 23.56 to 25.37 | 23.91 to 24.75 | 11.46 | 14.19 to 16.71 | 11.28 to 11.72 |
+| W, physical pressurised | 23.62 | 23.56 to 25.37 | 23.91 to 24.75 | 11.46 | 14.19 to 16.71 | 11.28 to 11.72 |
+
+Saving against case 0 in U: case 2 20.42 % (R), 22.49 to 22.74 % (day 1), 19.83 to 20.32 % (day 2);
+case 1 18.48 %, 20.62 to 20.90 %, 17.83 to 18.36 %. In the physical unpressurised mode: case 2
+32.67 %, 37.58 to 39.72 %, 31.30 to 32.90 %. The two physical modes give the same numbers: the
+medium limit does not bind at these inputs.
+
+**The worded rule of Befund 121 predicts case 1 at all nine points, in every model** (exhaust 1 is
+the warmer one everywhere), and case 1 is best or practically equal at none of them. At the plant
+inputs the rule fails at every read point.
+
+### 15.4 Reading A: A0
+
+At R case 1 is not best in U nor in the physical unpressurised mode of W; at X it is the best case
+in both (order 1, 3, 2, 5, 4, 6 in U and 1, 3, 5, 2, 4, 6 in the physical unpressurised mode).
+**Exchanging the sizes of the two lines alone turns the order.** The same holds at X with the
+circuit flows scaled, and at all eight segments with exchanged sizes, in all four models.
+
+### 15.5 Predictions: all confirmed
+
+F0 in all four models, C1 in all four models, A0. Expected in addition and found: case 2 best at
+all nine points, case 4 second in U; the regret of case 1 about a tenth of the best saving in U and
+larger in the physical modes; exhaust 1 the warmer one everywhere. **The predictions were not
+blind** (section 8), and the dry run showed the readings of the rebuild and of W before the main
+run (section 10).
+
+### 15.6 Without a reading
+
+* **As delivered, no comparison of the cases is admissible.** Line 2 is over-saturated at S
+  (saturation ratio 2.015, as Befund 130) and at P0 (2.309). The order of the unit's formula is
+  2, 4, 1, 3, 6, 5 at both; at P0 the savings against case 0 are 15.29 % (case 1), 17.52 % (case 2),
+  15.24 % (case 3) and 17.50 % (case 4). In the physical modes of W the saturation limit holds the
+  exhaust of line 2 at saturation at S, which the rule of Befund 121 counts as inadmissible.
+* **The delivery of 2026-11-19 against the models.** The Dyssol columns of the plant sheet agree
+  with U at the stored inputs within rounding in 5 of 8 heater values, 3 of 4 totals and 0 of 8
+  recovered heats. The stored results of three of the seven flowsheets (cases 2, 4, 6) are
+  reproduced exactly; the other four deviate by 0.010 to 0.030 K (in the small recovered heat of
+  exhaust 2 by up to 1.75 %). This is the picture of `docs/45`, section 8 (four flowsheets saved
+  with another state of the units); the columns of the sheet were filled from yet another run.
+* **The two sheets number the processes the other way round,** and the plant sheet states a
+  circuit flow for line 2 that differs from the one its flowsheets store and its own Excel columns
+  use (control (d)). Both go to the sender as questions.
+* **Negative recovery.** In U and in the partner mode of W the second stage of cases 5 and 6
+  cools the fresh gas at R and on day 2 (case 6 not at the last segment of day 2); not on day 1,
+  and never in the physical modes.
+* **Both circuits at one flow of the sweep sheet's grid.** In U and in the partner mode of W case
+  2 stays the best case at every one of the ten flows and every read point. **In the physical
+  modes the best case depends on the flow:** at the six smaller flows case 1 is best or
+  practically equal at every read point (at one segment of day 1 also at the largest flow), at the
+  larger flows case 2. With a small medium flow the circuit limits the recovery and the cases tie.
+  C1 in the physical modes is therefore a statement at the stored circuit flows.
+* **Band of the solid fraction of line 2.** 0.634 and 0.70: F0 and C1 in every model, best case 2.
+  0.60: C1 in every model; in U the reading F gives F1 (cells inadmissible after the recovery
+  stage) and the best admissible case is 2 or 6; in W F0 and best case 2.
+
+### 15.7 Generalised rule (section 9a; descriptive, post hoc)
+
+**Here.** "The warmer exhaust preheats the sink with the larger heat-capacity rate" names the
+better of cases 1 and 2 at 10 of 10 points (the nine read points and X) in each of the four
+models. At the nine read points it says case 2 (exhaust 1 warmer, sink 2 larger), at X case 1.
+
+**At the points of Befund 121** (stored arrays, nothing recomputed; variant with the workbook's
+circuit flows; sink 1 is the larger one at every point, so the generalised rule is "case 1 if
+exhaust 1 is the warmer one"). Hit rate for the choice between cases 1 and 2 at the points where
+the two fuels differ:
+
+| Mode | Set | Points | Generalised rule | Worded rule of Befund 121 | Where they differ: generalised / worded right |
+|---|---|---|---|---|---|
+| physical unpressurised | box | 14 841 | 0.9725 | 0.9735 | 13 / 28 |
+| physical unpressurised | test stream | 3 716 | 0.9701 | 0.9701 | 5 / 5 |
+| physical pressurised | box | 16 756 | 0.9736 | 0.9743 | 21 / 32 |
+| physical pressurised | test stream | 4 178 | 0.9706 | 0.9703 | 9 / 8 |
+| partner | box | 16 803 | 0.8398 | 0.9311 | 54 / 1589 |
+| partner | test stream | 4 185 | 0.8315 | 0.9259 | 18 / 413 |
+
+(16 803 admissible points of the box, 4 185 of the test stream; outside the practical tie the
+rates are 0.992 to 0.994 in the physical modes for both rules, and 0.982 against 0.9997 in the
+partner mode on the box. The fitted tree of Befund 121 has a test accuracy of 0.966 to 0.978 for
+its own target, "case 1 strictly best" among six cases, which is another quantity.)
+
+**Answer to the question of the addition.** In the physical modes the generalised rule is as good
+as the rule of Befund 121 to within 0.001 (equal or better on the test stream, 0.0007 to 0.0010
+lower on the box): there the two are the same rule up to the threshold of -0.54 K. **In the
+partner mode it is not:** the partner model keeps case 1 until exhaust 1 is about 15 K colder
+than exhaust 2, and the generalised rule has no such shift (0.84 against 0.93).
+
+## 16. Answers and caveats
+
+**Question 1.** Yes for what is controlled: Dyssol and the rebuild agree at all 1106 runs,
+cascades included, and the Excel columns of the plant sheet are reproduced by the partner mode of
+W. The stored results and the Dyssol columns of the sheet differ from a re-run by 0.01 to 0.03 K,
+as known from `docs/45`.
+
+**Question 2.** No. At all nine admissible points case 2 is the best case and case 1 the third or
+fourth, in the delivered units and in all three modes of the workbook rebuild. Case 1 needs 2.4
+to 2.5 % more fuel than case 2 in U and 11 to 17 % more in the physical modes.
+
+**Question 3.** No. The rule predicts case 1 at every one of the nine points.
+
+**Question 4.** Yes. With the sizes of the two lines exchanged and nothing else changed, case 1 is
+the best case.
+
+**Caveats.**
+
+1. **The predictions were not blind,** and the order of cases 1 and 2 in U was already in the
+   delivery (at the inadmissible point). The result confirms an estimate; it was not a risky test.
+2. **Line 1 is a nominal point without a measurement** at every read point; the M points combine a
+   measured line 2 with it. Nothing here is validated against a plant.
+3. **The solid fraction of line 2 is a placeholder.** With 0.60 the exhaust of line 2 is so near
+   saturation that the unit over-saturates it after the recovery at one point.
+4. **Circuit flows.** C1 holds at the flows the delivery stores. In the physical modes case 1 is
+   practically equal when both circuits run at one of the six smaller flows of the sweep sheet
+   (section 15.6). The flows are those of the delivery, not a design.
+5. **Ideal exchangers in U** (docs/12, item 41): the sizes of the gaps are those of the formula.
+6. **The generalised rule is a post-hoc hypothesis.** Its ten points here lie far from any
+   boundary (exhaust 1 much warmer, one sink clearly larger), and only two size ratios exist: the
+   workbook's and the plant's. Where a slightly warmer exhaust meets a much larger sink the rule is
+   untested. It does not describe the partner mode at the points of Befund 121.
+7. Two days, two products; "dry gas" and the assignment of line 2 to plant A are unconfirmed.
+8. Deterministic computation: no confidence statement; ranks are orders of totals.
+
+**Relation to existing findings (reported, nothing changed).** No number of Befund 110, 121, 128,
+130, 131 or 132 changes. Befund 110 ("case 1 is best") and the rule of Befund 121 do not carry
+over to the plant inputs; both were obtained with line 1 as the larger line.
+
+## 17. Open for the project lead
+
+1. Acceptance of F0, C1 (in U and in the three modes of W) and A0, and of "all predictions
+   confirmed".
+2. **Scope note to Befund 110** at the merge. Proposal: "Case 1 is the best case for the size
+   ratio of the workbook (line 1 the larger line). At the plant inputs of the partner deliveries,
+   where line 2 is the larger one, case 2 is the best case at all nine admissible points, in the
+   delivered units and in all three modes of the rebuild (finding plant-cases)."
+3. **Scope note or more precise rule for Befund 121** at the merge. Proposal: "The rule 'case 1 if
+   exhaust 1 is at least as warm as exhaust 2' was found with the dry-air flows of the workbook,
+   in which sink 1 is the larger one at every point. At the plant inputs (sink 2 the larger one)
+   it predicts case 1 at all nine admissible points, and case 2 is best there. In the physical
+   modes the wording 'the warmer exhaust preheats the sink with the larger heat-capacity rate'
+   makes the same choice between cases 1 and 2 at the points of Befund 121 (hit rate 0.9725 and
+   0.9736 against 0.9735 and 0.9743 on the box) and holds at the plant inputs (10 of 10; post
+   hoc, not pre-registered). In the partner mode it does not replace the rule (0.840 against
+   0.931) (finding plant-cases)."
+4. The three decisions taken while writing the code (section 12, last paragraph).
+5. Whether the four new questions (numbering of the processes, circuit flow of line 2, why the
+   sweep varies case 1, cases 5 and 6) go out with the list; nothing was sent.
+6. Document and finding number, the row of `docs/12`, the README sentence: the managing session
+   at the merge.
+
+## 18. Course of the run (2026-11-25)
+
+Design, reading, code and tests committed at d256082 before any run of the script. Dry run on
+that commit: all 158 combinations through the rebuild and W, Dyssol with every flowsheet at R (7
+runs); all controls held on what was run, and the readings of the rebuild and of W were visible
+(F0, C1, A0). Full suite on d256082: 1823 passed, 36 skipped (the worktree holds only the denylist
+and the price file of `local/`). Main run on the clean tree at d256082: 1106 Dyssol runs, four at a
+time, 1.06 to 1.75 s per run and at most 60 MB per process, 378 s in all; no run failed. Artifact
+committed at 781a17a after `tests/test_denylist.py`. A scan of the artifact against the local
+record found one shared number, the saturation ratio of line 2 at P0, which is committed by
+decision 11 (as the ratio at S in Befund 130).
+
+## 19. Artifacts
+
+`artifacts/runs/plant_cases_v1.json` (ranks, savings and regrets in %, saturation ratios, counts,
+flags, reading codes, the control, the hit rates of the two rules, digests);
+`tests/test_plant_cases.py::test_artifact_holds_the_numbers_of_the_document_and_of_the_lab_book_entry`
+checks the numbers of sections 15 and 17 and of the lab-book entry against it. Local record
+`local/runs/plant_cases/plant_cases_v1_local.json` of the worktree, copied to
+`C:/twinlink_runs/plant-cases/` (digest verified); German report
+`local/reports/plant_cases_bericht.md` of the main checkout (not versioned).
