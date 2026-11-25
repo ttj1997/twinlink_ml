@@ -210,6 +210,8 @@ replace a product-moisture measurement.
 
 **Process 1 of the partner sweep sheet against plant A (Befund 132; model against measurement on eight segments of two days).** At the measured inputs the Dyssol dryer unit is not over-saturated at any segment, its outlet lies 5.05 to 5.77 K above the measured exhaust (no validation: the unmeasured solid fraction dominates), and of the inputs of process 1 the solid fraction alone removes its over-saturation.
 
+**The six heat-recovery cases at the plant inputs of the partner deliveries (Befund 133; model against model, placeholders).** At the plant inputs case 2, not case 1, is the best case at all nine admissible points (delivered units and all three modes of the rebuild), the worded rule of Befund 121 is wrong there, and exchanging the sizes of the two lines alone turns the order; with both circuits at the same small flow the two cases tie in the physical modes.
+
 **One-step bandit (Befund 93, follow-up of Befund 68).** A residual action and a separated
 moisture cost lift SAC from a negative to a clearly positive closed-regret fraction, but no cell
 meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of

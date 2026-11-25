@@ -1,6 +1,6 @@
 """The six heat-recovery cases at the plant inputs of the partner deliveries.
 
-Design and pre-registered reading: ``docs/NN_plant_cases.md`` (docstring of
+Design and pre-registered reading: ``docs/52_plant_cases.md`` (docstring of
 ``scripts/report_plant_cases.py``).
 
 Two lines: line 1 is the line numbered 1 in the delivered case flowsheets, line 2 the line that

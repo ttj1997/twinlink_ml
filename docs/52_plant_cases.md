@@ -1,4 +1,4 @@
-# NN -- The six heat-recovery cases at the plant inputs of the partner deliveries: is case 1 still the best case, and does the rule of Befund 121 hold outside its box?
+# 52 -- The six heat-recovery cases at the plant inputs of the partner deliveries: is case 1 still the best case, and does the rule of Befund 121 hold outside its box?
 
 Status: **complete. All four controls held; pre-registered readings F0 (all 54 cells
 admissible), C1 (case 1 is the best case at none of nine admissible points, case 2 at all of them,
@@ -10,8 +10,8 @@ physical modes (section 15.6).** Accepted by the project lead on 2026-11-25 (sec
 1 to 14 are the design, committed before any
 run of the report script (d256082) and unchanged since except this paragraph; the results below
 them take their numbers only from the artifact named there. Branch `plant-cases` (from `master`
-8ae68d4), worktree `C:/twinlink_work/plantcases`. Document and finding number are assigned by the
-managing session at the merge. Code `src/twinlink_ml/dyssol_steady/network.py`, `plant_cases.py`,
+8ae68d4), worktree `C:/twinlink_work/plantcases`. Document number 52 and finding number 133 (lab book); merged into
+`master` on 2026-11-25. Code `src/twinlink_ml/dyssol_steady/network.py`, `plant_cases.py`,
 an extension of `flowsheet.py`; script `scripts/report_plant_cases.py` (the reading is in its
 docstring); tests `tests/test_plant_cases.py`.
 

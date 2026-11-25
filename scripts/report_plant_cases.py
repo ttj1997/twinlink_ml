@@ -1,6 +1,6 @@
 r"""The six heat-recovery cases at the plant inputs of the partner deliveries.
 
-Design: ``docs/NN_plant_cases.md``. Lab book: Befund NN (number open).
+Design: ``docs/52_plant_cases.md``. Lab book: Befund 133.
 
 **Question.** Befund 110 found case 1 the best of the six cases at the workbook point; Befund 121
 found, with the dry-air flows and circuit flows of the workbook, the rule "case 1 if exhaust 1 is
