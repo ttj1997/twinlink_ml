@@ -3,7 +3,7 @@
 Status: **complete. All three controls held; pre-registered readings F0 (the unit is not
 over-saturated at any of the eight measured segments), T1 (its outlet is 5.05 to 5.77 K above the
 measured exhaust) and A0 (the solid fraction); all three predictions confirmed (sections 14 to
-16).** Sections 1 to 13 are the design, committed before any run of the report script (10f28b0)
+16).** Accepted by the project lead on 2026-11-25 (section 19). Sections 1 to 13 are the design, committed before any run of the report script (10f28b0)
 and unchanged since except this paragraph; the results below them take their numbers only from
 the artifact named there. Branch `sheet-plant-a` (from `master` 24476e3), worktree
 `C:/twinlink_work/sheetpa`. Document and finding number are open (the managing session assigns
@@ -407,3 +407,25 @@ point as delivered. New is the cause: the inputs, and among them the solid fract
 | `artifacts/runs/sheet_plant_a_v1.json` | provenance, digests, the three controls, readings F, T and A, the predictions, the numbers without a reading |
 | `<worktree>/local/runs/sheet_plant_a/sheet_plant_a_v1_local.json` (not versioned; copy in `C:/twinlink_runs/sheet-plant-a/`) | inputs and results of all 94 points, the measured segment means, water loads, the roots of B, the smallest admissible solid fractions |
 | `local/reports/sheet_plant_a_bericht.md` of the main checkout (not versioned) | report in German with the recommendation for the sender |
+
+## 19. Decisions of the project lead (2026-11-25; added after the fact, sections 1 to 18 are unchanged)
+
+1. **F0, T1 and A0 are accepted,** and with them "all three predictions confirmed" (section 16,
+   item 1).
+2. **Befund 130 gets a scope note** (section 16, item 2): a dated addendum, append-only, entered
+   by the managing session at the merge, not on this branch, in the wording proposed there: "The
+   over-saturation of process 1 follows from its inputs: at the measured operation of plant A the
+   unit is not over-saturated at any of eight stationary segments, and replacing the sheet's
+   solid fraction by the reference of Befund 117 alone removes it (finding sheet-plant-a)."
+
+Added by the session, for the reader of the verdict (no decision): the caveats of section 15
+stand with it. "Warmer by 5.05 to 5.77 K" holds at the reference solid fraction 0.65 and moves by
+several kelvin over the band (section 14.6); the solid fraction that replaces the sheet's value in
+reading A is a placeholder, not a measurement (caveat 1); the predictions were not blind
+(caveat 5); both unconfirmed readings named at the top remain.
+
+With these decisions the study is closed on this branch. Open at the merge (managing session):
+document and finding number, the scope note to Befund 130 (item 2), the row of `docs/12`, the
+README sentence. Still open outside the repository: whether the recommendation for the sender
+goes out with the list of questions (section 16, item 3; nothing was sent), and the sender's
+answers on the gas flow and on the product and operating point of process 1.
