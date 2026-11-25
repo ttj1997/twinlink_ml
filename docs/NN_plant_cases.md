@@ -3,8 +3,11 @@
 Status: **complete. All four controls held; pre-registered readings F0 (all 54 cells
 admissible), C1 (case 1 is the best case at none of nine admissible points, case 2 at all of them,
 in the delivered units and in all three modes of the workbook rebuild) and A0 (exchanging the
-sizes of the two lines turns the order); all predictions confirmed (sections 15 to 17).** Not yet
-accepted by the project lead (section 17). Sections 1 to 14 are the design, committed before any
+sizes of the two lines turns the order); all predictions confirmed, not blind (sections 15 to
+17). C1 holds at the circuit flows the delivery stores: with both circuits at the same small flow
+(the six smaller of the ten flows of the sweep sheet) case 1 is best or practically equal in the
+physical modes (section 15.6).** Accepted by the project lead on 2026-11-25 (section 20). Sections
+1 to 14 are the design, committed before any
 run of the report script (d256082) and unchanged since except this paragraph; the results below
 them take their numbers only from the artifact named there. Branch `plant-cases` (from `master`
 8ae68d4), worktree `C:/twinlink_work/plantcases`. Document and finding number are assigned by the
@@ -544,3 +547,32 @@ checks the numbers of sections 15 and 17 and of the lab-book entry against it. L
 `local/runs/plant_cases/plant_cases_v1_local.json` of the worktree, copied to
 `C:/twinlink_runs/plant-cases/` (digest verified); German report
 `local/reports/plant_cases_bericht.md` of the main checkout (not versioned).
+
+## 20. Decisions of the project lead (2026-11-25; added after the fact, sections 1 to 19 are unchanged)
+
+1. **F0, C1 and A0 are accepted,** and with them "all predictions confirmed (not blind)" (section
+   17, item 1). The three decisions taken while writing the code (section 12, last paragraph) are
+   confirmed.
+2. **Befund 110 and Befund 121 get scope notes** in the wording of section 17, items 2 and 3: dated
+   addenda, append-only, entered by the managing session at the merge, not on this branch. For
+   Befund 121 in addition: the generalised rule (the warmer exhaust to the sink with the larger
+   heat-capacity rate) hits 10 of 10 at the new points and, in the physical modes, as well on the
+   box of Befund 121 (0.9725 against 0.9735); in the partner mode worse (0.840 against 0.931). It
+   is a post-hoc hypothesis and no replacement of the rule.
+3. **The restriction on the circuit flows belongs in the summary of this document,** not only
+   among the caveats: with both circuits at the same small flow cases 1 and 2 are practically
+   equal in the physical modes (section 15.6). It now stands in the status paragraph at the top.
+4. **The script step that was not chained is noted openly in the lab book** (addendum to the
+   entry of this finding): before the commit d256082 a scripted cosmetic edit of
+   `tests/test_plant_cases.py` failed on its own assertion and was not chained to the commands
+   after it. Without consequence: the script wrote nothing and the file was committed as tested.
+5. **The questions 13 to 16 and the hint for the sender go out,** sent by the project lead, not
+   from the branch.
+
+Full suite on the commit with the results and the test of the artifact (44b291f): 1824 passed,
+36 skipped. This section, the status paragraph and the addendum to the lab-book entry are
+documentation only.
+
+With these decisions the study is closed on this branch. Open at the merge (managing session):
+document and finding number, the two scope notes (item 2), the row of `docs/12` with the questions
+13 to 16, the README sentence. Open outside the repository: the sender's answers.
