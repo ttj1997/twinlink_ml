@@ -8,6 +8,13 @@ The box is NOT in the repository: it is read from a local YAML (template
 ``conf/dyssol_steady/box_local.yaml.example``). An entry is either ``[lower, upper]`` in the unit
 of the input or ``{relative: r}``, i.e. ``nominal x (1 -+ r)`` around the value of the source
 file. Records carry the SHA-256 of the resolved box only.
+
+A later study (``docs/NN_dyssol_freshgas.md``) varies the fresh-gas state as well
+(:data:`VARIED_FRESH_GAS`, seven inputs per line): its temperature and its RELATIVE humidity. The
+humidity ratio of a point follows from both (Buck's saturation pressure over water at 1 atm, the
+functions of :mod:`twinlink_ml.case_ranking.space`), so that no point of the box holds fresh gas
+above saturation. Every function takes the tuple of varied inputs; the default is the five
+inputs above, and with it nothing changes.
 """
 
 from __future__ import annotations
@@ -23,13 +30,19 @@ import numpy as np
 import yaml
 from scipy.stats import qmc
 
+from twinlink_ml.case_ranking.space import ambient_humidity_kg_per_kg, ambient_relative_humidity
+
 from .reference import LineInputs
 
 __all__ = [
+    "FRESH_GAS",
+    "RELATIVE_HUMIDITY",
     "VARIED",
+    "VARIED_FRESH_GAS",
     "Box",
     "apply_point",
     "load_box",
+    "point_row",
     "resolve_box",
     "sobol_points",
     "training_subset",
@@ -43,6 +56,24 @@ VARIED: tuple[str, ...] = (
     "medium_kg_per_h",
 )
 """Varied inputs of one line, in the column order of every design array."""
+
+RELATIVE_HUMIDITY = "gas_relative_humidity"
+"""Relative humidity of the fresh gas (fraction); not a field of :class:`LineInputs` but mapped to
+``gas_humidity_g_per_kg`` at the fresh-gas temperature of the point."""
+
+FRESH_GAS: tuple[str, ...] = ("gas_celsius", RELATIVE_HUMIDITY)
+"""The two inputs of the fresh-gas state."""
+
+VARIED_FRESH_GAS: tuple[str, ...] = (*VARIED, *FRESH_GAS)
+"""Seven varied inputs per line: the five of :data:`VARIED` and the fresh-gas state."""
+
+
+def _check_varied(varied: Sequence[str]) -> tuple[str, ...]:
+    varied = tuple(varied)
+    known = (set(LineInputs.__dataclass_fields__) - {"gas_humidity_g_per_kg"}) | {RELATIVE_HUMIDITY}
+    if len(set(varied)) != len(varied) or not set(varied) <= known:
+        raise ValueError(f"varied inputs must be distinct names out of {sorted(known)}")
+    return varied
 
 
 @dataclass(frozen=True)
@@ -87,19 +118,33 @@ class Box:
         return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
-def resolve_box(entries: Sequence[Mapping[str, Any]], nominal: Sequence[LineInputs]) -> Box:
-    """Box from one mapping per line (``input -> [lower, upper]`` or ``{relative: r}``)."""
+def resolve_box(
+    entries: Sequence[Mapping[str, Any]],
+    nominal: Sequence[LineInputs],
+    varied: Sequence[str] = VARIED,
+) -> Box:
+    """Box from one mapping per line (``input -> [lower, upper]`` or ``{relative: r}``).
+
+    The relative humidity has no stored value and takes an interval inside ``(0, 1]`` only.
+    """
+    varied = _check_varied(varied)
     if len(entries) != len(nominal):
         raise ValueError("the box needs one entry per line of the flowsheet")
     names: list[str] = []
     lower: list[float] = []
     upper: list[float] = []
     for k, (entry, line) in enumerate(zip(entries, nominal, strict=True), start=1):
-        if set(entry) != set(VARIED):
-            raise ValueError(f"line {k}: the box must name exactly {VARIED}")
-        for name in VARIED:
+        if set(entry) != set(varied):
+            raise ValueError(f"line {k}: the box must name exactly {varied}")
+        for name in varied:
             spec = entry[name]
-            if isinstance(spec, Mapping):
+            if name == RELATIVE_HUMIDITY:
+                if isinstance(spec, Mapping):
+                    raise ValueError(f"line {k}: {name} needs an interval, not a relative range")
+                lo, hi = float(spec[0]), float(spec[1])
+                if not 0.0 < lo < hi <= 1.0:
+                    raise ValueError(f"line {k}: {name} must lie in (0, 1]")
+            elif isinstance(spec, Mapping):
                 r = float(spec["relative"])
                 centre = float(getattr(line, name))
                 lo, hi = centre * (1.0 - r), centre * (1.0 + r)
@@ -111,12 +156,14 @@ def resolve_box(entries: Sequence[Mapping[str, Any]], nominal: Sequence[LineInpu
     return Box(tuple(names), tuple(lower), tuple(upper))
 
 
-def load_box(path: Path | str, case: str, nominal: Sequence[LineInputs]) -> Box:
+def load_box(
+    path: Path | str, case: str, nominal: Sequence[LineInputs], varied: Sequence[str] = VARIED
+) -> Box:
     """Read the box of ``case`` from the local YAML."""
     raw = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
     if case not in raw.get("cases", {}):
         raise KeyError(f"case {case!r} not in {path}")
-    return resolve_box(raw["cases"][case]["lines"], nominal)
+    return resolve_box(raw["cases"][case]["lines"], nominal, varied)
 
 
 def sobol_points(box: Box, n: int, seed: int) -> np.ndarray:
@@ -137,14 +184,44 @@ def training_subset(pool_size: int, n: int, seed: int) -> np.ndarray:
     return np.asarray(np.random.default_rng(seed).permutation(pool_size)[:n])
 
 
-def apply_point(nominal: Sequence[LineInputs], row: np.ndarray) -> tuple[LineInputs, ...]:
-    """Line inputs for one design row (columns as in :class:`Box`)."""
-    width = len(VARIED)
+def apply_point(
+    nominal: Sequence[LineInputs], row: np.ndarray, varied: Sequence[str] = VARIED
+) -> tuple[LineInputs, ...]:
+    """Line inputs for one design row (columns as in :class:`Box`).
+
+    A column :data:`RELATIVE_HUMIDITY` sets the humidity ratio of the fresh gas at the fresh-gas
+    temperature of the point (the varied one, else the stored one).
+    """
+    varied = _check_varied(varied)
+    width = len(varied)
     if len(row) != width * len(nominal):
         raise ValueError("design row does not match the number of lines")
-    return tuple(
-        replace(
-            line, **dict(zip(VARIED, map(float, row[k * width : (k + 1) * width]), strict=True))
-        )
-        for k, line in enumerate(nominal)
-    )
+    lines = []
+    for k, nominal_line in enumerate(nominal):
+        values = dict(zip(varied, map(float, row[k * width : (k + 1) * width]), strict=True))
+        relative = values.pop(RELATIVE_HUMIDITY, None)
+        line = replace(nominal_line, **values)
+        if relative is not None:
+            humidity = ambient_humidity_kg_per_kg(line.gas_celsius, relative)
+            line = replace(line, gas_humidity_g_per_kg=1000.0 * humidity)
+        lines.append(line)
+    return tuple(lines)
+
+
+def point_row(lines: Sequence[LineInputs], varied: Sequence[str] = VARIED) -> np.ndarray:
+    """Design row of given line inputs: the inverse of :func:`apply_point`.
+
+    Inputs that are not varied are not part of the row; the caller checks that they are the
+    stored ones.
+    """
+    varied = _check_varied(varied)
+    row: list[float] = []
+    for line in lines:
+        for name in varied:
+            if name == RELATIVE_HUMIDITY:
+                row.append(
+                    ambient_relative_humidity(line.gas_celsius, line.gas_humidity_g_per_kg / 1000.0)
+                )
+            else:
+                row.append(float(getattr(line, name)))
+    return np.asarray(row, dtype=np.float64)

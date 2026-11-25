@@ -40,6 +40,25 @@ flowsheets, ``dyssol_steady/box_local.yaml`` with the box. ``<out>`` =
 patched materials database, scratch folders of the Dyssol runs. ``$DYSSOL_HOME`` (default
 ``C:/Program Files/Dyssol``).
 
+Other settings (``--config``)
+-----------------------------
+``--config <file>`` names another YAML next to the default one. ``dyssol_freshgas.yaml``
+(``docs/NN_dyssol_freshgas.md``) varies seven inputs (the fresh-gas temperature and its relative
+humidity as well), reads its own box file, and adds
+
+* a pilot grid given by its axes, extended once automatically where the selection lies at an edge
+  (rule in the YAML, fixed before the pilot);
+* a third set of points, the points of one process of a partner sheet (``sheet_test``): they get
+  a Dyssol run and the control like every other point, are never part of the pool, of the Sobol
+  test set or of the pilot, and are scored per cell as a second, named test set;
+* the control tabulated over the fresh-gas temperature, and the count of points whose heater
+  inlet is colder than the lower bound of the vapour-enthalpy correlation;
+* in the dry run of the training stage a probe: the largest cell of every model with the full
+  optimiser settings (time and peak memory per worker).
+
+``$TWINLINK_DYSSOL_UNITS`` overrides the folder of the compiled units (default
+``$TWINLINK_RUNS_DIR/units``).
+
 Clean tree required; start with ``tools/run_here.sh scripts/run_dyssol_steady.py ...``.
 """
 
@@ -48,6 +67,7 @@ from __future__ import annotations
 import argparse
 import gzip
 import json
+import math
 import os
 import statistics
 import subprocess
@@ -67,10 +87,13 @@ sys.path.insert(0, str(SCRIPTS / "verify"))
 from _common import RUNS_DIR, _json_default, git, provenance, require_clean_tree  # noqa: E402
 
 from twinlink_ml.dyssol_steady import study  # noqa: E402
+from twinlink_ml.dyssol_steady.carrier_sweep import saturation_ratios  # noqa: E402
 from twinlink_ml.dyssol_steady.design import (  # noqa: E402
+    RELATIVE_HUMIDITY,
     Box,
     apply_point,
     load_box,
+    point_row,
     sobol_points,
     training_subset,
 )
@@ -91,7 +114,14 @@ from twinlink_ml.dyssol_steady.materials import (  # noqa: E402
     sha256_of,
 )
 from twinlink_ml.dyssol_steady.models import MlpSettings  # noqa: E402
-from twinlink_ml.dyssol_steady.reference import LineInputs, LineOutputs  # noqa: E402
+from twinlink_ml.dyssol_steady.reference import KELVIN, LineInputs, LineOutputs  # noqa: E402
+from twinlink_ml.dyssol_steady.sweep_sheet import (  # noqa: E402
+    RESULT_KEYS,
+    compare,
+    load_sweep_sheet,
+    sweep_points,
+    totals,
+)
 from twinlink_ml.partner_v4_1.comparison import load_dyssol_steady_state  # noqa: E402
 
 REPO_ROOT = SCRIPTS.parent
@@ -99,6 +129,8 @@ LOCAL = Path(os.environ.get("TWINLINK_LOCAL_DIR", REPO_ROOT / "local"))
 OUT = Path(os.environ.get("TWINLINK_DYSSOL_OUT", REPO_ROOT / "local" / "runs" / "dyssol_steady"))
 DYSSOL_HOME = Path(os.environ.get("DYSSOL_HOME", "C:/Program Files/Dyssol"))
 DRY_STEPS = 5
+CONFIG_DIR = REPO_ROOT / "conf" / "dyssol_steady"
+SHEET_SET = "sheet"
 _WORKER: dict[str, Any] = {}
 
 
@@ -107,7 +139,24 @@ def runs_dir() -> Path:
     return Path(os.environ.get("TWINLINK_RUNS_DIR", default))
 
 
+def units_dir() -> Path:
+    return Path(os.environ.get("TWINLINK_DYSSOL_UNITS", runs_dir() / "units"))
+
+
 # ----------------------------------------------------------------------------- context
+@dataclass(frozen=True)
+class SheetSet:
+    """Points of one process of a partner sheet as a second test set (local values)."""
+
+    name: str
+    rows: np.ndarray
+    """Design rows of the points, in the order of the sheet."""
+    reported: dict[str, tuple[float | None, ...]]
+    """The sheet's own values per quantity (descriptive comparison only)."""
+    workbook_sha256: str
+    gas_flow_reading: str
+
+
 @dataclass(frozen=True)
 class Context:
     """Everything a stage needs about one case."""
@@ -122,16 +171,74 @@ class Context:
     box: Box
     materials_db: Path
     materials: dict[str, str]
+    sheet: SheetSet | None = None
+
+    def lines_at(self, row: np.ndarray) -> tuple[LineInputs, ...]:
+        """Line inputs of one design row."""
+        return apply_point(self.nominal, np.asarray(row), self.config.varied)
 
 
-def build_context(case: str) -> Context:
-    config = study.load_config()
+def load_sheet_set(
+    config: study.StudyConfig, nominal: tuple[LineInputs, ...], box: Box
+) -> SheetSet:
+    """The sheet's points as design rows; aborts unless the surrogate's inputs can express them."""
+    spec = config.sheet_test
+    if spec is None or len(nominal) != 1:
+        raise SystemExit("sheet_test needs a config entry and a flowsheet with one line")
+    workbook = LOCAL / "partner" / str(spec["delivery"]) / str(spec["workbook"])
+    if not workbook.exists():
+        raise SystemExit(f"missing local file: {workbook}")
+    sheet = load_sweep_sheet(workbook)
+    process = int(spec["process"]) - 1
+    points = sweep_points(sheet, process, str(spec["gas_flow_reading"]))
+    if len(points) != int(spec["points"]):
+        raise SystemExit(f"the sheet has {len(points)} points, the YAML says {spec['points']}")
+    varied = config.varied
+    fixed = [
+        name
+        for name in LineInputs.__dataclass_fields__
+        if name not in varied
+        and not (name == "gas_humidity_g_per_kg" and RELATIVE_HUMIDITY in varied)
+    ]
+    rows = []
+    for point in points:
+        differing = [
+            name
+            for name in fixed
+            if not math.isclose(getattr(point, name), getattr(nominal[0], name), rel_tol=1e-12)
+        ]
+        if differing:
+            raise SystemExit(f"sheet point differs from the stored flowsheet in {differing}")
+        row = point_row([point], varied)
+        (back,) = apply_point(nominal, row, varied)
+        for name in LineInputs.__dataclass_fields__:
+            if not math.isclose(
+                getattr(back, name), getattr(point, name), rel_tol=1e-12, abs_tol=1e-12
+            ):
+                raise SystemExit(f"sheet point is not reproduced by its design row ({name})")
+        rows.append(row)
+    array = np.asarray(rows)
+    if not bool(box.contains(array).all()):
+        raise SystemExit("a point of the sheet lies outside the box")
+    return SheetSet(
+        name=str(spec["name"]),
+        rows=array,
+        reported={key: tuple(sheet.results[key][process]) for key in RESULT_KEYS},
+        workbook_sha256=sha256_of(workbook),
+        gas_flow_reading=str(spec["gas_flow_reading"]),
+    )
+
+
+def build_context(
+    case: str, config_file: str = "dyssol_steady.yaml", sheet: bool = True
+) -> Context:
+    config = study.load_config(CONFIG_DIR / config_file)
     if case not in config.cases:
         raise SystemExit(f"unknown case {case!r}; known: {sorted(config.cases)}")
     source = (
         LOCAL / "partner" / str(config.raw["delivery"]) / str(config.cases[case]["source_file"])
     )
-    box_path = LOCAL / "dyssol_steady" / "box_local.yaml"
+    box_path = LOCAL / "dyssol_steady" / config.box_file
     for path in (source, box_path, DYSSOL_HOME / "Materials.dmdb"):
         if not path.exists():
             raise SystemExit(f"missing local file: {path}")
@@ -150,6 +257,7 @@ def build_context(case: str) -> Context:
     if len(topology.lines) != int(config.cases[case]["lines"]):
         raise SystemExit(f"{source.name} has {len(topology.lines)} lines, the YAML says otherwise")
     nominal = nominal_inputs(file, topology, names)
+    box = load_box(box_path, case, nominal, config.varied)
     return Context(
         config=config,
         case=case,
@@ -158,9 +266,14 @@ def build_context(case: str) -> Context:
         properties=read_properties(patched),
         topology=topology,
         nominal=nominal,
-        box=load_box(box_path, case, nominal),
+        box=box,
         materials_db=patched,
         materials=materials,
+        sheet=(
+            load_sheet_set(config, nominal, box)
+            if sheet and config.sheet_test is not None
+            else None
+        ),
     )
 
 
@@ -251,6 +364,23 @@ def _fit_cell(task: dict[str, Any]) -> dict[str, Any]:
             result["metrics_admissible"] = study.cell_metrics(
                 w["y_test"][mask], prediction[mask], w["names"]
             )
+        strict = w.get("admissible_strict")
+        if strict is not None and 0 < int(strict.sum()) < len(strict):
+            result["metrics_admissible_strict"] = study.cell_metrics(
+                w["y_test"][strict], prediction[strict], w["names"]
+            )
+        for label, group in (w.get("groups") or {}).items():
+            # named subsets of the test set (descriptive splits); an empty one is left out
+            if int(group.sum()) > 0:
+                result.setdefault("metrics_by_group", {})[label] = {
+                    "points": int(group.sum()),
+                    **study.cell_metrics(w["y_test"][group], prediction[group], w["names"]),
+                }
+        if w.get("x_sheet") is not None:
+            # the points of the sheet are scored only; they never enter a fit
+            result["metrics_sheet"] = study.sheet_errors(
+                w["y_sheet"], model.predict(w["x_sheet"]), w["names"], w.get("reported")
+            )
         if isinstance(model, MlpRegressor):
             result["final_loss"] = model.final_loss
         return {
@@ -300,31 +430,39 @@ def stage_pilot(ctx: Context, name: str, workers: int, resume: bool) -> None:
     pilot = config.pilot
     reference = ReferenceFlowsheet(ctx.properties, ctx.topology.preheated_by)
 
+    if ctx.sheet is not None:
+        raise SystemExit("the pilot must not see the points of the sheet")
+
     def evaluated(n: int, seed: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         x = sobol_points(ctx.box, n, seed)
-        outputs = [reference.evaluate(apply_point(ctx.nominal, row)).outputs for row in x]
+        outputs = [reference.evaluate(ctx.lines_at(row)).outputs for row in x]
         ok = np.asarray([not any(o.oversaturated for o in point) for point in outputs])
         return x, study.target_matrix(outputs), ok
 
     x_pool, y_pool, _ = evaluated(config.pool_size, int(pilot["pool_seed"]))
     x_test, y_test, admissible = evaluated(config.test_size, int(pilot["test_seed"]))
     names = study.target_names(len(ctx.nominal))
-    tasks = [
-        {
-            "id": f"s{k}-n{n}-seed{seed}",
-            "setting": k,
-            "model": "mlp",
-            "n": int(n),
-            "seed": int(seed),
-            "settings": {"hidden": list(config.hidden), **setting},
-        }
-        for k, setting in enumerate(pilot["grid"])
-        for n in pilot["budgets"]
-        for seed in pilot["seeds"]
-    ]
-    for t in tasks:
-        t["settings"]["hidden"] = tuple(t["settings"]["hidden"])
-        t["settings"]["steps"] = int(t["settings"]["steps"])
+
+    def tasks_of(grid: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        tasks = [
+            {
+                "id": f"s{k}-n{n}-seed{seed}",
+                "setting": k,
+                "model": "mlp",
+                "n": int(n),
+                "seed": int(seed),
+                "settings": {"hidden": list(config.hidden), **setting},
+            }
+            for k, setting in enumerate(grid)
+            for n in pilot["budgets"]
+            for seed in pilot["seeds"]
+        ]
+        for t in tasks:
+            t["settings"]["hidden"] = tuple(t["settings"]["hidden"])
+            t["settings"]["steps"] = int(t["settings"]["steps"])
+        return tasks
+
+    grid = study.pilot_grid(pilot)
     payload = {
         "x_pool": scaled(ctx, x_pool),
         "y_pool": y_pool,
@@ -335,11 +473,35 @@ def stage_pilot(ctx: Context, name: str, workers: int, resume: bool) -> None:
         "names": names,
     }
     head = header(ctx, "pilot", name, False)
-    cells = run_fits(tasks, payload, Cache(OUT / f"_{name}_cache.jsonl", head, resume), workers)
+    cache = Cache(OUT / f"_{name}_cache.jsonl", head, resume)
+    cells = run_fits(tasks_of(grid), payload, cache, workers)
     selection = study.pilot_selection(cells, config)
-    chosen = pilot["grid"][selection["selected_setting"]]
+    chosen = grid[selection["selected_setting"]]
+    extension: dict[str, Any] | None = None
+    if "axes" in pilot:
+        # one automatic extension where the selection lies at an edge (rule of the YAML)
+        first = {"settings": len(grid), "selected_setting": selection["selected_setting"]}
+        step = study.pilot_extension(pilot, chosen)
+        print("round 1 selected:", json.dumps(chosen), "extension:", json.dumps(step), flush=True)
+        if step["extended"]:
+            grid = study.pilot_grid(pilot, step["axes"])
+            cells = run_fits(tasks_of(grid), payload, cache, workers)
+            selection = study.pilot_selection(cells, config)
+            chosen = grid[selection["selected_setting"]]
+        final = study.pilot_extension({"axes": step["axes"]}, chosen)
+        extension = {
+            "round_1": {**first, "settings_selected": grid[first["selected_setting"]]},
+            "rule": pilot.get("extension"),
+            "extended": step["extended"],
+            "at_edge_without_extension_round_1": step["at_edge_without_extension"],
+            "axes_after_extension": step["axes"],
+            "settings_after_extension": len(grid),
+            "final_selection_at_edge_of": final["at_edge_without_extension"],
+        }
+        print("extension record:", json.dumps(extension))
     print("criterion per setting:", json.dumps(selection["criterion"]))
     print("selected:", json.dumps(chosen))
+    extra = {} if extension is None else {"grid": grid, "extension": extension}
     write_gz(
         RUNS_DIR / f"{name}.json.gz",
         {
@@ -349,6 +511,7 @@ def stage_pilot(ctx: Context, name: str, workers: int, resume: bool) -> None:
             "materials": ctx.materials,
             "target_names": names,
             "selection": {**selection, "settings": chosen},
+            **extra,
             "cells": [
                 {
                     k: c[k]
@@ -362,7 +525,7 @@ def stage_pilot(ctx: Context, name: str, workers: int, resume: bool) -> None:
 
 # ----------------------------------------------------------------------------- data
 def dyssol_installation(ctx: Context) -> tuple[DyssolInstallation, dict[str, Any]]:
-    units = runs_dir() / "units"
+    units = units_dir()
     manifest_path = units / "manifest.json"
     executable = DYSSOL_HOME / "DyssolC.exe"
     if not manifest_path.exists() or not executable.exists():
@@ -382,35 +545,90 @@ def dyssol_installation(ctx: Context) -> tuple[DyssolInstallation, dict[str, Any
     }
 
 
-def control_summary(points: list[dict[str, Any]]) -> dict[str, Any]:
-    """Largest deviation of Dyssol from the rebuild over the points that have both."""
+def point_deviation(p: dict[str, Any]) -> tuple[float, float, dict[str, float]]:
+    """Deviation of Dyssol from the rebuild at one point: temperatures [K], the rest [%]."""
     temperature = relative = 0.0
     worst: dict[str, float] = {}
-    n = 0
-    for p in points:
-        if "dyssol" not in p:
-            continue
-        n += 1
-        for d, r in zip(p["dyssol"], p["reference"], strict=True):
-            for key, value in d.items():
-                if key == "saturation_ratio":
-                    continue
-                diff = abs(value - r[key])
-                if key.endswith("_celsius"):
-                    temperature = max(temperature, diff)
-                else:
-                    diff = 100.0 * diff / max(abs(value), 1.0)
-                    relative = max(relative, diff)
-                worst[key] = max(worst.get(key, 0.0), diff)
-    return {
-        "points_compared": n,
+    for d, r in zip(p["dyssol"], p["reference"], strict=True):
+        for key, value in d.items():
+            if key == "saturation_ratio":
+                continue
+            diff = abs(value - r[key])
+            if key.endswith("_celsius"):
+                temperature = max(temperature, diff)
+            else:
+                diff = 100.0 * diff / max(abs(value), 1.0)
+                relative = max(relative, diff)
+            worst[key] = max(worst.get(key, 0.0), diff)
+    return temperature, relative, worst
+
+
+def control_summary(
+    points: list[dict[str, Any]], table: dict[str, Any] | None = None
+) -> dict[str, Any]:
+    """Largest deviation of Dyssol from the rebuild over the points that have both.
+
+    ``table`` (settings with the fresh-gas temperature as an input): ``column`` of that input,
+    bin ``edges`` [degC] and ``vapour_lower_k``, the lower bound of the vapour-enthalpy
+    correlation. Then the deviation is also given per bin, per set, and over the points whose
+    heater inlet (rebuild) is colder than that bound.
+    """
+    temperature = relative = 0.0
+    worst: dict[str, float] = {}
+    compared = [p for p in points if "dyssol" in p]
+    deviations = [point_deviation(p) for p in compared]
+    for kelvin, percent, by_key in deviations:
+        temperature, relative = max(temperature, kelvin), max(relative, percent)
+        for key, diff in by_key.items():
+            worst[key] = max(worst.get(key, 0.0), diff)
+    out: dict[str, Any] = {
+        "points_compared": len(compared),
         "max_temperature_k": temperature,
         "max_relative_percent": relative,
         "max_by_quantity": worst,
     }
+    if table is not None:
+
+        def largest(rows: list[tuple[float, float, dict[str, float]]]) -> dict[str, Any]:
+            return {
+                "points": len(rows),
+                "max_temperature_k": max((r[0] for r in rows), default=0.0),
+                "max_relative_percent": max((r[1] for r in rows), default=0.0),
+            }
+
+        out["by_fresh_gas_celsius"] = study.control_by_bins(
+            [p["x"][table["column"]] for p in compared],
+            [d[0] for d in deviations],
+            [d[1] for d in deviations],
+            table["edges"],
+        )
+        out["by_set"] = {
+            label: largest(
+                [d for p, d in zip(compared, deviations, strict=True) if p["set"] == label]
+            )
+            for label in dict.fromkeys(p["set"] for p in compared)
+        }
+        cold = [
+            d
+            for p, d in zip(compared, deviations, strict=True)
+            if min(r["preheated_celsius"] for r in p["reference"]) + KELVIN
+            < table["vapour_lower_k"]
+        ]
+        out["heater_inlet_below_vapour_correlation"] = {
+            "lower_bound_k": table["vapour_lower_k"],
+            **largest(cold),
+        }
+    return out
 
 
-def data_summary(points: list[dict[str, Any]]) -> dict[str, Any]:
+def oversaturated_after_recovery(rows: list[dict[str, float]]) -> bool:
+    """True if any line's gas is over-saturated at the dryer outlet or after the recovery."""
+    return any(max(saturation_ratios(o)) > 1.0 for o in outputs_from_json(rows))
+
+
+def data_summary(
+    points: list[dict[str, Any]], table: dict[str, Any] | None = None, strict: bool = False
+) -> dict[str, Any]:
     def over(p: dict[str, Any]) -> bool:
         rows = p.get("dyssol", p["reference"])
         return any(r["saturation_ratio"] > 1.0 for r in rows)
@@ -424,6 +642,10 @@ def data_summary(points: list[dict[str, Any]]) -> dict[str, Any]:
         s["dyssol_ok"] += int("dyssol" in p)
         s["failed"] += int(not p.get("ok", True))
         s["oversaturated"] += int(over(p))
+        if strict:
+            s["oversaturated_also_after_recovery"] = s.get(
+                "oversaturated_also_after_recovery", 0
+            ) + int(oversaturated_after_recovery(p.get("dyssol", p["reference"])))
     walls = [p["wall_seconds"] for p in points if "wall_seconds" in p]
     peaks = [p["peak_memory_bytes"] for p in points if p.get("peak_memory_bytes")]
     return {
@@ -434,8 +656,26 @@ def data_summary(points: list[dict[str, Any]]) -> dict[str, Any]:
             "sum": sum(walls),
         },
         "dyssol_peak_memory_mb": max(peaks) / 2**20 if peaks else None,
-        "control": control_summary(points),
+        "control": control_summary(points, table),
     }
+
+
+def control_table(ctx: Context) -> dict[str, Any] | None:
+    """Settings of the control table over the fresh-gas temperature, if the YAML asks for one."""
+    edges = ctx.config.raw["control"].get("fresh_gas_bins_celsius")
+    if edges is None:
+        return None
+    if len(ctx.nominal) != 1 or "gas_celsius" not in ctx.config.varied:
+        raise SystemExit("control.fresh_gas_bins_celsius needs one line with gas_celsius varied")
+    return {
+        "column": ctx.config.varied.index("gas_celsius"),
+        "edges": [float(e) for e in edges],
+        "vapour_lower_k": float(ctx.properties.vapour_enthalpy_range_k[0]),
+    }
+
+
+def strict_flags(ctx: Context) -> bool:
+    return bool(ctx.config.raw.get("oversaturation_also_after_recovery", False))
 
 
 def stage_data(ctx: Context, name: str, workers: int, resume: bool, dry_run: bool) -> None:
@@ -449,12 +689,19 @@ def stage_data(ctx: Context, name: str, workers: int, resume: bool, dry_run: boo
         ("train", sobol_points(ctx.box, config.pool_size, config.pool_seed)),
         ("test", sobol_points(ctx.box, config.test_size, config.test_seed)),
     ]
+    if ctx.sheet is not None:
+        # the points of the sheet: their own set, never part of the pool or of the Sobol test set
+        for _, x in design:
+            gap = np.abs(x[:, None, :] - ctx.sheet.rows[None, :, :]).max(axis=2).min()
+            if not gap > 0.0:
+                raise SystemExit("a design point coincides with a point of the sheet")
+        design.append((SHEET_SET, ctx.sheet.rows))
     points: list[dict[str, Any]] = []
     for label, x in design:
         if not bool(ctx.box.contains(x).all()):
             raise SystemExit("design point outside the box")
         for i, row in enumerate(x):
-            lines = apply_point(ctx.nominal, row)
+            lines = ctx.lines_at(row)
             points.append(
                 {
                     "id": f"{label}-{i:04d}",
@@ -472,6 +719,12 @@ def stage_data(ctx: Context, name: str, workers: int, resume: bool, dry_run: boo
         finite = np.where(np.isfinite(columns), columns, 0.0)
         selected = set(finite.argmin(axis=0)) | set(finite.argmax(axis=0))
         selected |= set(range(8)) | set(range(config.pool_size, config.pool_size + 4))
+        if ctx.sheet is not None:
+            # also the extreme draws of every input and every point of the sheet
+            inputs = np.asarray([p["x"] for p in points], dtype=float)
+            selected |= set(inputs.argmin(axis=0)) | set(inputs.argmax(axis=0))
+            selected |= {k for k, p in enumerate(points) if p["set"] == SHEET_SET}
+        selected = {int(k) for k in selected}
     head = header(ctx, "data", name, dry_run)
     cache = Cache(OUT / f"_{name}_cache.jsonl", head, resume)
     todo = [k for k in sorted(selected) if points[k]["id"] not in cache.done]
@@ -483,7 +736,7 @@ def stage_data(ctx: Context, name: str, workers: int, resume: bool, dry_run: boo
     def unit(k: int) -> dict[str, Any]:
         p = points[k]
         try:
-            ev = flowsheet.evaluate(apply_point(ctx.nominal, np.asarray(p["x"])), p["id"])
+            ev = flowsheet.evaluate(ctx.lines_at(np.asarray(p["x"])), p["id"])
             return {
                 "id": p["id"],
                 "ok": True,
@@ -517,7 +770,7 @@ def stage_data(ctx: Context, name: str, workers: int, resume: bool, dry_run: boo
             p.update({k: v for k, v in rec.items() if k != "id"})
         elif p["id"] in failures:
             p.update({"ok": False, "error": failures[p["id"]]})
-    summary = data_summary(points)
+    summary = data_summary(points, control_table(ctx), strict_flags(ctx))
     print(json.dumps(summary, indent=1))
     target = OUT / f"{name}.json.gz"
     write_gz(
@@ -563,12 +816,19 @@ def stage_training(
     if exceeded:
         raise SystemExit("control exceeded: Dyssol and the rebuild disagree -- no fit; report")
 
+    strict_by_label: dict[str, np.ndarray] = {}
+    raw_x: dict[str, np.ndarray] = {}
+
     def arrays(label: str) -> tuple[np.ndarray, np.ndarray, np.ndarray, int]:
         rows = [p for p in dataset["points"] if p["set"] == label]
         usable = [p for p in rows if "dyssol" in p or dry_run]
         outputs = [outputs_from_json(p.get("dyssol", p["reference"])) for p in usable]
         x = np.asarray([p["x"] for p in usable], dtype=float)
         ok = np.asarray([not any(o.oversaturated for o in point) for point in outputs])
+        strict_by_label[label] = np.asarray(
+            [not any(max(saturation_ratios(o)) > 1.0 for o in point) for point in outputs]
+        )
+        raw_x[label] = x
         return scaled(ctx, x), study.target_matrix(outputs), ok, len(rows) - len(usable)
 
     x_pool, y_pool, _, pool_missing = arrays("train")
@@ -578,9 +838,9 @@ def stage_training(
     names = study.target_names(len(ctx.nominal))
     settings = None
     if dry_run:
-        first = config.pilot["grid"][0]
+        first = study.pilot_grid(config.pilot)[0]
         settings = {
-            "hidden": config.hidden,
+            "hidden": tuple(first.get("hidden", config.hidden)),
             "learning_rate": float(first["learning_rate"]),
             "steps": DRY_STEPS,
             "weight_decay": float(first["weight_decay"]),
@@ -609,10 +869,80 @@ def stage_training(
         "available": np.arange(len(x_pool)),
         "names": names,
     }
+    extra: dict[str, Any] = {}
+    if strict_flags(ctx):
+        payload["admissible_strict"] = strict_by_label["test"]
+        extra["test_set_admissible_also_after_recovery"] = int(strict_by_label["test"].sum())
+    if ctx.sheet is not None:
+        x_sheet, y_sheet, sheet_ok, sheet_missing = arrays(SHEET_SET)
+        if sheet_missing or not np.allclose(raw_x[SHEET_SET], ctx.sheet.rows, rtol=1e-12, atol=0.0):
+            raise SystemExit("the data set does not hold a result at every point of the sheet")
+        payload.update(x_sheet=x_sheet, y_sheet=y_sheet, reported=ctx.sheet.reported)
+        lower, upper = np.asarray(ctx.box.lower), np.asarray(ctx.box.upper)
+        rows = ctx.sheet.rows
+        fresh = [k for k, v in enumerate(config.varied) if v in ("gas_celsius", RELATIVE_HUMIDITY)]
+        truth = {
+            key: compare(
+                y_sheet[:, names.index(f"line1/{study.SHEET_TARGETS[key]}")].tolist(),
+                ctx.sheet.reported[key],
+            )
+            for key in RESULT_KEYS
+        }
+        extra["sheet_test"] = {
+            "name": ctx.sheet.name,
+            "points": len(rows),
+            "workbook_sha256": ctx.sheet.workbook_sha256,
+            "gas_flow_reading": ctx.sheet.gas_flow_reading,
+            "gas_flow_reading_status": "inferred from the agreement (Befund 130), "
+            "not confirmed by the sender",
+            "truth": "our own Dyssol run at each point of the sheet",
+            "points_inside_box": int(ctx.box.contains(rows).sum()),
+            "points_strictly_inside_in_fresh_gas_state": int(
+                np.all(
+                    (rows[:, fresh] > lower[fresh]) & (rows[:, fresh] < upper[fresh]), axis=1
+                ).sum()
+            ),
+            "points_on_a_face_of_the_box": {
+                v: int(((rows[:, k] <= lower[k]) | (rows[:, k] >= upper[k])).sum())
+                for k, v in enumerate(config.varied)
+            },
+            "oversaturated": int((~sheet_ok).sum()),
+            "oversaturated_also_after_recovery": int((~strict_by_label[SHEET_SET]).sum()),
+            "dyssol_against_sheet": {"per_quantity": truth, "total": totals(truth)},
+        }
     t0 = time.perf_counter()
-    cells = run_fits(tasks, payload, Cache(OUT / f"_{name}_cache.jsonl", head, resume), workers)
+    cache = Cache(OUT / f"_{name}_cache.jsonl", head, resume)
+    cells = run_fits(tasks, payload, cache, workers)
+    if dry_run and config.selected.get(ctx.case) is not None:
+        # probe with full-size fits: the largest cell of every model, full optimiser settings
+        probe = [
+            {
+                "id": f"probe-{model}-n{config.budgets[-1]}-seed{config.seeds[0]}",
+                "model": model,
+                "n": int(config.budgets[-1]),
+                "seed": int(config.seeds[0]),
+                "settings": asdict(config.mlp_settings(ctx.case)) if model == "mlp" else None,
+            }
+            for model in study.MODELS
+        ]
+        probed = run_fits(probe, payload, cache, workers)
+        extra["probe_full_size"] = [
+            {k: c[k] for k in ("id", "seconds", "peak_memory_mb")} for c in probed
+        ]
+        print("probe (full size):", json.dumps(extra["probe_full_size"]), flush=True)
     target = (OUT if dry_run else RUNS_DIR) / f"{name}.json.gz"
-    keep = ("id", "model", "n", "seed", "metrics", "metrics_admissible", "final_loss", "seconds")
+    keep = (
+        "id",
+        "model",
+        "n",
+        "seed",
+        "metrics",
+        "metrics_admissible",
+        "metrics_admissible_strict",
+        "metrics_sheet",
+        "final_loss",
+        "seconds",
+    )
     write_gz(
         target,
         {
@@ -630,10 +960,11 @@ def stage_training(
                 "test_points_without_result": test_missing,
             },
             "test_set": {
-                "name": "in-box Sobol test set, independent of the training pool",
+                "name": config.test_set_name,
                 "points": len(x_test),
                 "admissible_points": int(admissible.sum()),
             },
+            **extra,
             "mlp_settings": {**settings, "hidden": list(settings["hidden"])},
             "target_names": names,
             "workers": workers,
@@ -650,6 +981,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--case", required=True)
     parser.add_argument("--name", required=True)
     parser.add_argument("--data", help="name of the data set (stage training)")
+    parser.add_argument(
+        "--config", default="dyssol_steady.yaml", help="settings file in conf/dyssol_steady/"
+    )
     parser.add_argument("--workers", type=int, default=2)
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
@@ -662,7 +996,7 @@ def main() -> None:
     if not 1 <= args.workers <= max(cores, 1):
         raise SystemExit(f"--workers must be between 1 and the physical cores ({cores})")
     require_clean_tree()
-    ctx = build_context(args.case)
+    ctx = build_context(args.case, args.config, sheet=args.stage != "pilot")
     print(
         f"stage {args.stage}, case {ctx.case}, lines {len(ctx.nominal)}, "
         f"box {ctx.box.sha256()[:12]}, config {ctx.config.fingerprint[:12]}",

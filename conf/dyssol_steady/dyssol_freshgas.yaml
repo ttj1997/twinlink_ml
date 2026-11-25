@@ -1,0 +1,135 @@
+# Surrogate of the one-line Dyssol flowsheet with the fresh-gas state as an input: how many Dyssol
+# runs does it need with 7 instead of 5 inputs, and does it meet the points of the partner sheet
+# of 2026-11-24 for the admissible process 2? (docs/NN_dyssol_freshgas.md; the reading is
+# pre-registered there and in the docstring of scripts/analyze_dyssol_freshgas.py.)
+#
+# Read with `scripts/run_dyssol_steady.py --config dyssol_freshgas.yaml`. Design, models,
+# thresholds and reading are those of docs/45 (conf/dyssol_steady/dyssol_steady.yaml, Befund 128),
+# which stays unchanged; what differs is marked "NEW".
+#
+# STATUS: every number below is a study setting fixed by the task of the project lead
+# (2026-11-24) or chosen in the design document; none is a measured plant value. The box, the
+# sheet, its values and every generated data set are NOT in the repository: the box is read from
+# <local>/dyssol_steady/box_freshgas_local.yaml (template: box_freshgas_local.yaml.example next to
+# this file), the source flowsheet from <local>/partner/<delivery>/, the sheet from
+# <local>/partner/<sheet_test.delivery>/.
+
+version: 1
+
+delivery: dyssol_2026-11-19          # folder under <local>/partner/ with the .dflw files
+
+cases:
+  one_line:                          # the only case of this study (source as in Befund 128/130)
+    source_file: "Case 1.1.dflw"
+    lines: 1
+
+# NEW: seven varied inputs. The five of docs/45 section 4, the fresh-gas temperature and the
+# RELATIVE humidity of the fresh gas; the humidity ratio of a point follows from both (Buck over
+# water, 1 atm, as case_ranking/space.py), so no point holds fresh gas above saturation.
+varied:
+  - dry_gas_kg_per_h
+  - dryer_inlet_celsius
+  - spray_kg_per_h
+  - solid_fraction
+  - medium_kg_per_h
+  - gas_celsius
+  - gas_relative_humidity
+box_file: box_freshgas_local.yaml    # NEW: its own local box
+
+design:
+  pool_size: 1024                    # scrambled Sobol points of the training pool
+  pool_seed: 20261124                # NEW seeds (not those of Befund 128)
+  test_size: 256                     # independent scrambled Sobol points in the same box
+  test_seed: 20261125
+  test_set_name: "in-box Sobol test set, 7 inputs"
+
+budgets: [8, 16, 32, 64, 128, 256, 512]   # Dyssol runs N; per seed nested prefixes of one permutation
+seeds: [1, 2, 3, 4, 5]                    # permutation of the pool and initialisation of the MLP
+
+mlp:
+  hidden: [64, 64]                   # only a default; the selected setting names its own widths
+  # Filled from the pilot artifact (own commit) BEFORE any Dyssol data exist.
+  selected:
+    # selection of dyssol_freshgas_pilot_v1 (setting 175 of the grid after its one extension; round 1
+    # had selected width 64, learning rate 0.0003, 10000 steps, weight decay 0.1, at the edge of
+    # three axes). The final selection lies at the upper edge of width and steps; by the rule the
+    # grid is not extended a second time (caveat of the results).
+    one_line: {hidden: [128, 128], learning_rate: 0.0003, steps: 20000, weight_decay: 0.1}
+
+# Pilot of the MLP optimiser on the PYTHON REBUILD (no Dyssol run): its own pool and test points,
+# its own seeds; the points of the sheet are not loaded in this stage. Criterion and selection as
+# in docs/45 (lowest mean over pilot seeds and budgets of the mean of both reading numbers, each
+# divided by its threshold; ties to the setting listed first).
+#
+# NEW: the grid is a full factorial over four axes. Against Befund 128 (learning rate 0.001 /
+# 0.003, width 64, 5000 steps) the learning rate, the width of the two hidden layers and the
+# number of optimiser steps each have one more level on both sides; the weight decay keeps its
+# three levels.
+#
+# NEW, extension rule (fixed with this commit, before the pilot): if the selected setting lies at
+# the first or the last level of an axis, the level given below for that side is added to that
+# axis, ONCE, and the full factorial of the extended axes is run (only the new settings need
+# fits). The selection is then made over all settings of the extended grid. The grid is not
+# extended a second time; if the final selection lies at an edge again, that is reported as a
+# caveat. The weight decay has no lower extension (its first level is zero).
+pilot:
+  pool_seed: 20261126
+  test_seed: 20261127
+  seeds: [11, 12]
+  budgets: [16, 64, 256]
+  axes:                              # order of the product = tie-break order (first axis slowest)
+    learning_rate: [0.0003, 0.001, 0.003, 0.01]
+    width: [32, 64, 128]
+    steps: [2000, 5000, 10000]
+    weight_decay: [0.0, 0.001, 0.1]
+  extension:
+    learning_rate: {lower: 0.0001, upper: 0.03}
+    width: {lower: 16, upper: 256}
+    steps: {lower: 1000, upper: 20000}
+    weight_decay: {upper: 1.0}
+
+# Reading: 95th percentile over the test set, median over the seeds (docs/45 section 6).
+thresholds:
+  exhaust_temperature_k: 1.0         # exhaust after the heat recovery
+  total_fuel_percent: 1.0            # total fuel consumption, relative
+
+# Control before any fit: Dyssol against the Python rebuild at EVERY point of the data set (pool,
+# Sobol test set and the points of the sheet), bounds as in docs/45. Above the bounds the data set
+# is not used, the deviation is reported and the study stops.
+# NEW: the deviation is tabulated over the fresh-gas temperature (bins below, degC), because below
+# the lower bound of its correlation Dyssol evaluates the vapour enthalpy at that bound and the
+# carrier sweep (docs/49) computed -10, 0 and 20 degC with the rebuild only.
+control:
+  temperature_k: 1.0e-6
+  relative_percent: 1.0e-6
+  fresh_gas_bins_celsius: [-10.0, -5.0, 0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0]
+
+# NEW: over-saturation is flagged as in docs/45 (dryer exhaust above saturation; this flag defines
+# the "admissible test points") and, in addition, counted with the stricter rule of docs/49 (also
+# the exhaust after the heat recovery, which gets colder with cold fresh gas).
+oversaturation_also_after_recovery: true
+
+# NEW: second, named test set. The points of process 2 of the partner sheet of 2026-11-24 (its
+# eleven flows of the heat transfer medium). The truth at each point is OUR Dyssol run there, not
+# the sheet's value. The gas mass flow of the sheet is read as the dry gas: inferred from the
+# agreement in Befund 130, not confirmed by the sender. The points never enter the pool, the
+# Sobol test set or the pilot. Process 1 of the sheet is over-saturated at every point (ratio
+# 2.015, Befund 130) and is not part of this study.
+sheet_test:
+  name: "partner sheet 2026-11-24, process 2, 11 points"
+  delivery: dyssol_2026-11-24
+  workbook: "Simulation results_flow rates.xlsx"
+  process: 2
+  points: 11
+  gas_flow_reading: dry
+
+# NEW: prediction fixed before the data. Befund 128: N* of the quadratic regression was 32 and 128
+# at 21 and 66 coefficients, i.e. about 1.5 to 2 times the number of coefficients. With 7 inputs
+# the quadratic regression has 36 coefficients; predicted N* = 64 (the first step of the grid
+# above 1.5 x 36 = 54). Confirmed if N* of the quadratic regression is 64, not confirmed otherwise.
+prediction:
+  model: quadratic
+  n_star: 64
+
+statistics:
+  alpha: 0.05                        # paired t over seeds, Holm per family (one baseline, one number, all N)
