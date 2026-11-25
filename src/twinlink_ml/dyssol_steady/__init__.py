@@ -14,7 +14,7 @@ Design and reading: ``docs/45_dyssol_steady_state.md``.
 * :mod:`.sweep_sheet` -- reader of a partner sheet that sweeps the medium flow of one-line
   flowsheets, and its comparison with the rebuild or with Dyssol.
 * :mod:`.plant_check` -- measured stationary points of a plant line as inputs of the one-line
-  units, single replacements, distance to admissibility (``docs/NN_sheet_plant_a.md``).
+  units, single replacements, distance to admissibility (``docs/51_sheet_plant_a.md``).
 
 Plant values, the box and every generated data set stay outside the repository (``local/``).
 """

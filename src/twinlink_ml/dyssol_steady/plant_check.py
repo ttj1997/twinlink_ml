@@ -1,6 +1,6 @@
 """Process 1 of the partner sweep sheet against measured stationary points of a plant line.
 
-Design and pre-registered reading: ``docs/NN_sheet_plant_a.md`` (docstring of
+Design and pre-registered reading: ``docs/51_sheet_plant_a.md`` (docstring of
 ``scripts/report_sheet_plant_a.py``).
 
 The module turns measured stationary points into inputs of the one-line units

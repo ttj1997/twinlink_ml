@@ -208,6 +208,8 @@ replace a product-moisture measurement.
 
 **Dyssol flowsheet with the fresh-gas state as an input (Befund 131; model against model, placeholders).** With the fresh-gas state and the full range of the medium flow as inputs a surrogate of the one-line flowsheet needs an MLP and 128 to 256 Dyssol runs, the quadratic regression does not reach the thresholds up to 512 runs (the cause is the range of the medium flow, descriptively; the rule of thumb of Befund 128 holds only in its box), and the partner sheet is met at 8 of its 11 points.
 
+**Process 1 of the partner sweep sheet against plant A (Befund 132; model against measurement on eight segments of two days).** At the measured inputs the Dyssol dryer unit is not over-saturated at any segment, its outlet lies 5.05 to 5.77 K above the measured exhaust (no validation: the unmeasured solid fraction dominates), and of the inputs of process 1 the solid fraction alone removes its over-saturation.
+
 **One-step bandit (Befund 93, follow-up of Befund 68).** A residual action and a separated
 moisture cost lift SAC from a negative to a clearly positive closed-regret fraction, but no cell
 meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of

@@ -1,4 +1,4 @@
-# NN -- Process 1 of the partner sweep sheet against the measured operation of plant A: are the inputs those of the plant, and is the over-saturation a matter of the inputs or of the unit?
+# 51 -- Process 1 of the partner sweep sheet against the measured operation of plant A: are the inputs those of the plant, and is the over-saturation a matter of the inputs or of the unit?
 
 Status: **complete. All three controls held; pre-registered readings F0 (the unit is not
 over-saturated at any of the eight measured segments), T1 (its outlet is 5.05 to 5.77 K above the
@@ -6,8 +6,8 @@ measured exhaust) and A0 (the solid fraction); all three predictions confirmed (
 16).** Accepted by the project lead on 2026-11-25 (section 19). Sections 1 to 13 are the design, committed before any run of the report script (10f28b0)
 and unchanged since except this paragraph; the results below them take their numbers only from
 the artifact named there. Branch `sheet-plant-a` (from `master` 24476e3), worktree
-`C:/twinlink_work/sheetpa`. Document and finding number are open (the managing session assigns
-them at the merge). Code `src/twinlink_ml/dyssol_steady/plant_check.py`, script
+`C:/twinlink_work/sheetpa`. Document number 51 and finding number 132 (lab book); merged into
+`master` on 2026-11-25. Code `src/twinlink_ml/dyssol_steady/plant_check.py`, script
 `scripts/report_sheet_plant_a.py` (the reading is in its docstring), tests
 `tests/test_sheet_plant_a.py`.
 

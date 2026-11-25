@@ -1,6 +1,6 @@
 r"""Process 1 of the partner sweep sheet against the measured stationary operation of plant A.
 
-Design: ``docs/NN_sheet_plant_a.md``. Lab book: Befund NN (number open).
+Design: ``docs/51_sheet_plant_a.md``. Lab book: Befund 132.
 
 **Question.** Befund 130 found the dryer exhaust of process 1 of the sheet of 2026-11-24
 over-saturated at every point (saturation ratio 2.015). By its label in the sheet, process 1 is
