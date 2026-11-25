@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import asdict, replace
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -58,6 +59,7 @@ DENSITY = 1.2922
 SOLIDS = {"0.65": 0.65, "0.6": 0.6, pc.SHEET: SHEET_LINE.solid_fraction}
 HUMIDITIES = {pc.HUMIDITY_REFERENCE: 0.024, pc.SHEET: SHEET_LINE.gas_humidity_g_per_kg}
 REFERENCE = ("0.65", pc.HUMIDITY_REFERENCE)
+ARTIFACT = Path(__file__).resolve().parents[1] / "artifacts" / "runs" / "sheet_plant_a_v1.json"
 
 
 def _point(label: str, air: float, supply: float, spray: float, exhaust: float) -> pc.MeasuredPoint:
@@ -330,3 +332,93 @@ def test_repository_record_holds_no_input_of_the_sheet_and_no_measured_value() -
         "segments_without_root",
         "segments_with_minimum_above_the_sheet_value",
     }
+
+
+def _rounded(values: Any) -> list[float]:
+    return [round(float(v), 2) for v in values]
+
+
+def test_artifact_holds_the_numbers_of_the_document_and_of_the_lab_book_entry() -> None:
+    artifact = json.loads(ARTIFACT.read_text(encoding="utf-8"))
+    assert artifact["provenance"]["git/dirty"] is False
+    assert artifact["provenance"]["code/root_checked"] is True
+    control = artifact["control"]
+    assert control["read"] is True
+    assert control["a_sheet_point"]["relative_deviation"] == 0.0
+    assert control["b_segments"]["aggregate_max_relative_deviation"] == 0.0
+    dyssol = control["c_dyssol"]
+    assert (dyssol["points"], dyssol["points_compared"], dyssol["failures"]) == (94, 94, [])
+    assert dyssol["max_temperature_k"] < 5.8e-14
+    assert dyssol["max_relative_percent"] < 3.0e-14
+    assert _rounded(dyssol["dyssol_wall_seconds"]) == [0.96, 1.16]
+    assert all(artifact["inputs"]["same_as_dyssol_sweep_case1_comparison"].values())
+    assert round(artifact["sheet_point"]["saturation_ratio"], 3) == 2.015
+
+    assert artifact["reading_f"] == {
+        "code": "F0",
+        "segments": 8,
+        "oversaturated_segments": 0,
+        "oversaturated_per_day": {"day_1": 0, "day_2": 0},
+    }
+    reading_t = artifact["reading_t"]
+    assert (reading_t["code"], reading_t["threshold_k"]) == ("T1", 2.0)
+    assert reading_t["unit_warmer_at_every_read_segment"] is True
+    assert _rounded(reading_t["unit_minus_exhaust_k"].values()) == [
+        5.06,
+        5.57,
+        5.60,
+        5.77,
+        5.57,
+        5.50,
+        5.48,
+        5.05,
+    ]
+    reading_a = artifact["reading_a"]
+    assert (reading_a["code"], reading_a["named_input"]) == ("A0", "solid_fraction")
+    assert reading_a["removes_on_some_day_only"] == ["spray_kg_per_h"]
+    assert reading_a["removed"] == {
+        "dry_gas_kg_per_h": {"day_1": False, "day_2": False},
+        "dryer_inlet_celsius": {"day_1": False, "day_2": False},
+        "spray_kg_per_h": {"day_1": True, "day_2": False},
+        "solid_fraction": {"day_1": True, "day_2": True},
+        "gas_humidity_g_per_kg": {"day_1": False, "day_2": False},
+    }
+    assert all(entry["confirmed"] for entry in artifact["predictions"].values())
+
+    variants = artifact["without_reading"]["variants"]
+    assert len(variants) == 10
+    for key, entry in variants.items():
+        solid = key.split("|")[0]
+        assert entry["reading_t"] == "T1"
+        assert entry["reading_f"] == ("F1" if solid == pc.SHEET else "F0")
+        if solid == pc.SHEET:
+            assert entry["oversaturated_per_day"] == {"day_1": 0, "day_2": 4}
+    band = {
+        "0.6": ([2.34, 3.15], [-1.16, -0.63]),
+        "0.634": ([4.19, 4.93], [3.06, 3.58]),
+        "0.65": ([5.06, 5.77], [5.05, 5.57]),
+        "0.7": ([7.80, 8.41], [11.29, 11.78]),
+    }
+    for solid, (day_1, day_2) in band.items():
+        per_day = variants[f"{solid}|{pc.HUMIDITY_REFERENCE}"]["unit_minus_exhaust_k_per_day"]
+        assert _rounded(per_day["day_1"]) == day_1
+        assert _rounded(per_day["day_2"]) == day_2
+    reference = variants[f"0.65|{pc.HUMIDITY_REFERENCE}"]
+    ratios = list(reference["saturation_ratio"].values())
+    assert [round(min(ratios[:4]), 3), round(max(ratios[:4]), 3)] == [0.032, 0.035]
+    assert [round(min(ratios[4:]), 3), round(max(ratios[4:]), 3)] == [0.368, 0.370]
+    bed = list(reference["unit_minus_bed_k"].values())
+    assert _rounded([min(bed[:4]), max(bed[:4])]) == [-1.67, -1.45]
+    assert _rounded([min(bed[4:]), max(bed[4:])]) == [-6.00, -3.98]
+
+    minimum = artifact["without_reading"]["minimum_solid_fraction_of_the_unit"]
+    for entry in minimum.values():
+        assert entry == {
+            "segments": 8,
+            "segments_without_root": 4,
+            "segments_with_minimum_above_the_sheet_value": 4,
+        }
+    distance = artifact["without_reading"]["distance_to_admissibility"]
+    assert round(distance["spray_relative_change_percent"], 2) == -16.29
+    assert round(distance["dryer_inlet_change_k"], 2) == 12.34
+    assert distance["solid_fraction_root_exists"] is True

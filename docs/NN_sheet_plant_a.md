@@ -1,7 +1,10 @@
 # NN -- Process 1 of the partner sweep sheet against the measured operation of plant A: are the inputs those of the plant, and is the over-saturation a matter of the inputs or of the unit?
 
-Status: **design, code and reading committed before any run of the report script.** Sections 1
-to 13 are the design; results are added below them after the run and take their numbers only from
+Status: **complete. All three controls held; pre-registered readings F0 (the unit is not
+over-saturated at any of the eight measured segments), T1 (its outlet is 5.05 to 5.77 K above the
+measured exhaust) and A0 (the solid fraction); all three predictions confirmed (sections 14 to
+16).** Sections 1 to 13 are the design, committed before any run of the report script (10f28b0)
+and unchanged since except this paragraph; the results below them take their numbers only from
 the artifact named there. Branch `sheet-plant-a` (from `master` 24476e3), worktree
 `C:/twinlink_work/sheetpa`. Document and finding number are open (the managing session assigns
 them at the merge). Code `src/twinlink_ml/dyssol_steady/plant_check.py`, script
@@ -234,3 +237,173 @@ its docstring), `tests/test_sheet_plant_a.py` (invented day and invented line on
 `<root>/local/runs/sheet_plant_a/sheet_plant_a_v1_local.json`, copied to
 `C:/twinlink_runs/sheet-plant-a/`; German report with the recommendation for the sender in
 `local/reports/` of the main checkout (not versioned).
+
+## 14. Results
+
+Artifact `artifacts/runs/sheet_plant_a_v1.json` (written on the clean tree at 10f28b0, `git/dirty`
+False, `code/root_checked` True); local record `sheet_plant_a_v1_local.json` (not versioned).
+Sections 1 to 13 are unchanged since 10f28b0 except the status paragraph. **All of this section
+is conditional on the two unconfirmed readings named at the top** (gas flow = dry gas; process 1
+= plant A).
+
+### 14.1 Step 0: all three controls held
+
+* **(a)** The point S gives the saturation ratio stored for Befund 130 exactly (relative
+  deviation 0; the ratio is 2.015).
+* **(b)** The eight windows, the digests of both exports and of the role file are those of
+  `plant_scale_v1.json`; the day aggregates of the six quantities agree exactly (relative
+  deviation 0).
+* **(c)** 94 Dyssol runs (0.96 to 1.16 s each), none failed; Dyssol against the rebuild at most
+  5.7e-14 K and 2.9e-14 % (bounds 1e-6). Workbook, source flowsheet, units and patched materials
+  database have the digests of the artifact of Befund 130.
+
+The readings are read.
+
+### 14.2 Reading F: F0
+
+Reference variant (solid fraction 0.65, dried supply air): **0 of 8 segments over-saturated**
+(day 1: 0 of 4, day 2: 0 of 4). Saturation ratio of the unit's dryer exhaust: 0.032 to 0.035 on
+day 1, 0.368 to 0.370 on day 2 (the sheet's process 1: 2.015).
+
+### 14.3 Reading T: T1, the unit is warmer than the measured exhaust
+
+Dryer outlet temperature of the unit minus the measured exhaust temperature, reference variant,
+test set: plant A, two measured days, the eight stationary segments of Befund 117.
+
+| Segment | 1 | 2 | 3 | 4 |
+|---|---:|---:|---:|---:|
+| day 1 [K] | +5.06 | +5.57 | +5.60 | +5.77 |
+| day 2 [K] | +5.57 | +5.50 | +5.48 | +5.05 |
+
+No segment is within 2 K: **T1**. The unit is warmer at every segment, by 5.05 to 5.77 K, and by
+nearly the same amount on both days.
+
+### 14.4 Reading A: A0, the solid fraction
+
+Starting from the sheet's process 1, one input replaced by the value of a day; "yes" = the
+saturation ratio falls to 1 or below.
+
+| Replaced input | day 1 | day 2 |
+|---|---|---|
+| dry-gas flow (measured) | no | no |
+| dryer inlet temperature (measured) | no | no |
+| spray flow (measured) | yes | no |
+| solid fraction (0.65, placeholder of Befund 117) | yes | yes |
+| gas humidity (dried supply air, placeholder) | no | no |
+
+Exactly one input removes the over-saturation on both days: **A0, the solid fraction.** The spray
+flow removes it with the value of day 1 only.
+
+### 14.5 Predictions: all three confirmed
+
+F0 predicted and found; T1 with the unit warmer at every read segment predicted and found; A0
+with the solid fraction predicted and found. The spray flow removes the over-saturation on day 1
+only, as expected. The predictions were made with the day aggregates of `docs/34` and arithmetic
+by hand (section 10); they were not blind.
+
+### 14.6 Without a reading
+
+* **The variants.** With a solid fraction of 0.60, 0.634, 0.65 or 0.70 and with either humidity
+  no segment is over-saturated (F0 in all eight variants). **With the sheet's solid fraction and
+  otherwise measured inputs 4 of 8 segments are over-saturated: all four of day 2, none of
+  day 1**, with either humidity (F1).
+* **Reading T over the band of the solid fraction** (dried supply air; unit minus measured
+  exhaust, range over the four segments of a day):
+
+  | Solid fraction | day 1 [K] | day 2 [K] |
+  |---|---|---|
+  | 0.60 | +2.34 to +3.15 | -1.16 to -0.63 |
+  | 0.634 | +4.19 to +4.93 | +3.06 to +3.58 |
+  | 0.65 (reference) | +5.06 to +5.77 | +5.05 to +5.57 |
+  | 0.70 | +7.80 to +8.41 | +11.29 to +11.78 |
+
+  T1 in every variant, but the size and on day 2 even the sign of the miss depend on the solid
+  fraction, which is not measured: at 0.60 day 2 lies within 2 K and the unit is colder there.
+  "The unit is warmer by about 5 K" is a statement at the reference 0.65.
+* **Against the bed temperature** (reference variant; unit minus the mean of the six bed
+  sensors): -1.67 to -1.45 K on day 1, -6.00 to -3.98 K on day 2. The one outlet temperature of
+  the unit lies between the measured exhaust and the measured bed temperature on both days.
+* **Smallest solid fraction at which the unit is admissible** (rebuild; bracket 0.01 to 0.99;
+  measured inputs otherwise). At 4 segments it lies above the sheet's value, with either
+  humidity; at the other 4 the bracket holds no root. By the local record the first four are the
+  segments of day 2, and the other four are those of day 1, where the unit is admissible over the
+  whole bracket.
+* **Distance of process 1 to admissibility (B).** With its other inputs unchanged, process 1
+  reaches a saturation ratio of 1 with a spray flow lower by 16.29 %, or with a dryer inlet
+  temperature higher by 12.34 K, or with a higher solid fraction (a root below 0.99 exists; its
+  value is local). These are points exactly at saturation, not operating points with a margin.
+
+## 15. Answers and caveats
+
+**Question 1.** No. At the measured operation of plant A the unit's dryer exhaust is far from
+saturation at all eight segments, for every solid fraction of the band and both humidities. The
+over-saturation of process 1 is therefore a matter of its inputs, not of the missing saturation
+limit of the unit. With the sheet's solid fraction and otherwise measured inputs the unit
+over-saturates on day 2, the day with the high spray rate.
+
+**Question 2.** Not within 2 K. At the reference the unit's outlet is 5.05 to 5.77 K above the
+measured exhaust and 1.45 to 6.00 K below the measured bed temperature. This is the picture of
+Befund 117 (one outlet temperature cannot represent a line with a gap between bed and exhaust),
+now for the delivered units. The miss is not a constant of the unit: it moves by several kelvin
+over the band of the solid fraction.
+
+**Question 3.** The solid fraction. No measured input alone removes the over-saturation on both
+days; the spray flow does so with the value of day 1 only.
+
+**Caveats.**
+
+1. **The replacing solid fraction is a placeholder, not a measurement.** Reading A says that the
+   sheet's solid fraction and the reference of Befund 117 lie on different sides of saturation;
+   it does not say which of them is the plant's. What the measurement adds is reading F together
+   with the band: at the measured gas flow, inlet temperature and spray rate the unit is
+   admissible for every solid fraction from 0.60 to 0.70.
+2. **Process 1 = plant A is read from the label of the sheet.** If process 1 stands for a nominal
+   point or for another product, the result says that it is neither of the two measured ones.
+3. **Two days, two products.** The spray rate of day 1 is less than half of that of day 2
+   (`docs/34`); every difference between the days is confounded with the product.
+4. **Reading T is no validation of the unit.** The unit has no wall loss, no atomising air and one
+   outlet temperature; nothing was fitted. An agreement at one solid fraction (0.60 on day 2)
+   would be compensation, not accuracy.
+5. **The predictions were not blind** (section 10), and the dry run showed the readings of the
+   rebuild before the main run (section 9). The reading was committed before both.
+6. **Gas humidity:** both variants give the same counts and codes; the reference is a placeholder.
+7. **"Dry gas"** is inferred (Befund 130).
+8. **B gives points at saturation.** A spray flow or an inlet temperature for operation needs a
+   margin that this study does not determine.
+
+**Relation to existing findings (reported, nothing changed).** No number of Befund 117, 123, 128,
+130 or 131 changes. Befund 130 called process 1 "physically inadmissible"; this stays true of the
+point as delivered. New is the cause: the inputs, and among them the solid fraction.
+
+## 16. Open for the project lead
+
+1. Acceptance of F0, T1 and A0 and of "all three predictions confirmed".
+2. Whether Befund 130 gets a scope note at the merge. Proposal: "The over-saturation of process 1
+   follows from its inputs: at the measured operation of plant A the unit is not over-saturated
+   at any of eight stationary segments, and replacing the sheet's solid fraction by the reference
+   of Befund 117 alone removes it (finding sheet-plant-a)."
+3. Whether the recommendation for the sender (local report) goes out with the list of questions
+   (question 12 on the product and operating point of process 1 is on the list; nothing was sent).
+4. Document and finding number, the row of `docs/12`, the README sentence: the managing session
+   at the merge.
+
+## 17. Course of the run (2026-11-25)
+
+* Design, reading, code and tests committed (10f28b0) before the first run of the script.
+* Dry run on 10f28b0 (log of 10:31): every point through the rebuild, Dyssol at two points, exit
+  0, nothing written. It showed the readings of the rebuild.
+* Full suite on 10f28b0: **1795 passed, 36 skipped** in 2256 s (finished 11:09). The main
+  checkout skips 6; the `local/` of the worktree holds only the denylist and the price file, and
+  at least 26 of the skips are tests that need other local files (counted with `-rs` on the test
+  files that read `local/`).
+* Main run on the clean tree at 10f28b0 (finished 11:12): 94 Dyssol runs, none failed, nothing
+  retried; local record written and its copy in `C:/twinlink_runs/sheet-plant-a/` verified by
+  digest. Artifact committed after `tests/test_denylist.py` (da8f4ca). No merge, no push.
+
+## 18. Artifacts
+
+| File | Content |
+|---|---|
+| `artifacts/runs/sheet_plant_a_v1.json` | provenance, digests, the three controls, readings F, T and A, the predictions, the numbers without a reading |
+| `<worktree>/local/runs/sheet_plant_a/sheet_plant_a_v1_local.json` (not versioned; copy in `C:/twinlink_runs/sheet-plant-a/`) | inputs and results of all 94 points, the measured segment means, water loads, the roots of B, the smallest admissible solid fractions |
+| `local/reports/sheet_plant_a_bericht.md` of the main checkout (not versioned) | report in German with the recommendation for the sender |
