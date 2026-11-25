@@ -3,7 +3,7 @@
 Is the range of the medium flow, or are the fresh-gas inputs, the reason why the quadratic
 regression misses the thresholds? Python rebuild only.
 
-Design: ``docs/NN_dyssol_freshgas.md``, section 17; package ``twinlink_ml.dyssol_steady.cause``.
+Design: ``docs/50_dyssol_freshgas.md``, section 17; package ``twinlink_ml.dyssol_steady.cause``.
 
 **ADDED AFTER THE FACT** (decision of the project lead, 2026-11-24, after the results of the main
 run were known: reading D1, the quadratic regression has no ``N*`` up to 512 runs, prediction

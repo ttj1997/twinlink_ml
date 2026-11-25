@@ -1,6 +1,6 @@
 """Add-on to the fresh-gas study: why the quadratic regression misses the thresholds.
 
-Design and reading: ``docs/NN_dyssol_freshgas.md`` (section 17) and the docstring of
+Design and reading: ``docs/50_dyssol_freshgas.md`` (section 17) and the docstring of
 ``scripts/run_dyssol_freshgas_cause.py``. Two things changed at once against Befund 128: the
 fresh-gas state became an input, and the flow of the heat transfer medium went from a narrow
 range to the full one. Variants of the box separate them; everything is computed with the Python

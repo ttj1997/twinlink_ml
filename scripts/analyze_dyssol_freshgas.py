@@ -1,6 +1,6 @@
 """Surrogate of the one-line Dyssol flowsheet with the fresh-gas state as an input: the reading.
 
-Design: ``docs/NN_dyssol_freshgas.md``; settings ``conf/dyssol_steady/dyssol_freshgas.yaml``;
+Design: ``docs/50_dyssol_freshgas.md``; settings ``conf/dyssol_steady/dyssol_freshgas.yaml``;
 data and fits by ``scripts/run_dyssol_steady.py --config dyssol_freshgas.yaml``.
 
 **Occasion (Befund 130, open point 3; docs/45 section 17).** The partner sheet of 2026-11-24 (two

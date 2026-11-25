@@ -1,4 +1,4 @@
-# NN -- Dyssol flowsheet with the fresh-gas state as an input: data need of a surrogate with 7 inputs, and the partner sheet as a named test set
+# 50 -- Dyssol flowsheet with the fresh-gas state as an input: data need of a surrogate with 7 inputs, and the partner sheet as a named test set
 
 Status: **complete. Step 0 held at all 1291 points; pre-registered reading D1 (an MLP is needed,
 256 Dyssol runs; the quadratic regression does not reach the thresholds up to 512 runs); the
@@ -13,8 +13,8 @@ unaffected).
 Sections 1 to 10 are the design and the reading, committed BEFORE the pilot and before any Dyssol
 run of this study (4639bef) and unchanged since; the results below them take their numbers only
 from the artifacts named there. Branch `dyssol-freshgas` (from `master` 2e54dde), worktree
-`C:/twinlink_work/freshgas`. Document number and finding number are open (assigned by the managing
-session at merge). Code `src/twinlink_ml/dyssol_steady/` (extended, not copied), settings
+`C:/twinlink_work/freshgas`. Document number 50 and finding number 131 (lab book); merged into `master`
+on 2026-11-25. Code `src/twinlink_ml/dyssol_steady/` (extended, not copied), settings
 `conf/dyssol_steady/dyssol_freshgas.yaml`, drivers `scripts/run_dyssol_steady.py --config
 dyssol_freshgas.yaml` and `scripts/analyze_dyssol_freshgas.py`.
 

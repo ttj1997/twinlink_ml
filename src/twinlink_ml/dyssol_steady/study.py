@@ -15,7 +15,7 @@ A model *meets the thresholds at N* if the median over the seeds of both numbers
 its threshold. ``N*`` of a model is the smallest ``N`` of the grid from which on (every larger
 ``N`` of the grid included) it meets them.
 
-A later study (``docs/NN_dyssol_freshgas.md``, settings ``dyssol_freshgas.yaml``) uses the same
+A later study (``docs/50_dyssol_freshgas.md``, settings ``dyssol_freshgas.yaml``) uses the same
 reading with seven varied inputs and adds: a pilot grid given by its axes with one automatic
 extension (:func:`pilot_grid`, :func:`pilot_extension`), a second, named test set of points of a
 partner sheet (:func:`sheet_errors`, :func:`sheet_reading`), the control tabulated over an input

@@ -1,6 +1,6 @@
 # Surrogate of the one-line Dyssol flowsheet with the fresh-gas state as an input: how many Dyssol
 # runs does it need with 7 instead of 5 inputs, and does it meet the points of the partner sheet
-# of 2026-11-24 for the admissible process 2? (docs/NN_dyssol_freshgas.md; the reading is
+# of 2026-11-24 for the admissible process 2? (docs/50_dyssol_freshgas.md; the reading is
 # pre-registered there and in the docstring of scripts/analyze_dyssol_freshgas.py.)
 #
 # Read with `scripts/run_dyssol_steady.py --config dyssol_freshgas.yaml`. Design, models,

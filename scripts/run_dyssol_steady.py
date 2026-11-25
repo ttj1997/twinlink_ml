@@ -43,7 +43,7 @@ patched materials database, scratch folders of the Dyssol runs. ``$DYSSOL_HOME``
 Other settings (``--config``)
 -----------------------------
 ``--config <file>`` names another YAML next to the default one. ``dyssol_freshgas.yaml``
-(``docs/NN_dyssol_freshgas.md``) varies seven inputs (the fresh-gas temperature and its relative
+(``docs/50_dyssol_freshgas.md``) varies seven inputs (the fresh-gas temperature and its relative
 humidity as well), reads its own box file, and adds
 
 * a pilot grid given by its axes, extended once automatically where the selection lies at an edge

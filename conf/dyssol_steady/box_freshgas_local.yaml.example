@@ -1,5 +1,5 @@
 # Template of the box of the study with the fresh-gas state as an input
-# (docs/NN_dyssol_freshgas.md). Copy to <local>/dyssol_steady/box_freshgas_local.yaml (the local
+# (docs/50_dyssol_freshgas.md). Copy to <local>/dyssol_steady/box_freshgas_local.yaml (the local
 # folder is git-ignored) and replace the placeholders. The real box stays outside the repository;
 # records carry its SHA-256 only.
 #

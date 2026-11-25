@@ -1,6 +1,6 @@
 """Surrogate of the one-line flowsheet with the fresh-gas state as an input (seven inputs).
 
-Extension of the package ``twinlink_ml.dyssol_steady`` for ``docs/NN_dyssol_freshgas.md``: box and
+Extension of the package ``twinlink_ml.dyssol_steady`` for ``docs/50_dyssol_freshgas.md``: box and
 design with the relative humidity of the fresh gas, pilot grid with one automatic extension,
 second test set from a sweep sheet, control tabulated over the fresh-gas temperature.
 

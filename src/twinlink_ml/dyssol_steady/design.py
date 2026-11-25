@@ -9,7 +9,7 @@ The box is NOT in the repository: it is read from a local YAML (template
 of the input or ``{relative: r}``, i.e. ``nominal x (1 -+ r)`` around the value of the source
 file. Records carry the SHA-256 of the resolved box only.
 
-A later study (``docs/NN_dyssol_freshgas.md``) varies the fresh-gas state as well
+A later study (``docs/50_dyssol_freshgas.md``) varies the fresh-gas state as well
 (:data:`VARIED_FRESH_GAS`, seven inputs per line): its temperature and its RELATIVE humidity. The
 humidity ratio of a point follows from both (Buck's saturation pressure over water at 1 atm, the
 functions of :mod:`twinlink_ml.case_ranking.space`), so that no point of the box holds fresh gas

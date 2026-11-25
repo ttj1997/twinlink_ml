@@ -206,6 +206,8 @@ replace a product-moisture measurement.
 
 **Partner sweep sheet of 2026-11-24 and the cost of the medium flow (Befund 130; model against model, placeholders).** The rebuild of the stationary Dyssol units meets the delivered sweep of the medium flow in 91 of 128 values within rounding and 116 within one unit of the last decimal (our own Dyssol runs agree with the rebuild; the deviations lie between the sheet and Dyssol), and the sheet is not a test set for the surrogates of Befund 128. With ideal exchangers the cost of fuel plus pump electricity has no interior optimum of the medium flow up to 15 000 kg/h; a reliable optimum needs an exchanger model with a finite area.
 
+**Dyssol flowsheet with the fresh-gas state as an input (Befund 131; model against model, placeholders).** With the fresh-gas state and the full range of the medium flow as inputs a surrogate of the one-line flowsheet needs an MLP and 128 to 256 Dyssol runs, the quadratic regression does not reach the thresholds up to 512 runs (the cause is the range of the medium flow, descriptively; the rule of thumb of Befund 128 holds only in its box), and the partner sheet is met at 8 of its 11 points.
+
 **One-step bandit (Befund 93, follow-up of Befund 68).** A residual action and a separated
 moisture cost lift SAC from a negative to a clearly positive closed-regret fraction, but no cell
 meets the feasibility gate; RL stays a diagnostic finding. **Citation rule:** the median 0.91 of
