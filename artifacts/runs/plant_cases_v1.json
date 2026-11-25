@@ -1,0 +1,4179 @@
+{
+ "provenance": {
+  "git/commit": "d2560824f5173c116b42e2392a607d5f553ee754",
+  "git/dirty": false,
+  "python": "3.14.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "code/package_dir": "src/twinlink_ml",
+  "code/interpreter": ".venv/Scripts/python.exe",
+  "code/root_checked": true,
+  "preset/new_study_version": 2,
+  "solver/bed_temperature_bracket": "T_amb+10 K; fallback [T_amb+0.5 K, T_amb+10 K] iff the residual at T_amb+10 K is negative",
+  "heatnetwork/approach_check": "not used",
+  "heatnetwork/fingerprint": "not used"
+ },
+ "name": "plant_cases_v1",
+ "inputs": {
+  "sweep_sheet_sha256": "7436f4156dd050c389ea710ad73189dfe0a1175219e2a79fe65070182bb1020a",
+  "comparison_workbook_sha256": "d29565e3a5489714398688757e366a12f945aae1f0f9ef1ac0858295fe9def8a",
+  "flowsheets_sha256": {
+   "case 1, line 1": "76e2951ff97b0662f139cda64713352b8c2f3d52b051f455040d1166790fb784",
+   "case 1, line 2": "1bbb502efecd30dc4148136ae4cafb84936e2e72ca06956d4322d70dd3d58887",
+   "case 2": "d3351c6c3a623568dc8d0c50bd9a9ee83e148b1b900a39584dcf7f82448a1b1b",
+   "case 3": "cf32ac960874e9e679528093ffd49a9c8b79c6db48d45a75d6886bf6c72f8939",
+   "case 4": "62a8e5bf427029798ada5057eb701ceac9b6f86684b753769b418869189b6892",
+   "case 5": "76a7f8808a8ab1f145e27b9068620cdde7a91079fe5e24b75d9eaa5bd6222c1c",
+   "case 6": "51b0f8b0edbff84fa4290b71650da457694295fa5c606886f623b892d3d640ed"
+  },
+  "materials": {
+   "installed_sha256": "30188fb7a5678054b1819187359b0f5a04517f429ff52d35f0fda33c9b7ae30a",
+   "patched_sha256": "bf57d42ee7ef1ae0e83c06b71fc7efe1824f89161e93a5c21330b96be7eb98db"
+  },
+  "exports_sha256": {
+   "day_1": "e1ec8c7b72e35fa6a11b4fe74a2263907f8a245c449c5e4b6f659ce8b24998b6",
+   "day_2": "40a66b790032dcbf9d10d2155dc281d4e43825404bcd7892fb73f5b849938bdd"
+  },
+  "role_file_sha256": "8d45ef4c99c872d02399021cb633e3f1f9ab7431c3cf92f807389571034ebacd",
+  "dyssol_steady_config_fingerprint": "34311677cd77a56d10e82de572580fae2406ee827b75deaec8a7dcfb28b1218b",
+  "case_ranking_config_fingerprint": "0906db1d6b73f241",
+  "plant_scale_config_sha256": "40203a7b77f813b551e92bc9659a459dfebd1402fca51e4553d226b43f76aa86",
+  "gas_flow_reading": "dry",
+  "max_exhaust_relative_humidity": 0.9,
+  "cells": 158,
+  "grid_settings": 10,
+  "dyssol_version": "Version: 1.6.0",
+  "units_libraries": {
+   "DryerTwinLink.dll": "7cff70c22fe85fea28ce27daee0ee293d0318c825eb1dc9c306d23f680366599",
+   "HeaterTwinLink.dll": "198a8b751ad0110e54195c963b96dd06c2409035b349eebf140b912a9bcde77c",
+   "HeatrecoveryTwinLink.dll": "08e24cf29e1acd46655e8ba5141a404937c78d633bfbb609c604d44ead6ee2fd"
+  }
+ },
+ "control": {
+  "a_extended_rebuild": {
+   "cells": 158,
+   "max_relative_difference": 0.0,
+   "tolerance": 1e-12,
+   "held": true
+  },
+  "b_segments": {
+   "same_segments": true,
+   "same_exports": true,
+   "same_role_file": true,
+   "saturation_ratio_max_relative_deviation": 0.0,
+   "tolerance": 1e-09,
+   "held": true
+  },
+  "c_dyssol": {
+   "points": 1896,
+   "points_compared": 1896,
+   "max_temperature_k": 2.2737367544323206e-13,
+   "max_relative_percent": 5.5509332244191394e-11,
+   "dyssol_runs": 1106,
+   "bounds": {
+    "temperature_k": 1e-06,
+    "relative_percent": 1e-06
+   },
+   "failures": [],
+   "dyssol_wall_seconds": [
+    1.0606508001219481,
+    1.7527122001629323
+   ],
+   "dyssol_peak_memory_mb": 59.73046875,
+   "workers": 4,
+   "held": true
+  },
+  "d_workbook_against_excel": {
+   "flow_settings": {
+    "stated": {
+     "totals_within_rounding": 0,
+     "totals": 6,
+     "largest_total_difference_in_units_of_the_last_decimal": 193.40976751124686,
+     "fuel_values_within_rounding": [
+      6,
+      12
+     ],
+     "recovered_heats_within_rounding": [
+      4,
+      12
+     ],
+     "held": false
+    },
+    "stored": {
+     "totals_within_rounding": 6,
+     "totals": 6,
+     "largest_total_difference_in_units_of_the_last_decimal": 0.8975477661067544,
+     "fuel_values_within_rounding": [
+      12,
+      12
+     ],
+     "recovered_heats_within_rounding": [
+      12,
+      12
+     ],
+     "held": true
+    }
+   },
+   "held": true
+  },
+  "read_units": true,
+  "read_workbook": true
+ },
+ "test_set": {
+  "read_points": [
+   "R",
+   "M|day_1_s1",
+   "M|day_1_s2",
+   "M|day_1_s3",
+   "M|day_1_s4",
+   "M|day_2_s1",
+   "M|day_2_s2",
+   "M|day_2_s3",
+   "M|day_2_s4"
+  ],
+  "groups": {
+   "R": [
+    "R"
+   ],
+   "day_1": [
+    "M|day_1_s1",
+    "M|day_1_s2",
+    "M|day_1_s3",
+    "M|day_1_s4"
+   ],
+   "day_2": [
+    "M|day_2_s1",
+    "M|day_2_s2",
+    "M|day_2_s3",
+    "M|day_2_s4"
+   ]
+  }
+ },
+ "tie": {
+  "exact_kg_per_h": 1e-09,
+  "practical_fraction": 0.01,
+  "sensitivity": [
+   0.005,
+   0.02
+  ]
+ },
+ "headline_model": "U",
+ "models": {
+  "U": {
+   "reading_f": {
+    "code": "F0",
+    "cells": 54,
+    "admissible_cells": 54,
+    "admissible_cells_per_case": {
+     "1": 9,
+     "2": 9,
+     "3": 9,
+     "4": 9,
+     "5": 9,
+     "6": 9
+    }
+   },
+   "reading_c": {
+    "code": "C1",
+    "points": 9,
+    "case_1_best_or_practically_equal": 0,
+    "per_group": {
+     "R": "C1",
+     "day_1": "C1",
+     "day_2": "C1"
+    },
+    "sensitivity": {
+     "0.005": "C1",
+     "0.02": "C1"
+    },
+    "best_case_per_point": {
+     "R": 2,
+     "M|day_1_s1": 2,
+     "M|day_1_s2": 2,
+     "M|day_1_s3": 2,
+     "M|day_1_s4": 2,
+     "M|day_2_s1": 2,
+     "M|day_2_s2": 2,
+     "M|day_2_s3": 2,
+     "M|day_2_s4": 2
+    }
+   },
+   "points": {
+    "R": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      1,
+      6,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 18.4775773488256,
+      "2": 20.419531859612405,
+      "3": 17.041658430436467,
+      "4": 19.758684822178953,
+      "5": 14.111203243261166,
+      "6": 17.29538439982989
+     },
+     "regret_case_1_percent_of_best_saving": 9.510279296009596,
+     "regret_case_1_percent_of_best_fuel": 2.440240119423534,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "6": 1
+     },
+     "saturation": [
+      0.0,
+      0.5105922279481944
+     ]
+    },
+    "M|day_1_s1": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      1,
+      6,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 20.73918837839474,
+      "2": 22.59255797146865,
+      "3": 17.779608095006072,
+      "4": 21.531814791195284,
+      "5": 16.15985077170078,
+      "6": 20.233528886307337
+     },
+     "regret_case_1_percent_of_best_saving": 8.203451753513104,
+     "regret_case_1_percent_of_best_fuel": 2.394304145059828,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.0,
+      0.03498979189232108
+     ]
+    },
+    "M|day_1_s2": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      1,
+      6,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 20.62214819185671,
+      "2": 22.48502768574488,
+      "3": 17.71404040121284,
+      "4": 21.433058873835325,
+      "5": 16.058961800161992,
+      "6": 20.106700815284935
+     },
+     "regret_case_1_percent_of_best_saving": 8.28497754116265,
+     "regret_case_1_percent_of_best_fuel": 2.403251189119732,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.0,
+      0.03261855899514431
+     ]
+    },
+    "M|day_1_s3": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      1,
+      6,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 20.791353663045967,
+      "2": 22.641324800948844,
+      "3": 17.81391034064046,
+      "4": 21.573313077318346,
+      "5": 16.20522020066399,
+      "6": 20.28380354367792
+     },
+     "regret_case_1_percent_of_best_saving": 8.170772488654668,
+     "regret_case_1_percent_of_best_fuel": 2.3914203974444033,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.0,
+      0.03299631936651758
+     ]
+    },
+    "M|day_1_s4": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      1,
+      6,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 20.896489383149277,
+      "2": 22.739516035012464,
+      "3": 17.868618854804353,
+      "4": 21.656976960755582,
+      "5": 16.297574144097464,
+      "6": 20.39788891805069
+     },
+     "regret_case_1_percent_of_best_saving": 8.104951086142055,
+     "regret_case_1_percent_of_best_fuel": 2.38547127493843,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.0,
+      0.03248567011616624
+     ]
+    },
+    "M|day_2_s1": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      1,
+      6,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 17.83429669707283,
+      "2": 19.827077927925888,
+      "3": 16.49329575116884,
+      "4": 19.240740692931258,
+      "5": 13.55629601566566,
+      "6": 16.790414618346688
+     },
+     "regret_case_1_percent_of_best_saving": 10.05080646829093,
+     "regret_case_1_percent_of_best_fuel": 2.485603841483514,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "6": 1
+     },
+     "saturation": [
+      0.0,
+      0.3678019192873323
+     ]
+    },
+    "M|day_2_s2": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      1,
+      6,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 17.919301142662505,
+      "2": 19.904917703190616,
+      "3": 16.54503930489876,
+      "4": 19.303898083166292,
+      "5": 13.631972784610971,
+      "6": 16.872708137418876
+     },
+     "regret_case_1_percent_of_best_saving": 9.975507510939538,
+     "regret_case_1_percent_of_best_fuel": 2.4790742497398144,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "6": 1
+     },
+     "saturation": [
+      0.0,
+      0.36957685963295034
+     ]
+    },
+    "M|day_2_s3": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      1,
+      6,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 17.96625325826274,
+      "2": 19.94982687539695,
+      "3": 16.567303350315143,
+      "4": 19.339009585571816,
+      "5": 13.674749974167215,
+      "6": 16.925778529166898
+     },
+     "regret_case_1_percent_of_best_saving": 9.942811180885199,
+     "regret_case_1_percent_of_best_fuel": 2.477912963469364,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "6": 1
+     },
+     "saturation": [
+      0.0,
+      0.3680181552215219
+     ]
+    },
+    "M|day_2_s4": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      1,
+      6,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 18.363681627585322,
+      "2": 20.31859199705003,
+      "3": 16.792266586338354,
+      "4": 19.63354760133324,
+      "5": 14.031609964257072,
+      "6": 17.32920102603374
+     },
+     "regret_case_1_percent_of_best_saving": 9.621288570332705,
+     "regret_case_1_percent_of_best_fuel": 2.453408415413964,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "6": 0
+     },
+     "saturation": [
+      0.0,
+      0.3688969021146587
+     ]
+    }
+   },
+   "worded_rule": {
+    "threshold_k": -15.5,
+    "points_where_it_predicts_case_1": 9,
+    "points_where_it_predicts_case_1_and_case_1_is_best_or_equal": 0
+   },
+   "generalised_rule": {
+    "status": "post-hoc hypothesis of the project lead (2026-11-25), no reading",
+    "points": 10,
+    "decided_points": 10,
+    "hits": 10,
+    "per_point": {
+     "R": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_1_s1": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_1_s2": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_1_s3": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_1_s4": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_2_s1": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_2_s2": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_2_s3": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_2_s4": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "X": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": true,
+      "generalised_rule_case": 1,
+      "better_of_cases_1_and_2": 1,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     }
+    }
+   },
+   "exchanged_sizes": {
+    "X": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 1,
+     "order": [
+      1,
+      3,
+      2,
+      5,
+      4,
+      6
+     ],
+     "best_or_practically_equal": true,
+     "saving_percent": {
+      "1": 19.958280715567735,
+      "2": 17.593121863941146,
+      "3": 19.289940623763815,
+      "4": 16.340203230949715,
+      "5": 17.0223936891615,
+      "6": 13.678504627353458
+     },
+     "regret_case_1_percent_of_best_saving": 0.0,
+     "regret_case_1_percent_of_best_fuel": 0.0,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "6": 1
+     }
+    },
+    "X_scaled_circuits": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 1,
+     "order": [
+      1,
+      3,
+      5,
+      2,
+      4,
+      6
+     ],
+     "best_or_practically_equal": true,
+     "saving_percent": {
+      "1": 21.590804023850936,
+      "2": 18.541298591859828,
+      "3": 20.949933882955072,
+      "4": 17.496570928023207,
+      "5": 18.964676477323188,
+      "6": 15.164695855741925
+     },
+     "regret_case_1_percent_of_best_saving": 0.0,
+     "regret_case_1_percent_of_best_fuel": 0.0,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "6": 1
+     }
+    },
+    "measured_points_with_case_1_best_or_practically_equal": 8
+   },
+   "band": {
+    "0.6": {
+     "reading_f": "F1",
+     "reading_c": "C1",
+     "best_cases": [
+      "2",
+      "6"
+     ]
+    },
+    "0.634": {
+     "reading_f": "F0",
+     "reading_c": "C1",
+     "best_cases": [
+      "2"
+     ]
+    },
+    "0.7": {
+     "reading_f": "F0",
+     "reading_c": "C1",
+     "best_cases": [
+      "2"
+     ]
+    }
+   },
+   "grid": {
+    "R": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_1_s1": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_1_s2": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_1_s3": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_1_s4": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_2_s1": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_2_s2": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_2_s3": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_2_s4": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "X": {
+     "best_case_per_flow": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+     ]
+    }
+   },
+   "as_delivered": {
+    "S": {
+     "saturation": [
+      0.0,
+      2.0154634728394782
+     ],
+     "dryers_admissible": false,
+     "order_of_the_formula": [
+      2,
+      4,
+      1,
+      3,
+      6,
+      5
+     ],
+     "saving_percent": {
+      "1": 16.430474162520504,
+      "2": 18.555528967199677,
+      "3": 15.890197020726445,
+      "4": 18.307232195352654,
+      "5": 12.224389363084999,
+      "6": 15.225045411240837
+     },
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "6": 1
+     }
+    }
+   }
+  },
+  "W:partner": {
+   "reading_f": {
+    "code": "F0",
+    "cells": 54,
+    "admissible_cells": 54,
+    "admissible_cells_per_case": {
+     "1": 9,
+     "2": 9,
+     "3": 9,
+     "4": 9,
+     "5": 9,
+     "6": 9
+    }
+   },
+   "reading_c": {
+    "code": "C1",
+    "points": 9,
+    "case_1_best_or_practically_equal": 0,
+    "per_group": {
+     "R": "C1",
+     "day_1": "C1",
+     "day_2": "C1"
+    },
+    "sensitivity": {
+     "0.005": "C1",
+     "0.02": "C1"
+    },
+    "best_case_per_point": {
+     "R": 2,
+     "M|day_1_s1": 2,
+     "M|day_1_s2": 2,
+     "M|day_1_s3": 2,
+     "M|day_1_s4": 2,
+     "M|day_2_s1": 2,
+     "M|day_2_s2": 2,
+     "M|day_2_s3": 2,
+     "M|day_2_s4": 2
+    }
+   },
+   "points": {
+    "R": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      1,
+      6,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 18.448188663133244,
+      "2": 20.39771809107807,
+      "3": 17.003329586995502,
+      "4": 19.722920424423602,
+      "5": 14.075910490886734,
+      "6": 17.26213687663967
+     },
+     "regret_case_1_percent_of_best_saving": 9.55758589877534,
+     "regret_case_1_percent_of_best_fuel": 2.4490873643238085,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "6": 1
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.5348331440547691
+     ]
+    },
+    "M|day_1_s1": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      1,
+      6,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 20.732941680629168,
+      "2": 22.57733284204083,
+      "3": 17.780527981886575,
+      "4": 21.47041030832558,
+      "5": 16.16708699154471,
+      "6": 20.177421262794454
+     },
+     "regret_case_1_percent_of_best_saving": 8.16921633000536,
+     "regret_case_1_percent_of_best_fuel": 2.3822366615821977,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.04663107479681286
+     ]
+    },
+    "M|day_1_s2": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      1,
+      6,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 20.604744444012326,
+      "2": 22.45978005593299,
+      "3": 17.70343111926106,
+      "4": 21.372809661396442,
+      "5": 16.054823348966213,
+      "6": 20.051866245351256
+     },
+     "regret_case_1_percent_of_best_saving": 8.259366776081297,
+     "regret_case_1_percent_of_best_fuel": 2.3923527857656026,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.04388754877078411
+     ]
+    },
+    "M|day_1_s3": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      1,
+      6,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 20.78466487237125,
+      "2": 22.626327227044438,
+      "3": 17.81423570251542,
+      "4": 21.51214417416923,
+      "5": 16.211985536023562,
+      "6": 20.228028275774136
+     },
+     "regret_case_1_percent_of_best_saving": 8.139466631915043,
+     "regret_case_1_percent_of_best_fuel": 2.380218346461778,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.04428587610045718
+     ]
+    },
+    "M|day_1_s4": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      1,
+      6,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 20.89610033315149,
+      "2": 22.727355562983927,
+      "3": 17.87534723307771,
+      "4": 21.5953635016336,
+      "5": 16.310735398155167,
+      "6": 20.341661932320818
+     },
+     "regret_case_1_percent_of_best_saving": 8.057493643541196,
+     "regret_case_1_percent_of_best_fuel": 2.3698622496672397,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.043711027541551824
+     ]
+    },
+    "M|day_2_s1": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      1,
+      6,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 17.78027168925855,
+      "2": 19.766585804187926,
+      "3": 16.45284898478818,
+      "4": 19.168182070995968,
+      "5": 13.516747608935063,
+      "6": 16.719050613828724
+     },
+     "regret_case_1_percent_of_best_saving": 10.04884776059068,
+     "regret_case_1_percent_of_best_fuel": 2.4756694387723726,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "6": 1
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.3904919539753175
+     ]
+    },
+    "M|day_2_s2": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      1,
+      6,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 17.86779609928295,
+      "2": 19.845872685498307,
+      "3": 16.507051133110224,
+      "4": 19.231492691398845,
+      "5": 13.594931567176278,
+      "6": 16.801537514801044
+     },
+     "regret_case_1_percent_of_best_saving": 9.967193771533013,
+     "regret_case_1_percent_of_best_fuel": 2.4678412110382744,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "6": 1
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.3922650557430923
+     ]
+    },
+    "M|day_2_s3": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      1,
+      6,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 17.91627751758108,
+      "2": 19.891298414956236,
+      "3": 16.530797654247415,
+      "4": 19.26674621439315,
+      "5": 13.639225944696623,
+      "6": 16.854776852105665
+     },
+     "regret_case_1_percent_of_best_saving": 9.929069767965178,
+     "regret_case_1_percent_of_best_fuel": 2.465426175055983,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "6": 1
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.3907198959254441
+     ]
+    },
+    "M|day_2_s4": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      1,
+      6,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 18.3279245776552,
+      "2": 20.265622219868572,
+      "3": 16.769699711139367,
+      "4": 19.56160343090705,
+      "5": 14.010333727270018,
+      "6": 17.258763605444894
+     },
+     "regret_case_1_percent_of_best_saving": 9.56150085692231,
+     "regret_case_1_percent_of_best_fuel": 2.4301909617412423,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.3916397443179111
+     ]
+    }
+   },
+   "worded_rule": {
+    "threshold_k": -15.5,
+    "points_where_it_predicts_case_1": 9,
+    "points_where_it_predicts_case_1_and_case_1_is_best_or_equal": 0
+   },
+   "generalised_rule": {
+    "status": "post-hoc hypothesis of the project lead (2026-11-25), no reading",
+    "points": 10,
+    "decided_points": 10,
+    "hits": 10,
+    "per_point": {
+     "R": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_1_s1": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_1_s2": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_1_s3": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_1_s4": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_2_s1": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_2_s2": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_2_s3": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_2_s4": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "X": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": true,
+      "generalised_rule_case": 1,
+      "better_of_cases_1_and_2": 1,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     }
+    }
+   },
+   "exchanged_sizes": {
+    "X": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 1,
+     "order": [
+      1,
+      3,
+      2,
+      5,
+      4,
+      6
+     ],
+     "best_or_practically_equal": true,
+     "saving_percent": {
+      "1": 19.93383110089642,
+      "2": 17.56406400295209,
+      "3": 19.255584941047417,
+      "4": 16.305007490364908,
+      "5": 16.99013595791991,
+      "6": 13.645800905020302
+     },
+     "regret_case_1_percent_of_best_saving": 0.0,
+     "regret_case_1_percent_of_best_fuel": 0.0,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "6": 1
+     }
+    },
+    "X_scaled_circuits": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 1,
+     "order": [
+      1,
+      3,
+      5,
+      2,
+      4,
+      6
+     ],
+     "best_or_practically_equal": true,
+     "saving_percent": {
+      "1": 21.560672824957788,
+      "2": 18.50864150427067,
+      "3": 20.91289109612854,
+      "4": 17.45970250810806,
+      "5": 18.929470465576667,
+      "6": 15.130030876227991
+     },
+     "regret_case_1_percent_of_best_saving": 0.0,
+     "regret_case_1_percent_of_best_fuel": 0.0,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "6": 1
+     }
+    },
+    "measured_points_with_case_1_best_or_practically_equal": 8
+   },
+   "band": {
+    "0.6": {
+     "reading_f": "F0",
+     "reading_c": "C1",
+     "best_cases": [
+      "2"
+     ]
+    },
+    "0.634": {
+     "reading_f": "F0",
+     "reading_c": "C1",
+     "best_cases": [
+      "2"
+     ]
+    },
+    "0.7": {
+     "reading_f": "F0",
+     "reading_c": "C1",
+     "best_cases": [
+      "2"
+     ]
+    }
+   },
+   "grid": {
+    "R": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_1_s1": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_1_s2": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_1_s3": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_1_s4": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_2_s1": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_2_s2": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_2_s3": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_2_s4": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "X": {
+     "best_case_per_flow": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+     ]
+    }
+   },
+   "as_delivered": {
+    "S": {
+     "saturation": [
+      0.026804626537751456,
+      2.0101156266870337
+     ],
+     "dryers_admissible": false,
+     "order_of_the_formula": [
+      2,
+      4,
+      1,
+      3,
+      6,
+      5
+     ],
+     "saving_percent": {
+      "1": 16.375830463065242,
+      "2": 18.510729910394343,
+      "3": 15.84547490000978,
+      "4": 18.263383016923125,
+      "5": 12.178699968693929,
+      "6": 15.180337987082847
+     },
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "6": 1
+     }
+    }
+   }
+  },
+  "W:physical_unpressurised_95": {
+   "reading_f": {
+    "code": "F0",
+    "cells": 54,
+    "admissible_cells": 54,
+    "admissible_cells_per_case": {
+     "1": 9,
+     "2": 9,
+     "3": 9,
+     "4": 9,
+     "5": 9,
+     "6": 9
+    }
+   },
+   "reading_c": {
+    "code": "C1",
+    "points": 9,
+    "case_1_best_or_practically_equal": 0,
+    "per_group": {
+     "R": "C1",
+     "day_1": "C1",
+     "day_2": "C1"
+    },
+    "sensitivity": {
+     "0.005": "C1",
+     "0.02": "C1"
+    },
+    "best_case_per_point": {
+     "R": 2,
+     "M|day_1_s1": 2,
+     "M|day_1_s2": 2,
+     "M|day_1_s3": 2,
+     "M|day_1_s4": 2,
+     "M|day_2_s1": 2,
+     "M|day_2_s2": 2,
+     "M|day_2_s3": 2,
+     "M|day_2_s4": 2
+    }
+   },
+   "points": {
+    "R": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 24.957376714431945,
+      "2": 32.67442515933692,
+      "3": 23.79331281158615,
+      "4": 31.6422473908179,
+      "5": 23.393512301357145,
+      "6": 31.11056074626213
+     },
+     "regret_case_1_percent_of_best_saving": 23.6180082963136,
+     "regret_case_1_percent_of_best_fuel": 11.4622837802256,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.5348331440547691
+     ]
+    },
+    "M|day_1_s1": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 29.24066387147962,
+      "2": 38.91850968437782,
+      "3": 24.024990757885938,
+      "4": 33.53345024260903,
+      "5": 22.23365544810906,
+      "6": 31.91150126100724
+     },
+     "regret_case_1_percent_of_best_saving": 24.866948635453422,
+     "regret_case_1_percent_of_best_fuel": 15.844154690546235,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.04663107479681286
+     ]
+    },
+    "M|day_1_s2": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 28.729416460860094,
+      "2": 37.58348339478094,
+      "3": 23.736216980533992,
+      "4": 33.12830421251341,
+      "5": 22.02129076812127,
+      "6": 30.875357702042106
+     },
+     "regret_case_1_percent_of_best_saving": 23.5583988873963,
+     "regret_case_1_percent_of_best_fuel": 14.185455093436758,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.04388754877078411
+     ]
+    },
+    "M|day_1_s3": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 29.300510767931343,
+      "2": 38.93274832662326,
+      "3": 24.044483623807775,
+      "4": 33.5607223989787,
+      "5": 22.239288626468415,
+      "6": 31.871526185160338
+     },
+     "regret_case_1_percent_of_best_saving": 24.74070794561692,
+     "regret_case_1_percent_of_best_fuel": 15.77316367569764,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.04428587610045718
+     ]
+    },
+    "M|day_1_s4": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 29.644967513829606,
+      "2": 39.72052534643452,
+      "3": 24.210071709979996,
+      "4": 33.79661572195083,
+      "5": 22.34344384692958,
+      "6": 32.4190016795345
+     },
+     "regret_case_1_percent_of_best_saving": 25.366124301549135,
+     "regret_case_1_percent_of_best_fuel": 16.714740615293252,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.043711027541551824
+     ]
+    },
+    "M|day_2_s1": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 23.550555531058635,
+      "2": 31.297220024077422,
+      "3": 22.798336783083755,
+      "4": 30.633792857449333,
+      "5": 22.539985468772365,
+      "6": 30.28664996179118
+     },
+     "regret_case_1_percent_of_best_saving": 24.75192520952074,
+     "regret_case_1_percent_of_best_fuel": 11.275620136090083,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.3904919539753175
+     ]
+    },
+    "M|day_2_s2": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 23.785488906022373,
+      "2": 31.544609074073556,
+      "3": 22.915073359553897,
+      "4": 30.776755745431263,
+      "5": 22.616127074271883,
+      "6": 30.375247242323073
+     },
+     "regret_case_1_percent_of_best_saving": 24.59729378744588,
+     "regret_case_1_percent_of_best_fuel": 11.33456410532678,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.3922650557430923
+     ]
+    },
+    "M|day_2_s3": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 23.921087306198814,
+      "2": 31.70235083633199,
+      "3": 22.967313767801663,
+      "4": 30.861164886833574,
+      "5": 22.63973798234964,
+      "6": 30.421001512482842
+     },
+     "regret_case_1_percent_of_best_saving": 24.54475243903862,
+     "regret_case_1_percent_of_best_fuel": 11.393164516521223,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.3907198959254441
+     ]
+    },
+    "M|day_2_s4": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 25.036870507622307,
+      "2": 32.90333537368537,
+      "3": 23.481132776425937,
+      "4": 31.530770101680258,
+      "5": 22.946810960248285,
+      "6": 30.813275826311333
+     },
+     "regret_case_1_percent_of_best_saving": 23.907803803848758,
+     "regret_case_1_percent_of_best_fuel": 11.72407735894806,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.3916397443179111
+     ]
+    }
+   },
+   "worded_rule": {
+    "threshold_k": -0.54,
+    "points_where_it_predicts_case_1": 9,
+    "points_where_it_predicts_case_1_and_case_1_is_best_or_equal": 0
+   },
+   "generalised_rule": {
+    "status": "post-hoc hypothesis of the project lead (2026-11-25), no reading",
+    "points": 10,
+    "decided_points": 10,
+    "hits": 10,
+    "per_point": {
+     "R": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_1_s1": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_1_s2": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_1_s3": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_1_s4": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_2_s1": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_2_s2": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_2_s3": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_2_s4": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "X": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": true,
+      "generalised_rule_case": 1,
+      "better_of_cases_1_and_2": 1,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     }
+    }
+   },
+   "exchanged_sizes": {
+    "X": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 1,
+     "order": [
+      1,
+      3,
+      5,
+      2,
+      4,
+      6
+     ],
+     "best_or_practically_equal": true,
+     "saving_percent": {
+      "1": 39.486292048166554,
+      "2": 25.083046171700484,
+      "3": 38.13441529215536,
+      "4": 23.73116941568928,
+      "5": 38.13441529215536,
+      "6": 23.73116941568928
+     },
+     "regret_case_1_percent_of_best_saving": 0.0,
+     "regret_case_1_percent_of_best_fuel": 0.0,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     }
+    },
+    "X_scaled_circuits": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 1,
+     "order": [
+      1,
+      3,
+      5,
+      2,
+      4,
+      6
+     ],
+     "best_or_practically_equal": true,
+     "saving_percent": {
+      "1": 31.231071955606236,
+      "2": 23.007080864130536,
+      "3": 30.560137497210743,
+      "4": 22.273663518959133,
+      "5": 30.3297034650712,
+      "6": 22.105712373595477
+     },
+     "regret_case_1_percent_of_best_saving": 0.0,
+     "regret_case_1_percent_of_best_fuel": 0.0,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     }
+    },
+    "measured_points_with_case_1_best_or_practically_equal": 8
+   },
+   "band": {
+    "0.6": {
+     "reading_f": "F0",
+     "reading_c": "C1",
+     "best_cases": [
+      "2"
+     ]
+    },
+    "0.634": {
+     "reading_f": "F0",
+     "reading_c": "C1",
+     "best_cases": [
+      "2"
+     ]
+    },
+    "0.7": {
+     "reading_f": "F0",
+     "reading_c": "C1",
+     "best_cases": [
+      "2"
+     ]
+    }
+   },
+   "grid": {
+    "R": {
+     "best_case_per_flow": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_1_s1": {
+     "best_case_per_flow": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_1_s2": {
+     "best_case_per_flow": [
+      1,
+      1,
+      1,
+      2,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true
+     ]
+    },
+    "M|day_1_s3": {
+     "best_case_per_flow": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_1_s4": {
+     "best_case_per_flow": [
+      1,
+      1,
+      1,
+      2,
+      2,
+      1,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_2_s1": {
+     "best_case_per_flow": [
+      1,
+      1,
+      1,
+      1,
+      2,
+      1,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_2_s2": {
+     "best_case_per_flow": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_2_s3": {
+     "best_case_per_flow": [
+      2,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_2_s4": {
+     "best_case_per_flow": [
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "X": {
+     "best_case_per_flow": [
+      1,
+      1,
+      1,
+      1,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+     ]
+    }
+   },
+   "as_delivered": {
+    "S": {
+     "saturation": [
+      0.026804626537751456,
+      1.0
+     ],
+     "dryers_admissible": false,
+     "order_of_the_formula": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "saving_percent": {
+      "1": 23.393512301357145,
+      "2": 31.11056074626213,
+      "3": 23.393512301357145,
+      "4": 31.11056074626213,
+      "5": 23.393512301357145,
+      "6": 31.11056074626213
+     },
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     }
+    }
+   }
+  },
+  "W:physical_pressurised": {
+   "reading_f": {
+    "code": "F0",
+    "cells": 54,
+    "admissible_cells": 54,
+    "admissible_cells_per_case": {
+     "1": 9,
+     "2": 9,
+     "3": 9,
+     "4": 9,
+     "5": 9,
+     "6": 9
+    }
+   },
+   "reading_c": {
+    "code": "C1",
+    "points": 9,
+    "case_1_best_or_practically_equal": 0,
+    "per_group": {
+     "R": "C1",
+     "day_1": "C1",
+     "day_2": "C1"
+    },
+    "sensitivity": {
+     "0.005": "C1",
+     "0.02": "C1"
+    },
+    "best_case_per_point": {
+     "R": 2,
+     "M|day_1_s1": 2,
+     "M|day_1_s2": 2,
+     "M|day_1_s3": 2,
+     "M|day_1_s4": 2,
+     "M|day_2_s1": 2,
+     "M|day_2_s2": 2,
+     "M|day_2_s3": 2,
+     "M|day_2_s4": 2
+    }
+   },
+   "points": {
+    "R": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 24.957376714431945,
+      "2": 32.67442515933692,
+      "3": 23.79331281158615,
+      "4": 31.6422473908179,
+      "5": 23.393512301357145,
+      "6": 31.11056074626213
+     },
+     "regret_case_1_percent_of_best_saving": 23.6180082963136,
+     "regret_case_1_percent_of_best_fuel": 11.4622837802256,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.5348331440547691
+     ]
+    },
+    "M|day_1_s1": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 29.24066387147962,
+      "2": 38.91850968437782,
+      "3": 24.024990757885938,
+      "4": 33.53345024260903,
+      "5": 22.23365544810906,
+      "6": 31.91150126100724
+     },
+     "regret_case_1_percent_of_best_saving": 24.866948635453422,
+     "regret_case_1_percent_of_best_fuel": 15.844154690546235,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.04663107479681286
+     ]
+    },
+    "M|day_1_s2": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 28.729416460860094,
+      "2": 37.58348339478094,
+      "3": 23.736216980533992,
+      "4": 33.12830421251341,
+      "5": 22.02129076812127,
+      "6": 30.875357702042106
+     },
+     "regret_case_1_percent_of_best_saving": 23.5583988873963,
+     "regret_case_1_percent_of_best_fuel": 14.185455093436758,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.04388754877078411
+     ]
+    },
+    "M|day_1_s3": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 29.300510767931343,
+      "2": 38.93274832662326,
+      "3": 24.044483623807775,
+      "4": 33.5607223989787,
+      "5": 22.239288626468415,
+      "6": 31.871526185160338
+     },
+     "regret_case_1_percent_of_best_saving": 24.74070794561692,
+     "regret_case_1_percent_of_best_fuel": 15.77316367569764,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.04428587610045718
+     ]
+    },
+    "M|day_1_s4": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 29.644967513829606,
+      "2": 39.72052534643452,
+      "3": 24.210071709979996,
+      "4": 33.79661572195083,
+      "5": 22.34344384692958,
+      "6": 32.4190016795345
+     },
+     "regret_case_1_percent_of_best_saving": 25.366124301549135,
+     "regret_case_1_percent_of_best_fuel": 16.714740615293252,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.043711027541551824
+     ]
+    },
+    "M|day_2_s1": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 23.550555531058635,
+      "2": 31.297220024077422,
+      "3": 22.798336783083755,
+      "4": 30.633792857449333,
+      "5": 22.539985468772365,
+      "6": 30.28664996179118
+     },
+     "regret_case_1_percent_of_best_saving": 24.75192520952074,
+     "regret_case_1_percent_of_best_fuel": 11.275620136090083,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.3904919539753175
+     ]
+    },
+    "M|day_2_s2": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 23.785488906022373,
+      "2": 31.544609074073556,
+      "3": 22.915073359553897,
+      "4": 30.776755745431263,
+      "5": 22.616127074271883,
+      "6": 30.375247242323073
+     },
+     "regret_case_1_percent_of_best_saving": 24.59729378744588,
+     "regret_case_1_percent_of_best_fuel": 11.33456410532678,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.3922650557430923
+     ]
+    },
+    "M|day_2_s3": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 23.921087306198814,
+      "2": 31.70235083633199,
+      "3": 22.967313767801663,
+      "4": 30.861164886833574,
+      "5": 22.63973798234964,
+      "6": 30.421001512482842
+     },
+     "regret_case_1_percent_of_best_saving": 24.54475243903862,
+     "regret_case_1_percent_of_best_fuel": 11.393164516521223,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.3907198959254441
+     ]
+    },
+    "M|day_2_s4": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 2,
+     "order": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "best_or_practically_equal": false,
+     "saving_percent": {
+      "1": 25.036870507622307,
+      "2": 32.90333537368537,
+      "3": 23.481132776425937,
+      "4": 31.530770101680258,
+      "5": 22.946810960248285,
+      "6": 30.813275826311333
+     },
+     "regret_case_1_percent_of_best_saving": 23.907803803848758,
+     "regret_case_1_percent_of_best_fuel": 11.72407735894806,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     },
+     "saturation": [
+      0.026804626537751456,
+      0.3916397443179111
+     ]
+    }
+   },
+   "worded_rule": {
+    "threshold_k": -0.54,
+    "points_where_it_predicts_case_1": 9,
+    "points_where_it_predicts_case_1_and_case_1_is_best_or_equal": 0
+   },
+   "generalised_rule": {
+    "status": "post-hoc hypothesis of the project lead (2026-11-25), no reading",
+    "points": 10,
+    "decided_points": 10,
+    "hits": 10,
+    "per_point": {
+     "R": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_1_s1": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_1_s2": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_1_s3": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_1_s4": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_2_s1": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_2_s2": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_2_s3": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "M|day_2_s4": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": false,
+      "generalised_rule_case": 2,
+      "better_of_cases_1_and_2": 2,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     },
+     "X": {
+      "exhaust_1_warmer": true,
+      "sink_1_larger": true,
+      "generalised_rule_case": 1,
+      "better_of_cases_1_and_2": 1,
+      "generalised_rule_hit": true,
+      "worded_rule_predicts_case_1": true
+     }
+    }
+   },
+   "exchanged_sizes": {
+    "X": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 1,
+     "order": [
+      1,
+      3,
+      5,
+      2,
+      4,
+      6
+     ],
+     "best_or_practically_equal": true,
+     "saving_percent": {
+      "1": 40.818098893260505,
+      "2": 25.083046171700484,
+      "3": 39.50869925145539,
+      "4": 23.73116941568928,
+      "5": 39.466222137249304,
+      "6": 23.73116941568928
+     },
+     "regret_case_1_percent_of_best_saving": 0.0,
+     "regret_case_1_percent_of_best_fuel": 0.0,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     }
+    },
+    "X_scaled_circuits": {
+     "admissible_cases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "best_case": 1,
+     "order": [
+      1,
+      3,
+      5,
+      2,
+      4,
+      6
+     ],
+     "best_or_practically_equal": true,
+     "saving_percent": {
+      "1": 31.231071955606236,
+      "2": 23.007080864130536,
+      "3": 30.560137497210743,
+      "4": 22.273663518959133,
+      "5": 30.3297034650712,
+      "6": 22.105712373595477
+     },
+     "regret_case_1_percent_of_best_saving": 0.0,
+     "regret_case_1_percent_of_best_fuel": 0.0,
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     }
+    },
+    "measured_points_with_case_1_best_or_practically_equal": 8
+   },
+   "band": {
+    "0.6": {
+     "reading_f": "F0",
+     "reading_c": "C1",
+     "best_cases": [
+      "2"
+     ]
+    },
+    "0.634": {
+     "reading_f": "F0",
+     "reading_c": "C1",
+     "best_cases": [
+      "2"
+     ]
+    },
+    "0.7": {
+     "reading_f": "F0",
+     "reading_c": "C1",
+     "best_cases": [
+      "2"
+     ]
+    }
+   },
+   "grid": {
+    "R": {
+     "best_case_per_flow": [
+      1,
+      1,
+      2,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_1_s1": {
+     "best_case_per_flow": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_1_s2": {
+     "best_case_per_flow": [
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true
+     ]
+    },
+    "M|day_1_s3": {
+     "best_case_per_flow": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_1_s4": {
+     "best_case_per_flow": [
+      1,
+      2,
+      1,
+      2,
+      2,
+      1,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_2_s1": {
+     "best_case_per_flow": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_2_s2": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_2_s3": {
+     "best_case_per_flow": [
+      2,
+      1,
+      2,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "M|day_2_s4": {
+     "best_case_per_flow": [
+      2,
+      2,
+      2,
+      2,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "X": {
+     "best_case_per_flow": [
+      1,
+      2,
+      2,
+      1,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "case_1_best_or_practically_equal_per_flow": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+     ]
+    }
+   },
+   "as_delivered": {
+    "S": {
+     "saturation": [
+      0.026804626537751456,
+      1.0
+     ],
+     "dryers_admissible": false,
+     "order_of_the_formula": [
+      2,
+      4,
+      6,
+      1,
+      3,
+      5
+     ],
+     "saving_percent": {
+      "1": 23.393512301357145,
+      "2": 31.11056074626213,
+      "3": 23.393512301357145,
+      "4": 31.11056074626213,
+      "5": 23.393512301357145,
+      "6": 31.11056074626213
+     },
+     "negative_stages": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+     }
+    }
+   }
+  }
+ },
+ "reading_a": {
+  "code": "A0",
+  "models": [
+   "U",
+   "W:physical_unpressurised_95"
+  ],
+  "at_R": {
+   "U": false,
+   "W:physical_unpressurised_95": false
+  },
+  "at_X": {
+   "U": true,
+   "W:physical_unpressurised_95": true
+  }
+ },
+ "predictions": {
+  "F": {
+   "U": {
+    "predicted": "F0",
+    "found": "F0",
+    "confirmed": true
+   },
+   "W:partner": {
+    "predicted": "F0",
+    "found": "F0",
+    "confirmed": true
+   },
+   "W:physical_unpressurised_95": {
+    "predicted": "F0",
+    "found": "F0",
+    "confirmed": true
+   },
+   "W:physical_pressurised": {
+    "predicted": "F0",
+    "found": "F0",
+    "confirmed": true
+   }
+  },
+  "C": {
+   "U": {
+    "predicted": "C1",
+    "found": "C1",
+    "confirmed": true
+   },
+   "W:partner": {
+    "predicted": "C1",
+    "found": "C1",
+    "confirmed": true
+   },
+   "W:physical_unpressurised_95": {
+    "predicted": "C1",
+    "found": "C1",
+    "confirmed": true
+   },
+   "W:physical_pressurised": {
+    "predicted": "C1",
+    "found": "C1",
+    "confirmed": true
+   }
+  },
+  "A": {
+   "predicted": "A0",
+   "found": "A0",
+   "confirmed": true
+  }
+ },
+ "delivery": {
+  "plant_sheet_dyssol_columns_within_rounding": {
+   "fuel": [
+    5,
+    8
+   ],
+   "total": [
+    3,
+    4
+   ],
+   "recovered": [
+    0,
+    8
+   ]
+  },
+  "stored_results_against_rebuild": {
+   "case 1, line 1": {
+    "max_temperature_k": 0.010255918538462083,
+    "max_relative_percent": 0.011337139879597611
+   },
+   "case 1, line 2": {
+    "max_temperature_k": 0.013434110747994055,
+    "max_relative_percent": 1.7530196254047479
+   },
+   "case 2": {
+    "max_temperature_k": 0.0,
+    "max_relative_percent": 0.0
+   },
+   "case 3": {
+    "max_temperature_k": 0.013434110747994055,
+    "max_relative_percent": 1.7530196254072137
+   },
+   "case 4": {
+    "max_temperature_k": 0.0,
+    "max_relative_percent": 0.0
+   },
+   "case 5": {
+    "max_temperature_k": 0.02982697937551393,
+    "max_relative_percent": 0.025227101709317936
+   },
+   "case 6": {
+    "max_temperature_k": 0.0,
+    "max_relative_percent": 0.0
+   }
+  },
+  "P0_units": {
+   "saturation": [
+    0.0,
+    2.309224976819391
+   ],
+   "dryers_admissible": false,
+   "order_of_the_formula": [
+    2,
+    4,
+    1,
+    3,
+    6,
+    5
+   ],
+   "saving_percent": {
+    "1": 15.285847715164834,
+    "2": 17.519531425499267,
+    "3": 15.243516695552083,
+    "4": 17.500306651071313,
+    "5": 11.186970602222507,
+    "6": 14.090072032173943
+   },
+   "negative_stages": {
+    "1": 0,
+    "2": 0,
+    "3": 0,
+    "4": 0,
+    "5": 1,
+    "6": 1
+   }
+  },
+  "sheet_numbering_reversed_between_the_deliveries": true,
+  "stated_and_stored_circuit_flows_equal": false
+ },
+ "generalised_rule_at_befund_121": {
+  "source": "case_ranking_v1.npz",
+  "recomputed": false,
+  "sets": {
+   "full": {
+    "admissible_points": 16803,
+    "modes": {
+     "partner": {
+      "points": 16803,
+      "case_1_better": 12455,
+      "generalised": {
+       "decided": {
+        "n": 16803,
+        "hits": 14111,
+        "rate": 0.8397905135987621
+       },
+       "clear": {
+        "n": 12431,
+        "hits": 12208,
+        "rate": 0.9820609765907811
+       }
+      },
+      "worded": {
+       "decided": {
+        "n": 16803,
+        "hits": 15646,
+        "rate": 0.9311432482294828
+       },
+       "clear": {
+        "n": 12431,
+        "hits": 12427,
+        "rate": 0.9996782237953503
+       }
+      },
+      "rules_differ": {
+       "decided_points": 1643,
+       "generalised_right": 54,
+       "worded_right": 1589
+      },
+      "sink_1_larger_share": 1.0,
+      "worded_threshold_k": -15.5
+     },
+     "physical_unpressurised_95": {
+      "points": 16803,
+      "case_1_better": 8721,
+      "generalised": {
+       "decided": {
+        "n": 14841,
+        "hits": 14433,
+        "rate": 0.9725085910652921
+       },
+       "clear": {
+        "n": 13565,
+        "hits": 13460,
+        "rate": 0.9922594913380022
+       }
+      },
+      "worded": {
+       "decided": {
+        "n": 14841,
+        "hits": 14448,
+        "rate": 0.9735193046290681
+       },
+       "clear": {
+        "n": 13565,
+        "hits": 13472,
+        "rate": 0.9931441208993734
+       }
+      },
+      "rules_differ": {
+       "decided_points": 41,
+       "generalised_right": 13,
+       "worded_right": 28
+      },
+      "sink_1_larger_share": 1.0,
+      "worded_threshold_k": -0.54
+     },
+     "physical_pressurised": {
+      "points": 16803,
+      "case_1_better": 9895,
+      "generalised": {
+       "decided": {
+        "n": 16756,
+        "hits": 16314,
+        "rate": 0.9736213893530675
+       },
+       "clear": {
+        "n": 14889,
+        "hits": 14789,
+        "rate": 0.9932836322116999
+       }
+      },
+      "worded": {
+       "decided": {
+        "n": 16756,
+        "hits": 16325,
+        "rate": 0.9742778706135116
+       },
+       "clear": {
+        "n": 14889,
+        "hits": 14802,
+        "rate": 0.994156760024179
+       }
+      },
+      "rules_differ": {
+       "decided_points": 53,
+       "generalised_right": 21,
+       "worded_right": 32
+      },
+      "sink_1_larger_share": 1.0,
+      "worded_threshold_k": -0.54
+     }
+    }
+   },
+   "rule_test": {
+    "admissible_points": 4185,
+    "modes": {
+     "partner": {
+      "points": 4185,
+      "case_1_better": 3120,
+      "generalised": {
+       "decided": {
+        "n": 4185,
+        "hits": 3480,
+        "rate": 0.8315412186379928
+       },
+       "clear": {
+        "n": 3095,
+        "hits": 3023,
+        "rate": 0.9767366720516962
+       }
+      },
+      "worded": {
+       "decided": {
+        "n": 4185,
+        "hits": 3875,
+        "rate": 0.9259259259259259
+       },
+       "clear": {
+        "n": 3095,
+        "hits": 3093,
+        "rate": 0.9993537964458804
+       }
+      },
+      "rules_differ": {
+       "decided_points": 431,
+       "generalised_right": 18,
+       "worded_right": 413
+      },
+      "sink_1_larger_share": 1.0,
+      "worded_threshold_k": -15.5
+     },
+     "physical_unpressurised_95": {
+      "points": 4185,
+      "case_1_better": 2178,
+      "generalised": {
+       "decided": {
+        "n": 3716,
+        "hits": 3605,
+        "rate": 0.9701291711517761
+       },
+       "clear": {
+        "n": 3380,
+        "hits": 3356,
+        "rate": 0.9928994082840237
+       }
+      },
+      "worded": {
+       "decided": {
+        "n": 3716,
+        "hits": 3605,
+        "rate": 0.9701291711517761
+       },
+       "clear": {
+        "n": 3380,
+        "hits": 3358,
+        "rate": 0.993491124260355
+       }
+      },
+      "rules_differ": {
+       "decided_points": 10,
+       "generalised_right": 5,
+       "worded_right": 5
+      },
+      "sink_1_larger_share": 1.0,
+      "worded_threshold_k": -0.54
+     },
+     "physical_pressurised": {
+      "points": 4185,
+      "case_1_better": 2461,
+      "generalised": {
+       "decided": {
+        "n": 4178,
+        "hits": 4055,
+        "rate": 0.9705600765916707
+       },
+       "clear": {
+        "n": 3710,
+        "hits": 3687,
+        "rate": 0.9938005390835579
+       }
+      },
+      "worded": {
+       "decided": {
+        "n": 4178,
+        "hits": 4054,
+        "rate": 0.9703207276208712
+       },
+       "clear": {
+        "n": 3710,
+        "hits": 3689,
+        "rate": 0.9943396226415094
+       }
+      },
+      "rules_differ": {
+       "decided_points": 17,
+       "generalised_right": 9,
+       "worded_right": 8
+      },
+      "sink_1_larger_share": 1.0,
+      "worded_threshold_k": -0.54
+     }
+    }
+   }
+  },
+  "stored_tree_test_accuracy_strictly_best": {
+   "partner": 0.9775388291517324,
+   "physical_unpressurised_95": 0.9658303464755078,
+   "physical_pressurised": 0.9708482676224611
+  }
+ }
+}

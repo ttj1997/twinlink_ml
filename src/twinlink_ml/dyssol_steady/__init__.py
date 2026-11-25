@@ -15,6 +15,10 @@ Design and reading: ``docs/45_dyssol_steady_state.md``.
   flowsheets, and its comparison with the rebuild or with Dyssol.
 * :mod:`.plant_check` -- measured stationary points of a plant line as inputs of the one-line
   units, single replacements, distance to admissibility (``docs/51_sheet_plant_a.md``).
+* :mod:`.network` -- the units in a network with stages in series (the six cases of docs/11
+  section 13);
+* :mod:`.plant_cases` -- the six cases at the plant inputs of the partner deliveries, in the
+  delivered units and in the workbook rebuild (``docs/NN_plant_cases.md``).
 
 Plant values, the box and every generated data set stay outside the repository (``local/``).
 """

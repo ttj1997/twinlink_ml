@@ -24,7 +24,7 @@ import tempfile
 import time
 import weakref
 from abc import ABC, abstractmethod
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -40,9 +40,11 @@ __all__ = [
     "DyssolInstallation",
     "Evaluation",
     "LineUnits",
+    "NetworkTopology",
     "ReferenceFlowsheet",
     "SteadyStateSource",
     "Topology",
+    "discover_network",
     "discover_topology",
     "extract_outputs",
     "nominal_inputs",
@@ -154,6 +156,93 @@ def discover_topology(file: DyssolFile) -> Topology:
     return Topology(tuple(lines), tuple(recoveries.index(p) for p in preheater_of))
 
 
+@dataclass(frozen=True)
+class NetworkTopology:
+    """Lines of a flowsheet and, per fresh gas, the exhausts that preheat it in flow order.
+
+    The family "every exhaust has one heat recovery; a fresh gas passes none, one or several of
+    them in series" (the six cases of docs/11 section 13). ``sources_of_sink[i]`` holds the lines
+    (0-based) whose exhausts preheat the fresh gas of line ``i``, first stage first.
+    """
+
+    lines: tuple[LineUnits, ...]
+    sources_of_sink: tuple[tuple[int, ...], ...]
+
+
+def discover_network(file: DyssolFile) -> NetworkTopology:
+    """Read lines and wiring of a flowsheet of the series family from the ports of its units.
+
+    The fresh gas of a line is followed backwards from its heater through the preheater sides
+    of the heat recoveries to a gas inlet. Lines are ordered by the names of their dryers.
+    """
+    stream_name = {s.key: s.name for s in file.streams.values()}
+    kinds: dict[str, list[str]] = {"dryer": [], "heater": [], "recovery": [], "inlet": []}
+    for name, unit in file.units.items():
+        port_names = set(unit.ports)
+        for kind, expected in (
+            ("dryer", _DRYER_PORTS),
+            ("heater", _HEATER_PORTS),
+            ("recovery", _RECOVERY_PORTS),
+            ("inlet", _INLET_PORTS),
+        ):
+            if port_names == expected:
+                kinds[kind].append(name)
+
+    def with_port(kind: str, port: str, key: str) -> list[str]:
+        return [n for n in kinds[kind] if file.units[n].ports[port] == key]
+
+    def one(kind: str, port: str, key: str) -> str:
+        what = f"{kind} with port {port!r} on stream {stream_name.get(key, key)!r}"
+        return _one(with_port(kind, port, key), what)
+
+    dryers = sorted(kinds["dryer"])
+    if not dryers:
+        raise ValueError("no dryer of the stationary unit family in the flowsheet")
+    recovery_of = [
+        one("recovery", "Heat recovery inlet", file.units[d].ports["GasOut"]) for d in dryers
+    ]
+    if sorted(recovery_of) != sorted(kinds["recovery"]):
+        raise ValueError("flowsheet is not of the family 'one heat recovery per exhaust'")
+    lines: list[LineUnits] = []
+    wiring: list[tuple[int, ...]] = []
+    for dryer, recovery in zip(dryers, recovery_of, strict=True):
+        ports = file.units[dryer].ports
+        heater = one("heater", "OutPort", ports["GasIn"])
+        heater_in = file.units[heater].ports["InPort"]
+        chain: list[int] = []
+        stream = heater_in
+        while True:
+            upstream = with_port("recovery", "Preheater outlet", stream)
+            if not upstream:
+                break
+            stage = _one(upstream, f"recovery feeding stream {stream_name.get(stream, stream)!r}")
+            index = recovery_of.index(stage)
+            if index in chain:
+                raise ValueError("the fresh gas passes one heat recovery twice")
+            chain.insert(0, index)
+            stream = file.units[stage].ports["Preheater inlet"]
+        lines.append(
+            LineUnits(
+                gas_inlet=one("inlet", "InletMaterial", stream),
+                suspension=one("inlet", "InletMaterial", ports["Feed"]),
+                heater=heater,
+                dryer=dryer,
+                recovery=recovery,
+                gas_in=stream_name[stream],
+                feed=stream_name[ports["Feed"]],
+                heater_in=stream_name[heater_in],
+                dryer_out=stream_name[ports["GasOut"]],
+                exhaust=stream_name[file.units[recovery].ports["Heat recovery outlet"]],
+                product=stream_name[ports["Product"]],
+            )
+        )
+        wiring.append(tuple(chain))
+    used = [source for sink in wiring for source in sink]
+    if sorted(used) != list(range(len(dryers))):
+        raise ValueError("every heat recovery must preheat exactly one fresh gas")
+    return NetworkTopology(tuple(lines), tuple(wiring))
+
+
 def _phase(fractions: Mapping[str, float], state: str) -> str:
     return _one([n for n in fractions if n.lower().startswith(state)], f"{state} phase")
 
@@ -165,7 +254,7 @@ def _compound_index(file: DyssolFile, names: Mapping[str, str], role: str) -> in
 
 
 def nominal_inputs(
-    file: DyssolFile, topology: Topology, names: Mapping[str, str]
+    file: DyssolFile, topology: Topology | NetworkTopology, names: Mapping[str, str]
 ) -> tuple[LineInputs, ...]:
     """Inputs stored in the file (feeds at the last time point, unit parameters)."""
     vapour = _compound_index(file, names, "vapour")
@@ -194,9 +283,13 @@ def nominal_inputs(
 
 
 def extract_outputs(
-    file: DyssolFile, topology: Topology, names: Mapping[str, str]
+    file: DyssolFile, topology: Topology | NetworkTopology, names: Mapping[str, str]
 ) -> tuple[LineOutputs, ...]:
-    """Results of every line at the last time point of a result file."""
+    """Results of every line at the last time point of a result file.
+
+    With a :class:`NetworkTopology`: ``exhaust_celsius`` and ``heat_recovered_kw`` belong to the
+    recovery on the line's own exhaust, ``preheated_celsius`` is the heater inlet of the line.
+    """
     vapour = _compound_index(file, names, "vapour")
     out = []
     for ln in topology.lines:
@@ -293,7 +386,12 @@ def peak_working_set(handle: int | None = None) -> int | None:
 
 
 class DyssolFlowsheet(SteadyStateSource):
-    """One ``.dflw`` file run with ``DyssolC`` at given inputs."""
+    """One ``.dflw`` file run with ``DyssolC`` at given inputs.
+
+    ``discover`` reads the topology of the file: :func:`discover_topology` (the default; one heat
+    recovery per exhaust, each fresh gas preheated exactly once) or :func:`discover_network`
+    (stages in series allowed).
+    """
 
     def __init__(
         self,
@@ -301,13 +399,14 @@ class DyssolFlowsheet(SteadyStateSource):
         installation: DyssolInstallation,
         work_dir: Path,
         names: Mapping[str, str],
+        discover: Callable[[DyssolFile], Topology | NetworkTopology] = discover_topology,
     ) -> None:
         self.source = Path(source)
         self.installation = installation
         self.work_dir = Path(work_dir)
         self.names = dict(names)
         self.file = load_dyssol_steady_state(self.source)
-        self.topology = discover_topology(self.file)
+        self.topology = discover(self.file)
         self.nominal = nominal_inputs(self.file, self.topology, self.names)
         any_stream = next(iter(self.file.streams.values()))
         self.end_time = any_stream.time_s
